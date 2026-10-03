@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Temporary display name; the product name is undecided (ADR-010). -->
+    <string name="app_name">OurApp</string>
+</resources>

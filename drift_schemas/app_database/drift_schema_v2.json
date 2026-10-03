@@ -1,0 +1,1054 @@
+{
+  "_meta": {
+    "description": "This file contains a serialized version of schema entities for drift.",
+    "version": "1.3.0"
+  },
+  "options": {
+    "store_date_time_values_as_text": false
+  },
+  "entities": [
+    {
+      "id": 0,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "activity_types",
+        "was_declared_in_moor": true,
+        "columns": [
+          {
+            "name": "internal_id",
+            "getter_name": "internalId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL PRIMARY KEY",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "primary-key"
+            ]
+          },
+          {
+            "name": "public_id",
+            "getter_name": "publicId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL UNIQUE CHECK (length(public_id) = 36)",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "unique"
+            ]
+          },
+          {
+            "name": "name",
+            "getter_name": "name",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL CHECK (length(trim(name)) > 0)",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "icon_id",
+            "getter_name": "iconId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL CHECK (length(icon_id) > 0)",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "color_key",
+            "getter_name": "colorKey",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL CHECK (length(color_key) > 0)",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "description",
+            "getter_name": "description",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": "",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "supports_timer",
+            "getter_name": "supportsTimer",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL DEFAULT 0 CHECK (supports_timer IN (0, 1))",
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "supports_planning",
+            "getter_name": "supportsPlanning",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL DEFAULT 1 CHECK (supports_planning IN (0, 1))",
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "sort_order",
+            "getter_name": "sortOrder",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL DEFAULT 0",
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at",
+            "getter_name": "createdAt",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at",
+            "getter_name": "updatedAt",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "deleted_at",
+            "getter_name": "deletedAt",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": "",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "strict": true
+      }
+    },
+    {
+      "id": 1,
+      "references": [
+        0
+      ],
+      "type": "table",
+      "data": {
+        "name": "activity_fields",
+        "was_declared_in_moor": true,
+        "columns": [
+          {
+            "name": "internal_id",
+            "getter_name": "internalId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL PRIMARY KEY",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "primary-key"
+            ]
+          },
+          {
+            "name": "public_id",
+            "getter_name": "publicId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL UNIQUE CHECK (length(public_id) = 36)",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "unique"
+            ]
+          },
+          {
+            "name": "activity_type_id",
+            "getter_name": "activityTypeId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL REFERENCES activity_types(internal_id)ON DELETE RESTRICT",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "activity_types",
+                    "column": "internal_id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "restrict"
+                }
+              }
+            ]
+          },
+          {
+            "name": "name",
+            "getter_name": "name",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL CHECK (length(trim(name)) > 0)",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "field_type",
+            "getter_name": "fieldType",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL CHECK (field_type IN ('text', 'number', 'boolean', 'single_select', 'multi_select', 'date', 'time', 'duration', 'rating', 'repeating_group'))",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "dimension",
+            "getter_name": "dimension",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": "CHECK (dimension IS NULL OR field_type = 'number')",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "position",
+            "getter_name": "position",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL CHECK (position >= 0)",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "required",
+            "getter_name": "required",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL DEFAULT 0 CHECK (required IN (0, 1))",
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "measurable",
+            "getter_name": "measurable",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL DEFAULT 0 CHECK (measurable IN (0, 1))",
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "config_json",
+            "getter_name": "configJson",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL DEFAULT '{}' CHECK (json_valid(config_json))",
+            "default_dart": "const CustomExpression('\\'{}\\'')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at",
+            "getter_name": "createdAt",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at",
+            "getter_name": "updatedAt",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "deleted_at",
+            "getter_name": "deletedAt",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": "",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [
+          "CHECK(measurable = 0 OR field_type IN ('number', 'rating', 'duration', 'boolean'))"
+        ],
+        "strict": true
+      }
+    },
+    {
+      "id": 2,
+      "references": [
+        1
+      ],
+      "type": "index",
+      "data": {
+        "on": 1,
+        "name": "idx_activity_fields_type_position",
+        "sql": "CREATE INDEX idx_activity_fields_type_position ON activity_fields (activity_type_id, position);",
+        "unique": false,
+        "columns": []
+      }
+    },
+    {
+      "id": 3,
+      "references": [
+        0
+      ],
+      "type": "table",
+      "data": {
+        "name": "activity_logs",
+        "was_declared_in_moor": true,
+        "columns": [
+          {
+            "name": "internal_id",
+            "getter_name": "internalId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL PRIMARY KEY",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "primary-key"
+            ]
+          },
+          {
+            "name": "public_id",
+            "getter_name": "publicId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL UNIQUE CHECK (length(public_id) = 36)",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "unique"
+            ]
+          },
+          {
+            "name": "activity_type_id",
+            "getter_name": "activityTypeId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL REFERENCES activity_types(internal_id)ON DELETE RESTRICT",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "activity_types",
+                    "column": "internal_id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "restrict"
+                }
+              }
+            ]
+          },
+          {
+            "name": "started_at",
+            "getter_name": "startedAt",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "ended_at",
+            "getter_name": "endedAt",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": "",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "duration_ms",
+            "getter_name": "durationMs",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": "CHECK (duration_ms IS NULL OR duration_ms >= 0)",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tz_offset_minutes",
+            "getter_name": "tzOffsetMinutes",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL CHECK (tz_offset_minutes BETWEEN -1080 AND 1080)",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "local_date",
+            "getter_name": "localDate",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL CHECK (local_date GLOB '[0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]')",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "notes",
+            "getter_name": "notes",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": "",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at",
+            "getter_name": "createdAt",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at",
+            "getter_name": "updatedAt",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "deleted_at",
+            "getter_name": "deletedAt",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": "",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [
+          "CHECK(ended_at IS NULL OR ended_at >= started_at)",
+          "CHECK(duration_ms IS NULL OR ended_at IS NULL OR duration_ms <= ended_at - started_at)"
+        ],
+        "strict": true
+      }
+    },
+    {
+      "id": 4,
+      "references": [
+        3
+      ],
+      "type": "index",
+      "data": {
+        "on": 3,
+        "name": "idx_activity_logs_day",
+        "sql": "CREATE INDEX idx_activity_logs_day\n  ON activity_logs (local_date, started_at) WHERE deleted_at IS NULL;",
+        "unique": false,
+        "columns": []
+      }
+    },
+    {
+      "id": 5,
+      "references": [
+        3
+      ],
+      "type": "index",
+      "data": {
+        "on": 3,
+        "name": "idx_activity_logs_type_day",
+        "sql": "CREATE INDEX idx_activity_logs_type_day\n  ON activity_logs (activity_type_id, local_date, started_at) WHERE deleted_at IS NULL;",
+        "unique": false,
+        "columns": []
+      }
+    },
+    {
+      "id": 6,
+      "references": [
+        3,
+        1
+      ],
+      "type": "table",
+      "data": {
+        "name": "log_values",
+        "was_declared_in_moor": true,
+        "columns": [
+          {
+            "name": "internal_id",
+            "getter_name": "internalId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL PRIMARY KEY",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "primary-key"
+            ]
+          },
+          {
+            "name": "log_id",
+            "getter_name": "logId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL REFERENCES activity_logs(internal_id)ON DELETE CASCADE",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "activity_logs",
+                    "column": "internal_id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "field_id",
+            "getter_name": "fieldId",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL REFERENCES activity_fields(internal_id)ON DELETE RESTRICT",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "activity_fields",
+                    "column": "internal_id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "restrict"
+                }
+              }
+            ]
+          },
+          {
+            "name": "text_value",
+            "getter_name": "textValue",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": "",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "number_value",
+            "getter_name": "numberValue",
+            "moor_type": "double",
+            "nullable": true,
+            "customConstraints": "",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "unit_code",
+            "getter_name": "unitCode",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": "",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "normalized_value",
+            "getter_name": "normalizedValue",
+            "moor_type": "double",
+            "nullable": true,
+            "customConstraints": "",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "boolean_value",
+            "getter_name": "booleanValue",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": "CHECK (boolean_value IS NULL OR boolean_value IN (0, 1))",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "date_value",
+            "getter_name": "dateValue",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": "CHECK (date_value IS NULL OR date_value GLOB '[0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]')",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "time_value",
+            "getter_name": "timeValue",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": "CHECK (time_value IS NULL OR time_value BETWEEN 0 AND 1439)",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "duration_ms",
+            "getter_name": "durationMs",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": "CHECK (duration_ms IS NULL OR duration_ms >= 0)",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "json_value",
+            "getter_name": "jsonValue",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": "CHECK (json_value IS NULL OR json_valid(json_value))",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at",
+            "getter_name": "createdAt",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at",
+            "getter_name": "updatedAt",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [
+          "UNIQUE(log_id, field_id)",
+          "CHECK((text_value IS NOT NULL)+(number_value IS NOT NULL)+(boolean_value IS NOT NULL)+(date_value IS NOT NULL)+(time_value IS NOT NULL)+(duration_ms IS NOT NULL)+(json_value IS NOT NULL)= 1)",
+          "CHECK((number_value IS NULL)=(normalized_value IS NULL))",
+          "CHECK(unit_code IS NULL OR number_value IS NOT NULL)"
+        ],
+        "strict": true,
+        "unique_keys": [
+          [
+            "log_id",
+            "field_id"
+          ]
+        ]
+      }
+    },
+    {
+      "id": 7,
+      "references": [
+        6
+      ],
+      "type": "index",
+      "data": {
+        "on": 6,
+        "name": "idx_log_values_field_normalized",
+        "sql": "CREATE INDEX idx_log_values_field_normalized ON log_values (field_id, normalized_value);",
+        "unique": false,
+        "columns": []
+      }
+    },
+    {
+      "id": 8,
+      "references": [
+        6,
+        1,
+        3
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 6,
+        "references_in_body": [
+          6,
+          1,
+          3
+        ],
+        "name": "trg_log_values_insert_check",
+        "sql": "CREATE TRIGGER trg_log_values_insert_check BEFORE INSERT ON log_values\nBEGIN\n  SELECT RAISE(ABORT, 'log_value_field_not_in_log_type')\n  WHERE (SELECT activity_type_id FROM activity_fields WHERE internal_id = NEW.field_id)\n        IS NOT (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id);\n  SELECT RAISE(ABORT, 'log_value_column_mismatch')\n  WHERE NOT COALESCE((\n    SELECT CASE f.field_type\n      WHEN 'text' THEN NEW.text_value IS NOT NULL\n      WHEN 'single_select' THEN NEW.text_value IS NOT NULL\n      WHEN 'number' THEN NEW.number_value IS NOT NULL AND ((NEW.unit_code IS NULL) = (f.dimension IS NULL))\n      WHEN 'rating' THEN NEW.number_value IS NOT NULL AND NEW.unit_code IS NULL\n      WHEN 'boolean' THEN NEW.boolean_value IS NOT NULL\n      WHEN 'date' THEN NEW.date_value IS NOT NULL\n      WHEN 'time' THEN NEW.time_value IS NOT NULL\n      WHEN 'duration' THEN NEW.duration_ms IS NOT NULL\n      WHEN 'multi_select' THEN NEW.json_value IS NOT NULL\n      WHEN 'repeating_group' THEN NEW.json_value IS NOT NULL\n      ELSE 0\n    END\n    FROM activity_fields f WHERE f.internal_id = NEW.field_id), 0);\nEND;"
+      }
+    },
+    {
+      "id": 9,
+      "references": [
+        6,
+        1,
+        3
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 6,
+        "references_in_body": [
+          6,
+          1,
+          3
+        ],
+        "name": "trg_log_values_update_check",
+        "sql": "CREATE TRIGGER trg_log_values_update_check BEFORE UPDATE ON log_values\nBEGIN\n  SELECT RAISE(ABORT, 'log_value_field_not_in_log_type')\n  WHERE (SELECT activity_type_id FROM activity_fields WHERE internal_id = NEW.field_id)\n        IS NOT (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id);\n  SELECT RAISE(ABORT, 'log_value_column_mismatch')\n  WHERE NOT COALESCE((\n    SELECT CASE f.field_type\n      WHEN 'text' THEN NEW.text_value IS NOT NULL\n      WHEN 'single_select' THEN NEW.text_value IS NOT NULL\n      WHEN 'number' THEN NEW.number_value IS NOT NULL AND ((NEW.unit_code IS NULL) = (f.dimension IS NULL))\n      WHEN 'rating' THEN NEW.number_value IS NOT NULL AND NEW.unit_code IS NULL\n      WHEN 'boolean' THEN NEW.boolean_value IS NOT NULL\n      WHEN 'date' THEN NEW.date_value IS NOT NULL\n      WHEN 'time' THEN NEW.time_value IS NOT NULL\n      WHEN 'duration' THEN NEW.duration_ms IS NOT NULL\n      WHEN 'multi_select' THEN NEW.json_value IS NOT NULL\n      WHEN 'repeating_group' THEN NEW.json_value IS NOT NULL\n      ELSE 0\n    END\n    FROM activity_fields f WHERE f.internal_id = NEW.field_id), 0);\nEND;"
+      }
+    },
+    {
+      "id": 10,
+      "references": [
+        1,
+        6
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 1,
+        "references_in_body": [
+          1,
+          6
+        ],
+        "name": "trg_activity_fields_semantics_locked",
+        "sql": "CREATE TRIGGER trg_activity_fields_semantics_locked\nBEFORE UPDATE OF field_type, dimension ON activity_fields\nWHEN (OLD.field_type IS NOT NEW.field_type OR OLD.dimension IS NOT NEW.dimension)\n  AND EXISTS (SELECT 1 FROM log_values WHERE field_id = OLD.internal_id)\nBEGIN\n  SELECT RAISE(ABORT, 'activity_field_semantics_locked');\nEND;"
+      }
+    },
+    {
+      "id": 11,
+      "references": [
+        1
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 1,
+        "references_in_body": [
+          1
+        ],
+        "name": "trg_activity_fields_owner_immutable",
+        "sql": "CREATE TRIGGER trg_activity_fields_owner_immutable\nBEFORE UPDATE OF activity_type_id ON activity_fields\nWHEN OLD.activity_type_id IS NOT NEW.activity_type_id\nBEGIN\n  SELECT RAISE(ABORT, 'activity_field_owner_immutable');\nEND;"
+      }
+    },
+    {
+      "id": 12,
+      "references": [
+        3
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 3,
+        "references_in_body": [
+          3
+        ],
+        "name": "trg_activity_logs_type_immutable",
+        "sql": "CREATE TRIGGER trg_activity_logs_type_immutable\nBEFORE UPDATE OF activity_type_id ON activity_logs\nWHEN OLD.activity_type_id IS NOT NEW.activity_type_id\nBEGIN\n  SELECT RAISE(ABORT, 'activity_log_type_immutable');\nEND;"
+      }
+    },
+    {
+      "id": 13,
+      "references": [
+        0
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 0,
+        "references_in_body": [
+          0
+        ],
+        "name": "trg_activity_types_public_id_immutable",
+        "sql": "CREATE TRIGGER trg_activity_types_public_id_immutable\nBEFORE UPDATE OF public_id ON activity_types\nWHEN OLD.public_id IS NOT NEW.public_id\nBEGIN\n  SELECT RAISE(ABORT, 'public_id_immutable');\nEND;"
+      }
+    },
+    {
+      "id": 14,
+      "references": [
+        1
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 1,
+        "references_in_body": [
+          1
+        ],
+        "name": "trg_activity_fields_public_id_immutable",
+        "sql": "CREATE TRIGGER trg_activity_fields_public_id_immutable\nBEFORE UPDATE OF public_id ON activity_fields\nWHEN OLD.public_id IS NOT NEW.public_id\nBEGIN\n  SELECT RAISE(ABORT, 'public_id_immutable');\nEND;"
+      }
+    },
+    {
+      "id": 15,
+      "references": [
+        3
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 3,
+        "references_in_body": [
+          3
+        ],
+        "name": "trg_activity_logs_public_id_immutable",
+        "sql": "CREATE TRIGGER trg_activity_logs_public_id_immutable\nBEFORE UPDATE OF public_id ON activity_logs\nWHEN OLD.public_id IS NOT NEW.public_id\nBEGIN\n  SELECT RAISE(ABORT, 'public_id_immutable');\nEND;"
+      }
+    },
+    {
+      "id": 16,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "app_preferences",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "key",
+            "getter_name": "key",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "value_json",
+            "getter_name": "valueJson",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at",
+            "getter_name": "updatedAt",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "key"
+        ]
+      }
+    }
+  ],
+  "fixed_sql": [
+    {
+      "name": "activity_types",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"activity_types\" (\"internal_id\" INTEGER NOT NULL PRIMARY KEY, \"public_id\" TEXT NOT NULL UNIQUE CHECK (length(public_id) = 36), \"name\" TEXT NOT NULL CHECK (length(trim(name)) > 0), \"icon_id\" TEXT NOT NULL CHECK (length(icon_id) > 0), \"color_key\" TEXT NOT NULL CHECK (length(color_key) > 0), \"description\" TEXT, \"supports_timer\" INTEGER NOT NULL DEFAULT 0 CHECK (supports_timer IN (0, 1)), \"supports_planning\" INTEGER NOT NULL DEFAULT 1 CHECK (supports_planning IN (0, 1)), \"sort_order\" INTEGER NOT NULL DEFAULT 0, \"created_at\" INTEGER NOT NULL, \"updated_at\" INTEGER NOT NULL, \"deleted_at\" INTEGER) STRICT;"
+        }
+      ]
+    },
+    {
+      "name": "activity_fields",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"activity_fields\" (\"internal_id\" INTEGER NOT NULL PRIMARY KEY, \"public_id\" TEXT NOT NULL UNIQUE CHECK (length(public_id) = 36), \"activity_type_id\" INTEGER NOT NULL REFERENCES activity_types(internal_id)ON DELETE RESTRICT, \"name\" TEXT NOT NULL CHECK (length(trim(name)) > 0), \"field_type\" TEXT NOT NULL CHECK (field_type IN ('text', 'number', 'boolean', 'single_select', 'multi_select', 'date', 'time', 'duration', 'rating', 'repeating_group')), \"dimension\" TEXT CHECK (dimension IS NULL OR field_type = 'number'), \"position\" INTEGER NOT NULL CHECK (position >= 0), \"required\" INTEGER NOT NULL DEFAULT 0 CHECK (required IN (0, 1)), \"measurable\" INTEGER NOT NULL DEFAULT 0 CHECK (measurable IN (0, 1)), \"config_json\" TEXT NOT NULL DEFAULT '{}' CHECK (json_valid(config_json)), \"created_at\" INTEGER NOT NULL, \"updated_at\" INTEGER NOT NULL, \"deleted_at\" INTEGER, CHECK(measurable = 0 OR field_type IN ('number', 'rating', 'duration', 'boolean'))) STRICT;"
+        }
+      ]
+    },
+    {
+      "name": "idx_activity_fields_type_position",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX idx_activity_fields_type_position ON activity_fields (activity_type_id, position)"
+        }
+      ]
+    },
+    {
+      "name": "activity_logs",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"activity_logs\" (\"internal_id\" INTEGER NOT NULL PRIMARY KEY, \"public_id\" TEXT NOT NULL UNIQUE CHECK (length(public_id) = 36), \"activity_type_id\" INTEGER NOT NULL REFERENCES activity_types(internal_id)ON DELETE RESTRICT, \"started_at\" INTEGER NOT NULL, \"ended_at\" INTEGER, \"duration_ms\" INTEGER CHECK (duration_ms IS NULL OR duration_ms >= 0), \"tz_offset_minutes\" INTEGER NOT NULL CHECK (tz_offset_minutes BETWEEN -1080 AND 1080), \"local_date\" TEXT NOT NULL CHECK (local_date GLOB '[0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]'), \"notes\" TEXT, \"created_at\" INTEGER NOT NULL, \"updated_at\" INTEGER NOT NULL, \"deleted_at\" INTEGER, CHECK(ended_at IS NULL OR ended_at >= started_at), CHECK(duration_ms IS NULL OR ended_at IS NULL OR duration_ms <= ended_at - started_at)) STRICT;"
+        }
+      ]
+    },
+    {
+      "name": "idx_activity_logs_day",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX idx_activity_logs_day ON activity_logs (local_date, started_at) WHERE deleted_at IS NULL"
+        }
+      ]
+    },
+    {
+      "name": "idx_activity_logs_type_day",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX idx_activity_logs_type_day ON activity_logs (activity_type_id, local_date, started_at) WHERE deleted_at IS NULL"
+        }
+      ]
+    },
+    {
+      "name": "log_values",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"log_values\" (\"internal_id\" INTEGER NOT NULL PRIMARY KEY, \"log_id\" INTEGER NOT NULL REFERENCES activity_logs(internal_id)ON DELETE CASCADE, \"field_id\" INTEGER NOT NULL REFERENCES activity_fields(internal_id)ON DELETE RESTRICT, \"text_value\" TEXT, \"number_value\" REAL, \"unit_code\" TEXT, \"normalized_value\" REAL, \"boolean_value\" INTEGER CHECK (boolean_value IS NULL OR boolean_value IN (0, 1)), \"date_value\" TEXT CHECK (date_value IS NULL OR date_value GLOB '[0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]'), \"time_value\" INTEGER CHECK (time_value IS NULL OR time_value BETWEEN 0 AND 1439), \"duration_ms\" INTEGER CHECK (duration_ms IS NULL OR duration_ms >= 0), \"json_value\" TEXT CHECK (json_value IS NULL OR json_valid(json_value)), \"created_at\" INTEGER NOT NULL, \"updated_at\" INTEGER NOT NULL, UNIQUE(log_id, field_id), CHECK((text_value IS NOT NULL)+(number_value IS NOT NULL)+(boolean_value IS NOT NULL)+(date_value IS NOT NULL)+(time_value IS NOT NULL)+(duration_ms IS NOT NULL)+(json_value IS NOT NULL)= 1), CHECK((number_value IS NULL)=(normalized_value IS NULL)), CHECK(unit_code IS NULL OR number_value IS NOT NULL)) STRICT;"
+        }
+      ]
+    },
+    {
+      "name": "idx_log_values_field_normalized",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX idx_log_values_field_normalized ON log_values (field_id, normalized_value)"
+        }
+      ]
+    },
+    {
+      "name": "trg_log_values_insert_check",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER trg_log_values_insert_check BEFORE INSERT ON log_values BEGIN SELECT RAISE (ABORT, 'log_value_field_not_in_log_type') WHERE (SELECT activity_type_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id);SELECT RAISE (ABORT, 'log_value_column_mismatch') WHERE NOT COALESCE((SELECT CASE f.field_type WHEN 'text' THEN NEW.text_value IS NOT NULL WHEN 'single_select' THEN NEW.text_value IS NOT NULL WHEN 'number' THEN NEW.number_value IS NOT NULL AND((NEW.unit_code IS NULL)=(f.dimension IS NULL))WHEN 'rating' THEN NEW.number_value IS NOT NULL AND NEW.unit_code IS NULL WHEN 'boolean' THEN NEW.boolean_value IS NOT NULL WHEN 'date' THEN NEW.date_value IS NOT NULL WHEN 'time' THEN NEW.time_value IS NOT NULL WHEN 'duration' THEN NEW.duration_ms IS NOT NULL WHEN 'multi_select' THEN NEW.json_value IS NOT NULL WHEN 'repeating_group' THEN NEW.json_value IS NOT NULL ELSE 0 END FROM activity_fields AS f WHERE f.internal_id = NEW.field_id), 0);END"
+        }
+      ]
+    },
+    {
+      "name": "trg_log_values_update_check",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER trg_log_values_update_check BEFORE UPDATE ON log_values BEGIN SELECT RAISE (ABORT, 'log_value_field_not_in_log_type') WHERE (SELECT activity_type_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id);SELECT RAISE (ABORT, 'log_value_column_mismatch') WHERE NOT COALESCE((SELECT CASE f.field_type WHEN 'text' THEN NEW.text_value IS NOT NULL WHEN 'single_select' THEN NEW.text_value IS NOT NULL WHEN 'number' THEN NEW.number_value IS NOT NULL AND((NEW.unit_code IS NULL)=(f.dimension IS NULL))WHEN 'rating' THEN NEW.number_value IS NOT NULL AND NEW.unit_code IS NULL WHEN 'boolean' THEN NEW.boolean_value IS NOT NULL WHEN 'date' THEN NEW.date_value IS NOT NULL WHEN 'time' THEN NEW.time_value IS NOT NULL WHEN 'duration' THEN NEW.duration_ms IS NOT NULL WHEN 'multi_select' THEN NEW.json_value IS NOT NULL WHEN 'repeating_group' THEN NEW.json_value IS NOT NULL ELSE 0 END FROM activity_fields AS f WHERE f.internal_id = NEW.field_id), 0);END"
+        }
+      ]
+    },
+    {
+      "name": "trg_activity_fields_semantics_locked",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER trg_activity_fields_semantics_locked BEFORE UPDATE OF field_type, dimension ON activity_fields WHEN(OLD.field_type IS NOT NEW.field_type OR OLD.dimension IS NOT NEW.dimension)AND EXISTS (SELECT 1 FROM log_values WHERE field_id = OLD.internal_id) BEGIN SELECT RAISE (ABORT, 'activity_field_semantics_locked');END"
+        }
+      ]
+    },
+    {
+      "name": "trg_activity_fields_owner_immutable",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER trg_activity_fields_owner_immutable BEFORE UPDATE OF activity_type_id ON activity_fields WHEN OLD.activity_type_id IS NOT NEW.activity_type_id BEGIN SELECT RAISE (ABORT, 'activity_field_owner_immutable');END"
+        }
+      ]
+    },
+    {
+      "name": "trg_activity_logs_type_immutable",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER trg_activity_logs_type_immutable BEFORE UPDATE OF activity_type_id ON activity_logs WHEN OLD.activity_type_id IS NOT NEW.activity_type_id BEGIN SELECT RAISE (ABORT, 'activity_log_type_immutable');END"
+        }
+      ]
+    },
+    {
+      "name": "trg_activity_types_public_id_immutable",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER trg_activity_types_public_id_immutable BEFORE UPDATE OF public_id ON activity_types WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, 'public_id_immutable');END"
+        }
+      ]
+    },
+    {
+      "name": "trg_activity_fields_public_id_immutable",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER trg_activity_fields_public_id_immutable BEFORE UPDATE OF public_id ON activity_fields WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, 'public_id_immutable');END"
+        }
+      ]
+    },
+    {
+      "name": "trg_activity_logs_public_id_immutable",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER trg_activity_logs_public_id_immutable BEFORE UPDATE OF public_id ON activity_logs WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, 'public_id_immutable');END"
+        }
+      ]
+    },
+    {
+      "name": "app_preferences",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"app_preferences\" (\"key\" TEXT NOT NULL, \"value_json\" TEXT NOT NULL, \"updated_at\" INTEGER NOT NULL, PRIMARY KEY (\"key\"));"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+import 'package:daylog/core/database/app_database.dart';
+import 'package:daylog/features/activity_types/data/db_activity_type_repository.dart';
+import 'package:daylog/features/activity_types/domain/activity_type_use_cases.dart';
+import 'package:daylog/features/activity_logs/presentation/form/field_editor_shell.dart';
+import 'package:daylog/features/activity_types/presentation/activity_type_screen.dart';
+import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
+import 'package:daylog/features/settings/domain/theme_preference.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import '../../../support/fake_clock.dart';
+import '../../../support/fixtures.dart';
+import '../../../support/test_app.dart';
+
+const _onboarded = PreferencesSnapshot(
+  themePreference: ThemePreference.light,
+  onboardingCompleted: true,
+);
+
+/// Me → Activities (ADR-028).
+Future<void> openActivities(WidgetTester tester) async {
+  await tester.tap(
+    find.descendant(of: find.byType(NavigationBar), matching: find.text('Me')),
+  );
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Activities'));
+  await tester.pumpAndSettle();
+}
+
+/// Scrolls the lazily built form until [text] exists, then taps it.
+Future<void> scrollAndTap(WidgetTester tester, Finder finder) async {
+  await tester.scrollUntilVisible(
+    finder,
+    200,
+    scrollable: find.byType(Scrollable).hitTestable().first,
+  );
+  await tester.tap(finder);
+  await tester.pumpAndSettle();
+}
+
+/// Types into the text input of the field labelled [label].
+Future<void> enterField(WidgetTester tester, String label, String text) async {
+  final input = find.descendant(
+    of: find.widgetWithText(FieldEditorShell, label),
+    matching: find.byType(TextField),
+  );
+  await tester.scrollUntilVisible(
+    input,
+    -200,
+    scrollable: find.byType(Scrollable).hitTestable().first,
+  );
+  await tester.enterText(input, text);
+  await tester.pumpAndSettle();
+}
+
+Future<void> seedReading(AppDatabase db, FakeClock clock) async {
+  await CreateActivityType(
+    DbActivityTypeRepository(db, clock),
+    SequentialIdGenerator(),
+  )(readingDefinition());
+}
+
+void main() {
+  testAppWidgets(
+    'an empty Activities screen offers to build or start from a template',
+    (tester) async {
+      await pumpTestApp(tester, preferences: _onboarded);
+      await openActivities(tester);
+
+      expect(find.text('No activities yet'), findsOneWidget);
+      expect(find.text('New activity'), findsOneWidget);
+      expect(find.text('Start from a template'), findsOneWidget);
+    },
+  );
+
+  testAppWidgets(
+    'installing a template opens the new activity, which then appears in Activities',
+    (tester) async {
+      await pumpTestApp(tester, preferences: _onboarded);
+      await openActivities(tester);
+
+      await tester.tap(find.text('Start from a template'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Walking'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ActivityTypeScreen), findsOneWidget);
+      expect(
+        find.text('Nothing recorded yet. Record it to start this history.'),
+        findsOneWidget,
+      );
+
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      expect(find.text('Walking'), findsOneWidget);
+      expect(find.text('4 fields'), findsOneWidget);
+    },
+  );
+
+  testAppWidgets('building an activity with a field saves it and opens it', (
+    tester,
+  ) async {
+    await pumpTestApp(tester, preferences: _onboarded);
+    await openActivities(tester);
+
+    await tester.tap(find.text('New activity'));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Name'),
+      'Meditation',
+    );
+    await tester.pumpAndSettle();
+
+    await scrollAndTap(tester, find.text('Add field'));
+    await tester.tap(find.text('Rating'));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Field name'),
+      'Calm',
+    );
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('Calm'),
+      findsWidgets,
+      reason: 'field listed and previewed',
+    );
+
+    await scrollAndTap(tester, find.widgetWithText(FilledButton, 'Save'));
+
+    expect(find.byType(ActivityTypeScreen), findsOneWidget);
+    expect(find.text('Meditation'), findsOneWidget);
+  });
+
+  testAppWidgets('saving an activity without a name shows the issue inline', (
+    tester,
+  ) async {
+    await pumpTestApp(tester, preferences: _onboarded);
+    await openActivities(tester);
+
+    await tester.tap(find.text('New activity'));
+    await tester.pumpAndSettle();
+    await scrollAndTap(tester, find.widgetWithText(FilledButton, 'Save'));
+
+    await tester.scrollUntilVisible(
+      find.text('Please enter a name.'),
+      -200,
+      scrollable: find.byType(Scrollable).hitTestable().first,
+    );
+    expect(find.text('Please enter a name.'), findsOneWidget);
+  });
+
+  testAppWidgets(
+    'recording an activity adds it to its recent records with a summary',
+    (tester) async {
+      await pumpTestApp(tester, preferences: _onboarded, seed: seedReading);
+      await openActivities(tester);
+
+      await tester.tap(find.text('Reading'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilledButton, 'Record'));
+      await tester.pumpAndSettle();
+
+      // Book is required: saving empty shows the issue next to the field.
+      await scrollAndTap(tester, find.widgetWithText(FilledButton, 'Save'));
+      expect(find.text('This is required.'), findsOneWidget);
+
+      await enterField(tester, 'Book *', 'Fooled by Randomness');
+      await enterField(tester, 'Pages', '18');
+      await scrollAndTap(tester, find.widgetWithText(FilledButton, 'Save'));
+
+      expect(find.byType(ActivityTypeScreen), findsOneWidget);
+      expect(find.text('Fooled by Randomness · 18'), findsOneWidget);
+    },
+  );
+
+  testAppWidgets('deleting a record removes it, and Undo brings it back', (
+    tester,
+  ) async {
+    await pumpTestApp(tester, preferences: _onboarded, seed: seedReading);
+    await openActivities(tester);
+    await tester.tap(find.text('Reading'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Record'));
+    await tester.pumpAndSettle();
+    await enterField(tester, 'Book *', 'Antifragile');
+    await scrollAndTap(tester, find.widgetWithText(FilledButton, 'Save'));
+
+    await tester.tap(find.text('Antifragile'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Delete'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Antifragile'), findsNothing);
+    expect(find.text('Record deleted'), findsOneWidget);
+
+    await tester.tap(find.text('Undo'));
+    await tester.pumpAndSettle();
+    expect(find.text('Antifragile'), findsOneWidget);
+  });
+}

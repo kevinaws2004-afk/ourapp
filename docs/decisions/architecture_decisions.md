@@ -1,0 +1,421 @@
+# Architecture Decision Records
+
+> **Accepted** decisions (ADR-0xx) were made in the source documents (`claude_setup.md`, the spec). **Pending** decisions (ADR-Pxx) are recommendations that need owner approval. When one is approved, move it to Accepted with the next number and date it; never delete history.
+> Format: Decision · Context · Reason · Consequences.
+
+---
+
+## Accepted
+
+### ADR-001: Flutter instead of separate Kotlin/Swift applications
+- **Status:** Accepted (source: setup §4, spec §6)
+- **Decision:** Build one app in Flutter/Dart.
+- **Context:** Android first, iOS later; one small team; a highly custom visual identity.
+- **Reason:** A single codebase for both platforms; custom rendering suits a distinctive design system; strong animation/gesture support; the domain logic is shared in Dart.
+- **Consequences:** Platform-specific features (app blocking, notifications, widgets) need plugins or platform channels behind interfaces. The app must avoid Android-only assumptions to keep iOS cheap.
+
+### ADR-002: SQLite as the V1 source of truth
+- **Status:** Accepted (spec §8, §27; setup §5.8)
+- **Decision:** All data lives in a local SQLite database on the device.
+- **Context:** Thousands of logs, sets, sessions, measurements; offline; zero infrastructure cost.
+- **Reason:** Structured storage, queries, indexes, transactions, offline, proven performance, no server.
+- **Consequences:** Schema migrations must be managed carefully (see [database.md §7](../architecture/database.md#7-migrations)). Backups are the user's responsibility until export/sync exists.
+
+### ADR-003: Local-first, offline-first architecture
+- **Status:** Accepted (spec §6, §39)
+- **Decision:** Every feature works fully offline; the device is the authority.
+- **Context:** Privacy positioning ("your data stays on your device"), no backend in V1.
+- **Reason:** Simplicity, privacy, speed, ₹0 infrastructure.
+- **Consequences:** No server-side features. Data model must stay sync-ready (stable IDs, timestamps, soft delete) without implementing sync.
+
+### ADR-004: Riverpod for state management
+- **Status:** Accepted (setup §4, spec §6)
+- **Decision:** Use Riverpod for dependency injection and state.
+- **Context:** Need testable DI, reactive DB streams, scoped screen state.
+- **Reason:** Compile-safe providers, easy test overrides, good async (`AsyncValue`) and stream support, no `BuildContext` dependency for logic.
+- **Consequences:** Conventions in [state_management.md](../architecture/state_management.md). No code generation for providers (ADR-014).
+
+### ADR-005: Feature-first project structure
+- **Status:** Accepted (setup §5.1, §6)
+- **Decision:** `lib/features/<feature>/{data,domain,presentation}` plus `app/`, `core/`, `shared/`.
+- **Context:** Many features sharing one generic engine; long-term maintainability.
+- **Reason:** Locality of change; clear ownership; layers inside features keep separation of concerns.
+- **Consequences:** Cross-feature dependency rules are needed ([application_architecture.md §2](../architecture/application_architecture.md#2-dependency-rules)). Empty layer folders are not created.
+
+### ADR-006: Generic, configuration-driven activity engine
+- **Status:** Accepted (spec §5, §46; setup §5.14–16)
+- **Decision:** Activity Types, Fields, Logs and Values are generic. No per-activity tables or screens. The UI renders forms from field definitions.
+- **Context:** Users define their own activities (Language Learning, Cooking…) with no developer involvement.
+- **Reason:** Extensibility without migrations or code; one engine to test.
+- **Consequences:** Structured needs (sets, exercise lists) are solved by generic field types (Set Table, Repeating Group). Analytics must work on generic (time, value, unit) data. Some queries are more complex than with bespoke tables (see ADR-P05).
+
+### ADR-007: Repository abstraction between domain and persistence
+- **Status:** Accepted (setup §5.7)
+- **Decision:** Domain defines repository interfaces; data layer implements them over SQLite.
+- **Context:** Testability, separation of concerns, future sync.
+- **Reason:** UI/domain independent of DB library; sync-aware implementations can be introduced later.
+- **Consequences:** Mappers between rows and entities; repositories never leak DB types.
+
+### ADR-008: No backend in V1
+- **Status:** Accepted (spec §7, §42)
+- **Decision:** No API server, cloud database, Firebase/Supabase/AWS, authentication.
+- **Context:** V1 focus on the core loop; ₹0 cost; privacy.
+- **Reason:** Avoid complexity and cost until the core product is proven.
+- **Consequences:** No accounts, sync, remote config, crash reporting or analytics services. Future plan in [future_sync.md](../architecture/future_sync.md).
+
+### ADR-009: Android-first, iOS-compatible
+- **Status:** Accepted (setup §5.4, spec §33.7)
+- **Decision:** Ship and test on Android first; keep the code iOS-compatible.
+- **Context:** Initial target market/device.
+- **Reason:** Focus testing effort while preserving future reach.
+- **Consequences:** Plugins must support iOS or sit behind interfaces; the iOS project folder is kept and compiled; no Android-only APIs in domain/data.
+
+### ADR-010: Internal technical identifiers and product naming rule
+- **Status:** Accepted 2026-10-03 (owner gate, B1)
+- **Decision:**
+  - Internal codename / Dart package: `daylog`.
+  - Android application ID and iOS bundle ID: `com.ourapp.daylog`.
+  - Temporary development display name: **OurApp**.
+- **Context:** `flutter create` needs identifiers, and the Play application ID becomes permanent once published. The product name is undecided.
+- **Reason:** A neutral codename unblocks scaffolding without committing to a product name.
+- **Consequences:**
+  - `daylog` is **only** a technical identifier. It must never appear as the product name in UI, copy, onboarding, docs prose, the README description or marketing.
+  - "Daylight" is only the provisional design direction (ADR-016), also never the product name.
+  - The visible name lives in exactly three places, so it can be changed before release (see [development_guide.md §2.1](../development/development_guide.md#21-product-naming-temporary)).
+
+### ADR-011: drift as the SQLite access library
+- **Status:** Accepted 2026-10-03 (owner gate, B2; resolves ADR-P01)
+- **Decision:** Use drift (with `drift_flutter` for opening the database and `drift_dev` + `build_runner` for code generation). Generated `*.g.dart` files are committed to git.
+- **Context:** The data layer needs reactive queries (Today timeline), typed SQL, migrations with tests, background-isolate execution and in-memory test databases.
+- **Reason:** drift provides all of these. With sqflite, stream notification, mapping and migration testing would be hand-built.
+- **Consequences:**
+  - A `build_runner` step is required after schema changes.
+  - Committing generated files keeps the repo buildable without running the generator.
+  - Drift's database class must list every table, so **table definitions live in `lib/core/database/tables/`** (one cohesive schema, no `core → features` import). Feature `data/` layers hold repositories (and DAOs when useful) that use the core database.
+  - This refines [application_architecture.md §1](../architecture/application_architecture.md#1-project-layout).
+
+### ADR-012: Phase 1 schema limited to `app_preferences`; `app_preferences` is a documented exception (Option A)
+- **Status:** Accepted 2026-10-03 (owner gate, B3; resolves ADR-P14)
+- **Decision:**
+  1. Schema version 1 creates only `app_preferences`. The activity tables are added by Phase 2's first migration.
+  2. Preferences are stored in SQLite, not `shared_preferences`.
+  3. `app_preferences` is an **intentional exception** to the timestamp rule: text `key` primary key, `value_json`, `updated_at` only. "Reset" writes the default value; rows are never deleted.
+- **Context:** Phase 1 needs only the theme mode and the onboarding flag. Several activity-schema decisions are still pending.
+- **Reason:** Avoids locking unsettled schema decisions into the first migration. Preferences are a small fixed key set updated in place; per-key last-writer-wins on `updated_at` suffices for future sync.
+- **Consequences:**
+  - ADR-P02, P04, P05, P06, P07, P08 and P20 had to be decided before Phase 2 created the activity tables. They were, as ADR-017 to ADR-026.
+  - `app_preferences` is also an exception to the two-level identity model (ADR-017): its text `key` is the stable identifier, and there is no `internal_id`/`public_id`.
+
+### ADR-013: Time storage
+- **Status:** Accepted 2026-10-03 (owner gate, B4; resolves ADR-P03)
+- **Decision:**
+  - Instants are stored as UTC epoch milliseconds (`INTEGER`).
+  - Calendar dates are stored as `YYYY-MM-DD` text.
+  - Logs and measurements also store `tz_offset_minutes`.
+  - An activity belongs to the local day of its start.
+  - All "now" comes from the injectable `Clock`.
+- **Context:** The daily timeline and analytics must stay correct across time zones and DST.
+- **Reason:** Integers index and compare efficiently, with no parsing ambiguity. The stored offset keeps day assignment stable when travelling.
+- **Consequences:**
+  - Day boundaries are computed in Dart. See [data_architecture.md §7](../architecture/data_architecture.md#7-time-model).
+  - **Refinement (2026-10-04, with ADR-026's performance rules):** rows that are looked up by calendar day also store an explicit `local_date` (`YYYY-MM-DD`, the local day of the start/recorded instant, computed at write time). Day queries are then simple indexed equality/range lookups, with no per-query offset arithmetic.
+
+### ADR-014: Hand-written Riverpod providers; no riverpod_generator, no freezed
+- **Status:** Accepted 2026-10-03 (owner gate, B5; resolves the code-generation part of ADR-P10)
+- **Decision:**
+  - Use Riverpod (`flutter_riverpod`) with hand-written providers.
+  - No `riverpod_generator` and no `freezed`.
+  - Entities use Dart 3 sealed classes and records, with hand-written `copyWith`/equality where needed.
+  - drift is the only code generator.
+- **Context:** Provider patterns set in Phase 1 are copied by every later feature.
+- **Reason:** Explicit, readable providers; one generator toolchain; faster builds.
+- **Consequences:** Slightly more boilerplate per provider and entity. Moving to generators later is mechanical. Use-case naming is decided by ADR-023.
+
+### ADR-015: Flutter localization (gen-l10n) from Phase 1, English only
+- **Status:** Accepted 2026-10-03 (owner gate, B6; resolves ADR-P19)
+- **Decision:**
+  - Use the SDK's `flutter_localizations` + `gen-l10n` with ARB files in `lib/l10n/`.
+  - English is the only locale in V1.
+  - Generated localization files are committed (consistent with ADR-011).
+- **Context:** Phase 1 introduces the first user-visible strings.
+- **Reason:** Centralized copy from day one. Retrofitting strings later is expensive.
+- **Consequences:** User-visible strings are never inlined in widgets. The visible product name comes from the `appTitle` ARB entry.
+
+### ADR-016: "Daylight" visual identity as provisional v0
+- **Status:** Accepted as **provisional** 2026-10-03 (owner gate, B7; resolves ADR-P12)
+- **Decision:** Implement the tokens in [design_system.md](../ui/design_system.md): palette, Fraunces (display) + DM Sans (UI) bundled as OFL font assets, Day Arc motif, Plan-vs-Reality grammar.
+- **Context:** Phase 1 builds the token system and the light/dark themes.
+- **Reason:** The structure must exist before screens. Values are centralized, so they're cheap to change.
+- **Consequences:**
+  - The token *structure* is binding.
+  - The *values* stay provisional until the owner reviews the dev token showcase on a device. Changes after that review update design_system.md and the token files together.
+  - "Daylight" is a design-direction name, never the product name (ADR-010).
+  - Brand, accent and status colors were replaced by activity-palette colors in ADR-029. Neutrals remain provisional.
+
+### ADR-017: Two-level identity, INTEGER internal key + UUIDv7 public ID
+- **Status:** Accepted 2026-10-04 (owner decision; resolves ADR-P02)
+- **Decision:** Every user-owned entity table has:
+  - `internal_id INTEGER PRIMARY KEY`, the SQLite rowid alias. It is used for **all foreign keys and joins**.
+  - `public_id TEXT NOT NULL UNIQUE`, a UUIDv7 generated in the application layer (`Uuid7IdGenerator`, `core/ids/`). It is the stable, opaque domain identity used for routing, the domain layer, import/export, JSON references and future sync.
+- **Context:** Hot paths (Today, history, values per log, field history) are joins. Integer keys are smaller and faster to compare and index than 36-character text keys. Cross-device identity still needs globally unique IDs.
+- **Reason:** Integer joins for local performance; UUIDv7 for identity that never collides and never changes.
+- **Consequences:**
+  - `internal_id` **never leaves the data layer**. Domain entities, routes, exports and JSON payloads carry only `public_id`. Repositories translate between the two.
+  - `public_id` is immutable, enforced by triggers. No `AUTOINCREMENT`: internal ids are local-only, so rowid reuse after a hard delete is harmless.
+  - Child rows that are never referenced on their own (`log_values`) have only `internal_id`. Their identity is (log `public_id`, field `public_id`).
+  - Exception: `app_preferences` (ADR-012).
+  - Future sync maps `public_id` ↔ `internal_id` per device ([future_sync.md](../architecture/future_sync.md)).
+
+### ADR-018: Normalized plans; a Task is a Plan without an Activity Type; logs reference plans
+- **Status:** Accepted 2026-10-04 (owner decision; resolves ADR-P04). **Implemented in Phase 4** (its migration adds `plans` and `activity_logs.plan_id`).
+- **Decision:**
+  - One `plans` table: `internal_id`, `public_id`, `plan_date`, nullable `activity_type_id`, `title`, `notes`, `planned_start_at`, `planned_end_at`, `sort_order`, `status`, `created_at`, `updated_at`, `deleted_at`.
+  - A **Task** is a plan with `activity_type_id IS NULL`; its title is its identity.
+  - `activity_logs.plan_id` (nullable FK) records Plan → actual Activity Log explicitly.
+- **Context:** Planned vs actual (§20, §43) must be explicit, not inferred. Separate plan and task systems would duplicate persistence and UI.
+- **Reason:** One planning model; intention and reality stay in separate tables, linked by a foreign key.
+- **Consequences:**
+  - **No conflicting duplicate state.** Completion of an *activity* plan is **derived** from its linked, non-deleted logs. Stored `status` holds only what can't be derived:
+    - `planned` (default)
+    - `skipped`
+    - `cancelled`
+    - `completed`, **for tasks only**, which have no log. Enforced by `CHECK (status <> 'completed' OR activity_type_id IS NULL)`.
+  - `in_progress` is derived (from an active focus session, Phase 5).
+  - The domain computes the effective status; reality (a linked log) wins over a stored `skipped`.
+  - Indexes: `(plan_date, sort_order)` and `(activity_type_id, plan_date)`, both partial on `deleted_at IS NULL`. Plus `activity_logs(plan_id)` partial on `plan_id IS NOT NULL` for derived completion.
+  - **Open sub-item, owner confirmation requested:** planned *duration* without times ("Read for 45 minutes", §3.2/§20) has no column in the approved list. The documented proposal is `planned_duration_ms INTEGER NULL` with `CHECK (planned_duration_ms IS NULL OR planned_end_at IS NULL)`, so there is never a second source of planned duration. Not built until confirmed (needed by Phase 4).
+
+### ADR-019: Hybrid typed + JSON value storage
+- **Status:** Accepted 2026-10-04 (owner decision; resolves ADR-P05)
+- **Decision:**
+  - `log_values` has dedicated typed columns: `text_value`, `number_value` (+ `unit_code`, `normalized_value`), `boolean_value`, `date_value`, `time_value`, `duration_ms`.
+  - Exactly one is populated per row, chosen by the field type and enforced by CHECK plus a trigger.
+  - `json_value` is used **only** for genuinely structured values: Multi Select (a list of option IDs) and Repeating Group.
+- **Context:** Filtering, sorting, aggregation and analytics must not need JSON parsing on hot paths.
+- **Reason:** Typed relational data for queryability and performance; JSON only where the shape is truly nested or list-valued.
+- **Consequences:**
+  - Every JSON payload has `"v"`, references fields/options/items by **stable IDs** (UUIDv7 `public_id`s, or UUIDv7 item IDs), and never uses display names for identity.
+  - Decoders accept every past `"v"`. Format changes add a new `"v"` with a documented upgrade path ([data_architecture.md §5](../architecture/data_architecture.md#5-structured-values)).
+  - Hot indexes: `UNIQUE (log_id, field_id)` (values of a log) and `(field_id, normalized_value)` (field history, field existence checks).
+  - **Repeating Group storage:** resolved by **ADR-027**, which uses relational rows. `json_value` is therefore used only by Multi Select.
+
+### ADR-020: Unit registry and write-time normalization
+- **Status:** Accepted 2026-10-04 (owner decision; resolves ADR-P06)
+- **Decision:**
+  - A **code-defined Unit Registry** (domain) defines dimensions (mass, distance, duration, volume, temperature, energy) and units. Each unit has a stable code, dimension, affine conversion to the dimension's canonical unit (`canonical = value × factor + offset`), symbol and display decimals.
+  - A Number field may declare a `dimension` (column on `activity_fields`) and a default display unit (config).
+  - Values store the user's `unit_code`, the as-entered `number_value`, and `normalized_value` in the canonical unit, computed **at write time**.
+- **Context:** Historical values must be comparable without converting thousands of rows per read.
+- **Reason:** A deterministic, testable conversion on write; analytics read one column.
+- **Consequences:**
+  - Unit codes are permanent (never renamed or removed). Adding a unit is a code change only, with no schema change.
+  - `normalized_value` equals `number_value` for unitless numbers and ratings, so analytics always read `normalized_value`.
+  - Durations use the Duration field type (`duration_ms`). The registry's duration dimension serves conversion and formatting only, and is not offered as a Number dimension. That way there's one way to store a duration.
+  - Measurements (Phase 6) use the same `unit_code` + `normalized_value` pattern.
+
+### ADR-021: Durations are integer milliseconds; planned and actual are distinct
+- **Status:** Accepted 2026-10-04 (owner decision; resolves ADR-P07). Supersedes the earlier P07 recommendation (seconds, plus a "timer target field").
+- **Decision:**
+  - Elapsed durations are `duration_ms INTEGER`.
+  - **Actual** elapsed duration of an activity is `activity_logs.duration_ms`. A timed activity also stores `started_at`/`ended_at`; a manual entry stores `started_at` + `duration_ms`.
+  - Duration-type fields (`log_values.duration_ms`) are for *additional* user-defined durations, never the activity's own elapsed time.
+  - **Planned** duration lives only on plans (ADR-018).
+  - Formatting ("1h 42m") is presentation only.
+  - Running timers derive elapsed time from persisted timestamps and the `Clock` (Phase 5).
+- **Context:** The spec has both a log duration and "Duration" fields (OQ-10). Planned and actual must never share a field.
+- **Reason:** One source of truth per concept.
+- **Consequences:**
+  - CHECK `duration_ms <= ended_at − started_at` when both are present (active time ≤ wall-clock time).
+  - Templates do not add a Duration field for the activity's own time; the log editor shows duration as a built-in row, like notes.
+
+### ADR-022: Soft delete for user-owned entities, enforced in the data layer
+- **Status:** Accepted 2026-10-04 (owner decision; resolves ADR-P08)
+- **Decision:**
+  - User-owned entities (activity types, fields, logs; later plans, measurements, focus sessions) have `deleted_at`.
+  - Repositories exclude deleted rows by default through one shared query helper; callers can't forget the filter.
+  - Hot-path indexes are **partial** (`WHERE deleted_at IS NULL`), so tombstones don't cost reads.
+- **Context:** Undo, restore, future sync tombstones and historical integrity.
+- **Reason:** Safe deletion without losing referenced history.
+- **Consequences:**
+  - Child rows of an aggregate (`log_values`) are not tombstoned. They are replaced with the log on edit (hard-deleted when cleared) and cascade only on a physical purge (not done in V1).
+  - Historical reads (e.g. rendering a log whose field was removed) explicitly include deleted fields.
+  - Restore clears `deleted_at` and bumps `updated_at`.
+
+### ADR-023: Use-case naming, Verb + domain object/capability
+- **Status:** Accepted 2026-10-04 (owner decision; resolves ADR-P10)
+- **Decision:**
+  - Use cases are named for user/business intent: `CreateActivityType`, `UpdateActivityType`, `DeleteActivityType`, `LogActivity`, `UpdateActivityLog`, `WatchToday`, and so on.
+  - No `Manager`/`Handler`/`Processor`/`Service` names without a specific architectural reason.
+- **Context:** Names should state capability.
+- **Reason:** Readable, searchable application layer.
+- **Consequences:**
+  - Each use case is a small class with a single `call(...)` method (callable class). The owner's decision covered class names; `call` is the convention applied, recorded here.
+  - **All write operations** go through use cases (they enforce domain rules). Composite reads (e.g. `WatchToday`) are use cases. Simple single-repository reads may be watched directly through repository providers.
+
+### ADR-024: Phosphor icons via bundled official font + abstract icon registry
+- **Status:** Accepted 2026-10-04 (owner decision; resolves ADR-P13)
+- **Decision:**
+  - Phosphor is the single icon family.
+  - Integration: the **official Phosphor font files** (`Phosphor.ttf` regular, `Phosphor-Fill.ttf` fill) from Phosphor's own MIT-licensed `@phosphor-icons/web` 2.1.2 package, bundled as assets.
+  - A code **icon registry** maps stable `icon_id`s (e.g. `barbell`) to `const IconData`.
+  - SQLite stores only `icon_id`.
+- **Context:** Verified 2026-10-04:
+  - The official Flutter wrapper `phosphor_flutter` 2.1.0 (last release May 2024) **fails to compile on Flutter 3.47**: it subclasses `IconData`, which is now a `final` class. The analyzer passes, but the release compiler rejects it.
+  - The other Phosphor wrappers on pub.dev are unofficial and very new.
+- **Reason:** Official, MIT-licensed glyphs; no fragile wrapper dependency; the database stays independent of any icon library.
+- **Consequences:**
+  - Unknown/legacy `icon_id`s fall back to a neutral glyph.
+  - Adding an icon = registry entry (codepoint from Phosphor's `selection.json`/`style.css`).
+  - Release builds tree-shake both fonts to the glyphs used. Verified 2026-10-04: `Phosphor.ttf` went from 488 KB to 24.7 KB and `Phosphor-Fill.ttf` from 449 KB to 2.3 KB.
+  - Glyph constants, activity icon IDs and the registry are generated by `tool/generate_phosphor_glyphs.py`.
+  - The registry is the only place glyphs are referenced; replacing the library later changes only the registry.
+
+### ADR-025: Single application error model
+- **Status:** Accepted 2026-10-04 (owner decision; resolves ADR-P16)
+- **Decision:**
+  - Raw DB/platform error → repository translation → sealed `AppException` → use case → Riverpod `AsyncValue` → user-facing message.
+  - Categories:
+    - `ValidationException` (carries field issues)
+    - `NotFoundException`
+    - `StorageException`
+    - `MigrationException`
+    - `UnsupportedException`
+  - Each has a stable category, a safe message key mapped to localized copy in presentation, and optional debug context (never shown to users).
+- **Context:** Database exceptions must not leak into UI; messages must be human-readable.
+- **Reason:** One predictable error path.
+- **Consequences:**
+  - Domain validation returns a `ValidationResult` for live form feedback; use cases throw `ValidationException` when given invalid input.
+  - Trigger/constraint violations are translated to `ValidationException` (rule broken) or `StorageException`.
+  - Other categories are added only when justified.
+
+### ADR-026: Relational activity type/field schema with locked field semantics
+- **Status:** Accepted 2026-10-04 (owner decision; resolves ADR-P20)
+- **Decision:**
+  - `activity_types` has explicit columns: `internal_id`, `public_id`, `name`, `icon_id`, `color_key`, `description`, `supports_timer`, `supports_planning`, `sort_order`, timestamps.
+  - `activity_fields` has explicit columns: `internal_id`, `public_id`, `activity_type_id`, `name`, `field_type`, `dimension`, `position`, `required`, `measurable`, `config_json`, timestamps.
+  - `config_json` holds only field-type-specific configuration: numeric constraints, select options (with stable option IDs), rating scale, text presentation, default unit.
+  - No dynamic columns and no per-activity tables.
+  - All activity-engine tables are SQLite `STRICT` tables.
+- **Context:** Generic engine (ADR-006) with strong integrity and fast access.
+- **Reason:** Queryable metadata stays relational; flexible configuration stays in JSON.
+- **Consequences:** **Historical data safety is enforced by database triggers**, not only the domain:
+  - A field's `field_type`/`dimension` can't change once values exist.
+  - A field can't move to another activity type.
+  - A log's activity type can't change.
+  - A value's field must belong to its log's activity type and use the storage column of its field type.
+  - `public_id`s are immutable.
+
+  Violations surface as `ValidationException`. Every index has a documented query justification ([database.md §6](../architecture/database.md#6-indexes-and-query-plans)).
+
+### ADR-027: Repeating Groups are stored as relational rows
+- **Status:** Accepted 2026-10-04 (owner decision; resolves the ADR-019 sub-item). **Implemented in Phase 3.**
+- **Decision:** A Repeating Group's structure is relational:
+  - **Sub-fields are real `activity_fields` rows** with `parent_field_id` → the group field. Each has its own `public_id`, `field_type`, `dimension` and semantics lock.
+  - **Items are `log_group_items` rows:** `internal_id`, `public_id` (stable item ID), `log_id`, `field_id` (the group field), `parent_item_id` (nested groups), `position`, timestamps.
+  - **Item values are ordinary typed `log_values` rows** with `group_item_id` → their item.
+  - Nesting is limited to two levels (group → group), e.g. Gym: Exercises { Exercise: Text, Sets { Weight: Number (mass), Reps: Number } }.
+- **Context:** Workout sets and similar nested values feed Insights (max weight, volume, progression). ADR-019 requires keeping analytics out of JSON.
+- **Reason:**
+  - Nested values become typed, unit-normalized and indexable like any other value.
+  - Integrity is enforced by FKs and triggers.
+  - Item identity is stable for edits, reordering and future sync.
+- **Consequences:**
+  - The Phase 3 migration (schema **v3**):
+    - adds `activity_fields.parent_field_id`
+    - adds the `log_group_items` table
+    - rebuilds `log_values` (12-step pattern), because its table-level `UNIQUE (log_id, field_id)` becomes two partial unique indexes (top-level values vs item values) and it gains `group_item_id`
+  - Triggers are extended for parent/child consistency.
+  - Repeating Group fields have no `log_values` row of their own; their presence is their items.
+  - Plans move to schema v4 (Phase 4).
+  - Design: [database.md §3.10](../architecture/database.md#310-repeating-groups-designed-phase-3-adr-027), [data_architecture.md §5.3](../architecture/data_architecture.md#53-repeating-group-phase-3-adr-027).
+
+### ADR-028: Primary navigation, date-based Plan, Activities under Me, "Record" terminology
+- **Status:** Accepted 2026-10-04 (owner product decision; supersedes the spec's recommended navigation in §34 and the Track entry points in §36).
+- **Decision:**
+  - **Primary navigation: Today | Plan | Insights | Me.** Track is removed.
+  - **Plan** is the date-based planning system. A calendar/date selector navigates to any past, present or future date and shows that date's plans alongside what was actually recorded.
+  - **Today** is the specialized view of the current date: today's plan, today's reality, and their relationship.
+  - **Me → Activities** is where reusable Activity Types are created and configured (builder, templates). It's for setup, not daily recording.
+  - **Quick Record:** a global action, available from every tab, records an activity that wasn't planned.
+  - **Terminology:**
+    - "Record" is the user-facing action.
+    - Activity Log is the internal/domain name.
+    - Activity Type is the reusable definition.
+    - Plan is an intended activity/task for a date.
+    - Insights covers progress, measurements and patterns.
+- **Context:** Daily use is plan → do → record. Configuring activities is occasional, so it doesn't deserve a primary tab.
+- **Reason:** Navigation follows the core loop. Setup moves out of the way, and recording stays reachable everywhere.
+- **Consequences:**
+  - Routes: Me → `/me/activities`, `/me/activities/:typeId`. Plan stays at `/plan` and holds a selected-date state.
+  - The Plan tab's planned section fills in when plans are implemented (Phase 4). Its "Recorded" section for the selected date works now.
+  - Code keeps the domain names (`ActivityLog`, `LogActivity`). Only user-facing copy says "Record".
+
+### ADR-029: The app's colors come only from the activity palette
+- **Status:** Accepted 2026-10-04 (owner decision; partly resolves ADR-016's provisional values).
+- **Decision:**
+  - Apart from neutrals (canvas/surfaces, text, borders, scrims), every color in the app is one of the activity-palette colors (design_system.md §2.4).
+  - **Amendment (same day, owner):** `sand` is removed from the palette everywhere, leaving **nine** colors. Warning moves to apricot.
+  - Mapping:
+    - **brand = teal**
+    - **accent = apricot** (rating stars, highlights)
+    - **success = moss**
+    - **warning = apricot** (originally sand; see the amendment)
+    - **danger = rose**
+  - Each role uses that color's `solid` value, and its `soft` value for containers.
+- **Context:** The owner wants one cohesive color family across the product.
+- **Reason:** A single recognizable palette for activities, actions and status.
+- **Consequences:**
+  - The indigo brand and the separate status/accent colors are removed.
+  - Light-mode moss and apricot are under 4.5:1 against the canvas, so they're used **only as graphics** (icons, fills, accents) with readable text beside them. Rose (4.54:1) may carry error text, and teal carries white text at 4.59:1.
+  - `palette_consistency_test.dart` keeps the tokens identical to the palette, and `color_contrast_test.dart` enforces the contrast rules above.
+  - Neutrals stay provisional under ADR-016.
+  - Removing `sand` means a stored `color_key = 'sand'` renders with the `slate` fallback, and the builder asks for a new color on the next save. No migration is needed: the app is pre-release and no template used sand.
+
+---
+
+## Pending decisions
+
+Each needs owner approval. **Recommendation** is what the docs currently assume. Resolved entries are struck through and point to their accepted ADR.
+
+| ID | Topic | Recommendation | Alternatives | Why it matters now |
+|---|---|---|---|---|
+| ~~ADR-P01~~ | SQLite access library | **Resolved → ADR-011 (drift)** | | |
+| ~~ADR-P02~~ | Primary key format | **Resolved → ADR-017 (INTEGER internal key + UUIDv7 public ID)** | | |
+| ~~ADR-P03~~ | Time storage | **Resolved → ADR-013** | | |
+| ~~ADR-P04~~ | Plan schema | **Resolved → ADR-018** (sub-item: `planned_duration_ms` awaiting confirmation) | | |
+| ~~ADR-P05~~ | Structured values | **Resolved → ADR-019 + ADR-027** (relational Repeating Groups) | | |
+| ~~ADR-P06~~ | Units | **Resolved → ADR-020** | | |
+| ~~ADR-P07~~ | Duration semantics | **Resolved → ADR-021** | | |
+| ~~ADR-P08~~ | Soft delete | **Resolved → ADR-022** | | |
+| **ADR-P09** | Focus session model | Extend §30 table with `activity_type_id`, `plan_id`, `state`, `paused_at`; log created atomically on finish; one active session; timestamp-derived elapsed time | Create the log at session start (in-progress log); in-memory timer | Timer must survive process death; spec links session to a log that doesn't exist yet |
+| ~~ADR-P10~~ | Use-case naming | **Resolved → ADR-023** | | |
+| **ADR-P11** | Charts | **Custom `CustomPaint` chart primitives** (line, bar, sparkline): small V1 chart set, full control of identity and motion, no dependency | `fl_chart` wrapped behind shared components | Distinct visual identity vs build effort |
+| ~~ADR-P12~~ | Visual identity v0 | **Resolved → ADR-016 (provisional)** | | |
+| ~~ADR-P13~~ | Icon family | **Resolved → ADR-024 (Phosphor, bundled official font)** | | |
+| ~~ADR-P14~~ | Preferences storage | **Resolved → ADR-012 (SQLite, Option A)** | | |
+| **ADR-P15** | Search | V1: bounded `LIKE` queries over notes, `value_text` and `value_json`; adopt FTS5 if slow (requires bundled SQLite with FTS5, e.g. via `sqlite3_flutter_libs`) | FTS5 from day one | Search is V1? (FR-SH-01) |
+| ~~ADR-P16~~ | Error handling | **Resolved → ADR-025** | | |
+| **ADR-P17** | Animation tooling | Native Flutter animation APIs (implicit/explicit animations, `AnimatedSwitcher`, page transitions); add `flutter_animate` only if it materially reduces complexity; `animations` package for container transform is acceptable | `flutter_animate` everywhere; Rive/Lottie for illustrations | Dependency discipline |
+| **ADR-P18** | Draft persistence for long logs | Persist in-progress log drafts (e.g. a gym session) so backgrounding/kill doesn't lose input: either a `log_drafts` table (JSON of the form) or saving the log early with `ended_at = NULL` | Memory only (risk of data loss) | §43 gym flow lasts ~1 hour |
+| ~~ADR-P19~~ | Localization infrastructure | **Resolved → ADR-015** | | |
+| ~~ADR-P20~~ | Activity type/field schema | **Resolved → ADR-026** | | |
+| **ADR-P21** | Numeric font with tabular figures | Found in Phase 1: neither bundled font (Fraunces, DM Sans variable builds) has `tnum`. **Recommendation: bundle DM Mono (OFL, same design family as DM Sans) for the `numeric*` tokens only**, after an on-device look at the timer size. Alternatives: (b) a different UI family whose build is verified to include `tnum`; (c) keep proportional digits and accept timer jitter | (b), (c) | Must be decided before Phase 5 (focus timer); affects ADR-016 values only |
+
+### Defaults applied at scaffold (owner did not object at the 2026-10-03 gate; revisit before release)
+
+| Topic | Default | Where |
+|---|---|---|
+| Flutter / Dart | Stable channel at scaffold time, pinned in `pubspec.yaml` `environment` | [development_guide.md §2](../development/development_guide.md#2-environment) |
+| Android minimum SDK | API 26 | `android/app/build.gradle.kts` |
+| iOS deployment target | Flutter default | `ios/` |
+| Lints | `flutter_lints` + strict analyzer modes | `analysis_options.yaml` |
+| Phase 1 icons | Flutter's built-in rounded Material icons; replaced by Phosphor in Phase 2 (ADR-024) | `lib/core/design/` |
+| State class suffix | `Notifier` | [coding_standards.md §2](../development/coding_standards.md#2-naming) |
+
+### Decisions explicitly *not* made (intentionally deferred)
+
+- Final product name and app icon (identifiers are fixed by ADR-010).
+- CI provider.
+- Whether to add a foreground service/ongoing notification for focus (OQ-13).
+- Export file format details (OQ-03).
+- Anything about future backend technology (see [future_sync.md](../architecture/future_sync.md)).

@@ -1,0 +1,780 @@
+{
+  "@@locale": "en",
+  "appTitle": "OurApp",
+  "@appTitle": {
+    "description": "Temporary visible product name. The real name is undecided (ADR-010). Change together with Android strings.xml and iOS Info.plist."
+  },
+  "navToday": "Today",
+  "@navToday": {
+    "description": "Primary navigation tab: today's plan and timeline."
+  },
+  "navPlan": "Plan",
+  "@navPlan": {
+    "description": "Primary navigation tab: planning for future days."
+  },
+  "navInsights": "Insights",
+  "@navInsights": {
+    "description": "Primary navigation tab: graphs and history."
+  },
+  "navMe": "Me",
+  "@navMe": {
+    "description": "Primary navigation tab: body measurements, preferences, settings."
+  },
+  "todayPlaceholder": "Your plan for today and what actually happened will appear here.",
+  "@todayPlaceholder": {
+    "description": "Placeholder message on the Today tab until the feature is built."
+  },
+  "trackPlaceholder": "The activities you track will appear here.",
+  "@trackPlaceholder": {
+    "description": "Placeholder message on the Track tab until the feature is built."
+  },
+  "insightsPlaceholder": "Your progress over time will appear here.",
+  "@insightsPlaceholder": {
+    "description": "Placeholder message on the Insights tab until the feature is built."
+  },
+  "mePlaceholder": "Body measurements and preferences will appear here.",
+  "@mePlaceholder": {
+    "description": "Placeholder message on the Me tab until the feature is built."
+  },
+  "onboardingTitle": "Welcome",
+  "@onboardingTitle": {
+    "description": "Title of the first-run screen (placeholder for the full onboarding)."
+  },
+  "onboardingBody": "Plan your day, record what you actually do, and see your progress over time. Your data stays on this device.",
+  "@onboardingBody": {
+    "description": "Short first-run explanation, based on the product definition and privacy promise."
+  },
+  "onboardingStart": "Get started",
+  "@onboardingStart": {
+    "description": "Button that finishes the first-run screen."
+  },
+  "startupFailureTitle": "We couldn't open your data",
+  "@startupFailureTitle": {
+    "description": "Title shown when the local database fails to open."
+  },
+  "startupFailureBody": "Nothing has been changed or deleted. Please try again. If this keeps happening, restart the app.",
+  "@startupFailureBody": {
+    "description": "Explanation shown when the local database fails to open."
+  },
+  "startupFailureRetry": "Try again",
+  "@startupFailureRetry": {
+    "description": "Button to retry opening the local database."
+  },
+  "actionSave": "Save",
+  "@actionSave": {
+    "description": "Button: save the current form."
+  },
+  "actionCancel": "Cancel",
+  "@actionCancel": {
+    "description": "Button: cancel and close."
+  },
+  "actionUndo": "Undo",
+  "@actionUndo": {
+    "description": "Snackbar action that reverses the last change."
+  },
+  "actionEdit": "Edit",
+  "@actionEdit": {
+    "description": "Button/tooltip: edit."
+  },
+  "actionDelete": "Delete",
+  "@actionDelete": {
+    "description": "Button/tooltip: delete."
+  },
+  "actionClear": "Clear",
+  "@actionClear": {
+    "description": "Button: remove the current value."
+  },
+  "actionTryAgain": "Try again",
+  "@actionTryAgain": {
+    "description": "Button: retry after an error."
+  },
+  "actionDiscard": "Discard",
+  "@actionDiscard": {
+    "description": "Button: discard unsaved changes."
+  },
+  "actionKeepEditing": "Keep editing",
+  "@actionKeepEditing": {
+    "description": "Button: return to the form without discarding."
+  },
+  "discardChangesTitle": "Discard your changes?",
+  "@discardChangesTitle": {
+    "description": "Dialog title when leaving a form with unsaved changes."
+  },
+  "discardChangesMessage": "What you've entered here hasn't been saved.",
+  "@discardChangesMessage": {
+    "description": "Dialog message when leaving a form with unsaved changes."
+  },
+  "notSet": "Not set",
+  "@notSet": {
+    "description": "Shown when an optional value is empty."
+  },
+  "newActivity": "New activity",
+  "@newActivity": {
+    "description": "Button: create a new activity type."
+  },
+  "fromTemplate": "Start from a template",
+  "@fromTemplate": {
+    "description": "Button: create an activity type from a starter template."
+  },
+  "activityFieldCount": "{count, plural, =0{No extra fields} =1{1 field} other{{count} fields}}",
+  "@activityFieldCount": {
+    "description": "Number of fields on an activity type.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "activityArchived": "{name} deleted",
+  "@activityArchived": {
+    "description": "Snackbar after deleting an activity type.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "recentEntries": "Recent records",
+  "@recentEntries": {
+    "description": "Section title for the latest logs of an activity."
+  },
+  "noEntriesYet": "Nothing recorded yet. Record it to start this history.",
+  "@noEntriesYet": {
+    "description": "Empty state for an activity with no logs."
+  },
+  "builderNewTitle": "New activity",
+  "@builderNewTitle": {
+    "description": "Builder title when creating."
+  },
+  "builderEditTitle": "Edit activity",
+  "@builderEditTitle": {
+    "description": "Builder title when editing."
+  },
+  "activityNameLabel": "Name",
+  "@activityNameLabel": {
+    "description": "Activity name field label."
+  },
+  "activityNameHint": "e.g. Reading",
+  "@activityNameHint": {
+    "description": "Activity name field hint."
+  },
+  "activityDescriptionLabel": "Description (optional)",
+  "@activityDescriptionLabel": {
+    "description": "Activity description field label."
+  },
+  "iconLabel": "Icon",
+  "@iconLabel": {
+    "description": "Section label for the icon picker."
+  },
+  "colorLabel": "Color",
+  "@colorLabel": {
+    "description": "Section label for the color picker."
+  },
+  "fieldsSectionTitle": "What do you want to record?",
+  "@fieldsSectionTitle": {
+    "description": "Section title for the list of fields."
+  },
+  "fieldsSectionHint": "Every entry already records when it happened, how long it took, and notes.",
+  "@fieldsSectionHint": {
+    "description": "Explains the built-in properties of every log."
+  },
+  "addField": "Add field",
+  "@addField": {
+    "description": "Button: add a field to the activity."
+  },
+  "optionsSectionTitle": "Options",
+  "@optionsSectionTitle": {
+    "description": "Section title for activity behavior toggles."
+  },
+  "supportsTimerLabel": "Can be timed",
+  "@supportsTimerLabel": {
+    "description": "Toggle: the activity supports a timer."
+  },
+  "supportsTimerHint": "Use a timer to record how long it took.",
+  "@supportsTimerHint": {
+    "description": "Explanation for the timer toggle."
+  },
+  "supportsPlanningLabel": "Can be planned",
+  "@supportsPlanningLabel": {
+    "description": "Toggle: the activity can be added to plans."
+  },
+  "previewSectionTitle": "Preview",
+  "@previewSectionTitle": {
+    "description": "Section title for the live form preview."
+  },
+  "requiredBadge": "Required",
+  "@requiredBadge": {
+    "description": "Badge on a required field."
+  },
+  "lockedFieldHint": "This field already has entries, so its type can't change.",
+  "@lockedFieldHint": {
+    "description": "Shown when a field type is locked."
+  },
+  "fieldRemoved": "{name} (removed)",
+  "@fieldRemoved": {
+    "description": "Label of a field that was removed from the activity but has historical values.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fieldTypePickerTitle": "Choose a field type",
+  "@fieldTypePickerTitle": {
+    "description": "Title of the field type picker."
+  },
+  "fieldTypeText": "Text",
+  "@fieldTypeText": {
+    "description": "Field type name: Text."
+  },
+  "fieldTypeTextDescription": "Words, a short note or a long description",
+  "@fieldTypeTextDescription": {
+    "description": "Field type description for Text."
+  },
+  "fieldTypeNumber": "Number",
+  "@fieldTypeNumber": {
+    "description": "Field type name: Number."
+  },
+  "fieldTypeNumberDescription": "Counts or amounts, optionally with a unit like kg or km",
+  "@fieldTypeNumberDescription": {
+    "description": "Field type description for Number."
+  },
+  "fieldTypeBoolean": "Yes / No",
+  "@fieldTypeBoolean": {
+    "description": "Field type name: Yes / No."
+  },
+  "fieldTypeBooleanDescription": "Something that did or didn't happen",
+  "@fieldTypeBooleanDescription": {
+    "description": "Field type description for Yes / No."
+  },
+  "fieldTypeSingleSelect": "Single choice",
+  "@fieldTypeSingleSelect": {
+    "description": "Field type name: Single choice."
+  },
+  "fieldTypeSingleSelectDescription": "Pick one option from your list",
+  "@fieldTypeSingleSelectDescription": {
+    "description": "Field type description for Single choice."
+  },
+  "fieldTypeMultiSelect": "Multiple choice",
+  "@fieldTypeMultiSelect": {
+    "description": "Field type name: Multiple choice."
+  },
+  "fieldTypeMultiSelectDescription": "Pick any options from your list",
+  "@fieldTypeMultiSelectDescription": {
+    "description": "Field type description for Multiple choice."
+  },
+  "fieldTypeDate": "Date",
+  "@fieldTypeDate": {
+    "description": "Field type name: Date."
+  },
+  "fieldTypeDateDescription": "A calendar date",
+  "@fieldTypeDateDescription": {
+    "description": "Field type description for Date."
+  },
+  "fieldTypeTime": "Time",
+  "@fieldTypeTime": {
+    "description": "Field type name: Time."
+  },
+  "fieldTypeTimeDescription": "A time of day",
+  "@fieldTypeTimeDescription": {
+    "description": "Field type description for Time."
+  },
+  "fieldTypeDuration": "Duration",
+  "@fieldTypeDuration": {
+    "description": "Field type name: Duration."
+  },
+  "fieldTypeDurationDescription": "An amount of time, like rest or practice time",
+  "@fieldTypeDurationDescription": {
+    "description": "Field type description for Duration."
+  },
+  "fieldTypeRating": "Rating",
+  "@fieldTypeRating": {
+    "description": "Field type name: Rating."
+  },
+  "fieldTypeRatingDescription": "Stars on a scale you choose",
+  "@fieldTypeRatingDescription": {
+    "description": "Field type description for Rating."
+  },
+  "fieldTypeRepeatingGroup": "Repeating group",
+  "@fieldTypeRepeatingGroup": {
+    "description": "Field type name: Repeating group."
+  },
+  "fieldTypeRepeatingGroupDescription": "A list of items, like exercises or sets",
+  "@fieldTypeRepeatingGroupDescription": {
+    "description": "Field type description for Repeating group."
+  },
+  "availableLater": "Coming soon",
+  "@availableLater": {
+    "description": "Badge on a field type that is not available yet."
+  },
+  "fieldEditorNewTitle": "New field",
+  "@fieldEditorNewTitle": {
+    "description": "Field editor title when adding."
+  },
+  "fieldEditorEditTitle": "Edit field",
+  "@fieldEditorEditTitle": {
+    "description": "Field editor title when editing."
+  },
+  "fieldNameLabel": "Field name",
+  "@fieldNameLabel": {
+    "description": "Field name input label."
+  },
+  "requiredLabel": "Required",
+  "@requiredLabel": {
+    "description": "Toggle: field must be filled in."
+  },
+  "measurableLabel": "Show in insights",
+  "@measurableLabel": {
+    "description": "Toggle: field values feed insights."
+  },
+  "multilineLabel": "Multiple lines",
+  "@multilineLabel": {
+    "description": "Toggle: text field allows several lines."
+  },
+  "decimalsLabel": "Decimal places",
+  "@decimalsLabel": {
+    "description": "Number field decimals setting."
+  },
+  "minimumLabel": "Minimum",
+  "@minimumLabel": {
+    "description": "Number field minimum."
+  },
+  "maximumLabel": "Maximum",
+  "@maximumLabel": {
+    "description": "Number field maximum."
+  },
+  "unitDimensionLabel": "Measured in",
+  "@unitDimensionLabel": {
+    "description": "Number field: what kind of unit it uses."
+  },
+  "unitNone": "No unit",
+  "@unitNone": {
+    "description": "Number field without a unit."
+  },
+  "dimensionMass": "Weight",
+  "@dimensionMass": {
+    "description": "Unit dimension name: Weight."
+  },
+  "dimensionDistance": "Distance",
+  "@dimensionDistance": {
+    "description": "Unit dimension name: Distance."
+  },
+  "dimensionVolume": "Volume",
+  "@dimensionVolume": {
+    "description": "Unit dimension name: Volume."
+  },
+  "dimensionTemperature": "Temperature",
+  "@dimensionTemperature": {
+    "description": "Unit dimension name: Temperature."
+  },
+  "dimensionEnergy": "Energy",
+  "@dimensionEnergy": {
+    "description": "Unit dimension name: Energy."
+  },
+  "defaultUnitLabel": "Default unit",
+  "@defaultUnitLabel": {
+    "description": "Number field default unit."
+  },
+  "optionsLabel": "Options",
+  "@optionsLabel": {
+    "description": "Select field options list."
+  },
+  "addOption": "Add option",
+  "@addOption": {
+    "description": "Button: add a select option."
+  },
+  "optionHint": "Option name",
+  "@optionHint": {
+    "description": "Hint for a select option input."
+  },
+  "ratingScaleLabel": "Scale",
+  "@ratingScaleLabel": {
+    "description": "Rating field maximum stars."
+  },
+  "removeField": "Remove field",
+  "@removeField": {
+    "description": "Button: remove the field from the activity."
+  },
+  "doneAction": "Done",
+  "@doneAction": {
+    "description": "Button: confirm and close a sheet."
+  },
+  "whenLabel": "When",
+  "@whenLabel": {
+    "description": "Log start date/time label."
+  },
+  "durationLabel": "Duration",
+  "@durationLabel": {
+    "description": "Log duration label."
+  },
+  "hoursShort": "h",
+  "@hoursShort": {
+    "description": "Abbreviation for hours in duration inputs."
+  },
+  "minutesShort": "min",
+  "@minutesShort": {
+    "description": "Abbreviation for minutes in duration inputs."
+  },
+  "notesLabel": "Notes",
+  "@notesLabel": {
+    "description": "Log notes label."
+  },
+  "durationHoursMinutes": "{hours}h {minutes}m",
+  "@durationHoursMinutes": {
+    "description": "Duration of at least an hour.",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "durationMinutes": "{minutes} min",
+  "@durationMinutes": {
+    "description": "Duration under an hour.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "booleanYes": "Yes",
+  "@booleanYes": {
+    "description": "Boolean value true."
+  },
+  "booleanNo": "No",
+  "@booleanNo": {
+    "description": "Boolean value false."
+  },
+  "repeatingGroupUnavailable": "Repeating groups arrive in a later update.",
+  "@repeatingGroupUnavailable": {
+    "description": "Placeholder for an unsupported field type."
+  },
+  "templatesTitle": "Start from a template",
+  "@templatesTitle": {
+    "description": "Template picker title."
+  },
+  "templatesSubtitle": "Templates are just a starting point. You can change everything afterwards.",
+  "@templatesSubtitle": {
+    "description": "Template picker subtitle."
+  },
+  "templateReading": "Reading",
+  "@templateReading": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateReadingBook": "Book",
+  "@templateReadingBook": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateReadingPages": "Pages",
+  "@templateReadingPages": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateReadingRating": "Rating",
+  "@templateReadingRating": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateFocusedWork": "Focused work",
+  "@templateFocusedWork": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateFocusedWorkProject": "Project",
+  "@templateFocusedWorkProject": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateWalking": "Walking",
+  "@templateWalking": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateWalkingDistance": "Distance",
+  "@templateWalkingDistance": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateWalkingSteps": "Steps",
+  "@templateWalkingSteps": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateWalkingCalories": "Calories",
+  "@templateWalkingCalories": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateWalkingLocation": "Location",
+  "@templateWalkingLocation": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateLanguage": "Language learning",
+  "@templateLanguage": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateLanguageLanguage": "Language",
+  "@templateLanguageLanguage": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateLanguageWords": "Words learned",
+  "@templateLanguageWords": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateLanguageLesson": "Lesson",
+  "@templateLanguageLesson": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateLanguageDifficulty": "Difficulty",
+  "@templateLanguageDifficulty": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateLanguageSpanish": "Spanish",
+  "@templateLanguageSpanish": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateLanguageFrench": "French",
+  "@templateLanguageFrench": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateLanguageGerman": "German",
+  "@templateLanguageGerman": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateLanguageJapanese": "Japanese",
+  "@templateLanguageJapanese": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "errorGeneric": "Something went wrong. Please try again.",
+  "@errorGeneric": {
+    "description": "Generic error message."
+  },
+  "errorStorage": "Couldn't save your changes. Nothing was lost; please try again.",
+  "@errorStorage": {
+    "description": "Storage error message."
+  },
+  "errorNotFound": "This item no longer exists.",
+  "@errorNotFound": {
+    "description": "Not-found error message."
+  },
+  "errorUnsupported": "This was created by a newer version of the app.",
+  "@errorUnsupported": {
+    "description": "Unsupported-data error message."
+  },
+  "errorValidation": "Some details need attention.",
+  "@errorValidation": {
+    "description": "Shown when a form has validation issues."
+  },
+  "loadErrorMessage": "We couldn't load this. Please try again.",
+  "@loadErrorMessage": {
+    "description": "Shown when a screen fails to load."
+  },
+  "validationRequired": "This is required.",
+  "@validationRequired": {
+    "description": "Validation message."
+  },
+  "validationNameRequired": "Please enter a name.",
+  "@validationNameRequired": {
+    "description": "Validation message."
+  },
+  "validationNameTooLong": "That name is too long.",
+  "@validationNameTooLong": {
+    "description": "Validation message."
+  },
+  "validationDuplicateFieldName": "Another field already has this name.",
+  "@validationDuplicateFieldName": {
+    "description": "Validation message."
+  },
+  "validationUnknownIcon": "Please choose an icon.",
+  "@validationUnknownIcon": {
+    "description": "Validation message."
+  },
+  "validationUnknownColor": "Please choose a color.",
+  "@validationUnknownColor": {
+    "description": "Validation message."
+  },
+  "validationTextTooLong": "This is too long.",
+  "@validationTextTooLong": {
+    "description": "Validation message."
+  },
+  "validationNotANumber": "Please enter a number.",
+  "@validationNotANumber": {
+    "description": "Validation message."
+  },
+  "validationBelowMinimum": "This is below the minimum.",
+  "@validationBelowMinimum": {
+    "description": "Validation message."
+  },
+  "validationAboveMaximum": "This is above the maximum.",
+  "@validationAboveMaximum": {
+    "description": "Validation message."
+  },
+  "validationTooManyDecimals": "Too many decimal places.",
+  "@validationTooManyDecimals": {
+    "description": "Validation message."
+  },
+  "validationUnitRequired": "Please choose a unit.",
+  "@validationUnitRequired": {
+    "description": "Validation message."
+  },
+  "validationUnitNotAllowed": "This field doesn't use units.",
+  "@validationUnitNotAllowed": {
+    "description": "Validation message."
+  },
+  "validationUnknownOption": "That option doesn't exist anymore.",
+  "@validationUnknownOption": {
+    "description": "Validation message."
+  },
+  "validationArchivedOption": "That option has been retired.",
+  "@validationArchivedOption": {
+    "description": "Validation message."
+  },
+  "validationDuplicateOption": "Options need different names.",
+  "@validationDuplicateOption": {
+    "description": "Validation message."
+  },
+  "validationOptionLabelRequired": "Options need a name.",
+  "@validationOptionLabelRequired": {
+    "description": "Validation message."
+  },
+  "validationOptionsRequired": "Add at least one option.",
+  "@validationOptionsRequired": {
+    "description": "Validation message."
+  },
+  "validationRatingOutOfRange": "Choose a rating on the scale.",
+  "@validationRatingOutOfRange": {
+    "description": "Validation message."
+  },
+  "validationInvalidRatingScale": "The scale must be between 3 and 10.",
+  "@validationInvalidRatingScale": {
+    "description": "Validation message."
+  },
+  "validationInvalidMinMax": "The minimum must not be more than the maximum.",
+  "@validationInvalidMinMax": {
+    "description": "Validation message."
+  },
+  "validationNegativeDuration": "Duration can't be negative.",
+  "@validationNegativeDuration": {
+    "description": "Validation message."
+  },
+  "validationDurationExceedsElapsed": "Duration can't be longer than the time between start and end.",
+  "@validationDurationExceedsElapsed": {
+    "description": "Validation message."
+  },
+  "validationEndBeforeStart": "The end can't be before the start.",
+  "@validationEndBeforeStart": {
+    "description": "Validation message."
+  },
+  "validationFieldSemanticsLocked": "This field has entries, so its type can't change. Add a new field instead.",
+  "@validationFieldSemanticsLocked": {
+    "description": "Validation message."
+  },
+  "validationFieldTypeNotSupportedYet": "This field type isn't available yet.",
+  "@validationFieldTypeNotSupportedYet": {
+    "description": "Validation message."
+  },
+  "validationInvalidDate": "Please choose a valid date.",
+  "@validationInvalidDate": {
+    "description": "Validation message."
+  },
+  "validationInvalidTime": "Please choose a valid time.",
+  "@validationInvalidTime": {
+    "description": "Validation message."
+  },
+  "validationUnknownField": "This field is no longer part of the activity.",
+  "@validationUnknownField": {
+    "description": "Validation message."
+  },
+  "validationValueTypeMismatch": "This value doesn't fit the field.",
+  "@validationValueTypeMismatch": {
+    "description": "Validation message."
+  },
+  "actionRecord": "Record",
+  "@actionRecord": {
+    "description": "User-facing action for recording what actually happened (ADR-028)."
+  },
+  "recordNewTitle": "Record {name}",
+  "@recordNewTitle": {
+    "description": "Record form title when creating.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "recordEditTitle": "Edit record",
+  "@recordEditTitle": {
+    "description": "Record form title when editing."
+  },
+  "recordSaved": "Saved",
+  "@recordSaved": {
+    "description": "Snackbar after saving a record."
+  },
+  "recordDeleted": "Record deleted",
+  "@recordDeleted": {
+    "description": "Snackbar after deleting a record."
+  },
+  "activitiesTitle": "Activities",
+  "@activitiesTitle": {
+    "description": "Title of the activity management screen under Me."
+  },
+  "activitiesSubtitle": "The reusable activities you plan and record.",
+  "@activitiesSubtitle": {
+    "description": "Subtitle of the Activities screen."
+  },
+  "activitiesEmptyTitle": "No activities yet",
+  "@activitiesEmptyTitle": {
+    "description": "Empty state title on the Activities screen."
+  },
+  "activitiesEmptyMessage": "Build an activity that records exactly what matters to you, or start from a template.",
+  "@activitiesEmptyMessage": {
+    "description": "Empty state message on the Activities screen."
+  },
+  "meActivitiesSubtitle": "Create and configure what you record",
+  "@meActivitiesSubtitle": {
+    "description": "Subtitle of the Activities entry on the Me tab."
+  },
+  "quickRecordTitle": "What did you do?",
+  "@quickRecordTitle": {
+    "description": "Title of the Quick Record sheet."
+  },
+  "quickRecordEmpty": "Create an activity first, then record it here.",
+  "@quickRecordEmpty": {
+    "description": "Quick Record sheet when there are no activities."
+  },
+  "planToday": "Today",
+  "@planToday": {
+    "description": "Relative date label / button to jump to today."
+  },
+  "planTomorrow": "Tomorrow",
+  "@planTomorrow": {
+    "description": "Relative date label."
+  },
+  "planYesterday": "Yesterday",
+  "@planYesterday": {
+    "description": "Relative date label."
+  },
+  "planChooseDate": "Choose a date",
+  "@planChooseDate": {
+    "description": "Tooltip for the calendar button on the Plan tab."
+  },
+  "planPreviousWeek": "Previous week",
+  "@planPreviousWeek": {
+    "description": "Tooltip for the previous-week button."
+  },
+  "planNextWeek": "Next week",
+  "@planNextWeek": {
+    "description": "Tooltip for the next-week button."
+  },
+  "planPlannedSection": "Planned",
+  "@planPlannedSection": {
+    "description": "Section title for a date's plans."
+  },
+  "planPlannedEmpty": "Nothing planned for this day.",
+  "@planPlannedEmpty": {
+    "description": "Shown when a date has no plans."
+  },
+  "planRecordedSection": "Recorded",
+  "@planRecordedSection": {
+    "description": "Section title for what was actually recorded on a date."
+  },
+  "planRecordedEmpty": "Nothing recorded on this day.",
+  "@planRecordedEmpty": {
+    "description": "Shown when nothing was recorded on a past/current date."
+  }
+}

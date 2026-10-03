@@ -1,0 +1,183 @@
+-- Activity engine schema, v2 (docs/architecture/database.md §3.2–3.6).
+-- ADR-017 (identity), ADR-019 (typed values), ADR-020 (units), ADR-021
+-- (durations), ADR-022 (soft delete), ADR-026 (relational schema, triggers).
+-- Keep database.md in sync with every change here.
+
+CREATE TABLE activity_types (
+  internal_id       INTEGER NOT NULL PRIMARY KEY,
+  public_id         TEXT NOT NULL UNIQUE CHECK (length(public_id) = 36),
+  name              TEXT NOT NULL CHECK (length(trim(name)) > 0),
+  icon_id           TEXT NOT NULL CHECK (length(icon_id) > 0),
+  color_key         TEXT NOT NULL CHECK (length(color_key) > 0),
+  description       TEXT,
+  supports_timer    INTEGER NOT NULL DEFAULT 0 CHECK (supports_timer IN (0, 1)),
+  supports_planning INTEGER NOT NULL DEFAULT 1 CHECK (supports_planning IN (0, 1)),
+  sort_order        INTEGER NOT NULL DEFAULT 0,
+  created_at        INTEGER NOT NULL,
+  updated_at        INTEGER NOT NULL,
+  deleted_at        INTEGER
+) STRICT AS ActivityTypeRow;
+
+CREATE TABLE activity_fields (
+  internal_id      INTEGER NOT NULL PRIMARY KEY,
+  public_id        TEXT NOT NULL UNIQUE CHECK (length(public_id) = 36),
+  activity_type_id INTEGER NOT NULL REFERENCES activity_types (internal_id) ON DELETE RESTRICT,
+  name             TEXT NOT NULL CHECK (length(trim(name)) > 0),
+  field_type       TEXT NOT NULL CHECK (field_type IN (
+                     'text', 'number', 'boolean', 'single_select', 'multi_select',
+                     'date', 'time', 'duration', 'rating', 'repeating_group')),
+  dimension        TEXT CHECK (dimension IS NULL OR field_type = 'number'),
+  position         INTEGER NOT NULL CHECK (position >= 0),
+  required         INTEGER NOT NULL DEFAULT 0 CHECK (required IN (0, 1)),
+  measurable       INTEGER NOT NULL DEFAULT 0 CHECK (measurable IN (0, 1)),
+  config_json      TEXT NOT NULL DEFAULT '{}' CHECK (json_valid(config_json)),
+  created_at       INTEGER NOT NULL,
+  updated_at       INTEGER NOT NULL,
+  deleted_at       INTEGER,
+  CHECK (measurable = 0 OR field_type IN ('number', 'rating', 'duration', 'boolean'))
+) STRICT AS ActivityFieldRow;
+
+-- Ordered fields of a type (renderer/builder; includes removed fields for history).
+CREATE INDEX idx_activity_fields_type_position ON activity_fields (activity_type_id, position);
+
+CREATE TABLE activity_logs (
+  internal_id       INTEGER NOT NULL PRIMARY KEY,
+  public_id         TEXT NOT NULL UNIQUE CHECK (length(public_id) = 36),
+  activity_type_id  INTEGER NOT NULL REFERENCES activity_types (internal_id) ON DELETE RESTRICT,
+  started_at        INTEGER NOT NULL,
+  ended_at          INTEGER,
+  duration_ms       INTEGER CHECK (duration_ms IS NULL OR duration_ms >= 0),
+  tz_offset_minutes INTEGER NOT NULL CHECK (tz_offset_minutes BETWEEN -1080 AND 1080),
+  local_date        TEXT NOT NULL CHECK (local_date GLOB '[0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]'),
+  notes             TEXT,
+  created_at        INTEGER NOT NULL,
+  updated_at        INTEGER NOT NULL,
+  deleted_at        INTEGER,
+  CHECK (ended_at IS NULL OR ended_at >= started_at),
+  CHECK (duration_ms IS NULL OR ended_at IS NULL OR duration_ms <= ended_at - started_at)
+) STRICT AS ActivityLogRow;
+
+-- Today / logs for a date, in time order.
+CREATE INDEX idx_activity_logs_day
+  ON activity_logs (local_date, started_at) WHERE deleted_at IS NULL;
+-- Activity history (newest first) and analytics ranges per type.
+CREATE INDEX idx_activity_logs_type_day
+  ON activity_logs (activity_type_id, local_date, started_at) WHERE deleted_at IS NULL;
+
+CREATE TABLE log_values (
+  internal_id      INTEGER NOT NULL PRIMARY KEY,
+  log_id           INTEGER NOT NULL REFERENCES activity_logs (internal_id) ON DELETE CASCADE,
+  field_id         INTEGER NOT NULL REFERENCES activity_fields (internal_id) ON DELETE RESTRICT,
+  text_value       TEXT,
+  number_value     REAL,
+  unit_code        TEXT,
+  normalized_value REAL,
+  boolean_value    INTEGER CHECK (boolean_value IS NULL OR boolean_value IN (0, 1)),
+  date_value       TEXT CHECK (date_value IS NULL OR date_value GLOB '[0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]'),
+  time_value       INTEGER CHECK (time_value IS NULL OR time_value BETWEEN 0 AND 1439),
+  duration_ms      INTEGER CHECK (duration_ms IS NULL OR duration_ms >= 0),
+  json_value       TEXT CHECK (json_value IS NULL OR json_valid(json_value)),
+  created_at       INTEGER NOT NULL,
+  updated_at       INTEGER NOT NULL,
+  UNIQUE (log_id, field_id),
+  CHECK ((text_value IS NOT NULL) + (number_value IS NOT NULL) + (boolean_value IS NOT NULL)
+       + (date_value IS NOT NULL) + (time_value IS NOT NULL) + (duration_ms IS NOT NULL)
+       + (json_value IS NOT NULL) = 1),
+  CHECK ((number_value IS NULL) = (normalized_value IS NULL)),
+  CHECK (unit_code IS NULL OR number_value IS NOT NULL)
+) STRICT AS LogValueRow;
+
+-- Historical values for a field; also backs the semantics-lock EXISTS check.
+CREATE INDEX idx_log_values_field_normalized ON log_values (field_id, normalized_value);
+
+-- Historical-integrity triggers (ADR-026). Error codes are translated to
+-- ValidationException by the data layer (core/database/sqlite_error_translator.dart).
+
+CREATE TRIGGER trg_log_values_insert_check BEFORE INSERT ON log_values
+BEGIN
+  SELECT RAISE(ABORT, 'log_value_field_not_in_log_type')
+  WHERE (SELECT activity_type_id FROM activity_fields WHERE internal_id = NEW.field_id)
+        IS NOT (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id);
+  SELECT RAISE(ABORT, 'log_value_column_mismatch')
+  WHERE NOT COALESCE((
+    SELECT CASE f.field_type
+      WHEN 'text' THEN NEW.text_value IS NOT NULL
+      WHEN 'single_select' THEN NEW.text_value IS NOT NULL
+      WHEN 'number' THEN NEW.number_value IS NOT NULL AND ((NEW.unit_code IS NULL) = (f.dimension IS NULL))
+      WHEN 'rating' THEN NEW.number_value IS NOT NULL AND NEW.unit_code IS NULL
+      WHEN 'boolean' THEN NEW.boolean_value IS NOT NULL
+      WHEN 'date' THEN NEW.date_value IS NOT NULL
+      WHEN 'time' THEN NEW.time_value IS NOT NULL
+      WHEN 'duration' THEN NEW.duration_ms IS NOT NULL
+      WHEN 'multi_select' THEN NEW.json_value IS NOT NULL
+      WHEN 'repeating_group' THEN NEW.json_value IS NOT NULL
+      ELSE 0
+    END
+    FROM activity_fields f WHERE f.internal_id = NEW.field_id), 0);
+END;
+
+CREATE TRIGGER trg_log_values_update_check BEFORE UPDATE ON log_values
+BEGIN
+  SELECT RAISE(ABORT, 'log_value_field_not_in_log_type')
+  WHERE (SELECT activity_type_id FROM activity_fields WHERE internal_id = NEW.field_id)
+        IS NOT (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id);
+  SELECT RAISE(ABORT, 'log_value_column_mismatch')
+  WHERE NOT COALESCE((
+    SELECT CASE f.field_type
+      WHEN 'text' THEN NEW.text_value IS NOT NULL
+      WHEN 'single_select' THEN NEW.text_value IS NOT NULL
+      WHEN 'number' THEN NEW.number_value IS NOT NULL AND ((NEW.unit_code IS NULL) = (f.dimension IS NULL))
+      WHEN 'rating' THEN NEW.number_value IS NOT NULL AND NEW.unit_code IS NULL
+      WHEN 'boolean' THEN NEW.boolean_value IS NOT NULL
+      WHEN 'date' THEN NEW.date_value IS NOT NULL
+      WHEN 'time' THEN NEW.time_value IS NOT NULL
+      WHEN 'duration' THEN NEW.duration_ms IS NOT NULL
+      WHEN 'multi_select' THEN NEW.json_value IS NOT NULL
+      WHEN 'repeating_group' THEN NEW.json_value IS NOT NULL
+      ELSE 0
+    END
+    FROM activity_fields f WHERE f.internal_id = NEW.field_id), 0);
+END;
+
+CREATE TRIGGER trg_activity_fields_semantics_locked
+BEFORE UPDATE OF field_type, dimension ON activity_fields
+WHEN (OLD.field_type IS NOT NEW.field_type OR OLD.dimension IS NOT NEW.dimension)
+  AND EXISTS (SELECT 1 FROM log_values WHERE field_id = OLD.internal_id)
+BEGIN
+  SELECT RAISE(ABORT, 'activity_field_semantics_locked');
+END;
+
+CREATE TRIGGER trg_activity_fields_owner_immutable
+BEFORE UPDATE OF activity_type_id ON activity_fields
+WHEN OLD.activity_type_id IS NOT NEW.activity_type_id
+BEGIN
+  SELECT RAISE(ABORT, 'activity_field_owner_immutable');
+END;
+
+CREATE TRIGGER trg_activity_logs_type_immutable
+BEFORE UPDATE OF activity_type_id ON activity_logs
+WHEN OLD.activity_type_id IS NOT NEW.activity_type_id
+BEGIN
+  SELECT RAISE(ABORT, 'activity_log_type_immutable');
+END;
+
+CREATE TRIGGER trg_activity_types_public_id_immutable
+BEFORE UPDATE OF public_id ON activity_types
+WHEN OLD.public_id IS NOT NEW.public_id
+BEGIN
+  SELECT RAISE(ABORT, 'public_id_immutable');
+END;
+
+CREATE TRIGGER trg_activity_fields_public_id_immutable
+BEFORE UPDATE OF public_id ON activity_fields
+WHEN OLD.public_id IS NOT NEW.public_id
+BEGIN
+  SELECT RAISE(ABORT, 'public_id_immutable');
+END;
+
+CREATE TRIGGER trg_activity_logs_public_id_immutable
+BEFORE UPDATE OF public_id ON activity_logs
+WHEN OLD.public_id IS NOT NEW.public_id
+BEGIN
+  SELECT RAISE(ABORT, 'public_id_immutable');
+END;
