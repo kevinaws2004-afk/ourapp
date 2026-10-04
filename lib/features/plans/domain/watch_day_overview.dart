@@ -65,6 +65,50 @@ class DayOverview {
   /// Total recorded duration on the date.
   int get recordedMs =>
       records.fold(0, (sum, r) => sum + (r.log.durationMs ?? 0));
+
+  /// Everything on the date as one list of items (ADR-035): plans and
+  /// records without a plan, in time order (a plan's time is its planned
+  /// start, or when it was logged), then untimed plans in manual order.
+  List<DayEntry> get entries {
+    final timed = <(DateTime, DayEntry)>[
+      for (final item in planned)
+        if (item.plan.plannedStartAt ?? item.records.firstOrNull?.startedAt
+            case final at?)
+          (at, PlanEntry(item)),
+      for (final record in unplanned)
+        (record.log.startedAt, RecordEntry(record)),
+    ];
+    // List.sort isn't stable; ties keep their original order.
+    final indexed = timed.indexed.toList()
+      ..sort((a, b) {
+        final byTime = a.$2.$1.compareTo(b.$2.$1);
+        return byTime != 0 ? byTime : a.$1.compareTo(b.$1);
+      });
+    return [
+      for (final (_, (_, entry)) in indexed) entry,
+      for (final item in planned)
+        if (item.plan.plannedStartAt == null && item.records.isEmpty)
+          PlanEntry(item),
+    ];
+  }
+}
+
+/// One item on a day (ADR-035): a plan (with whatever was logged into it),
+/// or a record made without a plan.
+sealed class DayEntry {
+  const DayEntry();
+}
+
+final class PlanEntry extends DayEntry {
+  const PlanEntry(this.item);
+
+  final PlannedItem item;
+}
+
+final class RecordEntry extends DayEntry {
+  const RecordEntry(this.record);
+
+  final DayRecord record;
 }
 
 /// Composite read (ADR-023): a date's plans, its records, the records that

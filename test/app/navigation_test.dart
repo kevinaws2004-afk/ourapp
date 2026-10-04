@@ -1,8 +1,6 @@
 import 'package:daylog/core/database/app_database.dart';
-import 'package:daylog/features/activity_logs/presentation/log_editor_screen.dart';
 import 'package:daylog/features/activity_types/data/db_activity_type_repository.dart';
 import 'package:daylog/features/activity_types/domain/activity_type_use_cases.dart';
-import 'package:daylog/features/activity_types/presentation/builder/activity_builder_screen.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/features/settings/domain/theme_preference.dart';
 import 'package:flutter/material.dart';
@@ -37,38 +35,6 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(FloatingActionButton), findsNothing, reason: tab);
     }
-  });
-
-  testAppWidgets('Today records an unplanned activity via Record something', (
-    tester,
-  ) async {
-    await pumpTestApp(tester, preferences: _onboarded, seed: seedReading);
-
-    await tester.tap(find.text('Record something'));
-    await tester.pumpAndSettle();
-    expect(find.text('What did you do?'), findsOneWidget);
-    await tester.tap(find.text('Reading'));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(LogEditorScreen), findsOneWidget);
-    expect(find.text('Record Reading'), findsOneWidget);
-  });
-
-  testAppWidgets('with no activities, Quick Record offers to create one', (
-    tester,
-  ) async {
-    await pumpTestApp(tester, preferences: _onboarded);
-
-    await tester.tap(find.text('Record something'));
-    await tester.pumpAndSettle();
-    expect(
-      find.text('Create an activity first, then record it here.'),
-      findsOneWidget,
-    );
-    await tester.tap(find.text('New activity'));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(ActivityBuilderScreen), findsOneWidget);
   });
 
   testAppWidgets('expanded windows have no Record action in the rail', (

@@ -1,9 +1,9 @@
 import 'package:daylog/core/database/app_database.dart';
 import 'package:daylog/features/activity_logs/presentation/form/field_editor_shell.dart';
-import 'package:daylog/features/activity_logs/presentation/log_editor_screen.dart';
 import 'package:daylog/features/activity_types/data/db_activity_type_repository.dart';
 import 'package:daylog/features/activity_types/domain/activity_type_use_cases.dart';
 import 'package:daylog/features/activity_types/presentation/activity_type_screen.dart';
+import 'package:daylog/features/plans/presentation/item/item_screen.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/features/settings/domain/theme_preference.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +14,8 @@ import '../../../support/fixtures.dart';
 import '../../../support/test_app.dart';
 import '../../activity_types/presentation/activities_flow_test.dart'
     show enterField, openActivities, scrollAndTap;
+import '../../plans/presentation/plans_flow_test.dart'
+    show closeItem, waitForSave;
 
 const _onboarded = PreferencesSnapshot(
   themePreference: ThemePreference.light,
@@ -49,6 +51,7 @@ Future<void> openGymRecord(WidgetTester tester) async {
   await tester.pumpAndSettle();
   await tester.tap(find.widgetWithText(FilledButton, 'Record'));
   await tester.pumpAndSettle();
+  expect(find.byType(ItemScreen), findsOneWidget, reason: 'an item for now');
 }
 
 void main() {
@@ -79,7 +82,8 @@ void main() {
     await enterAt(tester, 'Reps', 2, '8');
 
     FocusManager.instance.primaryFocus?.unfocus();
-    await scrollAndTap(tester, find.widgetWithText(FilledButton, 'Save'));
+    await waitForSave(tester);
+    await closeItem(tester);
 
     expect(find.byType(ActivityTypeScreen), findsOneWidget);
     expect(find.text('Chest Press'), findsOneWidget);
@@ -87,7 +91,7 @@ void main() {
     // Reopening shows every set as recorded.
     await tester.tap(find.text('Chest Press'));
     await tester.pumpAndSettle();
-    expect(find.byType(LogEditorScreen), findsOneWidget);
+    expect(find.byType(ItemScreen), findsOneWidget);
     for (final (i, (kg, reps)) in [
       ('50', '12'),
       ('55', '10'),
@@ -103,25 +107,28 @@ void main() {
     }
   });
 
-  testAppWidgets('an exercise without a name shows the issue in its card', (
-    tester,
-  ) async {
-    await pumpTestApp(tester, preferences: _onboarded, seed: seedGym);
+  testAppWidgets('an exercise without a name yet is still saved (required '
+      'is a hint while logging, ADR-035)', (tester) async {
+    final db = await pumpTestApp(
+      tester,
+      preferences: _onboarded,
+      seed: seedGym,
+    );
     await openGymRecord(tester);
 
     await scrollAndTap(tester, find.text('Add Exercise'));
     await scrollAndTap(tester, find.text('Add Set'));
     await enterAt(tester, 'Reps', 0, '12');
     FocusManager.instance.primaryFocus?.unfocus();
-    await scrollAndTap(tester, find.widgetWithText(FilledButton, 'Save'));
+    await waitForSave(tester);
 
-    expect(find.byType(LogEditorScreen), findsOneWidget);
-    await tester.scrollUntilVisible(
-      find.text('This is required.'),
-      -200,
-      scrollable: find.byType(Scrollable).hitTestable().first,
+    expect(find.text('Saved'), findsOneWidget);
+    final items = await tester.runAsync(
+      () => db
+          .customSelect('SELECT COUNT(*) AS c FROM log_group_items')
+          .getSingle(),
     );
-    expect(find.text('This is required.'), findsOneWidget);
+    expect(items!.read<int>('c'), 2, reason: 'the exercise and its set');
   });
 
   testAppWidgets('exercise names are suggested from earlier workouts', (
@@ -132,7 +139,8 @@ void main() {
     await scrollAndTap(tester, find.text('Add Exercise'));
     await enterField(tester, 'Exercise *', 'Chest Press');
     FocusManager.instance.primaryFocus?.unfocus();
-    await scrollAndTap(tester, find.widgetWithText(FilledButton, 'Save'));
+    await waitForSave(tester);
+    await closeItem(tester);
 
     await tester.tap(find.widgetWithText(FilledButton, 'Record'));
     await tester.pumpAndSettle();

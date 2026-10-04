@@ -83,8 +83,9 @@ class Plan {
     required bool hasRecord,
     bool inFocus = false,
   }) {
-    if (!isTask && hasRecord) return EffectivePlanStatus.completed;
+    // A running timer wins: you're still logging into it (ADR-035).
     if (inFocus) return EffectivePlanStatus.inProgress;
+    if (!isTask && hasRecord) return EffectivePlanStatus.completed;
     return switch (status) {
       PlanStatus.planned => EffectivePlanStatus.planned,
       PlanStatus.completed => EffectivePlanStatus.completed,

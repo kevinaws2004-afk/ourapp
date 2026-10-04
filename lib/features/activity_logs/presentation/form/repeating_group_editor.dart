@@ -16,6 +16,7 @@ import '../../../activity_types/domain/field_type.dart';
 import '../../domain/field_value.dart';
 import '../../domain/log_validator.dart';
 import 'activity_log_form.dart';
+import 'add_detail_scope.dart';
 import 'text_number_editors.dart';
 
 /// Edits a Repeating Group (ADR-027): an ordered list of items, each holding
@@ -110,13 +111,22 @@ class RepeatingGroupEditor extends ConsumerWidget {
                   onChanged: (item) => _replace(index, item),
                   onRemove: () => _emit([..._items]..removeAt(index)),
                 ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: TextButton.icon(
-            icon: const Icon(AppIcons.add),
-            label: Text(l10n.addGroupItem(_itemLabel)),
-            onPressed: add,
-          ),
+        Wrap(
+          spacing: AppSpacing.sm,
+          children: [
+            TextButton.icon(
+              icon: const Icon(AppIcons.add),
+              label: Text(l10n.addGroupItem(_itemLabel)),
+              onPressed: add,
+            ),
+            // Logging into an item: the list can grow a new detail here.
+            if (AddDetailScope.maybeOf(context) case final scope?)
+              TextButton.icon(
+                icon: const Icon(AppIcons.edit),
+                label: Text(l10n.addGroupDetail),
+                onPressed: () => scope.onAddDetail(field),
+              ),
+          ],
         ),
       ],
     );

@@ -6,7 +6,7 @@
 
 **Status:**
 - Phases 1–6 are implemented (incl. focus timer, insights and body measurements): scaffold, preferences, design tokens/theme, adaptive shell, go_router, gen-l10n, the **generic activity engine** (activity types, fields, logs, typed values, builder, templates, generic form renderer), relational Repeating Groups, and **plans + Today** (plan → record, planned vs actual).
-- Navigation (ADR-028): **Today | Plan | Insights | Me** (no floating Record button; Quick Record opens from Today's "Record something"). Plan is date-based (calendar/week strip, the date's plans paired with their records, and unplanned records). Activities (setup) live under Me → Activities.
+- Navigation (ADR-028): **Today | Plan | Insights | Me** (no floating Record button). Everything on a day is an item you open to log into, saved as you type (ADR-035). Plan is date-based (calendar/week strip, the date's items as one list). Activities (setup) live under Me → Activities.
 - All four tabs are implemented (Insights in Phase 6).
 - See [application_architecture.md](../../docs/architecture/application_architecture.md) for the implemented-vs-planned map.
 

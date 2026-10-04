@@ -13,7 +13,7 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/widgets/section_header.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../../activity_logs/domain/activity_log.dart';
-import '../../activity_logs/presentation/day_record_tile.dart';
+import '../domain/plan.dart';
 import '../domain/watch_day_overview.dart';
 import 'plan_date_notifier.dart';
 import 'plan_editor_sheet.dart';
@@ -21,24 +21,21 @@ import 'plan_providers.dart';
 import 'widgets/plan_quick_add.dart';
 import 'widgets/planned_list.dart';
 
-/// Plan tab (ADR-028, ui_guidelines.md §4.2): the date-based planning system.
-/// Select any date → its plans, paired with what was actually recorded, plus
-/// records that weren't planned (F3, F3a).
+/// Plan tab (ADR-028, ADR-035): the date-based planner. Select any date →
+/// its items (plans, and anything done without a plan) in one list. Opening
+/// an item is where you log into it.
 class PlanScreen extends ConsumerWidget {
   const PlanScreen({
     super.key,
+    required this.onOpenItem,
     required this.onOpenRecord,
-    required this.onRecordPlan,
-    required this.onTrackPlan,
   });
 
+  /// Opens a plan's item screen.
+  final ValueChanged<PlanId> onOpenItem;
+
+  /// Opens a record made without a plan.
   final ValueChanged<ActivityLog> onOpenRecord;
-
-  /// Opens the record form for an activity plan (F5).
-  final ValueChanged<PlannedItem> onRecordPlan;
-
-  /// Sets up what to track for a task plan, then records it (ADR-030).
-  final ValueChanged<PlannedItem> onTrackPlan;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -72,84 +69,37 @@ class PlanScreen extends ConsumerWidget {
                   onPressed: () => showPlanEditor(context, date: selected),
                 ),
               ),
-              PlanQuickAdd(key: ValueKey(selected), date: selected),
+              PlanQuickAdd(
+                key: ValueKey(selected),
+                date: selected,
+                onStartNow: selected == today ? onOpenItem : null,
+              ),
               const SizedBox(height: AppSpacing.md),
               AsyncValueView<DayOverview>(
                 value: ref.watch(dayOverviewProvider(selected)),
                 onRetry: () => ref.invalidate(dayOverviewProvider(selected)),
-                data: (overview) => _DayContent(
-                  overview: overview,
-                  showRecorded: selected.compareTo(today) <= 0,
-                  onOpenRecord: onOpenRecord,
-                  onRecordPlan: onRecordPlan,
-                  onTrackPlan: onTrackPlan,
-                ),
+                data: (overview) {
+                  final entries = overview.entries;
+                  if (entries.isEmpty) {
+                    return Text(
+                      l10n.planPlannedEmpty,
+                      style: context.textStyles.bodyLarge?.copyWith(
+                        color: context.colors.textSecondary,
+                      ),
+                    );
+                  }
+                  return PlannedList(
+                    entries: entries,
+                    onOpenItem: (item) => onOpenItem(item.plan.id),
+                    onOpenRecord: onOpenRecord,
+                    reorderable: true,
+                  );
+                },
               ),
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class _DayContent extends StatelessWidget {
-  const _DayContent({
-    required this.overview,
-    required this.showRecorded,
-    required this.onOpenRecord,
-    required this.onRecordPlan,
-    required this.onTrackPlan,
-  });
-
-  final DayOverview overview;
-  final bool showRecorded;
-  final ValueChanged<ActivityLog> onOpenRecord;
-  final ValueChanged<PlannedItem> onRecordPlan;
-
-  /// Sets up what to track for a task plan, then records it (ADR-030).
-  final ValueChanged<PlannedItem> onTrackPlan;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final quiet = context.textStyles.bodyLarge?.copyWith(
-      color: context.colors.textSecondary,
-    );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (overview.planned.isEmpty)
-          Text(l10n.planPlannedEmpty, style: quiet)
-        else
-          PlannedList(
-            items: overview.planned,
-            onRecord: onRecordPlan,
-            onOpenRecord: onOpenRecord,
-            onTrack: onTrackPlan,
-            reorderable: true,
-          ),
-        if (showRecorded) ...[
-          SectionHeader(
-            title: overview.planned.isEmpty
-                ? l10n.planRecordedSection
-                : l10n.planAlsoRecordedSection,
-          ),
-          if (overview.unplanned.isEmpty)
-            Text(
-              overview.records.isEmpty
-                  ? l10n.planRecordedEmpty
-                  : l10n.planNothingUnplanned,
-              style: quiet,
-            )
-          else
-            for (final record in overview.unplanned)
-              DayRecordTile(
-                record: record,
-                onTap: () => onOpenRecord(record.log),
-              ),
-        ],
-      ],
     );
   }
 }

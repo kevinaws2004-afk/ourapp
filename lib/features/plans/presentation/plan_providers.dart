@@ -8,6 +8,7 @@ import '../../activity_logs/presentation/activity_log_providers.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
 import '../../focus/presentation/focus_providers.dart';
 import '../data/db_plan_repository.dart';
+import '../domain/item_use_cases.dart';
 import '../domain/plan_repository.dart';
 import '../domain/plan_use_cases.dart';
 import '../domain/watch_day_overview.dart';
@@ -74,10 +75,43 @@ final reorderPlansProvider = Provider(
       ReorderPlans(ref.watch(planRepositoryProvider), ref.watch(clockProvider)),
 );
 
-final deletePlanProvider = Provider(
-  (ref) => DeletePlan(ref.watch(planRepositoryProvider)),
+final ensureItemActivityProvider = Provider(
+  (ref) => EnsureItemActivity(
+    ref.watch(planRepositoryProvider),
+    ref.watch(activityTypeRepositoryProvider),
+    ref.watch(createActivityTypeProvider),
+    ref.watch(assignPlanActivityProvider),
+  ),
 );
 
-final restorePlanProvider = Provider(
-  (ref) => RestorePlan(ref.watch(planRepositoryProvider)),
+final markItemDoneProvider = Provider(
+  (ref) => MarkItemDone(
+    ref.watch(planRepositoryProvider),
+    ref.watch(activityLogRepositoryProvider),
+    ref.watch(logActivityProvider),
+    ref.watch(setPlanStatusProvider),
+    ref.watch(clockProvider),
+  ),
+);
+
+final deleteItemProvider = Provider(
+  (ref) => DeleteItem(
+    ref.watch(planRepositoryProvider),
+    ref.watch(activityLogRepositoryProvider),
+  ),
+);
+
+final restoreItemProvider = Provider(
+  (ref) => RestoreItem(
+    ref.watch(planRepositoryProvider),
+    ref.watch(activityLogRepositoryProvider),
+  ),
+);
+
+final addItemFieldProvider = Provider(
+  (ref) => AddItemField(
+    ref.watch(activityTypeRepositoryProvider),
+    ref.watch(ensureItemActivityProvider),
+    ref.watch(updateActivityTypeProvider),
+  ),
 );

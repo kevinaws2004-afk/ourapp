@@ -80,7 +80,7 @@ Riverpod 3 notes: `AsyncValue.value` returns `null` while loading or on error (t
 | `logsForTypeProvider(typeId)` | `StreamProvider.autoDispose.family` | activity_logs |
 | Use-case providers (`createActivityTypeProvider`, `logActivityProvider`, …) | `Provider` | per feature |
 | `activityBuilderProvider(typeId?)` | `AsyncNotifierProvider.autoDispose.family<ActivityBuilderNotifier, …>` | activity_types/presentation/builder |
-| `logEditorProvider(LogEditorArgs)` | `AsyncNotifierProvider.autoDispose.family<LogEditorNotifier, …>` | activity_logs/presentation |
+| `itemProvider(ItemArgs)` | `AsyncNotifierProvider.autoDispose.family<ItemNotifier, ItemState, ItemArgs>` (an item and what's logged into it; auto-saves, ADR-035) | plans/presentation/item |
 | `recordsForDayProvider(LocalDate)` | `StreamProvider.autoDispose.family<List<DayRecord>, …>` (composite read: `WatchRecordsForDay` = logs for the day + all types via `combineLatest2`) | activity_logs/presentation |
 | `planSelectedDateProvider` | `NotifierProvider<PlanDateNotifier, LocalDate>` (kept while the app runs; starts on today via `Clock`) | plans/presentation |
 | `dayOverviewProvider(LocalDate)` | `StreamProvider.autoDispose.family<DayOverview, …>` (composite read: `WatchDayOverview` = a date's plans + its logs + logs fulfilling its plans + all types, via nested `combineLatest2`) | plans/presentation |
@@ -92,7 +92,7 @@ Riverpod 3 notes: `AsyncValue.value` returns `null` while loading or on error (t
 | `insightChartsProvider`, `insightResultProvider(chart)`, `activityTotalsProvider` | `StreamProvider.autoDispose` (`WatchInsight` over repository streams) | insights/presentation |
 | `latestMeasurementsProvider`, `measurementsForTypeProvider(type)` | `StreamProvider.autoDispose` | measurements/presentation |
 
-- Riverpod 3 family notifiers receive their argument through the **constructor** (`LogEditorNotifier(this.args)`). Family keys are value types (`ActivityTypeId`, `LogEditorArgs` with `==`).
+- Riverpod 3 family notifiers receive their argument through the **constructor** (`ItemNotifier(this.args)`). Family keys are value types (`ActivityTypeId`, `ItemArgs` with `==`).
 - **Riverpod 3 pauses providers whose widgets are hidden** (e.g. a screen under a pushed route). Repository streams are built with `reactiveQuery` (`core/database/reactive_query.dart`):
   - Loads are driven by drift `tableUpdates`.
   - While paused, it defers loading.
@@ -100,18 +100,24 @@ Riverpod 3 notes: `AsyncValue.value` returns `null` while loading or on error (t
 
   This fixed a real bug found in Phase 2: a list didn't refresh after saving from a covering screen. Don't build live queries any other way. In particular, never watch a constant trigger query such as `SELECT 1`, because drift won't re-emit unchanged results.
 
-## 4. Editing pattern (log form, implemented as `LogEditorNotifier`)
+## 4. Editing pattern (an item, implemented as `ItemNotifier`, ADR-035)
 
 ```text
-LogEditorScreen(typeId, logId?, planId?)
-  └─ ref.watch(logFormProvider(args))          // AutoDisposeAsyncNotifier
-        build(): loads ActivityType (+ existing log) → LogFormState(draft values, validation = empty)
-        setValue(fieldId, value)                 → updates draft, clears that field's error
-        submit()                                 → domain validation → SaveActivityLog use case → AsyncValue result
-  └─ ref.listen(logFormProvider(args), ...)    // on success: haptic + success feedback + pop
+ItemScreen(ItemArgs.plan(planId) | ItemArgs.log(logId))
+  └─ ref.watch(itemProvider(args))                // AutoDisposeAsyncNotifier
+        build(): loads the plan, its log (getLogForPlan) and its ActivityType
+        setValue / setNotes / setStartedAt / setDuration
+              → new state + a version bump + a 600 ms debounced save
+        save (serialized in a Future chain):
+              no log yet → EnsureItemActivity (if no activity) → LogActivity(partial)
+              otherwise  → UpdateActivityLog(partial)
+              ValidationException → issues shown inline, "Not saved yet"
+        flush() saves now (leaving, timer actions, plan options); reload() re-reads
 ```
 
-The draft is plain immutable state (`copyWith`). Unsaved-changes guarding (on back) reads `state.isDirty`.
+- No Save button and no unsaved-changes dialog: a pending save also runs when the provider is disposed (use cases are captured at build, so it doesn't touch `ref` afterwards).
+- A save only marks the state "Saved" if nothing changed while it ran (version check).
+- Write paths read once (`getActiveTypes`, `getLogForPlan`), never `stream.first`.
 
 ## 5. Focus timer pattern
 

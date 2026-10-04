@@ -22,7 +22,7 @@
 | Members | `lowerCamelCase`, verbs for actions, nouns for values | `startSession()`, `plannedDuration` |
 | Booleans | `is/has/can/should` prefix | `isArchived`, `supportsTimer` |
 | Providers | `<thing>Provider` | `activeActivityTypesProvider` |
-| Notifiers | `<Screen/Concern>Notifier` (scaffold default) | `LogEditorNotifier`, `ActivityBuilderNotifier` |
+| Notifiers | `<Screen/Concern>Notifier` (scaffold default) | `ItemNotifier`, `ActivityBuilderNotifier` |
 | Repositories | interface `XRepository`, impl `DbXRepository` | |
 | Use cases | Verb + domain object, one `call()` method (ADR-023) | `CreateActivityType`, `LogActivity` |
 
@@ -46,7 +46,7 @@ Use the **spec's vocabulary** (Activity Type, Activity Log, Plan, Measurement, F
 - `const` constructors wherever possible.
 - **No hardcoded visual values** in feature code: colors, text styles, spacing, radii, durations and curves come from design tokens (`context.tokens`, `Theme.of(context)`). Lints/review enforce this. Exceptions require a comment with justification.
 - No raw default Material widgets where a shared product component exists (`AppButton`, `AppSheet`, etc.; see [ui_guidelines.md](../ui/ui_guidelines.md)).
-- All user-visible strings come from a central place (localization-ready). V1 ships English only, through `flutter_localizations` + gen-l10n ARB files in `lib/l10n/` (ADR-015). Never inline user-visible strings. **Exception:** debug-only developer tooling (the token showcase and its "Design tokens (debug)" entry) may use literal English, because it isn't reachable in release builds. Mark such strings with a comment.
+- All user-visible strings come from a central place (localization-ready). V1 ships English only, through `flutter_localizations` + gen-l10n ARB files in `lib/l10n/` (ADR-015). Never inline user-visible strings. **Exception:** debug-only developer tooling (the token showcase and its "Design tokens (debug)" entry, and the "Load demo data (debug)" entry) may use literal English, because it isn't reachable in release builds. Mark such strings with a comment.
 - Semantics labels for icon-only buttons and custom-painted content.
 - Lists use builders (`ListView.builder`, slivers) for unbounded data.
 

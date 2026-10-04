@@ -1,6 +1,7 @@
 import '../../../core/errors/app_exception.dart';
 import '../../../core/ids/id_generator.dart';
 import 'activity_ids.dart';
+import 'activity_type.dart';
 import 'activity_type_definition.dart';
 import 'activity_type_repository.dart';
 import 'activity_type_validator.dart';
@@ -33,6 +34,30 @@ ActivityTypeDefinition _withIds(
     supportsTimer: definition.supportsTimer,
     supportsPlanning: definition.supportsPlanning,
     fields: [for (final field in definition.fields) assign(field)],
+  );
+}
+
+/// The editable definition of an existing [type]: its active fields (with
+/// their IDs, so saving keeps them) and their sub-fields, in order.
+ActivityTypeDefinition definitionOf(ActivityType type) {
+  FieldDefinition field(ActivityField f) => FieldDefinition(
+    id: f.id,
+    name: f.name,
+    type: f.type,
+    dimension: f.dimension,
+    required: f.required,
+    measurable: f.measurable,
+    config: f.config,
+    subFields: [for (final sub in type.subFieldsOf(f.id)) field(sub)],
+  );
+  return ActivityTypeDefinition(
+    name: type.name,
+    iconId: type.iconId,
+    colorKey: type.colorKey,
+    description: type.description,
+    supportsTimer: type.supportsTimer,
+    supportsPlanning: type.supportsPlanning,
+    fields: [for (final f in type.activeFields) field(f)],
   );
 }
 

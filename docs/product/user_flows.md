@@ -34,66 +34,63 @@ Edge cases: unsaved-changes guard; duplicate name warning; editing a type with e
 ## F3. Plan a date (FR-PL-01…04, FR-PL-09, §43 "Night")
 
 1. Plan tab → the **calendar/date selector** (week strip + month calendar) chooses any date; it opens on today. Common picks: "Tomorrow" in the evening (§43).
-2. The selected date shows **Planned** (that date's plans) and, for today and past dates, **Recorded** (what actually happened).
-3. Quick add (implemented): type what you'll do and optionally a **from–to time** (day planner slots: 07:30 Gym, 09:00 Bath, 14:00 Meeting). Typing an activity's name ("Gym") plans that activity, and its chip lights up. A starter template's name installs that template first. Anything else ("Bath") is a task. Chips can also be tapped.
-4. Repeat rapidly; keyboard stays open; each item animates into the list.
-5. Reorder by drag; timed items sort by time.
-6. Items without an activity are Tasks.
+2. The selected date shows **one list of items** (ADR-035): its plans and anything done without a plan, in time order, then untimed plans.
+3. Quick add: type what you'll do and optionally a **from–to time** (day planner slots: 07:30 Gym, 09:00 Bath, 14:00 Meeting). Typing an activity's name ("Gym") plans that activity, and its chip lights up. A starter template's name installs that template first. Anything else ("Bath", "Doctor call") is a plain item. On today, **Now** adds it at the current time and opens it (F8).
+4. Repeat rapidly; keyboard stays open.
+5. Reorder untimed items by drag; timed items sort by time.
 
 ## F3a. Review a past date (FR-PL-10)
 
-Plan → select a past date → see what was planned and what was recorded side by side (each plan shows its records and "Recorded 45 min of 1 h"; unplanned records are listed under "Also recorded") → open a record to edit it.
+Plan → select a past date → the same list of items: each plan with what was logged into it ("Done · 45 min of 1 h" and a summary), plus anything done without a plan → open any item to see or change it.
 
 ## F4. Morning: see the plan (FR-TD-01, FR-TD-05)
 
-Open app → Today shows a greeting appropriate to the time of day and today's plan in order. Tapping a planned activity records it (F5); tasks have a check control. Plan and Record are one workflow (ADR-030).
+Open app → Today shows a greeting, quick add, and today's items in order. Tapping an item opens it to log into it (F5); tasks also have a check control.
 
-## F5. Start an activity from a plan (FR-PL-05, FR-LG-05)
+## F5. Do an item: open it and log into it (FR-PL-05, FR-LG-05, ADR-035)
 
-Plan and Record are one workflow (ADR-030). Example: Plan Oct 4 → Gym, Reading, Work.
+Example: Plan Oct 4 → Gym, Reading, Doctor call.
 
-1. Today/Plan → **tap the planned activity** (e.g. Gym).
-2. Its record form opens, linked to the plan and showing "Planned · …". It prefills the slot: start = the planned start (else now / that date at the current time), duration = the planned length (e.g. Reading 21:10–21:55 → 45 min). The user corrects them to reality.
-3. Enter what actually happened. For Gym, the focus ("Chest"), exercises and their sets (60 kg × 10, 65 kg × 8, 70 kg × 6…), duration, notes. One session = one record; sets are rows inside it (ADR-027).
-4. Save → the record links to the plan → the plan shows **Gym ✓ · Recorded 1 h 5 min of 1 h** on Plan and Today (completion derived from the link, ADR-018).
-5. Tapping a recorded plan opens its record. "Record again" (in the plan's More options) adds a second session.
-6. While recording, **Edit what to track** (record form app bar) opens the activity's builder to add or change fields. The form keeps what was entered.
-7. Phase 5 adds "Start focus" for timer activities and the `in_progress` status.
+1. Today/Plan → **tap the item** (e.g. Gym). The item opens: its planned time, **Mark done**, **Start timer**, the activity's fields, notes, and when/how long.
+2. Log what's happening, as it happens. For Gym: exercises and their sets (60 kg × 10, 65 kg × 8, 70 kg × 6…). Everything **saves as you type** ("Saving…" / "Saved"); there's no Save button.
+3. The first thing logged links a log to the plan, so the item shows **Gym ✓ · Done** with a summary on Plan and Today (completion derived from the link, ADR-018). Its start defaults to the planned start (else now), and its duration can be entered or filled by the timer.
+4. Leave any time and come back: the item shows what's logged so far, ready for more (another set).
+5. Nothing to log? **Mark done** records the planned time and length (e.g. Reading 21:10–21:55 → 45 min).
+6. **Add to log** (any item): pick a ready-made shape (*Sets & reps*, *Checklist*) or one thing (a number with a unit, text, a list, yes/no, a rating, a choice, a date, time spent), name it, and log into it right away. Inside a list, **Add detail** adds another column (e.g. Dose on a medicines list). A new name ("Doctor call") gets an activity of its own on the first thing added or logged, so the next "Doctor call" has the same things to log. The pencil opens the builder to rename, reorder or remove.
+7. Item options (⋯): edit title/time/notes, Skip, Reopen, Move to tomorrow, Delete (with Undo).
 
 ## F6. Gym workout (FR-LG-07, §43 "Gym")
 
-1. Tap the planned Gym (F5) or use Quick Record. The record form opens; start time set; optional live workout timer.
+1. Open the planned Gym (F5), or add "Gym" with **Now** (F8). Optionally **Start timer**.
 2. **Add exercise** → name with autocomplete from history (e.g. "Chest Press").
-3. **Add set** row: weight, reps. New row pre-fills from the previous row (and from the last session for that exercise when available: a speed affordance, clearly shown as a suggestion).
-4. Repeat sets, add more exercises; reorder/delete via swipe or handle with undo.
-5. Finish → end time set; workout duration computed/confirmed → save → completion feedback summarizing (exercises, sets, duration).
+3. **Add set** row: weight, reps. A new row pre-fills from the previous row.
+4. Repeat sets, add more exercises. Each change is saved, so nothing is lost if the app is backgrounded or killed mid-workout.
+5. Finish the timer (if running) → its time fills the workout's duration.
 
-Interruption: draft must not be lost if the app is backgrounded during a long workout. The draft is persisted (save log early as in-progress or persist the draft; see ADR-P18).
+## F7. Timer (FR-FO-01…06, §43 "Work"/"Reading")
 
-## F7. Focus session (FR-FO-01…06, §43 "Work"/"Reading")
+Phase 5 (ADR-031), moved into the item by ADR-035.
+1. In an item → **Start timer**. From an activity's page, **Start focus** adds an item for now with its timer running. Only one timer runs at a time.
+2. The timer shows at the top of the item (DM Mono) with Pause/Resume and Finish; keep logging while it runs. The full-screen timer is optional.
+3. Pause/resume any number of times. Leaving the app or the process dying doesn't affect elapsed time: it is computed from stored timestamps. Today shows a live "Reading · 23:14 · Return" banner (Return opens the item), and the item shows "In progress".
+4. Finish → the timed span becomes the item's start, end and duration, keeping everything logged → "Reading session complete · 42 min". A second timer on the same item adds its time.
+5. Discard (full-screen timer) asks for confirmation and logs nothing.
 
-Implemented in Phase 5 (ADR-031).
-1. Start focus: tap a planned timer activity → **Start focus** (or Record now), or the activity's page → **Start focus**. Only one session runs at a time.
-2. Full-screen timer: activity badge and name, large elapsed time in DM Mono, state (Focusing / Paused), Pause/Resume, Finish, Discard.
-3. Pause/resume any number of times. Leaving the app or the process dying doesn't affect elapsed time: it is computed from stored timestamps. Today shows a live "Reading · 23:14 · Return" banner, and the plan shows "In progress".
-4. Finish → the session pauses → the record form opens prefilled (start, focused time, "Planned · …") → add notes and fields (e.g. pages) → save → "Reading session complete · 42 min". The record links to the plan, which shows ✓. Backing out of the form keeps the session paused.
-5. Discard asks for confirmation and creates no record.
+## F8. Log something you're doing now (FR-LG-06, ADR-035)
 
-## F8. Quick Record (FR-LG-06, ADR-028)
-
-Today → **Record something** (no floating button since 2026-10-04) → sheet titled "What did you do?" listing the user's activities (most frequent/recent first later; Phase 2 lists them in display order) → tap → record form. Two taps for an unplanned activity. With no activities yet, the sheet offers "New activity". Task quick-add joins the sheet with plans (Phase 4); instant save for activities without required fields is a later polish.
+Today → quick add → type it ("Walk", "Gym") → **Now** → it's added at the current time and opens to log into it. Or an activity's page → **Record**, which does the same for that activity. There is no separate Quick Record sheet.
 
 ## F9. Record a meeting retroactively (§22, §43 "Meeting")
 
-Quick Record → Meeting → set start time in the past and duration 48m → People (multi-person), Topics, Decisions, Action items (checklist) → save. Retroactive logging (time pickers for past start/end) is supported for every activity (see OQ-17).
+Add "Meeting" to the day (or open its plan) → set when it started and how long (48m) → People, Topics, Decisions, Action items. Retroactive logging (past start and duration) works for every item (see OQ-17).
 
 ## F10. Complete a task (FR-PL-07)
 
-Tap the task's check control (or tap the task → **Mark as done**) on Today/Plan → status `completed` with brief feedback; undo available. No record created. Or tap the task → **Track details**: the activity builder opens named after the task ("Food"). Add any fields you want to log, save, and the plan links to the new activity and its record form opens. Later "Food" plans link to it automatically. "Mark as done" exists only for tasks; activity plans complete by being recorded (ADR-030).
+Tap the task's check control on Today/Plan, or open it → **Mark done** → status `completed` with brief feedback; undo available. Writing notes into a task instead gives it an activity of its own (F5 step 6), so it counts as done by what was logged.
 
 ## F11. Evening review (FR-TD-04, §43 "Night")
 
-Today in the evening shows **What you planned vs What actually happened**: each plan paired with its linked log(s) and actual duration; unplanned logs shown as additions; unfinished plans can still be tapped to record them, or skipped / moved to tomorrow from their More options (move = edit planned date). Copy stays neutral; no guilt messaging.
+Today in the evening shows the day's items: what was done (with what was logged and how long against what was planned), unplanned additions in time order, and what's still open, which can be opened to log, or skipped / moved to tomorrow from its options. Copy stays neutral; no guilt messaging.
 
 ## F12. Insights (FR-AN-01…07)
 

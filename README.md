@@ -8,13 +8,13 @@ Gym workouts, reading, focused work, meetings, walks, body measurements, or any 
 
 ## Status
 
-**Phases 5 (focus) and 6 (insights + body measurements): complete, awaiting owner review.** Phases 1–4 (scaffold, generic engine, structured fields, plans & Today) and the navigation clarification (ADR-028) are done. Navigation is **Today | Plan | Insights | Me**. Tap a plan to record it, or use **Record something** on Today for anything unplanned. You can:
+**Flow rework in progress (ADR-035): step 1 of 4 (items you log into, saved as you type) is done.** Phases 5 (focus) and 6 (insights + body measurements) are complete. Phases 1–4 (scaffold, generic engine, structured fields, plans & Today) and the navigation clarification (ADR-028) are done. Navigation is **Today | Plan | Insights | Me**. Everything on a day is an item: add it (or **Now** for what you're doing), open it, and log into it; it saves as you type (ADR-035). You can:
 - set up reusable activities under **Me → Activities** (builder or templates; ten generic field types, including **Repeating Groups**, e.g. exercises with nested sets; templates include Gym, Meeting and Cooking)
-- **record** what you did from anywhere, including typed values, units, duration, notes and lists of items (with suggestions from earlier records, e.g. exercise names)
+- **log** into any item: typed values, units, duration, notes and lists of items (with suggestions from earlier records, e.g. exercise names); leave and come back to add more
 - **plan** any date on the Plan tab: activity plans and simple tasks, with optional times or a length, quick add, drag to reorder, skip or move to tomorrow
-- **tap a planned activity to record it** (e.g. a Gym session with all its sets); it then shows ✓, and **Today** shows your plan next to what actually happened ("Recorded 45 min of 1 h") plus anything recorded without a plan
+- **open a planned item to log into it** (e.g. a Gym session, set by set); it then shows ✓ with a summary, and **Today** lists the day's items with what actually happened ("Done · 45 min of 1 h")
 
-- **focus**: start a timer from a planned activity or an activity's page; pause/resume; it survives the app being closed; finish → record the details → done
+- **timer**: start it inside an item and keep logging while it runs; pause/resume; it survives the app being closed; finishing fills the item's time
 - **understand progress** on Insights: time and counts per activity vs the previous period, and your own charts of anything (time, any number such as the weight of your bench-press sets, volume, personal bests, body measurements, planned vs actual)
 - track **body measurements** under Me See [`ai/tasks/current_task.md`](ai/tasks/current_task.md).
 

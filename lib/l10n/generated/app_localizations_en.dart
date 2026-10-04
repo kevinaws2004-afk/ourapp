@@ -187,7 +187,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fieldTypeTextDescription =>
-      'Words, a short note or a long description';
+      'Words, a short note or a long description, like what the doctor said';
 
   @override
   String get fieldTypeNumber => 'Number';
@@ -243,11 +243,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fieldTypeRatingDescription => 'Stars on a scale you choose';
 
   @override
-  String get fieldTypeRepeatingGroup => 'Repeating group';
+  String get fieldTypeRepeatingGroup => 'List';
 
   @override
   String get fieldTypeRepeatingGroupDescription =>
-      'A list of items, like exercises or sets';
+      'Rows with their own details, like exercises → sets, medicines or people';
 
   @override
   String get availableLater => 'Coming soon';
@@ -320,9 +320,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get doneAction => 'Done';
-
-  @override
-  String get whenLabel => 'When';
 
   @override
   String get durationLabel => 'Duration';
@@ -541,20 +538,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actionRecord => 'Record';
 
   @override
-  String recordNewTitle(String name) {
-    return 'Record $name';
-  }
-
-  @override
-  String get recordEditTitle => 'Edit record';
-
-  @override
-  String get recordSaved => 'Saved';
-
-  @override
-  String get recordDeleted => 'Record deleted';
-
-  @override
   String get activitiesTitle => 'Activities';
 
   @override
@@ -570,13 +553,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get meActivitiesSubtitle => 'Create and configure what you record';
-
-  @override
-  String get quickRecordTitle => 'What did you do?';
-
-  @override
-  String get quickRecordEmpty =>
-      'Create an activity first, then record it here.';
 
   @override
   String get planToday => 'Today';
@@ -601,12 +577,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get planPlannedEmpty => 'Nothing planned for this day.';
-
-  @override
-  String get planRecordedSection => 'Recorded';
-
-  @override
-  String get planRecordedEmpty => 'Nothing recorded on this day.';
 
   @override
   String groupItemCount(String itemLabel, int count) {
@@ -754,12 +724,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planQuickAddHint => 'Add something to this day';
 
   @override
-  String get planAlsoRecordedSection => 'Also recorded';
-
-  @override
-  String get planNothingUnplanned => 'Everything recorded was planned.';
-
-  @override
   String get planAnyTime => 'Any time';
 
   @override
@@ -788,9 +752,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Optional for an activity: it uses the activity\'s name';
 
   @override
-  String get planRecordIt => 'Record it';
-
-  @override
   String get planCompleteTask => 'Mark as done';
 
   @override
@@ -806,10 +767,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planMoveToTomorrow => 'Move to tomorrow';
 
   @override
-  String get planDelete => 'Delete plan';
+  String get planDelete => 'Delete';
 
   @override
-  String get planDeletedMessage => 'Plan deleted';
+  String get planDeletedMessage => 'Deleted';
 
   @override
   String get planMovedMessage => 'Moved to tomorrow';
@@ -827,7 +788,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planStatusDone => 'Done';
 
   @override
-  String get planStatusRecorded => 'Recorded';
+  String get planStatusRecorded => 'Done';
 
   @override
   String get planStatusSkipped => 'Skipped';
@@ -843,28 +804,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get todayGreetingEvening => 'Good evening';
-
-  @override
-  String get todayPlanSection => 'Today\'s plan';
-
-  @override
-  String get todayEditPlan => 'Plan';
-
-  @override
-  String get todayNothingPlanned => 'Nothing planned for today.';
-
-  @override
-  String get todayEmptyTitle => 'A fresh day';
-
-  @override
-  String get todayEmptyMessage =>
-      'Plan what you want to do, or record something you\'ve already done.';
-
-  @override
-  String get todayPlanYourDay => 'Plan your day';
-
-  @override
-  String get todayRecordSomething => 'Record something';
 
   @override
   String get validationPlannedDurationConflict =>
@@ -888,12 +827,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String planRecordedDuration(String duration) {
-    return 'Recorded $duration';
+    return 'Done · $duration';
   }
 
   @override
   String planRecordedOfPlanned(String actual, String planned) {
-    return 'Recorded $actual of $planned';
+    return 'Done · $actual of $planned';
   }
 
   @override
@@ -902,33 +841,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String todaySummary(int count, String duration) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count records',
-      one: '1 record',
-    );
-    return '$_temp0 · $duration';
-  }
-
-  @override
   String get planOptions => 'Plan options';
 
   @override
-  String get planRecordAgain => 'Record again';
-
-  @override
-  String get planOpenRecordHint => 'open its record';
+  String get planOpenRecordHint => 'open it';
 
   @override
   String planRecordHint(String title) {
-    return 'record $title';
-  }
-
-  @override
-  String planPlannedContext(String details) {
-    return 'Planned · $details';
+    return 'open $title to log it';
   }
 
   @override
@@ -946,28 +866,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get templateGymFocus => 'Focus';
 
   @override
-  String get planTrackDetails => 'Track details';
-
-  @override
-  String planTrackDetailsHint(String title) {
-    return 'Choose what to record for $title, then record it';
-  }
-
-  @override
-  String get recordEditFields => 'Edit what to track';
-
-  @override
   String get focusStart => 'Start focus';
-
-  @override
-  String get focusStartHint =>
-      'Time it now; record the details when you finish';
-
-  @override
-  String get recordNow => 'Record now';
-
-  @override
-  String get recordNowHint => 'Enter what you did';
 
   @override
   String get focusPause => 'Pause';
@@ -1274,13 +1173,94 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String todaySummaryCount(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count records',
-      one: '1 record',
-    );
-    return '$_temp0';
+  String get itemSaving => 'Saving…';
+
+  @override
+  String get itemSaved => 'Saved';
+
+  @override
+  String get itemSaveFailed => 'Not saved yet: check the highlighted fields';
+
+  @override
+  String get itemMarkDone => 'Mark done';
+
+  @override
+  String get itemDone => 'Done';
+
+  @override
+  String get itemStartTimer => 'Start timer';
+
+  @override
+  String get itemTimerFullScreen => 'Full screen timer';
+
+  @override
+  String get itemWhenSection => 'When';
+
+  @override
+  String get itemOptions => 'Item options';
+
+  @override
+  String get itemDeleted => 'Deleted';
+
+  @override
+  String get itemNothingToLogHint =>
+      'Add what you want to log: a number, a list (like exercises → sets), yes/no, a rating… or just write notes.';
+
+  @override
+  String get itemTimerOtherRunning => 'Another timer is running';
+
+  @override
+  String todayDoneSummary(int count, String duration) {
+    return '$count done · $duration';
   }
+
+  @override
+  String todayDoneCount(int count) {
+    return '$count done';
+  }
+
+  @override
+  String get planNow => 'Now';
+
+  @override
+  String get todayEmptyMessageItems =>
+      'Add what you\'re doing or planning. Open it later to log how it went.';
+
+  @override
+  String get itemAddToLog => 'Add to log';
+
+  @override
+  String get itemAddToLogTitle => 'What do you want to log?';
+
+  @override
+  String get itemAddReadyMade => 'Ready-made';
+
+  @override
+  String get itemAddOneThing => 'Or add one thing';
+
+  @override
+  String get shapeSetsReps => 'Sets & reps';
+
+  @override
+  String get shapeSetsRepsDescription =>
+      'Exercises, each with sets of weight × reps';
+
+  @override
+  String get shapeChecklist => 'Checklist';
+
+  @override
+  String get shapeChecklistDescription =>
+      'Items to tick off, like things to buy or do';
+
+  @override
+  String get shapeChecklistItem => 'Item';
+
+  @override
+  String get shapeChecklistDone => 'Done';
+
+  @override
+  String get addGroupDetail => 'Add detail';
+
+  @override
+  String get itemEditFields => 'Edit what\'s logged';
 }

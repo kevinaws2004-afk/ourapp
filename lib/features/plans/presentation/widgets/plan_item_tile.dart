@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/design/app_icons.dart';
 import '../../../../core/design/tokens/sizes.dart';
 import '../../../../core/design/context_ext.dart';
+import '../../../../core/design/keys/activity_icon_ids.dart';
 import '../../../../core/design/tokens/activity_palette.dart';
 import '../../../../core/design/tokens/radius.dart';
 import '../../../../core/design/tokens/spacing.dart';
@@ -10,6 +11,7 @@ import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../shared/widgets/activity_badge.dart';
 import '../../domain/plan.dart';
 import '../../domain/watch_day_overview.dart';
+import '../../../activity_logs/presentation/value_formatting.dart';
 import '../plan_formatting.dart';
 
 /// A plan in the Plan vs Reality grammar (design_system.md §1.2):
@@ -18,8 +20,8 @@ import '../plan_formatting.dart';
 /// - recorded / done: filled with the activity's soft color, primary text, ✓
 /// - skipped / cancelled: faint outline with a status label (never red)
 ///
-/// Tapping it does the plan ([onTap], ADR-030); [onMore] opens the plan
-/// options.
+/// Tapping it opens the item to log into it ([onTap], ADR-035); [onMore]
+/// opens the plan options.
 class PlanItemTile extends StatelessWidget {
   const PlanItemTile({
     super.key,
@@ -72,6 +74,11 @@ class PlanItemTile extends StatelessWidget {
       ?formatPlanOutcome(context, item),
     ].join(' · ');
     final titleColor = recorded ? colors.textPrimary : colors.textSecondary;
+    // What was logged into it ("Chest Press 3 sets · …").
+    final summary = switch ((type, item.records.firstOrNull)) {
+      (final type?, final log?) => summarizeLog(context, type, log),
+      _ => '',
+    };
 
     // Say what a tap does (ADR-030).
     final tapHint = plan.isTask
@@ -115,9 +122,12 @@ class PlanItemTile extends StatelessWidget {
                     else
                       Opacity(
                         opacity: inactive ? 0.5 : 1,
+                        // The type can briefly be missing while the types
+                        // stream catches up with a just-created activity.
                         child: ActivityBadge(
-                          iconId: type!.iconId,
-                          colorKey: type.colorKey,
+                          iconId: type?.iconId ?? ActivityIconIds.fallback,
+                          colorKey:
+                              type?.colorKey ?? ActivityColorKey.slate.name,
                         ),
                       ),
                     const SizedBox(width: AppSpacing.md),
@@ -136,6 +146,15 @@ class PlanItemTile extends StatelessWidget {
                           if (details.isNotEmpty)
                             Text(
                               details,
+                              style: context.textStyles.bodyMedium?.copyWith(
+                                color: colors.textSecondary,
+                              ),
+                            ),
+                          if (summary.isNotEmpty)
+                            Text(
+                              summary,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                               style: context.textStyles.bodyMedium?.copyWith(
                                 color: colors.textSecondary,
                               ),

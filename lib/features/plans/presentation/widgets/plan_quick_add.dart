@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/design/app_icons.dart';
 import '../../../../core/design/tokens/spacing.dart';
 import '../../../../core/errors/app_exception.dart';
+import '../../../../core/time/clock_provider.dart';
 import '../../../../core/time/local_date.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../shared/errors/error_copy.dart';
@@ -17,17 +18,22 @@ import '../../domain/plan.dart';
 import '../../domain/plan_title_match.dart';
 import '../plan_providers.dart';
 
-/// Fast day planning (F3): type what you'll do, optionally a from–to time,
-/// press enter. The keyboard stays open for the next one.
+/// Fast day planning (F3): type what you'll do, optionally a from–to time
+/// (or "Now" to log it straight away), press enter. The keyboard stays
+/// open for the next one.
 ///
 /// Typing an activity's name ("Gym") plans that activity, so tapping the
 /// plan later records the session (ADR-030); its chip lights up to show it.
 /// A starter template's name installs that template first. Anything else is
 /// a simple task ("Bath").
 class PlanQuickAdd extends ConsumerStatefulWidget {
-  const PlanQuickAdd({super.key, required this.date});
+  const PlanQuickAdd({super.key, required this.date, this.onStartNow});
 
   final LocalDate date;
+
+  /// Offers "Now" (today only): the item starts now and opens right away,
+  /// to log what you're doing (ADR-035).
+  final ValueChanged<PlanId>? onStartNow;
 
   @override
   ConsumerState<PlanQuickAdd> createState() => _PlanQuickAddState();
@@ -42,6 +48,7 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
   bool _matchedByName = false;
   TimeOfDay? _start;
   TimeOfDay? _end;
+  bool _now = false;
 
   @override
   void dispose() {
@@ -101,13 +108,16 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
     final l10n = AppLocalizations.of(context);
     try {
       final typeId = await _resolveActivity(l10n);
-      await ref.read(createPlanProvider)(
+      final now = _now;
+      final id = await ref.read(createPlanProvider)(
         PlanDraft(
           planDate: widget.date,
           title: _title.text,
           activityTypeId: typeId,
-          plannedStartAt: _instant(_start),
-          plannedEndAt: _start == null ? null : _instant(_end),
+          plannedStartAt: now
+              ? ref.read(clockProvider).nowUtc()
+              : _instant(_start),
+          plannedEndAt: now || _start == null ? null : _instant(_end),
         ),
       );
       _title.clear();
@@ -116,8 +126,13 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
         _matchedByName = false;
         _start = null;
         _end = null;
+        _now = false;
       });
-      _focus.requestFocus();
+      if (now) {
+        widget.onStartNow?.call(id);
+      } else {
+        _focus.requestFocus();
+      }
     } on ValidationException catch (e) {
       if (mounted) {
         showMessageSnackBar(
@@ -160,6 +175,7 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
           .value
           ?.where((t) => t.supportsPlanning),
     ];
+    final onStartNow = widget.onStartNow;
     final timeLabel = switch ((_start, _end)) {
       (null, _) => l10n.planAddTime,
       (final s?, null) => material.formatTimeOfDay(s),
@@ -184,11 +200,12 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
                 onSubmitted: (_) => _add(),
               ),
             ),
-            TextButton.icon(
-              icon: const Icon(AppIcons.time),
-              label: Text(timeLabel),
-              onPressed: () => _pickTimes(l10n),
-            ),
+            if (!_now)
+              TextButton.icon(
+                icon: const Icon(AppIcons.time),
+                label: Text(timeLabel),
+                onPressed: () => _pickTimes(l10n),
+              ),
             IconButton(
               tooltip: l10n.planAddAction,
               icon: const Icon(AppIcons.add),
@@ -196,12 +213,26 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
             ),
           ],
         ),
-        if (types.isNotEmpty) ...[
+        if (types.isNotEmpty || onStartNow != null) ...[
           const SizedBox(height: AppSpacing.sm),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
+                if (onStartNow != null)
+                  Padding(
+                    padding: const EdgeInsets.only(right: AppSpacing.sm),
+                    child: FilterChip(
+                      avatar: const Icon(AppIcons.start),
+                      label: Text(l10n.planNow),
+                      selected: _now,
+                      onSelected: (selected) => setState(() {
+                        _now = selected;
+                        _start = null;
+                        _end = null;
+                      }),
+                    ),
+                  ),
                 for (final type in types)
                   Padding(
                     padding: const EdgeInsets.only(right: AppSpacing.sm),

@@ -209,7 +209,7 @@ void main() {
         app.onGenerateTitle!(tester.element(find.byType(TodayScreen))),
         'OurApp',
       );
-      expect(find.text('A fresh day'), findsOneWidget);
+      expect(find.text('Add something to this day'), findsOneWidget);
     },
   );
 }

@@ -93,9 +93,9 @@ Exactly one typed representation per row, chosen by the field type (§4, [databa
 - **Title:** an activity plan created without a title takes the activity's name. A task needs a title.
 - **Plannable:** a newly chosen activity must exist, be active and have `supportsPlanning`. An existing plan keeps its activity even if archived since. A plan with records can't change its activity.
 - **Order:** timed plans by start time, then untimed plans by `sortOrder` (`orderPlans`).
-- **Day overview** (`WatchDayOverview`): a date's plans, each with the records fulfilling it (from any day) and its effective status, plus the date's records and the subset not fulfilling one of its plans ("Also recorded"). Records of a deleted plan count as unplanned.
-- **Use cases:** `CreatePlan`, `UpdatePlan`, `SetPlanStatus` (complete/reopen tasks; skip; cancel; activity plans can't be stored completed), `MovePlan` (wall-clock shift, reopen, append), `ReorderPlans`, `DeletePlan`/`RestorePlan`. `LogActivity` accepts a `planId` and rejects a plan of another activity (`planRecordMismatch`).
-- **Plan → record (ADR-030):** recording from a plan prefills start = planned start (else now for today's plan, or that date at the current local time; `recordStartFor`) and duration = the planned length. Quick add links a typed activity name (`matchByName`) or installs the matching starter template. `AssignPlanActivity` links a task plan to an activity created for it ("Track details"). Several records may fulfil one plan ("Record again" = a second session); one session with many sets is one record.
+- **Day overview** (`WatchDayOverview`): a date's plans, each with the records fulfilling it (from any day) and its effective status, plus the date's records and the subset not fulfilling one of its plans. `entries` merges them into one list of items (ADR-035): plans and unplanned records in time order (a plan's time is its planned start, else its first record), then untimed plans in manual order. Records of a deleted plan count as unplanned.
+- **Use cases:** `CreatePlan`, `UpdatePlan`, `SetPlanStatus` (complete/reopen tasks; skip; cancel; activity plans can't be stored completed), `MovePlan` (wall-clock shift, reopen, append), `ReorderPlans`, `DeletePlan`/`RestorePlan`. Items (ADR-035): `EnsureItemActivity` (the first thing logged into an item without an activity links it to the active activity with its name, or creates one with no fields), `MarkItemDone` (a task is completed; an activity item gets a log at its planned time and length), `DeleteItem`/`RestoreItem` (the plan and its log together). `LogActivity` accepts a `planId` and rejects a plan of another activity (`planRecordMismatch`).
+- **Item → log (ADR-035):** an item has at most one live log (`ActivityLogRepository.getLogForPlan`: the plan's earliest active log; older data with several shows the others as separate items). It's created by the first change, with start = planned start (else now for today's plan, or that date at the current local time; `recordStartFor`), and saved as the user types: `LogActivity` / `UpdateActivityLog` with `partial: true`, where missing required values are allowed and all other checks apply. Quick add links a typed activity name (`matchByName`) or installs the matching starter template. One session with many sets is one record.
 
 ### 3.6 Measurement (implemented in Phase 6, ADR-034)
 `id, type, value, unitCode, normalizedValue, recordedAt, tzOffsetMinutes, localDate, notes?, createdAt, updatedAt`.
@@ -111,9 +111,8 @@ Exactly one typed representation per row, chosen by the field type (§4, [databa
   - `StartFocusSession`: a timer activity, an optional plan of that activity, one active session.
   - `PauseFocusSession` / `ResumeFocusSession`.
   - `DiscardFocusSession`: soft delete, no record.
-  - `FinishFocusSession(id, draft)`: in one `UnitOfWork`, `LogActivity` with `endedAt` = the pause (or now) and the session's plan, then `markFinished`.
-- The record form opened from a session is prefilled with its start and focused time. Backing out leaves the session paused.
-- Plans show `EffectivePlanStatus.inProgress` while their session is active.
+  - `FinishFocusSession(id)` (ADR-035): in one `UnitOfWork`, the timed span goes into the item's log: a new log (start, `endedAt` = the pause or now, duration) if the plan has none, otherwise an update that keeps its values and notes (a second timed session keeps the first start and adds its time); then `markFinished`.
+- Plans show `EffectivePlanStatus.inProgress` while their session is active, even if something is already logged.
 
 ## 4. Field type catalog
 

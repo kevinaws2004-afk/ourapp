@@ -35,20 +35,24 @@ class DbActivityTypeRepository implements ActivityTypeRepository {
   );
 
   @override
-  Stream<List<ActivityType>> watchActiveTypes() => guardStorageStream(
-    'watchActiveTypes',
-    _watch(() async {
-      final rows =
-          await (_db.select(_db.activityTypes)
-                ..where((t) => isActive(t.deletedAt))
-                ..orderBy([
-                  (t) => OrderingTerm.asc(t.sortOrder),
-                  (t) => OrderingTerm.asc(t.name),
-                ]))
-              .get();
-      return _withFields(rows);
-    }),
-  );
+  Stream<List<ActivityType>> watchActiveTypes() =>
+      guardStorageStream('watchActiveTypes', _watch(_activeTypes));
+
+  @override
+  Future<List<ActivityType>> getActiveTypes() =>
+      guardStorage('getActiveTypes', _activeTypes);
+
+  Future<List<ActivityType>> _activeTypes() async {
+    final rows =
+        await (_db.select(_db.activityTypes)
+              ..where((t) => isActive(t.deletedAt))
+              ..orderBy([
+                (t) => OrderingTerm.asc(t.sortOrder),
+                (t) => OrderingTerm.asc(t.name),
+              ]))
+            .get();
+    return _withFields(rows);
+  }
 
   @override
   Stream<List<ActivityType>> watchAllTypes() => guardStorageStream(

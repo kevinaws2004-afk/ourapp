@@ -337,7 +337,7 @@
   - **Plan** is the date-based planning system. A calendar/date selector navigates to any past, present or future date and shows that date's plans alongside what was actually recorded.
   - **Today** is the specialized view of the current date: today's plan, today's reality, and their relationship.
   - **Me → Activities** is where reusable Activity Types are created and configured (builder, templates). It's for setup, not daily recording.
-  - **Quick Record:** records an activity that wasn't planned. *Amended 2026-10-04 (owner): no floating Record button on every tab, and no rail action.* Quick Record now opens from Today's **Record something** (section header and empty state). Planned activities are recorded by tapping the plan (ADR-030), and an activity's page keeps its Record button.
+  - **Quick Record:** records an activity that wasn't planned. *Amended 2026-10-04 (owner): no floating Record button on every tab, and no rail action.* ~~Quick Record now opens from Today's **Record something**.~~ *Superseded by ADR-035:* there is no Quick Record sheet. Anything unplanned is added to the day with **Now** and opened to log into it; an activity's page keeps its Record button, which does the same.
   - **Terminology:**
     - "Record" is the user-facing action.
     - Activity Log is the internal/domain name.
@@ -373,7 +373,7 @@
   - Removing `sand` means a stored `color_key = 'sand'` renders with the `slate` fallback, and the builder asks for a new color on the next save. No migration is needed: the app is pre-release and no template used sand.
 
 ### ADR-030: Plan and Record are one user workflow
-- **Status:** Accepted 2026-10-04 (owner correction after reviewing Phases 3–4). Refines ADR-018 and ADR-028. **Implemented 2026-10-04.**
+- **Status:** Accepted 2026-10-04 (owner correction after reviewing Phases 3–4). Refines ADR-018 and ADR-028. **Implemented 2026-10-04.** **Partly superseded by ADR-035 (2026-10-04):** the separate record form, "Track details", "Record again", the Start focus / Record now choice and Quick Record are gone; a plan opens as an item you log into. What still holds: the domain concepts, the day-planner quick add (names match activities and templates), planned-slot prefill, plan options behind More, and one session = one record.
 - **Decision:**
   - The domain keeps three concepts: Activity Type (definition), Plan (intention) and Activity Log (reality, "Record" in the UI). The **user workflow is one flow**: plan an activity for a date → tap it → record what actually happened → the record links to the plan → the plan shows as done.
   - **Tapping a plan does the plan:**
@@ -401,7 +401,7 @@
   - No schema or domain-rule change: `activity_logs.plan_id`, derived completion and the Repeating Group storage are unchanged.
 
 ### ADR-031: Focus sessions derive time from timestamps; the record is created on finish
-- **Status:** Accepted 2026-10-04 (owner chose "Record on finish"; resolves ADR-P09). **Implemented 2026-10-04 (Phase 5, schema v5).**
+- **Status:** Accepted 2026-10-04 (owner chose "Record on finish"; resolves ADR-P09). **Implemented 2026-10-04 (Phase 5, schema v5).** **Finish amended by ADR-035:** the timer runs inside its item while you log; finishing writes the timed span into the item's log (creating it if needed) instead of opening a record form. Timestamp-derived time, one active session and the single transaction are unchanged.
 - **Decision:**
   - `focus_sessions` stores `state` (running, paused, finished, discarded), `started_at`, `paused_at`, `paused_duration_ms`, `ended_at`, `duration_ms`, the activity, and the optional plan and record.
   - **Elapsed time = (end, or pause, or now) − start − completed pauses.** It is computed from persisted timestamps and the `Clock`, never counted in memory, so it survives backgrounding and process death (FR-FO-06).
@@ -448,6 +448,28 @@
   - No activity-specific chart code. Gym volume and PRs are generic metrics over Repeating Group rows.
   - Duration fields aren't chartable as field values yet: they store `duration_ms`, not `normalized_value`.
 
+### ADR-035: An item on your day is where you log; it saves as you type
+- **Status:** Accepted 2026-10-04 (owner, after using Phases 1–6 on a phone: "the flow is missing… user should not go somewhere else"). Supersedes parts of ADR-028, ADR-030 and ADR-031. **Steps 1–2 implemented 2026-10-04.**
+- **Decision:**
+  - **One user-facing concept: an item on a day.** It has a title, date, optional time and planned length, a state (planned, in progress, done, skipped) and what was logged into it. Storage is unchanged: a `Plan`, at most one live `ActivityLog` for it (`activity_logs.plan_id`), and the `ActivityType` that remembers its layout.
+  - **Opening an item is where you log into it** (`/item/:planId`). The same screen serves planned, in-progress and done items. Records made without a plan (older data, or from an activity's page) open the same way (`/item/log/:logId`).
+  - **Saved as you type.** There is no Save button and nothing to discard. The first change creates the log (start = the planned start, or now); later changes update it. You can leave mid-session and come back to add more (e.g. another set).
+  - **Required is a hint while logging.** Auto-saved logs are *partial*: `LogValidator.validate(partial: true)` skips missing required values; type, range and unit checks still apply. The `*` on the label marks what's expected.
+  - **Anything can be logged without setup.** The first thing logged into an item with no activity (a task or a new name like "Doctor call") gives it an activity named after it (an existing one with that name, or a new one with no fields), so later items with that name share it.
+  - **Add to log, right in the item.** Every item has **Add to log**: ready-made shapes in one tap (*Sets & reps* = Exercises → Sets → Weight kg × Reps; *Checklist* = Item + Done) or one thing of any field type (Text, Number with unit, Yes/No, choices, Date, Time, Duration, Rating, **List**), named and configured in the field sheet. Lists offer **Add detail** in place. What's added goes onto the item's activity (`AddItemField`, created for it first if needed), so the next item with that name has it. The pencil in the item opens the builder to rename, reorder or remove.
+  - **Done** = something was logged, or **Mark done** (an activity item gets a log at its planned time and length; a task is ticked off). A running timer shows the item as **In progress** even if something is logged.
+  - **The timer lives in the item.** Start timer / Pause / Finish sit at the top of the item, and you keep logging while it runs; the full-screen timer is optional. Finishing writes the timed span into the item's log in one transaction (a second session on the same item adds its time).
+  - **Today and Plan show one list of items**: plans and records made without a plan, in time order (a plan's time is its planned start, or when it was logged), then untimed plans in manual order. The separate "Recorded / Also recorded" sections are gone.
+  - **Adding:** the quick add on Today and Plan, with **Now** (today only) for what you're doing right now: it adds the item at the current time and opens it. An activity's page "Record" does the same for that activity.
+  - **Deleting an item** deletes the plan and what was logged into it; Undo restores both.
+- **Context:** On a real device the owner found plan, record and setup felt like three separate places. They want the planner to be the app: plan Gym, then at the gym open it and log sets into it, with nothing else to go through.
+- **Reason:** Planning exists to be lived; the planned item is where reality gets captured, as it happens.
+- **Consequences:**
+  - Removed: the record form (`LogEditorScreen`), the Quick Record sheet, the Start focus / Record now sheet, "Track details" and "Record again".
+  - Domain additions: `EnsureItemActivity`, `AddItemField`, `definitionOf(ActivityType)`, `MarkItemDone`, `DeleteItem` / `RestoreItem`, `partial` on `LogActivity` / `UpdateActivityLog`, `ActivityLogRepository.getLogForPlan`, `ActivityTypeRepository.getActiveTypes`, `DayOverview.entries`. `FinishFocusSession` takes only the session.
+  - No schema change.
+  - Next steps of the same rework (planned): week/month planner with repeating items, "Plan next", and automatic per-activity insights.
+
 ---
 
 ## Pending decisions
@@ -473,7 +495,7 @@ Each needs owner approval. **Recommendation** is what the docs currently assume.
 | **ADR-P15** | Search | V1: bounded `LIKE` queries over notes, `value_text` and `value_json`; adopt FTS5 if slow (requires bundled SQLite with FTS5, e.g. via `sqlite3_flutter_libs`) | FTS5 from day one | Search is V1? (FR-SH-01) |
 | ~~ADR-P16~~ | Error handling | **Resolved → ADR-025** | | |
 | **ADR-P17** | Animation tooling | Native Flutter animation APIs (implicit/explicit animations, `AnimatedSwitcher`, page transitions); add `flutter_animate` only if it materially reduces complexity; `animations` package for container transform is acceptable | `flutter_animate` everywhere; Rive/Lottie for illustrations | Dependency discipline |
-| **ADR-P18** | Draft persistence for long logs | Persist in-progress log drafts (e.g. a gym session) so backgrounding/kill doesn't lose input: either a `log_drafts` table (JSON of the form) or saving the log early with `ended_at = NULL` | Memory only (risk of data loss) | §43 gym flow lasts ~1 hour |
+| **ADR-P18** | Draft persistence for long logs (**resolved by ADR-035, 2026-10-04:** items save as you type, so there are no drafts) | Persist in-progress log drafts (e.g. a gym session) so backgrounding/kill doesn't lose input: either a `log_drafts` table (JSON of the form) or saving the log early with `ended_at = NULL` | Memory only (risk of data loss) | §43 gym flow lasts ~1 hour |
 | ~~ADR-P19~~ | Localization infrastructure | **Resolved → ADR-015** | | |
 | ~~ADR-P20~~ | Activity type/field schema | **Resolved → ADR-026** | | |
 | ~~ADR-P21~~ | Numeric font with tabular figures | **Resolved → ADR-032 (DM Mono for numeric tokens)** | | |

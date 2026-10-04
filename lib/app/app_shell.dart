@@ -10,8 +10,9 @@ import '../l10n/generated/app_localizations.dart';
 /// Adaptive primary navigation (ADR-028, ui_guidelines.md §2): Today, Plan,
 /// Insights, Me. Bottom bar on compact windows, rail on medium/expanded. Each
 /// tab keeps its own navigation stack. There is no floating Record button
-/// (owner, 2026-10-04): planned activities are recorded from the plan, and
-/// unplanned ones from Today's "Record something" (Quick Record).
+/// (owner, 2026-10-04): everything is an item on a day, added from Today or
+/// Plan (with "Now" for what you're doing right now) and logged by opening
+/// it (ADR-035).
 class AppShell extends StatelessWidget {
   const AppShell({super.key, required this.navigationShell});
 

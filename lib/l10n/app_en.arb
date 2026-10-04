@@ -223,7 +223,7 @@
   "@fieldTypeText": {
     "description": "Field type name: Text."
   },
-  "fieldTypeTextDescription": "Words, a short note or a long description",
+  "fieldTypeTextDescription": "Words, a short note or a long description, like what the doctor said",
   "@fieldTypeTextDescription": {
     "description": "Field type description for Text."
   },
@@ -291,11 +291,11 @@
   "@fieldTypeRatingDescription": {
     "description": "Field type description for Rating."
   },
-  "fieldTypeRepeatingGroup": "Repeating group",
+  "fieldTypeRepeatingGroup": "List",
   "@fieldTypeRepeatingGroup": {
     "description": "Field type name: Repeating group."
   },
-  "fieldTypeRepeatingGroupDescription": "A list of items, like exercises or sets",
+  "fieldTypeRepeatingGroupDescription": "Rows with their own details, like exercises → sets, medicines or people",
   "@fieldTypeRepeatingGroupDescription": {
     "description": "Field type description for Repeating group."
   },
@@ -394,10 +394,6 @@
   "doneAction": "Done",
   "@doneAction": {
     "description": "Button: confirm and close a sheet."
-  },
-  "whenLabel": "When",
-  "@whenLabel": {
-    "description": "Log start date/time label."
   },
   "durationLabel": "Duration",
   "@durationLabel": {
@@ -680,27 +676,6 @@
   "@actionRecord": {
     "description": "User-facing action for recording what actually happened (ADR-028)."
   },
-  "recordNewTitle": "Record {name}",
-  "@recordNewTitle": {
-    "description": "Record form title when creating.",
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "recordEditTitle": "Edit record",
-  "@recordEditTitle": {
-    "description": "Record form title when editing."
-  },
-  "recordSaved": "Saved",
-  "@recordSaved": {
-    "description": "Snackbar after saving a record."
-  },
-  "recordDeleted": "Record deleted",
-  "@recordDeleted": {
-    "description": "Snackbar after deleting a record."
-  },
   "activitiesTitle": "Activities",
   "@activitiesTitle": {
     "description": "Title of the activity management screen under Me."
@@ -720,14 +695,6 @@
   "meActivitiesSubtitle": "Create and configure what you record",
   "@meActivitiesSubtitle": {
     "description": "Subtitle of the Activities entry on the Me tab."
-  },
-  "quickRecordTitle": "What did you do?",
-  "@quickRecordTitle": {
-    "description": "Title of the Quick Record sheet."
-  },
-  "quickRecordEmpty": "Create an activity first, then record it here.",
-  "@quickRecordEmpty": {
-    "description": "Quick Record sheet when there are no activities."
   },
   "planToday": "Today",
   "@planToday": {
@@ -760,14 +727,6 @@
   "planPlannedEmpty": "Nothing planned for this day.",
   "@planPlannedEmpty": {
     "description": "Shown when a date has no plans."
-  },
-  "planRecordedSection": "Recorded",
-  "@planRecordedSection": {
-    "description": "Section title for what was actually recorded on a date."
-  },
-  "planRecordedEmpty": "Nothing recorded on this day.",
-  "@planRecordedEmpty": {
-    "description": "Shown when nothing was recorded on a past/current date."
   },
   "groupItemCount": "{itemLabel} × {count}",
   "@groupItemCount": {
@@ -971,14 +930,6 @@
   "@planQuickAddHint": {
     "description": "Plan tab quick add: hint in the title field."
   },
-  "planAlsoRecordedSection": "Also recorded",
-  "@planAlsoRecordedSection": {
-    "description": "Section title for records that weren't planned, shown under the plan."
-  },
-  "planNothingUnplanned": "Everything recorded was planned.",
-  "@planNothingUnplanned": {
-    "description": "Shown when every record of the day fulfils a plan."
-  },
   "planAnyTime": "Any time",
   "@planAnyTime": {
     "description": "Plan sheet: shown when the plan has no start time."
@@ -1015,10 +966,6 @@
   "@planTitleHelper": {
     "description": "Plan sheet: helper under the title field."
   },
-  "planRecordIt": "Record it",
-  "@planRecordIt": {
-    "description": "Plan sheet action: open the record form for this plan."
-  },
   "planCompleteTask": "Mark as done",
   "@planCompleteTask": {
     "description": "Completes a task (no record is created)."
@@ -1039,11 +986,11 @@
   "@planMoveToTomorrow": {
     "description": "Plan sheet action: move the plan to the next day."
   },
-  "planDelete": "Delete plan",
+  "planDelete": "Delete",
   "@planDelete": {
     "description": "Plan sheet action: delete the plan (with Undo)."
   },
-  "planDeletedMessage": "Plan deleted",
+  "planDeletedMessage": "Deleted",
   "@planDeletedMessage": {
     "description": "Snackbar after deleting a plan (with Undo)."
   },
@@ -1067,7 +1014,7 @@
   "@planStatusDone": {
     "description": "Status of a completed task."
   },
-  "planStatusRecorded": "Recorded",
+  "planStatusRecorded": "Done",
   "@planStatusRecorded": {
     "description": "Status of an activity plan with a record but no duration."
   },
@@ -1091,34 +1038,6 @@
   "@todayGreetingEvening": {
     "description": "Today greeting in the evening and at night."
   },
-  "todayPlanSection": "Today's plan",
-  "@todayPlanSection": {
-    "description": "Today: section title for today's plans."
-  },
-  "todayEditPlan": "Plan",
-  "@todayEditPlan": {
-    "description": "Today: opens the Plan tab on today."
-  },
-  "todayNothingPlanned": "Nothing planned for today.",
-  "@todayNothingPlanned": {
-    "description": "Today: no plans but there are records."
-  },
-  "todayEmptyTitle": "A fresh day",
-  "@todayEmptyTitle": {
-    "description": "Today empty state title."
-  },
-  "todayEmptyMessage": "Plan what you want to do, or record something you've already done.",
-  "@todayEmptyMessage": {
-    "description": "Today empty state message."
-  },
-  "todayPlanYourDay": "Plan your day",
-  "@todayPlanYourDay": {
-    "description": "Today empty state: primary action."
-  },
-  "todayRecordSomething": "Record something",
-  "@todayRecordSomething": {
-    "description": "Today empty state: secondary action (Quick Record)."
-  },
   "validationPlannedDurationConflict": "Use either an end time or a length, not both.",
   "@validationPlannedDurationConflict": {
     "description": "Validation message."
@@ -1139,7 +1058,7 @@
   "@validationPlanRecordMismatch": {
     "description": "Validation message."
   },
-  "planRecordedDuration": "Recorded {duration}",
+  "planRecordedDuration": "Done · {duration}",
   "@planRecordedDuration": {
     "description": "Outcome of a recorded plan without a planned length.",
     "placeholders": {
@@ -1148,7 +1067,7 @@
       }
     }
   },
-  "planRecordedOfPlanned": "Recorded {actual} of {planned}",
+  "planRecordedOfPlanned": "Done · {actual} of {planned}",
   "@planRecordedOfPlanned": {
     "description": "Planned vs actual: actual duration of the planned duration.",
     "placeholders": {
@@ -1172,44 +1091,19 @@
       }
     }
   },
-  "todaySummary": "{count, plural, =1{1 record} other{{count} records}} · {duration}",
-  "@todaySummary": {
-    "description": "Today: count of records and total recorded time.",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      },
-      "duration": {
-        "type": "String"
-      }
-    }
-  },
   "planOptions": "Plan options",
   "@planOptions": {
     "description": "Tooltip of a plan's More button: edit, skip, move, delete."
   },
-  "planRecordAgain": "Record again",
-  "@planRecordAgain": {
-    "description": "Plan options: record another session for an already recorded plan."
-  },
-  "planOpenRecordHint": "open its record",
+  "planOpenRecordHint": "open it",
   "@planOpenRecordHint": {
     "description": "Screen reader hint for tapping a recorded plan."
   },
-  "planRecordHint": "record {title}",
+  "planRecordHint": "open {title} to log it",
   "@planRecordHint": {
     "description": "Screen reader hint for tapping a planned activity.",
     "placeholders": {
       "title": {
-        "type": "String"
-      }
-    }
-  },
-  "planPlannedContext": "Planned · {details}",
-  "@planPlannedContext": {
-    "description": "Record form: the plan this record fulfils, e.g. 'Planned · Gym · 45 min'.",
-    "placeholders": {
-      "details": {
         "type": "String"
       }
     }
@@ -1235,38 +1129,9 @@
   "@templateGymFocus": {
     "description": "Starter template content (becomes editable user data once added). What a gym session trained, e.g. Chest."
   },
-  "planTrackDetails": "Track details",
-  "@planTrackDetails": {
-    "description": "Turn a plan into something you record, with fields you choose."
-  },
-  "planTrackDetailsHint": "Choose what to record for {title}, then record it",
-  "@planTrackDetailsHint": {
-    "description": "Explains Track details.",
-    "placeholders": {
-      "title": {
-        "type": "String"
-      }
-    }
-  },
-  "recordEditFields": "Edit what to track",
-  "@recordEditFields": {
-    "description": "Record form action: change this activity's fields."
-  },
   "focusStart": "Start focus",
   "@focusStart": {
     "description": "Starts a focus timer for the activity."
-  },
-  "focusStartHint": "Time it now; record the details when you finish",
-  "@focusStartHint": {
-    "description": "Explains Start focus."
-  },
-  "recordNow": "Record now",
-  "@recordNow": {
-    "description": "Records the activity right away, without a timer."
-  },
-  "recordNowHint": "Enter what you did",
-  "@recordNowHint": {
-    "description": "Explains Record now."
   },
   "focusPause": "Pause",
   "@focusPause": {
@@ -1689,13 +1554,129 @@
       }
     }
   },
-  "todaySummaryCount": "{count, plural, =1{1 record} other{{count} records}}",
-  "@todaySummaryCount": {
-    "description": "Today: count of records when none has a duration.",
+  "itemSaving": "Saving…",
+  "@itemSaving": {
+    "description": "Shown in an item while what the user logged is being saved."
+  },
+  "itemSaved": "Saved",
+  "@itemSaved": {
+    "description": "Shown in an item once everything logged is saved (it saves as you type)."
+  },
+  "itemSaveFailed": "Not saved yet: check the highlighted fields",
+  "@itemSaveFailed": {
+    "description": "Shown in an item when a value can't be saved."
+  },
+  "itemMarkDone": "Mark done",
+  "@itemMarkDone": {
+    "description": "Button in an item: done, without logging details."
+  },
+  "itemDone": "Done",
+  "@itemDone": {
+    "description": "Status of an item that has been done or logged."
+  },
+  "itemStartTimer": "Start timer",
+  "@itemStartTimer": {
+    "description": "Button in an item: time the activity while logging it."
+  },
+  "itemTimerFullScreen": "Full screen timer",
+  "@itemTimerFullScreen": {
+    "description": "Opens the running timer full screen."
+  },
+  "itemWhenSection": "When",
+  "@itemWhenSection": {
+    "description": "Section in an item with when it happened and how long."
+  },
+  "itemOptions": "Item options",
+  "@itemOptions": {
+    "description": "Tooltip of the item's options menu (edit, skip, move, delete)."
+  },
+  "itemDeleted": "Deleted",
+  "@itemDeleted": {
+    "description": "Snackbar after deleting an item."
+  },
+  "itemNothingToLogHint": "Add what you want to log: a number, a list (like exercises → sets), yes/no, a rating… or just write notes.",
+  "@itemNothingToLogHint": {
+    "description": "Shown in an item whose activity has no fields yet."
+  },
+  "itemTimerOtherRunning": "Another timer is running",
+  "@itemTimerOtherRunning": {
+    "description": "Shown in an item when a timer runs for a different item."
+  },
+  "todayDoneSummary": "{count} done · {duration}",
+  "@todayDoneSummary": {
+    "description": "Today's summary: how many items were done, and their total time.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "todayDoneCount": "{count} done",
+  "@todayDoneCount": {
+    "description": "Today's summary when nothing done has a duration.",
     "placeholders": {
       "count": {
         "type": "int"
       }
     }
+  },
+  "planNow": "Now",
+  "@planNow": {
+    "description": "Chip in quick add: it's happening now; opens the item to log it."
+  },
+  "todayEmptyMessageItems": "Add what you're doing or planning. Open it later to log how it went.",
+  "@todayEmptyMessageItems": {
+    "description": "Today empty state message."
+  },
+  "itemAddToLog": "Add to log",
+  "@itemAddToLog": {
+    "description": "Button in an item: add something new to log (a number, a list, …)."
+  },
+  "itemAddToLogTitle": "What do you want to log?",
+  "@itemAddToLogTitle": {
+    "description": "Title of the sheet for adding something to log."
+  },
+  "itemAddReadyMade": "Ready-made",
+  "@itemAddReadyMade": {
+    "description": "Section of ready-made things to log (sets & reps, checklist)."
+  },
+  "itemAddOneThing": "Or add one thing",
+  "@itemAddOneThing": {
+    "description": "Section of single things to log (number, text, list…)."
+  },
+  "shapeSetsReps": "Sets & reps",
+  "@shapeSetsReps": {
+    "description": "Ready-made: exercises, each with sets of weight × reps."
+  },
+  "shapeSetsRepsDescription": "Exercises, each with sets of weight × reps",
+  "@shapeSetsRepsDescription": {
+    "description": "Description of the Sets & reps ready-made."
+  },
+  "shapeChecklist": "Checklist",
+  "@shapeChecklist": {
+    "description": "Ready-made: items you can tick off."
+  },
+  "shapeChecklistDescription": "Items to tick off, like things to buy or do",
+  "@shapeChecklistDescription": {
+    "description": "Description of the Checklist ready-made."
+  },
+  "shapeChecklistItem": "Item",
+  "@shapeChecklistItem": {
+    "description": "A checklist row."
+  },
+  "shapeChecklistDone": "Done",
+  "@shapeChecklistDone": {
+    "description": "A checklist row's tick."
+  },
+  "addGroupDetail": "Add detail",
+  "@addGroupDetail": {
+    "description": "Button inside a list in an item: add another detail to each row."
+  },
+  "itemEditFields": "Edit what's logged",
+  "@itemEditFields": {
+    "description": "Tooltip: rename, reorder or remove what this item logs."
   }
 }

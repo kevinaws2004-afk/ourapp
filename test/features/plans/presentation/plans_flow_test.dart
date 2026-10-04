@@ -1,11 +1,12 @@
 import 'package:daylog/core/database/app_database.dart';
 import 'package:daylog/core/time/local_date.dart';
-import 'package:daylog/features/activity_logs/presentation/log_editor_screen.dart';
 import 'package:daylog/features/activity_types/data/db_activity_type_repository.dart';
 import 'package:daylog/features/activity_types/domain/activity_type_use_cases.dart';
 import 'package:daylog/features/plans/data/db_plan_repository.dart';
 import 'package:daylog/features/plans/domain/plan.dart';
 import 'package:daylog/features/plans/domain/plan_use_cases.dart';
+import 'package:daylog/features/plans/presentation/item/item_notifier.dart';
+import 'package:daylog/features/plans/presentation/item/item_screen.dart';
 import 'package:daylog/features/plans/presentation/widgets/plan_item_tile.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/features/settings/domain/theme_preference.dart';
@@ -43,15 +44,23 @@ Future<void> seedReadingPlan(AppDatabase db, FakeClock clock) async {
   );
 }
 
-/// Taps a planned activity; timer activities first ask "Start focus" or
-/// "Record now" (F5), and this picks Record now.
-Future<void> tapToRecord(WidgetTester tester, Finder plan) async {
-  await tester.tap(plan);
+/// Opens an item by tapping it on a day's list.
+Future<void> openItem(WidgetTester tester, Finder item) async {
+  await tester.tap(item);
   await tester.pumpAndSettle();
-  if (find.text('Record now').evaluate().isNotEmpty) {
-    await tester.tap(find.text('Record now'));
-    await tester.pumpAndSettle();
-  }
+  expect(find.byType(ItemScreen), findsOneWidget);
+}
+
+/// Lets an item's auto-save run (it saves shortly after typing stops).
+Future<void> waitForSave(WidgetTester tester) async {
+  await tester.pump(ItemNotifier.saveDelay + const Duration(milliseconds: 50));
+  await tester.pumpAndSettle();
+}
+
+/// Leaves an item, back to the day.
+Future<void> closeItem(WidgetTester tester) async {
+  await tester.pageBack();
+  await tester.pumpAndSettle();
 }
 
 void main() {
@@ -75,27 +84,43 @@ void main() {
     expect(find.byTooltip('Mark as not done'), findsOneWidget);
   });
 
-  testAppWidgets('tapping a planned activity opens its record form; saving '
-      'completes the plan, and tapping it again opens the record', (
+  testAppWidgets('opening a planned activity is where you log into it: it '
+      'saves as you type, and the plan shows as done with what was logged', (
     tester,
   ) async {
     await pumpTestApp(tester, preferences: _onboarded, seed: seedReadingPlan);
     await openPlan(tester);
 
-    await tapToRecord(tester, find.text('Read'));
-    expect(find.byType(LogEditorScreen), findsOneWidget);
-    expect(find.textContaining('Planned · Read · '), findsOneWidget);
+    await openItem(tester, find.text('Read'));
+    expect(find.text('Mark done'), findsOneWidget);
+    expect(find.text('Save'), findsNothing, reason: 'no Save button');
     await enterField(tester, 'Book *', 'Antifragile');
-    await scrollAndTap(tester, find.widgetWithText(FilledButton, 'Save'));
+    await waitForSave(tester);
+    expect(find.text('Saved'), findsOneWidget);
+    expect(find.text('Done'), findsOneWidget);
 
-    expect(find.byType(LogEditorScreen), findsNothing);
-    expect(find.textContaining(' · Recorded'), findsOneWidget);
+    await closeItem(tester);
+    expect(find.textContaining('Done'), findsOneWidget, reason: 'its status');
+    expect(find.text('Antifragile'), findsOneWidget, reason: 'summary');
     expect(find.byIcon(AppIcons.taskDone), findsOneWidget, reason: '✓');
-    expect(find.text('Everything recorded was planned.'), findsOneWidget);
 
-    await tester.tap(find.text('Read'));
-    await tester.pumpAndSettle();
-    expect(find.text('Edit record'), findsOneWidget);
+    // Coming back to it shows what was logged, ready for more.
+    await openItem(tester, find.text('Read'));
+    expect(find.text('Antifragile'), findsOneWidget);
+  });
+
+  testAppWidgets('leaving an item right after typing still saves it', (
+    tester,
+  ) async {
+    await pumpTestApp(tester, preferences: _onboarded, seed: seedReadingPlan);
+    await openPlan(tester);
+
+    await openItem(tester, find.text('Read'));
+    await enterField(tester, 'Book *', 'Skin in the Game');
+    await closeItem(tester);
+    await waitForSave(tester);
+
+    expect(find.text('Skin in the Game'), findsOneWidget);
   });
 
   testAppWidgets('plan options: move to tomorrow, with Undo', (tester) async {
@@ -104,7 +129,7 @@ void main() {
 
     await tester.tap(find.byTooltip('Plan options'));
     await tester.pumpAndSettle();
-    expect(find.text('Record it'), findsOneWidget);
+    expect(find.text('Record it'), findsNothing, reason: 'open it instead');
     expect(find.text('Mark as done'), findsNothing, reason: 'tasks only');
     await scrollAndTap(tester, find.text('Move to tomorrow'));
 
@@ -116,7 +141,9 @@ void main() {
     expect(find.text('Read'), findsOneWidget);
   });
 
-  testAppWidgets('tapping a task marks it done', (tester) async {
+  testAppWidgets('a task opens like any item and can be marked done there', (
+    tester,
+  ) async {
     await pumpTestApp(tester, preferences: _onboarded);
     await openPlan(tester);
     await tester.enterText(
@@ -126,81 +153,85 @@ void main() {
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Call mum'));
+    await openItem(tester, find.text('Call mum'));
+    await tester.tap(find.text('Mark done'));
     await tester.pumpAndSettle();
-    expect(find.text('Track details'), findsOneWidget);
-    await tester.tap(find.text('Mark as done'));
-    await tester.pumpAndSettle();
+    expect(find.text('Done'), findsOneWidget);
 
+    await closeItem(tester);
     expect(find.byTooltip('Mark as not done'), findsOneWidget);
   });
 
-  testAppWidgets('any plan can be tracked with fields the user chooses: '
-      '"Food" → track details → add a field → record it', (tester) async {
+  testAppWidgets('anything can be logged: notes on a new name save it as '
+      'done, with an activity of its own', (tester) async {
     await pumpTestApp(tester, preferences: _onboarded);
     await openPlan(tester);
     await tester.enterText(
       find.widgetWithText(TextField, 'Add something to this day'),
-      'Food',
+      'Doctor call',
     );
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Food'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Track details'));
-    await tester.pumpAndSettle();
+    await openItem(tester, find.text('Doctor call'));
+    await enterField(tester, 'Notes', 'Take vitamin D; check again in May');
+    await waitForSave(tester);
+    expect(find.text('Saved'), findsOneWidget);
 
-    // The builder starts with the plan's name; the user picks the fields.
-    expect(find.widgetWithText(TextFormField, 'Food'), findsOneWidget);
-    await scrollAndTap(tester, find.text('Add field'));
-    await tester.tap(find.text('Number'));
-    await tester.pumpAndSettle();
-    await tester.enterText(
-      find.widgetWithText(TextField, 'Field name'),
-      'Calories',
+    await closeItem(tester);
+    expect(
+      find.byTooltip('Mark as not done'),
+      findsNothing,
+      reason:
+          'not a '
+          'bare task any more',
     );
-    await tester.tap(find.text('Done'));
-    await tester.pumpAndSettle();
-    await scrollAndTap(tester, find.widgetWithText(FilledButton, 'Save'));
-
-    // Straight into recording the plan with those fields.
-    expect(find.byType(LogEditorScreen), findsOneWidget);
-    expect(find.textContaining('Planned · Food'), findsOneWidget);
-    await enterField(tester, 'Calories', '650');
-    await scrollAndTap(tester, find.widgetWithText(FilledButton, 'Save'));
-
-    expect(find.byIcon(AppIcons.taskDone), findsOneWidget, reason: 'Food ✓');
+    expect(find.byIcon(AppIcons.taskDone), findsOneWidget, reason: '✓');
   });
 
-  testAppWidgets('Today greets and tapping today\'s plan records it', (
-    tester,
-  ) async {
-    await pumpTestApp(tester, preferences: _onboarded, seed: seedReadingPlan);
+  testAppWidgets('Today: "Now" adds an item and opens it to log straight '
+      'away', (tester) async {
+    await pumpTestApp(
+      tester,
+      preferences: _onboarded,
+      seed: (db, clock) => CreateActivityType(
+        DbActivityTypeRepository(db, clock),
+        SequentialIdGenerator(),
+      )(readingDefinition()),
+    );
 
     expect(find.text('Good morning'), findsOneWidget);
-    expect(find.text("Today's plan"), findsOneWidget);
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Add something to this day'),
+      'Reading',
+    );
+    await tester.tap(find.widgetWithText(FilterChip, 'Now'));
+    await tester.pumpAndSettle();
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Read'));
-    await tester.pumpAndSettle();
-    expect(find.text('Start focus'), findsOneWidget, reason: 'timer activity');
-    await tester.tap(find.text('Record now'));
-    await tester.pumpAndSettle();
-    expect(find.byType(LogEditorScreen), findsOneWidget);
+    expect(find.byType(ItemScreen), findsOneWidget);
+    await enterField(tester, 'Book *', 'Deep Work');
+    await closeItem(tester);
+    await waitForSave(tester);
+    expect(find.text('Deep Work'), findsOneWidget);
+    expect(find.textContaining('1 done'), findsOneWidget);
   });
 
-  testAppWidgets('an empty Today offers to plan the day', (tester) async {
+  testAppWidgets('an empty Today invites adding to the day', (tester) async {
     await pumpTestApp(tester, preferences: _onboarded);
 
-    expect(find.text('A fresh day'), findsOneWidget);
-    await tester.tap(find.text('Plan your day'));
-    await tester.pumpAndSettle();
-
+    expect(
+      find.text(
+        "Add what you're doing or planning. Open it later to log how it went.",
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Add something to this day'), findsOneWidget);
   });
 
-  testAppWidgets('typing an activity\'s name plans that activity, with a '
-      'from–to slot that prefills the record', (tester) async {
+  testAppWidgets('typing an activity\'s name plans that activity, so its '
+      'item has its fields', (tester) async {
     await pumpTestApp(
       tester,
       preferences: _onboarded,
@@ -226,8 +257,8 @@ void main() {
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
 
-    await tapToRecord(tester, find.text('reading'));
-    expect(find.byType(LogEditorScreen), findsOneWidget, reason: 'not a task');
+    await openItem(tester, find.text('reading'));
+    expect(find.text('Book *'), findsOneWidget, reason: 'not a task');
   });
 
   testAppWidgets('typing a starter template\'s name installs it and plans it', (
@@ -248,8 +279,7 @@ void main() {
     // Let the confirmation snackbar leave before tapping the plan.
     await tester.pump(const Duration(seconds: 5));
     await tester.pumpAndSettle();
-    await tapToRecord(tester, find.byType(PlanItemTile));
-    expect(find.byType(LogEditorScreen), findsOneWidget);
+    await openItem(tester, find.byType(PlanItemTile));
     await tester.scrollUntilVisible(
       find.text('Add Exercise'),
       200,
@@ -258,7 +288,7 @@ void main() {
     expect(find.text('Add Exercise'), findsOneWidget);
   });
 
-  testAppWidgets('recording a 21:10–21:55 plan prefills its 45 minutes', (
+  testAppWidgets('"Mark done" on a 21:10–21:55 plan records its 45 minutes', (
     tester,
   ) async {
     await pumpTestApp(
@@ -284,10 +314,85 @@ void main() {
     );
     await openPlan(tester);
 
-    await tapToRecord(tester, find.text('Read'));
-    await enterField(tester, 'Book *', 'Fooled by Randomness');
-    await scrollAndTap(tester, find.widgetWithText(FilledButton, 'Save'));
+    await openItem(tester, find.text('Read'));
+    await tester.tap(find.text('Mark done'));
+    await tester.pumpAndSettle();
+    await closeItem(tester);
 
-    expect(find.textContaining('Recorded 45 min of 45 min'), findsOneWidget);
+    expect(find.textContaining('Done · 45 min of 45 min'), findsOneWidget);
+  });
+
+  group('anything can be logged, added right inside the item', () {
+    Future<void> openNewItem(WidgetTester tester, String name) async {
+      await pumpTestApp(tester, preferences: _onboarded);
+      await openPlan(tester);
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Add something to this day'),
+        name,
+      );
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      await openItem(tester, find.text(name));
+    }
+
+    testAppWidgets('Sets & reps in one tap, then log a set', (tester) async {
+      await openNewItem(tester, 'Leg day');
+
+      await scrollAndTap(tester, find.text('Add to log'));
+      await tester.tap(find.text('Sets & reps'));
+      await tester.pumpAndSettle();
+
+      await scrollAndTap(tester, find.text('Add Exercise'));
+      await enterField(tester, 'Exercise', 'Squat');
+      await scrollAndTap(tester, find.text('Add Set'));
+      final weight = find.widgetWithText(TextField, 'Weight').first;
+      await tester.ensureVisible(weight);
+      await tester.enterText(weight, '80');
+      await tester.pumpAndSettle();
+      await waitForSave(tester);
+      expect(find.text('Saved'), findsOneWidget);
+
+      await closeItem(tester);
+      expect(find.byIcon(AppIcons.taskDone), findsOneWidget, reason: '✓');
+    });
+
+    testAppWidgets('one number, named by the user, logged straight away', (
+      tester,
+    ) async {
+      await openNewItem(tester, 'Lunch');
+
+      await scrollAndTap(tester, find.text('Add to log'));
+      await scrollAndTap(tester, find.text('Number'));
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Field name'),
+        'Calories',
+      );
+      await tester.tap(find.text('Done'));
+      await tester.pumpAndSettle();
+
+      await enterField(tester, 'Calories', '650');
+      await waitForSave(tester);
+      await closeItem(tester);
+      expect(find.text('650'), findsOneWidget, reason: 'summary');
+    });
+
+    testAppWidgets('a list can get another detail where it is', (tester) async {
+      await openNewItem(tester, 'Doctor visit');
+
+      await scrollAndTap(tester, find.text('Add to log'));
+      await tester.tap(find.text('Checklist'));
+      await tester.pumpAndSettle();
+      await scrollAndTap(tester, find.text('Add detail'));
+      await scrollAndTap(tester, find.text('Text'));
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Field name'),
+        'Dose',
+      );
+      await tester.tap(find.text('Done'));
+      await tester.pumpAndSettle();
+
+      await scrollAndTap(tester, find.text('Add Item'));
+      expect(find.text('Dose'), findsOneWidget);
+    });
   });
 }

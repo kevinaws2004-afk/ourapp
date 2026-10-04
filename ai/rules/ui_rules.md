@@ -19,10 +19,10 @@
 15. Never copy Flowfy or any other product's palette, fonts, illustrations, mascot, layouts or wording.
 16. Icons are Phosphor through `AppIcons`/`ActivityIconRegistry` only (ADR-024): regular weight by default, fill for selected states.
 17. Field editors go through `FieldEditorRegistry` and `FieldEditorShell` (visible label, `*` for required, inline error).
-18. Primary navigation is Today | Plan | Insights | Me (ADR-028). No floating Record button: unplanned activities are recorded from Today's "Record something". Don't add tabs or a FAB. Activity setup lives under Me → Activities.
-19. User-facing copy says **Record** ("Record", "Record Reading", "Record deleted"), never "Log". Activity Log is internal only.
+18. Primary navigation is Today | Plan | Insights | Me (ADR-028). No floating Record button: anything unplanned is added with the quick add's **Now** and opened (ADR-035). Don't add tabs or a FAB. Activity setup lives under Me → Activities.
+19. User-facing copy talks about items being **done** and logging into them; never "Log" as a noun. The activity page's button says "Record". Activity Log is internal only.
 20. Color: only the nine activity-palette colors plus neutrals (ADR-029; sand was removed). Use the semantic roles (`brandPrimary` = teal, `accentDawn` = apricot, `success` = moss, `warning` = apricot, `danger` = rose); never introduce another hue. Moss/apricot are never small text.
-21. Tapping a planned activity records it (or opens its record); plan options (edit, Skip, Move, Delete, Record again) live behind the plan's More button. Never make "Mark as done" the way to complete an activity plan (ADR-030).
-22. Never hard-code what an activity records. Any plan can become trackable via Track details (builder named after the plan), and the record form can edit what an activity tracks (ADR-030).
+21. Tapping an item opens it to log into it (ADR-035); plan options (edit, Skip, Move, Delete) live behind its More button. Never add a Save button or a separate record form: items save as you type.
+22. Never hard-code what an activity records, and never require setup before logging: any item takes notes straight away and gets its own activity on the first thing logged (ADR-035).
 23. Charts only through `AppChart` (ADR-033); never use fl_chart widgets in features. Chart copy stays neutral ("+12 % vs previous period").
 24. No size literals in features: use `AppSizes` (badges, touch target, strokes, charts), so the planned visual pass can retune them centrally.

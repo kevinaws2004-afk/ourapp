@@ -409,7 +409,7 @@ abstract class AppLocalizations {
   /// Field type description for Text.
   ///
   /// In en, this message translates to:
-  /// **'Words, a short note or a long description'**
+  /// **'Words, a short note or a long description, like what the doctor said'**
   String get fieldTypeTextDescription;
 
   /// Field type name: Number.
@@ -511,13 +511,13 @@ abstract class AppLocalizations {
   /// Field type name: Repeating group.
   ///
   /// In en, this message translates to:
-  /// **'Repeating group'**
+  /// **'List'**
   String get fieldTypeRepeatingGroup;
 
   /// Field type description for Repeating group.
   ///
   /// In en, this message translates to:
-  /// **'A list of items, like exercises or sets'**
+  /// **'Rows with their own details, like exercises → sets, medicines or people'**
   String get fieldTypeRepeatingGroupDescription;
 
   /// Badge on a field type that is not available yet.
@@ -663,12 +663,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Done'**
   String get doneAction;
-
-  /// Log start date/time label.
-  ///
-  /// In en, this message translates to:
-  /// **'When'**
-  String get whenLabel;
 
   /// Log duration label.
   ///
@@ -1072,30 +1066,6 @@ abstract class AppLocalizations {
   /// **'Record'**
   String get actionRecord;
 
-  /// Record form title when creating.
-  ///
-  /// In en, this message translates to:
-  /// **'Record {name}'**
-  String recordNewTitle(String name);
-
-  /// Record form title when editing.
-  ///
-  /// In en, this message translates to:
-  /// **'Edit record'**
-  String get recordEditTitle;
-
-  /// Snackbar after saving a record.
-  ///
-  /// In en, this message translates to:
-  /// **'Saved'**
-  String get recordSaved;
-
-  /// Snackbar after deleting a record.
-  ///
-  /// In en, this message translates to:
-  /// **'Record deleted'**
-  String get recordDeleted;
-
   /// Title of the activity management screen under Me.
   ///
   /// In en, this message translates to:
@@ -1125,18 +1095,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create and configure what you record'**
   String get meActivitiesSubtitle;
-
-  /// Title of the Quick Record sheet.
-  ///
-  /// In en, this message translates to:
-  /// **'What did you do?'**
-  String get quickRecordTitle;
-
-  /// Quick Record sheet when there are no activities.
-  ///
-  /// In en, this message translates to:
-  /// **'Create an activity first, then record it here.'**
-  String get quickRecordEmpty;
 
   /// Relative date label / button to jump to today.
   ///
@@ -1185,18 +1143,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nothing planned for this day.'**
   String get planPlannedEmpty;
-
-  /// Section title for what was actually recorded on a date.
-  ///
-  /// In en, this message translates to:
-  /// **'Recorded'**
-  String get planRecordedSection;
-
-  /// Shown when nothing was recorded on a past/current date.
-  ///
-  /// In en, this message translates to:
-  /// **'Nothing recorded on this day.'**
-  String get planRecordedEmpty;
 
   /// Summary of a repeating group: its item label and number of items, e.g. 'Set × 3'.
   ///
@@ -1462,18 +1408,6 @@ abstract class AppLocalizations {
   /// **'Add something to this day'**
   String get planQuickAddHint;
 
-  /// Section title for records that weren't planned, shown under the plan.
-  ///
-  /// In en, this message translates to:
-  /// **'Also recorded'**
-  String get planAlsoRecordedSection;
-
-  /// Shown when every record of the day fulfils a plan.
-  ///
-  /// In en, this message translates to:
-  /// **'Everything recorded was planned.'**
-  String get planNothingUnplanned;
-
   /// Plan sheet: shown when the plan has no start time.
   ///
   /// In en, this message translates to:
@@ -1528,12 +1462,6 @@ abstract class AppLocalizations {
   /// **'Optional for an activity: it uses the activity\'s name'**
   String get planTitleHelper;
 
-  /// Plan sheet action: open the record form for this plan.
-  ///
-  /// In en, this message translates to:
-  /// **'Record it'**
-  String get planRecordIt;
-
   /// Completes a task (no record is created).
   ///
   /// In en, this message translates to:
@@ -1567,13 +1495,13 @@ abstract class AppLocalizations {
   /// Plan sheet action: delete the plan (with Undo).
   ///
   /// In en, this message translates to:
-  /// **'Delete plan'**
+  /// **'Delete'**
   String get planDelete;
 
   /// Snackbar after deleting a plan (with Undo).
   ///
   /// In en, this message translates to:
-  /// **'Plan deleted'**
+  /// **'Deleted'**
   String get planDeletedMessage;
 
   /// Snackbar after moving a plan (with Undo).
@@ -1609,7 +1537,7 @@ abstract class AppLocalizations {
   /// Status of an activity plan with a record but no duration.
   ///
   /// In en, this message translates to:
-  /// **'Recorded'**
+  /// **'Done'**
   String get planStatusRecorded;
 
   /// Status of a skipped plan. Neutral.
@@ -1641,48 +1569,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Good evening'**
   String get todayGreetingEvening;
-
-  /// Today: section title for today's plans.
-  ///
-  /// In en, this message translates to:
-  /// **'Today\'s plan'**
-  String get todayPlanSection;
-
-  /// Today: opens the Plan tab on today.
-  ///
-  /// In en, this message translates to:
-  /// **'Plan'**
-  String get todayEditPlan;
-
-  /// Today: no plans but there are records.
-  ///
-  /// In en, this message translates to:
-  /// **'Nothing planned for today.'**
-  String get todayNothingPlanned;
-
-  /// Today empty state title.
-  ///
-  /// In en, this message translates to:
-  /// **'A fresh day'**
-  String get todayEmptyTitle;
-
-  /// Today empty state message.
-  ///
-  /// In en, this message translates to:
-  /// **'Plan what you want to do, or record something you\'ve already done.'**
-  String get todayEmptyMessage;
-
-  /// Today empty state: primary action.
-  ///
-  /// In en, this message translates to:
-  /// **'Plan your day'**
-  String get todayPlanYourDay;
-
-  /// Today empty state: secondary action (Quick Record).
-  ///
-  /// In en, this message translates to:
-  /// **'Record something'**
-  String get todayRecordSomething;
 
   /// Validation message.
   ///
@@ -1717,13 +1603,13 @@ abstract class AppLocalizations {
   /// Outcome of a recorded plan without a planned length.
   ///
   /// In en, this message translates to:
-  /// **'Recorded {duration}'**
+  /// **'Done · {duration}'**
   String planRecordedDuration(String duration);
 
   /// Planned vs actual: actual duration of the planned duration.
   ///
   /// In en, this message translates to:
-  /// **'Recorded {actual} of {planned}'**
+  /// **'Done · {actual} of {planned}'**
   String planRecordedOfPlanned(String actual, String planned);
 
   /// A planned time range.
@@ -1732,41 +1618,23 @@ abstract class AppLocalizations {
   /// **'{start}–{end}'**
   String planTimeRange(String start, String end);
 
-  /// Today: count of records and total recorded time.
-  ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =1{1 record} other{{count} records}} · {duration}'**
-  String todaySummary(int count, String duration);
-
   /// Tooltip of a plan's More button: edit, skip, move, delete.
   ///
   /// In en, this message translates to:
   /// **'Plan options'**
   String get planOptions;
 
-  /// Plan options: record another session for an already recorded plan.
-  ///
-  /// In en, this message translates to:
-  /// **'Record again'**
-  String get planRecordAgain;
-
   /// Screen reader hint for tapping a recorded plan.
   ///
   /// In en, this message translates to:
-  /// **'open its record'**
+  /// **'open it'**
   String get planOpenRecordHint;
 
   /// Screen reader hint for tapping a planned activity.
   ///
   /// In en, this message translates to:
-  /// **'record {title}'**
+  /// **'open {title} to log it'**
   String planRecordHint(String title);
-
-  /// Record form: the plan this record fulfils, e.g. 'Planned · Gym · 45 min'.
-  ///
-  /// In en, this message translates to:
-  /// **'Planned · {details}'**
-  String planPlannedContext(String details);
 
   /// Snackbar when quick add installed a starter template matching the typed name.
   ///
@@ -1792,47 +1660,11 @@ abstract class AppLocalizations {
   /// **'Focus'**
   String get templateGymFocus;
 
-  /// Turn a plan into something you record, with fields you choose.
-  ///
-  /// In en, this message translates to:
-  /// **'Track details'**
-  String get planTrackDetails;
-
-  /// Explains Track details.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose what to record for {title}, then record it'**
-  String planTrackDetailsHint(String title);
-
-  /// Record form action: change this activity's fields.
-  ///
-  /// In en, this message translates to:
-  /// **'Edit what to track'**
-  String get recordEditFields;
-
   /// Starts a focus timer for the activity.
   ///
   /// In en, this message translates to:
   /// **'Start focus'**
   String get focusStart;
-
-  /// Explains Start focus.
-  ///
-  /// In en, this message translates to:
-  /// **'Time it now; record the details when you finish'**
-  String get focusStartHint;
-
-  /// Records the activity right away, without a timer.
-  ///
-  /// In en, this message translates to:
-  /// **'Record now'**
-  String get recordNow;
-
-  /// Explains Record now.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter what you did'**
-  String get recordNowHint;
 
   /// Focus timer: pause.
   ///
@@ -2380,11 +2212,173 @@ abstract class AppLocalizations {
   /// **'Volume = {amount} × {count} per item'**
   String insightVolumeFormula(String amount, String count);
 
-  /// Today: count of records when none has a duration.
+  /// Shown in an item while what the user logged is being saved.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =1{1 record} other{{count} records}}'**
-  String todaySummaryCount(int count);
+  /// **'Saving…'**
+  String get itemSaving;
+
+  /// Shown in an item once everything logged is saved (it saves as you type).
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get itemSaved;
+
+  /// Shown in an item when a value can't be saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Not saved yet: check the highlighted fields'**
+  String get itemSaveFailed;
+
+  /// Button in an item: done, without logging details.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark done'**
+  String get itemMarkDone;
+
+  /// Status of an item that has been done or logged.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get itemDone;
+
+  /// Button in an item: time the activity while logging it.
+  ///
+  /// In en, this message translates to:
+  /// **'Start timer'**
+  String get itemStartTimer;
+
+  /// Opens the running timer full screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Full screen timer'**
+  String get itemTimerFullScreen;
+
+  /// Section in an item with when it happened and how long.
+  ///
+  /// In en, this message translates to:
+  /// **'When'**
+  String get itemWhenSection;
+
+  /// Tooltip of the item's options menu (edit, skip, move, delete).
+  ///
+  /// In en, this message translates to:
+  /// **'Item options'**
+  String get itemOptions;
+
+  /// Snackbar after deleting an item.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted'**
+  String get itemDeleted;
+
+  /// Shown in an item whose activity has no fields yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Add what you want to log: a number, a list (like exercises → sets), yes/no, a rating… or just write notes.'**
+  String get itemNothingToLogHint;
+
+  /// Shown in an item when a timer runs for a different item.
+  ///
+  /// In en, this message translates to:
+  /// **'Another timer is running'**
+  String get itemTimerOtherRunning;
+
+  /// Today's summary: how many items were done, and their total time.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} done · {duration}'**
+  String todayDoneSummary(int count, String duration);
+
+  /// Today's summary when nothing done has a duration.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} done'**
+  String todayDoneCount(int count);
+
+  /// Chip in quick add: it's happening now; opens the item to log it.
+  ///
+  /// In en, this message translates to:
+  /// **'Now'**
+  String get planNow;
+
+  /// Today empty state message.
+  ///
+  /// In en, this message translates to:
+  /// **'Add what you\'re doing or planning. Open it later to log how it went.'**
+  String get todayEmptyMessageItems;
+
+  /// Button in an item: add something new to log (a number, a list, …).
+  ///
+  /// In en, this message translates to:
+  /// **'Add to log'**
+  String get itemAddToLog;
+
+  /// Title of the sheet for adding something to log.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you want to log?'**
+  String get itemAddToLogTitle;
+
+  /// Section of ready-made things to log (sets & reps, checklist).
+  ///
+  /// In en, this message translates to:
+  /// **'Ready-made'**
+  String get itemAddReadyMade;
+
+  /// Section of single things to log (number, text, list…).
+  ///
+  /// In en, this message translates to:
+  /// **'Or add one thing'**
+  String get itemAddOneThing;
+
+  /// Ready-made: exercises, each with sets of weight × reps.
+  ///
+  /// In en, this message translates to:
+  /// **'Sets & reps'**
+  String get shapeSetsReps;
+
+  /// Description of the Sets & reps ready-made.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercises, each with sets of weight × reps'**
+  String get shapeSetsRepsDescription;
+
+  /// Ready-made: items you can tick off.
+  ///
+  /// In en, this message translates to:
+  /// **'Checklist'**
+  String get shapeChecklist;
+
+  /// Description of the Checklist ready-made.
+  ///
+  /// In en, this message translates to:
+  /// **'Items to tick off, like things to buy or do'**
+  String get shapeChecklistDescription;
+
+  /// A checklist row.
+  ///
+  /// In en, this message translates to:
+  /// **'Item'**
+  String get shapeChecklistItem;
+
+  /// A checklist row's tick.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get shapeChecklistDone;
+
+  /// Button inside a list in an item: add another detail to each row.
+  ///
+  /// In en, this message translates to:
+  /// **'Add detail'**
+  String get addGroupDetail;
+
+  /// Tooltip: rename, reorder or remove what this item logs.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit what\'s logged'**
+  String get itemEditFields;
 }
 
 class _AppLocalizationsDelegate

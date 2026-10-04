@@ -7,13 +7,14 @@ import '../../../shared/widgets/tab_placeholder.dart';
 
 /// Me tab: Activities (reusable activity setup, ADR-028) today; body
 /// measurements and preferences later. In debug builds it also links to the
-/// developer token showcase.
+/// developer token showcase and a demo data loader.
 class MeScreen extends StatelessWidget {
   const MeScreen({
     super.key,
     required this.onOpenActivities,
     required this.onOpenMeasurements,
     this.onOpenTokenShowcase,
+    this.onLoadDemoData,
   });
 
   final VoidCallback onOpenActivities;
@@ -21,6 +22,9 @@ class MeScreen extends StatelessWidget {
 
   /// Debug-only entry point; ignored in release builds.
   final VoidCallback? onOpenTokenShowcase;
+
+  /// Debug-only demo data loader; ignored in release builds.
+  final VoidCallback? onLoadDemoData;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +55,13 @@ class MeScreen extends StatelessWidget {
               title: const Text('Design tokens (debug)'),
               trailing: const Icon(AppIcons.chevron),
               onTap: onOpenTokenShowcase,
+            ),
+          if (kDebugMode && onLoadDemoData != null)
+            ListTile(
+              leading: const Icon(AppIcons.developer),
+              // Developer tooling: intentionally not localized (coding_standards.md §4).
+              title: const Text('Load demo data (debug)'),
+              onTap: onLoadDemoData,
             ),
         ],
       ),

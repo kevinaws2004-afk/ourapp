@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/design/app_icons.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/errors/error_copy.dart';
 import '../../../shared/widgets/state_views.dart';
+import '../../activity_logs/domain/activity_log.dart';
 import '../domain/plan.dart';
 import '../domain/watch_day_overview.dart';
 import 'plan_editor_sheet.dart';
@@ -90,73 +90,28 @@ class PlanActions {
     );
   }
 
-  Future<void> delete(PlannedItem item) => _run(
-    () => _ref.read(deletePlanProvider)(item.plan.id),
-    message: _l10n.planDeletedMessage,
-    undo: () => _ref.read(restorePlanProvider)(item.plan.id),
-  );
-
-  /// A task was tapped: tick it off, or track details for it (choose what to
-  /// record, then record it). [onTrack] starts tracking.
-  Future<void> chooseForTask(
-    PlannedItem item, {
-    required ValueChanged<PlannedItem> onTrack,
-  }) async {
-    final l10n = _l10n;
-    final done = item.status == EffectivePlanStatus.completed;
-    final track = await showModalBottomSheet<bool>(
-      context: _context,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: Text(
-                item.plan.title,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
-            ListTile(
-              leading: Icon(done ? AppIcons.undo : AppIcons.taskDone),
-              title: Text(done ? l10n.planReopenTask : l10n.planCompleteTask),
-              onTap: () => Navigator.of(context).pop(false),
-            ),
-            ListTile(
-              leading: const Icon(AppIcons.edit),
-              title: Text(l10n.planTrackDetails),
-              subtitle: Text(l10n.planTrackDetailsHint(item.plan.title)),
-              onTap: () => Navigator.of(context).pop(true),
-            ),
-          ],
-        ),
-      ),
+  /// Deletes the item and what was logged into it (ADR-035), with Undo.
+  Future<void> delete(PlannedItem item) {
+    var logs = const <ActivityLogId>[];
+    // Read now: Undo may run after the screen that deleted it has closed.
+    final restore = _ref.read(restoreItemProvider);
+    return _run(
+      () async => logs = await _ref.read(deleteItemProvider)(item.plan.id),
+      message: _l10n.planDeletedMessage,
+      undo: () => restore(item.plan.id, logs),
     );
-    if (!_context.mounted || track == null) return;
-    if (track) {
-      onTrack(item);
-    } else {
-      await toggleTask(item);
-    }
   }
 
-  /// Opens [item] in the plan sheet and runs the action chosen there.
-  /// [onRecord] opens the record form for an activity plan (F5).
-  Future<void> open(
-    PlannedItem item, {
-    required ValueChanged<PlannedItem> onRecord,
-    required ValueChanged<PlannedItem> onTrack,
-  }) async {
+  /// Opens [item]'s plan sheet (edit its title, time and notes) and runs
+  /// the action chosen there. Returns that action.
+  Future<PlanSheetAction?> open(PlannedItem item) async {
     final action = await showPlanEditor(
       _context,
       date: item.plan.planDate,
       item: item,
     );
-    if (!_context.mounted) return;
+    if (!_context.mounted) return action;
     switch (action) {
-      case PlanSheetAction.record || PlanSheetAction.recordAgain:
-        onRecord(item);
-      case PlanSheetAction.track:
-        onTrack(item);
       case PlanSheetAction.toggleTask:
         await toggleTask(item);
       case PlanSheetAction.skip:
@@ -170,5 +125,6 @@ class PlanActions {
       case null:
         break;
     }
+    return action;
   }
 }

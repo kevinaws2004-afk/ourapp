@@ -10,7 +10,7 @@
 |---|---|
 | Cold start to interactive Today | < 1.5 s (mid-range), < 2.5 s (low-end) |
 | Tab switch | next frame (state preserved by shell) |
-| Open record form / Quick Record sheet | < 150 ms to first frame |
+| Open an item | < 150 ms to first frame |
 | Save log (incl. values) | < 50 ms DB time |
 | Today screen query (plans + logs for a day) | < 20 ms |
 | Insights chart for 6 months of data | < 200 ms compute; show skeleton if longer |

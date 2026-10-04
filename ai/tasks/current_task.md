@@ -4,43 +4,30 @@
 
 ## Status
 
-**Phases 5 (Focus) and 6 (Insights + body measurements): complete in code (2026-10-04), waiting for owner review.** Don't start Phase 7 until the owner approves it. Phases 3–6 aren't committed yet (branch `feature/phase-3-structured-fields`); commit only when the owner asks.
+**Flow rework (owner-approved plan, 2026-10-04; ADR-035): Steps 1–2 of 4 done, on the emulator for the owner to try.** The owner tested Phases 1–6 on their phone and found the flow broken: plan, record and activity setup felt like three separate places. Approved plan: the planner is the app; open an item on your day and log into it as you go. This replaces the old Phase 7 scope. Phases 3–6 are committed (`4b8431a`); the rework isn't committed yet (commit only when the owner asks).
 
-Owner decisions this round:
-- ADR-031: record on finish (P09)
-- ADR-032: DM Mono (P21)
-- ADR-033: fl_chart (P11)
-- ADR-034: core + gym & PRs (OQ-02, FR-AN-05/06/08/09)
+Step 1 (done): item screen + live logging
+- One list of items on Today and Plan (plans + records made without a plan, time order, untimed last); "Recorded / Also recorded" sections removed
+- `ItemScreen` (`/item/:planId`, `/item/log/:logId`): fields, notes, when/duration; **saves as you type** (`ItemNotifier`, 600 ms debounce, saves on leaving); "Saving…" / "Saved"
+- Required is a hint while logging (`partial` validation); a new name takes notes straight away and gets an activity of its own (`EnsureItemActivity`)
+- Mark done (`MarkItemDone`), Start timer inside the item (finish fills the item's log; a second session adds time), Delete = plan + log with Undo (`DeleteItem`/`RestoreItem`)
+- Quick add has **Now** (today): adds the item at the current time and opens it; an activity's "Record" does the same
+- Removed: record form, Quick Record sheet, Start focus / Record now sheet, Track details, Record again
+- Bug fixed on the way: Undo after deleting from inside an item (the screen had closed)
 
-Recommendations followed (say so if asked): OQ-09 fixed measurement types; OQ-13 no focus notification. **Needs owner confirmation:** OQ-14. Saved charts were built; the recommendation was ad hoc charts.
-
-Phase 5 (schema v5):
-- `focus_sessions` with timestamp-derived elapsed time and one active session (DB index)
-- Start focus from a planned timer activity ("Start focus" / "Record now") or an activity's page
-- full-screen timer in DM Mono with Pause/Resume, Finish and Discard (confirmed)
-- Finish → paused → record form prefilled (start, focused time, plan) → `FinishFocusSession` writes record + session in one `UnitOfWork` → "Reading session complete · 42 min"
-- plans show In progress; Today shows a live Return banner
-- `ActivityLogDraft.endedAt` with end/duration validation
-
-Phase 6 (schema v6):
-- `measurements` (weight, height, body fat, chest, waist, arms, legs; units cm/in/% added) with Me → Body measurements (latest, history + line chart, add/edit/delete with Undo)
-- `insight_charts` (saved configs)
-- generic engine: time, count, any Number/Rating field at any depth with a text filter (e.g. Exercise = Chest Press), volume (weight × reps), body measurement, planned vs actual
-- aggregations total/average/best/lowest/count/latest; day/week/month buckets; Week/Month/3 months/Year ranges; change vs previous period; personal best
-- Insights tab: activity totals + chart cards + chart builder
-- `AppChart` wraps fl_chart
+Step 2 (done, after the owner found a plain item had nothing to log but notes): **Add to log** in every item (Sets & reps / Checklist in one tap, or any one thing: number with unit, text, list, yes/no, rating, choice, date, time), **Add detail** inside lists, pencil → builder; `AddItemField` saves it onto the item's activity.
 
 Verified:
-- `dart format` clean.
-- `flutter analyze`: no issues.
-- `flutter test`: 269 tests pass.
-- **Not run:** device integration tests (deferred by the owner).
+- `dart format` clean, `flutter analyze` no issues, `flutter test`: 283 pass
+- **Not run:** device integration tests (owner's standing preference); they were updated to the item flow and compile
 
-Not built yet (documented): keep-awake and the arc/wash on the focus screen; sparklines; a separate chart-detail screen; charting Duration fields as values; a task-completion source; draft persistence for long records (ADR-P18).
+Next steps (approved, in order):
+3. Plan next (any item) + Day/Week/Month planner + repeating items (schema v7 `plan_series`)
+4. Automatic insights: per-activity days done / time / change, and an activity page with charts generated from its fields (per exercise best and volume)
 
-**Navigation change (owner, 2026-10-04):** the floating "+ Record" button and rail action were removed. Quick Record opens from Today's "Record something" (ADR-028 amended). 270 tests pass.
+Owner decisions this round: the item model (one concept, recording happens inside the item); logging must not require setup; follow-ups are a generic action, not a doctor feature; scope = all four steps; functionality first, visual design later.
 
-Earlier: Phases 1–4; ADR-028/029/030 (navigation, palette, plan → record workflow, customizable tracking from any plan).
+**Needs owner confirmation:** OQ-14 (saved charts kept, now planned as secondary to automatic insights).
 
 ## Standing rule (all phases)
 
@@ -59,9 +46,9 @@ Docs stay synchronized with the code in the same task as every change: [developm
 | Visual identity review of the remaining provisional values (neutrals, fonts; ADR-016) | Before screens multiply | Owner's on-device showcase review |
 | Splash screen polish | Later | Deferred by the owner |
 
-Other pending ADRs (P09, P11, P15, P17, P18) and the remaining open questions belong to later phases.
+Other pending ADRs (P15, P17; P18 resolved by ADR-035) and the remaining open questions belong to later phases.
 
-## Next task (proposed, not started): Phase 7, Onboarding + Quick Record polish + history
+## After the rework: Phase 7, Onboarding + history/search
 
 See [development_guide.md §6](../../docs/development/development_guide.md#6-proposed-implementation-phases). Starts only after the owner's approval. Open first: OQ-14 confirmation and running the device integration tests for Phases 3–6.
 

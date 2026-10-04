@@ -10,7 +10,7 @@ Based on the **available window width** (not device type), so split-screen, fold
 
 | Class | Width (dp) | Typical | Navigation | Screen margin | Columns |
 |---|---|---|---|---|---|
-| **Compact** | < 600 | Phones portrait | Bottom navigation bar + Quick Record action | `space.xl` (20) | 1 |
+| **Compact** | < 600 | Phones portrait | Bottom navigation bar | `space.xl` (20) | 1 |
 | **Medium** | 600 – 839 | Large phones landscape, small tablets, unfolded foldables | Navigation rail (labels shown) | `space.xxl` (24) | 1–2 |
 | **Expanded** | ≥ 840 | Tablets landscape/portrait 10" | Navigation rail (extended with labels, optional) | `space.xxxl` (32) | 2 (list–detail) or multi-column grids |
 

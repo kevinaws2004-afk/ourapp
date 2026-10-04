@@ -58,7 +58,7 @@ flutter devices                                    # wait until the emulator is 
 flutter run -d emulator-5554
 ```
 
-On first launch the app shows the placeholder onboarding screen; "Get started" leads to Today. In debug builds, Me → "Design tokens (debug)" opens the token showcase (theme switch, "Show onboarding again").
+On first launch the app shows the placeholder onboarding screen; "Get started" leads to Today. In debug builds, Me → "Design tokens (debug)" opens the token showcase (theme switch, "Show onboarding again"), and Me → "Load demo data (debug)" adds six weeks of sample records, plans, measurements and charts through the normal use cases (`lib/app/dev/demo_data.dart`). It adds to existing data, once (a second tap does nothing), and the records can only be removed one by one, so use it on test installs.
 
 ## 4. Workflow
 
@@ -145,9 +145,10 @@ Proposed, for approval. Order is driven by the V1 success criterion (§43): buil
 | 2 ✅ | Generic engine (**done 2026-10-04**; schema v2 = activity tables; decisions ADR-017–026, OQ-01): activity types + fields (domain/data), the nine scalar/select field types (Repeating Group moves to Phase 3), generic form renderer, log save/edit/delete, builder with preview, starter templates | Create Reading & Language Learning types via the builder and log them with zero type-specific code |
 | 3 ✅ | Structured fields (**done 2026-10-04**, awaiting owner review): Repeating Group with **relational storage** (ADR-027, schema v3: sub-fields with `parent_field_id`, `log_group_items`, `log_values.group_item_id`), nested sets (Set Table = nested Repeating Group + Number), Gym/Meeting/Cooking templates, exercise autocomplete | §43 gym step works (widget + repository tests; device test written, not yet run) |
 | 4 ✅ | Plans & Tasks (**done 2026-10-04**, awaiting owner review): schema v4 (ADR-018 incl. the owner-confirmed `planned_duration_ms`); plan → record flow; Today (plan + records + planned vs actual) | §43 night/morning steps (widget + repository tests; device test written, not yet run) |
-| 5 ✅ | Focus mode (**done 2026-10-04**, awaiting owner review): schema v5 `focus_sessions` (ADR-031), timestamp-derived timer, start from plans/activities, finish → record form → one transaction, In-progress plans, DM Mono timer digits (ADR-032) | §43 work/reading steps (repository + widget tests) |
+| 5 ✅ | Focus mode (**done 2026-10-04**, awaiting owner review): schema v5 `focus_sessions` (ADR-031), timestamp-derived timer, start from plans/activities, finish → record form (since ADR-035: finish fills the item) → one transaction, In-progress plans, DM Mono timer digits (ADR-032) | §43 work/reading steps (repository + widget tests) |
 | 6 ✅ | Insights + body measurements (**done 2026-10-04**, awaiting owner review): schema v6 `measurements` + `insight_charts`, generic engine (time, count, any field incl. nested with text filter, volume, PRs, body, planned vs actual), fl_chart via `AppChart` (ADR-033), Me → Body measurements (ADR-034) | §43 "see progress over time" (repository + widget tests) |
-| 7 | Onboarding narrative; Quick Record polish (recent ordering, instant record); history/search | First-run to first record in < 1 minute |
+| R | **Flow rework (owner, 2026-10-04; replaces the old Phase 7 scope, ADR-035):** (1) ✅ item screen + live logging; (2) ✅ log anything inline: Add to log, ready-made shapes, Add detail in lists (both done 2026-10-04); (3) Plan next + week/month planner + repeating items (schema v7); (4) automatic per-activity insights | Plan Gym → open at the gym → log sets live; any new name logs without setup; progress graphs without building charts |
+| 7 | Onboarding narrative; history/search | First-run to first record in < 1 minute |
 | 8 | Hardening: performance pass, accessibility pass, tablet layouts, export (if OQ-03 approved), integration test of the full §43 scenario | Release candidate |
 
 Design work (identity validation, illustrations) runs alongside Phases 1–3 so screens aren't built on placeholder visuals.

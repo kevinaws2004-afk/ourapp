@@ -4,6 +4,7 @@ import 'package:daylog/features/activity_types/domain/activity_type_use_cases.da
 import 'package:daylog/features/activity_logs/presentation/form/field_editor_shell.dart';
 import 'package:daylog/features/activity_types/presentation/activity_type_screen.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
+import 'package:daylog/features/plans/presentation/item/item_screen.dart';
 import 'package:daylog/features/settings/domain/theme_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,6 +12,8 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../support/fake_clock.dart';
 import '../../../support/fixtures.dart';
 import '../../../support/test_app.dart';
+import '../../plans/presentation/plans_flow_test.dart'
+    show closeItem, waitForSave;
 
 const _onboarded = PreferencesSnapshot(
   themePreference: ThemePreference.light,
@@ -152,7 +155,8 @@ void main() {
   });
 
   testAppWidgets(
-    'recording an activity adds it to its recent records with a summary',
+    'recording an activity opens an item for now; what you log shows in its '
+    'recent records',
     (tester) async {
       await pumpTestApp(tester, preferences: _onboarded, seed: seedReading);
       await openActivities(tester);
@@ -161,23 +165,20 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.widgetWithText(FilledButton, 'Record'));
       await tester.pumpAndSettle();
-
-      // Book is required: saving empty shows the issue next to the field.
-      await scrollAndTap(tester, find.widgetWithText(FilledButton, 'Save'));
-      expect(find.text('This is required.'), findsOneWidget);
+      expect(find.byType(ItemScreen), findsOneWidget);
 
       await enterField(tester, 'Book *', 'Fooled by Randomness');
       await enterField(tester, 'Pages', '18');
-      await scrollAndTap(tester, find.widgetWithText(FilledButton, 'Save'));
+      await closeItem(tester);
+      await waitForSave(tester);
 
       expect(find.byType(ActivityTypeScreen), findsOneWidget);
       expect(find.text('Fooled by Randomness · 18'), findsOneWidget);
     },
   );
 
-  testAppWidgets('deleting a record removes it, and Undo brings it back', (
-    tester,
-  ) async {
+  testAppWidgets('deleting an item removes what was logged, and Undo brings '
+      'it back', (tester) async {
     await pumpTestApp(tester, preferences: _onboarded, seed: seedReading);
     await openActivities(tester);
     await tester.tap(find.text('Reading'));
@@ -185,15 +186,17 @@ void main() {
     await tester.tap(find.widgetWithText(FilledButton, 'Record'));
     await tester.pumpAndSettle();
     await enterField(tester, 'Book *', 'Antifragile');
-    await scrollAndTap(tester, find.widgetWithText(FilledButton, 'Save'));
+    await closeItem(tester);
+    await waitForSave(tester);
 
     await tester.tap(find.text('Antifragile'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Delete'));
+    await tester.tap(find.byTooltip('Item options'));
     await tester.pumpAndSettle();
+    await scrollAndTap(tester, find.text('Delete'));
 
     expect(find.text('Antifragile'), findsNothing);
-    expect(find.text('Record deleted'), findsOneWidget);
+    expect(find.text('Deleted'), findsOneWidget);
 
     await tester.tap(find.text('Undo'));
     await tester.pumpAndSettle();

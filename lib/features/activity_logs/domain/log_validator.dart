@@ -15,10 +15,14 @@ abstract final class LogValidator {
   static const maxTextLength = 10000;
 
   /// [existing] values may keep referencing removed fields when editing.
+  /// With [partial], missing required values are allowed: an item's log is
+  /// saved as it's filled in, so "required" is a hint, not a save blocker
+  /// (ADR-035).
   static ValidationResult validate(
     ActivityType type,
     ActivityLogDraft draft, {
     Map<ActivityFieldId, FieldValue> existing = const {},
+    bool partial = false,
   }) {
     final issues = <ValidationIssue>[];
     final duration = draft.durationMs;
@@ -59,6 +63,7 @@ abstract final class LogValidator {
       existing: existing,
       targetPrefix: '',
       issues: issues,
+      partial: partial,
     );
     return ValidationResult(issues);
   }
@@ -77,10 +82,11 @@ abstract final class LogValidator {
     required Map<ActivityFieldId, FieldValue> existing,
     required String targetPrefix,
     required List<ValidationIssue> issues,
+    required bool partial,
   }) {
     String target(ActivityFieldId id) => '$targetPrefix${id.value}';
     for (final field in fields) {
-      if (field.required && !values.containsKey(field.id)) {
+      if (!partial && field.required && !values.containsKey(field.id)) {
         issues.add(
           ValidationIssue(ValidationCode.required, target: target(field.id)),
         );
@@ -101,7 +107,15 @@ abstract final class LogValidator {
       if (unchangedHistorical) continue;
       if (value is RepeatingGroupValue &&
           field.type == FieldType.repeatingGroup) {
-        _validateGroup(type, field, value, previous, targetPrefix, issues);
+        _validateGroup(
+          type,
+          field,
+          value,
+          previous,
+          targetPrefix,
+          issues,
+          partial: partial,
+        );
       } else {
         for (final issue in validateValue(field, value, previous: previous)) {
           issues.add(ValidationIssue(issue.code, target: target(fieldId)));
@@ -116,8 +130,9 @@ abstract final class LogValidator {
     RepeatingGroupValue value,
     FieldValue? previous,
     String targetPrefix,
-    List<ValidationIssue> issues,
-  ) {
+    List<ValidationIssue> issues, {
+    required bool partial,
+  }) {
     final previousItems = {
       if (previous is RepeatingGroupValue)
         for (final item in previous.items) item.id: item,
@@ -140,6 +155,7 @@ abstract final class LogValidator {
         existing: previousItems[item.id]?.values ?? const {},
         targetPrefix: '${item.id.value}/',
         issues: issues,
+        partial: partial,
       );
     }
   }

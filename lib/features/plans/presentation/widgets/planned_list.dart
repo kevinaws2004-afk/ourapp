@@ -9,72 +9,72 @@ import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../shared/errors/error_copy.dart';
 import '../../../../shared/widgets/state_views.dart';
 import '../../../activity_logs/domain/activity_log.dart';
+import '../../../activity_logs/presentation/day_record_tile.dart';
 import '../../domain/watch_day_overview.dart';
 import '../plan_actions.dart';
 import '../plan_providers.dart';
 import 'plan_item_tile.dart';
 
-/// A date's plans (Today, Plan tab): timed plans in time order, then untimed
-/// ones in manual order. With [reorderable], untimed plans can be dragged
-/// (FR-PL-08).
+/// A day's items (Today, Plan tab; ADR-035): plans and records made without
+/// a plan as one list, in time order, then untimed plans in manual order.
+/// With [reorderable], untimed plans can be dragged (FR-PL-08).
 ///
-/// Tapping a plan does it (ADR-030): an activity plan without a record opens
-/// its record form ([onRecord]); a recorded one opens its latest record
-/// ([onOpenRecord]); a task offers "Mark as done" or "Track details"
-/// ([onTrack]). Plan options sit behind More.
+/// Tapping an item opens it to log into it ([onOpenItem], or [onOpenRecord]
+/// for a record without a plan). A task's check ticks it off; plan options
+/// sit behind More.
 class PlannedList extends ConsumerWidget {
   const PlannedList({
     super.key,
-    required this.items,
-    required this.onRecord,
+    required this.entries,
+    required this.onOpenItem,
     required this.onOpenRecord,
-    required this.onTrack,
     this.reorderable = false,
   });
 
-  final List<PlannedItem> items;
-  final ValueChanged<PlannedItem> onRecord;
+  final List<DayEntry> entries;
+  final ValueChanged<PlannedItem> onOpenItem;
   final ValueChanged<ActivityLog> onOpenRecord;
-
-  /// Set up what to track for a task, then record it (ADR-030).
-  final ValueChanged<PlannedItem> onTrack;
   final bool reorderable;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final actions = PlanActions(context, ref);
-    Widget tile(PlannedItem item, {Widget? dragHandle}) => PlanItemTile(
-      key: ValueKey(item.plan.id),
-      item: item,
-      onTap: () {
-        if (item.plan.isTask) {
-          unawaited(actions.chooseForTask(item, onTrack: onTrack));
-        } else if (item.records.isNotEmpty) {
-          onOpenRecord(item.records.last);
-        } else {
-          onRecord(item);
-        }
-      },
-      onMore: () => actions.open(item, onRecord: onRecord, onTrack: onTrack),
-      onToggleTask: () => actions.toggleTask(item),
-      dragHandle: dragHandle,
-    );
+    Widget tile(DayEntry entry, {Widget? dragHandle}) => switch (entry) {
+      PlanEntry(:final item) => PlanItemTile(
+        key: ValueKey(item.plan.id),
+        item: item,
+        onTap: () => onOpenItem(item),
+        onMore: () => unawaited(actions.open(item)),
+        onToggleTask: () => actions.toggleTask(item),
+        dragHandle: dragHandle,
+      ),
+      RecordEntry(:final record) => DayRecordTile(
+        key: ValueKey(record.log.id),
+        record: record,
+        onTap: () => onOpenRecord(record.log),
+      ),
+    };
 
-    final timed = items.where((i) => i.plan.isTimed).toList();
-    final untimed = items.where((i) => !i.plan.isTimed).toList();
+    // Untimed plans sit at the end of [entries]; only they can be dragged.
+    bool untimedPlan(DayEntry e) =>
+        e is PlanEntry &&
+        e.item.plan.plannedStartAt == null &&
+        e.item.records.isEmpty;
+    final timed = entries.where((e) => !untimedPlan(e)).toList();
+    final untimed = entries.where(untimedPlan).cast<PlanEntry>().toList();
     if (!reorderable || untimed.length < 2) {
-      return Column(children: [for (final item in items) tile(item)]);
+      return Column(children: [for (final entry in entries) tile(entry)]);
     }
     final l10n = AppLocalizations.of(context);
     return Column(
       children: [
-        for (final item in timed) tile(item),
+        for (final entry in timed) tile(entry),
         ReorderableListView(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           buildDefaultDragHandles: false,
           onReorderItem: (oldIndex, newIndex) async {
-            final order = [for (final i in untimed) i.plan.id];
+            final order = [for (final e in untimed) e.item.plan.id];
             order.insert(newIndex, order.removeAt(oldIndex));
             try {
               await ref.read(reorderPlansProvider)(order);
@@ -85,9 +85,9 @@ class PlannedList extends ConsumerWidget {
             }
           },
           children: [
-            for (final (index, item) in untimed.indexed)
+            for (final (index, entry) in untimed.indexed)
               tile(
-                item,
+                entry,
                 dragHandle: ReorderableDragStartListener(
                   index: index,
                   child: Semantics(

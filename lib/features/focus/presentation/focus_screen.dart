@@ -29,7 +29,7 @@ String formatTimer(int milliseconds) {
 
 /// The full-screen focus timer (§16, §17; FR-FO-01…06). It reads the active
 /// session from SQLite, so it shows the right time after the app was killed.
-/// [onFinish] opens the record form that finishes the session.
+/// [onFinish] finishes the session into its item (ADR-035).
 class FocusScreen extends ConsumerWidget {
   const FocusScreen({super.key, required this.onFinish});
 

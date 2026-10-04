@@ -39,7 +39,7 @@ Use these terms exactly in code, UI discussions and docs.
 | **Activity Field** (Field) | One configurable input belonging to an Activity Type: name, field type, position, required, config. | §10 |
 | **Field Type** | The kind of input/value a field holds (Text, Number, Duration, Set Table…). A fixed catalog provided by the app. | §9 |
 | **Activity Log** (Log) | Internal/domain name for what actually happened: an Activity Type instance with times and field values. Represents **reality**. In the UI this is a **record**: users *record* an activity (ADR-028). | §3.3 |
-| **Record** | The user-facing action for capturing what actually happened (creates an Activity Log). "Quick Record" records an unplanned activity from anywhere. | ADR-028 |
+| **Record** | The user-facing action for capturing what actually happened (creates an Activity Log). Done inside an item on a day: open it and log into it, saved as you type; something unplanned is added with "Now" (ADR-035). | ADR-028, ADR-035 |
 | **Field Value** (Log Value) | The value a Log holds for one Field. | §4, §27 |
 | **Plan** | An intended activity or task for a specific date (past, present or future). May optionally link to an Activity Type. Represents **intention**. | §3.2, §19, ADR-028 |
 | **Task** | A lightweight plan item with no detailed logging (e.g. "Pay bill"). | §21 |
@@ -73,7 +73,7 @@ The analytics engine does not know what an activity *means*. It only understands
 | **Insights** | Progress, measurements and patterns. |
 | **Me** | **Activities** (create/configure reusable Activity Types: builder, templates), body measurements, preferences, settings, export. |
 
-Cross-cutting: **Quick Record** (global action on every tab, for recording an unplanned activity; §37), **Focus Mode** (§16), **Search & History** (§38), **Onboarding** (§33.4).
+Cross-cutting: **logging into items** (anything unplanned is added to the day with "Now" and opened; §37, ADR-035), **Focus Mode** (§16), **Search & History** (§38), **Onboarding** (§33.4).
 
 ## 7. Reference activities
 

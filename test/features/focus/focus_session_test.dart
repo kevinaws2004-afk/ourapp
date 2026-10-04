@@ -52,7 +52,9 @@ void main() {
     resume = ResumeFocusSession(sessions, clock);
     finish = FinishFocusSession(
       sessions,
+      logs,
       LogActivity(types, logs, plans, ids, clock),
+      UpdateActivityLog(types, logs, clock),
       DbUnitOfWork(db),
       clock,
     );
@@ -64,12 +66,6 @@ void main() {
     final id = await CreateActivityType(types, ids)(readingDefinition());
     return (await types.getType(id))!;
   }
-
-  ActivityLogDraft draft(ActivityType type, FocusSession s, {String? book}) =>
-      ActivityLogDraft(
-        startedAt: s.startedAt,
-        values: {if (book != null) type.activeFields.first.id: TextValue(book)},
-      );
 
   group('elapsed time is derived from timestamps', () {
     final t0 = DateTime.utc(2026, 10, 4, 21);
@@ -172,9 +168,7 @@ void main() {
       clock.advance(const Duration(minutes: 5)); // paused: not counted
       await resume(id);
       clock.advance(const Duration(minutes: 12));
-      final session = (await sessions.getActive())!;
-
-      final logId = await finish(id, draft(type, session, book: 'Antifragile'));
+      final logId = await finish(id);
 
       final log = (await logs.getLog(logId))!;
       expect(log.durationMs, const Duration(minutes: 42).inMilliseconds);
@@ -188,22 +182,53 @@ void main() {
     },
   );
 
-  test('a record that fails validation leaves the session running', () async {
-    final type = await reading(); // Book is required
+  test('finishing keeps what was logged into the item and adds a second '
+      "session's time", () async {
+    final type = await reading(); // Book is required: a hint, not a blocker
+    final today = LocalDate(2026, 10, 4);
+    final planId = await CreatePlan(plans, types, ids, clock)(
+      PlanDraft(planDate: today, title: 'Read', activityTypeId: type.id),
+    );
+    final book = type.activeFields.first.id;
+    // Logged into the item before the timer started.
+    final logId = await LogActivity(types, logs, plans, ids, clock)(
+      type.id,
+      ActivityLogDraft(
+        startedAt: clock.nowUtc(),
+        values: {book: const TextValue('Antifragile')},
+        planId: planId,
+      ),
+      partial: true,
+    );
+    final sessionStart = clock.nowUtc();
+
+    await finish(await _timed(start, clock, type.id, planId, minutes: 20));
+    var log = (await logs.getLog(logId))!;
+    expect(log.values[book], const TextValue('Antifragile'));
+    expect(log.startedAt, sessionStart);
+    expect(log.durationMs, const Duration(minutes: 20).inMilliseconds);
+
+    clock.advance(const Duration(minutes: 30));
+    expect(
+      await finish(await _timed(start, clock, type.id, planId, minutes: 10)),
+      logId,
+    );
+    log = (await logs.getLog(logId))!;
+    expect(log.startedAt, sessionStart);
+    expect(log.durationMs, const Duration(minutes: 30).inMilliseconds);
+    expect(log.endedAt, clock.nowUtc());
+  });
+
+  test('finishing a session without a plan creates its own record', () async {
+    final type = await reading();
     final id = await start(type.id);
     clock.advance(const Duration(minutes: 10));
-    final session = (await sessions.getActive())!;
 
-    await expectLater(
-      finish(id, draft(type, session)),
-      throwsA(isA<ValidationException>()),
-    );
+    final log = (await logs.getLog(await finish(id)))!;
 
-    expect((await sessions.getActive())!.state, FocusState.running);
-    final count = await db
-        .customSelect('SELECT COUNT(*) AS c FROM activity_logs')
-        .getSingle();
-    expect(count.read<int>('c'), 0);
+    expect(log.planId, isNull);
+    expect(log.values, isEmpty);
+    expect(log.durationMs, const Duration(minutes: 10).inMilliseconds);
   });
 
   test('discarding creates no record', () async {
@@ -232,4 +257,17 @@ void main() {
       throwsA(anything),
     );
   });
+}
+
+/// Starts a session on [planId] and lets it run [minutes].
+Future<FocusSessionId> _timed(
+  StartFocusSession start,
+  FakeClock clock,
+  ActivityTypeId typeId,
+  PlanId planId, {
+  required int minutes,
+}) async {
+  final id = await start(typeId, planId: planId);
+  clock.advance(Duration(minutes: minutes));
+  return id;
 }

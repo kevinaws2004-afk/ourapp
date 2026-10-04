@@ -20,19 +20,10 @@ import 'plan_providers.dart';
 
 /// An action chosen in the plan sheet, run by the screen that opened it
 /// (the sheet's own state is gone once it closes).
-enum PlanSheetAction {
-  record,
-  recordAgain,
-  track,
-  toggleTask,
-  skip,
-  reopen,
-  moveToTomorrow,
-  delete,
-}
+enum PlanSheetAction { toggleTask, skip, reopen, moveToTomorrow, delete }
 
 /// Creates a plan for [date] ([item] null) or edits [item] and offers its
-/// actions: record it, complete a task, skip, reopen, move to tomorrow,
+/// actions: complete a task, skip, reopen, move to tomorrow,
 /// delete (FR-PL-01…07, F5, F10, F11). Saving happens in the sheet; an
 /// action is returned to the caller.
 Future<PlanSheetAction?> showPlanEditor(
@@ -289,18 +280,6 @@ class _PlanEditorSheetState extends ConsumerState<_PlanEditorSheet> {
         );
     return [
       const SizedBox(height: AppSpacing.lg),
-      if (!plan.isTask && item.records.isEmpty)
-        action(AppIcons.start, l10n.planRecordIt, PlanSheetAction.record),
-      // Another session for the same plan (ADR-030).
-      if (!plan.isTask && item.records.isNotEmpty)
-        action(
-          AppIcons.record,
-          l10n.planRecordAgain,
-          PlanSheetAction.recordAgain,
-        ),
-      // Any plan can be tracked with fields the user chooses (ADR-030).
-      if (plan.isTask)
-        action(AppIcons.edit, l10n.planTrackDetails, PlanSheetAction.track),
       if (plan.isTask && open)
         action(
           AppIcons.taskDone,

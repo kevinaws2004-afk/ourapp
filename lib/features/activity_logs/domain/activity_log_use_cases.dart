@@ -68,10 +68,13 @@ class LogActivity {
   final IdGenerator _ids;
   final Clock _clock;
 
+  /// With [partial], missing required values don't block the save (an
+  /// item's log saved as it's filled in, ADR-035).
   Future<ActivityLogId> call(
     ActivityTypeId typeId,
-    ActivityLogDraft draft,
-  ) async {
+    ActivityLogDraft draft, {
+    bool partial = false,
+  }) async {
     final type = await _types.getType(typeId);
     if (type == null || type.isDeleted) {
       throw NotFoundException(debugContext: 'LogActivity ${typeId.value}');
@@ -80,6 +83,7 @@ class LogActivity {
     LogValidator.validate(
       type,
       input,
+      partial: partial,
     ).throwIfInvalid(debugContext: 'LogActivity');
     if (draft.planId case final planId?) {
       final plan = await _plans.getPlan(planId);
@@ -120,7 +124,13 @@ class UpdateActivityLog {
   final ActivityLogRepository _logs;
   final Clock _clock;
 
-  Future<void> call(ActivityLogId id, ActivityLogDraft draft) async {
+  /// With [partial], missing required values don't block the save
+  /// (ADR-035). A draft with [ActivityLogDraft.endedAt] replaces the end.
+  Future<void> call(
+    ActivityLogId id,
+    ActivityLogDraft draft, {
+    bool partial = false,
+  }) async {
     final existing = await _logs.getLog(id);
     if (existing == null) {
       throw NotFoundException(debugContext: 'UpdateActivityLog ${id.value}');
@@ -134,6 +144,7 @@ class UpdateActivityLog {
       type,
       input,
       existing: existing.values,
+      partial: partial,
     ).throwIfInvalid(debugContext: 'UpdateActivityLog');
     final startedAt = draft.startedAt.toUtc();
     final offset = _clock.offsetAt(startedAt);
@@ -142,7 +153,7 @@ class UpdateActivityLog {
         id: id,
         activityTypeId: existing.activityTypeId,
         startedAt: startedAt,
-        endedAt: existing.endedAt,
+        endedAt: draft.endedAt?.toUtc() ?? existing.endedAt,
         durationMs: draft.durationMs,
         tzOffsetMinutes: offset.inMinutes,
         localDate: LocalDate.ofInstant(startedAt, offset),

@@ -1,5 +1,6 @@
 import '../../../core/time/local_date.dart';
 import '../../activity_types/domain/activity_ids.dart';
+import '../../plans/domain/plan.dart';
 import 'activity_log.dart';
 
 /// Persistence for activity logs and their values (one aggregate).
@@ -23,6 +24,9 @@ abstract interface class ActivityLogRepository {
   Stream<ActivityLog?> watchLog(ActivityLogId id);
 
   Future<ActivityLog?> getLog(ActivityLogId id);
+
+  /// The item's log (ADR-035): the plan's earliest active log, if any.
+  Future<ActivityLog?> getLogForPlan(PlanId planId);
 
   /// Distinct text values previously recorded for a text field (in any
   /// scope, including inside Repeating Group items) in non-deleted logs, most

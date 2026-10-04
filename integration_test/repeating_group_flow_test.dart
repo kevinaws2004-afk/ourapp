@@ -3,6 +3,7 @@ import 'package:daylog/core/database/app_database.dart';
 import 'package:daylog/core/database/database_provider.dart';
 import 'package:daylog/features/activity_logs/presentation/form/field_editor_shell.dart';
 import 'package:daylog/features/activity_types/presentation/activity_type_screen.dart';
+import 'package:daylog/features/plans/presentation/item/item_notifier.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/features/settings/domain/theme_preference.dart';
 import 'package:daylog/features/settings/presentation/preferences_providers.dart';
@@ -87,8 +88,11 @@ void main() {
       await enter(tester, find.widgetWithText(TextField, 'Reps').at(i), reps);
     }
     FocusManager.instance.primaryFocus?.unfocus();
+    // The item saves as you type (ADR-035); leave once it has.
+    await tester.pump(ItemNotifier.saveDelay * 2);
     await tester.pumpAndSettle();
-    await scrollAndTap(tester, find.widgetWithText(FilledButton, 'Save'));
+    await tester.pageBack();
+    await tester.pumpAndSettle();
 
     expect(find.byType(ActivityTypeScreen), findsOneWidget);
     await tester.tap(find.text('Chest Press'));

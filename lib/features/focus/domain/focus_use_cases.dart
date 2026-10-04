@@ -3,6 +3,7 @@ import '../../../core/ids/id_generator.dart';
 import '../../../core/time/clock.dart';
 import '../../../core/transactions/unit_of_work.dart';
 import '../../activity_logs/domain/activity_log.dart';
+import '../../activity_logs/domain/activity_log_repository.dart';
 import '../../activity_logs/domain/activity_log_use_cases.dart';
 import '../../activity_types/domain/activity_ids.dart';
 import '../../activity_types/domain/activity_type_repository.dart';
@@ -119,15 +120,26 @@ class DiscardFocusSession {
   }
 }
 
-/// Finishes the session with the record the user confirmed (FR-FO-03): the
-/// record (with the session's plan and end time) and the session's finished
+/// Finishes the session into its item's log (ADR-035): the timed span
+/// becomes the log's start, end and duration; whatever was logged into the
+/// item stays. A second session on the same item adds to its time. Without
+/// a plan, it creates a log of its own. The log and the session's finished
 /// state are written in one transaction. The session ends at its pause, or
 /// now if running.
 class FinishFocusSession {
-  const FinishFocusSession(this._sessions, this._log, this._work, this._clock);
+  const FinishFocusSession(
+    this._sessions,
+    this._logs,
+    this._log,
+    this._update,
+    this._work,
+    this._clock,
+  );
 
   final FocusSessionRepository _sessions;
+  final ActivityLogRepository _logs;
   final LogActivity _log;
+  final UpdateActivityLog _update;
   final UnitOfWork _work;
   final Clock _clock;
 
@@ -137,28 +149,50 @@ class FinishFocusSession {
     return (end, session.elapsedMs(end));
   }
 
-  Future<ActivityLogId> call(FocusSessionId id, ActivityLogDraft draft) async {
+  Future<ActivityLogId> call(FocusSessionId id) async {
     final session = await _active(_sessions, id, 'FinishFocus');
     final now = _clock.nowUtc();
     final (end, elapsed) = endOf(session, now);
-    final durationMs = draft.durationMs ?? elapsed;
     return _work.run(() async {
-      final logId = await _log(
-        session.activityTypeId,
-        ActivityLogDraft(
-          startedAt: draft.startedAt,
-          endedAt: end,
-          durationMs: durationMs,
-          notes: draft.notes,
-          values: draft.values,
-          planId: session.planId,
-        ),
-      );
+      final existing = session.planId == null
+          ? null
+          : await _logs.getLogForPlan(session.planId!);
+      final ActivityLogId logId;
+      if (existing == null) {
+        logId = await _log(
+          session.activityTypeId,
+          ActivityLogDraft(
+            startedAt: session.startedAt,
+            endedAt: end,
+            durationMs: elapsed,
+            values: const {},
+            planId: session.planId,
+          ),
+          partial: true,
+        );
+      } else {
+        // An earlier timed session on this item: keep its start, add time.
+        final timedBefore = existing.endedAt != null;
+        logId = existing.id;
+        await _update(
+          logId,
+          ActivityLogDraft(
+            startedAt: timedBefore ? existing.startedAt : session.startedAt,
+            endedAt: end,
+            durationMs: timedBefore
+                ? (existing.durationMs ?? 0) + elapsed
+                : elapsed,
+            notes: existing.notes,
+            values: existing.values,
+          ),
+          partial: true,
+        );
+      }
       await _sessions.markFinished(
         id,
         logId: logId,
         endedAt: end,
-        durationMs: durationMs,
+        durationMs: elapsed,
         updatedAt: now,
       );
       return logId;

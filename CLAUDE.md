@@ -10,7 +10,7 @@ Core loop: **Plan → Do → Log → Measure → Understand.** Gym, Reading, Wor
 
 **Current phase:** see [`ai/tasks/current_task.md`](ai/tasks/current_task.md). Only work on the phase the owner has approved there.
 
-**Navigation & terminology (ADR-028):** Today | Plan | Insights | Me. No floating Record button; unplanned activities are recorded from Today's "Record something" (Quick Record), planned ones by tapping the plan (ADR-030). Plan is date-based (calendar). Reusable activities are configured under Me → Activities. UI copy says **Record**; Activity Log is the internal/domain name.
+**Navigation & terminology (ADR-028, ADR-035):** Today | Plan | Insights | Me. No floating Record button. Everything on a day is an **item**: you add it (quick add, or **Now** for what you're doing), then open it to log into it; it saves as you type. Plan is date-based (calendar). Reusable activities are configured under Me → Activities but never required before logging. Activity Log is the internal/domain name; the UI talks about items being done.
 
 **Naming rule (ADR-010):** the product name is **undecided**.
 - `daylog` / `com.ourapp.daylog` are internal technical identifiers only (Dart package, app/bundle ID). Never present "Daylog" as the product name in UI, copy, docs prose or marketing.
@@ -38,7 +38,7 @@ Flutter · Dart 3 (null-safe) · SQLite (local, V1 source of truth) · Riverpod 
 | `lib/app/` | Bootstrap, root `App`, router (`router.dart`), adaptive shell, startup failure screen, provider logger, `dev/` (debug-only token showcase) |
 | `lib/core/` | `database/` (drift DB, all table definitions incl. `tables/activity_engine.drift`, `guardStorage`, `isActive`, `reactiveQuery`), `design/` (tokens, theme, Phosphor icons and registries, window size classes), `errors/` (AppException), `time/` (Clock, LocalDate), `ids/` (UUIDv7), `units/` (unit registry), `logging/` (AppLogger) |
 | `lib/shared/widgets/` | Reusable design-system components |
-| `lib/features/<feature>/{data,domain,presentation}/` | Feature code (only the layers that are needed). Implemented: `settings` (preferences, Me), `activity_types` (types, fields, builder, templates, Me → Activities), `activity_logs` (logs, typed values, generic form renderer, record form, Quick Record), `plans` (plans and tasks, day overview, date-based Plan tab), `today` (Today screen), `focus` (focus timer, ADR-031), `measurements` (Me → Body measurements), `insights` (generic analytics engine + charts, ADR-034) |
+| `lib/features/<feature>/{data,domain,presentation}/` | Feature code (only the layers that are needed). Implemented: `settings` (preferences, Me), `activity_types` (types, fields, builder, templates, Me → Activities), `activity_logs` (logs, typed values, generic form renderer), `plans` (plans and tasks, day overview, the item screen where you log (ADR-035), date-based Plan tab), `today` (Today screen), `focus` (focus timer, ADR-031), `measurements` (Me → Body measurements), `insights` (generic analytics engine + charts, ADR-034) |
 | `lib/l10n/` | ARB strings (`app_en.arb`) + committed gen-l10n output |
 | `assets/fonts/` | Bundled fonts with licenses: Fraunces, DM Sans and DM Mono (OFL), Phosphor icons (MIT) |
 | `tool/` | `generate_phosphor_glyphs.py` (icon constants and registry) |

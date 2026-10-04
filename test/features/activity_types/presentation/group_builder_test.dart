@@ -25,11 +25,11 @@ void main() {
 
     await scrollAndTap(tester, find.text('Add field'));
     await tester.dragUntilVisible(
-      find.text('Repeating group'),
+      find.text('List'),
       find.byType(ListView).last,
       const Offset(0, -200),
     );
-    await tester.tap(find.text('Repeating group'));
+    await tester.tap(find.text('List'));
     await tester.pumpAndSettle();
     await tester.enterText(
       find.widgetWithText(TextField, 'Field name'),

@@ -149,6 +149,24 @@ class DbActivityLogRepository implements ActivityLogRepository {
   Future<ActivityLog?> getLog(ActivityLogId id) =>
       guardStorage('getLog', () => _load(id));
 
+  @override
+  Future<ActivityLog?> getLogForPlan(PlanId planId) =>
+      guardStorage('getLogForPlan', () async {
+        final row = await _db
+            .customSelect(
+              'SELECT l.public_id FROM activity_logs l '
+              'JOIN plans p ON p.internal_id = l.plan_id '
+              'WHERE p.public_id = ? AND l.deleted_at IS NULL '
+              'ORDER BY l.started_at, l.internal_id LIMIT 1',
+              variables: [Variable(planId.value)],
+              readsFrom: {_db.activityLogs, _db.plans},
+            )
+            .getSingleOrNull();
+        return row == null
+            ? null
+            : _load(ActivityLogId(row.read<String>('public_id')));
+      });
+
   Future<ActivityLog?> _load(ActivityLogId id) async {
     final row =
         await (_db.select(_db.activityLogs)..where(

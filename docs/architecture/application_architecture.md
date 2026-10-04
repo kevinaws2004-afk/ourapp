@@ -9,13 +9,12 @@
 >   - `l10n/`
 >   - `settings` (preferences)
 >   - `activity_types`: domain, data and presentation (Me → Activities, activity detail, builder, templates)
->   - `activity_logs`: domain, data and presentation (log editor and generic form renderer)
->   - `plans`: domain, data and presentation (plans and tasks, `WatchDayOverview`, the date-based Plan tab with quick add, reorder and the plan sheet)
->   - `today` (presentation): greeting, today's plan (tap to record or open the record, task check; ADR-030), planned vs actual, unplanned records, empty state
->   - `focus` (Phase 5, ADR-031): domain/data/presentation (session model and use cases, `DbFocusSessionRepository`, full-screen `FocusScreen`, `FocusBanner`, start choice sheet); `core/transactions/UnitOfWork` + `core/database/DbUnitOfWork`
+>   - `activity_logs`: domain, data and presentation (the generic form renderer and the day's record tile)
+>   - `plans`: domain, data and presentation (plans and tasks, `WatchDayOverview` + `DayOverview.entries`, the item screen where you log into an item (`presentation/item/`, ADR-035), the date-based Plan tab with quick add, reorder and the plan sheet)
+>   - `today` (presentation): greeting, quick add with Now, today's items as one list (tap to open the item, task check; ADR-035), planned vs actual
+>   - `focus` (Phase 5, ADR-031): domain/data/presentation (session model and use cases, `DbFocusSessionRepository`, full-screen `FocusScreen`, `FocusBanner`; the timer also runs inside the item); `core/transactions/UnitOfWork` + `core/database/DbUnitOfWork`
 >   - `measurements` (Phase 6): domain/data/presentation (Me → Body measurements, per-type history + chart, add/edit sheet)
 >   - `insights` (Phase 6, ADR-034): the generic engine (`insight.dart`, `WatchInsight`), `DbInsightRepository`, the Insights tab, chart cards and the chart builder; shared `AppChart` (fl_chart, ADR-033)
->   - Quick Record
 > - Everything else here is target design.
 
 ---
@@ -48,7 +47,7 @@ lib/
 | `bootstrap.dart` | Error handlers → open + migrate DB → read preferences snapshot → `runApp` |
 | `startup_failure_app.dart` | Shown if the DB can't be opened/migrated; offers retry, never deletes data |
 | `provider_logger.dart` | Riverpod `ProviderObserver` that logs provider failures |
-| `dev/` | Debug-only token showcase (`token_showcase_screen.dart`, `showcase_sections.dart`), registered only when `kDebugMode` |
+| `dev/` | Debug-only token showcase (`token_showcase_screen.dart`, `showcase_sections.dart`), registered only when `kDebugMode`; demo data loader (`demo_data.dart`, Me → "Load demo data (debug)", writes through the normal use cases) |
 
 ### 1.2 `core/`
 
@@ -165,16 +164,16 @@ ActivityLogFormFields                      features/activity_logs/presentation/f
        └─ FieldEditorRegistry.editorFor(field, value, onChanged)
         │
         ▼
-LogEditorNotifier (draft: startedAt, durationMs, notes, Map<ActivityFieldId, FieldValue>)
-  └─ save() ─▶ LogActivity / UpdateActivityLog use case ─▶ LogValidator ─▶ repository
+ItemNotifier (item: plan, type, logId?, startedAt, durationMs, notes, Map<ActivityFieldId, FieldValue>)
+  └─ debounced auto-save ─▶ LogActivity / UpdateActivityLog (partial: true) ─▶ LogValidator ─▶ repository
 ```
 
 Rules:
 - `FieldEditorRegistry` is an exhaustive `switch` over `FieldType`, so adding a field type without an editor is a compile error. It is the only place presentation branches on field type.
-- Editors hold no persisted state: they receive the current typed `FieldValue?` and an `onChanged` callback. Draft state lives in the notifier. Clearing an input emits `null` (no value).
+- Editors hold no persisted state: they receive the current typed `FieldValue?` and an `onChanged` callback. The item's state lives in the notifier, which saves it shortly after each change (ADR-035). Clearing an input emits `null` (no value).
 - Validation is domain logic (`LogValidator`). The UI shows the returned `ValidationIssue`s next to the matching field.
-- The log's built-in **start time, duration (ADR-021) and notes** sit outside the renderer, in the log editor screen.
-- Used by: new log and edit log (Phase 2); plan → log (Phase 4, ADR-030: tapping a plan opens `LogEditorArgs.create(typeId, planId:)`, route `/logs/new/:typeId?plan=<planId>`; `LogEditorNotifier` loads the plan into `LogEditorState.plan` for the "Planned" line and the default start time); post-focus completion (Phase 5).
+- The log's built-in **start time, duration (ADR-021) and notes** sit outside the renderer, in the item screen.
+- Used by: the item screen (ADR-035: `ItemScreen` / `ItemNotifier` in `plans/presentation/item/`, routes `/item/:planId` and `/item/log/:logId`; the first change creates the log through `EnsureItemActivity` + `LogActivity`, later ones `UpdateActivityLog`, all `partial`). Earlier: new/edit log (Phase 2), plan → log (Phase 4, ADR-030: tapping a plan opens `LogEditorArgs.create(typeId, planId:)`, route `/logs/new/:typeId?plan=<planId>`; `LogEditorNotifier` loads the plan into `LogEditorState.plan` for the "Planned" line and the default start time); post-focus completion (Phase 5).
 - The builder's live **preview** renders the same `ActivityLogFormFields` with a throwaway draft. There is one renderer, never two.
 - **Repeating Group** (`RepeatingGroupEditor`, ADR-027) is generic: it never knows what an item represents.
   - Items render as cards holding a nested `ActivityLogFormFields` for the group's sub-fields, with issue targets prefixed `<itemId>/`.
@@ -194,9 +193,9 @@ Rules:
 
 ## 6. Navigation
 
-- `go_router` with a `StatefulShellRoute` for the four tabs (Today, Plan, Insights, Me; ADR-028) preserving each tab's stack. The shell has no Record action (owner, 2026-10-04). Quick Record is opened from Today (`openQuickRecord` in the router).
-- Full-screen routes outside the shell: Focus Mode, Activity Builder, Log Editor (on compact), Onboarding.
-- Modal bottom sheets for Quick Record, quick plan/task entry, and pickers. Sheets are not routes unless deep-linking is needed.
+- `go_router` with a `StatefulShellRoute` for the four tabs (Today, Plan, Insights, Me; ADR-028) preserving each tab's stack. The shell has no Record action (owner, 2026-10-04); items are added from the quick add (ADR-035).
+- Full-screen routes outside the shell: Item, Focus Mode, Activity Builder, Onboarding.
+- Modal bottom sheets for the plan sheet and pickers. Sheets are not routes unless deep-linking is needed.
 - Onboarding gate (implemented): the router's `redirect` calls `onboardingRedirect()` with the current `onboarding_completed` preference. A `ValueNotifier` fed by the preference stream is the router's `refreshListenable`; the startup snapshot gives the correct first route with no flash.
 - Route paths are constants in `app/router.dart`. Features expose screen widgets; they do not build `GoRoute`s themselves, which keeps routing in one place.
 - Route arguments are IDs (strings), never entity objects, so routes survive restoration.
@@ -205,7 +204,7 @@ Implemented:
 - Phase 1: `/onboarding`, `/today`, `/plan`, `/insights`, `/me`, debug-only `/dev/tokens` (`/track` was removed by ADR-028).
 - Phase 2:
   - Inside the Me tab: `/me/activities` (Activities) and `/me/activities/:typeId` (activity detail).
-  - Full-screen on the root navigator: `/activities/new`, `/activities/templates`, `/activities/:typeId/edit`, `/logs/new/:typeId`, `/logs/:logId`.
+  - Full-screen on the root navigator: `/activities/new`, `/activities/templates`, `/activities/:typeId/edit`. (`/logs/…` were replaced by `/item/…`, ADR-035.)
 
 Route parameters are public IDs (ADR-017). Indicative full route map (paths will be reconciled with the implemented ones as features land):
 
@@ -215,10 +214,9 @@ Route parameters are public IDs (ADR-017). Indicative full route map (paths will
 /me/activities                   (implemented)
 /me/activities/:typeId           (implemented)
 /activities/new, /activities/templates, /activities/:typeId/edit   (implemented)
-/logs/new/:typeId[?plan=:planId] (implemented; the plan link was added in Phase 4)
-/logs/:logId                     (implemented)
-/focus                           (implemented: the active session)
-/focus/finish/:sessionId         (implemented: record form that finishes it)
+/item/:planId                    (implemented: an item, where you log into it; ADR-035)
+/item/log/:logId                 (implemented: a record without a plan, as an item)
+/focus                           (implemented: the active session, full screen)
 /insights                        (implemented)
 /me
 /me/measurements[/:type]         (implemented)

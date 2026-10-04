@@ -93,16 +93,17 @@ Current suites (269 tests):
   - config codec round-trips (incl. `suggest`, `itemLabel`)
   - repository/use cases: create, ordered fields, update with reorder/rename/add/remove, soft delete/restore, template install with fresh option IDs, live stream
 - **plans:**
-  - domain: effective status (reality wins), planned length, display order, validator (title, plannable activity, locked activity, time rules), wall-clock day shift across DST, `daysUntil`, record start for a plan (planned start; else today → now, another day → that date at the current time), name matching
+  - items (ADR-035): a new name gets a plain activity of its own once, an existing name is reused; Mark done logs the planned time and length once, ticks a task off; partial logs save without required values; deleting an item deletes its log and Undo restores both; a day's items in time order with untimed plans last; `getLogForPlan` ignores deleted logs
+  - domain: effective status (a running timer wins, then reality), planned length, display order, validator (title, plannable activity, locked activity, time rules), wall-clock day shift across DST, `daysUntil`, record start for a plan (planned start; else today → now, another day → that date at the current time), name matching
   - repository/use cases: title from activity, appended order, record from plan links and derives completion (and reopens on record delete), records on other days pair with their plan, mismatched plan rejected, task-only completion, move to tomorrow (time kept, reopened, appended), reorder, locked activity, delete/restore, live overview
 - **focus (Phase 5):**
   - elapsed time excludes pauses; a paused session stands still
   - survives a restart (a new repository reads the same elapsed time)
   - only timer activities; one active session (domain and DB unique index)
   - finish writes the record (duration, end, plan) and the finished state atomically, and the plan goes In progress → completed
-  - a failed record leaves the session running (rollback)
   - discard creates no record
-  - widgets: plan → Start focus → timer → Finish → prefilled record → "session complete" → plan ✓; Today banner → Return
+  - finishing fills the item's existing log (values kept, start = session start), a second session adds its time; a session without a plan creates its own record (ADR-035)
+  - widgets: open item → Start timer → log while it runs → Finish → "session complete", values kept, ✓ "Done · 42 min of 1h 0m"; Today banner → Return → the item → full-screen timer
 - **insights & measurements (Phase 6):**
   - domain: Monday weeks/month buckets, gaps vs zero-fill, every aggregation, this vs previous period, chart JSON round-trip for every source, measurement validation
   - repository on real SQLite: nested set weights filtered by exercise (case-insensitive) and personal best; volume = Σ weight × reps; time, count and per-activity totals; planned vs actual by plan date; lb → kg canonical measurements; save/list/delete charts
@@ -117,16 +118,15 @@ Current suites (269 tests):
   - Activities (Me → Activities) empty state
   - template install
   - builder create + inline validation
-  - log with required-field validation and history summary
-  - delete + Undo
-  - navigation (ADR-028): four tabs, no floating Record button (compact or rail), Quick Record from Today's "Record something", empty Quick Record → builder, Me → Activities
-  - Plan tab: opens on today with Planned and Recorded sections, week navigation, future dates hide Recorded, record → edit, calendar picker
+  - Record on an activity's page opens an item for now; what's logged shows in its history summary
+  - deleting an item (plan + log) + Undo
+  - navigation (ADR-028): four tabs, no floating Record button (compact or rail), Me → Activities
+  - Plan tab: opens on today with one list of items (unplanned records included), week navigation, a record without a plan opens as an item, calendar picker
   - renderer: every editor in order, archived options hidden, typed emission and clearing, invalid numbers
-  - Plans & Today (ADR-030): quick-add task + complete, tapping a task toggles it, tapping a planned activity opens its linked record form ("Planned · …") → save → ✓ "Recorded" → tapping again opens the record, plan options (Record it, no Mark as done for activities) → move to tomorrow with Undo, Today greeting and tap-to-record, empty Today → Plan tab
-  - planned Gym → tap → one exercise, three sets → save → ✓, stored as one linked record with four group items
-  - any plan is trackable: task "Food" → Track details → builder prefilled "Food" → add a Number field → save → record form ("Planned · Food") → save → ✓; tapping a task offers Mark as done / Track details
-  - quick add: typing "reading" links the Reading activity; typing "Gym" installs the template and plans it; a 21:10–21:55 plan prefills 45 min ("Recorded 45 min of 45 min")
-  - Repeating Groups: recording the §43 workout (sets prefilled from the previous set, reopened intact), item-scoped required error, exercise autocomplete; builder creates a group with a sub-field in a nested sheet
+  - Items (ADR-035): quick-add task + complete; opening a planned activity → typing saves ("Saved", no Save button) → ✓ with summary → reopening shows it; leaving right after typing still saves; plan options (no "Record it") → move to tomorrow with Undo; a task opens and is marked done; notes on a new name save it with an activity of its own; Today "Now" opens a new item; empty Today invitation; Add to log → Sets & reps → log a set ✓; Add to log → Number "Calories" → 650 in the summary; Checklist → Add detail "Dose" appears in each row; "Mark done" on 21:10–21:55 → "Done · 45 min of 45 min"
+  - planned Gym → open → one exercise, three sets (auto-saved) → leave → back → a fourth set → stored as one linked record with five group items
+  - quick add: typing "reading" links the Reading activity (its item has its fields); typing "Gym" installs the template and plans it
+  - Repeating Groups: recording the §43 workout from an activity's page (sets prefilled from the previous set, reopened intact), an exercise without a name is still saved (partial), exercise autocomplete; builder creates a group with a sub-field in a nested sheet
 - **integration (device):**
   - `app_launch_test` (real bootstrap/DB)
   - `activity_engine_flow_test` (Me → Activities → template → record → history on native SQLite, in-memory DB)

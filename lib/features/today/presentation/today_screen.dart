@@ -1,50 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/design/app_icons.dart';
 import '../../../core/design/context_ext.dart';
 import '../../../core/design/tokens/spacing.dart';
 import '../../../core/design/window_size_class.dart';
 import '../../../core/time/clock.dart';
 import '../../../core/time/clock_provider.dart';
+import '../../../core/time/local_date.dart';
 import '../../../l10n/generated/app_localizations.dart';
-import '../../../shared/widgets/app_button.dart';
-import '../../../shared/widgets/section_header.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../../activity_logs/domain/activity_log.dart';
-import '../../activity_logs/presentation/day_record_tile.dart';
 import '../../activity_logs/presentation/value_formatting.dart';
 import '../../focus/presentation/focus_banner.dart';
+import '../../plans/domain/plan.dart';
 import '../../plans/domain/watch_day_overview.dart';
 import '../../plans/presentation/plan_date_notifier.dart';
 import '../../plans/presentation/plan_providers.dart';
+import '../../plans/presentation/widgets/plan_quick_add.dart';
 import '../../plans/presentation/widgets/planned_list.dart';
 
-/// Today tab (ui_guidelines.md §4.1; FR-TD-01…05): a time-of-day greeting,
-/// today's plan with Start / check actions, each plan paired with what was
-/// recorded for it (planned vs actual), and what was recorded without a plan.
+/// Today tab (ADR-035): a greeting, a quick way to add to the day (planned,
+/// or "Now" to log it straight away), and the day's items in time order.
+/// Opening an item is where you log into it.
 class TodayScreen extends ConsumerWidget {
   const TodayScreen({
     super.key,
+    required this.onOpenItem,
     required this.onOpenRecord,
-    required this.onRecordPlan,
-    required this.onTrackPlan,
-    required this.onPlanDay,
-    required this.onQuickRecord,
     required this.onOpenFocus,
   });
 
-  /// Returns to the running focus session.
-  final VoidCallback onOpenFocus;
+  /// Opens a plan's item screen.
+  final ValueChanged<PlanId> onOpenItem;
+
+  /// Opens a record made without a plan.
   final ValueChanged<ActivityLog> onOpenRecord;
-  final ValueChanged<PlannedItem> onRecordPlan;
 
-  /// Sets up what to track for a task plan, then records it (ADR-030).
-  final ValueChanged<PlannedItem> onTrackPlan;
-
-  /// Opens the Plan tab on today.
-  final VoidCallback onPlanDay;
-  final VoidCallback onQuickRecord;
+  /// Returns to the running timer's item.
+  final VoidCallback onOpenFocus;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -79,16 +72,21 @@ class TodayScreen extends ConsumerWidget {
                 ),
               ),
               FocusBanner(onOpen: onOpenFocus),
+              const SizedBox(height: AppSpacing.lg),
+              PlanQuickAdd(
+                key: ValueKey(today),
+                date: today,
+                onStartNow: onOpenItem,
+              ),
+              const SizedBox(height: AppSpacing.md),
               AsyncValueView<DayOverview>(
                 value: ref.watch(dayOverviewProvider(today)),
                 onRetry: () => ref.invalidate(dayOverviewProvider(today)),
-                data: (overview) => _TodayContent(
+                data: (overview) => _TodayItems(
                   overview: overview,
+                  today: today,
+                  onOpenItem: onOpenItem,
                   onOpenRecord: onOpenRecord,
-                  onRecordPlan: onRecordPlan,
-                  onTrackPlan: onTrackPlan,
-                  onPlanDay: onPlanDay,
-                  onQuickRecord: onQuickRecord,
                 ),
               ),
             ],
@@ -110,106 +108,62 @@ class TodayScreen extends ConsumerWidget {
   }
 }
 
-class _TodayContent extends StatelessWidget {
-  const _TodayContent({
+class _TodayItems extends StatelessWidget {
+  const _TodayItems({
     required this.overview,
+    required this.today,
+    required this.onOpenItem,
     required this.onOpenRecord,
-    required this.onRecordPlan,
-    required this.onTrackPlan,
-    required this.onPlanDay,
-    required this.onQuickRecord,
   });
 
   final DayOverview overview;
+  final LocalDate today;
+  final ValueChanged<PlanId> onOpenItem;
   final ValueChanged<ActivityLog> onOpenRecord;
-  final ValueChanged<PlannedItem> onRecordPlan;
-
-  /// Sets up what to track for a task plan, then records it (ADR-030).
-  final ValueChanged<PlannedItem> onTrackPlan;
-  final VoidCallback onPlanDay;
-  final VoidCallback onQuickRecord;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    if (overview.planned.isEmpty && overview.records.isEmpty) {
-      return AppEmptyState(
-        icon: AppIcons.today.outline,
-        title: l10n.todayEmptyTitle,
-        message: l10n.todayEmptyMessage,
-        action: AppButton(
-          label: l10n.todayPlanYourDay,
-          icon: AppIcons.plan.outline,
-          onPressed: onPlanDay,
-        ),
-        secondaryAction: AppButton(
-          label: l10n.todayRecordSomething,
-          variant: AppButtonVariant.secondary,
-          icon: AppIcons.record,
-          onPressed: onQuickRecord,
-        ),
-      );
-    }
-    final quiet = context.textStyles.bodyLarge?.copyWith(
+    final quiet = context.textStyles.bodyMedium?.copyWith(
       color: context.colors.textSecondary,
     );
+    final entries = overview.entries;
+    if (entries.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.only(top: AppSpacing.lg),
+        child: Text(l10n.todayEmptyMessageItems, style: quiet),
+      );
+    }
+    final done = entries
+        .where(
+          (e) => switch (e) {
+            PlanEntry(:final item) =>
+              item.status == EffectivePlanStatus.completed,
+            RecordEntry() => true,
+          },
+        )
+        .length;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (overview.records.isNotEmpty) ...[
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            overview.recordedMs > 0
-                ? l10n.todaySummary(
-                    overview.records.length,
-                    formatDuration(l10n, overview.recordedMs),
-                  )
-                : l10n.todaySummaryCount(overview.records.length),
-            style: context.textStyles.bodyMedium?.copyWith(
-              color: context.colors.textSecondary,
+        if (done > 0)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.md),
+            child: Text(
+              overview.recordedMs > 0
+                  ? l10n.todayDoneSummary(
+                      done,
+                      formatDuration(l10n, overview.recordedMs),
+                    )
+                  : l10n.todayDoneCount(done),
+              style: quiet,
             ),
           ),
-        ],
-        SectionHeader(
-          title: l10n.todayPlanSection,
-          trailing: TextButton(
-            onPressed: onPlanDay,
-            child: Text(l10n.todayEditPlan),
-          ),
+        PlannedList(
+          entries: entries,
+          onOpenItem: (item) => onOpenItem(item.plan.id),
+          onOpenRecord: onOpenRecord,
         ),
-        if (overview.planned.isEmpty)
-          Text(l10n.todayNothingPlanned, style: quiet)
-        else
-          PlannedList(
-            items: overview.planned,
-            onRecord: onRecordPlan,
-            onOpenRecord: onOpenRecord,
-            onTrack: onTrackPlan,
-          ),
-        SectionHeader(
-          title: overview.planned.isEmpty
-              ? l10n.planRecordedSection
-              : l10n.planAlsoRecordedSection,
-          // Unplanned activities are recorded here (Quick Record, FR-LG-06).
-          trailing: TextButton.icon(
-            icon: const Icon(AppIcons.record),
-            label: Text(l10n.todayRecordSomething),
-            onPressed: onQuickRecord,
-          ),
-        ),
-        if (overview.unplanned.isEmpty)
-          Text(
-            overview.records.isEmpty
-                ? l10n.planRecordedEmpty
-                : l10n.planNothingUnplanned,
-            style: quiet,
-          )
-        else
-          for (final record in overview.unplanned)
-            DayRecordTile(
-              record: record,
-              onTap: () => onOpenRecord(record.log),
-            ),
       ],
     );
   }

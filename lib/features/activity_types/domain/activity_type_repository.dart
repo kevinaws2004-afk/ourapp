@@ -11,6 +11,9 @@ abstract interface class ActivityTypeRepository {
   /// Active types, ordered for display.
   Stream<List<ActivityType>> watchActiveTypes();
 
+  /// Active types once, ordered for display.
+  Future<List<ActivityType>> getActiveTypes();
+
   /// Every type including deleted ones, for rendering historical records.
   Stream<List<ActivityType>> watchAllTypes();
 

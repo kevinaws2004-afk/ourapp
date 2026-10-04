@@ -14,12 +14,12 @@
 - **Activity Log**: what actually happened (times, notes, field values). Reality.
 - **Plan**: what the user intends (date, optional time/duration, optional Activity Type, status). Intention.
 - **Task**: a lightweight plan item with no detailed logging (e.g. "Buy milk"). It is a Plan with no Activity Type (ADR-018).
-- **Plan → Record is one workflow (ADR-030):** tapping a planned activity opens its record form linked to the plan; saving completes the plan. One session = one record (sets are rows inside it). Only tasks have "Mark as done".
+- **An item on your day is where you log (ADR-035):** opening a plan opens the item; what you log saves as you type, and the first thing logged makes it done. Leave and come back to add more. Any name can take notes immediately (it gets an activity of its own). "Mark done" logs the planned time. One session = one record (sets are rows inside it).
 - **Measurement**: a value analyzable over time; also **Body Measurements** (weight, height, body fat, chest, waist, arms, legs), stored separately.
 - **Focus Session**: full-screen timer whose active duration lands in a Log.
 - **Repeating Group**: the structured field type (exercise list; sets = a nested Repeating Group of Numbers). "Set Table" from the spec is a composition, not a type (OQ-01).
 
-**Navigation (ADR-028):** Today · Plan · Insights · Me, plus a global **Quick Record** action.
+**Navigation (ADR-028):** Today · Plan · Insights · Me. Add to a day from the quick add (with **Now**); no global record action (ADR-035).
 - **Plan:** the date-based planning system: pick any date, see its plans and what was recorded.
 - **Today:** today's plan plus today's reality.
 - **Me → Activities:** reusable Activity Type setup.
