@@ -14,7 +14,7 @@ ActivityTypeDefinition withFields(List<FieldDefinition> fields) =>
     ActivityTypeDefinition(
       name: 'Test',
       iconId: 'sparkle',
-      colorKey: 'sage',
+      colorKey: 'teal',
       fields: fields,
     );
 
@@ -255,7 +255,7 @@ void main() {
       id: const ActivityTypeId('t1'),
       name: 'Test',
       iconId: 'sparkle',
-      colorKey: 'sage',
+      colorKey: 'teal',
       supportsTimer: false,
       supportsPlanning: true,
       sortOrder: 0,

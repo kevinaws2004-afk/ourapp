@@ -53,9 +53,21 @@ void main() {
     expect(find.text('Read session complete · 42 min'), findsOneWidget);
     expect(find.text('Fooled by Randomness'), findsOneWidget, reason: 'kept');
     expect(find.text('Done'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Minutes'),
+      200,
+      scrollable: find.byType(Scrollable).hitTestable().first,
+    );
+    expect(
+      find.widgetWithText(TextField, '42'),
+      findsOneWidget,
+      reason: 'the timed length fills the duration (A11)',
+    );
 
     await closeItem(tester);
-    expect(find.textContaining('Done · 42 min of 1h 0m'), findsOneWidget);
+    // Finishing the timer finished the item (ADR-040).
+    expect(find.textContaining('42 min of 1h 0m'), findsOneWidget);
+    expect(find.byTooltip('Mark as not done'), findsOneWidget);
   });
 
   testAppWidgets('a running timer shows on Today; Return goes back to its '

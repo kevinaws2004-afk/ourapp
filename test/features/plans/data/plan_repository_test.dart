@@ -54,7 +54,7 @@ void main() {
   }
 
   Future<DayOverview> overview(LocalDate date) =>
-      WatchDayOverview(plans, logs, types)(date).first;
+      WatchDayOverview(plans, logs, types, clock)(date).first;
 
   Future<ActivityLogId> record(
     ActivityType type, {
@@ -97,7 +97,8 @@ void main() {
     );
   });
 
-  test('recording from a plan links it and completes it (derived)', () async {
+  test('recording from a plan links it; it is in progress that day and done '
+      'once the day has passed (ADR-040)', () async {
     final type = await reading();
     final planId = await createPlan(
       PlanDraft(
@@ -114,12 +115,19 @@ void main() {
     expect((await logs.getLog(logId))!.planId, planId);
     final day = await overview(today);
     final item = day.planned.single;
-    expect(item.status, EffectivePlanStatus.completed);
+    expect(item.status, EffectivePlanStatus.inProgress);
     expect(item.actualDurationMs, 2700000);
     expect(day.unplanned, isEmpty, reason: 'the record fulfils the plan');
     expect(await plans.hasRecords(planId), isTrue);
 
-    // Deleting the record reopens the plan: completion is never stored.
+    clock.advance(const Duration(days: 1));
+    expect(
+      (await overview(today)).planned.single.status,
+      EffectivePlanStatus.completed,
+      reason: 'logged on a past day',
+    );
+
+    // Deleting the record reopens the plan: nothing was marked done.
     await DeleteActivityLog(logs)(logId);
     expect((await overview(today)).planned.single.isOpen, isTrue);
   });
@@ -157,7 +165,7 @@ void main() {
     );
   });
 
-  test('tasks complete by status; activity plans can\'t', () async {
+  test('any item can be marked done by status (ADR-040)', () async {
     final type = await reading();
     final setStatus = SetPlanStatus(plans, clock);
     final taskId = await createPlan(PlanDraft(planDate: today, title: 'Call'));
@@ -172,9 +180,12 @@ void main() {
           .status,
       EffectivePlanStatus.completed,
     );
-    await expectLater(
-      setStatus(readId, PlanStatus.completed),
-      throwsA(isA<ValidationException>()),
+    await setStatus(readId, PlanStatus.completed);
+    expect(
+      (await overview(today)).planned
+          .firstWhere((i) => i.plan.id == readId)
+          .status,
+      EffectivePlanStatus.completed,
     );
   });
 
@@ -254,7 +265,7 @@ void main() {
   });
 
   test('the day overview updates when a plan is added', () async {
-    final emissions = WatchDayOverview(plans, logs, types)(today);
+    final emissions = WatchDayOverview(plans, logs, types, clock)(today);
     final expectation = expectLater(
       emissions.map((o) => o.planned.length),
       emitsInOrder([0, 1]),

@@ -40,7 +40,8 @@ Never used as decoration on data-dense screens (Insights, History).
 The product's central distinction (§20) gets a consistent visual grammar:
 - **Planned** = *outline*: dashed or thin 1.5dp border in the activity color, transparent/canvas fill, secondary text.
 - **Actual (logged)** = *filled*: activity `soft` surface with a solid activity-color accent (bar/dot/icon), primary text.
-- **Completed task** = filled check with a brief fill animation; title in secondary color (not struck through by default; strike-through is visually noisy).
+- **Completed task** = filled like any done item (brand `soft` surface) with the ✓; not struck through (strike-through is visually noisy).
+- **One rule for every row (A16, A17):** planned/in progress = outline; done = filled + ✓; skipped/cancelled = faded outline. Every row starts with the same check (open circle in the activity color, ✓ in `success` when done), which toggles done where that's possible. "Done" isn't repeated as text.
 - **Skipped/cancelled** = outline at reduced emphasis + status label (never red; skipping is not an error).
 Shape carries the meaning, not only color (accessibility).
 
@@ -55,7 +56,7 @@ Principles adopted (§33.1): cohesive visual world, soft pastel surfaces, large 
 ### 2.1 Token architecture
 ```text
 Raw palette (private)  →  Semantic roles (public, theme-aware)  →  Components
-   e.g. linen100              surface.canvas                          AppSurface
+   e.g. whiteCanvas           surface.canvas                          AppSurface
 ```
 - Feature code uses **semantic roles only** (`tokens.color.surfaceCanvas`, `tokens.color.textSecondary`, `tokens.activity(key).soft`).
 - Raw palette values are referenced only inside `core/design/`.
@@ -63,40 +64,40 @@ Raw palette (private)  →  Semantic roles (public, theme-aware)  →  Component
 
 ### 2.2 Semantic roles: neutrals & brand
 
-**ADR-029 (owner decision):** apart from neutrals (surfaces, text, borders, scrims), **every color in the app is one of the nine activity-palette colors** (§2.4):
+**ADR-029 / ADR-038 (owner decisions):** the whole app uses only **white shades, mist `#DDF0EF` and six activity-palette colors: sky, lilac, teal, rose, slate, coral** (§2.4). Neutrals are white shades (light surfaces), slate shades (text, borders, dark-mode surfaces) and mist (light sunken surface, = teal soft). Roles:
 - brand = **teal**
-- accent = **apricot**
-- success = **moss**
-- warning = **apricot** (sand was removed from the palette)
+- accent = **coral**
+- success = **teal**
+- warning = **coral**
 - danger = **rose**
 
 `test/core/design/palette_consistency_test.dart` enforces this.
 
 | Role | Light | Dark | Usage | Contrast notes |
 |---|---|---|---|---|
-| `surfaceCanvas` | `#F5F1EA` (Linen) | `#12141B` (Night ink) | App background | — |
-| `surfaceBase` | `#FBF8F3` | `#1A1D26` | Primary content surfaces, sheets | — |
-| `surfaceRaised` | `#FFFDF9` | `#232735` | Floating elements (menus, popovers, FAB container) | — |
-| `surfaceSunken` | `#ECE6DB` | `#0D0F14` | Wells, input backgrounds, segmented control track | — |
-| `borderSubtle` | `#E2DACB` | `#2C3040` | Hairline separators, card outlines (decorative) | decorative only |
-| `borderStrong` | `#8C8270` | `#6E7488` | Input outlines, focus-adjacent boundaries | ≥ 3:1 on canvas (3.37 / 3.96) |
-| `textPrimary` | `#1F1D2B` | `#F1EEE8` | Body and headings | 14.7 / 15.9 on canvas |
-| `textSecondary` | `#5E5A6B` | `#B4B0BE` | Supporting text, metadata | 5.9 / 8.7 |
-| `textTertiary` | `#8A8595` | `#86839A` | Placeholders, disabled, large-only decorative text | 3.2 / 5.0 (light: **not** for small essential text) |
-| `brandPrimary` | `#2F8180` (**teal** solid) | `#7CCBC8` (teal solid) | Primary actions, selection, focus ring, links | white text on it 4.59:1; 4.1 / 9.8 vs canvas (graphics) |
-| `onBrandPrimary` | `#FFFFFF` | `#12141B` (Night ink) | Text/icons on primary | 4.59 / 9.84 |
-| `brandPrimarySoft` | `#DDF0EF` (teal soft) | `#162B2B` (teal soft) | Selected chips, highlighted rows, nav indicator | — |
-| `onBrandPrimarySoft` | `#1F1D2B` (= textPrimary) | `#F1EEE8` (= textPrimary) | Text/icons on soft primary | ≥ 4.5 |
-| `accentDawn` | `#B8642F` (**apricot** solid) | `#F2A877` (apricot solid) | Rating stars, highlights, Day Arc "now" marker, celebration accents | graphics only (3.8 / 9.3); **never small text** |
-| `scrim` | `#1F1D2B` @ 40% | `#000000` @ 60% | Behind sheets/dialogs | — |
+| `surfaceCanvas` | `#F7FBFB` (white shade) | `#13171E` (deep slate) | App background | — |
+| `surfaceBase` | `#FFFFFF` | `#1A1F28` | Primary content surfaces, sheets | — |
+| `surfaceRaised` | `#FFFFFF` | `#232935` | Floating elements (menus, popovers, FAB container) | — |
+| `surfaceSunken` | `#DDF0EF` (**mist**) | `#0E1116` | Wells, input backgrounds, segmented control track | — |
+| `borderSubtle` | `#E6E9EF` (slate soft) | `#2A313E` | Hairline separators, card outlines (decorative) | decorative only |
+| `borderStrong` | `#5D6A80` (slate solid) | `#6F7A8F` | Input outlines, focus-adjacent boundaries | ≥ 3:1 on canvas (5.25 / 4.15) |
+| `textPrimary` | `#252C3A` (slate ink) | `#F4FAF9` (white shade) | Body and headings | 13.4 / 17.0 on canvas |
+| `textSecondary` | `#515D72` | `#A8B3C7` (slate solid) | Supporting text, metadata | 6.4 / 8.5 (5.6 on mist) |
+| `textTertiary` | `#7F889C` | `#808AA0` | Placeholders, disabled, large-only decorative text | 3.4 / 5.2 (light: **not** for small essential text) |
+| `brandPrimary` | `#2F8180` (**teal** solid) | `#7CCBC8` (teal solid) | Primary actions, selection, focus ring, links | white text on it 4.59:1; 4.4 / 9.6 vs canvas (graphics) |
+| `onBrandPrimary` | `#FFFFFF` | `#13171E` | Text/icons on primary | 4.59 / 9.61 |
+| `brandPrimarySoft` | `#DDF0EF` (teal soft = mist) | `#162B2B` (teal soft) | Selected chips, highlighted rows, nav indicator | — |
+| `onBrandPrimarySoft` | `#252C3A` (= textPrimary) | `#F4FAF9` (= textPrimary) | Text/icons on soft primary | ≥ 4.5 |
+| `accentDawn` | `#C0503E` (**coral** solid) | `#F29A89` (coral solid) | Rating stars, highlights, Day Arc "now" marker, celebration accents | graphics only (4.5 / 8.4); **never small text** |
+| `scrim` | `#252C3A` @ 40% | `#0E1116` @ 60% | Behind sheets/dialogs | — |
 
 ### 2.3 Semantic roles: status
 
 | Role | Light | Dark | Container (light / dark) | Usage |
 |---|---|---|---|---|
-| `success` | `#6B7A2E` (**moss**) | `#B8C87A` | `#EDF0DA` / `#262A17` (moss soft) | Completion, saved. Icons/fills only, never small text (4.19:1 light) |
-| `warning` | `#B8642F` (**apricot**) | `#F2A877` | `#FBE9DC` / `#33231A` (apricot soft) | Non-blocking caution. Icons/fills only, never small text (3.81:1 light) |
-| `danger` | `#B04E62` (**rose**) | `#EE9AAA` | `#F8E3E7` / `#331E24` (rose soft) | Destructive actions, real errors; may be text (4.54:1 light) |
+| `success` | `#2F8180` (**teal**) | `#7CCBC8` | `#DDF0EF` / `#162B2B` (teal soft) | Completion, saved. Icons/fills only, never small text (4.4:1 light) |
+| `warning` | `#C0503E` (**coral**) | `#F29A89` | `#FBE4DF` / `#341E1A` (coral soft) | Non-blocking caution. Icons/fills only |
+| `danger` | `#B04E62` (**rose**) | `#EE9AAA` | `#F8E3E7` / `#331E24` (rose soft) | Destructive actions, real errors; may be text (4.9:1 light) |
 | `info` | = `brandPrimary` | = `brandPrimary` | = `brandPrimarySoft` | Neutral notices |
 
 Status colors are never used to judge the user (a skipped plan is neutral, not `danger`).
@@ -107,22 +108,19 @@ Users pick an activity color from a curated set. The DB stores the **key**. Each
 
 | Key | `solid` light | `soft` light | `solid` dark | `soft` dark |
 |---|---|---|---|---|
-| `sage` | `#5E8B6B` | `#E3EEE5` | `#8FC29D` | `#1E2B23` |
 | `sky` | `#4A78A8` | `#E1ECF7` | `#8DB6E3` | `#1B2533` |
 | `lilac` | `#7A62B5` | `#ECE6F8` | `#B9A6EC` | `#251F35` |
-| `apricot` | `#B8642F` | `#FBE9DC` | `#F2A877` | `#33231A` |
 | `rose` | `#B04E62` | `#F8E3E7` | `#EE9AAA` | `#331E24` |
 | `teal` | `#2F8180` | `#DDF0EF` | `#7CCBC8` | `#162B2B` |
 | `coral` | `#C0503E` | `#FBE4DF` | `#F29A89` | `#341E1A` |
 | `slate` | `#5D6A80` | `#E6E9EF` | `#A8B3C7` | `#20242C` |
-| `moss` | `#6B7A2E` | `#EDF0DA` | `#B8C87A` | `#262A17` |
 
 Usage rules:
 - `solid` → icons, accent bars, chart lines/bars, dots (graphics; ≥ 3:1 in light, 3.5–4.9 against canvas and 3.3–4.5 against its own `soft`; ≥ 7:1 in dark against both).
 - `soft` → tinted surfaces for logged items, activity headers, selected states.
 - **Text on `soft` is always `textPrimary`/`textSecondary`**, never `solid` (light-mode solids are below 4.5:1 for small text).
 - A screen may show many activity colors, but **one screen = one dominant accent** (brand or the focused activity) to avoid rainbow clutter.
-- Adding or removing a palette key is a design-system change (tokens + contrast check + ADR), never a user-entered hex. `sand` was removed by owner decision (ADR-029). A stored key that no longer exists renders with the `slate` fallback until the user picks a new color.
+- Adding or removing a palette key is a design-system change (tokens + contrast check + ADR), never a user-entered hex. `sand` was removed by owner decision (ADR-029); `sage`, `apricot` and `moss` were removed when the owner limited the app to six colors (ADR-038). Stored `sage`/`moss` show as teal and `apricot` as coral (`ActivityColorKey.fromName`), and the builder saves the replacement on the next save. Any other stored key that no longer exists renders with the `slate` fallback until the user picks a new color.
 
 ### 2.5 Gradients
 Allowed only for: the Day Arc sky wash (subtle, 2 stops, ≤ 15% lightness change) and onboarding/illustration backgrounds. Never on buttons, cards, charts or text. (Avoid "excessive gradients", §33.5.)
@@ -330,7 +328,7 @@ lib/core/design/
 └── window_size_class.dart      # compact/medium/expanded + screen margins + content widths
 ```
 
-Activity colors resolve with `context.tokens.activity(ActivityColorKey.sage)`. Numeric styles (no Material slot) are `AppTypography.numericHero/Large/Medium`. `AppTheme.light`/`AppTheme.dark` are built once. Not yet implemented: `inputDecorationTheme` (no inputs exist yet), page-transition customization (Flutter defaults), the planned-border token and the Day Arc (no screen uses them yet).
+Activity colors resolve with `context.tokens.activity(ActivityColorKey.teal)`. Numeric styles (no Material slot) are `AppTypography.numericHero/Large/Medium`. `AppTheme.light`/`AppTheme.dark` are built once. Not yet implemented: `inputDecorationTheme` (no inputs exist yet), page-transition customization (Flutter defaults), the planned-border token and the Day Arc (no screen uses them yet).
 
 - `ThemeData` is fully derived from tokens so that remaining Material widgets inherit the identity (`ColorScheme`, `TextTheme`, `inputDecorationTheme`, `filledButtonTheme`, `bottomSheetTheme`, `navigationBarTheme`, `snackBarTheme`, page transitions, splash factory).
 - Roles not covered by Material (surface steps, activity palette, planned border, motion) live in `AppTokens` (`ThemeExtension`) with `lerp` for smooth theme switching.

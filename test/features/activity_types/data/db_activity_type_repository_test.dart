@@ -59,10 +59,60 @@ void main() {
     const invalid = ActivityTypeDefinition(
       name: '',
       iconId: 'sparkle',
-      colorKey: 'sage',
+      colorKey: 'teal',
       fields: [],
     );
     expect(() => create(invalid), throwsA(isA<ValidationException>()));
+  });
+
+  group('activity names are unique (A8)', () {
+    Matcher duplicateName() => throwsA(
+      isA<ValidationException>().having(
+        (e) => e.issues.single,
+        'issue',
+        const ValidationIssue(
+          ValidationCode.duplicateActivityName,
+          target: 'name',
+        ),
+      ),
+    );
+
+    test('creating a second activity with the same name is rejected, '
+        'ignoring case and spaces', () async {
+      await create(readingDefinition());
+      final again = readingDefinition();
+      expect(
+        () => create(
+          ActivityTypeDefinition(
+            name: '  reading ',
+            iconId: again.iconId,
+            colorKey: again.colorKey,
+            fields: const [],
+          ),
+        ),
+        duplicateName(),
+      );
+    });
+
+    test('renaming to another activity\'s name is rejected; keeping its own '
+        'name is fine', () async {
+      final reading = await create(readingDefinition());
+      final walking = await create(walkingDefinition());
+      final type = (await repository.getType(walking))!;
+
+      expect(
+        () => update(walking, _renamed(definitionOf(type), 'Reading')),
+        duplicateName(),
+      );
+      await update(reading, definitionOf((await repository.getType(reading))!));
+    });
+
+    test('an archived activity\'s name can be used again', () async {
+      final id = await create(readingDefinition());
+      await DeleteActivityType(repository)(id);
+
+      expect(await create(readingDefinition()), isNot(id));
+    });
   });
 
   test('updating reorders, renames, adds and soft-deletes fields', () async {
@@ -148,6 +198,8 @@ void main() {
   test('installing a template assigns fresh option IDs', () async {
     final installer = InstallActivityTemplate(create, ids);
     final first = await installer(languageDefinition());
+    // Names are unique among active activities: archive before reinstalling.
+    await DeleteActivityType(repository)(first);
     final second = await installer(languageDefinition());
     final a =
         (await repository.getType(first))!.activeFields.first.config
@@ -176,3 +228,14 @@ void main() {
     expect(await emitted, [0, 1]);
   });
 }
+
+ActivityTypeDefinition _renamed(ActivityTypeDefinition d, String name) =>
+    ActivityTypeDefinition(
+      name: name,
+      iconId: d.iconId,
+      colorKey: d.colorKey,
+      description: d.description,
+      supportsTimer: d.supportsTimer,
+      supportsPlanning: d.supportsPlanning,
+      fields: d.fields,
+    );

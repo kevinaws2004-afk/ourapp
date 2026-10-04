@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/design/app_icons.dart';
 import '../../../../core/design/context_ext.dart';
+import '../../../../core/design/tokens/motion.dart';
 import '../../../../core/design/tokens/radius.dart';
 import '../../../../core/design/tokens/spacing.dart';
 import '../../../../core/errors/app_exception.dart';
@@ -73,7 +74,7 @@ class RepeatingGroupEditor extends ConsumerWidget {
         subFields.isNotEmpty &&
         subFields.every((f) => f.type == FieldType.number);
 
-    void add() {
+    void add(BuildContext actionsContext) {
       final id = GroupItemId(ref.read(idGeneratorProvider).newId());
       final previous = _items.lastOrNull;
       _emit([
@@ -83,6 +84,18 @@ class RepeatingGroupEditor extends ConsumerWidget {
           values: compact && previous != null ? {...previous.values} : const {},
         ),
       ]);
+      // Keep the new row in view above the keyboard (A14): the actions sit
+      // right below it.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!actionsContext.mounted) return;
+        Scrollable.ensureVisible(
+          actionsContext,
+          alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+          duration: MediaQuery.disableAnimationsOf(context)
+              ? Duration.zero
+              : AppMotion.standard,
+        );
+      });
     }
 
     return Column(
@@ -111,22 +124,30 @@ class RepeatingGroupEditor extends ConsumerWidget {
                   onChanged: (item) => _replace(index, item),
                   onRemove: () => _emit([..._items]..removeAt(index)),
                 ),
-        Wrap(
-          spacing: AppSpacing.sm,
-          children: [
-            TextButton.icon(
-              icon: const Icon(AppIcons.add),
-              label: Text(l10n.addGroupItem(_itemLabel)),
-              onPressed: add,
-            ),
-            // Logging into an item: the list can grow a new detail here.
-            if (AddDetailScope.maybeOf(context) case final scope?)
+        Builder(
+          builder: (actionsContext) => Row(
+            children: [
               TextButton.icon(
-                icon: const Icon(AppIcons.edit),
-                label: Text(l10n.addGroupDetail),
-                onPressed: () => scope.onAddDetail(field),
+                icon: const Icon(AppIcons.add),
+                label: Text(l10n.addGroupItem(_itemLabel)),
+                onPressed: () => add(actionsContext),
               ),
-          ],
+              const Spacer(),
+              // Logging into an item: the list can grow a new detail, kept in
+              // a menu so it doesn't compete with adding a row (A13).
+              if (AddDetailScope.maybeOf(context) case final scope?)
+                PopupMenuButton<void>(
+                  tooltip: l10n.groupListOptions(_itemLabel),
+                  icon: const Icon(AppIcons.more),
+                  itemBuilder: (_) => [
+                    PopupMenuItem(
+                      onTap: () => scope.onAddDetail(field),
+                      child: Text(l10n.addGroupDetailTo(_itemLabel)),
+                    ),
+                  ],
+                ),
+            ],
+          ),
         ),
       ],
     );

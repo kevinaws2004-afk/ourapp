@@ -132,6 +132,7 @@ class ItemScreen extends ConsumerWidget {
         records: const [],
         status: plan.effectiveStatus(
           hasRecord: state.hasLog,
+          today: currentLocalDate(ref.read(clockProvider)),
           inFocus: session?.planId == plan.id,
         ),
       ),
@@ -336,6 +337,7 @@ class _ItemBody extends ConsumerWidget {
                 onChanged: notifier.setDuration,
               ),
             ),
+            if (plan != null) _MarkDone(args: args, state: state),
             // Plan ahead from here: next appointment, next session (ADR-036).
             if (plan != null)
               Align(
@@ -376,20 +378,13 @@ class _ItemActions extends ConsumerWidget {
     final canTime =
         plan != null && (state.type == null || state.type!.supportsTimer);
 
+    final done = state.isDoneOn(currentLocalDate(ref.watch(clockProvider)));
+    // "Mark done" sits at the bottom of the item (A10): logging doesn't
+    // finish it.
     final children = <Widget>[
-      if (state.isDone && !timerHere)
-        _DoneChip(label: l10n.itemDone)
-      else if (plan != null && !timerHere)
-        AppButton(
-          label: l10n.itemMarkDone,
-          icon: AppIcons.taskDone,
-          variant: AppButtonVariant.secondary,
-          onPressed: () => _run(context, ref, () async {
-            await ref.read(markItemDoneProvider)(plan.id);
-          }),
-        ),
-      // A ticked-off task can be reopened (nothing was logged into it).
-      if (plan != null && plan.status == PlanStatus.completed && !state.hasLog)
+      if (done && !timerHere) _DoneChip(label: l10n.itemDone),
+      // Anything marked done can be reopened (ADR-040).
+      if (plan != null && plan.status == PlanStatus.completed && !timerHere)
         TextButton(
           onPressed: () => _run(context, ref, () async {
             await ref.read(setPlanStatusProvider)(plan.id, PlanStatus.planned);
@@ -476,6 +471,60 @@ class _ItemActions extends ConsumerWidget {
         l10n.focusComplete(state.title, formatDuration(l10n, elapsed)),
       );
     }
+  }
+}
+
+/// "Mark done" at the end of an item (A10, ADR-040): logging into an item
+/// doesn't finish it; this does. Hidden once done or while its timer runs
+/// (finishing the timer finishes the item).
+class _MarkDone extends ConsumerWidget {
+  const _MarkDone({required this.args, required this.state});
+
+  final ItemArgs args;
+  final ItemState state;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final plan = state.plan!;
+    final session = ref.watch(activeFocusSessionProvider).value;
+    final today = currentLocalDate(ref.watch(clockProvider));
+    if (state.isDoneOn(today) || session?.planId == plan.id) {
+      return const SizedBox.shrink();
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (state.hasLog) ...[
+            Text(
+              l10n.itemMarkDoneHint,
+              style: context.textStyles.bodyMedium?.copyWith(
+                color: context.colors.textSecondary,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+          ],
+          AppButton(
+            label: l10n.itemMarkDone,
+            icon: AppIcons.taskDone,
+            onPressed: () async {
+              final notifier = ref.read(itemProvider(args).notifier);
+              try {
+                await notifier.flush();
+                await ref.read(markItemDoneProvider)(plan.id);
+                await notifier.reload();
+              } catch (error) {
+                if (context.mounted) {
+                  showMessageSnackBar(context, errorMessage(l10n, error));
+                }
+              }
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
 

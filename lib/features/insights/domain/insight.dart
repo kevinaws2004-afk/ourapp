@@ -32,6 +32,14 @@ enum InsightRange {
   /// The same length immediately before [window] (for comparisons).
   (LocalDate, LocalDate) previous(LocalDate today) =>
       (today.addDays(-(2 * days - 1)), today.addDays(-days));
+
+  /// The bucket that fits this range for automatic charts (A20): days for
+  /// a week, weeks for a month or three, months for a year.
+  Bucket get bucket => switch (this) {
+    week => Bucket.day,
+    month || quarter => Bucket.week,
+    year => Bucket.month,
+  };
 }
 
 /// Keeps values whose item, parent item or record has this text value in
@@ -342,6 +350,20 @@ InsightSeries buildSeries(
         ? null
         : inRange.reduce((a, b) => b.date.compareTo(a.date) >= 0 ? b : a),
   );
+}
+
+/// The highest per-day total of [points] (e.g. the best day's volume, A21),
+/// or null when there are none.
+DataPoint? bestDayTotal(List<DataPoint> points) {
+  final byDay = <LocalDate, double>{};
+  for (final p in points) {
+    byDay[p.date] = (byDay[p.date] ?? 0) + p.value;
+  }
+  DataPoint? best;
+  for (final MapEntry(key: date, :value) in byDay.entries) {
+    if (best == null || value > best.value) best = DataPoint(date, value);
+  }
+  return best;
 }
 
 /// The aggregated value of a whole period (for "this vs last period").

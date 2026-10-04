@@ -61,6 +61,28 @@ ActivityTypeDefinition definitionOf(ActivityType type) {
   );
 }
 
+/// Whether [a] and [b] name the same activity: trimmed, case-insensitive.
+bool sameActivityName(String a, String b) =>
+    a.trim().toLowerCase() == b.trim().toLowerCase();
+
+/// Rejects a name another active activity already uses, so typing "Gym"
+/// always means one activity. Archived activities don't count.
+Future<void> _ensureNameFree(
+  ActivityTypeRepository repository,
+  String name, {
+  ActivityTypeId? except,
+  required String debugContext,
+}) async {
+  final taken = (await repository.getActiveTypes()).any(
+    (t) => t.id != except && sameActivityName(t.name, name),
+  );
+  if (taken) {
+    throw ValidationException(const [
+      ValidationIssue(ValidationCode.duplicateActivityName, target: 'name'),
+    ], debugContext: debugContext);
+  }
+}
+
 String? _trimToNull(String? value) {
   final trimmed = value?.trim();
   return trimmed == null || trimmed.isEmpty ? null : trimmed;
@@ -75,6 +97,11 @@ class CreateActivityType {
   Future<ActivityTypeId> call(ActivityTypeDefinition definition) async {
     ActivityTypeValidator.validate(definition)
         .throwIfInvalid(debugContext: 'CreateActivityType');
+    await _ensureNameFree(
+      _repository,
+      definition.name,
+      debugContext: 'CreateActivityType',
+    );
     final id = ActivityTypeId(_ids.newId());
     await _repository.create(id, _withIds(definition, _ids));
     return id;
@@ -100,6 +127,12 @@ class UpdateActivityType {
       existing: existing,
       fieldsWithValues: await _repository.fieldsWithValues(id),
     ).throwIfInvalid(debugContext: 'UpdateActivityType');
+    await _ensureNameFree(
+      _repository,
+      definition.name,
+      except: id,
+      debugContext: 'UpdateActivityType',
+    );
     await _repository.update(id, _withIds(definition, _ids));
   }
 }

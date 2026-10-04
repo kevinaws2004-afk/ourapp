@@ -234,7 +234,7 @@ CREATE TABLE plans (
   CHECK (planned_end_at IS NULL OR planned_start_at IS NOT NULL),
   CHECK (planned_end_at IS NULL OR planned_end_at >= planned_start_at),
   CHECK (planned_duration_ms IS NULL OR (planned_duration_ms > 0 AND planned_end_at IS NULL)),
-  CHECK (status <> 'completed' OR activity_type_id IS NULL)   -- activity-plan completion is derived
+  CHECK (status <> 'completed' OR activity_type_id IS NULL)   -- dropped in v8 (ADR-040)
 ) STRICT;
 CREATE INDEX idx_plans_day ON plans (plan_date, sort_order) WHERE deleted_at IS NULL;
 CREATE INDEX idx_plans_type_day ON plans (activity_type_id, plan_date)
@@ -245,7 +245,7 @@ CREATE INDEX idx_activity_logs_plan ON activity_logs (plan_id) WHERE plan_id IS 
 ```
 - `planned_duration_ms` (owner-confirmed 2026-10-04, ADR-018) is the planned length of an untimed or start-only plan ("Read for 45 minutes"). It can't coexist with `planned_end_at`, so there is one source of planned duration. An end time requires a start time.
 - `sort_order` is the manual order among a date's untimed plans; timed plans display by `planned_start_at` (domain `orderPlans`). New and moved plans append (`MAX + 1`); reorder rewrites `0..n-1` in one transaction.
-- Plan completion is never stored for activity plans: a non-deleted record with `plan_id` completes it (domain `Plan.effectiveStatus`). Deleting that record reopens the plan.
+- **v8 (ADR-040):** the tasks-only `completed` CHECK is gone (table rebuilt with drift's `TableMigration`, internal IDs and all rows kept; `trg_activity_logs_plan_check_*` and `trg_focus_sessions_plan_check`, whose bodies read `plans`, are dropped before and recreated after; the table's own indexes and triggers are recreated by the rebuild). Any plan can store `completed`: Mark done, or a finished timer. Without it, a non-deleted record with `plan_id` makes an activity plan *in progress* on its day and *done* once the day has passed (domain `Plan.effectiveStatus`). Deleting that record reopens a plan that wasn't marked done.
 - "Move to tomorrow" changes `plan_date` and shifts planned times by whole days at the same local wall-clock time. An occurrence of a repeating plan moves as a one-off copy instead, and the occurrence is soft-deleted on its date (ADR-036).
 
 ### 3.7a `plan_series` (v7, implemented, ADR-036)
@@ -431,7 +431,7 @@ Rules:
 
 ## 7. Migrations
 
-1. **Versioning:** SQLite `user_version` through drift's `schemaVersion`. v1 = `app_preferences`; **v2 = activity engine** (§3.2–3.6); **v3 = Repeating Groups** (§3.10; adds a column and a table, then rebuilds `log_values` with drift's `TableMigration`); **v4 = plans** (§3.7; adds `plans` and `activity_logs.plan_id`, no rebuild); **v5 = focus sessions** (§3.8); **v6 = measurements + insight charts** (§3.9, §3.11); **v7 = repeating plans** (§3.7a; a new table, a nullable column on `plans` and a unique index, no rebuild).
+1. **Versioning:** SQLite `user_version` through drift's `schemaVersion`. v1 = `app_preferences`; **v2 = activity engine** (§3.2–3.6); **v3 = Repeating Groups** (§3.10; adds a column and a table, then rebuilds `log_values` with drift's `TableMigration`); **v4 = plans** (§3.7; adds `plans` and `activity_logs.plan_id`, no rebuild); **v5 = focus sessions** (§3.8); **v6 = measurements + insight charts** (§3.9, §3.11); **v7 = repeating plans** (§3.7a; a new table, a nullable column on `plans` and a unique index, no rebuild); **v8 = completable activity plans** (§3.7; `plans` rebuilt to drop one CHECK, ADR-040).
 2. **Forward-only, append-only.** A shipped migration is never edited.
 3. Each step is transactional and leaves the DB valid. SQLite table rebuilds (the 12-step pattern) are used only when `ALTER TABLE` can't express a change.
 4. **drift workflow (implemented):**

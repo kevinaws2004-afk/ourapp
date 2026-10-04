@@ -7,9 +7,9 @@
 **Feel:** calm, premium, personal, modern, visually distinctive, easy on the eyes, fast, uncluttered, intentionally designed. One recognizable visual world, not a set of screens.
 
 **Identity "Daylight":** the shape and light of a day.
-- Warm Linen canvas (`#F5F1EA`) in light; Night ink (`#12141B`) in dark. Never stark white or pure black.
-- **Only the nine activity-palette colors are used (ADR-029).** Brand = **teal**, accent = **apricot** (rating stars), success = **moss**, warning = **apricot**, danger = **rose**. Neutrals (cream/night surfaces, text, borders) are the only exceptions. Moss and apricot are graphics-only in light mode (no small text).
-- Activity palette keys (nine): sage, sky, lilac, apricot, rose, teal, coral, slate, moss. Sand was removed (ADR-029). Each has `solid` (icons/charts) and `soft` (surfaces). Text on soft = textPrimary.
+- Light: white-shade canvas (`#F7FBFB`), white cards, mist `#DDF0EF` sunken surfaces, slate-ink text. Dark: deep slate surfaces (`#13171E`), white-shade text. Never pure black.
+- **Only white shades, mist `#DDF0EF` and six palette colors are used (ADR-029, ADR-038).** Brand = **teal**, accent = **coral** (rating stars), success = **teal**, warning = **coral**, danger = **rose**. Neutrals are white and slate shades. Coral and teal are graphics-only for small text in light mode.
+- Activity palette keys (six): sky, lilac, rose, teal, coral, slate. Sand, sage, apricot, moss were removed (stored sage/moss → teal, apricot → coral). Each has `solid` (icons/charts) and `soft` (surfaces). Text on soft = textPrimary.
 - Type: **Fraunces** for display/headlines (≥ 21px), **DM Sans** for UI/body, tabular figures for numbers.
 - Motifs: **Day Arc** (Today header, onboarding progress, focus ring, completion) and **Plan vs Reality grammar**: planned = outline/dashed; actual = filled soft + solid accent. Skipped ≠ error.
 

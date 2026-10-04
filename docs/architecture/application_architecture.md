@@ -68,7 +68,7 @@ lib/
 
 Reusable, feature-agnostic UI built from design tokens.
 - Implemented:
-  - `AppButton`, `TabPlaceholder`, `CenteredScrollBody`
+  - `AppButton` (all variants take an optional icon), `CenteredScrollBody`
   - `ActivityBadge`, `SectionHeader`
   - state views: `AsyncValueView`, `DelayedLoadingPlaceholder`, `AppEmptyState`, `AppErrorState`
   - snackbar helpers: `showUndoSnackBar`, `showMessageSnackBar`
@@ -210,7 +210,8 @@ Route parameters are public IDs (ADR-017). Indicative full route map (paths will
 
 ```text
 /today                           (implemented)
-/plan                            (implemented)
+/plan                            (implemented: Week | Month)
+/plan/day                        (implemented: the selected date as a day; ADR-039)
 /me/activities                   (implemented)
 /me/activities/:typeId           (implemented)
 /activities/new, /activities/templates, /activities/:typeId/edit   (implemented)

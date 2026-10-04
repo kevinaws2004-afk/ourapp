@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/design/app_icons.dart';
+import '../../../../core/design/context_ext.dart';
+import '../../../../core/design/tokens/sizes.dart';
 import '../../../../core/design/tokens/spacing.dart';
 import '../../../../core/errors/app_exception.dart';
 import '../../../../core/time/clock_provider.dart';
 import '../../../../core/time/local_date.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../shared/errors/error_copy.dart';
+import '../../../../shared/widgets/activity_badge.dart';
+import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/state_views.dart';
 import '../../../activity_types/domain/activity_ids.dart';
 import '../../../activity_types/domain/activity_type.dart';
@@ -16,23 +20,30 @@ import '../../../activity_types/presentation/activity_templates.dart';
 import '../../../activity_types/presentation/activity_type_providers.dart';
 import '../../domain/plan.dart';
 import '../../domain/plan_title_match.dart';
+import '../plan_date_notifier.dart';
 import '../plan_providers.dart';
+import 'plan_time_sheet.dart';
 
-/// Fast day planning (F3): type what you'll do, optionally a from–to time
-/// (or "Now" to log it straight away), press enter. The keyboard stays
-/// open for the next one.
+/// Fast day planning (F3): type what you'll do and press enter (or "+") to
+/// add it to the day; the keyboard stays open for the next one. While
+/// typing, matching activities and ready-made templates are suggested (A6),
+/// and two actions appear: **Start now** (today only: it starts now and opens
+/// right away, ADR-035) and a time, chosen in one sheet (A5).
 ///
-/// Typing an activity's name ("Gym") plans that activity, so tapping the
-/// plan later records the session (ADR-030); its chip lights up to show it.
-/// A starter template's name installs that template first. Anything else is
-/// a simple task ("Bath").
+/// Typing an activity's name ("Gym") plans that activity, so its item has
+/// its fields (ADR-030); its chip lights up to show it. A template's name
+/// installs that template first, unless an activity already has the name
+/// (names are unique, A8). Anything else is a simple task ("Bath").
 class PlanQuickAdd extends ConsumerStatefulWidget {
   const PlanQuickAdd({super.key, required this.date, this.onStartNow});
 
+  /// How many "Recent" chips to show (A7).
+  static const maxRecent = 8;
+
   final LocalDate date;
 
-  /// Offers "Now" (today only): the item starts now and opens right away,
-  /// to log what you're doing (ADR-035).
+  /// Offers "Start now" (today only): the item starts now and opens right
+  /// away, to log what you're doing (ADR-035).
   final ValueChanged<PlanId>? onStartNow;
 
   @override
@@ -46,9 +57,8 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
 
   /// The chip was selected by typing its name, not by tapping it.
   bool _matchedByName = false;
-  TimeOfDay? _start;
-  TimeOfDay? _end;
-  bool _now = false;
+  LocalTime? _start;
+  LocalTime? _end;
 
   @override
   void dispose() {
@@ -57,15 +67,18 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
     super.dispose();
   }
 
-  List<ActivityType> get _plannable => [
-    ...?ref
-        .read(activeActivityTypesProvider)
-        .value
-        ?.where((t) => t.supportsPlanning),
-  ];
+  bool get _hasInput => _title.text.trim().isNotEmpty || _typeId != null;
+
+  List<ActivityType> get _plannable => ref.read(recentActivityTypesProvider);
+
+  List<ActivityType> get _active =>
+      ref.read(activeActivityTypesProvider).value ?? const [];
 
   void _onTitleChanged(String text) {
-    if (_typeId != null && !_matchedByName) return; // a tapped chip wins
+    if (_typeId != null && !_matchedByName) {
+      setState(() {}); // a tapped chip wins; refresh the actions
+      return;
+    }
     final match = matchByName(text, _plannable, (t) => t.name);
     setState(() {
       _typeId = match?.id;
@@ -73,7 +86,17 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
     });
   }
 
-  DateTime? _instant(TimeOfDay? time) {
+  void _useName(String name) {
+    _title.value = TextEditingValue(
+      text: name,
+      selection: TextSelection.collapsed(offset: name.length),
+    );
+    _typeId = null;
+    _matchedByName = false;
+    _onTitleChanged(name);
+  }
+
+  DateTime? _instant(LocalTime? time) {
     final date = widget.date;
     return time == null
         ? null
@@ -87,28 +110,27 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
   }
 
   /// The activity for this plan: the chosen chip, or a starter template with
-  /// the typed name (installed now).
+  /// the typed name (installed now) when no activity has that name yet.
   Future<ActivityTypeId?> _resolveActivity(AppLocalizations l10n) async {
     if (_typeId case final id?) return id;
+    if (matchByName(_title.text, _active, (t) => t.name) != null) {
+      return null; // the name belongs to an activity that isn't plannable
+    }
     final template = matchByName<ActivityTypeDefinition>(
       _title.text,
       activityTemplates(l10n),
       (t) => t.name,
     );
     if (template == null) return null;
-    final id = await ref.read(installActivityTemplateProvider)(template);
-    if (mounted) {
-      showMessageSnackBar(context, l10n.planActivityAdded(template.name));
-    }
-    return id;
+    // No pop-up: the suggestion already said it's ready-made (A9).
+    return ref.read(installActivityTemplateProvider)(template);
   }
 
-  Future<void> _add() async {
-    if (_title.text.trim().isEmpty && _typeId == null) return;
+  Future<void> _add({bool now = false}) async {
+    if (!_hasInput) return;
     final l10n = AppLocalizations.of(context);
     try {
       final typeId = await _resolveActivity(l10n);
-      final now = _now;
       final id = await ref.read(createPlanProvider)(
         PlanDraft(
           planDate: widget.date,
@@ -126,7 +148,6 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
         _matchedByName = false;
         _start = null;
         _end = null;
-        _now = false;
       });
       if (now) {
         widget.onStartNow?.call(id);
@@ -145,43 +166,39 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
     }
   }
 
-  /// Picks the start, then an optional end (cancel = no end time).
-  Future<void> _pickTimes(AppLocalizations l10n) async {
-    final start = await showTimePicker(
-      context: context,
-      helpText: l10n.planPickStart,
-      initialTime: _start ?? const TimeOfDay(hour: 9, minute: 0),
+  Future<void> _pickTime() async {
+    final clock = ref.read(clockProvider);
+    final nowUtc = clock.nowUtc();
+    final local = nowUtc.add(clock.offsetAt(nowUtc));
+    final choice = await showPlanTimeSheet(
+      context,
+      isToday: widget.date == currentLocalDate(clock),
+      now: LocalTime.hm(local.hour, local.minute),
+      start: _start,
+      end: _end,
     );
-    if (start == null || !mounted) return;
-    final end = await showTimePicker(
-      context: context,
-      helpText: l10n.planPickEnd,
-      initialTime:
-          _end ?? TimeOfDay(hour: (start.hour + 1) % 24, minute: start.minute),
-    );
+    if (choice == null || !mounted) return;
     setState(() {
-      _start = start;
-      _end = end;
+      _start = choice.start;
+      _end = choice.end;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final material = MaterialLocalizations.of(context);
-    final types = [
-      ...?ref
-          .watch(activeActivityTypesProvider)
-          .value
-          ?.where((t) => t.supportsPlanning),
-    ];
+    final recent = ref.watch(recentActivityTypesProvider);
+    final active =
+        ref.watch(activeActivityTypesProvider).value ?? const <ActivityType>[];
     final onStartNow = widget.onStartNow;
-    final timeLabel = switch ((_start, _end)) {
+    final start = _start;
+    final end = _end;
+    final timeLabel = switch ((start, end)) {
       (null, _) => l10n.planAddTime,
-      (final s?, null) => material.formatTimeOfDay(s),
+      (final s?, null) => formatLocalTime(context, s),
       (final s?, final e?) => l10n.planTimeRange(
-        material.formatTimeOfDay(s),
-        material.formatTimeOfDay(e),
+        formatLocalTime(context, s),
+        formatLocalTime(context, e),
       ),
     };
     return Column(
@@ -200,40 +217,60 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
                 onSubmitted: (_) => _add(),
               ),
             ),
-            if (!_now)
-              TextButton.icon(
-                icon: const Icon(AppIcons.time),
-                label: Text(timeLabel),
-                onPressed: () => _pickTimes(l10n),
-              ),
             IconButton(
               tooltip: l10n.planAddAction,
               icon: const Icon(AppIcons.add),
-              onPressed: _add,
+              onPressed: _hasInput ? _add : null,
             ),
           ],
         ),
-        if (types.isNotEmpty || onStartNow != null) ...[
+        if (_typeId == null)
+          _Suggestions(
+            text: _title.text,
+            types: recent,
+            templates: [
+              for (final t in activityTemplates(l10n))
+                if (matchByName(t.name, active, (a) => a.name) == null) t,
+            ],
+            onType: (type) => _useName(type.name),
+            onTemplate: (template) => _useName(template.name),
+          ),
+        if (_hasInput) ...[
           const SizedBox(height: AppSpacing.sm),
+          Wrap(
+            spacing: AppSpacing.sm,
+            runSpacing: AppSpacing.xs,
+            children: [
+              if (onStartNow != null)
+                AppButton(
+                  label: l10n.planStartNow,
+                  icon: AppIcons.start,
+                  variant: AppButtonVariant.secondary,
+                  onPressed: () => _add(now: true),
+                ),
+              AppButton(
+                label: timeLabel,
+                icon: AppIcons.time,
+                variant: AppButtonVariant.tertiary,
+                onPressed: _pickTime,
+              ),
+            ],
+          ),
+        ],
+        if (recent.isNotEmpty) ...[
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            l10n.planRecent,
+            style: context.textStyles.labelMedium?.copyWith(
+              color: context.colors.textSecondary,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                if (onStartNow != null)
-                  Padding(
-                    padding: const EdgeInsets.only(right: AppSpacing.sm),
-                    child: FilterChip(
-                      avatar: const Icon(AppIcons.start),
-                      label: Text(l10n.planNow),
-                      selected: _now,
-                      onSelected: (selected) => setState(() {
-                        _now = selected;
-                        _start = null;
-                        _end = null;
-                      }),
-                    ),
-                  ),
-                for (final type in types)
+                for (final type in recent.take(PlanQuickAdd.maxRecent))
                   Padding(
                     padding: const EdgeInsets.only(right: AppSpacing.sm),
                     child: ChoiceChip(
@@ -252,4 +289,108 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
       ],
     );
   }
+}
+
+/// Activities and ready-made templates matching what's being typed (A6).
+class _Suggestions extends StatelessWidget {
+  const _Suggestions({
+    required this.text,
+    required this.types,
+    required this.templates,
+    required this.onType,
+    required this.onTemplate,
+  });
+
+  static const _limit = 4;
+
+  final String text;
+  final List<ActivityType> types;
+
+  /// Templates no activity has the name of yet.
+  final List<ActivityTypeDefinition> templates;
+  final ValueChanged<ActivityType> onType;
+  final ValueChanged<ActivityTypeDefinition> onTemplate;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final matchingTypes = suggestByName(
+      text,
+      types,
+      (t) => t.name,
+      limit: _limit,
+    );
+    final matchingTemplates = suggestByName(
+      text,
+      templates,
+      (t) => t.name,
+      limit: _limit - matchingTypes.length,
+    );
+    if (matchingTypes.isEmpty && matchingTemplates.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    final exact = matchByName(text, matchingTemplates, (t) => t.name);
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.xs),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (final type in matchingTypes)
+            _SuggestionTile(
+              iconId: type.iconId,
+              colorKey: type.colorKey,
+              title: type.name,
+              subtitle: l10n.planSuggestionYours,
+              onTap: () => onType(type),
+            ),
+          for (final template in matchingTemplates)
+            _SuggestionTile(
+              iconId: template.iconId,
+              colorKey: template.colorKey,
+              title: template.name,
+              subtitle: l10n.planSuggestionReadyMade(
+                template.fields.map((f) => f.name).join(' · '),
+              ),
+              selected: identical(template, exact),
+              onTap: () => onTemplate(template),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SuggestionTile extends StatelessWidget {
+  const _SuggestionTile({
+    required this.iconId,
+    required this.colorKey,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+    this.selected = false,
+  });
+
+  final String iconId;
+  final String colorKey;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) => ListTile(
+    contentPadding: EdgeInsets.zero,
+    leading: ActivityBadge(
+      iconId: iconId,
+      colorKey: colorKey,
+      size: AppSizes.badgeSmall,
+    ),
+    title: Text(title),
+    subtitle: Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis),
+    trailing: selected
+        ? Icon(AppIcons.check, color: context.colors.brandPrimary)
+        : null,
+    selected: selected,
+    onTap: onTap,
+  );
 }

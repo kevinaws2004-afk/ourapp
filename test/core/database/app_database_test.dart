@@ -23,7 +23,7 @@ void main() {
             .add(row.read<String>('name'));
       }
 
-      expect(version.read<int>('user_version'), 7);
+      expect(version.read<int>('user_version'), 8);
       expect(byType['table'], [
         'activity_fields',
         'activity_logs',
@@ -100,7 +100,7 @@ void main() {
     () async {
       final db = AppDatabase(
         NativeDatabase.memory(
-          setup: (raw) => raw.execute('PRAGMA user_version = 8'),
+          setup: (raw) => raw.execute('PRAGMA user_version = 9'),
         ),
       );
       addTearDown(db.close);

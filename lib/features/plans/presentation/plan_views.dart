@@ -23,8 +23,9 @@ import 'plan_editor_sheet.dart';
 import 'plan_providers.dart';
 import 'widgets/planned_list.dart';
 
-/// How the Plan tab shows the selected date (ADR-036).
-enum PlanView { day, week, month }
+/// How the Plan tab shows the selected date (ADR-036, A1). A single day
+/// opens on its own screen.
+enum PlanView { week, month }
 
 final planViewProvider = NotifierProvider<PlanViewNotifier, PlanView>(
   PlanViewNotifier.new,
@@ -32,7 +33,7 @@ final planViewProvider = NotifierProvider<PlanViewNotifier, PlanView>(
 
 class PlanViewNotifier extends Notifier<PlanView> {
   @override
-  PlanView build() => PlanView.day;
+  PlanView build() => PlanView.week;
 
   void show(PlanView view) => state = view;
 }
@@ -44,7 +45,7 @@ LocalDate weekStartOf(BuildContext context, LocalDate date) {
   return date.addDays(-((date.weekday % 7 - first) % 7));
 }
 
-/// Day | Week | Month.
+/// Week | Month.
 class PlanViewSwitch extends ConsumerWidget {
   const PlanViewSwitch({super.key});
 
@@ -54,7 +55,6 @@ class PlanViewSwitch extends ConsumerWidget {
     return SegmentedButton<PlanView>(
       showSelectedIcon: false,
       segments: [
-        ButtonSegment(value: PlanView.day, label: Text(l10n.planViewDay)),
         ButtonSegment(value: PlanView.week, label: Text(l10n.planViewWeek)),
         ButtonSegment(value: PlanView.month, label: Text(l10n.planViewMonth)),
       ],
@@ -119,10 +119,12 @@ class PlanWeekView extends ConsumerWidget {
     super.key,
     required this.onOpenItem,
     required this.onOpenRecord,
+    required this.onOpenDay,
   });
 
   final ValueChanged<PlanId> onOpenItem;
   final ValueChanged<ActivityLog> onOpenRecord;
+  final ValueChanged<LocalDate> onOpenDay;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -156,6 +158,7 @@ class PlanWeekView extends ConsumerWidget {
             isToday: start.addDays(i) == today,
             onOpenItem: onOpenItem,
             onOpenRecord: onOpenRecord,
+            onOpenDay: onOpenDay,
           ),
       ],
     );
@@ -168,12 +171,14 @@ class _WeekDay extends ConsumerWidget {
     required this.isToday,
     required this.onOpenItem,
     required this.onOpenRecord,
+    required this.onOpenDay,
   });
 
   final LocalDate date;
   final bool isToday;
   final ValueChanged<PlanId> onOpenItem;
   final ValueChanged<ActivityLog> onOpenRecord;
+  final ValueChanged<LocalDate> onOpenDay;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -192,10 +197,7 @@ class _WeekDay extends ConsumerWidget {
               Expanded(
                 child: InkWell(
                   borderRadius: AppRadius.mdAll,
-                  onTap: () {
-                    ref.read(planSelectedDateProvider.notifier).select(date);
-                    ref.read(planViewProvider.notifier).show(PlanView.day);
-                  },
+                  onTap: () => onOpenDay(date),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       vertical: AppSpacing.sm,
@@ -245,7 +247,9 @@ class _WeekDay extends ConsumerWidget {
 /// A month calendar with a dot per planned item (ADR-036). Tapping a day
 /// opens it.
 class PlanMonthView extends ConsumerWidget {
-  const PlanMonthView({super.key});
+  const PlanMonthView({super.key, required this.onOpenDay});
+
+  final ValueChanged<LocalDate> onOpenDay;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -330,10 +334,7 @@ class PlanMonthView extends ConsumerWidget {
                           types[plan.activityTypeId]?.colorKey,
                         ),
                     ],
-                    onTap: () {
-                      notifier.select(gridStart.addDays(w * 7 + i));
-                      ref.read(planViewProvider.notifier).show(PlanView.day);
-                    },
+                    onTap: () => onOpenDay(gridStart.addDays(w * 7 + i)),
                   ),
                 ),
             ],

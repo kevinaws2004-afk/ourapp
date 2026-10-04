@@ -66,26 +66,80 @@ String formatFieldValue(
   };
 }
 
-/// A group in a summary: its items' first text sub-field ("Chest press,
-/// Squat"), or the item count when it has no text sub-field.
+/// A group in a summary (A18): each item as its name followed by its values,
+/// nested lists included, with repeated rows folded: "Bench press 60 kg × 8
+/// (×2), 65 kg × 6; Squat 80 kg × 5". Generic: names are the first text
+/// sub-field, all-number rows read "60 kg × 8". Falls back to the item count
+/// when nothing is filled in.
 String formatGroupSummary(
   BuildContext context,
   ActivityType type,
   ActivityField field,
   RepeatingGroupValue value,
 ) {
-  final textField = type
+  final nested = type
       .subFieldsOf(field.id, includeRemoved: true)
-      .where((f) => f.type == FieldType.text)
-      .firstOrNull;
-  final names = [
-    if (textField != null)
-      for (final item in value.items)
-        if (item.values[textField.id] case TextValue(:final text)) text,
-  ];
-  return names.isEmpty
+      .any((f) => f.type == FieldType.repeatingGroup);
+  final lines = _groupLines(context, type, field, value);
+  return lines.isEmpty
       ? formatFieldValue(context, field, value)
-      : names.join(', ');
+      : lines.join(nested ? '; ' : ', ');
+}
+
+/// One line per item of [value], consecutive repeats folded ("… (×2)").
+List<String> _groupLines(
+  BuildContext context,
+  ActivityType type,
+  ActivityField field,
+  RepeatingGroupValue value,
+) {
+  final subs = type.subFieldsOf(field.id, includeRemoved: true);
+  final name = subs.where((f) => f.type == FieldType.text).firstOrNull;
+  final others = [
+    for (final sub in subs)
+      if (sub.id != name?.id) sub,
+  ];
+  final allNumbers =
+      others.isNotEmpty && others.every((f) => f.type == FieldType.number);
+  String line(GroupItem item) {
+    final label = switch (name == null ? null : item.values[name.id]) {
+      TextValue(:final text) => text,
+      _ => null,
+    };
+    final parts = [
+      for (final sub in others)
+        if (item.values[sub.id] case final v?)
+          v is RepeatingGroupValue
+              ? _groupLines(context, type, sub, v).join(', ')
+              : formatFieldValue(context, sub, v),
+    ].where((p) => p.isNotEmpty);
+    return [
+      ?label,
+      if (parts.isNotEmpty) parts.join(allNumbers ? ' × ' : ' · '),
+    ].join(' ');
+  }
+
+  final folded = <String>[];
+  String? previous;
+  var count = 0;
+  void flush() {
+    if (previous case final p? when p.isNotEmpty) {
+      folded.add(count > 1 ? '$p (×$count)' : p);
+    }
+  }
+
+  for (final item in value.items) {
+    final current = line(item);
+    if (current == previous) {
+      count++;
+    } else {
+      flush();
+      previous = current;
+      count = 1;
+    }
+  }
+  flush();
+  return folded;
 }
 
 /// A short line describing a log for lists: its first few values in field

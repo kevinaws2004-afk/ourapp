@@ -2748,7 +2748,6 @@ class Plans extends Table with TableInfo<Plans, PlanRow> {
     'CHECK(planned_end_at IS NULL OR planned_start_at IS NOT NULL)',
     'CHECK(planned_end_at IS NULL OR planned_end_at >= planned_start_at)',
     'CHECK(planned_duration_ms IS NULL OR(planned_duration_ms > 0 AND planned_end_at IS NULL))',
-    'CHECK(status <> \'completed\' OR activity_type_id IS NULL)',
   ];
   @override
   bool get dontWriteConstraints => true;

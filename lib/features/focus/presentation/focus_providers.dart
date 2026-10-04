@@ -65,6 +65,7 @@ final discardFocusSessionProvider = Provider(
 final finishFocusSessionProvider = Provider(
   (ref) => FinishFocusSession(
     ref.watch(focusSessionRepositoryProvider),
+    ref.watch(planRepositoryProvider),
     ref.watch(activityLogRepositoryProvider),
     ref.watch(logActivityProvider),
     ref.watch(updateActivityLogProvider),

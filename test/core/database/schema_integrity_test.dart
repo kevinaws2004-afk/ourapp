@@ -266,13 +266,11 @@ void main() {
           .read<int>('id');
     }
 
-    test('only tasks store completed', () async {
+    test('any plan can store completed (v8, ADR-040)', () async {
       final type = await insertType(uuid(1));
       await insertPlan(uuid(2), status: 'completed');
-      expect(
-        insertPlan(uuid(3), typeId: type, status: 'completed'),
-        throwsA(anything),
-      );
+      await insertPlan(uuid(3), typeId: type, status: 'completed');
+      expect(insertPlan(uuid(4), status: 'done'), throwsA(anything));
     });
 
     test('one source of planned duration; end needs a later start', () async {

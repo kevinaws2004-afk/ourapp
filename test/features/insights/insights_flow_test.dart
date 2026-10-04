@@ -7,6 +7,7 @@ import 'package:daylog/features/activity_logs/domain/activity_log_use_cases.dart
 import 'package:daylog/features/activity_logs/domain/field_value.dart';
 import 'package:daylog/features/activity_types/data/db_activity_type_repository.dart';
 import 'package:daylog/features/activity_types/domain/activity_ids.dart';
+import 'package:daylog/features/activity_types/domain/activity_type_definition.dart';
 import 'package:daylog/features/activity_types/domain/activity_type_use_cases.dart';
 import 'package:daylog/features/insights/presentation/activity_insights_screen.dart';
 import 'package:daylog/features/measurements/data/db_measurement_repository.dart';
@@ -168,5 +169,115 @@ void main() {
     );
     expect(find.text('Chest Press · best Weight'), findsOneWidget);
     expect(find.byTooltip('Chart options'), findsNothing, reason: 'automatic');
+    // One period for every number (A20), records named for what they are.
+    expect(find.text('Sep 4 – Oct 3'), findsOneWidget);
+    expect(find.text('best this period'), findsWidgets);
+    expect(find.text('All-time best 60 kg · Oct 2'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Best day 480 kg · Oct 2'),
+      200,
+      scrollable: find
+          .descendant(
+            of: find.byType(ActivityInsightsScreen),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
+    expect(find.text('Best Set 480 kg · Oct 2'), findsOneWidget, reason: 'A21');
+  });
+
+  group('one period, live and clear (A20–A24)', () {
+    // One generator for the group, so IDs never repeat within a database.
+    final ids = SequentialIdGenerator();
+    Future<ActivityTypeId> logReading(
+      AppDatabase db,
+      FakeClock clock, {
+      ActivityTypeId? typeId,
+      String name = 'Reading',
+      int? durationMs,
+    }) async {
+      final types = DbActivityTypeRepository(db, clock);
+      final logs = DbActivityLogRepository(db, clock, const AppLogger());
+      // Straight through the repository: two activities may share a name
+      // when they were made before names were unique (A24).
+      final id = typeId ?? ActivityTypeId(ids.newId());
+      if (typeId == null) {
+        await types.create(
+          id,
+          ActivityTypeDefinition(
+            name: name,
+            iconId: 'book-open',
+            colorKey: 'sky',
+            fields: const [],
+          ),
+        );
+      }
+      await LogActivity(types, logs, DbPlanRepository(db, clock), ids, clock)(
+        id,
+        ActivityLogDraft(
+          startedAt: clock.nowUtc(),
+          durationMs: durationMs,
+          values: const {},
+        ),
+      );
+      return id;
+    }
+
+    testAppWidgets('the activity list updates as soon as something is '
+        'logged', (tester) async {
+      late ActivityTypeId reading;
+      final db = await pumpTestApp(
+        tester,
+        preferences: _onboarded,
+        seed: (db, clock) async => reading = await logReading(db, clock),
+      );
+      await openTab(tester, 'Insights');
+      expect(find.textContaining('1 day · once'), findsOneWidget);
+
+      await tester.runAsync(
+        () => logReading(
+          db,
+          FakeClock(DateTime.utc(2026, 10, 3, 9)),
+          typeId: reading,
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.textContaining('2 times'), findsOneWidget);
+    });
+
+    testAppWidgets('two activities with one name are told apart', (
+      tester,
+    ) async {
+      await pumpTestApp(
+        tester,
+        preferences: _onboarded,
+        seed: (db, clock) async {
+          await logReading(db, clock);
+          await logReading(db, clock);
+        },
+      );
+      await openTab(tester, 'Insights');
+
+      expect(
+        find.textContaining('Another activity has this name'),
+        findsNWidgets(2),
+      );
+    });
+
+    testAppWidgets('an automatic chart with nothing in the period is left out '
+        '(A23)', (tester) async {
+      await pumpTestApp(
+        tester,
+        preferences: _onboarded,
+        seed: (db, clock) => logReading(db, clock),
+      );
+      await openTab(tester, 'Insights');
+      await tester.tap(find.text('Reading'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Times done'), findsOneWidget);
+      expect(find.text('Time'), findsNothing, reason: 'never timed');
+      expect(find.text('No data in this period yet.'), findsNothing);
+    });
   });
 }

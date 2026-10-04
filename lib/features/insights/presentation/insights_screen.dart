@@ -23,6 +23,7 @@ import 'chart_builder_sheet.dart';
 import 'insight_chart_card.dart';
 import 'insight_formatting.dart';
 import 'insight_providers.dart';
+import 'insight_range_picker.dart';
 
 /// Insights tab (§24–26; FR-AN-01…09): each activity's days, time and count
 /// for the range against the previous one, opening its automatic progress
@@ -38,7 +39,6 @@ class InsightsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final margin = WindowSizeClass.of(context).screenMargin;
-    final range = ref.watch(insightRangeProvider);
     return SafeArea(
       child: Align(
         alignment: Alignment.topLeft,
@@ -54,23 +54,7 @@ class InsightsScreen extends ConsumerWidget {
             children: [
               Text(l10n.navInsights, style: context.textStyles.displayMedium),
               const SizedBox(height: AppSpacing.lg),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    for (final r in InsightRange.values)
-                      Padding(
-                        padding: const EdgeInsets.only(right: AppSpacing.sm),
-                        child: ChoiceChip(
-                          label: Text(rangeLabel(l10n, r)),
-                          selected: r == range,
-                          onSelected: (_) =>
-                              ref.read(insightRangeProvider.notifier).select(r),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
+              const InsightRangePicker(),
               SectionHeader(title: l10n.insightActivitySection),
               _ActivityTotals(onOpenActivity: onOpenActivity),
               SectionHeader(
@@ -110,6 +94,12 @@ class _ActivityTotals extends ConsumerWidget {
           for (final type in types)
             if (current[type.id] case final totals?) (type, totals),
         ]..sort((a, b) => b.$2.durationMs.compareTo(a.$2.durationMs));
+        // Names used by more than one activity (A24).
+        final names = <String, int>{};
+        for (final (type, _) in rows) {
+          final key = type.name.trim().toLowerCase();
+          names[key] = (names[key] ?? 0) + 1;
+        }
         if (rows.isEmpty) {
           return Text(
             l10n.insightNoActivity,
@@ -125,6 +115,7 @@ class _ActivityTotals extends ConsumerWidget {
                 type: type,
                 totals: totals,
                 previous: previous[type.id],
+                duplicateName: names[type.name.trim().toLowerCase()]! > 1,
                 onTap: () => onOpenActivity(type.id),
               ),
           ],
@@ -140,12 +131,17 @@ class _TotalsRow extends StatelessWidget {
     required this.totals,
     required this.onTap,
     this.previous,
+    this.duplicateName = false,
   });
 
   final ActivityType type;
   final ActivityTotals totals;
   final ActivityTotals? previous;
   final VoidCallback onTap;
+
+  /// Another listed activity has the same name: say so, so the two rows
+  /// aren't mistaken for one (A24).
+  final bool duplicateName;
 
   @override
   Widget build(BuildContext context) {
@@ -160,11 +156,15 @@ class _TotalsRow extends StatelessWidget {
       title: Text(type.name),
       subtitle: Text(
         [
-          l10n.insightDaysDone(totals.days),
-          if (totals.durationMs > 0) formatDuration(l10n, totals.durationMs),
-          l10n.insightTimesRecorded(totals.count),
-        ].join(' · '),
+          [
+            l10n.insightDaysDone(totals.days),
+            if (totals.durationMs > 0) formatDuration(l10n, totals.durationMs),
+            l10n.insightTimesRecorded(totals.count),
+          ].join(' · '),
+          if (duplicateName) l10n.insightDuplicateName,
+        ].join('\n'),
       ),
+      isThreeLine: duplicateName,
       onTap: onTap,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,

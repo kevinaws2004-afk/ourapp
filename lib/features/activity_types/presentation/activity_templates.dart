@@ -51,7 +51,7 @@ List<ActivityTypeDefinition> activityTemplates(AppLocalizations l10n) => [
   ActivityTypeDefinition(
     name: l10n.templateWalking,
     iconId: 'person-simple-walk',
-    colorKey: 'sage',
+    colorKey: 'teal',
     supportsTimer: true,
     fields: [
       FieldDefinition(
@@ -88,7 +88,7 @@ List<ActivityTypeDefinition> activityTemplates(AppLocalizations l10n) => [
   ActivityTypeDefinition(
     name: l10n.templateLanguage,
     iconId: 'translate',
-    colorKey: 'apricot',
+    colorKey: 'coral',
     supportsTimer: true,
     fields: [
       FieldDefinition(
@@ -134,11 +134,27 @@ List<ActivityTypeDefinition> activityTemplates(AppLocalizations l10n) => [
     colorKey: 'coral',
     supportsTimer: true,
     fields: [
-      // What the session trained ("Chest", "Chest / Shoulders"), §18.
+      // What the session trained, §18: a choice, not an empty text box (A12).
       FieldDefinition(
         name: l10n.templateGymFocus,
-        type: FieldType.text,
-        config: const TextFieldConfig(suggestFromHistory: true),
+        type: FieldType.singleSelect,
+        config: SelectFieldConfig(
+          options: [
+            for (final (i, label) in [
+              l10n.templateGymPush,
+              l10n.templateGymPull,
+              l10n.templateGymLegs,
+              l10n.templateGymUpperBody,
+              l10n.templateGymLowerBody,
+              l10n.templateGymFullBody,
+              l10n.templateGymCardio,
+            ].indexed)
+              SelectOption(
+                id: SelectOptionId('template-option-$i'),
+                label: label,
+              ),
+          ],
+        ),
       ),
       FieldDefinition(
         name: l10n.templateGymExercises,

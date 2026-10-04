@@ -5,6 +5,7 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/errors/error_copy.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../../activity_logs/domain/activity_log.dart';
+import '../../activity_logs/presentation/activity_log_providers.dart';
 import '../domain/plan.dart';
 import '../domain/watch_day_overview.dart';
 import 'plan_editor_sheet.dart';
@@ -59,16 +60,29 @@ class PlanActions {
   Future<void> _setStatus(PlanId id, PlanStatus status) =>
       _ref.read(setPlanStatusProvider)(id, status);
 
-  /// Completes an open task (with Undo) or reopens a done one (F10).
-  Future<void> toggleTask(PlannedItem item) {
+  /// Whether [toggleDone] can act: an open item can be marked done, and one
+  /// marked done can be reopened. Something logged on a past day counts as
+  /// done by itself (ADR-040) and has nothing to undo here.
+  static bool canToggleDone(PlannedItem item) =>
+      item.isOpen || item.plan.status == PlanStatus.completed;
+
+  /// Marks any item done (with Undo) or reopens one marked done (F10, A17).
+  /// Undo also removes a log that marking done created.
+  Future<void> toggleDone(PlannedItem item) {
     final id = item.plan.id;
-    if (item.status == EffectivePlanStatus.completed) {
+    if (!item.isOpen) {
       return _run(() => _setStatus(id, PlanStatus.planned));
     }
+    final markDone = _ref.read(markItemDoneProvider);
+    final deleteLog = _ref.read(deleteActivityLogProvider);
+    ActivityLogId? created;
     return _run(
-      () => _setStatus(id, PlanStatus.completed),
+      () async => created = await markDone(id),
       message: _l10n.planTaskDoneMessage,
-      undo: () => _setStatus(id, PlanStatus.planned),
+      undo: () async {
+        await _setStatus(id, PlanStatus.planned);
+        if (created case final log?) await deleteLog(log);
+      },
     );
   }
 
@@ -138,8 +152,8 @@ class PlanActions {
     );
     if (!_context.mounted) return action;
     switch (action) {
-      case PlanSheetAction.toggleTask:
-        await toggleTask(item);
+      case PlanSheetAction.toggleDone:
+        await toggleDone(item);
       case PlanSheetAction.repeat:
         await repeat(item);
       case PlanSheetAction.stopRepeating:

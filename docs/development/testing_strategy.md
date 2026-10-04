@@ -78,7 +78,7 @@ Current suites (269 tests):
   - `LocalDate`/`LocalTime` (offsets, midnight crossing)
   - unit registry conversions (affine temperature)
   - icon/color registries
-  - WCAG contrast; palette consistency (ADR-029: brand/accent/status equal palette colors; sand removed)
+  - WCAG contrast; palette consistency (ADR-029/038: brand/accent/status equal palette colors; six keys; legacy keys resolve)
   - window size classes
   - schema v6 shape and STRICT tables
   - every trigger and CHECK, including the v3 Repeating Group triggers (parent/nesting, item structure, value scope, cascade)
@@ -126,7 +126,10 @@ Current suites (269 tests):
   - navigation (ADR-028): four tabs, no floating Record button (compact or rail), Me → Activities
   - Plan tab: opens on today with one list of items (unplanned records included), week navigation, a record without a plan opens as an item, calendar picker
   - renderer: every editor in order, archived options hidden, typed emission and clearing, invalid numbers
-  - Items (ADR-035): quick-add task + complete; opening a planned activity → typing saves ("Saved", no Save button) → ✓ with summary → reopening shows it; leaving right after typing still saves; plan options (no "Record it") → move to tomorrow with Undo; a task opens and is marked done; notes on a new name save it with an activity of its own; Today "Now" opens a new item; empty Today invitation; Add to log → Sets & reps → log a set ✓; Add to log → Number "Calories" → 650 in the summary; Checklist → Add detail "Dose" appears in each row; "Mark done" on 21:10–21:55 → "Done · 45 min of 45 min"
+  - Quick add and planner (ADR-039): Start now / Set a time appear once typing; Recent label; template and own-activity suggestions; one time sheet sets start + length; Plan opens on Week, a tapped day opens the day screen, which steps days and has a date picker; a taken template name isn't installed twice. Domain: unique activity names, `PlanTimeSuggestions`, `suggestByName`, `rankByUse`.
+  - Insights clarity (A20–A27): `ChartAxis` steps (no repeated labels); the activity list updates live after a new log; dates of the period shown; "best this period", "All-time best", "Best day" and "Best Set" labels; empty automatic charts hidden; duplicate names marked; builder order, 12 icons + More, icon names for screen readers; picker theme from tokens.
+  - Done state and rows (ADR-040, A9–A19): logging makes an item in progress, Mark done (bottom of the item) or the row check makes it done, Undo removes a log that marking created; past-day logs count as done; finishing a timer finishes the item and fills the duration boxes; folded summaries ("60 kg × 8 (×2)"); "Anytime" heading; discard question on a half-filled sheet; list ⋯ menu adds a detail; no pop-up after adding a template. Migration v7→v8 keeps plans, logs, series links and triggers.
+  - Items (ADR-035): quick-add task + complete; opening a planned activity → typing saves ("Saved", no Save button) → ✓ with summary → reopening shows it; leaving right after typing still saves; plan options (no "Record it") → move to tomorrow with Undo; a task opens and is marked done; notes on a new name save it with an activity of its own; Today "Start now" opens a new item; empty Today invitation; Add to log → Sets & reps → log a set ✓; Add to log → Number "Calories" → 650 in the summary; Checklist → Add detail "Dose" appears in each row; "Mark done" on 21:10–21:55 → "Done · 45 min of 45 min"
   - planned Gym → open → one exercise, three sets (auto-saved) → leave → back → a fourth set → stored as one linked record with five group items
   - quick add: typing "reading" links the Reading activity (its item has its fields); typing "Gym" installs the template and plans it
   - Repeating Groups: recording the §43 workout from an activity's page (sets prefilled from the previous set, reopened intact), an exercise without a name is still saved (partial), exercise autocomplete; builder creates a group with a sub-field in a nested sheet

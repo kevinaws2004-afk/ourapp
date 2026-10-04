@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/errors/app_exception.dart';
 import '../../../../core/time/clock.dart';
 import '../../../../core/time/clock_provider.dart';
+import '../../../../core/time/local_date.dart';
 import '../../../activity_logs/domain/activity_log.dart';
 import '../../../activity_logs/domain/activity_log_use_cases.dart';
 import '../../../activity_logs/domain/field_value.dart';
@@ -71,8 +72,14 @@ class ItemState {
 
   bool get hasLog => logId != null;
 
-  /// Done: something was logged, or a task was ticked off.
-  bool get isDone => hasLog || plan?.status == PlanStatus.completed;
+  /// Done on [today] (ADR-040): a record without a plan always is; an item
+  /// follows [Plan.effectiveStatus] (marked done, or logged on a past day).
+  bool isDoneOn(LocalDate today) => switch (plan) {
+    null => hasLog,
+    final plan =>
+      plan.effectiveStatus(hasRecord: hasLog, today: today) ==
+          EffectivePlanStatus.completed,
+  };
 
   /// Active fields, plus removed fields that still hold a value here.
   List<ActivityField> get visibleFields => [

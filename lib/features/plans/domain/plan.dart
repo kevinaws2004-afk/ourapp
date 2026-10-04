@@ -5,9 +5,10 @@ import 'plan_series.dart';
 
 extension type const PlanId(String value) {}
 
-/// What is stored about a plan's progress (ADR-018). Completion of an
-/// *activity* plan is never stored: it is derived from linked records (see
-/// [EffectivePlanStatus]). `completed` is stored only for tasks.
+/// What is stored about a plan's progress (ADR-018, ADR-040). `completed`
+/// is stored when an item is marked done (a task ticked off, an activity
+/// item's Mark done, or its timer finished); see [Plan.effectiveStatus] for
+/// what's shown.
 enum PlanStatus {
   planned('planned'),
   completed('completed'),
@@ -84,15 +85,26 @@ class Plan {
       ? plannedEndAt!.difference(plannedStartAt!).inMilliseconds
       : plannedDurationMs;
 
-  /// The effective status, given whether a non-deleted record fulfils it and
-  /// whether a focus session is running on it.
+  /// The effective status (ADR-040), given whether a non-deleted record
+  /// fulfils it, whether a focus session is running on it, and [today].
+  ///
+  /// Logging into an activity item doesn't finish it: it's in progress until
+  /// it's marked done, unless its day has passed (then what was logged counts
+  /// as done, so nothing stays in progress forever).
   EffectivePlanStatus effectiveStatus({
     required bool hasRecord,
+    required LocalDate today,
     bool inFocus = false,
   }) {
     // A running timer wins: you're still logging into it (ADR-035).
     if (inFocus) return EffectivePlanStatus.inProgress;
-    if (!isTask && hasRecord) return EffectivePlanStatus.completed;
+    if (status == PlanStatus.completed) return EffectivePlanStatus.completed;
+    // Something logged wins over planned, skipped or cancelled.
+    if (!isTask && hasRecord) {
+      return planDate.compareTo(today) < 0
+          ? EffectivePlanStatus.completed
+          : EffectivePlanStatus.inProgress;
+    }
     return switch (status) {
       PlanStatus.planned => EffectivePlanStatus.planned,
       PlanStatus.completed => EffectivePlanStatus.completed,

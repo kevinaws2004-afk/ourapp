@@ -32,7 +32,7 @@ void main() {
     });
     final l10n = AppLocalizationsEn();
 
-    expect(await loadDemoData(container, l10n), isTrue);
+    expect(await loadDemoData(container, l10n), DemoDataResult.loaded);
 
     final types = await container
         .read(activityTypeRepositoryProvider)
@@ -51,6 +51,6 @@ void main() {
     expect(todayPlans, isNotEmpty);
 
     // A second run never duplicates data.
-    expect(await loadDemoData(container, l10n), isFalse);
+    expect(await loadDemoData(container, l10n), DemoDataResult.alreadyLoaded);
   });
 }

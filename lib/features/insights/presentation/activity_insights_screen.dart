@@ -17,6 +17,7 @@ import '../domain/insight.dart';
 import 'insight_chart_card.dart';
 import 'insight_formatting.dart';
 import 'insight_providers.dart';
+import 'insight_range_picker.dart';
 
 /// One activity's progress, worked out automatically (ADR-037): days done,
 /// time and how often in the range against the previous one, then a chart
@@ -63,23 +64,7 @@ class ActivityInsightsScreen extends ConsumerWidget {
               AppSpacing.giant,
             ),
             children: [
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    for (final r in InsightRange.values)
-                      Padding(
-                        padding: const EdgeInsets.only(right: AppSpacing.sm),
-                        child: ChoiceChip(
-                          label: Text(rangeLabel(l10n, r)),
-                          selected: r == range,
-                          onSelected: (_) =>
-                              ref.read(insightRangeProvider.notifier).select(r),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
+              const InsightRangePicker(),
               const SizedBox(height: AppSpacing.lg),
               _Summary(typeId: typeId),
               SectionHeader(title: l10n.insightProgressSection),
@@ -90,7 +75,10 @@ class ActivityInsightsScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     for (final chart in charts)
-                      InsightChartCard(chart: _titled(l10n, chart)),
+                      InsightChartCard(
+                        chart: _titled(l10n, chart, range),
+                        hideWhenEmpty: true,
+                      ),
                   ],
                 ),
               ),
@@ -101,7 +89,12 @@ class ActivityInsightsScreen extends ConsumerWidget {
     );
   }
 
-  static InsightChartConfig _titled(AppLocalizations l10n, AutoChart chart) {
+  /// The chart with its title, in buckets that fit [range] (A20).
+  static InsightChartConfig _titled(
+    AppLocalizations l10n,
+    AutoChart chart,
+    InsightRange range,
+  ) {
     final field = chart.fieldName ?? '';
     final row = chart.rowName;
     final title = switch (chart.kind) {
@@ -121,7 +114,7 @@ class ActivityInsightsScreen extends ConsumerWidget {
       title: title,
       source: c.source,
       aggregation: c.aggregation,
-      bucket: c.bucket,
+      bucket: range.bucket,
       kind: c.kind,
     );
   }

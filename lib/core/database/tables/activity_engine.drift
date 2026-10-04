@@ -71,8 +71,9 @@ CREATE TABLE plans (
   series_id           INTEGER REFERENCES plan_series (internal_id) ON DELETE RESTRICT,
   CHECK (planned_end_at IS NULL OR planned_start_at IS NOT NULL),
   CHECK (planned_end_at IS NULL OR planned_end_at >= planned_start_at),
-  CHECK (planned_duration_ms IS NULL OR (planned_duration_ms > 0 AND planned_end_at IS NULL)),
-  CHECK (status <> 'completed' OR activity_type_id IS NULL)
+  CHECK (planned_duration_ms IS NULL OR (planned_duration_ms > 0 AND planned_end_at IS NULL))
+  -- v8 dropped CHECK (status <> 'completed' OR activity_type_id IS NULL):
+  -- any item can be marked done (ADR-040).
 ) STRICT AS PlanRow;
 
 -- One occurrence per series and date, deleted ones included: an occurrence

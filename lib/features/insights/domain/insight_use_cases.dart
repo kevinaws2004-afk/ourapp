@@ -11,9 +11,16 @@ class InsightResult {
     required this.series,
     required this.currentValue,
     required this.previousValue,
+    required this.from,
+    required this.to,
     this.plannedSeries,
     this.personalBest,
+    this.bestDay,
   });
+
+  /// The period shown, `[from, to]` (one range for the whole screen, A20).
+  final LocalDate from;
+  final LocalDate to;
 
   /// The values (recorded time, for planned vs actual).
   final InsightSeries series;
@@ -23,10 +30,17 @@ class InsightResult {
   final double? currentValue;
   final double? previousValue;
 
-  /// Highest point ever recorded (for value-like sources).
+  /// Highest point ever recorded (for value-like sources): for a volume,
+  /// the best single item (e.g. set).
   final DataPoint? personalBest;
 
+  /// For a volume: the best day's total ever (A21).
+  final DataPoint? bestDay;
+
   double? get change => relativeChange(currentValue, previousValue);
+
+  /// Nothing recorded in the period.
+  bool get isEmpty => series.isEmpty && (plannedSeries?.isEmpty ?? true);
 }
 
 /// Composite read (ADR-023): computes a chart from its source's points.
@@ -55,6 +69,8 @@ class WatchInsight {
       return _insights.watchPlannedVsActual(source.typeId).map((data) {
         final (planned, actual) = data;
         return InsightResult(
+          from: from,
+          to: to,
           series: series(actual),
           plannedSeries: series(planned),
           currentValue: periodValue(actual, from, to, Aggregation.sum),
@@ -67,6 +83,8 @@ class WatchInsight {
         .watchPoints(source)
         .map(
           (points) => InsightResult(
+            from: from,
+            to: to,
             series: series(points),
             currentValue: periodValue(points, from, to, chart.aggregation),
             previousValue: periodValue(
@@ -78,6 +96,7 @@ class WatchInsight {
             personalBest: tracksBest && points.isNotEmpty
                 ? points.reduce((a, b) => b.value > a.value ? b : a)
                 : null,
+            bestDay: source is VolumeSource ? bestDayTotal(points) : null,
           ),
         );
   }

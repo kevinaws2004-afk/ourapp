@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/design/app_icons.dart';
 import '../../../core/design/context_ext.dart';
 import '../../../core/design/keys/activity_color_key.dart';
 import '../../../core/design/tokens/radius.dart';
 import '../../../core/design/tokens/spacing.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/widgets/activity_badge.dart';
+import '../../../shared/widgets/done_check.dart';
+import '../../../core/design/tokens/sizes.dart';
 import '../domain/watch_records_for_day.dart';
 import 'value_formatting.dart';
 
@@ -50,12 +51,19 @@ class DayRecordTile extends StatelessWidget {
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.md,
-                vertical: AppSpacing.md,
+                horizontal: AppSpacing.xs,
+                vertical: AppSpacing.sm,
               ),
               child: Row(
                 children: [
-                  ActivityBadge(iconId: type.iconId, colorKey: type.colorKey),
+                  // Done by definition: the check shows it, like every row
+                  // (A17), without toggling.
+                  DoneCheck(done: true, color: activity.solid),
+                  ActivityBadge(
+                    iconId: type.iconId,
+                    colorKey: type.colorKey,
+                    size: AppSizes.badgeSmall,
+                  ),
                   const SizedBox(width: AppSpacing.md),
                   Expanded(
                     child: Column(
@@ -72,11 +80,6 @@ class DayRecordTile extends StatelessWidget {
                           ),
                       ],
                     ),
-                  ),
-                  Icon(
-                    AppIcons.taskDone,
-                    color: colors.success,
-                    semanticLabel: l10n.planStatusRecorded,
                   ),
                 ],
               ),

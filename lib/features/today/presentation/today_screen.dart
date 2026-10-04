@@ -6,22 +6,16 @@ import '../../../core/design/tokens/spacing.dart';
 import '../../../core/design/window_size_class.dart';
 import '../../../core/time/clock.dart';
 import '../../../core/time/clock_provider.dart';
-import '../../../core/time/local_date.dart';
 import '../../../l10n/generated/app_localizations.dart';
-import '../../../shared/widgets/state_views.dart';
 import '../../activity_logs/domain/activity_log.dart';
-import '../../activity_logs/presentation/value_formatting.dart';
 import '../../focus/presentation/focus_banner.dart';
 import '../../plans/domain/plan.dart';
-import '../../plans/domain/watch_day_overview.dart';
 import '../../plans/presentation/plan_date_notifier.dart';
-import '../../plans/presentation/plan_providers.dart';
-import '../../plans/presentation/widgets/plan_quick_add.dart';
-import '../../plans/presentation/widgets/planned_list.dart';
+import '../../plans/presentation/widgets/day_items.dart';
 
-/// Today tab (ADR-035): a greeting, a quick way to add to the day (planned,
-/// or "Now" to log it straight away), and the day's items in time order.
-/// Opening an item is where you log into it.
+/// Today tab (ADR-035): a greeting, then today as [DayItems]: a quick way to
+/// add to the day (planned, or "Start now" to log it straight away) and the
+/// day's items in time order. Opening an item is where you log into it.
 class TodayScreen extends ConsumerWidget {
   const TodayScreen({
     super.key,
@@ -73,21 +67,12 @@ class TodayScreen extends ConsumerWidget {
               ),
               FocusBanner(onOpen: onOpenFocus),
               const SizedBox(height: AppSpacing.lg),
-              PlanQuickAdd(
-                key: ValueKey(today),
+              DayItems(
                 date: today,
+                emptyMessage: l10n.todayEmptyMessageItems,
+                onOpenItem: onOpenItem,
+                onOpenRecord: onOpenRecord,
                 onStartNow: onOpenItem,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              AsyncValueView<DayOverview>(
-                value: ref.watch(dayOverviewProvider(today)),
-                onRetry: () => ref.invalidate(dayOverviewProvider(today)),
-                data: (overview) => _TodayItems(
-                  overview: overview,
-                  today: today,
-                  onOpenItem: onOpenItem,
-                  onOpenRecord: onOpenRecord,
-                ),
               ),
             ],
           ),
@@ -105,66 +90,5 @@ class TodayScreen extends ConsumerWidget {
       < 18 => l10n.todayGreetingAfternoon,
       _ => l10n.todayGreetingEvening,
     };
-  }
-}
-
-class _TodayItems extends StatelessWidget {
-  const _TodayItems({
-    required this.overview,
-    required this.today,
-    required this.onOpenItem,
-    required this.onOpenRecord,
-  });
-
-  final DayOverview overview;
-  final LocalDate today;
-  final ValueChanged<PlanId> onOpenItem;
-  final ValueChanged<ActivityLog> onOpenRecord;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final quiet = context.textStyles.bodyMedium?.copyWith(
-      color: context.colors.textSecondary,
-    );
-    final entries = overview.entries;
-    if (entries.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.only(top: AppSpacing.lg),
-        child: Text(l10n.todayEmptyMessageItems, style: quiet),
-      );
-    }
-    final done = entries
-        .where(
-          (e) => switch (e) {
-            PlanEntry(:final item) =>
-              item.status == EffectivePlanStatus.completed,
-            RecordEntry() => true,
-          },
-        )
-        .length;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (done > 0)
-          Padding(
-            padding: const EdgeInsets.only(bottom: AppSpacing.md),
-            child: Text(
-              overview.recordedMs > 0
-                  ? l10n.todayDoneSummary(
-                      done,
-                      formatDuration(l10n, overview.recordedMs),
-                    )
-                  : l10n.todayDoneCount(done),
-              style: quiet,
-            ),
-          ),
-        PlannedList(
-          entries: entries,
-          onOpenItem: (item) => onOpenItem(item.plan.id),
-          onOpenRecord: onOpenRecord,
-        ),
-      ],
-    );
   }
 }

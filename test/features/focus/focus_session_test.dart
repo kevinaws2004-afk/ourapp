@@ -52,6 +52,7 @@ void main() {
     resume = ResumeFocusSession(sessions, clock);
     finish = FinishFocusSession(
       sessions,
+      plans,
       logs,
       LogActivity(types, logs, plans, ids, clock),
       UpdateActivityLog(types, logs, clock),
@@ -116,7 +117,7 @@ void main() {
       const ActivityTypeDefinition(
         name: 'Lunch',
         iconId: 'fork-knife',
-        colorKey: 'apricot',
+        colorKey: 'coral',
         fields: [],
       ),
     );
@@ -156,6 +157,7 @@ void main() {
         plans,
         logs,
         types,
+        clock,
         planInFocus: () => sessions.watchActive().map((s) => s?.planId),
       );
       expect(
@@ -203,6 +205,11 @@ void main() {
     final sessionStart = clock.nowUtc();
 
     await finish(await _timed(start, clock, type.id, planId, minutes: 20));
+    expect(
+      (await plans.getPlan(planId))!.status,
+      PlanStatus.completed,
+      reason: 'finishing the timer finishes the item (ADR-040)',
+    );
     var log = (await logs.getLog(logId))!;
     expect(log.values[book], const TextValue('Antifragile'));
     expect(log.startedAt, sessionStart);

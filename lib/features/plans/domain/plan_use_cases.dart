@@ -138,8 +138,8 @@ class AssignPlanActivity {
   }
 }
 
-/// Completes/uncompletes a task, or skips/cancels/reopens any plan. Activity
-/// plans are completed by recording them, never by a stored status (ADR-018).
+/// Completes, skips, cancels or reopens any plan (ADR-040: activity items
+/// are marked done too; see [MarkItemDone] for logging them first).
 class SetPlanStatus {
   const SetPlanStatus(this._plans, this._clock);
 
@@ -150,11 +150,6 @@ class SetPlanStatus {
     final plan = await _plans.getPlan(id);
     if (plan == null) {
       throw NotFoundException(debugContext: 'SetPlanStatus ${id.value}');
-    }
-    if (status == PlanStatus.completed && !plan.isTask) {
-      throw const ValidationException([
-        ValidationIssue(ValidationCode.onlyTasksCanBeCompleted),
-      ], debugContext: 'SetPlanStatus');
     }
     await _plans.update(
       plan.copyWith(status: status, updatedAt: _clock.nowUtc()),

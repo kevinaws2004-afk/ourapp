@@ -10,6 +10,8 @@ import 'generated/schema.dart';
 import 'generated/schema_v1.dart' as v1;
 import 'generated/schema_v2.dart' as v2;
 import 'generated/schema_v3.dart' as v3;
+import 'generated/schema_v6.dart' as v6;
+import 'generated/schema_v7.dart' as v7;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -183,18 +185,91 @@ void main() {
   test('migration from v6 to v7 keeps plans (no series) and adds repeating '
       'plans', () async {
     final schema = await verifier.schemaAt(6);
-    final db = AppDatabase(schema.newConnection());
+    final old = v6.DatabaseAtV6(schema.newConnection());
     const plan = '00000000-0000-7000-8000-000000000001';
-    await db.customStatement(
+    await old.customStatement(
       'INSERT INTO plans (internal_id, public_id, plan_date, title, created_at, updated_at) '
       "VALUES (1, '$plan', '2026-10-04', 'Bath', 1, 1)",
     );
+    await old.close();
 
+    final db = AppDatabase(schema.newConnection());
     await verifier.migrateAndValidate(db, 7);
 
     final migrated = await db.select(db.plans).getSingle();
     expect((migrated.publicId, migrated.seriesId), (plan, null));
     expect(await db.select(db.planSeries).get(), isEmpty);
+    await db.close();
+  });
+
+  test('migration from v7 to v8 keeps plans, their logs and series, and lets '
+      'an activity plan be completed', () async {
+    final schema = await verifier.schemaAt(7);
+    final old = v7.DatabaseAtV7(schema.newConnection());
+    const type = '00000000-0000-7000-8000-000000000001';
+    const series = '00000000-0000-7000-8000-000000000002';
+    const plan = '00000000-0000-7000-8000-000000000003';
+    const task = '00000000-0000-7000-8000-000000000004';
+    const log = '00000000-0000-7000-8000-000000000005';
+    await old.customStatement(
+      'INSERT INTO activity_types (internal_id, public_id, name, icon_id, color_key, created_at, updated_at) '
+      "VALUES (1, '$type', 'Gym', 'barbell', 'coral', 1, 1)",
+    );
+    await old.customStatement(
+      'INSERT INTO plan_series (internal_id, public_id, activity_type_id, title, weekdays, '
+      'interval_weeks, start_date, created_at, updated_at) '
+      "VALUES (1, '$series', 1, 'Gym', 1, 1, '2026-10-05', 1, 1)",
+    );
+    await old.customStatement(
+      'INSERT INTO plans (internal_id, public_id, plan_date, activity_type_id, title, '
+      'planned_start_at, sort_order, created_at, updated_at, series_id) '
+      "VALUES (7, '$plan', '2026-10-05', 1, 'Gym', 1000, 3, 1, 2, 1)",
+    );
+    await old.customStatement(
+      'INSERT INTO plans (internal_id, public_id, plan_date, title, status, created_at, updated_at) '
+      "VALUES (8, '$task', '2026-10-05', 'Bath', 'completed', 1, 1)",
+    );
+    await old.customStatement(
+      'INSERT INTO activity_logs (internal_id, public_id, activity_type_id, started_at, tz_offset_minutes, '
+      "local_date, created_at, updated_at, plan_id) VALUES (1, '$log', 1, 1000, 0, '2026-10-05', 1, 1, 7)",
+    );
+
+    await old.close();
+
+    final db = AppDatabase(schema.newConnection());
+    await verifier.migrateAndValidate(db, 8);
+
+    final plans = await (db.select(
+      db.plans,
+    )..orderBy([(p) => OrderingTerm(expression: p.internalId)])).get();
+    expect(
+      [
+        for (final p in plans)
+          (p.internalId, p.publicId, p.status, p.seriesId, p.sortOrder),
+      ],
+      [(7, plan, 'planned', 1, 3), (8, task, 'completed', null, 0)],
+    );
+    expect((await db.select(db.activityLogs).getSingle()).planId, 7);
+
+    // New in v8: an activity plan can be stored as completed.
+    await db.customStatement(
+      "UPDATE plans SET status = 'completed' WHERE internal_id = 7",
+    );
+    // The rebuilt table's triggers still guard it.
+    await expectLater(
+      db.customStatement(
+        "UPDATE plans SET public_id = '00000000-0000-7000-8000-000000000009' "
+        'WHERE internal_id = 7',
+      ),
+      throwsA(anything),
+    );
+    await expectLater(
+      db.customStatement(
+        'UPDATE plans SET activity_type_id = NULL WHERE internal_id = 7',
+      ),
+      throwsA(anything),
+      reason: 'a plan with logs keeps its activity',
+    );
     await db.close();
   });
 }

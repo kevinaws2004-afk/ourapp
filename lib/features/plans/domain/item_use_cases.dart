@@ -64,8 +64,9 @@ class EnsureItemActivity {
   }
 }
 
-/// Marks an item done without logging details: a task is ticked off; an
-/// activity item gets a log at its planned time and length.
+/// Marks an item done (ADR-040). An activity item with nothing logged gets a
+/// log at its planned time and length first; then the item is stored as
+/// completed. Returns the log it created, if any (for Undo).
 class MarkItemDone {
   const MarkItemDone(
     this._plans,
@@ -81,24 +82,27 @@ class MarkItemDone {
   final SetPlanStatus _setStatus;
   final Clock _clock;
 
-  Future<void> call(PlanId id) async {
+  Future<ActivityLogId?> call(PlanId id) async {
     final plan = await _plans.getPlan(id);
     if (plan == null) {
       throw NotFoundException(debugContext: 'MarkItemDone ${id.value}');
     }
     final typeId = plan.activityTypeId;
-    if (typeId == null) return _setStatus(id, PlanStatus.completed);
-    if (await _logs.getLogForPlan(id) != null) return;
-    await _log(
-      typeId,
-      ActivityLogDraft(
-        startedAt: recordStartFor(plan, _clock),
-        durationMs: plan.plannedLengthMs,
-        values: const {},
-        planId: id,
-      ),
-      partial: true,
-    );
+    ActivityLogId? created;
+    if (typeId != null && await _logs.getLogForPlan(id) == null) {
+      created = await _log(
+        typeId,
+        ActivityLogDraft(
+          startedAt: recordStartFor(plan, _clock),
+          durationMs: plan.plannedLengthMs,
+          values: const {},
+          planId: id,
+        ),
+        partial: true,
+      );
+    }
+    await _setStatus(id, PlanStatus.completed);
+    return created;
   }
 }
 

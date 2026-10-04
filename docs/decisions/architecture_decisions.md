@@ -180,6 +180,7 @@
     - `skipped`
     - `cancelled`
     - `completed`, **for tasks only**, which have no log. Enforced by `CHECK (status <> 'completed' OR activity_type_id IS NULL)`.
+    - *Amended by ADR-040 (schema v8): any plan can store `completed` (Mark done, finished timer); a log makes an activity item in progress on its day and done once the day has passed.*
   - `in_progress` is derived (from an active focus session, Phase 5).
   - The domain computes the effective status; reality (a linked log) wins over a stored `skipped`.
   - Indexes: `(plan_date, sort_order)` and `(activity_type_id, plan_date)`, both partial on `deleted_at IS NULL`. Plus `activity_logs(plan_id)` partial on `plan_id IS NOT NULL` for derived completion.
@@ -370,6 +371,7 @@
   - Light-mode moss and apricot are under 4.5:1 against the canvas, so they're used **only as graphics** (icons, fills, accents) with readable text beside them. Rose (4.54:1) may carry error text, and teal carries white text at 4.59:1.
   - `palette_consistency_test.dart` keeps the tokens identical to the palette, and `color_contrast_test.dart` enforces the contrast rules above.
   - Neutrals stay provisional under ADR-016.
+  - **Superseded in part by ADR-038:** the palette is now six colors (sage, apricot, moss removed); accent/warning = coral, success = teal.
   - Removing `sand` means a stored `color_key = 'sand'` renders with the `slate` fallback, and the builder asks for a new color on the next save. No migration is needed: the app is pre-release and no template used sand.
 
 ### ADR-030: Plan and Record are one user workflow
@@ -457,10 +459,10 @@
   - **Required is a hint while logging.** Auto-saved logs are *partial*: `LogValidator.validate(partial: true)` skips missing required values; type, range and unit checks still apply. The `*` on the label marks what's expected.
   - **Anything can be logged without setup.** The first thing logged into an item with no activity (a task or a new name like "Doctor call") gives it an activity named after it (an existing one with that name, or a new one with no fields), so later items with that name share it.
   - **Add to log, right in the item.** Every item has **Add to log**: ready-made shapes in one tap (*Sets & reps* = Exercises → Sets → Weight kg × Reps; *Checklist* = Item + Done) or one thing of any field type (Text, Number with unit, Yes/No, choices, Date, Time, Duration, Rating, **List**), named and configured in the field sheet. Lists offer **Add detail** in place. What's added goes onto the item's activity (`AddItemField`, created for it first if needed), so the next item with that name has it. The pencil in the item opens the builder to rename, reorder or remove.
-  - **Done** = something was logged, or **Mark done** (an activity item gets a log at its planned time and length; a task is ticked off). A running timer shows the item as **In progress** even if something is logged.
+  - *(Amended by ADR-040: logging makes an item in progress; Mark done or finishing the timer makes it done.)* **Done** = something was logged, or **Mark done** (an activity item gets a log at its planned time and length; a task is ticked off). A running timer shows the item as **In progress** even if something is logged.
   - **The timer lives in the item.** Start timer / Pause / Finish sit at the top of the item, and you keep logging while it runs; the full-screen timer is optional. Finishing writes the timed span into the item's log in one transaction (a second session on the same item adds its time).
   - **Today and Plan show one list of items**: plans and records made without a plan, in time order (a plan's time is its planned start, or when it was logged), then untimed plans in manual order. The separate "Recorded / Also recorded" sections are gone.
-  - **Adding:** the quick add on Today and Plan, with **Now** (today only) for what you're doing right now: it adds the item at the current time and opens it. An activity's page "Record" does the same for that activity.
+  - **Adding:** the quick add on Today and Plan, with **Now** (today only) for what you're doing right now: it adds the item at the current time and opens it. An activity's page "Record" does the same for that activity. *Amended by ADR-039: "Now" became the **Start now** action; time is one sheet.*
   - **Deleting an item** deletes the plan and what was logged into it; Undo restores both.
 - **Context:** On a real device the owner found plan, record and setup felt like three separate places. They want the planner to be the app: plan Gym, then at the gym open it and log sets into it, with nothing else to go through.
 - **Reason:** Planning exists to be lived; the planned item is where reality gets captured, as it happens.
@@ -475,7 +477,7 @@
 ### ADR-036: Week/month planner, repeating plans as generated occurrences, Plan next
 - **Status:** Accepted 2026-10-04 (owner-approved rework, step 3). **Implemented 2026-10-04 (schema v7).**
 - **Decision:**
-  - **Plan tab: Day | Week | Month.** Day is the existing date view. Week stacks the seven days (locale's first day of the week) with their items; a day's heading opens it and "+" plans on it. Month is a calendar with a dot per planned item, in its activity's color; tapping a day opens it.
+  - **Plan tab: Day | Week | Month.** *(Superseded by ADR-039: Week | Month, and a tapped day opens a day screen like Today.)* Day is the existing date view. Week stacks the seven days (locale's first day of the week) with their items; a day's heading opens it and "+" plans on it. Month is a calendar with a dot per planned item, in its activity's color; tapping a day opens it.
   - **Repeating plans** (`plan_series`): weekdays, every 1–4 weeks (stored 1–52) counted from the start week, optional last date. A plan becomes repeating from its options ("Repeat…"); it is the first occurrence.
   - **Occurrences are ordinary plans**, generated for the dates being viewed (Today, a day, a week, a month grid) by `EnsureSeriesOccurrences`, idempotently. So every occurrence can be opened and logged into, skipped, moved or deleted like any plan, and planned-vs-actual just works.
   - A unique index on `(series_id, plan_date)` that includes deleted rows means a deleted (or moved) occurrence is never generated again.
@@ -496,9 +498,53 @@
     - inside lists: for each row name logged so far (from the list's first Text field, e.g. each exercise), the best of its Number; when a list has two Numbers (e.g. weight and reps), the best of the first and the **volume** (first × second, summed)
     - at most 4 row names per list and 16 charts
   - They use the existing engine (ADR-034) and chart card, with the selected range, change vs previous period and personal best. They aren't saved and have no edit menu.
+  - *Amended 2026-10-05 (backlog A20/A23): their bucket follows the selected range (`InsightRange.bucket`: days for Week, weeks for Month and 3 months, months for Year), and charts with nothing in the period are left out.*
   - The user's own saved charts stay below, as "Your own charts" (pending OQ-14).
 - **Context:** The owner: "in a week how many days which activity is done… based on that data graph of progression" without building charts.
 - **Consequences:** `ActivityTotals.days` (distinct `local_date`s); `InsightChartConfig` has value equality (so generated charts are stable provider keys); route `/insights/activity/:typeId`.
+
+### ADR-038: Six colors, white shades and mist
+- **Status:** Accepted 2026-10-04 (owner decision; amends ADR-029, resolves ADR-016's provisional neutrals).
+- **Decision:**
+  - The whole app uses only white shades, mist `#DDF0EF` and the activity-palette colors **sky, lilac, teal, rose, slate, coral**.
+  - `sage`, `apricot` and `moss` are removed from the palette. Accent and warning move to **coral**, success to **teal**.
+  - Neutrals: light surfaces are white shades (`#F7FBFB` canvas, `#FFFFFF` cards) with mist as the sunken surface; text and borders are slate shades; dark mode uses deep slate surfaces and white-shade text.
+- **Context:** The owner found the warm linen neutrals and the extra colors made the app feel off and asked for one tight color set.
+- **Consequences:**
+  - Stored `color_key` values `sage`/`moss` resolve to teal and `apricot` to coral via `ActivityColorKey.fromName`, so nothing breaks and no migration is needed; the builder writes the replacement key on the next save.
+  - Success and brand share teal; completion is still told apart by icon and copy, not color alone.
+  - Six activity colors for seven templates: Language and Gym both use coral.
+
+### ADR-039: Plan tab is Week | Month; one quick add with Start now, a time sheet and suggestions; unique activity names
+- **Status:** Accepted 2026-10-05 (owner approved improvement backlog items A1–A8, [improvement_backlog.md](../product/improvement_backlog.md)). Amends ADR-035 (adding) and ADR-036 (Plan views).
+- **Decision:**
+  - **No separate Day view.** The Plan tab is **Week | Month** (opens on Week). Tapping a day opens a **day screen** (`/plan/day`, the Plan tab's selected date) that shows exactly what Today shows for today: the shared `DayItems` (quick add, day summary, items). It steps a day at a time and has a calendar button. One "+" per screen.
+  - **Quick add actions.** The "Now" toggle chip is replaced by actions that appear once something is typed: **Start now** (today only: adds the item at the current time and opens it) and **Set a time**. Enter or "+" adds it untimed or at the chosen time.
+  - **One time sheet** replaces the two clock dialogs: suggested starts (the next half hours after now on today, typical times on other days, "Other time…"), then a length (No end, 15 min, 30 min, 1 h, 2 h, "Until…"); lengths past midnight are disabled. Pure rules in `PlanTimeSuggestions`.
+  - **Suggestions while typing:** up to four matches (`suggestByName`): your activities first, then templates no activity has the name of yet.
+  - **Recent chips:** plannable activities ordered by use in plans from four weeks back to a week ahead (`rankByUse`, `recentActivityTypesProvider`), at most eight, under a "Recent" label.
+  - **Activity names are unique** among active activities (trimmed, case-insensitive): `CreateActivityType` and `UpdateActivityType` reject a taken name with `ValidationCode.duplicateActivityName` on `name`. Archived activities don't count. Quick add never installs a template whose name an activity already has.
+  - **Me** shows "Your setup" (Activities, Body measurements); developer tools sit in a separate section that only debug builds show. `TabPlaceholder` was removed.
+- **Context:** A hands-on evaluation found Today and Plan → Day were the same screen with two "+", "Now" was a hidden toggle, time took two dialogs defaulting to 9 AM, chips had no label, and duplicate "Gym"/"Reading" activities could be created.
+- **Consequences:**
+  - No schema change. Existing duplicate names stay as they are; only new creates and renames are checked (A24 handles showing them).
+  - The debug demo data refuses to load when one of its activity names is taken (`DemoDataResult.namesTaken`).
+  - Tests: unique names (repository), time suggestions, suggestions, usage ranking (domain), quick add, time sheet, day screen and template picker (widget). Device integration test updated, not run.
+
+### ADR-040: Any item can be marked done; logging makes it in progress (schema v8)
+- **Status:** Accepted 2026-10-05 (owner chose the "proper fix" for backlog item A10). **Implemented 2026-10-05 (schema v8).** Amends ADR-018 (completion of activity plans) and ADR-035 ("Done = something was logged").
+- **Decision:**
+  - `plans.status = 'completed'` is allowed for activity plans too: schema v8 drops `CHECK (status <> 'completed' OR activity_type_id IS NULL)` (table rebuild, internal IDs kept; triggers on `activity_logs` / `focus_sessions` that read `plans` are dropped and recreated).
+  - Effective status (`Plan.effectiveStatus(hasRecord:, today:, inFocus:)`): a running timer → in progress; stored `completed` → done; otherwise, for an activity item with something logged → **in progress on its day (or later dates), done once its day has passed**; else the stored status. Something logged still wins over skipped/cancelled.
+  - **Mark done** (`MarkItemDone`) works for any item: an activity item with nothing logged first gets a log at its planned time and length; then the plan is stored as completed. It returns the log it created, so Undo can remove it.
+  - **Finishing the timer** on an item stores it as completed.
+  - **Reopen** ("Mark as not done") sets any item marked done back to planned. Something logged on a past day counts as done by itself and isn't toggled.
+  - `ValidationCode.onlyTasksCanBeCompleted` is removed.
+- **Context:** Logging the first exercise of a workout marked the whole session done (evaluation finding A10).
+- **Consequences:**
+  - The item screen keeps **Mark done** at the bottom until it's done ("Logged so far. Mark it done when you've finished." once something is logged). The row check toggles done/not done for every item (A17).
+  - "N done" on a day counts items marked done (or past days' logged items), not every item with a log.
+  - Migration test v7→v8 keeps plans, their logs, series links and sort order, and checks the rebuilt table's triggers still guard it.
 
 ## Pending decisions
 

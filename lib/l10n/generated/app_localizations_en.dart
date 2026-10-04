@@ -31,10 +31,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get insightsPlaceholder => 'Your progress over time will appear here.';
 
   @override
-  String get mePlaceholder =>
-      'Body measurements and preferences will appear here.';
-
-  @override
   String get onboardingTitle => 'Welcome';
 
   @override
@@ -325,12 +321,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get durationLabel => 'Duration';
 
   @override
-  String get hoursShort => 'h';
-
-  @override
-  String get minutesShort => 'min';
-
-  @override
   String get notesLabel => 'Notes';
 
   @override
@@ -444,6 +434,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get validationNameTooLong => 'That name is too long.';
+
+  @override
+  String get validationDuplicateActivityName =>
+      'You already have an activity with this name.';
 
   @override
   String get validationDuplicateFieldName =>
@@ -571,9 +565,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get planNextWeek => 'Next week';
-
-  @override
-  String get planPlannedSection => 'Planned';
 
   @override
   String get planPlannedEmpty => 'Nothing planned for this day.';
@@ -718,7 +709,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planAddAction => 'Add plan';
 
   @override
-  String get planAddTime => 'Time';
+  String get planAddTime => 'Set a time';
 
   @override
   String get planQuickAddHint => 'Add something to this day';
@@ -818,21 +809,17 @@ class AppLocalizationsEn extends AppLocalizations {
       'This plan already has a record, so its activity can\'t change.';
 
   @override
-  String get validationOnlyTasksCanBeCompleted =>
-      'Record this activity to complete the plan.';
-
-  @override
   String get validationPlanRecordMismatch =>
       'This plan is for a different activity.';
 
   @override
   String planRecordedDuration(String duration) {
-    return 'Done · $duration';
+    return '$duration';
   }
 
   @override
   String planRecordedOfPlanned(String actual, String planned) {
-    return 'Done · $actual of $planned';
+    return '$actual of $planned';
   }
 
   @override
@@ -852,18 +839,34 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String planActivityAdded(String name) {
-    return 'Added the $name activity, so you can record it from the plan';
-  }
-
-  @override
   String get planPickStart => 'From';
 
   @override
   String get planPickEnd => 'To (optional)';
 
   @override
-  String get templateGymFocus => 'Focus';
+  String get templateGymFocus => 'Workout';
+
+  @override
+  String get templateGymPush => 'Push';
+
+  @override
+  String get templateGymPull => 'Pull';
+
+  @override
+  String get templateGymLegs => 'Legs';
+
+  @override
+  String get templateGymUpperBody => 'Upper body';
+
+  @override
+  String get templateGymLowerBody => 'Lower body';
+
+  @override
+  String get templateGymFullBody => 'Full body';
+
+  @override
+  String get templateGymCardio => 'Cardio';
 
   @override
   String get focusStart => 'Start focus';
@@ -1132,11 +1135,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String insightPersonalBest(String value, String date) {
-    return 'Personal best $value · $date';
-  }
-
-  @override
   String insightPlannedVsActualSummary(String actual, String planned) {
     return 'Recorded $actual of $planned planned';
   }
@@ -1220,9 +1218,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get planNow => 'Now';
-
-  @override
   String get todayEmptyMessageItems =>
       'Add what you\'re doing or planning. Open it later to log how it went.';
 
@@ -1259,7 +1254,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shapeChecklistDone => 'Done';
 
   @override
-  String get addGroupDetail => 'Add detail';
+  String addGroupDetailTo(String item) {
+    return 'Add a detail to each $item';
+  }
+
+  @override
+  String groupListOptions(String item) {
+    return '$item list options';
+  }
 
   @override
   String get itemEditFields => 'Edit what\'s logged';
@@ -1320,9 +1322,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actionOpen => 'Open';
 
   @override
-  String get planViewDay => 'Day';
-
-  @override
   String get planViewWeek => 'Week';
 
   @override
@@ -1376,4 +1375,316 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get insightOpenActivityHint => 'see its progress';
+
+  @override
+  String get actionDone => 'Done';
+
+  @override
+  String get planStartNow => 'Start now';
+
+  @override
+  String get planRecent => 'Recent';
+
+  @override
+  String get planSuggestionYours => 'Your activity';
+
+  @override
+  String planSuggestionReadyMade(String fields) {
+    return 'Ready-made · $fields';
+  }
+
+  @override
+  String get planTimeSheetTitle => 'When?';
+
+  @override
+  String get planTimeStarts => 'Starts';
+
+  @override
+  String get planTimeLength => 'How long';
+
+  @override
+  String get planTimeOther => 'Other time…';
+
+  @override
+  String get planTimeNoEnd => 'No end';
+
+  @override
+  String planTimeMinutes(int count) {
+    return '$count min';
+  }
+
+  @override
+  String planTimeHours(int count) {
+    return '$count h';
+  }
+
+  @override
+  String get planTimeUntil => 'Until…';
+
+  @override
+  String planTimeUntilTime(String time) {
+    return 'Until $time';
+  }
+
+  @override
+  String get planTimeRemove => 'No time';
+
+  @override
+  String get dayPreviousDay => 'Previous day';
+
+  @override
+  String get dayNextDay => 'Next day';
+
+  @override
+  String get meSectionSetup => 'Your setup';
+
+  @override
+  String get durationHoursLabel => 'Hours';
+
+  @override
+  String get durationMinutesLabel => 'Minutes';
+
+  @override
+  String get itemMarkDoneHint =>
+      'Logged so far. Mark it done when you’ve finished.';
+
+  @override
+  String get planAnytime => 'Anytime';
+
+  @override
+  String get insightPeriodTotal => 'total this period';
+
+  @override
+  String get insightPeriodAverage => 'average this period';
+
+  @override
+  String get insightPeriodBest => 'best this period';
+
+  @override
+  String get insightPeriodLowest => 'lowest this period';
+
+  @override
+  String get insightPeriodCount => 'times this period';
+
+  @override
+  String insightAllTimeBest(String value, String date) {
+    return 'All-time best $value · $date';
+  }
+
+  @override
+  String insightBestDay(String value, String date) {
+    return 'Best day $value · $date';
+  }
+
+  @override
+  String insightBestItem(String item, String value, String date) {
+    return 'Best $item $value · $date';
+  }
+
+  @override
+  String insightPeriod(String from, String to) {
+    return '$from – $to';
+  }
+
+  @override
+  String get insightDuplicateName =>
+      'Another activity has this name. Rename one in Me → Activities.';
+
+  @override
+  String get activityIconBarbell => 'Weights';
+
+  @override
+  String get activityIconBookOpen => 'Book';
+
+  @override
+  String get activityIconBriefcase => 'Briefcase';
+
+  @override
+  String get activityIconPersonSimpleWalk => 'Walking';
+
+  @override
+  String get activityIconPersonSimpleRun => 'Running';
+
+  @override
+  String get activityIconBicycle => 'Cycling';
+
+  @override
+  String get activityIconSwimmingPool => 'Swimming';
+
+  @override
+  String get activityIconFlowerLotus => 'Meditation';
+
+  @override
+  String get activityIconUsersThree => 'People';
+
+  @override
+  String get activityIconPencilSimple => 'Writing';
+
+  @override
+  String get activityIconCode => 'Coding';
+
+  @override
+  String get activityIconCookingPot => 'Cooking';
+
+  @override
+  String get activityIconTranslate => 'Languages';
+
+  @override
+  String get activityIconGraduationCap => 'Studying';
+
+  @override
+  String get activityIconBrain => 'Thinking';
+
+  @override
+  String get activityIconMusicNotes => 'Music';
+
+  @override
+  String get activityIconGuitar => 'Guitar';
+
+  @override
+  String get activityIconMicrophone => 'Microphone';
+
+  @override
+  String get activityIconPaintBrush => 'Painting';
+
+  @override
+  String get activityIconCamera => 'Photography';
+
+  @override
+  String get activityIconGameController => 'Games';
+
+  @override
+  String get activityIconMoon => 'Night';
+
+  @override
+  String get activityIconBed => 'Sleep';
+
+  @override
+  String get activityIconCoffee => 'Coffee';
+
+  @override
+  String get activityIconForkKnife => 'Meal';
+
+  @override
+  String get activityIconDrop => 'Water';
+
+  @override
+  String get activityIconPill => 'Medicine';
+
+  @override
+  String get activityIconFirstAid => 'First aid';
+
+  @override
+  String get activityIconTooth => 'Teeth';
+
+  @override
+  String get activityIconHeart => 'Heart';
+
+  @override
+  String get activityIconLeaf => 'Nature';
+
+  @override
+  String get activityIconPlant => 'Plants';
+
+  @override
+  String get activityIconDog => 'Pets';
+
+  @override
+  String get activityIconBaby => 'Baby';
+
+  @override
+  String get activityIconHouse => 'Home';
+
+  @override
+  String get activityIconBroom => 'Cleaning';
+
+  @override
+  String get activityIconWrench => 'Repairs';
+
+  @override
+  String get activityIconShoppingCart => 'Shopping';
+
+  @override
+  String get activityIconWallet => 'Money';
+
+  @override
+  String get activityIconEnvelope => 'Email';
+
+  @override
+  String get activityIconPhone => 'Phone call';
+
+  @override
+  String get activityIconChatCircle => 'Chat';
+
+  @override
+  String get activityIconLaptop => 'Computer';
+
+  @override
+  String get activityIconPresentationChart => 'Presentation';
+
+  @override
+  String get activityIconNotebook => 'Notebook';
+
+  @override
+  String get activityIconTarget => 'Goal';
+
+  @override
+  String get activityIconLightbulb => 'Idea';
+
+  @override
+  String get activityIconTimer => 'Timer';
+
+  @override
+  String get activityIconMountains => 'Hiking';
+
+  @override
+  String get activityIconBasketball => 'Basketball';
+
+  @override
+  String get activityIconSoccerBall => 'Football';
+
+  @override
+  String get activityIconTennisBall => 'Tennis';
+
+  @override
+  String get activityIconYinYang => 'Balance';
+
+  @override
+  String get activityIconGlobe => 'Travel';
+
+  @override
+  String get activityIconAirplane => 'Flight';
+
+  @override
+  String get activityIconCar => 'Driving';
+
+  @override
+  String get activityIconSparkle => 'Sparkle';
+
+  @override
+  String get activityIconStar => 'Star';
+
+  @override
+  String get activityColorSky => 'Sky';
+
+  @override
+  String get activityColorLilac => 'Lilac';
+
+  @override
+  String get activityColorRose => 'Rose';
+
+  @override
+  String get activityColorTeal => 'Teal';
+
+  @override
+  String get activityColorCoral => 'Coral';
+
+  @override
+  String get activityColorSlate => 'Slate';
+
+  @override
+  String get builderMoreIcons => 'More icons';
+
+  @override
+  String get builderFewerIcons => 'Fewer icons';
 }

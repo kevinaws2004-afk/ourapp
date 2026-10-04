@@ -21,10 +21,6 @@ abstract final class ActivityPalette {
       brightness == Brightness.light ? _light[key]! : _dark[key]!;
 
   static const Map<ActivityColorKey, ActivityColors> _light = {
-    ActivityColorKey.sage: ActivityColors(
-      solid: Color(0xFF5E8B6B),
-      soft: Color(0xFFE3EEE5),
-    ),
     ActivityColorKey.sky: ActivityColors(
       solid: Color(0xFF4A78A8),
       soft: Color(0xFFE1ECF7),
@@ -32,10 +28,6 @@ abstract final class ActivityPalette {
     ActivityColorKey.lilac: ActivityColors(
       solid: Color(0xFF7A62B5),
       soft: Color(0xFFECE6F8),
-    ),
-    ActivityColorKey.apricot: ActivityColors(
-      solid: Color(0xFFB8642F),
-      soft: Color(0xFFFBE9DC),
     ),
     ActivityColorKey.rose: ActivityColors(
       solid: Color(0xFFB04E62),
@@ -53,17 +45,9 @@ abstract final class ActivityPalette {
       solid: Color(0xFF5D6A80),
       soft: Color(0xFFE6E9EF),
     ),
-    ActivityColorKey.moss: ActivityColors(
-      solid: Color(0xFF6B7A2E),
-      soft: Color(0xFFEDF0DA),
-    ),
   };
 
   static const Map<ActivityColorKey, ActivityColors> _dark = {
-    ActivityColorKey.sage: ActivityColors(
-      solid: Color(0xFF8FC29D),
-      soft: Color(0xFF1E2B23),
-    ),
     ActivityColorKey.sky: ActivityColors(
       solid: Color(0xFF8DB6E3),
       soft: Color(0xFF1B2533),
@@ -71,10 +55,6 @@ abstract final class ActivityPalette {
     ActivityColorKey.lilac: ActivityColors(
       solid: Color(0xFFB9A6EC),
       soft: Color(0xFF251F35),
-    ),
-    ActivityColorKey.apricot: ActivityColors(
-      solid: Color(0xFFF2A877),
-      soft: Color(0xFF33231A),
     ),
     ActivityColorKey.rose: ActivityColors(
       solid: Color(0xFFEE9AAA),
@@ -91,10 +71,6 @@ abstract final class ActivityPalette {
     ActivityColorKey.slate: ActivityColors(
       solid: Color(0xFFA8B3C7),
       soft: Color(0xFF20242C),
-    ),
-    ActivityColorKey.moss: ActivityColors(
-      solid: Color(0xFFB8C87A),
-      soft: Color(0xFF262A17),
     ),
   };
 }

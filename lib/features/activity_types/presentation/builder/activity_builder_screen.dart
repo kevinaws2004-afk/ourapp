@@ -16,12 +16,14 @@ import '../../../../shared/widgets/activity_badge.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/section_header.dart';
 import '../../../../shared/widgets/state_views.dart';
+import '../../../../shared/widgets/discard_guard.dart';
 import '../../../activity_logs/domain/field_value.dart';
 import '../../../activity_logs/presentation/form/activity_log_form.dart';
 import '../../domain/activity_ids.dart';
 import '../../domain/activity_type.dart';
 import '../../domain/activity_type_definition.dart';
 import '../field_type_copy.dart';
+import '../activity_appearance_copy.dart';
 import 'activity_builder_notifier.dart';
 import 'field_editor_sheet.dart';
 import 'field_type_picker_sheet.dart';
@@ -48,7 +50,7 @@ class ActivityBuilderScreen extends ConsumerWidget {
       canPop: !dirty,
       onPopInvokedWithResult: (didPop, _) async {
         if (didPop) return;
-        if (await _confirmDiscard(context) && context.mounted) {
+        if (await confirmDiscard(context) && context.mounted) {
           Navigator.of(context).pop();
         }
       },
@@ -66,28 +68,6 @@ class ActivityBuilderScreen extends ConsumerWidget {
       ),
     );
   }
-}
-
-Future<bool> _confirmDiscard(BuildContext context) async {
-  final l10n = AppLocalizations.of(context);
-  final result = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text(l10n.discardChangesTitle),
-      content: Text(l10n.discardChangesMessage),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context, false),
-          child: Text(l10n.actionKeepEditing),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context, true),
-          child: Text(l10n.actionDiscard),
-        ),
-      ],
-    ),
-  );
-  return result ?? false;
 }
 
 class _BuilderBody extends ConsumerWidget {
@@ -146,17 +126,7 @@ class _BuilderBody extends ConsumerWidget {
               ),
               onChanged: notifier.setDescription,
             ),
-            SectionHeader(title: l10n.iconLabel),
-            _IconPicker(
-              selected: state.iconId,
-              colorKey: state.colorKey,
-              onSelected: notifier.setIcon,
-            ),
-            SectionHeader(title: l10n.colorLabel),
-            _ColorPicker(
-              selected: state.colorKey,
-              onSelected: notifier.setColor,
-            ),
+            // What you record comes first; how it looks after (A27).
             SectionHeader(
               title: l10n.fieldsSectionTitle,
               subtitle: l10n.fieldsSectionHint,
@@ -169,6 +139,17 @@ class _BuilderBody extends ConsumerWidget {
                 label: Text(l10n.addField),
                 onPressed: () => _addField(context, notifier),
               ),
+            ),
+            SectionHeader(title: l10n.iconLabel),
+            _IconPicker(
+              selected: state.iconId,
+              colorKey: state.colorKey,
+              onSelected: notifier.setIcon,
+            ),
+            SectionHeader(title: l10n.colorLabel),
+            _ColorPicker(
+              selected: state.colorKey,
+              onSelected: notifier.setColor,
             ),
             SectionHeader(title: l10n.optionsSectionTitle),
             SwitchListTile(
@@ -312,52 +293,83 @@ class _FieldList extends ConsumerWidget {
   }
 }
 
-class _IconPicker extends StatelessWidget {
+/// A dozen suggested icons, plus the chosen one, with "More icons" for the
+/// rest (A27). Each reads its name to a screen reader (A25).
+class _IconPicker extends StatefulWidget {
   const _IconPicker({
     required this.selected,
     required this.colorKey,
     required this.onSelected,
   });
 
+  /// How many icons show before "More icons".
+  static const suggested = 12;
+
   final String selected;
   final String colorKey;
   final ValueChanged<String> onSelected;
 
   @override
+  State<_IconPicker> createState() => _IconPickerState();
+}
+
+class _IconPickerState extends State<_IconPicker> {
+  bool _all = false;
+
+  @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final colors = context.tokens.activity(
-      ActivityColorKey.fromName(colorKey) ?? ActivityColorKey.slate,
+      ActivityColorKey.fromName(widget.colorKey) ?? ActivityColorKey.slate,
     );
-    return Wrap(
-      spacing: AppSpacing.xs,
-      runSpacing: AppSpacing.xs,
+    final first = ActivityIconIds.all.take(_IconPicker.suggested).toList();
+    final shown = _all
+        ? ActivityIconIds.all
+        : [...first, if (!first.contains(widget.selected)) widget.selected];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (final id in ActivityIconIds.all)
-          InkWell(
-            borderRadius: AppRadius.mdAll,
-            onTap: () => onSelected(id),
-            child: Container(
-              width: AppSizes.touchTarget,
-              height: AppSizes.touchTarget,
-              decoration: BoxDecoration(
-                color: id == selected ? colors.soft : null,
-                borderRadius: AppRadius.mdAll,
-                border: id == selected
-                    ? Border.all(
-                        color: colors.solid,
-                        width: AppSizes.selectionRing,
-                      )
-                    : null,
+        Wrap(
+          spacing: AppSpacing.xs,
+          runSpacing: AppSpacing.xs,
+          children: [
+            for (final id in shown)
+              Semantics(
+                label: activityIconLabel(l10n, id),
+                selected: id == widget.selected,
+                button: true,
+                excludeSemantics: true,
+                child: InkWell(
+                  borderRadius: AppRadius.mdAll,
+                  onTap: () => widget.onSelected(id),
+                  child: Container(
+                    width: AppSizes.touchTarget,
+                    height: AppSizes.touchTarget,
+                    decoration: BoxDecoration(
+                      color: id == widget.selected ? colors.soft : null,
+                      borderRadius: AppRadius.mdAll,
+                      border: id == widget.selected
+                          ? Border.all(
+                              color: colors.solid,
+                              width: AppSizes.selectionRing,
+                            )
+                          : null,
+                    ),
+                    child: Icon(
+                      ActivityIconRegistry.resolve(id),
+                      color: id == widget.selected
+                          ? colors.solid
+                          : context.colors.textSecondary,
+                    ),
+                  ),
+                ),
               ),
-              child: Icon(
-                ActivityIconRegistry.resolve(id),
-                semanticLabel: id,
-                color: id == selected
-                    ? colors.solid
-                    : context.colors.textSecondary,
-              ),
-            ),
-          ),
+          ],
+        ),
+        TextButton(
+          onPressed: () => setState(() => _all = !_all),
+          child: Text(_all ? l10n.builderFewerIcons : l10n.builderMoreIcons),
+        ),
       ],
     );
   }
@@ -377,7 +389,7 @@ class _ColorPicker extends StatelessWidget {
       children: [
         for (final key in ActivityColorKey.values)
           Semantics(
-            label: key.name,
+            label: activityColorLabel(AppLocalizations.of(context), key),
             selected: key.name == selected,
             button: true,
             child: InkWell(

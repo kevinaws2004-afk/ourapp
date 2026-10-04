@@ -1,4 +1,5 @@
 import '../../../core/async/combine_latest.dart';
+import '../../../core/time/clock.dart';
 import '../../../core/time/local_date.dart';
 import '../../activity_logs/domain/activity_log.dart';
 import '../../activity_logs/domain/activity_log_repository.dart';
@@ -118,13 +119,22 @@ class WatchDayOverview {
   const WatchDayOverview(
     this._plans,
     this._logs,
-    this._types, {
+    this._types,
+    this._clock, {
     this.planInFocus,
   });
 
   final PlanRepository _plans;
   final ActivityLogRepository _logs;
   final ActivityTypeRepository _types;
+
+  /// For "today" in [Plan.effectiveStatus] (ADR-040).
+  final Clock _clock;
+
+  LocalDate get _today {
+    final now = _clock.nowUtc();
+    return LocalDate.ofInstant(now, _clock.offsetAt(now));
+  }
 
   /// The plan an active focus session is doing, if any (ADR-031).
   final Stream<PlanId?> Function()? planInFocus;
@@ -146,6 +156,7 @@ class WatchDayOverview {
                   records: item.records,
                   status: item.plan.effectiveStatus(
                     hasRecord: item.records.isNotEmpty,
+                    today: _today,
                     inFocus: item.plan.id == inFocus,
                   ),
                 ),
@@ -190,6 +201,7 @@ class WatchDayOverview {
               records: recordsByPlan[plan.id] ?? const [],
               status: plan.effectiveStatus(
                 hasRecord: recordsByPlan.containsKey(plan.id),
+                today: _today,
               ),
             ),
         ],

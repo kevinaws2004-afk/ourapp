@@ -136,12 +136,6 @@ abstract class AppLocalizations {
   /// **'Your progress over time will appear here.'**
   String get insightsPlaceholder;
 
-  /// Placeholder message on the Me tab until the feature is built.
-  ///
-  /// In en, this message translates to:
-  /// **'Body measurements and preferences will appear here.'**
-  String get mePlaceholder;
-
   /// Title of the first-run screen (placeholder for the full onboarding).
   ///
   /// In en, this message translates to:
@@ -670,18 +664,6 @@ abstract class AppLocalizations {
   /// **'Duration'**
   String get durationLabel;
 
-  /// Abbreviation for hours in duration inputs.
-  ///
-  /// In en, this message translates to:
-  /// **'h'**
-  String get hoursShort;
-
-  /// Abbreviation for minutes in duration inputs.
-  ///
-  /// In en, this message translates to:
-  /// **'min'**
-  String get minutesShort;
-
   /// Log notes label.
   ///
   /// In en, this message translates to:
@@ -897,6 +879,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'That name is too long.'**
   String get validationNameTooLong;
+
+  /// Validation message when creating or renaming an activity to a name another activity already uses.
+  ///
+  /// In en, this message translates to:
+  /// **'You already have an activity with this name.'**
+  String get validationDuplicateActivityName;
 
   /// Validation message.
   ///
@@ -1131,12 +1119,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Next week'**
   String get planNextWeek;
-
-  /// Section title for a date's plans.
-  ///
-  /// In en, this message translates to:
-  /// **'Planned'**
-  String get planPlannedSection;
 
   /// Shown when a date has no plans.
   ///
@@ -1396,10 +1378,10 @@ abstract class AppLocalizations {
   /// **'Add plan'**
   String get planAddAction;
 
-  /// Plan tab quick add: button choosing an optional time.
+  /// Quick add: opens the sheet choosing when it happens.
   ///
   /// In en, this message translates to:
-  /// **'Time'**
+  /// **'Set a time'**
   String get planAddTime;
 
   /// Plan tab quick add: hint in the title field.
@@ -1591,25 +1573,19 @@ abstract class AppLocalizations {
   /// Validation message.
   ///
   /// In en, this message translates to:
-  /// **'Record this activity to complete the plan.'**
-  String get validationOnlyTasksCanBeCompleted;
-
-  /// Validation message.
-  ///
-  /// In en, this message translates to:
   /// **'This plan is for a different activity.'**
   String get validationPlanRecordMismatch;
 
   /// Outcome of a recorded plan without a planned length.
   ///
   /// In en, this message translates to:
-  /// **'Done · {duration}'**
+  /// **'{duration}'**
   String planRecordedDuration(String duration);
 
   /// Planned vs actual: actual duration of the planned duration.
   ///
   /// In en, this message translates to:
-  /// **'Done · {actual} of {planned}'**
+  /// **'{actual} of {planned}'**
   String planRecordedOfPlanned(String actual, String planned);
 
   /// A planned time range.
@@ -1636,12 +1612,6 @@ abstract class AppLocalizations {
   /// **'open {title} to log it'**
   String planRecordHint(String title);
 
-  /// Snackbar when quick add installed a starter template matching the typed name.
-  ///
-  /// In en, this message translates to:
-  /// **'Added the {name} activity, so you can record it from the plan'**
-  String planActivityAdded(String name);
-
   /// Time picker title: planned start time.
   ///
   /// In en, this message translates to:
@@ -1657,8 +1627,50 @@ abstract class AppLocalizations {
   /// Starter template content (becomes editable user data once added). What a gym session trained, e.g. Chest.
   ///
   /// In en, this message translates to:
-  /// **'Focus'**
+  /// **'Workout'**
   String get templateGymFocus;
+
+  /// Gym template: an option of the Workout choice (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Push'**
+  String get templateGymPush;
+
+  /// Gym template: an option of the Workout choice (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Pull'**
+  String get templateGymPull;
+
+  /// Gym template: an option of the Workout choice (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Legs'**
+  String get templateGymLegs;
+
+  /// Gym template: an option of the Workout choice (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Upper body'**
+  String get templateGymUpperBody;
+
+  /// Gym template: an option of the Workout choice (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Lower body'**
+  String get templateGymLowerBody;
+
+  /// Gym template: an option of the Workout choice (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Full body'**
+  String get templateGymFullBody;
+
+  /// Gym template: an option of the Workout choice (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Cardio'**
+  String get templateGymCardio;
 
   /// Starts a focus timer for the activity.
   ///
@@ -2170,12 +2182,6 @@ abstract class AppLocalizations {
   /// **'{change} vs previous period'**
   String insightChange(String change);
 
-  /// All-time best value and its date.
-  ///
-  /// In en, this message translates to:
-  /// **'Personal best {value} · {date}'**
-  String insightPersonalBest(String value, String date);
-
   /// Planned vs actual totals.
   ///
   /// In en, this message translates to:
@@ -2296,12 +2302,6 @@ abstract class AppLocalizations {
   /// **'{count} done'**
   String todayDoneCount(int count);
 
-  /// Chip in quick add: it's happening now; opens the item to log it.
-  ///
-  /// In en, this message translates to:
-  /// **'Now'**
-  String get planNow;
-
   /// Today empty state message.
   ///
   /// In en, this message translates to:
@@ -2368,11 +2368,17 @@ abstract class AppLocalizations {
   /// **'Done'**
   String get shapeChecklistDone;
 
-  /// Button inside a list in an item: add another detail to each row.
+  /// Menu item inside a list in an item: add another detail to every row (e.g. "Add a detail to each Set").
   ///
   /// In en, this message translates to:
-  /// **'Add detail'**
-  String get addGroupDetail;
+  /// **'Add a detail to each {item}'**
+  String addGroupDetailTo(String item);
+
+  /// Tooltip of the menu on a list in an item.
+  ///
+  /// In en, this message translates to:
+  /// **'{item} list options'**
+  String groupListOptions(String item);
 
   /// Tooltip: rename, reorder or remove what this item logs.
   ///
@@ -2467,12 +2473,6 @@ abstract class AppLocalizations {
   /// Plan tab view switch.
   ///
   /// In en, this message translates to:
-  /// **'Day'**
-  String get planViewDay;
-
-  /// Plan tab view switch.
-  ///
-  /// In en, this message translates to:
   /// **'Week'**
   String get planViewWeek;
 
@@ -2547,6 +2547,594 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'see its progress'**
   String get insightOpenActivityHint;
+
+  /// Generic confirm button that closes a sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get actionDone;
+
+  /// Quick add (today): adds what's typed at the current time and opens it to log it.
+  ///
+  /// In en, this message translates to:
+  /// **'Start now'**
+  String get planStartNow;
+
+  /// Quick add: label above the most-used activities.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent'**
+  String get planRecent;
+
+  /// Quick add suggestion subtitle for an existing activity.
+  ///
+  /// In en, this message translates to:
+  /// **'Your activity'**
+  String get planSuggestionYours;
+
+  /// Quick add suggestion subtitle for a template, with its field names.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready-made · {fields}'**
+  String planSuggestionReadyMade(String fields);
+
+  /// Title of the time sheet when planning.
+  ///
+  /// In en, this message translates to:
+  /// **'When?'**
+  String get planTimeSheetTitle;
+
+  /// Time sheet: label above the start time choices.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts'**
+  String get planTimeStarts;
+
+  /// Time sheet: label above the length choices.
+  ///
+  /// In en, this message translates to:
+  /// **'How long'**
+  String get planTimeLength;
+
+  /// Time sheet: picks any start time.
+  ///
+  /// In en, this message translates to:
+  /// **'Other time…'**
+  String get planTimeOther;
+
+  /// Time sheet: no end time.
+  ///
+  /// In en, this message translates to:
+  /// **'No end'**
+  String get planTimeNoEnd;
+
+  /// Time sheet length chip in minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} min'**
+  String planTimeMinutes(int count);
+
+  /// Time sheet length chip in hours.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} h'**
+  String planTimeHours(int count);
+
+  /// Time sheet: picks an end time.
+  ///
+  /// In en, this message translates to:
+  /// **'Until…'**
+  String get planTimeUntil;
+
+  /// Time sheet: the chosen end time.
+  ///
+  /// In en, this message translates to:
+  /// **'Until {time}'**
+  String planTimeUntilTime(String time);
+
+  /// Time sheet: removes the chosen time.
+  ///
+  /// In en, this message translates to:
+  /// **'No time'**
+  String get planTimeRemove;
+
+  /// Day screen: goes to the day before.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous day'**
+  String get dayPreviousDay;
+
+  /// Day screen: goes to the day after.
+  ///
+  /// In en, this message translates to:
+  /// **'Next day'**
+  String get dayNextDay;
+
+  /// Me tab: section with Activities and Body measurements.
+  ///
+  /// In en, this message translates to:
+  /// **'Your setup'**
+  String get meSectionSetup;
+
+  /// Label of the hours box in a duration input.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours'**
+  String get durationHoursLabel;
+
+  /// Label of the minutes box in a duration input.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get durationMinutesLabel;
+
+  /// Item screen: line above Mark done when something is logged but the item is not finished yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Logged so far. Mark it done when you’ve finished.'**
+  String get itemMarkDoneHint;
+
+  /// Heading above a day's items that have no time.
+  ///
+  /// In en, this message translates to:
+  /// **'Anytime'**
+  String get planAnytime;
+
+  /// Chart headline label: the sum over the period shown.
+  ///
+  /// In en, this message translates to:
+  /// **'total this period'**
+  String get insightPeriodTotal;
+
+  /// Chart headline label.
+  ///
+  /// In en, this message translates to:
+  /// **'average this period'**
+  String get insightPeriodAverage;
+
+  /// Chart headline label: the highest value in the period shown.
+  ///
+  /// In en, this message translates to:
+  /// **'best this period'**
+  String get insightPeriodBest;
+
+  /// Chart headline label.
+  ///
+  /// In en, this message translates to:
+  /// **'lowest this period'**
+  String get insightPeriodLowest;
+
+  /// Chart headline label: how many in the period shown.
+  ///
+  /// In en, this message translates to:
+  /// **'times this period'**
+  String get insightPeriodCount;
+
+  /// A chart's highest value ever, with its date.
+  ///
+  /// In en, this message translates to:
+  /// **'All-time best {value} · {date}'**
+  String insightAllTimeBest(String value, String date);
+
+  /// A volume chart: the highest total on one day ever.
+  ///
+  /// In en, this message translates to:
+  /// **'Best day {value} · {date}'**
+  String insightBestDay(String value, String date);
+
+  /// A volume chart: the highest single row ever (e.g. "Best Set 480 kg").
+  ///
+  /// In en, this message translates to:
+  /// **'Best {item} {value} · {date}'**
+  String insightBestItem(String item, String value, String date);
+
+  /// The dates the Insights numbers cover.
+  ///
+  /// In en, this message translates to:
+  /// **'{from} – {to}'**
+  String insightPeriod(String from, String to);
+
+  /// Insights: shown under an activity whose name another activity also uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Another activity has this name. Rename one in Me → Activities.'**
+  String get insightDuplicateName;
+
+  /// Screen-reader name of the "barbell" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Weights'**
+  String get activityIconBarbell;
+
+  /// Screen-reader name of the "book-open" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Book'**
+  String get activityIconBookOpen;
+
+  /// Screen-reader name of the "briefcase" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Briefcase'**
+  String get activityIconBriefcase;
+
+  /// Screen-reader name of the "person-simple-walk" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Walking'**
+  String get activityIconPersonSimpleWalk;
+
+  /// Screen-reader name of the "person-simple-run" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Running'**
+  String get activityIconPersonSimpleRun;
+
+  /// Screen-reader name of the "bicycle" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Cycling'**
+  String get activityIconBicycle;
+
+  /// Screen-reader name of the "swimming-pool" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Swimming'**
+  String get activityIconSwimmingPool;
+
+  /// Screen-reader name of the "flower-lotus" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Meditation'**
+  String get activityIconFlowerLotus;
+
+  /// Screen-reader name of the "users-three" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'People'**
+  String get activityIconUsersThree;
+
+  /// Screen-reader name of the "pencil-simple" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Writing'**
+  String get activityIconPencilSimple;
+
+  /// Screen-reader name of the "code" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coding'**
+  String get activityIconCode;
+
+  /// Screen-reader name of the "cooking-pot" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Cooking'**
+  String get activityIconCookingPot;
+
+  /// Screen-reader name of the "translate" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Languages'**
+  String get activityIconTranslate;
+
+  /// Screen-reader name of the "graduation-cap" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Studying'**
+  String get activityIconGraduationCap;
+
+  /// Screen-reader name of the "brain" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Thinking'**
+  String get activityIconBrain;
+
+  /// Screen-reader name of the "music-notes" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Music'**
+  String get activityIconMusicNotes;
+
+  /// Screen-reader name of the "guitar" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Guitar'**
+  String get activityIconGuitar;
+
+  /// Screen-reader name of the "microphone" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone'**
+  String get activityIconMicrophone;
+
+  /// Screen-reader name of the "paint-brush" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Painting'**
+  String get activityIconPaintBrush;
+
+  /// Screen-reader name of the "camera" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Photography'**
+  String get activityIconCamera;
+
+  /// Screen-reader name of the "game-controller" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Games'**
+  String get activityIconGameController;
+
+  /// Screen-reader name of the "moon" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Night'**
+  String get activityIconMoon;
+
+  /// Screen-reader name of the "bed" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep'**
+  String get activityIconBed;
+
+  /// Screen-reader name of the "coffee" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coffee'**
+  String get activityIconCoffee;
+
+  /// Screen-reader name of the "fork-knife" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal'**
+  String get activityIconForkKnife;
+
+  /// Screen-reader name of the "drop" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Water'**
+  String get activityIconDrop;
+
+  /// Screen-reader name of the "pill" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine'**
+  String get activityIconPill;
+
+  /// Screen-reader name of the "first-aid" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'First aid'**
+  String get activityIconFirstAid;
+
+  /// Screen-reader name of the "tooth" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Teeth'**
+  String get activityIconTooth;
+
+  /// Screen-reader name of the "heart" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Heart'**
+  String get activityIconHeart;
+
+  /// Screen-reader name of the "leaf" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Nature'**
+  String get activityIconLeaf;
+
+  /// Screen-reader name of the "plant" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Plants'**
+  String get activityIconPlant;
+
+  /// Screen-reader name of the "dog" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Pets'**
+  String get activityIconDog;
+
+  /// Screen-reader name of the "baby" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Baby'**
+  String get activityIconBaby;
+
+  /// Screen-reader name of the "house" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get activityIconHouse;
+
+  /// Screen-reader name of the "broom" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleaning'**
+  String get activityIconBroom;
+
+  /// Screen-reader name of the "wrench" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Repairs'**
+  String get activityIconWrench;
+
+  /// Screen-reader name of the "shopping-cart" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping'**
+  String get activityIconShoppingCart;
+
+  /// Screen-reader name of the "wallet" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Money'**
+  String get activityIconWallet;
+
+  /// Screen-reader name of the "envelope" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get activityIconEnvelope;
+
+  /// Screen-reader name of the "phone" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone call'**
+  String get activityIconPhone;
+
+  /// Screen-reader name of the "chat-circle" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat'**
+  String get activityIconChatCircle;
+
+  /// Screen-reader name of the "laptop" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Computer'**
+  String get activityIconLaptop;
+
+  /// Screen-reader name of the "presentation-chart" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Presentation'**
+  String get activityIconPresentationChart;
+
+  /// Screen-reader name of the "notebook" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Notebook'**
+  String get activityIconNotebook;
+
+  /// Screen-reader name of the "target" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal'**
+  String get activityIconTarget;
+
+  /// Screen-reader name of the "lightbulb" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Idea'**
+  String get activityIconLightbulb;
+
+  /// Screen-reader name of the "timer" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer'**
+  String get activityIconTimer;
+
+  /// Screen-reader name of the "mountains" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Hiking'**
+  String get activityIconMountains;
+
+  /// Screen-reader name of the "basketball" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Basketball'**
+  String get activityIconBasketball;
+
+  /// Screen-reader name of the "soccer-ball" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Football'**
+  String get activityIconSoccerBall;
+
+  /// Screen-reader name of the "tennis-ball" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Tennis'**
+  String get activityIconTennisBall;
+
+  /// Screen-reader name of the "yin-yang" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get activityIconYinYang;
+
+  /// Screen-reader name of the "globe" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel'**
+  String get activityIconGlobe;
+
+  /// Screen-reader name of the "airplane" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Flight'**
+  String get activityIconAirplane;
+
+  /// Screen-reader name of the "car" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Driving'**
+  String get activityIconCar;
+
+  /// Screen-reader name of the "sparkle" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Sparkle'**
+  String get activityIconSparkle;
+
+  /// Screen-reader name of the "star" activity icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Star'**
+  String get activityIconStar;
+
+  /// Screen-reader name of an activity color.
+  ///
+  /// In en, this message translates to:
+  /// **'Sky'**
+  String get activityColorSky;
+
+  /// Screen-reader name of an activity color.
+  ///
+  /// In en, this message translates to:
+  /// **'Lilac'**
+  String get activityColorLilac;
+
+  /// Screen-reader name of an activity color.
+  ///
+  /// In en, this message translates to:
+  /// **'Rose'**
+  String get activityColorRose;
+
+  /// Screen-reader name of an activity color.
+  ///
+  /// In en, this message translates to:
+  /// **'Teal'**
+  String get activityColorTeal;
+
+  /// Screen-reader name of an activity color.
+  ///
+  /// In en, this message translates to:
+  /// **'Coral'**
+  String get activityColorCoral;
+
+  /// Screen-reader name of an activity color.
+  ///
+  /// In en, this message translates to:
+  /// **'Slate'**
+  String get activityColorSlate;
+
+  /// Activity builder: shows every icon.
+  ///
+  /// In en, this message translates to:
+  /// **'More icons'**
+  String get builderMoreIcons;
+
+  /// Activity builder: shows only the suggested icons.
+  ///
+  /// In en, this message translates to:
+  /// **'Fewer icons'**
+  String get builderFewerIcons;
 }
 
 class _AppLocalizationsDelegate

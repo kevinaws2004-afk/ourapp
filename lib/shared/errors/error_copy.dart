@@ -18,6 +18,7 @@ String validationMessage(
   ValidationCode.required => l10n.validationRequired,
   ValidationCode.nameRequired => l10n.validationNameRequired,
   ValidationCode.nameTooLong => l10n.validationNameTooLong,
+  ValidationCode.duplicateActivityName => l10n.validationDuplicateActivityName,
   ValidationCode.duplicateFieldName => l10n.validationDuplicateFieldName,
   ValidationCode.unknownIcon => l10n.validationUnknownIcon,
   ValidationCode.unknownColor => l10n.validationUnknownColor,
@@ -54,8 +55,6 @@ String validationMessage(
     l10n.validationPlannedDurationConflict,
   ValidationCode.activityNotPlannable => l10n.validationActivityNotPlannable,
   ValidationCode.planActivityLocked => l10n.validationPlanActivityLocked,
-  ValidationCode.onlyTasksCanBeCompleted =>
-    l10n.validationOnlyTasksCanBeCompleted,
   ValidationCode.planRecordMismatch => l10n.validationPlanRecordMismatch,
   ValidationCode.invalidRepeat => l10n.validationInvalidRepeat,
   ValidationCode.focusAlreadyActive => l10n.validationFocusAlreadyActive,

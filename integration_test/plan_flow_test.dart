@@ -14,9 +14,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:intl/intl.dart';
 
 /// Plans on a real device (ADR-018, ADR-035): install Reading, plan it for
-/// today on the Plan tab, open it and log into it (saved as you type), and
+/// today from the Plan tab's week (today's day screen), open it and log into it (saved as you type), and
 /// see it done on Today.
 /// In-memory database, so the device's real app data is untouched.
 void main() {
@@ -60,6 +61,11 @@ void main() {
     await tester.pumpAndSettle();
 
     await tapTab('Plan');
+    // The week opens; tapping today's heading opens the day (A1).
+    await tester.tap(
+      find.text(DateFormat.yMMMMEEEEd('en_US').format(DateTime.now())),
+    );
+    await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(ChoiceChip, 'Reading'));
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Add plan'));
@@ -79,11 +85,21 @@ void main() {
     await tester.pump(ItemNotifier.saveDelay * 2);
     await tester.pumpAndSettle();
     expect(find.text('Saved'), findsOneWidget);
+    // Logging doesn't finish it; Mark done at the bottom does (ADR-040).
+    await tester.scrollUntilVisible(
+      find.text('Mark done'),
+      200,
+      scrollable: find.byType(Scrollable).hitTestable().first,
+    );
+    await tester.ensureVisible(find.text('Mark done'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Mark done'));
+    await tester.pumpAndSettle();
     await tester.pageBack();
     await tester.pumpAndSettle();
 
     await tapTab('Today');
-    expect(find.textContaining('Done'), findsWidgets);
+    expect(find.textContaining('1 done'), findsOneWidget);
     expect(find.byIcon(AppIcons.taskDone), findsOneWidget);
 
     await db.close();

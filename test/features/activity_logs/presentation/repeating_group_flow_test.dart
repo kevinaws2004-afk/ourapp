@@ -86,10 +86,14 @@ void main() {
     await closeItem(tester);
 
     expect(find.byType(ActivityTypeScreen), findsOneWidget);
-    expect(find.text('Chest Press'), findsOneWidget);
+    // The summary shows the sets' numbers (A18).
+    expect(
+      find.textContaining('Chest Press 50 kg × 12, 55 kg × 10'),
+      findsOneWidget,
+    );
 
     // Reopening shows every set as recorded.
-    await tester.tap(find.text('Chest Press'));
+    await tester.tap(find.textContaining('Chest Press'));
     await tester.pumpAndSettle();
     expect(find.byType(ItemScreen), findsOneWidget);
     for (final (i, (kg, reps)) in [

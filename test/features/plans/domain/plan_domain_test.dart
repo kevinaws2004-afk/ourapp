@@ -64,34 +64,72 @@ class _DstClock implements Clock {
 }
 
 void main() {
-  group('effective status (ADR-018)', () {
+  group('effective status (ADR-018, ADR-040)', () {
     const reading = ActivityTypeId('reading');
+    final today = _date;
+    final tomorrow = _date.addDays(1);
 
-    test('a record completes an activity plan, even a skipped one', () {
+    test(
+      'logging into an activity item today makes it in progress, not done',
+      () {
+        expect(
+          plan(typeId: reading).effectiveStatus(hasRecord: true, today: today),
+          EffectivePlanStatus.inProgress,
+        );
+        expect(
+          plan(typeId: reading).effectiveStatus(hasRecord: false, today: today),
+          EffectivePlanStatus.planned,
+        );
+      },
+    );
+
+    test('once its day has passed, what was logged counts as done', () {
       expect(
-        plan(typeId: reading).effectiveStatus(hasRecord: true),
+        plan(typeId: reading).effectiveStatus(hasRecord: true, today: tomorrow),
         EffectivePlanStatus.completed,
       );
+    });
+
+    test('marked done is done, logged or not', () {
+      for (final hasRecord in [true, false]) {
+        expect(
+          plan(
+            typeId: reading,
+            status: PlanStatus.completed,
+          ).effectiveStatus(hasRecord: hasRecord, today: today),
+          EffectivePlanStatus.completed,
+        );
+      }
+    });
+
+    test('something logged wins over skipped', () {
       expect(
         plan(
           typeId: reading,
           status: PlanStatus.skipped,
-        ).effectiveStatus(hasRecord: true),
+        ).effectiveStatus(hasRecord: true, today: tomorrow),
         EffectivePlanStatus.completed,
       );
+    });
+
+    test('a running timer shows in progress, even when marked done', () {
       expect(
-        plan(typeId: reading).effectiveStatus(hasRecord: false),
-        EffectivePlanStatus.planned,
+        plan(
+          typeId: reading,
+          status: PlanStatus.completed,
+        ).effectiveStatus(hasRecord: true, today: today, inFocus: true),
+        EffectivePlanStatus.inProgress,
       );
     });
 
     test('a task is completed only by its stored status', () {
       expect(
-        plan(status: PlanStatus.completed).effectiveStatus(hasRecord: false),
+        plan(status: PlanStatus.completed)
+            .effectiveStatus(hasRecord: false, today: today),
         EffectivePlanStatus.completed,
       );
       expect(
-        plan().effectiveStatus(hasRecord: false),
+        plan().effectiveStatus(hasRecord: false, today: today),
         EffectivePlanStatus.planned,
       );
     });

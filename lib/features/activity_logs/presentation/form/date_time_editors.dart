@@ -94,15 +94,47 @@ class DurationInput extends StatefulWidget {
 }
 
 class _DurationInputState extends State<DurationInput> {
-  late final _hours = TextEditingController(text: _initial(60));
-  late final _minutes = TextEditingController(text: _initial(1));
+  late final _hours = TextEditingController();
+  late final _minutes = TextEditingController();
 
-  String _initial(int unitMinutes) {
-    final ms = widget.milliseconds;
-    if (ms == null) return '';
-    final totalMinutes = ms ~/ Duration.millisecondsPerMinute;
-    final value = unitMinutes == 60 ? totalMinutes ~/ 60 : totalMinutes % 60;
-    return value == 0 ? '' : '$value';
+  @override
+  void initState() {
+    super.initState();
+    _show(widget.milliseconds);
+  }
+
+  /// Rounds to whole minutes; anything under a minute shows as 1 (a short
+  /// timed session isn't "nothing").
+  static int? _minutesOf(int? ms) {
+    if (ms == null) return null;
+    final rounded = (ms / Duration.millisecondsPerMinute).round();
+    return ms > 0 && rounded == 0 ? 1 : rounded;
+  }
+
+  void _show(int? ms) {
+    final total = _minutesOf(ms);
+    String part(int value) => total == null || value == 0 ? '' : '$value';
+    _hours.text = part((total ?? 0) ~/ 60);
+    _minutes.text = part((total ?? 0) % 60);
+  }
+
+  int? get _entered {
+    final h = int.tryParse(_hours.text.trim());
+    final m = int.tryParse(_minutes.text.trim());
+    if (h == null && m == null) return null;
+    return ((h ?? 0) * 60 + (m ?? 0)) * Duration.millisecondsPerMinute;
+  }
+
+  /// A new value from outside (e.g. a finished timer, A11) replaces what's
+  /// shown, unless it's what was just typed.
+  @override
+  void didUpdateWidget(DurationInput old) {
+    super.didUpdateWidget(old);
+    final incoming = widget.milliseconds;
+    if (incoming != old.milliseconds &&
+        _minutesOf(incoming) != _minutesOf(_entered)) {
+      _show(incoming);
+    }
   }
 
   @override
@@ -112,35 +144,26 @@ class _DurationInputState extends State<DurationInput> {
     super.dispose();
   }
 
-  void _emit() {
-    final h = int.tryParse(_hours.text.trim());
-    final m = int.tryParse(_minutes.text.trim());
-    if (h == null && m == null) {
-      widget.onChanged(null);
-      return;
-    }
-    widget.onChanged(
-      ((h ?? 0) * 60 + (m ?? 0)) * Duration.millisecondsPerMinute,
-    );
-  }
+  void _emit() => widget.onChanged(_entered);
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    Widget box(TextEditingController controller, String suffix) => SizedBox(
+    // Labeled, so empty boxes still say what they are (A11).
+    Widget box(TextEditingController controller, String label) => SizedBox(
       width: AppSizes.durationBox,
       child: TextField(
         controller: controller,
         keyboardType: TextInputType.number,
-        decoration: InputDecoration(suffixText: suffix),
+        decoration: InputDecoration(labelText: label, hintText: '0'),
         onChanged: (_) => _emit(),
       ),
     );
     return Row(
       children: [
-        box(_hours, l10n.hoursShort),
+        box(_hours, l10n.durationHoursLabel),
         const SizedBox(width: AppSpacing.md),
-        box(_minutes, l10n.minutesShort),
+        box(_minutes, l10n.durationMinutesLabel),
       ],
     );
   }

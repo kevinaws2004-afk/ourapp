@@ -10,7 +10,7 @@ Core loop: **Plan → Do → Log → Measure → Understand.** Gym, Reading, Wor
 
 **Current phase:** see [`ai/tasks/current_task.md`](ai/tasks/current_task.md). Only work on the phase the owner has approved there.
 
-**Navigation & terminology (ADR-028, ADR-035):** Today | Plan | Insights | Me. No floating Record button. Everything on a day is an **item**: you add it (quick add, or **Now** for what you're doing), then open it to log into it; it saves as you type. Plan is date-based (calendar). Reusable activities are configured under Me → Activities but never required before logging. Activity Log is the internal/domain name; the UI talks about items being done.
+**Navigation & terminology (ADR-028, ADR-035):** Today | Plan | Insights | Me. No floating Record button. Everything on a day is an **item**: you add it (quick add, or **Start now** for what you're doing), then open it to log into it; it saves as you type. Plan is date-based: Week | Month, and a tapped day opens like Today (ADR-039). Reusable activities are configured under Me → Activities but never required before logging. Activity Log is the internal/domain name; the UI talks about items being done.
 
 **Naming rule (ADR-010):** the product name is **undecided**.
 - `daylog` / `com.ourapp.daylog` are internal technical identifiers only (Dart package, app/bundle ID). Never present "Daylog" as the product name in UI, copy, docs prose or marketing.
@@ -87,7 +87,7 @@ Unit tests for domain rules; repository tests against real in-memory SQLite (no 
 
 ## 9. Database rules
 
-- **Schema:** generic STRICT tables only; schema v2 = activity engine; v3 = relational Repeating Groups (ADR-027); v4 = plans + `activity_logs.plan_id` (ADR-018); v5 = focus sessions (ADR-031); v6 = measurements + saved insight charts (ADR-034); v7 = repeating plans (`plan_series`, `plans.series_id`, ADR-036). Triggers lock field semantics once values exist (ADR-026) and enforce group structure.
+- **Schema:** generic STRICT tables only; schema v2 = activity engine; v3 = relational Repeating Groups (ADR-027); v4 = plans + `activity_logs.plan_id` (ADR-018); v5 = focus sessions (ADR-031); v6 = measurements + saved insight charts (ADR-034); v7 = repeating plans (`plan_series`, `plans.series_id`, ADR-036); v8 = any plan can be stored as completed (`plans` rebuilt without the tasks-only check, ADR-040). Triggers lock field semantics once values exist (ADR-026) and enforce group structure.
 - **Identity:** INTEGER FKs/joins, UUIDv7 `public_id`s (ADR-017).
 - **Values:** typed value columns, with JSON only for multi-select (ADR-019). Repeating Groups are rows: `log_group_items` + scoped `log_values` (ADR-027).
 - **Units:** user unit + write-time `normalized_value` (ADR-020); durations as `duration_ms` (ADR-021).
@@ -97,7 +97,7 @@ Unit tests for domain rules; repository tests against real in-memory SQLite (no 
 
 ## 10. UI/UX rules
 
-The product must feel calm, premium, personal and distinctive, never a generic CRUD or black dashboard app. Use tokens and shared components; implement loading/empty/error/success states; apply the Plan vs Reality grammar; responsive by window size class; accessibility (48dp, contrast, 200% text, semantics, reduced motion); purposeful motion; run the visual quality checklist before calling UI done. Colors: only the nine activity-palette colors plus neutrals (ADR-029; brand = teal; no sand). Flowfy is a principles reference only; never copy it. Rules: [`ai/rules/ui_rules.md`](ai/rules/ui_rules.md).
+The product must feel calm, premium, personal and distinctive, never a generic CRUD or black dashboard app. Use tokens and shared components; implement loading/empty/error/success states; apply the Plan vs Reality grammar; responsive by window size class; accessibility (48dp, contrast, 200% text, semantics, reduced motion); purposeful motion; run the visual quality checklist before calling UI done. Colors: only white shades, mist `#DDF0EF` and the six palette colors sky, lilac, teal, rose, slate, coral; text/borders are slate shades (ADR-029, ADR-038; brand = teal). Flowfy is a principles reference only; never copy it. Rules: [`ai/rules/ui_rules.md`](ai/rules/ui_rules.md).
 
 ## 11. Dependency rules
 

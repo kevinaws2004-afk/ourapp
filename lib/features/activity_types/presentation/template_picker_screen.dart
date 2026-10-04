@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/design/context_ext.dart';
+import '../../../core/errors/app_exception.dart';
 import '../../../core/design/tokens/spacing.dart';
 import '../../../core/design/window_size_class.dart';
 import '../../../l10n/generated/app_localizations.dart';
@@ -65,6 +66,14 @@ class TemplatePickerScreen extends ConsumerWidget {
                       // Opening the new activity is the confirmation; a
                       // snackbar here would cover the next screen's actions.
                       Navigator.of(context).pop(id);
+                    } on ValidationException catch (e) {
+                      // E.g. an activity with this name already exists.
+                      if (context.mounted) {
+                        showMessageSnackBar(
+                          context,
+                          validationMessage(l10n, e.issues.first.code),
+                        );
+                      }
                     } catch (error) {
                       if (context.mounted) {
                         showMessageSnackBar(context, errorMessage(l10n, error));

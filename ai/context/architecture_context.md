@@ -6,7 +6,7 @@
 
 **Status:**
 - Phases 1–6 are implemented (incl. focus timer, insights and body measurements): scaffold, preferences, design tokens/theme, adaptive shell, go_router, gen-l10n, the **generic activity engine** (activity types, fields, logs, typed values, builder, templates, generic form renderer), relational Repeating Groups, and **plans + Today** (plan → record, planned vs actual).
-- Navigation (ADR-028): **Today | Plan | Insights | Me** (no floating Record button). Everything on a day is an item you open to log into, saved as you type (ADR-035). Plan is date-based: Day | Week | Month, with repeating plans generated as ordinary plans for the dates viewed (schema v7, ADR-036). Insights builds per-activity charts from fields (ADR-037). Activities (setup) live under Me → Activities.
+- Navigation (ADR-028): **Today | Plan | Insights | Me** (no floating Record button). Everything on a day is an item you open to log into, saved as you type (ADR-035). Plan is date-based: Week | Month plus a day screen sharing Today's `DayItems` (ADR-039), with repeating plans generated as ordinary plans for the dates viewed (schema v7, ADR-036). Insights builds per-activity charts from fields (ADR-037). Activities (setup) live under Me → Activities.
 - All four tabs are implemented (Insights in Phase 6).
 - See [application_architecture.md](../../docs/architecture/application_architecture.md) for the implemented-vs-planned map.
 
@@ -31,7 +31,7 @@ Features: `activity_types`, `activity_logs`, `plans`, `focus`, `today`, `insight
 - Schema v1: `app_preferences` (text key, `updated_at` only, ADR-012).
 - **Schema v2 (implemented):** `activity_types`, `activity_fields`, `activity_logs`, `log_values`. These are STRICT tables with CHECKs, partial indexes and integrity triggers.
 - **Schema v3 (implemented, Phase 3, ADR-027):** Repeating Groups: `activity_fields.parent_field_id`, `log_group_items`, `log_values.group_item_id` (rebuilt with partial unique indexes per scope).
-- **Schema v4 (implemented, Phase 4, ADR-018):** `plans` (task = no activity; stored `completed` only for tasks; `planned_duration_ms` exclusive with `planned_end_at`) and `activity_logs.plan_id`. Activity-plan completion is derived from linked records (`Plan.effectiveStatus`, `WatchDayOverview`).
+- **Schema v4 (implemented, Phase 4, ADR-018):** `plans` (task = no activity; `planned_duration_ms` exclusive with `planned_end_at`) and `activity_logs.plan_id`. **Schema v8 (ADR-040):** any plan can store `completed` (Mark done, finished timer); otherwise a linked record makes an activity plan in progress on its day and done after it (`Plan.effectiveStatus(today:)`, `WatchDayOverview`).
 - **Schema v5 (Phase 5, ADR-031):** `focus_sessions` (timestamp-derived elapsed time, one active session, finish = record + session in one `UnitOfWork`).
 - **Schema v6 (Phase 6, ADR-034):** `measurements` (fixed types, canonical units) and `insight_charts` (saved chart configs, versioned JSON; OQ-14 confirmation pending).
 - Insights: one generic engine over (local_date, value) points from activity time/count, any number field (nested, text filter), volume, measurements, planned vs actual.

@@ -21,12 +21,13 @@ class AppDatabase extends _$AppDatabase {
   /// v1: `app_preferences` (ADR-012). v2: activity engine (ADR-017–026).
   /// v3: relational Repeating Groups (ADR-027). v4: plans (ADR-018).
   /// v5: focus sessions (ADR-031). v6: measurements, insight charts
-  /// (ADR-034). v7: repeating plans (ADR-036).
+  /// (ADR-034). v7: repeating plans (ADR-036). v8: any plan can be stored
+  /// as completed (ADR-040).
   /// Every schema change bumps this, adds a step below, regenerates the step
   /// helpers with `dart run drift_dev make-migrations`, and adds migration
   /// tests (docs/architecture/database.md §7).
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -156,6 +157,30 @@ class AppDatabase extends _$AppDatabase {
       // A nullable FK column with no default can be added in place.
       await m.addColumn(schema.plans, schema.plans.seriesId);
       await m.create(schema.uxPlansSeriesDate);
+    },
+    from7To8: (m, schema) async {
+      // plans: drop CHECK (status <> 'completed' OR activity_type_id IS NULL)
+      // so activity items can be marked done (ADR-040). SQLite can't drop a
+      // table constraint, so the table is rebuilt (data copied, internal IDs
+      // kept, so foreign keys from logs and sessions still match). Triggers on
+      // other tables whose body reads plans are dropped first so the rename
+      // is clean, then recreated.
+      for (final trigger in [
+        'trg_activity_logs_plan_check_insert',
+        'trg_activity_logs_plan_check_update',
+        'trg_focus_sessions_plan_check',
+      ]) {
+        await m.database.customStatement('DROP TRIGGER IF EXISTS $trigger');
+      }
+      // alterTable recreates the table's own indexes and triggers.
+      await m.alterTable(TableMigration(schema.plans));
+      for (final trigger in [
+        schema.trgActivityLogsPlanCheckInsert,
+        schema.trgActivityLogsPlanCheckUpdate,
+        schema.trgFocusSessionsPlanCheck,
+      ]) {
+        await m.create(trigger);
+      }
     },
   );
 }

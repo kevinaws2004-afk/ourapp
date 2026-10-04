@@ -5,15 +5,18 @@ import '../../../core/ids/id_generator_provider.dart';
 import '../../../core/time/clock_provider.dart';
 import '../../../core/time/local_date.dart';
 import '../../activity_logs/presentation/activity_log_providers.dart';
+import '../../activity_types/domain/activity_type.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
 import '../../focus/presentation/focus_providers.dart';
 import '../data/db_plan_repository.dart';
+import '../domain/activity_usage.dart';
 import '../domain/item_use_cases.dart';
 import '../domain/plan.dart';
 import '../domain/plan_repository.dart';
 import '../domain/series_use_cases.dart';
 import '../domain/plan_use_cases.dart';
 import '../domain/watch_day_overview.dart';
+import 'plan_date_notifier.dart';
 
 final planRepositoryProvider = Provider<PlanRepository>(
   (ref) => DbPlanRepository(
@@ -29,6 +32,7 @@ final dayOverviewProvider = StreamProvider.autoDispose
         ref.watch(planRepositoryProvider),
         ref.watch(activityLogRepositoryProvider),
         ref.watch(activityTypeRepositoryProvider),
+        ref.watch(clockProvider),
         planInFocus: () => ref
             .watch(focusSessionRepositoryProvider)
             .watchActive()
@@ -164,3 +168,27 @@ final plansInRangeProvider = StreamProvider.autoDispose
       await ref.watch(ensureSeriesOccurrencesProvider)(from, to);
       yield* plans.watchPlansForRange(from, to);
     });
+
+/// Plans from four weeks back to a week ahead of [today], to see which
+/// activities are used most. Occurrences aren't generated for this.
+final _recentPlansProvider = StreamProvider.autoDispose
+    .family<List<Plan>, LocalDate>(
+      (ref, today) => ref
+          .watch(planRepositoryProvider)
+          .watchPlansForRange(today.addDays(-27), today.addDays(7)),
+    );
+
+/// Plannable activities, most used first (quick add's "Recent" chips, A7).
+final recentActivityTypesProvider = Provider.autoDispose<List<ActivityType>>((
+  ref,
+) {
+  final today = currentLocalDate(ref.watch(clockProvider));
+  final types = [
+    ...?ref
+        .watch(activeActivityTypesProvider)
+        .value
+        ?.where((t) => t.supportsPlanning),
+  ];
+  final plans = ref.watch(_recentPlansProvider(today)).value ?? const [];
+  return rankByUse(types, plans, (t) => t.id);
+});

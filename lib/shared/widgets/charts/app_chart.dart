@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../core/design/context_ext.dart';
 import '../../../core/design/tokens/sizes.dart';
 import '../../../core/design/tokens/spacing.dart';
+import 'chart_axis.dart';
 
 /// One series for [AppChart]: a value (or a gap) per bucket.
 class ChartSeries {
@@ -25,8 +26,12 @@ class AppChart extends StatelessWidget {
     required this.series,
     required this.labels,
     required this.formatValue,
+    this.wholeNumbers = false,
     this.height = AppSizes.chartHeight,
   });
+
+  /// Values are counts: the axis uses whole steps (A22).
+  final bool wholeNumbers;
 
   final AppChartKind kind;
   final List<ChartSeries> series;
@@ -36,14 +41,14 @@ class AppChart extends StatelessWidget {
   final String Function(double value) formatValue;
   final double height;
 
-  double get _maxY {
+  ChartAxis get _axis {
     var max = 0.0;
     for (final s in series) {
       for (final v in s.values) {
         if (v != null && v > max) max = v;
       }
     }
-    return max == 0 ? 1 : max * 1.15;
+    return ChartAxis.fit(max, wholeNumbers: wholeNumbers);
   }
 
   @override
@@ -53,6 +58,7 @@ class AppChart extends StatelessWidget {
       color: colors.textSecondary,
     );
     final step = (labels.length / 5).ceil().clamp(1, labels.length);
+    final axis = _axis;
     final titles = FlTitlesData(
       topTitles: const AxisTitles(),
       rightTitles: const AxisTitles(),
@@ -60,9 +66,9 @@ class AppChart extends StatelessWidget {
         sideTitles: SideTitles(
           showTitles: true,
           reservedSize: AppSpacing.giant - AppSpacing.md,
-          getTitlesWidget: (value, meta) => value == meta.max
-              ? const SizedBox.shrink()
-              : Text(formatValue(value), style: labelStyle),
+          interval: axis.interval,
+          getTitlesWidget: (value, meta) =>
+              Text(formatValue(value), style: labelStyle),
         ),
       ),
       bottomTitles: AxisTitles(
@@ -85,6 +91,7 @@ class AppChart extends StatelessWidget {
     );
     final grid = FlGridData(
       drawVerticalLine: false,
+      horizontalInterval: axis.interval,
       getDrawingHorizontalLine: (_) =>
           FlLine(color: colors.borderSubtle, strokeWidth: AppSizes.hairline),
     );
@@ -96,7 +103,7 @@ class AppChart extends StatelessWidget {
         AppChartKind.line => LineChart(
           LineChartData(
             minY: 0,
-            maxY: _maxY,
+            maxY: axis.max,
             minX: 0,
             maxX: (labels.length - 1).clamp(0, double.infinity).toDouble(),
             gridData: grid,
@@ -144,7 +151,7 @@ class AppChart extends StatelessWidget {
         AppChartKind.bar => BarChart(
           BarChartData(
             minY: 0,
-            maxY: _maxY,
+            maxY: axis.max,
             gridData: grid,
             borderData: border,
             titlesData: titles,

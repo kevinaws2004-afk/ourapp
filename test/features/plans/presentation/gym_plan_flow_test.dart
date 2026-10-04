@@ -9,7 +9,6 @@ import 'package:daylog/features/plans/domain/plan_use_cases.dart';
 import 'package:daylog/features/plans/presentation/widgets/plan_item_tile.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/features/settings/domain/theme_preference.dart';
-import 'package:daylog/core/design/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -83,7 +82,11 @@ void main() {
     FocusManager.instance.primaryFocus?.unfocus();
     await waitForSave(tester);
     await closeItem(tester);
-    expect(find.byIcon(AppIcons.taskDone), findsOneWidget, reason: '✓');
+    expect(
+      find.textContaining('In progress'),
+      findsOneWidget,
+      reason: 'logging sets doesn\'t finish the session (A10)',
+    );
 
     // Back at the gym: the sets are there; one more.
     await openItem(tester, find.byType(PlanItemTile));

@@ -28,10 +28,6 @@
   "@insightsPlaceholder": {
     "description": "Placeholder message on the Insights tab until the feature is built."
   },
-  "mePlaceholder": "Body measurements and preferences will appear here.",
-  "@mePlaceholder": {
-    "description": "Placeholder message on the Me tab until the feature is built."
-  },
   "onboardingTitle": "Welcome",
   "@onboardingTitle": {
     "description": "Title of the first-run screen (placeholder for the full onboarding)."
@@ -399,14 +395,6 @@
   "@durationLabel": {
     "description": "Log duration label."
   },
-  "hoursShort": "h",
-  "@hoursShort": {
-    "description": "Abbreviation for hours in duration inputs."
-  },
-  "minutesShort": "min",
-  "@minutesShort": {
-    "description": "Abbreviation for minutes in duration inputs."
-  },
   "notesLabel": "Notes",
   "@notesLabel": {
     "description": "Log notes label."
@@ -564,6 +552,10 @@
   "@validationNameTooLong": {
     "description": "Validation message."
   },
+  "validationDuplicateActivityName": "You already have an activity with this name.",
+  "@validationDuplicateActivityName": {
+    "description": "Validation message when creating or renaming an activity to a name another activity already uses."
+  },
   "validationDuplicateFieldName": "Another field already has this name.",
   "@validationDuplicateFieldName": {
     "description": "Validation message."
@@ -719,10 +711,6 @@
   "planNextWeek": "Next week",
   "@planNextWeek": {
     "description": "Tooltip for the next-week button."
-  },
-  "planPlannedSection": "Planned",
-  "@planPlannedSection": {
-    "description": "Section title for a date's plans."
   },
   "planPlannedEmpty": "Nothing planned for this day.",
   "@planPlannedEmpty": {
@@ -922,9 +910,9 @@
   "@planAddAction": {
     "description": "Plan tab quick add: button adding the typed plan."
   },
-  "planAddTime": "Time",
+  "planAddTime": "Set a time",
   "@planAddTime": {
-    "description": "Plan tab quick add: button choosing an optional time."
+    "description": "Quick add: opens the sheet choosing when it happens."
   },
   "planQuickAddHint": "Add something to this day",
   "@planQuickAddHint": {
@@ -1050,15 +1038,11 @@
   "@validationPlanActivityLocked": {
     "description": "Validation message."
   },
-  "validationOnlyTasksCanBeCompleted": "Record this activity to complete the plan.",
-  "@validationOnlyTasksCanBeCompleted": {
-    "description": "Validation message."
-  },
   "validationPlanRecordMismatch": "This plan is for a different activity.",
   "@validationPlanRecordMismatch": {
     "description": "Validation message."
   },
-  "planRecordedDuration": "Done · {duration}",
+  "planRecordedDuration": "{duration}",
   "@planRecordedDuration": {
     "description": "Outcome of a recorded plan without a planned length.",
     "placeholders": {
@@ -1067,7 +1051,7 @@
       }
     }
   },
-  "planRecordedOfPlanned": "Done · {actual} of {planned}",
+  "planRecordedOfPlanned": "{actual} of {planned}",
   "@planRecordedOfPlanned": {
     "description": "Planned vs actual: actual duration of the planned duration.",
     "placeholders": {
@@ -1108,15 +1092,6 @@
       }
     }
   },
-  "planActivityAdded": "Added the {name} activity, so you can record it from the plan",
-  "@planActivityAdded": {
-    "description": "Snackbar when quick add installed a starter template matching the typed name.",
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
   "planPickStart": "From",
   "@planPickStart": {
     "description": "Time picker title: planned start time."
@@ -1125,9 +1100,37 @@
   "@planPickEnd": {
     "description": "Time picker title: planned end time; cancel for no end."
   },
-  "templateGymFocus": "Focus",
+  "templateGymFocus": "Workout",
   "@templateGymFocus": {
     "description": "Starter template content (becomes editable user data once added). What a gym session trained, e.g. Chest."
+  },
+  "templateGymPush": "Push",
+  "@templateGymPush": {
+    "description": "Gym template: an option of the Workout choice (becomes editable user data once added)."
+  },
+  "templateGymPull": "Pull",
+  "@templateGymPull": {
+    "description": "Gym template: an option of the Workout choice (becomes editable user data once added)."
+  },
+  "templateGymLegs": "Legs",
+  "@templateGymLegs": {
+    "description": "Gym template: an option of the Workout choice (becomes editable user data once added)."
+  },
+  "templateGymUpperBody": "Upper body",
+  "@templateGymUpperBody": {
+    "description": "Gym template: an option of the Workout choice (becomes editable user data once added)."
+  },
+  "templateGymLowerBody": "Lower body",
+  "@templateGymLowerBody": {
+    "description": "Gym template: an option of the Workout choice (becomes editable user data once added)."
+  },
+  "templateGymFullBody": "Full body",
+  "@templateGymFullBody": {
+    "description": "Gym template: an option of the Workout choice (becomes editable user data once added)."
+  },
+  "templateGymCardio": "Cardio",
+  "@templateGymCardio": {
+    "description": "Gym template: an option of the Workout choice (becomes editable user data once added)."
   },
   "focusStart": "Start focus",
   "@focusStart": {
@@ -1482,18 +1485,6 @@
       }
     }
   },
-  "insightPersonalBest": "Personal best {value} · {date}",
-  "@insightPersonalBest": {
-    "description": "All-time best value and its date.",
-    "placeholders": {
-      "value": {
-        "type": "String"
-      },
-      "date": {
-        "type": "String"
-      }
-    }
-  },
   "insightPlannedVsActualSummary": "Recorded {actual} of {planned} planned",
   "@insightPlannedVsActualSummary": {
     "description": "Planned vs actual totals.",
@@ -1623,10 +1614,6 @@
       }
     }
   },
-  "planNow": "Now",
-  "@planNow": {
-    "description": "Chip in quick add: it's happening now; opens the item to log it."
-  },
   "todayEmptyMessageItems": "Add what you're doing or planning. Open it later to log how it went.",
   "@todayEmptyMessageItems": {
     "description": "Today empty state message."
@@ -1671,9 +1658,23 @@
   "@shapeChecklistDone": {
     "description": "A checklist row's tick."
   },
-  "addGroupDetail": "Add detail",
-  "@addGroupDetail": {
-    "description": "Button inside a list in an item: add another detail to each row."
+  "addGroupDetailTo": "Add a detail to each {item}",
+  "@addGroupDetailTo": {
+    "description": "Menu item inside a list in an item: add another detail to every row (e.g. \"Add a detail to each Set\").",
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "groupListOptions": "{item} list options",
+  "@groupListOptions": {
+    "description": "Tooltip of the menu on a list in an item.",
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
   },
   "itemEditFields": "Edit what's logged",
   "@itemEditFields": {
@@ -1749,10 +1750,6 @@
   "actionOpen": "Open",
   "@actionOpen": {
     "description": "Action in a snackbar: open what was just created."
-  },
-  "planViewDay": "Day",
-  "@planViewDay": {
-    "description": "Plan tab view switch."
   },
   "planViewWeek": "Week",
   "@planViewWeek": {
@@ -1833,5 +1830,452 @@
   "insightOpenActivityHint": "see its progress",
   "@insightOpenActivityHint": {
     "description": "Tap hint on an activity row in Insights."
+  },
+  "actionDone": "Done",
+  "@actionDone": {
+    "description": "Generic confirm button that closes a sheet."
+  },
+  "planStartNow": "Start now",
+  "@planStartNow": {
+    "description": "Quick add (today): adds what's typed at the current time and opens it to log it."
+  },
+  "planRecent": "Recent",
+  "@planRecent": {
+    "description": "Quick add: label above the most-used activities."
+  },
+  "planSuggestionYours": "Your activity",
+  "@planSuggestionYours": {
+    "description": "Quick add suggestion subtitle for an existing activity."
+  },
+  "planSuggestionReadyMade": "Ready-made · {fields}",
+  "@planSuggestionReadyMade": {
+    "description": "Quick add suggestion subtitle for a template, with its field names.",
+    "placeholders": {
+      "fields": {
+        "type": "String"
+      }
+    }
+  },
+  "planTimeSheetTitle": "When?",
+  "@planTimeSheetTitle": {
+    "description": "Title of the time sheet when planning."
+  },
+  "planTimeStarts": "Starts",
+  "@planTimeStarts": {
+    "description": "Time sheet: label above the start time choices."
+  },
+  "planTimeLength": "How long",
+  "@planTimeLength": {
+    "description": "Time sheet: label above the length choices."
+  },
+  "planTimeOther": "Other time…",
+  "@planTimeOther": {
+    "description": "Time sheet: picks any start time."
+  },
+  "planTimeNoEnd": "No end",
+  "@planTimeNoEnd": {
+    "description": "Time sheet: no end time."
+  },
+  "planTimeMinutes": "{count} min",
+  "@planTimeMinutes": {
+    "description": "Time sheet length chip in minutes.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planTimeHours": "{count} h",
+  "@planTimeHours": {
+    "description": "Time sheet length chip in hours.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planTimeUntil": "Until…",
+  "@planTimeUntil": {
+    "description": "Time sheet: picks an end time."
+  },
+  "planTimeUntilTime": "Until {time}",
+  "@planTimeUntilTime": {
+    "description": "Time sheet: the chosen end time.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "planTimeRemove": "No time",
+  "@planTimeRemove": {
+    "description": "Time sheet: removes the chosen time."
+  },
+  "dayPreviousDay": "Previous day",
+  "@dayPreviousDay": {
+    "description": "Day screen: goes to the day before."
+  },
+  "dayNextDay": "Next day",
+  "@dayNextDay": {
+    "description": "Day screen: goes to the day after."
+  },
+  "meSectionSetup": "Your setup",
+  "@meSectionSetup": {
+    "description": "Me tab: section with Activities and Body measurements."
+  },
+  "durationHoursLabel": "Hours",
+  "@durationHoursLabel": {
+    "description": "Label of the hours box in a duration input."
+  },
+  "durationMinutesLabel": "Minutes",
+  "@durationMinutesLabel": {
+    "description": "Label of the minutes box in a duration input."
+  },
+  "itemMarkDoneHint": "Logged so far. Mark it done when you’ve finished.",
+  "@itemMarkDoneHint": {
+    "description": "Item screen: line above Mark done when something is logged but the item is not finished yet."
+  },
+  "planAnytime": "Anytime",
+  "@planAnytime": {
+    "description": "Heading above a day's items that have no time."
+  },
+  "insightPeriodTotal": "total this period",
+  "@insightPeriodTotal": {
+    "description": "Chart headline label: the sum over the period shown."
+  },
+  "insightPeriodAverage": "average this period",
+  "@insightPeriodAverage": {
+    "description": "Chart headline label."
+  },
+  "insightPeriodBest": "best this period",
+  "@insightPeriodBest": {
+    "description": "Chart headline label: the highest value in the period shown."
+  },
+  "insightPeriodLowest": "lowest this period",
+  "@insightPeriodLowest": {
+    "description": "Chart headline label."
+  },
+  "insightPeriodCount": "times this period",
+  "@insightPeriodCount": {
+    "description": "Chart headline label: how many in the period shown."
+  },
+  "insightAllTimeBest": "All-time best {value} · {date}",
+  "@insightAllTimeBest": {
+    "description": "A chart's highest value ever, with its date.",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "insightBestDay": "Best day {value} · {date}",
+  "@insightBestDay": {
+    "description": "A volume chart: the highest total on one day ever.",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "insightBestItem": "Best {item} {value} · {date}",
+  "@insightBestItem": {
+    "description": "A volume chart: the highest single row ever (e.g. \"Best Set 480 kg\").",
+    "placeholders": {
+      "item": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "insightPeriod": "{from} – {to}",
+  "@insightPeriod": {
+    "description": "The dates the Insights numbers cover.",
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "insightDuplicateName": "Another activity has this name. Rename one in Me → Activities.",
+  "@insightDuplicateName": {
+    "description": "Insights: shown under an activity whose name another activity also uses."
+  },
+  "activityIconBarbell": "Weights",
+  "@activityIconBarbell": {
+    "description": "Screen-reader name of the \"barbell\" activity icon."
+  },
+  "activityIconBookOpen": "Book",
+  "@activityIconBookOpen": {
+    "description": "Screen-reader name of the \"book-open\" activity icon."
+  },
+  "activityIconBriefcase": "Briefcase",
+  "@activityIconBriefcase": {
+    "description": "Screen-reader name of the \"briefcase\" activity icon."
+  },
+  "activityIconPersonSimpleWalk": "Walking",
+  "@activityIconPersonSimpleWalk": {
+    "description": "Screen-reader name of the \"person-simple-walk\" activity icon."
+  },
+  "activityIconPersonSimpleRun": "Running",
+  "@activityIconPersonSimpleRun": {
+    "description": "Screen-reader name of the \"person-simple-run\" activity icon."
+  },
+  "activityIconBicycle": "Cycling",
+  "@activityIconBicycle": {
+    "description": "Screen-reader name of the \"bicycle\" activity icon."
+  },
+  "activityIconSwimmingPool": "Swimming",
+  "@activityIconSwimmingPool": {
+    "description": "Screen-reader name of the \"swimming-pool\" activity icon."
+  },
+  "activityIconFlowerLotus": "Meditation",
+  "@activityIconFlowerLotus": {
+    "description": "Screen-reader name of the \"flower-lotus\" activity icon."
+  },
+  "activityIconUsersThree": "People",
+  "@activityIconUsersThree": {
+    "description": "Screen-reader name of the \"users-three\" activity icon."
+  },
+  "activityIconPencilSimple": "Writing",
+  "@activityIconPencilSimple": {
+    "description": "Screen-reader name of the \"pencil-simple\" activity icon."
+  },
+  "activityIconCode": "Coding",
+  "@activityIconCode": {
+    "description": "Screen-reader name of the \"code\" activity icon."
+  },
+  "activityIconCookingPot": "Cooking",
+  "@activityIconCookingPot": {
+    "description": "Screen-reader name of the \"cooking-pot\" activity icon."
+  },
+  "activityIconTranslate": "Languages",
+  "@activityIconTranslate": {
+    "description": "Screen-reader name of the \"translate\" activity icon."
+  },
+  "activityIconGraduationCap": "Studying",
+  "@activityIconGraduationCap": {
+    "description": "Screen-reader name of the \"graduation-cap\" activity icon."
+  },
+  "activityIconBrain": "Thinking",
+  "@activityIconBrain": {
+    "description": "Screen-reader name of the \"brain\" activity icon."
+  },
+  "activityIconMusicNotes": "Music",
+  "@activityIconMusicNotes": {
+    "description": "Screen-reader name of the \"music-notes\" activity icon."
+  },
+  "activityIconGuitar": "Guitar",
+  "@activityIconGuitar": {
+    "description": "Screen-reader name of the \"guitar\" activity icon."
+  },
+  "activityIconMicrophone": "Microphone",
+  "@activityIconMicrophone": {
+    "description": "Screen-reader name of the \"microphone\" activity icon."
+  },
+  "activityIconPaintBrush": "Painting",
+  "@activityIconPaintBrush": {
+    "description": "Screen-reader name of the \"paint-brush\" activity icon."
+  },
+  "activityIconCamera": "Photography",
+  "@activityIconCamera": {
+    "description": "Screen-reader name of the \"camera\" activity icon."
+  },
+  "activityIconGameController": "Games",
+  "@activityIconGameController": {
+    "description": "Screen-reader name of the \"game-controller\" activity icon."
+  },
+  "activityIconMoon": "Night",
+  "@activityIconMoon": {
+    "description": "Screen-reader name of the \"moon\" activity icon."
+  },
+  "activityIconBed": "Sleep",
+  "@activityIconBed": {
+    "description": "Screen-reader name of the \"bed\" activity icon."
+  },
+  "activityIconCoffee": "Coffee",
+  "@activityIconCoffee": {
+    "description": "Screen-reader name of the \"coffee\" activity icon."
+  },
+  "activityIconForkKnife": "Meal",
+  "@activityIconForkKnife": {
+    "description": "Screen-reader name of the \"fork-knife\" activity icon."
+  },
+  "activityIconDrop": "Water",
+  "@activityIconDrop": {
+    "description": "Screen-reader name of the \"drop\" activity icon."
+  },
+  "activityIconPill": "Medicine",
+  "@activityIconPill": {
+    "description": "Screen-reader name of the \"pill\" activity icon."
+  },
+  "activityIconFirstAid": "First aid",
+  "@activityIconFirstAid": {
+    "description": "Screen-reader name of the \"first-aid\" activity icon."
+  },
+  "activityIconTooth": "Teeth",
+  "@activityIconTooth": {
+    "description": "Screen-reader name of the \"tooth\" activity icon."
+  },
+  "activityIconHeart": "Heart",
+  "@activityIconHeart": {
+    "description": "Screen-reader name of the \"heart\" activity icon."
+  },
+  "activityIconLeaf": "Nature",
+  "@activityIconLeaf": {
+    "description": "Screen-reader name of the \"leaf\" activity icon."
+  },
+  "activityIconPlant": "Plants",
+  "@activityIconPlant": {
+    "description": "Screen-reader name of the \"plant\" activity icon."
+  },
+  "activityIconDog": "Pets",
+  "@activityIconDog": {
+    "description": "Screen-reader name of the \"dog\" activity icon."
+  },
+  "activityIconBaby": "Baby",
+  "@activityIconBaby": {
+    "description": "Screen-reader name of the \"baby\" activity icon."
+  },
+  "activityIconHouse": "Home",
+  "@activityIconHouse": {
+    "description": "Screen-reader name of the \"house\" activity icon."
+  },
+  "activityIconBroom": "Cleaning",
+  "@activityIconBroom": {
+    "description": "Screen-reader name of the \"broom\" activity icon."
+  },
+  "activityIconWrench": "Repairs",
+  "@activityIconWrench": {
+    "description": "Screen-reader name of the \"wrench\" activity icon."
+  },
+  "activityIconShoppingCart": "Shopping",
+  "@activityIconShoppingCart": {
+    "description": "Screen-reader name of the \"shopping-cart\" activity icon."
+  },
+  "activityIconWallet": "Money",
+  "@activityIconWallet": {
+    "description": "Screen-reader name of the \"wallet\" activity icon."
+  },
+  "activityIconEnvelope": "Email",
+  "@activityIconEnvelope": {
+    "description": "Screen-reader name of the \"envelope\" activity icon."
+  },
+  "activityIconPhone": "Phone call",
+  "@activityIconPhone": {
+    "description": "Screen-reader name of the \"phone\" activity icon."
+  },
+  "activityIconChatCircle": "Chat",
+  "@activityIconChatCircle": {
+    "description": "Screen-reader name of the \"chat-circle\" activity icon."
+  },
+  "activityIconLaptop": "Computer",
+  "@activityIconLaptop": {
+    "description": "Screen-reader name of the \"laptop\" activity icon."
+  },
+  "activityIconPresentationChart": "Presentation",
+  "@activityIconPresentationChart": {
+    "description": "Screen-reader name of the \"presentation-chart\" activity icon."
+  },
+  "activityIconNotebook": "Notebook",
+  "@activityIconNotebook": {
+    "description": "Screen-reader name of the \"notebook\" activity icon."
+  },
+  "activityIconTarget": "Goal",
+  "@activityIconTarget": {
+    "description": "Screen-reader name of the \"target\" activity icon."
+  },
+  "activityIconLightbulb": "Idea",
+  "@activityIconLightbulb": {
+    "description": "Screen-reader name of the \"lightbulb\" activity icon."
+  },
+  "activityIconTimer": "Timer",
+  "@activityIconTimer": {
+    "description": "Screen-reader name of the \"timer\" activity icon."
+  },
+  "activityIconMountains": "Hiking",
+  "@activityIconMountains": {
+    "description": "Screen-reader name of the \"mountains\" activity icon."
+  },
+  "activityIconBasketball": "Basketball",
+  "@activityIconBasketball": {
+    "description": "Screen-reader name of the \"basketball\" activity icon."
+  },
+  "activityIconSoccerBall": "Football",
+  "@activityIconSoccerBall": {
+    "description": "Screen-reader name of the \"soccer-ball\" activity icon."
+  },
+  "activityIconTennisBall": "Tennis",
+  "@activityIconTennisBall": {
+    "description": "Screen-reader name of the \"tennis-ball\" activity icon."
+  },
+  "activityIconYinYang": "Balance",
+  "@activityIconYinYang": {
+    "description": "Screen-reader name of the \"yin-yang\" activity icon."
+  },
+  "activityIconGlobe": "Travel",
+  "@activityIconGlobe": {
+    "description": "Screen-reader name of the \"globe\" activity icon."
+  },
+  "activityIconAirplane": "Flight",
+  "@activityIconAirplane": {
+    "description": "Screen-reader name of the \"airplane\" activity icon."
+  },
+  "activityIconCar": "Driving",
+  "@activityIconCar": {
+    "description": "Screen-reader name of the \"car\" activity icon."
+  },
+  "activityIconSparkle": "Sparkle",
+  "@activityIconSparkle": {
+    "description": "Screen-reader name of the \"sparkle\" activity icon."
+  },
+  "activityIconStar": "Star",
+  "@activityIconStar": {
+    "description": "Screen-reader name of the \"star\" activity icon."
+  },
+  "activityColorSky": "Sky",
+  "@activityColorSky": {
+    "description": "Screen-reader name of an activity color."
+  },
+  "activityColorLilac": "Lilac",
+  "@activityColorLilac": {
+    "description": "Screen-reader name of an activity color."
+  },
+  "activityColorRose": "Rose",
+  "@activityColorRose": {
+    "description": "Screen-reader name of an activity color."
+  },
+  "activityColorTeal": "Teal",
+  "@activityColorTeal": {
+    "description": "Screen-reader name of an activity color."
+  },
+  "activityColorCoral": "Coral",
+  "@activityColorCoral": {
+    "description": "Screen-reader name of an activity color."
+  },
+  "activityColorSlate": "Slate",
+  "@activityColorSlate": {
+    "description": "Screen-reader name of an activity color."
+  },
+  "builderMoreIcons": "More icons",
+  "@builderMoreIcons": {
+    "description": "Activity builder: shows every icon."
+  },
+  "builderFewerIcons": "Fewer icons",
+  "@builderFewerIcons": {
+    "description": "Activity builder: shows only the suggested icons."
   }
 }

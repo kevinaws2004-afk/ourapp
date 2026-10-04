@@ -129,6 +129,7 @@ class DiscardFocusSession {
 class FinishFocusSession {
   const FinishFocusSession(
     this._sessions,
+    this._plans,
     this._logs,
     this._log,
     this._update,
@@ -137,6 +138,7 @@ class FinishFocusSession {
   );
 
   final FocusSessionRepository _sessions;
+  final PlanRepository _plans;
   final ActivityLogRepository _logs;
   final LogActivity _log;
   final UpdateActivityLog _update;
@@ -195,6 +197,15 @@ class FinishFocusSession {
         durationMs: elapsed,
         updatedAt: now,
       );
+      // Finishing the timer finishes the item (ADR-040).
+      if (session.planId case final planId?) {
+        final plan = await _plans.getPlan(planId);
+        if (plan != null && plan.status == PlanStatus.planned) {
+          await _plans.update(
+            plan.copyWith(status: PlanStatus.completed, updatedAt: now),
+          );
+        }
+      }
       return logId;
     });
   }

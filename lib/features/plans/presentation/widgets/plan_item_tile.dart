@@ -9,33 +9,38 @@ import '../../../../core/design/tokens/radius.dart';
 import '../../../../core/design/tokens/spacing.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../shared/widgets/activity_badge.dart';
+import '../../../../shared/widgets/done_check.dart';
 import '../../domain/plan.dart';
 import '../../domain/watch_day_overview.dart';
 import '../../../activity_logs/presentation/value_formatting.dart';
 import '../plan_formatting.dart';
 
-/// A plan in the Plan vs Reality grammar (design_system.md §1.2):
-/// - open: outline in the activity color, secondary text; a check control
-///   for a task
-/// - recorded / done: filled with the activity's soft color, primary text, ✓
-/// - skipped / cancelled: faint outline with a status label (never red)
+/// A plan in the Plan vs Reality grammar (design_system.md §1.2, A16), the
+/// same for tasks and activities:
+/// - open or in progress: outline (the activity color), secondary text
+/// - done: filled with the activity's soft color (tasks: brand soft),
+///   primary text
+/// - skipped / cancelled: faint outline, faded (never red)
 ///
-/// Tapping it opens the item to log into it ([onTap], ADR-035); [onMore]
-/// opens the plan options.
+/// The check on the left marks it done or not done ([onToggleDone], A17);
+/// it's inactive when there's nothing to toggle. Tapping the row opens the
+/// item to log into it ([onTap], ADR-035); [onMore] opens the plan options.
 class PlanItemTile extends StatelessWidget {
   const PlanItemTile({
     super.key,
     required this.item,
     required this.onTap,
     required this.onMore,
-    required this.onToggleTask,
+    required this.onToggleDone,
     this.dragHandle,
   });
 
   final PlannedItem item;
   final VoidCallback onTap;
   final VoidCallback onMore;
-  final VoidCallback onToggleTask;
+
+  /// Null when the check can't toggle (e.g. skipped, or done by itself).
+  final VoidCallback? onToggleDone;
 
   /// A drag handle for manual reordering, when the list allows it.
   final Widget? dragHandle;
@@ -52,15 +57,15 @@ class PlanItemTile extends StatelessWidget {
             ActivityColorKey.fromName(type.colorKey) ?? ActivityColorKey.slate,
           );
     final status = item.status;
-    final recorded = status == EffectivePlanStatus.completed && !plan.isTask;
+    final done = status == EffectivePlanStatus.completed;
     final inactive =
         status == EffectivePlanStatus.skipped ||
         status == EffectivePlanStatus.cancelled;
 
     final decoration = BoxDecoration(
-      color: recorded ? activity?.soft : null,
+      color: done ? activity?.soft ?? colors.brandPrimarySoft : null,
       borderRadius: AppRadius.mdAll,
-      border: recorded
+      border: done
           ? null
           : Border.all(
               color: inactive
@@ -73,8 +78,12 @@ class PlanItemTile extends StatelessWidget {
       ?formatPlanTime(context, plan),
       ?formatPlanOutcome(context, item),
     ].join(' · ');
-    final titleColor = recorded ? colors.textPrimary : colors.textSecondary;
-    // What was logged into it ("Chest Press 3 sets · …").
+    final titleColor = inactive
+        ? colors.textTertiary
+        : done
+        ? colors.textPrimary
+        : colors.textSecondary;
+    // What was logged into it ("Bench press 60 kg × 8 (×2)"), A18.
     final summary = switch ((type, item.records.firstOrNull)) {
       (final type?, final log?) => summarizeLog(context, type, log),
       _ => '',
@@ -83,7 +92,7 @@ class PlanItemTile extends StatelessWidget {
     // Say what a tap does (ADR-030).
     final tapHint = plan.isTask
         ? null
-        : recorded
+        : done
         ? l10n.planOpenRecordHint
         : l10n.planRecordHint(plan.title);
     return Padding(
@@ -99,27 +108,19 @@ class PlanItemTile extends StatelessWidget {
               decoration: decoration,
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.md,
+                  horizontal: AppSpacing.xs,
                   vertical: AppSpacing.sm,
                 ),
                 child: Row(
                   children: [
-                    if (plan.isTask)
-                      IconButton(
-                        tooltip: status == EffectivePlanStatus.completed
-                            ? l10n.planReopenTask
-                            : l10n.planCompleteTask,
-                        icon: Icon(
-                          status == EffectivePlanStatus.completed
-                              ? AppIcons.taskDone
-                              : AppIcons.taskOpen,
-                          color: status == EffectivePlanStatus.completed
-                              ? colors.success
-                              : colors.textSecondary,
-                        ),
-                        onPressed: inactive ? null : onToggleTask,
-                      )
-                    else
+                    DoneCheck(
+                      done: done,
+                      color: inactive
+                          ? colors.textTertiary
+                          : activity?.solid ?? colors.textSecondary,
+                      onPressed: onToggleDone,
+                    ),
+                    if (!plan.isTask) ...[
                       Opacity(
                         opacity: inactive ? 0.5 : 1,
                         // The type can briefly be missing while the types
@@ -128,9 +129,11 @@ class PlanItemTile extends StatelessWidget {
                           iconId: type?.iconId ?? ActivityIconIds.fallback,
                           colorKey:
                               type?.colorKey ?? ActivityColorKey.slate.name,
+                          size: AppSizes.badgeSmall,
                         ),
                       ),
-                    const SizedBox(width: AppSpacing.md),
+                      const SizedBox(width: AppSpacing.md),
+                    ],
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,9 +141,7 @@ class PlanItemTile extends StatelessWidget {
                           Text(
                             plan.title,
                             style: context.textStyles.titleMedium?.copyWith(
-                              color: inactive
-                                  ? colors.textTertiary
-                                  : titleColor,
+                              color: titleColor,
                             ),
                           ),
                           if (details.isNotEmpty)
@@ -162,12 +163,6 @@ class PlanItemTile extends StatelessWidget {
                         ],
                       ),
                     ),
-                    if (recorded)
-                      Icon(
-                        AppIcons.taskDone,
-                        color: colors.success,
-                        semanticLabel: l10n.planStatusRecorded,
-                      ),
                     if (plan.isRepeating)
                       Icon(
                         AppIcons.repeat,

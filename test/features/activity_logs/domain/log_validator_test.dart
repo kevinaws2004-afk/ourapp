@@ -33,7 +33,7 @@ ActivityType typeWith(List<ActivityField> fields) => ActivityType(
   id: const ActivityTypeId('t'),
   name: 'T',
   iconId: 'sparkle',
-  colorKey: 'sage',
+  colorKey: 'teal',
   supportsTimer: false,
   supportsPlanning: true,
   sortOrder: 0,

@@ -17,11 +17,12 @@ import '../../activity_types/presentation/activity_type_providers.dart';
 import '../domain/plan.dart';
 import '../domain/watch_day_overview.dart';
 import 'plan_providers.dart';
+import '../../../shared/widgets/discard_guard.dart';
 
 /// An action chosen in the plan sheet, run by the screen that opened it
 /// (the sheet's own state is gone once it closes).
 enum PlanSheetAction {
-  toggleTask,
+  toggleDone,
   repeat,
   stopRepeating,
   skip,
@@ -138,8 +139,29 @@ class _PlanEditorSheetState extends ConsumerState<_PlanEditorSheet> {
     });
   }
 
+  /// Something was changed (A15).
+  bool get _dirty =>
+      !_saving &&
+      (_title.text != (_plan?.title ?? '') ||
+          _notes.text != (_plan?.notes ?? '') ||
+          _typeId != _plan?.activityTypeId ||
+          _start != _timeOf(_plan?.plannedStartAt) ||
+          _end != _timeOf(_plan?.plannedEndAt) ||
+          _durationMs != _plan?.plannedDurationMs);
+
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    // Rebuild on typing so the discard guard knows about it (A15).
+    _title.addListener(() => setState(() {}));
+    _notes.addListener(() => setState(() {}));
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      DiscardGuard(dirty: _dirty, child: _buildSheet(context));
+
+  Widget _buildSheet(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final material = MaterialLocalizations.of(context);
     final item = widget.item;
@@ -288,15 +310,18 @@ class _PlanEditorSheetState extends ConsumerState<_PlanEditorSheet> {
         );
     return [
       const SizedBox(height: AppSpacing.lg),
-      if (plan.isTask && open)
+      // Any item can be marked done (ADR-040).
+      if (open)
         action(
           AppIcons.taskDone,
           l10n.planCompleteTask,
-          PlanSheetAction.toggleTask,
+          PlanSheetAction.toggleDone,
         ),
       if (open) action(AppIcons.skip, l10n.planSkip, PlanSheetAction.skip),
-      // A recorded plan is done by reality; only stored statuses reopen.
-      if (!open && item.records.isEmpty)
+      // Stored statuses reopen; something logged on a past day is done by
+      // itself (ADR-040).
+      if (!open &&
+          (item.records.isEmpty || plan.status == PlanStatus.completed))
         action(AppIcons.undo, l10n.planReopen, PlanSheetAction.reopen),
       if (open)
         action(

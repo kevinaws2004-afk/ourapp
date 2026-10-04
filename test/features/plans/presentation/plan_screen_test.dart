@@ -6,6 +6,7 @@ import 'package:daylog/features/activity_logs/domain/activity_log_use_cases.dart
 import 'package:daylog/features/activity_logs/domain/field_value.dart';
 import 'package:daylog/features/activity_types/data/db_activity_type_repository.dart';
 import 'package:daylog/features/plans/data/db_plan_repository.dart';
+import 'package:daylog/features/plans/presentation/day_screen.dart';
 import 'package:daylog/features/plans/presentation/item/item_screen.dart';
 import 'package:daylog/features/activity_types/domain/activity_type_use_cases.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
@@ -47,7 +48,8 @@ Future<void> seedTodayRecord(AppDatabase db, FakeClock clock) async {
   );
 }
 
-Future<void> openPlan(WidgetTester tester) async {
+/// Opens the Plan tab (its week view).
+Future<void> openPlanTab(WidgetTester tester) async {
   await tester.tap(
     find.descendant(
       of: find.byType(NavigationBar),
@@ -57,34 +59,53 @@ Future<void> openPlan(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-void main() {
-  testAppWidgets('Plan opens on today and lists what was done today as an '
-      'item', (tester) async {
-    await pumpTestApp(tester, preferences: _onboarded, seed: seedTodayRecord);
-    await openPlan(tester);
+/// Opens today's day from the Plan tab's week (A1). The test app's today is
+/// Sat Oct 3 2026.
+Future<void> openPlan(WidgetTester tester) async {
+  await openPlanTab(tester);
+  await tester.tap(find.text('Saturday, October 3, 2026'));
+  await tester.pumpAndSettle();
+  expect(find.byType(DayScreen), findsOneWidget);
+}
 
+void main() {
+  testAppWidgets('Plan opens on the week; tapping today opens it as a day '
+      'that lists what was done as an item', (tester) async {
+    await pumpTestApp(tester, preferences: _onboarded, seed: seedTodayRecord);
+    await openPlanTab(tester);
+
+    expect(find.text('Week'), findsOneWidget);
+    expect(find.text('Day'), findsNothing, reason: 'no separate day view');
+    expect(find.text('Fooled by Randomness'), findsOneWidget);
+
+    await tester.tap(find.text('Saturday, October 3, 2026'));
+    await tester.pumpAndSettle();
+    expect(find.byType(DayScreen), findsOneWidget);
     expect(find.text('Today'), findsWidgets);
-    expect(find.text('Saturday, October 3, 2026'), findsOneWidget);
-    expect(find.text('Planned'), findsOneWidget);
     expect(find.text('Recorded'), findsNothing, reason: 'one list of items');
     expect(find.text('Fooled by Randomness'), findsOneWidget);
+    expect(
+      find.byTooltip('Add plan'),
+      findsOneWidget,
+      reason: 'one "+" on the day (A2)',
+    );
   });
 
-  testAppWidgets('selecting another day shows that day', (tester) async {
+  testAppWidgets('the day screen steps to other days', (tester) async {
     await pumpTestApp(tester, preferences: _onboarded, seed: seedTodayRecord);
     await openPlan(tester);
 
-    await tester.tap(find.byTooltip('Next week'));
+    await tester.tap(find.byTooltip('Next day'));
     await tester.pumpAndSettle();
-    expect(find.text('Saturday, October 10, 2026'), findsOneWidget);
+    expect(find.text('Sunday, October 4, 2026'), findsOneWidget);
+    expect(find.text('Tomorrow'), findsOneWidget);
     expect(find.text('Nothing planned for this day.'), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(TextButton, 'Today'));
+    await tester.tap(find.byTooltip('Previous day'));
+    await tester.tap(find.byTooltip('Previous day'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Previous week'));
-    await tester.pumpAndSettle();
-    expect(find.text('Saturday, September 26, 2026'), findsOneWidget);
-    expect(find.text('Nothing planned for this day.'), findsOneWidget);
+    expect(find.text('Friday, October 2, 2026'), findsOneWidget);
+    expect(find.text('Yesterday'), findsOneWidget);
   });
 
   testAppWidgets('a record made without a plan opens as an item', (

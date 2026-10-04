@@ -104,10 +104,12 @@ void main() {
           ),
         );
 
-        await markDone()(id);
-        await markDone()(id);
+        final created = await markDone()(id);
+        expect(await markDone()(id), isNull, reason: 'nothing new to create');
+        expect((await plans.getPlan(id))!.status, PlanStatus.completed);
 
         final log = (await logs.getLogForPlan(id))!;
+        expect(log.id, created, reason: 'returned for Undo');
         expect(log.startedAt, start);
         expect(log.durationMs, 1800000);
         final count = await db
@@ -195,7 +197,8 @@ void main() {
     await record(DateTime.utc(2026, 10, 4, 12), plan: untimedDone);
     await record(DateTime.utc(2026, 10, 4, 8)); // unplanned
 
-    final overview = await WatchDayOverview(plans, logs, types)(today).first;
+    final overview = await WatchDayOverview(plans, logs, types, clock)(today)
+        .first;
     final order = [
       for (final e in overview.entries)
         switch (e) {

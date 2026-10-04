@@ -14,6 +14,7 @@ import '../../domain/field_config.dart';
 import '../../domain/field_type.dart';
 import '../field_type_copy.dart';
 import 'field_type_picker_sheet.dart';
+import '../../../../shared/widgets/discard_guard.dart';
 
 /// Result of editing a field: the new definition, or a request to remove it.
 sealed class FieldEditResult {
@@ -109,8 +110,27 @@ class _FieldEditorSheetState extends ConsumerState<_FieldEditorSheet> {
     ),
   );
 
+  /// Something was changed (A15).
+  bool get _dirty =>
+      _name.text != widget.initial.name ||
+      _required != widget.initial.required ||
+      _measurable != widget.initial.measurable ||
+      _dimension != widget.initial.dimension ||
+      !identical(_config, widget.initial.config) ||
+      !identical(_subFields, widget.initial.subFields);
+
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    // Rebuild on typing so the discard guard knows about it (A15).
+    _name.addListener(() => setState(() {}));
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      DiscardGuard(dirty: _dirty, child: _buildSheet(context));
+
+  Widget _buildSheet(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),

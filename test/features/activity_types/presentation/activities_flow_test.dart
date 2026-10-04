@@ -37,6 +37,9 @@ Future<void> scrollAndTap(WidgetTester tester, Finder finder) async {
     200,
     scrollable: find.byType(Scrollable).hitTestable().first,
   );
+  // Fully in view, not just peeking at the edge.
+  await tester.ensureVisible(finder);
+  await tester.pumpAndSettle();
   await tester.tap(finder);
   await tester.pumpAndSettle();
 }
@@ -100,6 +103,31 @@ void main() {
     },
   );
 
+  testAppWidgets('a template whose name is taken is not installed twice (A8)', (
+    tester,
+  ) async {
+    await pumpTestApp(
+      tester,
+      preferences: _onboarded,
+      seed: (db, clock) => CreateActivityType(
+        DbActivityTypeRepository(db, clock),
+        SequentialIdGenerator(),
+      )(walkingDefinition()),
+    );
+    await openActivities(tester);
+
+    await tester.tap(find.text('Start from a template'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Walking'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('You already have an activity with this name.'),
+      findsOneWidget,
+    );
+    expect(find.byType(ActivityTypeScreen), findsNothing);
+  });
+
   testAppWidgets('building an activity with a field saves it and opens it', (
     tester,
   ) async {
@@ -134,6 +162,36 @@ void main() {
 
     expect(find.byType(ActivityTypeScreen), findsOneWidget);
     expect(find.text('Meditation'), findsOneWidget);
+  });
+
+  testAppWidgets('the editor asks what you record before how it looks; it '
+      'suggests 12 icons with named ones for screen readers (A25, A27)', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await pumpTestApp(tester, preferences: _onboarded);
+    await openActivities(tester);
+    await tester.tap(find.text('New activity'));
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.text('More icons'),
+      200,
+      scrollable: find.byType(Scrollable).hitTestable().first,
+    );
+    expect(
+      tester.getTopLeft(find.text('Add field')).dy,
+      lessThan(tester.getTopLeft(find.text('Icon')).dy),
+      reason: 'what you record comes first',
+    );
+    expect(find.bySemanticsLabel('Walking'), findsOneWidget);
+    expect(find.bySemanticsLabel('person-simple-walk'), findsNothing);
+    expect(find.bySemanticsLabel('Hiking'), findsNothing, reason: 'not in 12');
+
+    await scrollAndTap(tester, find.text('More icons'));
+    expect(find.bySemanticsLabel('Hiking'), findsOneWidget);
+    expect(find.text('Fewer icons'), findsOneWidget);
+    semantics.dispose();
   });
 
   testAppWidgets('saving an activity without a name shows the issue inline', (

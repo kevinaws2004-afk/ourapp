@@ -41,7 +41,7 @@ Future<Map<ActivityFieldId, FieldValue?>> pumpForm(
     id: const ActivityTypeId('form-test'),
     name: 'Form test',
     iconId: 'sparkle',
-    colorKey: 'sage',
+    colorKey: 'teal',
     supportsTimer: false,
     supportsPlanning: true,
     sortOrder: 0,

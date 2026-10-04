@@ -16,6 +16,7 @@ import '../features/insights/presentation/insights_screen.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
 import '../features/plans/domain/plan.dart';
 import '../core/time/clock_provider.dart';
+import '../features/plans/presentation/day_screen.dart';
 import '../features/plans/presentation/item/item_notifier.dart';
 import '../features/plans/presentation/item/item_screen.dart';
 import '../features/plans/presentation/plan_date_notifier.dart';
@@ -42,6 +43,9 @@ import 'dev/token_showcase_screen.dart';
 abstract final class AppRoutes {
   static const today = '/today';
   static const plan = '/plan';
+
+  /// The Plan tab's selected date as one day (A1).
+  static const planDay = '/plan/day';
   static const insights = '/insights';
 
   /// An activity's automatic progress (ADR-037), inside the Insights tab.
@@ -213,7 +217,18 @@ final routerProvider = Provider<GoRouter>((ref) {
                   onOpenItem: (id) =>
                       unawaited(context.push(AppRoutes.item(id))),
                   onOpenRecord: (log) => openLog(context, log),
+                  onOpenDay: () => unawaited(context.push(AppRoutes.planDay)),
                 ),
+                routes: [
+                  GoRoute(
+                    path: 'day',
+                    builder: (context, state) => DayScreen(
+                      onOpenItem: (id) =>
+                          unawaited(context.push(AppRoutes.item(id))),
+                      onOpenRecord: (log) => openLog(context, log),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -388,15 +403,20 @@ final routerProvider = Provider<GoRouter>((ref) {
 /// Debug-only: fills an empty app with demo data (dev/demo_data.dart).
 Future<void> _loadDemoData(BuildContext context) async {
   final messenger = ScaffoldMessenger.of(context);
-  final loaded = await loadDemoData(
+  final result = await loadDemoData(
     ProviderScope.containerOf(context),
     AppLocalizations.of(context),
   );
+  // Developer tooling: intentionally not localized (coding_standards.md §4).
   messenger.showSnackBar(
     SnackBar(
-      content: Text(
-        loaded ? 'Demo data loaded' : 'Demo data is already loaded',
-      ),
+      content: Text(switch (result) {
+        DemoDataResult.loaded => 'Demo data loaded',
+        DemoDataResult.alreadyLoaded => 'Demo data is already loaded',
+        DemoDataResult.namesTaken =>
+          'Demo data needs an app without Gym, Reading, Walking or '
+              'Focused work activities',
+      }),
     ),
   );
 }

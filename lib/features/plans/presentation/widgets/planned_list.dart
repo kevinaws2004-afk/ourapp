@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/design/app_icons.dart';
+import '../../../../core/design/context_ext.dart';
 import '../../../../core/design/tokens/spacing.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../shared/errors/error_copy.dart';
@@ -45,7 +46,9 @@ class PlannedList extends ConsumerWidget {
         item: item,
         onTap: () => onOpenItem(item),
         onMore: () => unawaited(actions.open(item)),
-        onToggleTask: () => actions.toggleTask(item),
+        onToggleDone: PlanActions.canToggleDone(item)
+            ? () => actions.toggleDone(item)
+            : null,
         dragHandle: dragHandle,
       ),
       RecordEntry(:final record) => DayRecordTile(
@@ -62,13 +65,26 @@ class PlannedList extends ConsumerWidget {
         e.item.records.isEmpty;
     final timed = entries.where((e) => !untimedPlan(e)).toList();
     final untimed = entries.where(untimedPlan).cast<PlanEntry>().toList();
-    if (!reorderable || untimed.length < 2) {
-      return Column(children: [for (final entry in entries) tile(entry)]);
-    }
     final l10n = AppLocalizations.of(context);
+    // Untimed items get their own heading under the timed ones (A19).
+    final anytime = [
+      if (timed.isNotEmpty && untimed.isNotEmpty) _AnytimeHeading(),
+    ];
+    if (!reorderable || untimed.length < 2) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (final entry in timed) tile(entry),
+          ...anytime,
+          for (final entry in untimed) tile(entry),
+        ],
+      );
+    }
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         for (final entry in timed) tile(entry),
+        ...anytime,
         ReorderableListView(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -104,4 +120,21 @@ class PlannedList extends ConsumerWidget {
       ],
     );
   }
+}
+
+/// "Anytime": the heading above a day's untimed items (A19).
+class _AnytimeHeading extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(top: AppSpacing.md, bottom: AppSpacing.sm),
+    child: Semantics(
+      header: true,
+      child: Text(
+        AppLocalizations.of(context).planAnytime,
+        style: context.textStyles.labelMedium?.copyWith(
+          color: context.colors.textSecondary,
+        ),
+      ),
+    ),
+  );
 }

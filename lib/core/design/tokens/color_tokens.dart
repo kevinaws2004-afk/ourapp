@@ -1,57 +1,50 @@
 import 'package:flutter/material.dart';
 
-/// Raw palette (private). Neutrals are the provisional v0 base (ADR-016);
-/// every other color is an activity-palette color (ADR-029). Feature code uses
-/// [AppColors] roles, never these.
+/// Raw palette (private). The app uses only white shades, the brand mist
+/// #DDF0EF and six activity-palette colors: sky, lilac, teal, rose, slate,
+/// coral (ADR-029, ADR-038). Neutrals are white shades and slate shades (text,
+/// borders, dark surfaces). Feature code uses [AppColors] roles, never these.
 abstract final class _Palette {
-  // Light neutrals ("Linen").
-  static const linenCanvas = Color(0xFFF5F1EA);
-  static const linenBase = Color(0xFFFBF8F3);
-  static const linenRaised = Color(0xFFFFFDF9);
-  static const linenSunken = Color(0xFFECE6DB);
-  static const linenBorderSubtle = Color(0xFFE2DACB);
-  static const linenBorderStrong = Color(0xFF8C8270);
-  static const inkPrimary = Color(0xFF1F1D2B);
-  static const inkSecondary = Color(0xFF5E5A6B);
-  static const inkTertiary = Color(0xFF8A8595);
+  // Light neutrals: white shades + mist.
+  static const white = Color(0xFFFFFFFF);
+  static const whiteCanvas = Color(0xFFF7FBFB);
+  static const mist = Color(0xFFDDF0EF); // = teal soft (light)
+  static const slateHairline = Color(0xFFE6E9EF); // = slate soft (light)
+  static const slateStrong = Color(0xFF5D6A80); // = slate solid (light)
+  static const slateInk = Color(0xFF252C3A);
+  static const slateInkSecondary = Color(0xFF515D72);
+  static const slateInkTertiary = Color(0xFF7F889C);
 
-  // Dark neutrals ("Night ink").
-  static const nightCanvas = Color(0xFF12141B);
-  static const nightBase = Color(0xFF1A1D26);
-  static const nightRaised = Color(0xFF232735);
-  static const nightSunken = Color(0xFF0D0F14);
-  static const nightBorderSubtle = Color(0xFF2C3040);
-  static const nightBorderStrong = Color(0xFF6E7488);
-  static const paperPrimary = Color(0xFFF1EEE8);
-  static const paperSecondary = Color(0xFFB4B0BE);
-  static const paperTertiary = Color(0xFF86839A);
+  // Dark neutrals: deep slate shades + white shades for text.
+  static const slateNightCanvas = Color(0xFF13171E);
+  static const slateNightBase = Color(0xFF1A1F28);
+  static const slateNightRaised = Color(0xFF232935);
+  static const slateNightSunken = Color(0xFF0E1116);
+  static const slateNightBorderSubtle = Color(0xFF2A313E);
+  static const slateNightBorderStrong = Color(0xFF6F7A8F);
+  static const whitePrimary = Color(0xFFF4FAF9);
+  static const slateLight = Color(0xFFA8B3C7); // = slate solid (dark)
+  static const slateLightTertiary = Color(0xFF808AA0);
 
   // Every non-neutral color comes from the activity palette (ADR-029):
-  // brand = teal, accent = apricot, success = moss, warning = apricot,
+  // brand = teal, accent = coral, success = teal, warning = coral,
   // danger = rose. Values must stay identical to activity_palette.dart.
   static const tealSolidLight = Color(0xFF2F8180);
   static const tealSolidDark = Color(0xFF7CCBC8);
-  static const tealSoftLight = Color(0xFFDDF0EF);
+  static const tealSoftLight = mist;
   static const tealSoftDark = Color(0xFF162B2B);
-  static const white = Color(0xFFFFFFFF);
-  static const apricotSolidLight = Color(0xFFB8642F);
-  static const apricotSolidDark = Color(0xFFF2A877);
-
-  // Status.
-  static const mossSolidLight = Color(0xFF6B7A2E);
-  static const mossSolidDark = Color(0xFFB8C87A);
-  static const mossSoftLight = Color(0xFFEDF0DA);
-  static const mossSoftDark = Color(0xFF262A17);
-  static const apricotSoftLight = Color(0xFFFBE9DC);
-  static const apricotSoftDark = Color(0xFF33231A);
+  static const coralSolidLight = Color(0xFFC0503E);
+  static const coralSolidDark = Color(0xFFF29A89);
+  static const coralSoftLight = Color(0xFFFBE4DF);
+  static const coralSoftDark = Color(0xFF341E1A);
   static const roseSolidLight = Color(0xFFB04E62);
   static const roseSolidDark = Color(0xFFEE9AAA);
   static const roseSoftLight = Color(0xFFF8E3E7);
   static const roseSoftDark = Color(0xFF331E24);
 
   // Scrims.
-  static const scrimLight = Color(0x661F1D2B); // ink @ 40%
-  static const scrimDark = Color(0x99000000); // black @ 60%
+  static const scrimLight = Color(0x66252C3A); // slate ink @ 40%
+  static const scrimDark = Color(0x990E1116); // slate night @ 60%
 }
 
 /// Semantic color roles (design_system.md §2.2–2.3). Theme-aware.
@@ -82,49 +75,49 @@ class AppColors {
   });
 
   static const light = AppColors(
-    surfaceCanvas: _Palette.linenCanvas,
-    surfaceBase: _Palette.linenBase,
-    surfaceRaised: _Palette.linenRaised,
-    surfaceSunken: _Palette.linenSunken,
-    borderSubtle: _Palette.linenBorderSubtle,
-    borderStrong: _Palette.linenBorderStrong,
-    textPrimary: _Palette.inkPrimary,
-    textSecondary: _Palette.inkSecondary,
-    textTertiary: _Palette.inkTertiary,
+    surfaceCanvas: _Palette.whiteCanvas,
+    surfaceBase: _Palette.white,
+    surfaceRaised: _Palette.white,
+    surfaceSunken: _Palette.mist,
+    borderSubtle: _Palette.slateHairline,
+    borderStrong: _Palette.slateStrong,
+    textPrimary: _Palette.slateInk,
+    textSecondary: _Palette.slateInkSecondary,
+    textTertiary: _Palette.slateInkTertiary,
     brandPrimary: _Palette.tealSolidLight,
     onBrandPrimary: _Palette.white,
     brandPrimarySoft: _Palette.tealSoftLight,
-    onBrandPrimarySoft: _Palette.inkPrimary,
-    accentDawn: _Palette.apricotSolidLight,
+    onBrandPrimarySoft: _Palette.slateInk,
+    accentDawn: _Palette.coralSolidLight,
     scrim: _Palette.scrimLight,
-    success: _Palette.mossSolidLight,
-    successContainer: _Palette.mossSoftLight,
-    warning: _Palette.apricotSolidLight,
-    warningContainer: _Palette.apricotSoftLight,
+    success: _Palette.tealSolidLight,
+    successContainer: _Palette.tealSoftLight,
+    warning: _Palette.coralSolidLight,
+    warningContainer: _Palette.coralSoftLight,
     danger: _Palette.roseSolidLight,
     dangerContainer: _Palette.roseSoftLight,
   );
 
   static const dark = AppColors(
-    surfaceCanvas: _Palette.nightCanvas,
-    surfaceBase: _Palette.nightBase,
-    surfaceRaised: _Palette.nightRaised,
-    surfaceSunken: _Palette.nightSunken,
-    borderSubtle: _Palette.nightBorderSubtle,
-    borderStrong: _Palette.nightBorderStrong,
-    textPrimary: _Palette.paperPrimary,
-    textSecondary: _Palette.paperSecondary,
-    textTertiary: _Palette.paperTertiary,
+    surfaceCanvas: _Palette.slateNightCanvas,
+    surfaceBase: _Palette.slateNightBase,
+    surfaceRaised: _Palette.slateNightRaised,
+    surfaceSunken: _Palette.slateNightSunken,
+    borderSubtle: _Palette.slateNightBorderSubtle,
+    borderStrong: _Palette.slateNightBorderStrong,
+    textPrimary: _Palette.whitePrimary,
+    textSecondary: _Palette.slateLight,
+    textTertiary: _Palette.slateLightTertiary,
     brandPrimary: _Palette.tealSolidDark,
-    onBrandPrimary: _Palette.nightCanvas,
+    onBrandPrimary: _Palette.slateNightCanvas,
     brandPrimarySoft: _Palette.tealSoftDark,
-    onBrandPrimarySoft: _Palette.paperPrimary,
-    accentDawn: _Palette.apricotSolidDark,
+    onBrandPrimarySoft: _Palette.whitePrimary,
+    accentDawn: _Palette.coralSolidDark,
     scrim: _Palette.scrimDark,
-    success: _Palette.mossSolidDark,
-    successContainer: _Palette.mossSoftDark,
-    warning: _Palette.apricotSolidDark,
-    warningContainer: _Palette.apricotSoftDark,
+    success: _Palette.tealSolidDark,
+    successContainer: _Palette.tealSoftDark,
+    warning: _Palette.coralSolidDark,
+    warningContainer: _Palette.coralSoftDark,
     danger: _Palette.roseSolidDark,
     dangerContainer: _Palette.roseSoftDark,
   );
@@ -150,15 +143,15 @@ class AppColors {
   final Color brandPrimarySoft;
   final Color onBrandPrimarySoft;
 
-  /// Apricot accent (rating stars, highlights). Graphics only; never small text.
+  /// Coral accent (rating stars, highlights). Graphics only; never small text.
   final Color accentDawn;
   final Color scrim;
 
-  /// Moss. Icons/fills on [successContainer]; never small text (below 4.5:1).
+  /// Teal. Icons/fills on [successContainer]; never small text (below 4.5:1).
   final Color success;
   final Color successContainer;
 
-  /// Apricot. Icons/fills on [warningContainer]; never small text (below 4.5:1).
+  /// Coral. Icons/fills on [warningContainer]; never small text (below 4.5:1).
   final Color warning;
   final Color warningContainer;
 

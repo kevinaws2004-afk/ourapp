@@ -44,7 +44,7 @@ abstract final class AppTheme {
       surfaceContainerHighest: c.surfaceSunken,
       outline: c.borderStrong,
       outlineVariant: c.borderSubtle,
-      shadow: const Color(0xFF000000),
+      shadow: c.scrim.withValues(alpha: 1),
       scrim: c.scrim,
       inverseSurface: isLight
           ? AppColors.dark.surfaceBase
@@ -210,6 +210,71 @@ abstract final class AppTheme {
           color: c.textSecondary,
         ),
       ),
+      // The pickers match the app instead of stock Material (A26).
+      datePickerTheme: _datePicker(c),
+      timePickerTheme: _timePicker(c),
     );
   }
+
+  /// Selected = brand; everything else neutral.
+  static WidgetStateProperty<Color?> _selected(Color on, Color off) =>
+      WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.selected) ? on : off,
+      );
+
+  /// [_selected] for theme slots that take a state-aware [Color].
+  static Color _selectedColor(Color on, Color off) =>
+      WidgetStateColor.resolveWith(
+        (states) => states.contains(WidgetState.selected) ? on : off,
+      );
+
+  static DatePickerThemeData _datePicker(AppColors c) => DatePickerThemeData(
+    backgroundColor: c.surfaceRaised,
+    surfaceTintColor: Colors.transparent,
+    elevation: 0,
+    shape: const RoundedRectangleBorder(borderRadius: AppRadius.lgAll),
+    headerBackgroundColor: c.surfaceRaised,
+    headerForegroundColor: c.textPrimary,
+    headerHeadlineStyle: AppTypography.headlineSmall.copyWith(
+      color: c.textPrimary,
+    ),
+    headerHelpStyle: AppTypography.labelLarge.copyWith(color: c.textSecondary),
+    weekdayStyle: AppTypography.labelMedium.copyWith(color: c.textSecondary),
+    dayStyle: AppTypography.bodyMedium,
+    dayForegroundColor: _selected(c.onBrandPrimary, c.textPrimary),
+    dayBackgroundColor: _selected(c.brandPrimary, Colors.transparent),
+    todayForegroundColor: _selected(c.onBrandPrimary, c.brandPrimary),
+    todayBackgroundColor: _selected(c.brandPrimary, Colors.transparent),
+    todayBorder: BorderSide(color: c.brandPrimary),
+    yearForegroundColor: _selected(c.onBrandPrimary, c.textPrimary),
+    yearBackgroundColor: _selected(c.brandPrimary, Colors.transparent),
+    dividerColor: c.borderSubtle,
+    rangePickerBackgroundColor: c.surfaceRaised,
+    rangeSelectionBackgroundColor: c.brandPrimarySoft,
+  );
+
+  static TimePickerThemeData _timePicker(AppColors c) => TimePickerThemeData(
+    backgroundColor: c.surfaceRaised,
+    elevation: 0,
+    shape: const RoundedRectangleBorder(borderRadius: AppRadius.lgAll),
+    helpTextStyle: AppTypography.labelLarge.copyWith(color: c.textSecondary),
+    hourMinuteColor: _selectedColor(c.brandPrimarySoft, c.surfaceSunken),
+    hourMinuteTextColor: _selectedColor(c.onBrandPrimarySoft, c.textPrimary),
+    hourMinuteTextStyle: AppTypography.numericLarge,
+    hourMinuteShape: const RoundedRectangleBorder(
+      borderRadius: AppRadius.mdAll,
+    ),
+    // AM/PM in brand soft, not the coral accent the scheme would give it.
+    dayPeriodColor: _selectedColor(c.brandPrimarySoft, Colors.transparent),
+    dayPeriodTextColor: _selectedColor(c.onBrandPrimarySoft, c.textSecondary),
+    dayPeriodBorderSide: BorderSide(color: c.borderStrong),
+    dayPeriodShape: const RoundedRectangleBorder(borderRadius: AppRadius.mdAll),
+    dayPeriodTextStyle: AppTypography.labelLarge,
+    dialBackgroundColor: c.surfaceSunken,
+    dialHandColor: c.brandPrimary,
+    dialTextColor: _selectedColor(c.onBrandPrimary, c.textPrimary),
+    dialTextStyle: AppTypography.bodyLarge,
+    entryModeIconColor: c.textSecondary,
+    timeSelectorSeparatorColor: WidgetStatePropertyAll(c.textSecondary),
+  );
 }

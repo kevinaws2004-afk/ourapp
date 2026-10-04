@@ -14,7 +14,7 @@ Activity Types are created and configured under **Me → Activities** (ADR-028).
 
 | ID | Requirement | Priority | Spec |
 |---|---|---|---|
-| FR-AT-01 | User can create an Activity Type with name, icon, color/appearance and optional description. | V1 | §3.1, §11, §27 |
+| FR-AT-01 | User can create an Activity Type with name, icon, color/appearance and optional description. Names are unique among active activities (case-insensitive), so typing a name always means one activity. | V1 | §3.1, §11, §27, ADR-039 |
 | FR-AT-02 | User can add fields to an Activity Type from the field type catalog (FR-FT-*). | V1 | §9, §11 |
 | FR-AT-03 | User can reorder fields; order determines form rendering order. | V1 | §11 |
 | FR-AT-04 | User can mark a field as required. | V1 | §10 |
@@ -56,7 +56,7 @@ Each type has defined value semantics, validation, storage mapping, rendering an
 | FR-LG-03 | Required fields are marked; while logging into an item they are a hint, not a save blocker (ADR-035). Values are validated (type, range, unit) before saving. | V1 | §10, ADR-035 |
 | FR-LG-04 | User can edit and delete a Log. | V1 | implied |
 | FR-LG-05 | Logging happens inside an item, opened from Today or Plan; an activity's page (Me → Activities) adds an item for now and opens it; the timer runs inside the item. | V1 | §36, ADR-028, ADR-035 |
-| FR-LG-06 | **Log something now:** the quick add's **Now** adds an unplanned item at the current time and opens it to log into (no separate Quick Record sheet). | V1 | §37, ADR-028, ADR-035 |
+| FR-LG-06 | **Log something now:** the quick add's **Start now** adds an unplanned item at the current time and opens it to log into (no separate Quick Record sheet). | V1 | §37, ADR-028, ADR-035, ADR-039 |
 | FR-LG-07 | Gym: user can add exercises, add sets per exercise (weight × reps), and record workout duration. | V1 | §12, §41 |
 | FR-LG-08 | Logs for archived Activity Types or removed fields remain viewable. | V1 | implied |
 
@@ -67,12 +67,12 @@ Each type has defined value semantics, validation, storage mapping, rendering an
 | FR-PL-01 | User can create a Plan for today, tomorrow or a future date. | V1 | §19 |
 | FR-PL-02 | A Plan has a title, optional description, optional scheduled start/end. | V1 | §28 |
 | FR-PL-03 | A Plan can optionally link to an Activity Type. | V1 | §19 |
-| FR-PL-04 | A Plan has a status. Stored: planned, skipped, cancelled, and completed (tasks only). Activity-plan completion and in-progress are **derived** from linked logs/focus sessions (ADR-018). | V1 | §28 |
+| FR-PL-04 | A Plan has a status: planned, skipped, cancelled or completed. Any item can be marked done (Mark done, the row's check, or finishing its timer). Logging into an activity item makes it **in progress** until it's marked done, or until its day has passed (ADR-040). | V1 | §28, ADR-018, ADR-040 |
 | FR-PL-05 | Opening a plan opens it as an item to log into; the first thing logged creates its linked Log, saved as the user types (ADR-035). | V1 | §19, §36, ADR-030, ADR-035 |
 | FR-PL-06 | Plan and Log are preserved independently to allow planned-vs-actual comparison. | V1 | §20, §43 |
 | FR-PL-07 | Lightweight Tasks can be created and completed without detailed logging. | V1 | §21, §41 |
 | FR-PL-08 | Plans can be reordered (drag and drop). | V1? | §6 lists drag & drop in stack |
-| FR-PL-09 | The Plan tab is date-based: a calendar/date selector navigates to any past, present or future date and shows that date's plans. | V1 | ADR-028 |
+| FR-PL-09 | The Plan tab is date-based: a week and a month view reach any past, present or future date; tapping a day opens it, shown the same way as Today. | V1 | ADR-028, ADR-039 |
 | FR-PL-10 | For a selected date, the user sees what was planned next to what was actually recorded, including past dates (review). | V1 | §20, ADR-028 |
 
 ### 1.5 Focus Mode & Timer

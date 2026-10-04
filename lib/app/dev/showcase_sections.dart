@@ -150,19 +150,19 @@ class BrandSwatches extends StatelessWidget {
           foreground: c.onBrandPrimarySoft,
         ),
         _Swatch(
-          name: 'accent (apricot)',
+          name: 'accent (coral)',
           color: c.accentDawn,
           // Decorative color, never a text background; dark ink keeps the
           // label readable in both themes.
           foreground: AppColors.light.textPrimary,
         ),
         _Swatch(
-          name: 'success (moss)',
+          name: 'success (teal)',
           color: c.success,
           foreground: c.onBrandPrimary,
         ),
         _Swatch(
-          name: 'warning (apricot)',
+          name: 'warning (coral)',
           color: c.warning,
           foreground: c.onBrandPrimary,
         ),

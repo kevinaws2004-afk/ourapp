@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/async/combine_latest.dart';
 import '../../../core/database/database_provider.dart';
 import '../../../core/ids/id_generator_provider.dart';
 import '../../../core/time/clock_provider.dart';
@@ -58,13 +59,13 @@ final activityTotalsProvider =
       final repo = ref.watch(insightRepositoryProvider);
       final (from, to) = range.window(today);
       final (prevFrom, prevTo) = range.previous(today);
-      return repo
-          .watchActivityTotals(from, to)
-          .asyncExpand(
-            (current) => repo
-                .watchActivityTotals(prevFrom, prevTo)
-                .map((previous) => (current, previous)),
-          );
+      // Both stay live (A20): asyncExpand used to wait on the inner stream
+      // forever, so the list stopped updating after its first value.
+      return combineLatest2(
+        repo.watchActivityTotals(from, to),
+        repo.watchActivityTotals(prevFrom, prevTo),
+        (current, previous) => (current, previous),
+      );
     });
 
 final saveInsightChartProvider = Provider(

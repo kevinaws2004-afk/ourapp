@@ -19,9 +19,9 @@
 - **Focus Session**: full-screen timer whose active duration lands in a Log.
 - **Repeating Group**: the structured field type (exercise list; sets = a nested Repeating Group of Numbers). "Set Table" from the spec is a composition, not a type (OQ-01).
 
-**Planner (ADR-036):** Plan is Day | Week | Month; plans can repeat (weekdays, every N weeks; occurrences are ordinary items); any item offers Plan next.
+**Planner (ADR-036, ADR-039):** Plan is Week | Month, and a tapped day opens like Today; plans can repeat (weekdays, every N weeks; occurrences are ordinary items); any item offers Plan next.
 **Insights (ADR-037):** each activity opens an automatic progress page built from its fields (per exercise best weight and volume, etc.).
-**Navigation (ADR-028):** Today · Plan · Insights · Me. Add to a day from the quick add (with **Now**); no global record action (ADR-035).
+**Navigation (ADR-028):** Today · Plan · Insights · Me. Add to a day from the quick add (suggestions while typing, **Start now**, one time sheet, Recent chips; ADR-039); no global record action (ADR-035). Activity names are unique. Logging into an item makes it in progress; Mark done / the row check / finishing the timer makes it done (ADR-040).
 - **Plan:** the date-based planning system: pick any date, see its plans and what was recorded.
 - **Today:** today's plan plus today's reality.
 - **Me → Activities:** reusable Activity Type setup.

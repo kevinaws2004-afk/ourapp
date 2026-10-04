@@ -154,7 +154,7 @@ class ActivityBuilderNotifier extends AsyncNotifier<ActivityBuilderState> {
       return ActivityBuilderState(
         name: args.initialName.trim(),
         iconId: 'sparkle',
-        colorKey: ActivityColorKey.sage.name,
+        colorKey: ActivityColorKey.teal.name,
         fields: const [],
       );
     }
@@ -168,7 +168,9 @@ class ActivityBuilderNotifier extends AsyncNotifier<ActivityBuilderState> {
       typeId: id,
       name: type.name,
       iconId: type.iconId,
-      colorKey: type.colorKey,
+      colorKey:
+          (ActivityColorKey.fromName(type.colorKey) ?? ActivityColorKey.slate)
+              .name,
       description: type.description ?? '',
       supportsTimer: type.supportsTimer,
       supportsPlanning: type.supportsPlanning,

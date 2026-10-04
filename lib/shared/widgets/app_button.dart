@@ -34,17 +34,19 @@ class AppButton extends StatelessWidget {
                 icon: iconWidget,
                 label: child,
               ),
-      AppButtonVariant.secondary => FilledButton.tonal(
+      AppButtonVariant.secondary => FilledButton.tonalIcon(
         style: FilledButton.styleFrom(
           backgroundColor: colors.brandPrimarySoft,
           foregroundColor: colors.onBrandPrimarySoft,
         ),
         onPressed: onPressed,
-        child: child,
+        icon: iconWidget,
+        label: child,
       ),
-      AppButtonVariant.tertiary => TextButton(
+      AppButtonVariant.tertiary => TextButton.icon(
         onPressed: onPressed,
-        child: child,
+        icon: iconWidget,
+        label: child,
       ),
       AppButtonVariant.destructive => FilledButton(
         style: FilledButton.styleFrom(

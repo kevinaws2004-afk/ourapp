@@ -11,6 +11,8 @@ import '../../features/activity_logs/domain/field_value.dart';
 import '../../features/activity_logs/presentation/activity_log_providers.dart';
 import '../../features/activity_types/domain/activity_ids.dart';
 import '../../features/activity_types/domain/activity_type.dart';
+import '../../features/activity_types/domain/activity_type_use_cases.dart';
+import '../../features/activity_types/domain/field_config.dart';
 import '../../features/activity_types/presentation/activity_templates.dart';
 import '../../features/activity_types/presentation/activity_type_providers.dart';
 import '../../features/insights/domain/insight.dart';
@@ -24,16 +26,29 @@ import '../../l10n/generated/app_localizations.dart';
 /// Debug-only demo data: six weeks of Gym, Reading, Walking and Focused work
 /// records, plans around today, body measurements and a few saved charts.
 /// Everything goes through the normal use cases, so it is validated like user
-/// input, alongside any existing data. Returns false (and writes nothing)
-/// when the demo data is already there.
-Future<bool> loadDemoData(
+/// input, alongside any existing data. Writes nothing when the demo data is
+/// already there, or when an activity already uses one of its names
+/// (activity names are unique).
+enum DemoDataResult { loaded, alreadyLoaded, namesTaken }
+
+Future<DemoDataResult> loadDemoData(
   ProviderContainer container,
   AppLocalizations l10n,
 ) async {
   final types = container.read(activityTypeRepositoryProvider);
   final charts = container.read(insightRepositoryProvider);
   if ((await charts.watchCharts().first).any((c) => c.title == _marker)) {
-    return false;
+    return DemoDataResult.alreadyLoaded;
+  }
+  final demoNames = [
+    l10n.templateReading,
+    l10n.templateFocusedWork,
+    l10n.templateWalking,
+    l10n.templateGym,
+  ];
+  final existing = await types.getActiveTypes();
+  if (existing.any((t) => demoNames.any((n) => sameActivityName(t.name, n)))) {
+    return DemoDataResult.namesTaken;
   }
 
   final clock = container.read(clockProvider);
@@ -145,7 +160,9 @@ Future<bool> loadDemoData(
               durationMs: minutes(duration),
               planId: planId,
               values: {
-                gymFocus: TextValue(legDay ? 'Legs' : 'Chest / Back'),
+                gymFocus: SingleSelectValue(
+                  _option(gym, gymFocus, legDay ? 2 : 1), // Legs / Pull
+                ),
                 gymExercises: RepeatingGroupValue([
                   for (final (name, kg) in exercises)
                     item({
@@ -316,13 +333,18 @@ Future<bool> loadDemoData(
       ),
     );
   }
-  return true;
+  return DemoDataResult.loaded;
 }
 
 /// Title of the first demo chart; its presence means the demo is loaded.
 const _marker = 'Gym volume';
 
 /// Live fields under [parent] (top level when null), in form order.
+/// The [index]th option of a select field (templates are plain data; never
+/// match by label).
+SelectOptionId _option(ActivityType type, ActivityFieldId field, int index) =>
+    (type.fieldById(field)!.config as SelectFieldConfig).options[index].id;
+
 List<ActivityFieldId> _children(ActivityType type, [ActivityFieldId? parent]) =>
     ([
           for (final f in type.fields)

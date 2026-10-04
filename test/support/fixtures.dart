@@ -110,7 +110,7 @@ ActivityTypeDefinition languageDefinition() => const ActivityTypeDefinition(
 ActivityTypeDefinition walkingDefinition() => const ActivityTypeDefinition(
   name: 'Walking',
   iconId: 'person-simple-walk',
-  colorKey: 'sage',
+  colorKey: 'teal',
   fields: [
     FieldDefinition(
       name: 'Distance',

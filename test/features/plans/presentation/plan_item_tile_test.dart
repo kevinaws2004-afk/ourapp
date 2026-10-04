@@ -40,7 +40,7 @@ void main() {
             ),
             onTap: () {},
             onMore: () {},
-            onToggleTask: () {},
+            onToggleDone: () {},
           ),
         ),
       ),

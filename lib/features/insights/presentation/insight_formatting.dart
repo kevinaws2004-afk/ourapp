@@ -18,11 +18,16 @@ class InsightDisplay {
     this._convert,
     this._format, {
     this.isDuration = false,
+    this.wholeNumbers = false,
   });
 
   final double Function(double canonical) _convert;
   final String Function(double display) _format;
   final bool isDuration;
+
+  /// Shown without decimals (counts, minutes, whole units): chart axes use
+  /// whole steps so labels never repeat (A22).
+  final bool wholeNumbers;
 
   double convert(double canonical) => _convert(canonical);
 
@@ -44,6 +49,7 @@ class InsightDisplay {
           formatNumber(v, decimals),
           if (u != null) u.symbol,
         ].join(u?.symbol == '%' ? '' : ' '),
+        wholeNumbers: decimals == 0,
       );
     }
 
@@ -61,10 +67,12 @@ class InsightDisplay {
           (minutes * Duration.millisecondsPerMinute).round(),
         ),
         isDuration: true,
+        wholeNumbers: true,
       ),
       ActivityCountSource() => InsightDisplay._(
         (v) => v,
         (v) => formatNumber(v, 0),
+        wholeNumbers: true,
       ),
       FieldValueSource(:final fieldId) => unit(fieldUnit(fieldId)),
       VolumeSource(:final amountFieldId) => unit(
@@ -101,6 +109,25 @@ String aggregationLabel(AppLocalizations l10n, Aggregation a) => switch (a) {
   Aggregation.count => l10n.insightAggCount,
   Aggregation.latest => l10n.insightAggLatest,
 };
+
+/// What a chart's headline number is, for the period shown (A21): "total
+/// this period", "best this period", …
+String periodValueLabel(AppLocalizations l10n, Aggregation a) => switch (a) {
+  Aggregation.sum => l10n.insightPeriodTotal,
+  Aggregation.average => l10n.insightPeriodAverage,
+  Aggregation.max => l10n.insightPeriodBest,
+  Aggregation.min => l10n.insightPeriodLowest,
+  Aggregation.count => l10n.insightPeriodCount,
+  Aggregation.latest => l10n.insightAggLatest,
+};
+
+/// "Sep 5 – Oct 4": the period every number on the screen covers (A20).
+String formatPeriod(BuildContext context, LocalDate from, LocalDate to) {
+  final material = MaterialLocalizations.of(context);
+  String d(LocalDate x) =>
+      material.formatShortMonthDay(DateTime(x.year, x.month, x.day));
+  return AppLocalizations.of(context).insightPeriod(d(from), d(to));
+}
 
 String bucketName(AppLocalizations l10n, Bucket b) => switch (b) {
   Bucket.day => l10n.insightBucketDay,

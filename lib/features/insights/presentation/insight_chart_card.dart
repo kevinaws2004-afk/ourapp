@@ -12,6 +12,7 @@ import '../../../shared/widgets/charts/app_chart.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../../activity_types/domain/activity_ids.dart';
 import '../../activity_types/domain/activity_type.dart';
+import '../../activity_types/domain/field_config.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
 import '../domain/insight.dart';
 import '../domain/insight_use_cases.dart';
@@ -35,9 +36,14 @@ class InsightChartCard extends ConsumerWidget {
     required this.chart,
     this.onEdit,
     this.onDelete,
+    this.hideWhenEmpty = false,
   });
 
   final InsightChartConfig chart;
+
+  /// Automatic charts with nothing in the period aren't shown (A23), e.g.
+  /// "Time" for an activity that's never timed. Saved charts always show.
+  final bool hideWhenEmpty;
 
   /// Edit/delete for a saved chart; automatic charts have neither.
   final VoidCallback? onEdit;
@@ -50,6 +56,10 @@ class InsightChartCard extends ConsumerWidget {
     final ActivityType? type = typeId == null
         ? null
         : ref.watch(activityTypeProvider(typeId)).value;
+    final result = ref.watch(insightResultProvider(chart));
+    if (hideWhenEmpty && (result.value?.isEmpty ?? false)) {
+      return const SizedBox.shrink();
+    }
     final accent = type == null
         ? context.colors.brandPrimary
         : context.tokens
@@ -105,12 +115,13 @@ class InsightChartCard extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(right: AppSpacing.md),
                 child: AsyncValueView<InsightResult>(
-                  value: ref.watch(insightResultProvider(chart)),
+                  value: result,
                   data: (result) => _Content(
                     chart: chart,
                     result: result,
                     display: InsightDisplay.of(l10n, chart.source, type),
                     accent: accent,
+                    itemLabel: _itemLabel(chart.source, type),
                   ),
                 ),
               ),
@@ -122,18 +133,32 @@ class InsightChartCard extends ConsumerWidget {
   }
 }
 
+/// What one row of a volume's list is called ("Set"), for "Best Set".
+String? _itemLabel(InsightSource source, ActivityType? type) =>
+    switch ((source, type)) {
+      (VolumeSource(:final groupFieldId), final type?) => switch (type
+          .fieldById(groupFieldId)
+          ?.config) {
+        RepeatingGroupFieldConfig(:final itemLabel) => itemLabel,
+        _ => null,
+      },
+      _ => null,
+    };
+
 class _Content extends StatelessWidget {
   const _Content({
     required this.chart,
     required this.result,
     required this.display,
     required this.accent,
+    this.itemLabel,
   });
 
   final InsightChartConfig chart;
   final InsightResult result;
   final InsightDisplay display;
   final Color accent;
+  final String? itemLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +166,7 @@ class _Content extends StatelessWidget {
     final material = MaterialLocalizations.of(context);
     final series = result.series;
     final planned = result.plannedSeries;
-    if (series.isEmpty && (planned?.isEmpty ?? true)) {
+    if (result.isEmpty) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
         child: Text(
@@ -183,26 +208,51 @@ class _Content extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
-              Text(aggregationLabel(l10n, chart.aggregation), style: quiet),
+              Flexible(
+                child: Text(
+                  periodValueLabel(l10n, chart.aggregation),
+                  style: quiet,
+                ),
+              ),
             ],
           ),
         if (planned == null && change != null)
           Text(l10n.insightChange(formatChange(change)), style: quiet),
-        if (result.personalBest case final best?)
+        // All-time records, named for what they are (A21).
+        if (result.bestDay case final day?)
           Text(
-            l10n.insightPersonalBest(display.format(best.value), date(best)),
+            l10n.insightBestDay(display.format(day.value), date(day)),
             style: quiet,
           ),
+        if (result.personalBest case final best?)
+          Text(switch ((chart.source, itemLabel)) {
+            (VolumeSource(), final item?) => l10n.insightBestItem(
+              item,
+              display.format(best.value),
+              date(best),
+            ),
+            _ => l10n.insightAllTimeBest(
+              display.format(best.value),
+              date(best),
+            ),
+          }, style: quiet),
         const SizedBox(height: AppSpacing.md),
         AppChart(
           kind: chart.kind == ChartKind.bar || planned != null
               ? AppChartKind.bar
               : AppChartKind.line,
+          // A partial first bucket is labelled with the period's first day,
+          // so the chart starts where the period does (A20).
           labels: [
             for (final b in series.buckets)
-              bucketLabel(context, b.start, chart.bucket),
+              bucketLabel(
+                context,
+                b.start.compareTo(result.from) < 0 ? result.from : b.start,
+                chart.bucket,
+              ),
           ],
           formatValue: display.axis,
+          wholeNumbers: display.wholeNumbers,
           series: [
             if (planned != null)
               ChartSeries(

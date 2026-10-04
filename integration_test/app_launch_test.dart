@@ -38,7 +38,7 @@ void main() {
         await tester.pumpAndSettle();
       }
 
-      await tester.tap(find.text('Design tokens (debug)'));
+      await tester.tap(find.text('Design tokens'));
       await tester.pumpAndSettle();
       expect(find.byType(TokenShowcaseScreen), findsOneWidget);
 

@@ -95,7 +95,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(ActivityTypeScreen), findsOneWidget);
-    await tester.tap(find.text('Chest Press'));
+    // The summary carries the sets' numbers (A18).
+    await tester.tap(find.textContaining('Chest Press'));
     await tester.pumpAndSettle();
     final lastReps = find.widgetWithText(TextField, 'Reps').at(2);
     await tester.ensureVisible(lastReps);

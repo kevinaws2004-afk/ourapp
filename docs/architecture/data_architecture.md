@@ -65,6 +65,7 @@ Lifecycle rules (FR-AT-09; historical data safety, enforced by domain **and** DB
 - **Delete:** soft delete. Values remain and are shown in historical logs as a muted "removed field". Not offered in new logs.
 - **Select options:** removing an option that may be in use marks it `archived` in config (stable option IDs); archived options render for history but can't be chosen for new values.
 - Active field names must be unique within a type (case-insensitive). This is a domain rule.
+- Active activity type names must be unique (trimmed, case-insensitive; archived types don't count). Enforced in `CreateActivityType` / `UpdateActivityType` (`duplicateActivityName`), not in the schema (ADR-039).
 
 ### 3.3 ActivityLog (§3.3, ADR-021)
 `id, activityTypeId, startedAt, endedAt?, durationMs?, tzOffsetMinutes, localDate, notes?, values, createdAt, updatedAt, deletedAt?` + `planId?` (the plan it fulfils; set on create, kept on edit)
@@ -226,7 +227,7 @@ InsightSeries (buckets + total, count, average, best, latest) ──▶ AppChart
 - `MeasurementSource(type)`: `measurements.normalized_value`.
 - `PlannedVsActualSource(type?)`: planned length (`planned_end_at − planned_start_at` or `planned_duration_ms`) and recorded `duration_ms` of linked records, both by `plan_date` (FR-AN-09).
 
-**Results** (`WatchInsight`): the series for the range, the period value against the previous period of the same length, and the **personal best** (all-time highest point) for field and volume sources. Default aggregations: time/count/volume = total, body = latest, field = best.
+**Results** (`WatchInsight`): the period (`from`, `to`), the series for the range, the period value against the previous period of the same length, and the **personal best** (all-time highest point) for field and volume sources; for a volume also the **best day** (highest per-day total, `bestDayTotal`). `InsightRange.bucket` gives automatic charts a bucket that fits the range. Default aggregations: time/count/volume = total, body = latest, field = best.
 
 **Saved charts** (`InsightChartConfig`: title, source, aggregation, bucket, line/bar) are persisted in `insight_charts` as versioned JSON (`InsightChartCodec`, `"v": 1`). This departs from the OQ-14 recommendation and awaits owner confirmation.
 
@@ -245,7 +246,7 @@ Templates are **plain data** (`features/activity_types/presentation/activity_tem
 | Walking | Distance (number, distance, km), Steps (number), Calories (number, energy, kcal), Location (text) | yes |
 | Language Learning | Language (single select), Words learned (number), Lesson (text), Difficulty (rating /5) | yes |
 
-| Gym (Phase 3) | Focus (text, suggest; e.g. "Chest"), Exercises (group, item "Exercise") { Exercise (text, required, suggest), Sets (group, item "Set") { Weight (number, mass, kg, 2 decimals), Reps (number) } } | yes |
+| Gym (Phase 3) | Workout (single choice: Push, Pull, Legs, Upper body, Lower body, Full body, Cardio; A12), Exercises (group, item "Exercise") { Exercise (text, required, suggest), Sets (group, item "Set") { Weight (number, mass, kg, 2 decimals), Reps (number) } } | yes |
 | Meeting (Phase 3) | People (text), Topics (multi-line text), Decisions (multi-line text), Action items (group, item "Action item") { Item (text, required), Done (boolean) } | yes |
 | Cooking (Phase 3) | Recipe (text, suggest), Servings (number), Calories (number, energy, kcal), Rating (rating /5), Ingredients (group, item "Ingredient") { Ingredient (text, required, suggest), Have it (boolean) } | yes |
 

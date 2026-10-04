@@ -24,8 +24,9 @@ String? formatPlanTime(BuildContext context, Plan plan) {
   ].join(' · ').emptyToNull;
 }
 
-/// The reality half of Plan vs Reality: "Recorded · 45 min of 1 h", or the
-/// stored status for skipped, cancelled and done tasks; null while open.
+/// The reality half of Plan vs Reality: "45 min of 1 h" once done, "In
+/// progress", or skipped / cancelled; null while open. "Done" itself isn't
+/// spelled out: the ✓ and the filled row say it (A18).
 String? formatPlanOutcome(BuildContext context, PlannedItem item) {
   final l10n = AppLocalizations.of(context);
   final actual = item.actualDurationMs;
@@ -33,14 +34,13 @@ String? formatPlanOutcome(BuildContext context, PlannedItem item) {
   return switch (item.status) {
     EffectivePlanStatus.planned => null,
     EffectivePlanStatus.inProgress => l10n.planStatusInProgress,
-    EffectivePlanStatus.completed when item.plan.isTask => l10n.planStatusDone,
     EffectivePlanStatus.completed => switch ((actual, planned)) {
       (final a?, final p?) => l10n.planRecordedOfPlanned(
         formatDuration(l10n, a),
         formatDuration(l10n, p),
       ),
       (final a?, null) => l10n.planRecordedDuration(formatDuration(l10n, a)),
-      _ => l10n.planStatusRecorded,
+      _ => null,
     },
     EffectivePlanStatus.skipped => l10n.planStatusSkipped,
     EffectivePlanStatus.cancelled => l10n.planStatusCancelled,
