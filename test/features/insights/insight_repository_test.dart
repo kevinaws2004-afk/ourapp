@@ -19,6 +19,7 @@ import 'package:daylog/features/measurements/domain/measurement_use_cases.dart';
 import 'package:daylog/features/plans/data/db_plan_repository.dart';
 import 'package:daylog/features/plans/domain/plan.dart';
 import 'package:daylog/features/plans/domain/plan_use_cases.dart';
+import 'package:daylog/features/insights/domain/auto_insights.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/fake_clock.dart';
@@ -172,6 +173,7 @@ void main() {
     );
     await read(DateTime.utc(2026, 9, 29, 21), 45);
     await read(DateTime.utc(2026, 9, 30, 21), 30);
+    await read(DateTime.utc(2026, 9, 30, 7), 0); // same day again
 
     final time = await insights
         .watchPoints(ActivityDurationSource(reading.id))
@@ -180,12 +182,13 @@ void main() {
     final count = await insights
         .watchPoints(ActivityCountSource(reading.id))
         .first;
-    expect(count, hasLength(2));
+    expect(count, hasLength(3));
     final totals = await insights
         .watchActivityTotals(LocalDate(2026, 9, 25), LocalDate(2026, 10, 1))
         .first;
     expect(totals[reading.id]!.durationMs, 75 * 60000);
-    expect(totals[reading.id]!.count, 2);
+    expect(totals[reading.id]!.count, 3);
+    expect(totals[reading.id]!.days, 2, reason: 'distinct days');
   });
 
   test('planned vs actual by plan date', () async {
@@ -265,4 +268,58 @@ void main() {
     await DeleteInsightChart(insights, clock)(id);
     expect(await insights.watchCharts().first, isEmpty);
   });
+
+  test('automatic charts (ADR-037): per exercise best weight and volume, '
+      'from the fields alone, with real data behind them', () async {
+    final gym = await install(gymDefinition());
+    await workout(gym, DateTime.utc(2026, 9, 28, 18), {
+      'Chest Press': [(50, 12), (55, 10)],
+      'Squat': [(80, 8)],
+    });
+    await workout(gym, DateTime.utc(2026, 9, 30, 18), {
+      'Chest Press': [(60, 8)],
+    });
+    final exercise = field(gym, 'Exercise');
+    final names = await logs.textSuggestions(exercise);
+
+    expect(names.toSet(), {'Chest Press', 'Squat'});
+    final charts = autoChartsFor(gym, {
+      exercise: [...names]..sort(),
+    });
+
+    expect(
+      [for (final c in charts) (c.kind, c.rowName, c.fieldName)],
+      [
+        (AutoChartKind.time, null, null),
+        (AutoChartKind.count, null, null),
+        (AutoChartKind.best, 'Chest Press', 'Weight'),
+        (AutoChartKind.volume, 'Chest Press', null),
+        (AutoChartKind.best, 'Squat', 'Weight'),
+        (AutoChartKind.volume, 'Squat', null),
+      ],
+    );
+    final best = await insights.watchPoints(charts[2].config.source).first;
+    expect(aggregate(best, Aggregation.max), 60);
+    final volume = await insights.watchPoints(charts[3].config.source).first;
+    expect(aggregate(volume, Aggregation.sum), 50 * 12 + 55 * 10 + 60 * 8);
+  });
+
+  test(
+    'automatic charts for a plain activity: its numbers and ratings',
+    () async {
+      final reading = await install(readingDefinition());
+
+      final charts = autoChartsFor(reading, const {});
+
+      expect(
+        [for (final c in charts) (c.kind, c.fieldName, c.config.aggregation)],
+        [
+          (AutoChartKind.time, null, Aggregation.sum),
+          (AutoChartKind.count, null, Aggregation.count),
+          (AutoChartKind.value, 'Pages', Aggregation.sum),
+          (AutoChartKind.value, 'Rating', Aggregation.average),
+        ],
+      );
+    },
+  );
 }

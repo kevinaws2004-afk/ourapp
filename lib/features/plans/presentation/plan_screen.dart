@@ -18,12 +18,13 @@ import '../domain/watch_day_overview.dart';
 import 'plan_date_notifier.dart';
 import 'plan_editor_sheet.dart';
 import 'plan_providers.dart';
+import 'plan_views.dart';
 import 'widgets/plan_quick_add.dart';
 import 'widgets/planned_list.dart';
 
-/// Plan tab (ADR-028, ADR-035): the date-based planner. Select any date →
-/// its items (plans, and anything done without a plan) in one list. Opening
-/// an item is where you log into it.
+/// Plan tab (ADR-028, ADR-035, ADR-036): the date-based planner, as a day, a
+/// week or a month. A day lists its items (plans, and anything done without
+/// a plan); opening an item is where you log into it.
 class PlanScreen extends ConsumerWidget {
   const PlanScreen({
     super.key,
@@ -58,44 +59,58 @@ class PlanScreen extends ConsumerWidget {
             children: [
               Text(l10n.navPlan, style: context.textStyles.displayMedium),
               const SizedBox(height: AppSpacing.lg),
-              _DateHeading(selected: selected, today: today),
-              const SizedBox(height: AppSpacing.md),
-              _WeekStrip(selected: selected, today: today),
-              SectionHeader(
-                title: l10n.planPlannedSection,
-                trailing: IconButton(
-                  tooltip: l10n.planNewTitle,
-                  icon: const Icon(AppIcons.add),
-                  onPressed: () => showPlanEditor(context, date: selected),
-                ),
-              ),
-              PlanQuickAdd(
-                key: ValueKey(selected),
-                date: selected,
-                onStartNow: selected == today ? onOpenItem : null,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              AsyncValueView<DayOverview>(
-                value: ref.watch(dayOverviewProvider(selected)),
-                onRetry: () => ref.invalidate(dayOverviewProvider(selected)),
-                data: (overview) {
-                  final entries = overview.entries;
-                  if (entries.isEmpty) {
-                    return Text(
-                      l10n.planPlannedEmpty,
-                      style: context.textStyles.bodyLarge?.copyWith(
-                        color: context.colors.textSecondary,
-                      ),
-                    );
-                  }
-                  return PlannedList(
-                    entries: entries,
-                    onOpenItem: (item) => onOpenItem(item.plan.id),
+              const PlanViewSwitch(),
+              const SizedBox(height: AppSpacing.lg),
+              ...switch (ref.watch(planViewProvider)) {
+                PlanView.week => [
+                  PlanWeekView(
+                    onOpenItem: onOpenItem,
                     onOpenRecord: onOpenRecord,
-                    reorderable: true,
-                  );
-                },
-              ),
+                  ),
+                ],
+                PlanView.month => [const PlanMonthView()],
+                PlanView.day => [
+                  _DateHeading(selected: selected, today: today),
+                  const SizedBox(height: AppSpacing.md),
+                  _WeekStrip(selected: selected, today: today),
+                  SectionHeader(
+                    title: l10n.planPlannedSection,
+                    trailing: IconButton(
+                      tooltip: l10n.planNewTitle,
+                      icon: const Icon(AppIcons.add),
+                      onPressed: () => showPlanEditor(context, date: selected),
+                    ),
+                  ),
+                  PlanQuickAdd(
+                    key: ValueKey(selected),
+                    date: selected,
+                    onStartNow: selected == today ? onOpenItem : null,
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  AsyncValueView<DayOverview>(
+                    value: ref.watch(dayOverviewProvider(selected)),
+                    onRetry: () =>
+                        ref.invalidate(dayOverviewProvider(selected)),
+                    data: (overview) {
+                      final entries = overview.entries;
+                      if (entries.isEmpty) {
+                        return Text(
+                          l10n.planPlannedEmpty,
+                          style: context.textStyles.bodyLarge?.copyWith(
+                            color: context.colors.textSecondary,
+                          ),
+                        );
+                      }
+                      return PlannedList(
+                        entries: entries,
+                        onOpenItem: (item) => onOpenItem(item.plan.id),
+                        onOpenRecord: onOpenRecord,
+                        reorderable: true,
+                      );
+                    },
+                  ),
+                ],
+              },
             ],
           ),
         ),

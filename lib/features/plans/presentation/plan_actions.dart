@@ -9,6 +9,7 @@ import '../domain/plan.dart';
 import '../domain/watch_day_overview.dart';
 import 'plan_editor_sheet.dart';
 import 'plan_providers.dart';
+import 'widgets/repeat_sheet.dart';
 
 /// Reversible plan actions shared by Today and the Plan tab: they act
 /// immediately and offer Undo (ui_guidelines.md: no confirmation dialogs).
@@ -81,14 +82,39 @@ class PlanActions {
       _run(() => _setStatus(item.plan.id, PlanStatus.planned));
 
   Future<void> moveToTomorrow(PlannedItem item) {
+    final id = item.plan.id;
     final from = item.plan.planDate;
     final move = _ref.read(movePlanProvider);
+    final restore = _ref.read(restoreItemProvider);
+    final delete = _ref.read(deleteItemProvider);
+    var moved = id;
     return _run(
-      () => move(item.plan.id, from.addDays(1)),
+      () async => moved = await move(id, from.addDays(1)),
       message: _l10n.planMovedMessage,
-      undo: () => move(item.plan.id, from),
+      // A repeating occurrence moved as a copy: drop the copy, bring it back.
+      undo: () async {
+        if (moved == id) return move(id, from).then((_) {});
+        await delete(moved);
+        await restore(id, const []);
+      },
     );
   }
+
+  /// Makes the plan repeat on chosen days (ADR-036).
+  Future<void> repeat(PlannedItem item) async {
+    final rule = await showRepeatSheet(_context, date: item.plan.planDate);
+    if (rule == null || !_context.mounted) return;
+    final days = formatWeekdays(_context, rule.weekdays);
+    await _run(
+      () => _ref.read(repeatPlanProvider)(item.plan.id, rule),
+      message: _l10n.planRepeatSaved(days),
+    );
+  }
+
+  Future<void> stopRepeating(PlannedItem item) => _run(
+    () => _ref.read(stopRepeatingProvider)(item.plan.id),
+    message: _l10n.planRepeatStopped,
+  );
 
   /// Deletes the item and what was logged into it (ADR-035), with Undo.
   Future<void> delete(PlannedItem item) {
@@ -114,6 +140,10 @@ class PlanActions {
     switch (action) {
       case PlanSheetAction.toggleTask:
         await toggleTask(item);
+      case PlanSheetAction.repeat:
+        await repeat(item);
+      case PlanSheetAction.stopRepeating:
+        await stopRepeating(item);
       case PlanSheetAction.skip:
         await skip(item);
       case PlanSheetAction.reopen:

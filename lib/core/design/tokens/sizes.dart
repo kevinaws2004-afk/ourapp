@@ -13,6 +13,9 @@ abstract final class AppSizes {
   /// Day cell height in the Plan week strip.
   static const double dayCell = 56;
 
+  /// One planned item on a month-calendar day.
+  static const double monthDot = 6;
+
   /// Width of one hours/minutes box in a duration input.
   static const double durationBox = 96;
 

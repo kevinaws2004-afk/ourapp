@@ -87,7 +87,7 @@ Unit tests for domain rules; repository tests against real in-memory SQLite (no 
 
 ## 9. Database rules
 
-- **Schema:** generic STRICT tables only; schema v2 = activity engine; v3 = relational Repeating Groups (ADR-027); v4 = plans + `activity_logs.plan_id` (ADR-018); v5 = focus sessions (ADR-031); v6 = measurements + saved insight charts (ADR-034). Triggers lock field semantics once values exist (ADR-026) and enforce group structure.
+- **Schema:** generic STRICT tables only; schema v2 = activity engine; v3 = relational Repeating Groups (ADR-027); v4 = plans + `activity_logs.plan_id` (ADR-018); v5 = focus sessions (ADR-031); v6 = measurements + saved insight charts (ADR-034); v7 = repeating plans (`plan_series`, `plans.series_id`, ADR-036). Triggers lock field semantics once values exist (ADR-026) and enforce group structure.
 - **Identity:** INTEGER FKs/joins, UUIDv7 `public_id`s (ADR-017).
 - **Values:** typed value columns, with JSON only for multi-select (ADR-019). Repeating Groups are rows: `log_group_items` + scoped `log_values` (ADR-027).
 - **Units:** user unit + write-time `normalized_value` (ADR-020); durations as `duration_ms` (ADR-021).

@@ -93,6 +93,8 @@ Current suites (269 tests):
   - config codec round-trips (incl. `suggest`, `itemLabel`)
   - repository/use cases: create, ordered fields, update with reorder/rename/add/remove, soft delete/restore, template install with fresh option IDs, live stream
 - **plans:**
+  - repeating plans (ADR-036): weekdays, every-other-week and end date rules; Mon/Wed/Fri occurrences at 18:00 local, generated once; a deleted occurrence isn't regenerated; changing the rule from a date keeps logged occurrences; stop repeating; invalid rules rejected; moving an occurrence moves a copy; Plan next copies title, activity and length
+  - widgets: Repeat… → Mon + Sat → "Repeats Mon, Sat" → both show in the next week; Month → tap a day → Day; Plan next from an item → "Planned for Sat, Oct 10" → it's there next week
   - items (ADR-035): a new name gets a plain activity of its own once, an existing name is reused; Mark done logs the planned time and length once, ticks a task off; partial logs save without required values; deleting an item deletes its log and Undo restores both; a day's items in time order with untimed plans last; `getLogForPlan` ignores deleted logs
   - domain: effective status (a running timer wins, then reality), planned length, display order, validator (title, plannable activity, locked activity, time rules), wall-clock day shift across DST, `daysUntil`, record start for a plan (planned start; else today → now, another day → that date at the current time), name matching
   - repository/use cases: title from activity, appended order, record from plan links and derives completion (and reopens on record delete), records on other days pair with their plan, mismatched plan rejected, task-only completion, move to tomorrow (time kept, reopened, appended), reorder, locked activity, delete/restore, live overview
@@ -105,6 +107,7 @@ Current suites (269 tests):
   - finishing fills the item's existing log (values kept, start = session start), a second session adds its time; a session without a plan creates its own record (ADR-035)
   - widgets: open item → Start timer → log while it runs → Finish → "session complete", values kept, ✓ "Done · 42 min of 1h 0m"; Today banner → Return → the item → full-screen timer
 - **insights & measurements (Phase 6):**
+  - automatic charts (ADR-037): Gym → time, count, then per exercise best Weight and volume with real values behind them; Reading → Pages total and Rating average; days done counts distinct days; Insights → tap Gym → progress page with "Chest Press · best Weight" and no chart menu
   - domain: Monday weeks/month buckets, gaps vs zero-fill, every aggregation, this vs previous period, chart JSON round-trip for every source, measurement validation
   - repository on real SQLite: nested set weights filtered by exercise (case-insensitive) and personal best; volume = Σ weight × reps; time, count and per-activity totals; planned vs actual by plan date; lb → kg canonical measurements; save/list/delete charts
   - widgets: empty Insights; build a body-weight chart → latest value + line; record a measurement from Me

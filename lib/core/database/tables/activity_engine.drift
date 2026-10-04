@@ -67,11 +67,18 @@ CREATE TABLE plans (
   created_at          INTEGER NOT NULL,
   updated_at          INTEGER NOT NULL,
   deleted_at          INTEGER,
+  -- v7: the repeating plan this is an occurrence of (ADR-036).
+  series_id           INTEGER REFERENCES plan_series (internal_id) ON DELETE RESTRICT,
   CHECK (planned_end_at IS NULL OR planned_start_at IS NOT NULL),
   CHECK (planned_end_at IS NULL OR planned_end_at >= planned_start_at),
   CHECK (planned_duration_ms IS NULL OR (planned_duration_ms > 0 AND planned_end_at IS NULL)),
   CHECK (status <> 'completed' OR activity_type_id IS NULL)
 ) STRICT AS PlanRow;
+
+-- One occurrence per series and date, deleted ones included: an occurrence
+-- the user deleted is never generated again (ADR-036).
+CREATE UNIQUE INDEX ux_plans_series_date ON plans (series_id, plan_date)
+  WHERE series_id IS NOT NULL;
 
 -- A date's plans in order (Plan tab, Today).
 CREATE INDEX idx_plans_day ON plans (plan_date, sort_order) WHERE deleted_at IS NULL;
@@ -428,6 +435,35 @@ CREATE TABLE insight_charts (
 
 CREATE TRIGGER trg_measurements_public_id_immutable
 BEFORE UPDATE OF public_id ON measurements
+WHEN OLD.public_id IS NOT NEW.public_id
+BEGIN
+  SELECT RAISE(ABORT, 'public_id_immutable');
+END;
+
+-- v7: a repeating plan (ADR-036): which weekdays, every how many weeks, from
+-- when (and optionally until when). Occurrences are ordinary plans,
+-- generated for the dates being viewed.
+CREATE TABLE plan_series (
+  internal_id      INTEGER NOT NULL PRIMARY KEY,
+  public_id        TEXT NOT NULL UNIQUE CHECK (length(public_id) = 36),
+  activity_type_id INTEGER REFERENCES activity_types (internal_id) ON DELETE RESTRICT,
+  title            TEXT NOT NULL CHECK (length(trim(title)) > 0),
+  notes            TEXT,
+  -- Local wall-clock start (minute of day), if timed.
+  start_minute     INTEGER CHECK (start_minute IS NULL OR start_minute BETWEEN 0 AND 1439),
+  duration_ms      INTEGER CHECK (duration_ms IS NULL OR duration_ms > 0),
+  -- Bit 0 = Monday … bit 6 = Sunday.
+  weekdays         INTEGER NOT NULL CHECK (weekdays BETWEEN 1 AND 127),
+  interval_weeks   INTEGER NOT NULL DEFAULT 1 CHECK (interval_weeks BETWEEN 1 AND 52),
+  start_date       TEXT NOT NULL CHECK (start_date GLOB '[0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]'),
+  end_date         TEXT CHECK (end_date IS NULL OR end_date >= start_date),
+  created_at       INTEGER NOT NULL,
+  updated_at       INTEGER NOT NULL,
+  deleted_at       INTEGER
+) STRICT AS PlanSeriesRow;
+
+CREATE TRIGGER trg_plan_series_public_id_immutable
+BEFORE UPDATE OF public_id ON plan_series
 WHEN OLD.public_id IS NOT NEW.public_id
 BEGIN
   SELECT RAISE(ABORT, 'public_id_immutable');

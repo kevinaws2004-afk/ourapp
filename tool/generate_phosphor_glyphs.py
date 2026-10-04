@@ -19,7 +19,7 @@ UI_ICONS = [
     'lock-simple', 'warning-circle', 'clock', 'calendar-blank', 'star', 'archive', 'info',
     'sun', 'calendar-dots', 'squares-four', 'chart-line-up', 'user', 'timer', 'check-circle',
     'toggle-left', 'text-aa', 'hash', 'list-checks', 'list-bullets', 'hourglass-medium',
-    'rows', 'radio-button', 'caret-left', 'circle', 'play', 'skip-forward', 'arrow-bend-up-right', 'pause', 'ruler',
+    'rows', 'radio-button', 'caret-left', 'circle', 'play', 'skip-forward', 'arrow-bend-up-right', 'pause', 'ruler', 'repeat', 'calendar-plus', 'arrow-right',
 ]
 FILL_ICONS = ['sun', 'calendar-dots', 'squares-four', 'chart-line-up', 'user', 'star', 'check-circle']
 ACTIVITY_ICONS = [

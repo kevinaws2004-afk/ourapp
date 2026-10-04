@@ -122,6 +122,7 @@ enum ValidationCode {
   planActivityLocked,
   onlyTasksCanBeCompleted,
   planRecordMismatch,
+  invalidRepeat,
   focusAlreadyActive,
   activityHasNoTimer,
   focusNotActive,

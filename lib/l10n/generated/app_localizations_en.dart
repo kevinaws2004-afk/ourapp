@@ -982,7 +982,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get insightChartTypeLabel => 'Chart';
 
   @override
-  String get insightChartsSection => 'Your charts';
+  String get insightChartsSection => 'Your own charts';
 
   @override
   String get insightChartsEmptyTitle => 'Build your first chart';
@@ -1263,4 +1263,117 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get itemEditFields => 'Edit what\'s logged';
+
+  @override
+  String get validationInvalidRepeat =>
+      'Choose at least one day, and an end date on or after this one.';
+
+  @override
+  String get planRepeat => 'Repeat…';
+
+  @override
+  String get planStopRepeating => 'Stop repeating after this';
+
+  @override
+  String get planRepeatTitle => 'Repeat';
+
+  @override
+  String get planRepeatEvery => 'Every';
+
+  @override
+  String planRepeatWeeks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count weeks',
+      one: 'week',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get planRepeatUntil => 'Until';
+
+  @override
+  String get planRepeatForever => 'No end';
+
+  @override
+  String planRepeatSaved(String days) {
+    return 'Repeats $days';
+  }
+
+  @override
+  String get planRepeatStopped => 'Won\'t repeat after this';
+
+  @override
+  String get planRepeating => 'Repeats';
+
+  @override
+  String get planNextAction => 'Plan next…';
+
+  @override
+  String planNextPlanned(String date) {
+    return 'Planned for $date';
+  }
+
+  @override
+  String get actionOpen => 'Open';
+
+  @override
+  String get planViewDay => 'Day';
+
+  @override
+  String get planViewWeek => 'Week';
+
+  @override
+  String get planViewMonth => 'Month';
+
+  @override
+  String get planWeekEmptyDay => 'Nothing planned';
+
+  @override
+  String get insightAutoTime => 'Time';
+
+  @override
+  String get insightAutoCount => 'Times done';
+
+  @override
+  String insightAutoBest(String field) {
+    return 'Best $field';
+  }
+
+  @override
+  String insightAutoRowBest(String field, String row) {
+    return '$row · best $field';
+  }
+
+  @override
+  String get insightAutoVolume => 'Volume';
+
+  @override
+  String insightAutoRowVolume(String row) {
+    return '$row · volume';
+  }
+
+  @override
+  String insightDaysDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get insightProgressSection => 'Progress';
+
+  @override
+  String insightActivityEmpty(String name) {
+    return 'Log $name a few times and its progress shows here.';
+  }
+
+  @override
+  String get insightOpenActivityHint => 'see its progress';
 }

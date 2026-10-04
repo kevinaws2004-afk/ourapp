@@ -1885,7 +1885,7 @@ abstract class AppLocalizations {
   /// Insights / body measurements copy.
   ///
   /// In en, this message translates to:
-  /// **'Your charts'**
+  /// **'Your own charts'**
   String get insightChartsSection;
 
   /// Insights / body measurements copy.
@@ -2379,6 +2379,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit what\'s logged'**
   String get itemEditFields;
+
+  /// Error: a repeat rule with no days or an end before the plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose at least one day, and an end date on or after this one.'**
+  String get validationInvalidRepeat;
+
+  /// Plan option: make it repeat on chosen days.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat…'**
+  String get planRepeat;
+
+  /// Plan option on a repeating plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop repeating after this'**
+  String get planStopRepeating;
+
+  /// Title of the repeat sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat'**
+  String get planRepeatTitle;
+
+  /// Label before the week interval in the repeat sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Every'**
+  String get planRepeatEvery;
+
+  /// Repeat interval option, e.g. 'Every 2 weeks'.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{week} other{{count} weeks}}'**
+  String planRepeatWeeks(int count);
+
+  /// Label for the repeat's optional end date.
+  ///
+  /// In en, this message translates to:
+  /// **'Until'**
+  String get planRepeatUntil;
+
+  /// The repeat has no end date.
+  ///
+  /// In en, this message translates to:
+  /// **'No end'**
+  String get planRepeatForever;
+
+  /// Snackbar after setting a repeat, e.g. 'Repeats Mon, Wed, Fri'.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeats {days}'**
+  String planRepeatSaved(String days);
+
+  /// Snackbar after stopping a repeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Won\'t repeat after this'**
+  String get planRepeatStopped;
+
+  /// Short label on a repeating plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeats'**
+  String get planRepeating;
+
+  /// Button in an item: plan the same thing on another date (next appointment, next session).
+  ///
+  /// In en, this message translates to:
+  /// **'Plan next…'**
+  String get planNextAction;
+
+  /// Snackbar after Plan next.
+  ///
+  /// In en, this message translates to:
+  /// **'Planned for {date}'**
+  String planNextPlanned(String date);
+
+  /// Action in a snackbar: open what was just created.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get actionOpen;
+
+  /// Plan tab view switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get planViewDay;
+
+  /// Plan tab view switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get planViewWeek;
+
+  /// Plan tab view switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get planViewMonth;
+
+  /// A day with no items in the week view.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing planned'**
+  String get planWeekEmptyDay;
+
+  /// Automatic chart: time spent per week.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get insightAutoTime;
+
+  /// Automatic chart: how often per week.
+  ///
+  /// In en, this message translates to:
+  /// **'Times done'**
+  String get insightAutoCount;
+
+  /// Automatic chart: best value of a field, e.g. 'Best Weight'.
+  ///
+  /// In en, this message translates to:
+  /// **'Best {field}'**
+  String insightAutoBest(String field);
+
+  /// Automatic chart for one list row, e.g. 'Chest Press · best Weight'.
+  ///
+  /// In en, this message translates to:
+  /// **'{row} · best {field}'**
+  String insightAutoRowBest(String field, String row);
+
+  /// Automatic chart: weight × reps summed.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume'**
+  String get insightAutoVolume;
+
+  /// Automatic chart: volume of one list row, e.g. 'Chest Press · volume'.
+  ///
+  /// In en, this message translates to:
+  /// **'{row} · volume'**
+  String insightAutoRowVolume(String row);
+
+  /// How many days an activity was done in the period.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String insightDaysDone(int count);
+
+  /// Section on an activity's insights page with its automatic charts.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get insightProgressSection;
+
+  /// Empty state of an activity's insights page.
+  ///
+  /// In en, this message translates to:
+  /// **'Log {name} a few times and its progress shows here.'**
+  String insightActivityEmpty(String name);
+
+  /// Tap hint on an activity row in Insights.
+  ///
+  /// In en, this message translates to:
+  /// **'see its progress'**
+  String get insightOpenActivityHint;
 }
 
 class _AppLocalizationsDelegate

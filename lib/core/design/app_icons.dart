@@ -50,6 +50,8 @@ abstract final class AppIcons {
   static const measurements = PhosphorGlyphs.ruler;
   static const skip = PhosphorGlyphs.skipForward;
   static const moveToTomorrow = PhosphorGlyphs.arrowBendUpRight;
+  static const repeat = PhosphorGlyphs.repeat;
+  static const planNext = PhosphorGlyphs.calendarPlus;
 
   // Field type icons (builder field-type picker).
   static const fieldText = PhosphorGlyphs.textAa;

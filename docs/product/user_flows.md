@@ -38,6 +38,8 @@ Edge cases: unsaved-changes guard; duplicate name warning; editing a type with e
 3. Quick add: type what you'll do and optionally a **from–to time** (day planner slots: 07:30 Gym, 09:00 Bath, 14:00 Meeting). Typing an activity's name ("Gym") plans that activity, and its chip lights up. A starter template's name installs that template first. Anything else ("Bath", "Doctor call") is a plain item. On today, **Now** adds it at the current time and opens it (F8).
 4. Repeat rapidly; keyboard stays open.
 5. Reorder untimed items by drag; timed items sort by time.
+6. **Day | Week | Month** (ADR-036): Week shows the seven days with their items (tap a day's heading to open it, "+" to plan on it); Month shows a calendar with a dot per item (tap a day to open it).
+7. **Repeat** (item options → Repeat…): pick weekdays, every 1–4 weeks, and an optional last date. Each occurrence is an ordinary item on its day. From an occurrence, Repeat… again changes it from that day on; "Stop repeating after this" ends it. Deleting or moving one occurrence affects only that one.
 
 ## F3a. Review a past date (FR-PL-10)
 
@@ -57,7 +59,8 @@ Example: Plan Oct 4 → Gym, Reading, Doctor call.
 4. Leave any time and come back: the item shows what's logged so far, ready for more (another set).
 5. Nothing to log? **Mark done** records the planned time and length (e.g. Reading 21:10–21:55 → 45 min).
 6. **Add to log** (any item): pick a ready-made shape (*Sets & reps*, *Checklist*) or one thing (a number with a unit, text, a list, yes/no, a rating, a choice, a date, time spent), name it, and log into it right away. Inside a list, **Add detail** adds another column (e.g. Dose on a medicines list). A new name ("Doctor call") gets an activity of its own on the first thing added or logged, so the next "Doctor call" has the same things to log. The pencil opens the builder to rename, reorder or remove.
-7. Item options (⋯): edit title/time/notes, Skip, Reopen, Move to tomorrow, Delete (with Undo).
+7. Item options (⋯): edit title/time/notes, Repeat… / Stop repeating, Skip, Reopen, Move to tomorrow, Delete (with Undo).
+8. **Plan next…** (bottom of any item): pick a date (a week later is suggested) and, for a timed item, a time → the same thing is planned there, with the same things to log (e.g. the next doctor's appointment). The snackbar offers Open.
 
 ## F6. Gym workout (FR-LG-07, §43 "Gym")
 
@@ -94,17 +97,18 @@ Today in the evening shows the day's items: what was done (with what was logged 
 
 ## F12. Insights (FR-AN-01…07)
 
-Implemented in Phase 6 (ADR-034).
-1. The Insights tab shows a range (Week / Month / 3 months / Year) and the **Activities** totals: recorded time and how often per activity, with the change vs the previous period.
-2. **Your charts**: **Add chart** → what to chart:
+Implemented in Phase 6 (ADR-034); automatic progress added by ADR-037.
+1. The Insights tab shows a range (Week / Month / 3 months / Year) and each activity done in it: **days done**, time and how often, with the change vs the previous period.
+2. **Tap an activity → its progress**, worked out automatically from what it logs: time and times done per week, each number and rating, and for lists, each row's best and volume (Gym: "Chest Press · best Weight", "Chest Press · volume", per exercise). Nothing to build.
+3. **Your own charts** (below, optional): **Add chart** → what to chart:
    - Time, How often, A field (any number at any depth, e.g. Exercises › Sets › Weight, optionally "Only where Exercise = Chest Press")
    - Volume (weight × reps)
    - Body measurement
    - Planned vs actual
 
    Then choose how to show it (total / average / best / lowest / count / latest), group by day / week / month, line or bars, and a title. Save.
-3. Each chart card shows the headline value, "+12 % vs previous period", "Personal best 70 kg · Oct 2" (field/volume) and the chart. More → Edit / Delete (with Undo).
-4. Empty states explain what can be charted.
+4. Each chart card shows the headline value, "+12 % vs previous period", "Personal best 70 kg · Oct 2" (field/volume) and the chart. More → Edit / Delete (with Undo).
+5. Empty states explain what can be charted.
 
 ## F13. Body measurement (FR-BM-01…03)
 

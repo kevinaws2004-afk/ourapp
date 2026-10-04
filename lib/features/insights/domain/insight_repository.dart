@@ -4,10 +4,17 @@ import 'insight.dart';
 
 /// Totals of one activity over a period.
 class ActivityTotals {
-  const ActivityTotals({required this.durationMs, required this.count});
+  const ActivityTotals({
+    required this.durationMs,
+    required this.count,
+    this.days = 0,
+  });
 
   final int durationMs;
   final int count;
+
+  /// Distinct days it was done on.
+  final int days;
 }
 
 /// Read model for Insights (FR-AN-*) plus the saved charts. Streams update

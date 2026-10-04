@@ -175,7 +175,8 @@ class DbInsightRepository implements InsightRepository {
       final rows = await _db
           .customSelect(
             'SELECT t.public_id AS id, SUM(COALESCE(l.duration_ms, 0)) AS ms, '
-            'COUNT(*) AS n FROM activity_logs l '
+            'COUNT(*) AS n, COUNT(DISTINCT l.local_date) AS d '
+            'FROM activity_logs l '
             'JOIN activity_types t ON t.internal_id = l.activity_type_id '
             'WHERE l.deleted_at IS NULL AND l.local_date BETWEEN ? AND ? '
             'GROUP BY l.activity_type_id',
@@ -188,6 +189,7 @@ class DbInsightRepository implements InsightRepository {
           ActivityTypeId(r.read<String>('id')): ActivityTotals(
             durationMs: r.read<int>('ms'),
             count: r.read<int>('n'),
+            days: r.read<int>('d'),
           ),
       };
     }),

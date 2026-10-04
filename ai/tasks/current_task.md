@@ -4,7 +4,7 @@
 
 ## Status
 
-**Flow rework (owner-approved plan, 2026-10-04; ADR-035): Steps 1–2 of 4 done, on the emulator for the owner to try.** The owner tested Phases 1–6 on their phone and found the flow broken: plan, record and activity setup felt like three separate places. Approved plan: the planner is the app; open an item on your day and log into it as you go. This replaces the old Phase 7 scope. Phases 3–6 are committed (`4b8431a`); the rework isn't committed yet (commit only when the owner asks).
+**Flow rework (owner-approved plan, 2026-10-04; ADR-035–037): all 4 steps done, on the emulator for the owner to try.** The owner tested Phases 1–6 on their phone and found the flow broken: plan, record and activity setup felt like three separate places. Approved plan: the planner is the app; open an item on your day and log into it as you go. This replaces the old Phase 7 scope. Phases 3–6 are committed (`4b8431a`); the rework isn't committed yet (commit only when the owner asks).
 
 Step 1 (done): item screen + live logging
 - One list of items on Today and Plan (plans + records made without a plan, time order, untimed last); "Recorded / Also recorded" sections removed
@@ -18,12 +18,12 @@ Step 1 (done): item screen + live logging
 Step 2 (done, after the owner found a plain item had nothing to log but notes): **Add to log** in every item (Sets & reps / Checklist in one tap, or any one thing: number with unit, text, list, yes/no, rating, choice, date, time), **Add detail** inside lists, pencil → builder; `AddItemField` saves it onto the item's activity.
 
 Verified:
-- `dart format` clean, `flutter analyze` no issues, `flutter test`: 283 pass
+- `dart format` clean, `flutter analyze` no issues, `flutter test`: 306 pass
 - **Not run:** device integration tests (owner's standing preference); they were updated to the item flow and compile
 
-Next steps (approved, in order):
-3. Plan next (any item) + Day/Week/Month planner + repeating items (schema v7 `plan_series`)
-4. Automatic insights: per-activity days done / time / change, and an activity page with charts generated from its fields (per exercise best and volume)
+Step 3 (done, ADR-036, schema v7): Plan tab **Day | Week | Month**; **Repeat…** (weekdays, every 1–4 weeks, until) with occurrences generated for the dates viewed, "Stop repeating after this", moving one occurrence moves a copy; **Plan next…** in every item.
+
+Step 4 (done, ADR-037): Insights rows show days done · time · times · change and open an activity's **progress page** with charts worked out from its fields (time, count, numbers, ratings, per list row best and volume, e.g. per exercise). Saved charts stay below as "Your own charts".
 
 Owner decisions this round: the item model (one concept, recording happens inside the item); logging must not require setup; follow-ups are a generic action, not a doctor feature; scope = all four steps; functionality first, visual design later.
 

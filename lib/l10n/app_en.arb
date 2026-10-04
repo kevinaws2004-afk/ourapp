@@ -1285,7 +1285,7 @@
   "@insightChartTypeLabel": {
     "description": "Insights / body measurements copy."
   },
-  "insightChartsSection": "Your charts",
+  "insightChartsSection": "Your own charts",
   "@insightChartsSection": {
     "description": "Insights / body measurements copy."
   },
@@ -1678,5 +1678,160 @@
   "itemEditFields": "Edit what's logged",
   "@itemEditFields": {
     "description": "Tooltip: rename, reorder or remove what this item logs."
+  },
+  "validationInvalidRepeat": "Choose at least one day, and an end date on or after this one.",
+  "@validationInvalidRepeat": {
+    "description": "Error: a repeat rule with no days or an end before the plan."
+  },
+  "planRepeat": "Repeat…",
+  "@planRepeat": {
+    "description": "Plan option: make it repeat on chosen days."
+  },
+  "planStopRepeating": "Stop repeating after this",
+  "@planStopRepeating": {
+    "description": "Plan option on a repeating plan."
+  },
+  "planRepeatTitle": "Repeat",
+  "@planRepeatTitle": {
+    "description": "Title of the repeat sheet."
+  },
+  "planRepeatEvery": "Every",
+  "@planRepeatEvery": {
+    "description": "Label before the week interval in the repeat sheet."
+  },
+  "planRepeatWeeks": "{count, plural, =1{week} other{{count} weeks}}",
+  "@planRepeatWeeks": {
+    "description": "Repeat interval option, e.g. 'Every 2 weeks'.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planRepeatUntil": "Until",
+  "@planRepeatUntil": {
+    "description": "Label for the repeat's optional end date."
+  },
+  "planRepeatForever": "No end",
+  "@planRepeatForever": {
+    "description": "The repeat has no end date."
+  },
+  "planRepeatSaved": "Repeats {days}",
+  "@planRepeatSaved": {
+    "description": "Snackbar after setting a repeat, e.g. 'Repeats Mon, Wed, Fri'.",
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "planRepeatStopped": "Won't repeat after this",
+  "@planRepeatStopped": {
+    "description": "Snackbar after stopping a repeat."
+  },
+  "planRepeating": "Repeats",
+  "@planRepeating": {
+    "description": "Short label on a repeating plan."
+  },
+  "planNextAction": "Plan next…",
+  "@planNextAction": {
+    "description": "Button in an item: plan the same thing on another date (next appointment, next session)."
+  },
+  "planNextPlanned": "Planned for {date}",
+  "@planNextPlanned": {
+    "description": "Snackbar after Plan next.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "actionOpen": "Open",
+  "@actionOpen": {
+    "description": "Action in a snackbar: open what was just created."
+  },
+  "planViewDay": "Day",
+  "@planViewDay": {
+    "description": "Plan tab view switch."
+  },
+  "planViewWeek": "Week",
+  "@planViewWeek": {
+    "description": "Plan tab view switch."
+  },
+  "planViewMonth": "Month",
+  "@planViewMonth": {
+    "description": "Plan tab view switch."
+  },
+  "planWeekEmptyDay": "Nothing planned",
+  "@planWeekEmptyDay": {
+    "description": "A day with no items in the week view."
+  },
+  "insightAutoTime": "Time",
+  "@insightAutoTime": {
+    "description": "Automatic chart: time spent per week."
+  },
+  "insightAutoCount": "Times done",
+  "@insightAutoCount": {
+    "description": "Automatic chart: how often per week."
+  },
+  "insightAutoBest": "Best {field}",
+  "@insightAutoBest": {
+    "description": "Automatic chart: best value of a field, e.g. 'Best Weight'.",
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "insightAutoRowBest": "{row} · best {field}",
+  "@insightAutoRowBest": {
+    "description": "Automatic chart for one list row, e.g. 'Chest Press · best Weight'.",
+    "placeholders": {
+      "field": {
+        "type": "String"
+      },
+      "row": {
+        "type": "String"
+      }
+    }
+  },
+  "insightAutoVolume": "Volume",
+  "@insightAutoVolume": {
+    "description": "Automatic chart: weight × reps summed."
+  },
+  "insightAutoRowVolume": "{row} · volume",
+  "@insightAutoRowVolume": {
+    "description": "Automatic chart: volume of one list row, e.g. 'Chest Press · volume'.",
+    "placeholders": {
+      "row": {
+        "type": "String"
+      }
+    }
+  },
+  "insightDaysDone": "{count, plural, =1{1 day} other{{count} days}}",
+  "@insightDaysDone": {
+    "description": "How many days an activity was done in the period.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "insightProgressSection": "Progress",
+  "@insightProgressSection": {
+    "description": "Section on an activity's insights page with its automatic charts."
+  },
+  "insightActivityEmpty": "Log {name} a few times and its progress shows here.",
+  "@insightActivityEmpty": {
+    "description": "Empty state of an activity's insights page.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "insightOpenActivityHint": "see its progress",
+  "@insightOpenActivityHint": {
+    "description": "Tap hint on an activity row in Insights."
   }
 }

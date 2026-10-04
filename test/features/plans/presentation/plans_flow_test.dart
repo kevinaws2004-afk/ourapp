@@ -395,4 +395,64 @@ void main() {
       expect(find.text('Dose'), findsOneWidget);
     });
   });
+
+  group('planner: week, month, repeat, plan next (ADR-036)', () {
+    testAppWidgets('repeat a plan on chosen days; the week shows each one', (
+      tester,
+    ) async {
+      await pumpTestApp(tester, preferences: _onboarded, seed: seedReadingPlan);
+      await openPlan(tester);
+
+      await tester.tap(find.byTooltip('Plan options'));
+      await tester.pumpAndSettle();
+      await scrollAndTap(tester, find.text('Repeat…'));
+      // Starts on the plan's weekday (Sat 3 Oct); add Monday.
+      await tester.tap(find.widgetWithText(FilterChip, 'Mon'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Repeats Mon, Sat'), findsOneWidget);
+
+      await tester.tap(find.text('Week'));
+      await tester.pumpAndSettle();
+      // Week of Sat 3 Oct (locale weeks start on Sunday): Sat 3 only;
+      // next week: Mon 5 and Sat 10.
+      await tester.tap(find.byTooltip('Next week'));
+      await tester.pumpAndSettle();
+      expect(find.text('Read'), findsNWidgets(2));
+      expect(find.byIcon(AppIcons.repeat), findsNWidgets(2));
+    });
+
+    testAppWidgets('month shows the calendar; tapping a day opens it', (
+      tester,
+    ) async {
+      await pumpTestApp(tester, preferences: _onboarded, seed: seedReadingPlan);
+      await openPlan(tester);
+
+      await tester.tap(find.text('Month'));
+      await tester.pumpAndSettle();
+      expect(find.text('October 2026'), findsOneWidget);
+
+      await tester.tap(find.bySemanticsLabel('Saturday, October 3, 2026'));
+      await tester.pumpAndSettle();
+      expect(find.text('Read'), findsOneWidget, reason: 'day view');
+    });
+
+    testAppWidgets('plan next from inside an item', (tester) async {
+      await pumpTestApp(tester, preferences: _onboarded, seed: seedReadingPlan);
+      await openPlan(tester);
+      await openItem(tester, find.text('Read'));
+
+      await scrollAndTap(tester, find.text('Plan next…'));
+      // The date picker suggests a week later.
+      await tester.tap(find.text('OK'));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('Planned for Sat, Oct 10'), findsOneWidget);
+      await closeItem(tester);
+      await tester.tap(find.byTooltip('Next week'));
+      await tester.pumpAndSettle();
+      expect(find.text('Read'), findsOneWidget);
+    });
+  });
 }

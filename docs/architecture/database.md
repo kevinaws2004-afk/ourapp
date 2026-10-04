@@ -12,6 +12,7 @@
 > | `plans` + `activity_logs.plan_id` | v4 | 4 | Implemented (ADR-018) |
 > | `focus_sessions` | v5 | 5 | Implemented (ADR-031) |
 > | `measurements`, `insight_charts` | v6 | 6 | Implemented (ADR-034) |
+> | `plan_series` + `plans.series_id` | v7 | Rework step 3 | Implemented (ADR-036) |
 >
 > Implemented DDL lives in `lib/core/database/tables/activity_engine.drift` (activity engine) and `tables/app_preferences_table.dart`. If this document and those files ever disagree, the code is the truth and this document must be fixed in the same change.
 
@@ -245,7 +246,35 @@ CREATE INDEX idx_activity_logs_plan ON activity_logs (plan_id) WHERE plan_id IS 
 - `planned_duration_ms` (owner-confirmed 2026-10-04, ADR-018) is the planned length of an untimed or start-only plan ("Read for 45 minutes"). It can't coexist with `planned_end_at`, so there is one source of planned duration. An end time requires a start time.
 - `sort_order` is the manual order among a date's untimed plans; timed plans display by `planned_start_at` (domain `orderPlans`). New and moved plans append (`MAX + 1`); reorder rewrites `0..n-1` in one transaction.
 - Plan completion is never stored for activity plans: a non-deleted record with `plan_id` completes it (domain `Plan.effectiveStatus`). Deleting that record reopens the plan.
-- "Move to tomorrow" changes `plan_date` and shifts planned times by whole days at the same local wall-clock time.
+- "Move to tomorrow" changes `plan_date` and shifts planned times by whole days at the same local wall-clock time. An occurrence of a repeating plan moves as a one-off copy instead, and the occurrence is soft-deleted on its date (ADR-036).
+
+### 3.7a `plan_series` (v7, implemented, ADR-036)
+```sql
+CREATE TABLE plan_series (
+  internal_id      INTEGER NOT NULL PRIMARY KEY,
+  public_id        TEXT NOT NULL UNIQUE CHECK (length(public_id) = 36),
+  activity_type_id INTEGER REFERENCES activity_types (internal_id) ON DELETE RESTRICT,
+  title            TEXT NOT NULL CHECK (length(trim(title)) > 0),
+  notes            TEXT,
+  start_minute     INTEGER CHECK (start_minute IS NULL OR start_minute BETWEEN 0 AND 1439),
+  duration_ms      INTEGER CHECK (duration_ms IS NULL OR duration_ms > 0),
+  weekdays         INTEGER NOT NULL CHECK (weekdays BETWEEN 1 AND 127),  -- bit 0 = Monday
+  interval_weeks   INTEGER NOT NULL DEFAULT 1 CHECK (interval_weeks BETWEEN 1 AND 52),
+  start_date       TEXT NOT NULL CHECK (start_date GLOB '[0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]'),
+  end_date         TEXT CHECK (end_date IS NULL OR end_date >= start_date),
+  created_at       INTEGER NOT NULL,
+  updated_at       INTEGER NOT NULL,
+  deleted_at       INTEGER
+) STRICT;
+
+ALTER TABLE plans ADD COLUMN series_id INTEGER REFERENCES plan_series (internal_id) ON DELETE RESTRICT;
+CREATE UNIQUE INDEX ux_plans_series_date ON plans (series_id, plan_date) WHERE series_id IS NOT NULL;
+-- + trg_plan_series_public_id_immutable
+```
+- A series holds what each occurrence looks like (title, activity, local start minute, length) and when it happens (weekdays, every N weeks from the start week, optional last date).
+- **Occurrences are ordinary `plans` rows**, generated idempotently for the dates being viewed (`EnsureSeriesOccurrences`, `INSERT OR IGNORE`), so each can be opened and logged into, skipped or deleted on its own.
+- `ux_plans_series_date` deliberately includes deleted rows: an occurrence the user deleted (or moved away) is never generated again.
+- Changing a repeat from an occurrence ends the old series the day before (or deletes it if it hadn't started) and soft-deletes its later occurrences that are still open (planned, nothing logged); "Stop repeating after this" does the same after the occurrence.
 
 ### 3.8 `focus_sessions` (v5, implemented, ADR-031)
 ```sql
@@ -402,7 +431,7 @@ Rules:
 
 ## 7. Migrations
 
-1. **Versioning:** SQLite `user_version` through drift's `schemaVersion`. v1 = `app_preferences`; **v2 = activity engine** (§3.2–3.6); **v3 = Repeating Groups** (§3.10; adds a column and a table, then rebuilds `log_values` with drift's `TableMigration`); **v4 = plans** (§3.7; adds `plans` and `activity_logs.plan_id`, no rebuild); **v5 = focus sessions** (§3.8); **v6 = measurements + insight charts** (§3.9, §3.11).
+1. **Versioning:** SQLite `user_version` through drift's `schemaVersion`. v1 = `app_preferences`; **v2 = activity engine** (§3.2–3.6); **v3 = Repeating Groups** (§3.10; adds a column and a table, then rebuilds `log_values` with drift's `TableMigration`); **v4 = plans** (§3.7; adds `plans` and `activity_logs.plan_id`, no rebuild); **v5 = focus sessions** (§3.8); **v6 = measurements + insight charts** (§3.9, §3.11); **v7 = repeating plans** (§3.7a; a new table, a nullable column on `plans` and a unique index, no rebuild).
 2. **Forward-only, append-only.** A shipped migration is never edited.
 3. Each step is transactional and leaves the DB valid. SQLite table rebuilds (the 12-step pattern) are used only when `ALTER TABLE` can't express a change.
 4. **drift workflow (implemented):**
@@ -412,7 +441,7 @@ Rules:
    4. `dart run drift_dev make-migrations`. This exports `drift_schemas/app_database/drift_schema_vN.json` and regenerates the step helpers (`lib/core/database/app_database.steps.dart`) and migration tests (`test/drift/app_database/`).
    5. Add the `fromXToY` step in `AppDatabase.migration`.
    6. Commit everything.
-5. **Tests:** generated tests verify each step against the exported schema snapshots. Hand-written tests verify that data survives (v1 preferences survive v1→v2; v2 values survive v2→v3 with `group_item_id` NULL; logs survive v3→v4 with `plan_id` NULL; v4→v5 and v5→v6 are verified against the snapshots).
+5. **Tests:** generated tests verify each step against the exported schema snapshots. Hand-written tests verify that data survives (v1 preferences survive v1→v2; v2 values survive v2→v3 with `group_item_id` NULL; logs survive v3→v4 with `plan_id` NULL; v4→v5 and v5→v6 are verified against the snapshots; plans survive v6→v7 with `series_id` NULL).
 6. Unknown or newer on-disk versions throw `MigrationException`, which shows the startup failure screen. The database is never deleted or recreated.
 7. JSON payload evolution (`"v"`) is handled by tolerant domain decoders; bulk rewrites are optional.
 8. User changes to activity types and fields are **data**, never migrations.

@@ -27,19 +27,21 @@ ActivityTypeId? _typeOf(InsightSource source) => switch (source) {
   MeasurementSource() => null,
 };
 
-/// One saved chart: its headline value, change vs the previous period,
+/// One chart (saved, or worked out automatically): its headline value, change vs the previous period,
 /// personal best, and the chart itself.
 class InsightChartCard extends ConsumerWidget {
   const InsightChartCard({
     super.key,
     required this.chart,
-    required this.onEdit,
-    required this.onDelete,
+    this.onEdit,
+    this.onDelete,
   });
 
   final InsightChartConfig chart;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
+
+  /// Edit/delete for a saved chart; automatic charts have neither.
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -82,18 +84,22 @@ class InsightChartCard extends ConsumerWidget {
                       style: context.textStyles.titleMedium,
                     ),
                   ),
-                  PopupMenuButton<bool>(
-                    tooltip: l10n.insightChartOptions,
-                    icon: const Icon(AppIcons.more),
-                    onSelected: (edit) => edit ? onEdit() : onDelete(),
-                    itemBuilder: (_) => [
-                      PopupMenuItem(value: true, child: Text(l10n.insightEdit)),
-                      PopupMenuItem(
-                        value: false,
-                        child: Text(l10n.insightDelete),
-                      ),
-                    ],
-                  ),
+                  if (onEdit != null && onDelete != null)
+                    PopupMenuButton<bool>(
+                      tooltip: l10n.insightChartOptions,
+                      icon: const Icon(AppIcons.more),
+                      onSelected: (edit) => edit ? onEdit!() : onDelete!(),
+                      itemBuilder: (_) => [
+                        PopupMenuItem(
+                          value: true,
+                          child: Text(l10n.insightEdit),
+                        ),
+                        PopupMenuItem(
+                          value: false,
+                          child: Text(l10n.insightDelete),
+                        ),
+                      ],
+                    ),
                 ],
               ),
               Padding(

@@ -21,12 +21,12 @@ class AppDatabase extends _$AppDatabase {
   /// v1: `app_preferences` (ADR-012). v2: activity engine (ADR-017–026).
   /// v3: relational Repeating Groups (ADR-027). v4: plans (ADR-018).
   /// v5: focus sessions (ADR-031). v6: measurements, insight charts
-  /// (ADR-034).
+  /// (ADR-034). v7: repeating plans (ADR-036).
   /// Every schema change bumps this, adds a step below, regenerates the step
   /// helpers with `dart run drift_dev make-migrations`, and adds migration
   /// tests (docs/architecture/database.md §7).
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -149,6 +149,13 @@ class AppDatabase extends _$AppDatabase {
       await m.create(schema.idxMeasurementsTypeDay);
       await m.createTable(schema.insightCharts);
       await m.create(schema.trgMeasurementsPublicIdImmutable);
+    },
+    from6To7: (m, schema) async {
+      await m.createTable(schema.planSeries);
+      await m.create(schema.trgPlanSeriesPublicIdImmutable);
+      // A nullable FK column with no default can be added in place.
+      await m.addColumn(schema.plans, schema.plans.seriesId);
+      await m.create(schema.uxPlansSeriesDate);
     },
   );
 }

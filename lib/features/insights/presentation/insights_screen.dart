@@ -24,11 +24,15 @@ import 'insight_chart_card.dart';
 import 'insight_formatting.dart';
 import 'insight_providers.dart';
 
-/// Insights tab (§24–26; FR-AN-01…09): activity totals for the range against
-/// the previous one, and the user's own charts built from any activity,
-/// field, set volume, body measurement or plan.
+/// Insights tab (§24–26; FR-AN-01…09): each activity's days, time and count
+/// for the range against the previous one, opening its automatic progress
+/// page (ADR-037), then the user's own charts (any activity, field, set
+/// volume, body measurement or plan).
 class InsightsScreen extends ConsumerWidget {
-  const InsightsScreen({super.key});
+  const InsightsScreen({super.key, required this.onOpenActivity});
+
+  /// Opens an activity's automatic progress page (ADR-037).
+  final ValueChanged<ActivityTypeId> onOpenActivity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -68,7 +72,7 @@ class InsightsScreen extends ConsumerWidget {
                 ),
               ),
               SectionHeader(title: l10n.insightActivitySection),
-              const _ActivityTotals(),
+              _ActivityTotals(onOpenActivity: onOpenActivity),
               SectionHeader(
                 title: l10n.insightChartsSection,
                 trailing: IconButton(
@@ -87,7 +91,9 @@ class InsightsScreen extends ConsumerWidget {
 }
 
 class _ActivityTotals extends ConsumerWidget {
-  const _ActivityTotals();
+  const _ActivityTotals({required this.onOpenActivity});
+
+  final ValueChanged<ActivityTypeId> onOpenActivity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -119,6 +125,7 @@ class _ActivityTotals extends ConsumerWidget {
                 type: type,
                 totals: totals,
                 previous: previous[type.id],
+                onTap: () => onOpenActivity(type.id),
               ),
           ],
         );
@@ -128,11 +135,17 @@ class _ActivityTotals extends ConsumerWidget {
 }
 
 class _TotalsRow extends StatelessWidget {
-  const _TotalsRow({required this.type, required this.totals, this.previous});
+  const _TotalsRow({
+    required this.type,
+    required this.totals,
+    required this.onTap,
+    this.previous,
+  });
 
   final ActivityType type;
   final ActivityTotals totals;
   final ActivityTotals? previous;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -147,18 +160,25 @@ class _TotalsRow extends StatelessWidget {
       title: Text(type.name),
       subtitle: Text(
         [
+          l10n.insightDaysDone(totals.days),
           if (totals.durationMs > 0) formatDuration(l10n, totals.durationMs),
           l10n.insightTimesRecorded(totals.count),
         ].join(' · '),
       ),
-      trailing: change == null
-          ? null
-          : Text(
+      onTap: onTap,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (change != null)
+            Text(
               l10n.insightChange(formatChange(change)),
               style: context.textStyles.labelMedium?.copyWith(
                 color: context.colors.textSecondary,
               ),
             ),
+          const Icon(AppIcons.chevron),
+        ],
+      ),
     );
   }
 }

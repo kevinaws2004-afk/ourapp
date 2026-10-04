@@ -57,6 +57,7 @@ String validationMessage(
   ValidationCode.onlyTasksCanBeCompleted =>
     l10n.validationOnlyTasksCanBeCompleted,
   ValidationCode.planRecordMismatch => l10n.validationPlanRecordMismatch,
+  ValidationCode.invalidRepeat => l10n.validationInvalidRepeat,
   ValidationCode.focusAlreadyActive => l10n.validationFocusAlreadyActive,
   ValidationCode.activityHasNoTimer => l10n.validationActivityHasNoTimer,
   ValidationCode.focusNotActive => l10n.validationFocusNotActive,

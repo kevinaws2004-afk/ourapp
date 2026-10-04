@@ -195,7 +195,7 @@ void main() {
       );
       await setStatus(id, PlanStatus.skipped);
 
-      await MovePlan(plans, clock)(id, tomorrow);
+      await MovePlan(plans, SequentialIdGenerator(), clock)(id, tomorrow);
 
       final moved = (await plans.getPlan(id))!;
       expect(moved.planDate, tomorrow);

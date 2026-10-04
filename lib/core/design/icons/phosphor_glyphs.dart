@@ -44,6 +44,9 @@ abstract final class PhosphorGlyphs {
   static const arrowBendUpRight = IconData(0xe026, fontFamily: 'Phosphor');
   static const pause = IconData(0xe39e, fontFamily: 'Phosphor');
   static const ruler = IconData(0xe6b8, fontFamily: 'Phosphor');
+  static const repeat = IconData(0xe3f6, fontFamily: 'Phosphor');
+  static const calendarPlus = IconData(0xe714, fontFamily: 'Phosphor');
+  static const arrowRight = IconData(0xe06c, fontFamily: 'Phosphor');
   static const barbell = IconData(0xe0b6, fontFamily: 'Phosphor');
   static const bookOpen = IconData(0xe0e6, fontFamily: 'Phosphor');
   static const briefcase = IconData(0xe0ee, fontFamily: 'Phosphor');

@@ -20,10 +20,18 @@ import 'plan_providers.dart';
 
 /// An action chosen in the plan sheet, run by the screen that opened it
 /// (the sheet's own state is gone once it closes).
-enum PlanSheetAction { toggleTask, skip, reopen, moveToTomorrow, delete }
+enum PlanSheetAction {
+  toggleTask,
+  repeat,
+  stopRepeating,
+  skip,
+  reopen,
+  moveToTomorrow,
+  delete,
+}
 
 /// Creates a plan for [date] ([item] null) or edits [item] and offers its
-/// actions: complete a task, skip, reopen, move to tomorrow,
+/// actions: complete a task, repeat (or stop), skip, reopen, move to tomorrow,
 /// delete (FR-PL-01…07, F5, F10, F11). Saving happens in the sheet; an
 /// action is returned to the caller.
 Future<PlanSheetAction?> showPlanEditor(
@@ -295,6 +303,13 @@ class _PlanEditorSheetState extends ConsumerState<_PlanEditorSheet> {
           AppIcons.moveToTomorrow,
           l10n.planMoveToTomorrow,
           PlanSheetAction.moveToTomorrow,
+        ),
+      action(AppIcons.repeat, l10n.planRepeat, PlanSheetAction.repeat),
+      if (plan.isRepeating)
+        action(
+          AppIcons.repeat,
+          l10n.planStopRepeating,
+          PlanSheetAction.stopRepeating,
         ),
       action(AppIcons.delete, l10n.planDelete, PlanSheetAction.delete),
     ];

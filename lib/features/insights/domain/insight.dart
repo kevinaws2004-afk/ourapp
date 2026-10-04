@@ -181,6 +181,19 @@ class InsightChartConfig {
   final Bucket bucket;
   final ChartKind kind;
 
+  @override
+  bool operator ==(Object other) =>
+      other is InsightChartConfig &&
+      other.id == id &&
+      other.title == title &&
+      other.source == source &&
+      other.aggregation == aggregation &&
+      other.bucket == bucket &&
+      other.kind == kind;
+
+  @override
+  int get hashCode => Object.hash(id, title, source, aggregation, bucket, kind);
+
   /// Sensible defaults for a source: time and counts add up, body values
   /// show the latest, field values show the best (PR-style) per bucket.
   static Aggregation defaultAggregation(InsightSource source) =>

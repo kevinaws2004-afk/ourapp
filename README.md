@@ -8,7 +8,7 @@ Gym workouts, reading, focused work, meetings, walks, body measurements, or any 
 
 ## Status
 
-**Flow rework in progress (ADR-035): step 1 of 4 (items you log into, saved as you type) is done.** Phases 5 (focus) and 6 (insights + body measurements) are complete. Phases 1–4 (scaffold, generic engine, structured fields, plans & Today) and the navigation clarification (ADR-028) are done. Navigation is **Today | Plan | Insights | Me**. Everything on a day is an item: add it (or **Now** for what you're doing), open it, and log into it; it saves as you type (ADR-035). You can:
+**Flow rework done (ADR-035–037):** items you log into (saved as you type, with Add to log), a Day/Week/Month planner with repeating plans and Plan next, and automatic progress per activity in Insights. Phases 5 (focus) and 6 (insights + body measurements) are complete. Phases 1–4 (scaffold, generic engine, structured fields, plans & Today) and the navigation clarification (ADR-028) are done. Navigation is **Today | Plan | Insights | Me**. Everything on a day is an item: add it (or **Now** for what you're doing), open it, and log into it; it saves as you type (ADR-035). You can:
 - set up reusable activities under **Me → Activities** (builder or templates; ten generic field types, including **Repeating Groups**, e.g. exercises with nested sets; templates include Gym, Meeting and Cooking)
 - **log** into any item: typed values, units, duration, notes and lists of items (with suggestions from earlier records, e.g. exercise names); leave and come back to add more
 - **plan** any date on the Plan tab: activity plans and simple tasks, with optional times or a length, quick add, drag to reorder, skip or move to tomorrow

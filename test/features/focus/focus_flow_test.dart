@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:daylog/features/focus/presentation/focus_screen.dart';
 import 'package:daylog/features/plans/presentation/item/item_screen.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
@@ -39,6 +40,13 @@ void main() {
     await enterField(tester, 'Book *', 'Fooled by Randomness');
     await waitForSave(tester);
     clock.advance(const Duration(minutes: 42));
+    // Back to the top of the item, where the timer is.
+    await tester.fling(
+      find.byType(Scrollable).hitTestable().first,
+      const Offset(0, 2000),
+      2000,
+    );
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Finish'));
     await tester.pumpAndSettle();
 

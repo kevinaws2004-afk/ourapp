@@ -32,6 +32,8 @@ import '../../domain/plan.dart';
 import '../../domain/watch_day_overview.dart';
 import '../plan_actions.dart';
 import '../plan_editor_sheet.dart';
+import '../../../../core/time/local_date.dart';
+import '../plan_date_notifier.dart';
 import '../plan_formatting.dart';
 import '../plan_providers.dart';
 import 'add_to_log_sheet.dart';
@@ -46,10 +48,14 @@ class ItemScreen extends ConsumerWidget {
     required this.args,
     required this.onOpenTimer,
     this.onEditFields,
+    this.onOpenItem,
   });
 
   final ItemArgs args;
   final VoidCallback onOpenTimer;
+
+  /// Opens another item (the one "Plan next" just created).
+  final ValueChanged<PlanId>? onOpenItem;
 
   /// Opens the item's activity in the builder (rename, reorder or remove
   /// what it logs); the item reloads afterwards.
@@ -97,8 +103,12 @@ class ItemScreen extends ConsumerWidget {
         body: AsyncValueView(
           value: item,
           onRetry: () => ref.invalidate(itemProvider(args)),
-          data: (state) =>
-              _ItemBody(args: args, state: state, onOpenTimer: onOpenTimer),
+          data: (state) => _ItemBody(
+            args: args,
+            state: state,
+            onOpenTimer: onOpenTimer,
+            onOpenItem: onOpenItem,
+          ),
         ),
       ),
     );
@@ -226,11 +236,13 @@ class _ItemBody extends ConsumerWidget {
     required this.args,
     required this.state,
     required this.onOpenTimer,
+    this.onOpenItem,
   });
 
   final ItemArgs args;
   final ItemState state;
   final VoidCallback onOpenTimer;
+  final ValueChanged<PlanId>? onOpenItem;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -324,6 +336,17 @@ class _ItemBody extends ConsumerWidget {
                 onChanged: notifier.setDuration,
               ),
             ),
+            // Plan ahead from here: next appointment, next session (ADR-036).
+            if (plan != null)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton.icon(
+                  icon: const Icon(AppIcons.planNext),
+                  label: Text(l10n.planNextAction),
+                  onPressed: () =>
+                      unawaited(_planNext(context, ref, plan, onOpenItem)),
+                ),
+              ),
           ],
         ),
       ),
@@ -629,6 +652,72 @@ Future<void> _addToLog(
         validationMessage(l10n, e.issues.first.code),
       );
     }
+  } catch (error) {
+    if (context.mounted) {
+      showMessageSnackBar(context, errorMessage(l10n, error));
+    }
+  }
+}
+
+/// "Plan next…": pick a date (and, for a timed plan, a time) for the same
+/// thing again (ADR-036).
+Future<void> _planNext(
+  BuildContext context,
+  WidgetRef ref,
+  Plan plan,
+  ValueChanged<PlanId>? onOpenItem,
+) async {
+  final l10n = AppLocalizations.of(context);
+  final material = MaterialLocalizations.of(context);
+  final today = currentLocalDate(ref.read(clockProvider));
+  final suggested = plan.planDate.addDays(7);
+  final initial = suggested.compareTo(today) < 0 ? today : suggested;
+  final picked = await showDatePicker(
+    context: context,
+    initialDate: DateTime(initial.year, initial.month, initial.day),
+    firstDate: DateTime(today.year, today.month, today.day),
+    lastDate: DateTime(today.year + 5),
+  );
+  if (picked == null || !context.mounted) return;
+  DateTime? startAt;
+  if (plan.plannedStartAt case final start?) {
+    final time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(start.toLocal()),
+    );
+    if (!context.mounted) return;
+    if (time != null) {
+      startAt = DateTime(
+        picked.year,
+        picked.month,
+        picked.day,
+        time.hour,
+        time.minute,
+      ).toUtc();
+    }
+  }
+  try {
+    final id = await ref.read(planNextProvider)(
+      plan.id,
+      LocalDate(picked.year, picked.month, picked.day),
+      startAt: startAt,
+    );
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            l10n.planNextPlanned(material.formatMediumDate(picked)),
+          ),
+          action: onOpenItem == null
+              ? null
+              : SnackBarAction(
+                  label: l10n.actionOpen,
+                  onPressed: () => onOpenItem(id),
+                ),
+        ),
+      );
   } catch (error) {
     if (context.mounted) {
       showMessageSnackBar(context, errorMessage(l10n, error));

@@ -87,6 +87,8 @@ Do not use raw Material `Card`, `ElevatedButton`, `AlertDialog` etc. in features
   - the selected date shows as a display-type heading with a relative label (Today / Tomorrow / Yesterday)
   - "Today" jumps back to the current date
 - **Items:** that date's plans and anything done without a plan, as one list (ADR-035). Timed items are ordered by time (a plan logged without a planned time sorts by when it was logged), and untimed ones follow in manual order (drag to reorder). Fast inline add: title → optional from–to time (or **Now** on today); enter adds it and keeps the keyboard open. Typing an activity's name selects its chip (a starter template's name installs it), so "Gym" becomes a Gym item with its fields; any other name is a plain item that can still take notes straight away. The "+" opens the full plan sheet (title, activity or "Just a task", start/end or length, notes). **Tapping an item opens it** (§4.4). Its **More** button opens the plan sheet: edit details, Mark as done (tasks), Skip, Reopen, Move to tomorrow, Delete (with Undo; deletes what was logged too).
+- **Day | Week | Month** switch at the top (ADR-036). Week: a period header (‹ Oct 4–10 › and Today), then each day's heading (today in brand color; tap → Day) with "+" and its items, or "Nothing planned". Month: ‹ October 2026 ›, narrow weekday labels, a 7-column grid of day cells (`AppSizes.dayCell`) with up to four activity-colored dots (`AppSizes.monthDot`); tap → Day.
+- Repeating items show a repeat icon before More. The plan sheet offers Repeat… (weekday chips, every N weeks, until) and Stop repeating after this.
 - Flow: select date → items → open one → log what happens.
 
 ### 4.3 Me → Activities (implemented)
@@ -101,6 +103,7 @@ The reusable Activity Types, managed under Me rather than in a primary tab (ADR-
 - The activity's fields, rendered by the shared form renderer in configured order with consistent field shells. Structured fields (Repeating Group, incl. sets as a nested group) expand inline; "Add {item}" sits at the end of each group; a new all-number row starts from the previous row; text fields can offer previously recorded values as suggestions.
 - An item with no fields shows one line inviting it to log something. **Add to log** (always present, after the fields) opens "What do you want to log?": Ready-made (Sets & reps, Checklist) and "Or add one thing" (every field type with a plain description) → the field sheet to name it. Lists show **Add detail** next to "Add {item}". A pencil in the app bar opens the builder for the item's activity.
 - Notes, then **When** (start date/time) and duration.
+- Bottom: **Plan next…** (date picker, then a time for timed items; snackbar with Open).
 - **No Save button:** changes save shortly after typing stops, and on leaving. Values that can't be saved show their issue inline with "Not saved yet: check the highlighted fields". Required fields (`*`) are a hint, not a blocker.
 
 ### 4.5 Activity builder (implemented in Phase 2: one scrolling screen with live preview; two-pane layout on expanded windows later)
@@ -123,7 +126,8 @@ Default cards generated from the user's data (stat tiles with deltas and sparkli
   - saved chart cards: headline in `numericLarge`, change, personal best, `AppChart` line/bar; planned vs actual as grey planned bars next to activity-colored recorded bars
   - the chart builder sheet
   - empty states
-- **Not built yet:** sparklines and a separate chart-detail screen (cards show the full chart).
+- **Implemented (ADR-037):** activity rows show "4 days · 3h 20m · 5 times" and a chevron; tapping opens the activity's **progress page**: app bar with badge and name, range chips, a summary line (days · time · times · change), then "Progress" with automatic chart cards (no options menu). The saved charts section is titled "Your own charts".
+- **Not built yet:** sparklines.
 
 ### 4.8 Me
 **Activities** (implemented, §4.3), **Body measurements** (implemented in Phase 6: latest values, per-type history with a line chart, add/edit/delete with Undo), preferences (theme, units), data (export if approved), about/privacy statement. A calm settings list built from shared list items, not default settings screens.

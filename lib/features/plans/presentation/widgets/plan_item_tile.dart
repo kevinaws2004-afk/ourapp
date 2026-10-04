@@ -168,6 +168,13 @@ class PlanItemTile extends StatelessWidget {
                         color: colors.success,
                         semanticLabel: l10n.planStatusRecorded,
                       ),
+                    if (plan.isRepeating)
+                      Icon(
+                        AppIcons.repeat,
+                        size: AppSpacing.lg,
+                        color: colors.textSecondary,
+                        semanticLabel: l10n.planRepeating,
+                      ),
                     IconButton(
                       tooltip: l10n.planOptions,
                       icon: const Icon(AppIcons.more),

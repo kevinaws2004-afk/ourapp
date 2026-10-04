@@ -11,6 +11,7 @@ import '../features/activity_types/presentation/activities_screen.dart';
 import '../features/activity_types/presentation/activity_type_screen.dart';
 import '../features/activity_types/presentation/builder/activity_builder_screen.dart';
 import '../features/activity_types/presentation/template_picker_screen.dart';
+import '../features/insights/presentation/activity_insights_screen.dart';
 import '../features/insights/presentation/insights_screen.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
 import '../features/plans/domain/plan.dart';
@@ -42,6 +43,10 @@ abstract final class AppRoutes {
   static const today = '/today';
   static const plan = '/plan';
   static const insights = '/insights';
+
+  /// An activity's automatic progress (ADR-037), inside the Insights tab.
+  static String activityInsights(ActivityTypeId id) =>
+      '/insights/activity/${id.value}';
   static const me = '/me';
 
   /// Reusable activity setup, under Me (ADR-028).
@@ -212,7 +217,25 @@ final routerProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
-          _branch(AppRoutes.insights, const InsightsScreen()),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.insights,
+                builder: (context, state) => InsightsScreen(
+                  onOpenActivity: (id) =>
+                      unawaited(context.push(AppRoutes.activityInsights(id))),
+                ),
+                routes: [
+                  GoRoute(
+                    path: 'activity/:typeId',
+                    builder: (context, state) => ActivityInsightsScreen(
+                      typeId: ActivityTypeId(state.pathParameters['typeId']!),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -313,6 +336,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           onOpenTimer: () => unawaited(context.push(AppRoutes.focus)),
           onEditFields: (typeId) =>
               context.push<ActivityTypeId>(AppRoutes.editActivity(typeId)),
+          onOpenItem: (id) => unawaited(context.push(AppRoutes.item(id))),
         ),
       ),
       GoRoute(
@@ -323,6 +347,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           onOpenTimer: () => unawaited(context.push(AppRoutes.focus)),
           onEditFields: (typeId) =>
               context.push<ActivityTypeId>(AppRoutes.editActivity(typeId)),
+          onOpenItem: (id) => unawaited(context.push(AppRoutes.item(id))),
         ),
       ),
       GoRoute(
@@ -359,10 +384,6 @@ final routerProvider = Provider<GoRouter>((ref) {
   });
   return router;
 });
-
-StatefulShellBranch _branch(String path, Widget screen) => StatefulShellBranch(
-  routes: [GoRoute(path: path, builder: (context, state) => screen)],
-);
 
 /// Debug-only: fills an empty app with demo data (dev/demo_data.dart).
 Future<void> _loadDemoData(BuildContext context) async {

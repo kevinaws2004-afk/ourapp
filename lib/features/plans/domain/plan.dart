@@ -1,6 +1,7 @@
 import '../../../core/time/clock.dart';
 import '../../../core/time/local_date.dart';
 import '../../activity_types/domain/activity_ids.dart';
+import 'plan_series.dart';
 
 extension type const PlanId(String value) {}
 
@@ -42,6 +43,7 @@ class Plan {
     this.plannedStartAt,
     this.plannedEndAt,
     this.plannedDurationMs,
+    this.seriesId,
   });
 
   static const maxTitleLength = 120;
@@ -68,7 +70,12 @@ class Plan {
   final DateTime createdAt;
   final DateTime updatedAt;
 
+  /// The repeating plan this is an occurrence of (ADR-036), if any.
+  final PlanSeriesId? seriesId;
+
   bool get isTask => activityTypeId == null;
+
+  bool get isRepeating => seriesId != null;
 
   bool get isTimed => plannedStartAt != null;
 
@@ -116,6 +123,7 @@ class Plan {
     status: status ?? this.status,
     createdAt: createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
+    seriesId: seriesId,
   );
 }
 

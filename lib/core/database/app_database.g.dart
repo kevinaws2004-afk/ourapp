@@ -1532,6 +1532,829 @@ class ActivityFieldsCompanion extends UpdateCompanion<ActivityFieldRow> {
   }
 }
 
+class PlanSeries extends Table with TableInfo<PlanSeries, PlanSeriesRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  PlanSeries(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _internalIdMeta = const VerificationMeta(
+    'internalId',
+  );
+  late final GeneratedColumn<int> internalId = GeneratedColumn<int>(
+    'internal_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints: 'NOT NULL PRIMARY KEY',
+  );
+  static const VerificationMeta _publicIdMeta = const VerificationMeta(
+    'publicId',
+  );
+  late final GeneratedColumn<String> publicId = GeneratedColumn<String>(
+    'public_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL UNIQUE CHECK (length(public_id) = 36)',
+  );
+  static const VerificationMeta _activityTypeIdMeta = const VerificationMeta(
+    'activityTypeId',
+  );
+  late final GeneratedColumn<int> activityTypeId = GeneratedColumn<int>(
+    'activity_type_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints:
+        'REFERENCES activity_types(internal_id)ON DELETE RESTRICT',
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL CHECK (length(trim(title)) > 0)',
+  );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    $customConstraints: '',
+  );
+  static const VerificationMeta _startMinuteMeta = const VerificationMeta(
+    'startMinute',
+  );
+  late final GeneratedColumn<int> startMinute = GeneratedColumn<int>(
+    'start_minute',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints:
+        'CHECK (start_minute IS NULL OR start_minute BETWEEN 0 AND 1439)',
+  );
+  static const VerificationMeta _durationMsMeta = const VerificationMeta(
+    'durationMs',
+  );
+  late final GeneratedColumn<int> durationMs = GeneratedColumn<int>(
+    'duration_ms',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints: 'CHECK (duration_ms IS NULL OR duration_ms > 0)',
+  );
+  static const VerificationMeta _weekdaysMeta = const VerificationMeta(
+    'weekdays',
+  );
+  late final GeneratedColumn<int> weekdays = GeneratedColumn<int>(
+    'weekdays',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL CHECK (weekdays BETWEEN 1 AND 127)',
+  );
+  static const VerificationMeta _intervalWeeksMeta = const VerificationMeta(
+    'intervalWeeks',
+  );
+  late final GeneratedColumn<int> intervalWeeks = GeneratedColumn<int>(
+    'interval_weeks',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints:
+        'NOT NULL DEFAULT 1 CHECK (interval_weeks BETWEEN 1 AND 52)',
+    defaultValue: const CustomExpression('1'),
+  );
+  static const VerificationMeta _startDateMeta = const VerificationMeta(
+    'startDate',
+  );
+  late final GeneratedColumn<String> startDate = GeneratedColumn<String>(
+    'start_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL CHECK (start_date GLOB \'[0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]\')',
+  );
+  static const VerificationMeta _endDateMeta = const VerificationMeta(
+    'endDate',
+  );
+  late final GeneratedColumn<String> endDate = GeneratedColumn<String>(
+    'end_date',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    $customConstraints: 'CHECK (end_date IS NULL OR end_date >= start_date)',
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  late final GeneratedColumn<int> createdAt = GeneratedColumn<int>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  late final GeneratedColumn<int> updatedAt = GeneratedColumn<int>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  late final GeneratedColumn<int> deletedAt = GeneratedColumn<int>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints: '',
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    internalId,
+    publicId,
+    activityTypeId,
+    title,
+    notes,
+    startMinute,
+    durationMs,
+    weekdays,
+    intervalWeeks,
+    startDate,
+    endDate,
+    createdAt,
+    updatedAt,
+    deletedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'plan_series';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PlanSeriesRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('internal_id')) {
+      context.handle(
+        _internalIdMeta,
+        internalId.isAcceptableOrUnknown(data['internal_id']!, _internalIdMeta),
+      );
+    }
+    if (data.containsKey('public_id')) {
+      context.handle(
+        _publicIdMeta,
+        publicId.isAcceptableOrUnknown(data['public_id']!, _publicIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_publicIdMeta);
+    }
+    if (data.containsKey('activity_type_id')) {
+      context.handle(
+        _activityTypeIdMeta,
+        activityTypeId.isAcceptableOrUnknown(
+          data['activity_type_id']!,
+          _activityTypeIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
+    if (data.containsKey('start_minute')) {
+      context.handle(
+        _startMinuteMeta,
+        startMinute.isAcceptableOrUnknown(
+          data['start_minute']!,
+          _startMinuteMeta,
+        ),
+      );
+    }
+    if (data.containsKey('duration_ms')) {
+      context.handle(
+        _durationMsMeta,
+        durationMs.isAcceptableOrUnknown(data['duration_ms']!, _durationMsMeta),
+      );
+    }
+    if (data.containsKey('weekdays')) {
+      context.handle(
+        _weekdaysMeta,
+        weekdays.isAcceptableOrUnknown(data['weekdays']!, _weekdaysMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_weekdaysMeta);
+    }
+    if (data.containsKey('interval_weeks')) {
+      context.handle(
+        _intervalWeeksMeta,
+        intervalWeeks.isAcceptableOrUnknown(
+          data['interval_weeks']!,
+          _intervalWeeksMeta,
+        ),
+      );
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(
+        _startDateMeta,
+        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startDateMeta);
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(
+        _endDateMeta,
+        endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {internalId};
+  @override
+  PlanSeriesRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PlanSeriesRow(
+      internalId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}internal_id'],
+      )!,
+      publicId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}public_id'],
+      )!,
+      activityTypeId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}activity_type_id'],
+      ),
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
+      startMinute: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}start_minute'],
+      ),
+      durationMs: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}duration_ms'],
+      ),
+      weekdays: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}weekdays'],
+      )!,
+      intervalWeeks: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}interval_weeks'],
+      )!,
+      startDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}start_date'],
+      )!,
+      endDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}end_date'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}deleted_at'],
+      ),
+    );
+  }
+
+  @override
+  PlanSeries createAlias(String alias) {
+    return PlanSeries(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class PlanSeriesRow extends DataClass implements Insertable<PlanSeriesRow> {
+  final int internalId;
+  final String publicId;
+  final int? activityTypeId;
+  final String title;
+  final String? notes;
+
+  /// Local wall-clock start (minute of day), if timed.
+  final int? startMinute;
+  final int? durationMs;
+
+  /// Bit 0 = Monday … bit 6 = Sunday.
+  final int weekdays;
+  final int intervalWeeks;
+  final String startDate;
+  final String? endDate;
+  final int createdAt;
+  final int updatedAt;
+  final int? deletedAt;
+  const PlanSeriesRow({
+    required this.internalId,
+    required this.publicId,
+    this.activityTypeId,
+    required this.title,
+    this.notes,
+    this.startMinute,
+    this.durationMs,
+    required this.weekdays,
+    required this.intervalWeeks,
+    required this.startDate,
+    this.endDate,
+    required this.createdAt,
+    required this.updatedAt,
+    this.deletedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['internal_id'] = Variable<int>(internalId);
+    map['public_id'] = Variable<String>(publicId);
+    if (!nullToAbsent || activityTypeId != null) {
+      map['activity_type_id'] = Variable<int>(activityTypeId);
+    }
+    map['title'] = Variable<String>(title);
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
+    if (!nullToAbsent || startMinute != null) {
+      map['start_minute'] = Variable<int>(startMinute);
+    }
+    if (!nullToAbsent || durationMs != null) {
+      map['duration_ms'] = Variable<int>(durationMs);
+    }
+    map['weekdays'] = Variable<int>(weekdays);
+    map['interval_weeks'] = Variable<int>(intervalWeeks);
+    map['start_date'] = Variable<String>(startDate);
+    if (!nullToAbsent || endDate != null) {
+      map['end_date'] = Variable<String>(endDate);
+    }
+    map['created_at'] = Variable<int>(createdAt);
+    map['updated_at'] = Variable<int>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<int>(deletedAt);
+    }
+    return map;
+  }
+
+  PlanSeriesCompanion toCompanion(bool nullToAbsent) {
+    return PlanSeriesCompanion(
+      internalId: Value(internalId),
+      publicId: Value(publicId),
+      activityTypeId: activityTypeId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(activityTypeId),
+      title: Value(title),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
+      startMinute: startMinute == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startMinute),
+      durationMs: durationMs == null && nullToAbsent
+          ? const Value.absent()
+          : Value(durationMs),
+      weekdays: Value(weekdays),
+      intervalWeeks: Value(intervalWeeks),
+      startDate: Value(startDate),
+      endDate: endDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(endDate),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+    );
+  }
+
+  factory PlanSeriesRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PlanSeriesRow(
+      internalId: serializer.fromJson<int>(json['internal_id']),
+      publicId: serializer.fromJson<String>(json['public_id']),
+      activityTypeId: serializer.fromJson<int?>(json['activity_type_id']),
+      title: serializer.fromJson<String>(json['title']),
+      notes: serializer.fromJson<String?>(json['notes']),
+      startMinute: serializer.fromJson<int?>(json['start_minute']),
+      durationMs: serializer.fromJson<int?>(json['duration_ms']),
+      weekdays: serializer.fromJson<int>(json['weekdays']),
+      intervalWeeks: serializer.fromJson<int>(json['interval_weeks']),
+      startDate: serializer.fromJson<String>(json['start_date']),
+      endDate: serializer.fromJson<String?>(json['end_date']),
+      createdAt: serializer.fromJson<int>(json['created_at']),
+      updatedAt: serializer.fromJson<int>(json['updated_at']),
+      deletedAt: serializer.fromJson<int?>(json['deleted_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'internal_id': serializer.toJson<int>(internalId),
+      'public_id': serializer.toJson<String>(publicId),
+      'activity_type_id': serializer.toJson<int?>(activityTypeId),
+      'title': serializer.toJson<String>(title),
+      'notes': serializer.toJson<String?>(notes),
+      'start_minute': serializer.toJson<int?>(startMinute),
+      'duration_ms': serializer.toJson<int?>(durationMs),
+      'weekdays': serializer.toJson<int>(weekdays),
+      'interval_weeks': serializer.toJson<int>(intervalWeeks),
+      'start_date': serializer.toJson<String>(startDate),
+      'end_date': serializer.toJson<String?>(endDate),
+      'created_at': serializer.toJson<int>(createdAt),
+      'updated_at': serializer.toJson<int>(updatedAt),
+      'deleted_at': serializer.toJson<int?>(deletedAt),
+    };
+  }
+
+  PlanSeriesRow copyWith({
+    int? internalId,
+    String? publicId,
+    Value<int?> activityTypeId = const Value.absent(),
+    String? title,
+    Value<String?> notes = const Value.absent(),
+    Value<int?> startMinute = const Value.absent(),
+    Value<int?> durationMs = const Value.absent(),
+    int? weekdays,
+    int? intervalWeeks,
+    String? startDate,
+    Value<String?> endDate = const Value.absent(),
+    int? createdAt,
+    int? updatedAt,
+    Value<int?> deletedAt = const Value.absent(),
+  }) => PlanSeriesRow(
+    internalId: internalId ?? this.internalId,
+    publicId: publicId ?? this.publicId,
+    activityTypeId: activityTypeId.present
+        ? activityTypeId.value
+        : this.activityTypeId,
+    title: title ?? this.title,
+    notes: notes.present ? notes.value : this.notes,
+    startMinute: startMinute.present ? startMinute.value : this.startMinute,
+    durationMs: durationMs.present ? durationMs.value : this.durationMs,
+    weekdays: weekdays ?? this.weekdays,
+    intervalWeeks: intervalWeeks ?? this.intervalWeeks,
+    startDate: startDate ?? this.startDate,
+    endDate: endDate.present ? endDate.value : this.endDate,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+  );
+  PlanSeriesRow copyWithCompanion(PlanSeriesCompanion data) {
+    return PlanSeriesRow(
+      internalId: data.internalId.present
+          ? data.internalId.value
+          : this.internalId,
+      publicId: data.publicId.present ? data.publicId.value : this.publicId,
+      activityTypeId: data.activityTypeId.present
+          ? data.activityTypeId.value
+          : this.activityTypeId,
+      title: data.title.present ? data.title.value : this.title,
+      notes: data.notes.present ? data.notes.value : this.notes,
+      startMinute: data.startMinute.present
+          ? data.startMinute.value
+          : this.startMinute,
+      durationMs: data.durationMs.present
+          ? data.durationMs.value
+          : this.durationMs,
+      weekdays: data.weekdays.present ? data.weekdays.value : this.weekdays,
+      intervalWeeks: data.intervalWeeks.present
+          ? data.intervalWeeks.value
+          : this.intervalWeeks,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      endDate: data.endDate.present ? data.endDate.value : this.endDate,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlanSeriesRow(')
+          ..write('internalId: $internalId, ')
+          ..write('publicId: $publicId, ')
+          ..write('activityTypeId: $activityTypeId, ')
+          ..write('title: $title, ')
+          ..write('notes: $notes, ')
+          ..write('startMinute: $startMinute, ')
+          ..write('durationMs: $durationMs, ')
+          ..write('weekdays: $weekdays, ')
+          ..write('intervalWeeks: $intervalWeeks, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    internalId,
+    publicId,
+    activityTypeId,
+    title,
+    notes,
+    startMinute,
+    durationMs,
+    weekdays,
+    intervalWeeks,
+    startDate,
+    endDate,
+    createdAt,
+    updatedAt,
+    deletedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PlanSeriesRow &&
+          other.internalId == this.internalId &&
+          other.publicId == this.publicId &&
+          other.activityTypeId == this.activityTypeId &&
+          other.title == this.title &&
+          other.notes == this.notes &&
+          other.startMinute == this.startMinute &&
+          other.durationMs == this.durationMs &&
+          other.weekdays == this.weekdays &&
+          other.intervalWeeks == this.intervalWeeks &&
+          other.startDate == this.startDate &&
+          other.endDate == this.endDate &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt);
+}
+
+class PlanSeriesCompanion extends UpdateCompanion<PlanSeriesRow> {
+  final Value<int> internalId;
+  final Value<String> publicId;
+  final Value<int?> activityTypeId;
+  final Value<String> title;
+  final Value<String?> notes;
+  final Value<int?> startMinute;
+  final Value<int?> durationMs;
+  final Value<int> weekdays;
+  final Value<int> intervalWeeks;
+  final Value<String> startDate;
+  final Value<String?> endDate;
+  final Value<int> createdAt;
+  final Value<int> updatedAt;
+  final Value<int?> deletedAt;
+  const PlanSeriesCompanion({
+    this.internalId = const Value.absent(),
+    this.publicId = const Value.absent(),
+    this.activityTypeId = const Value.absent(),
+    this.title = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.startMinute = const Value.absent(),
+    this.durationMs = const Value.absent(),
+    this.weekdays = const Value.absent(),
+    this.intervalWeeks = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+  });
+  PlanSeriesCompanion.insert({
+    this.internalId = const Value.absent(),
+    required String publicId,
+    this.activityTypeId = const Value.absent(),
+    required String title,
+    this.notes = const Value.absent(),
+    this.startMinute = const Value.absent(),
+    this.durationMs = const Value.absent(),
+    required int weekdays,
+    this.intervalWeeks = const Value.absent(),
+    required String startDate,
+    this.endDate = const Value.absent(),
+    required int createdAt,
+    required int updatedAt,
+    this.deletedAt = const Value.absent(),
+  }) : publicId = Value(publicId),
+       title = Value(title),
+       weekdays = Value(weekdays),
+       startDate = Value(startDate),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<PlanSeriesRow> custom({
+    Expression<int>? internalId,
+    Expression<String>? publicId,
+    Expression<int>? activityTypeId,
+    Expression<String>? title,
+    Expression<String>? notes,
+    Expression<int>? startMinute,
+    Expression<int>? durationMs,
+    Expression<int>? weekdays,
+    Expression<int>? intervalWeeks,
+    Expression<String>? startDate,
+    Expression<String>? endDate,
+    Expression<int>? createdAt,
+    Expression<int>? updatedAt,
+    Expression<int>? deletedAt,
+  }) {
+    return RawValuesInsertable({
+      if (internalId != null) 'internal_id': internalId,
+      if (publicId != null) 'public_id': publicId,
+      if (activityTypeId != null) 'activity_type_id': activityTypeId,
+      if (title != null) 'title': title,
+      if (notes != null) 'notes': notes,
+      if (startMinute != null) 'start_minute': startMinute,
+      if (durationMs != null) 'duration_ms': durationMs,
+      if (weekdays != null) 'weekdays': weekdays,
+      if (intervalWeeks != null) 'interval_weeks': intervalWeeks,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+    });
+  }
+
+  PlanSeriesCompanion copyWith({
+    Value<int>? internalId,
+    Value<String>? publicId,
+    Value<int?>? activityTypeId,
+    Value<String>? title,
+    Value<String?>? notes,
+    Value<int?>? startMinute,
+    Value<int?>? durationMs,
+    Value<int>? weekdays,
+    Value<int>? intervalWeeks,
+    Value<String>? startDate,
+    Value<String?>? endDate,
+    Value<int>? createdAt,
+    Value<int>? updatedAt,
+    Value<int?>? deletedAt,
+  }) {
+    return PlanSeriesCompanion(
+      internalId: internalId ?? this.internalId,
+      publicId: publicId ?? this.publicId,
+      activityTypeId: activityTypeId ?? this.activityTypeId,
+      title: title ?? this.title,
+      notes: notes ?? this.notes,
+      startMinute: startMinute ?? this.startMinute,
+      durationMs: durationMs ?? this.durationMs,
+      weekdays: weekdays ?? this.weekdays,
+      intervalWeeks: intervalWeeks ?? this.intervalWeeks,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (internalId.present) {
+      map['internal_id'] = Variable<int>(internalId.value);
+    }
+    if (publicId.present) {
+      map['public_id'] = Variable<String>(publicId.value);
+    }
+    if (activityTypeId.present) {
+      map['activity_type_id'] = Variable<int>(activityTypeId.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
+    if (startMinute.present) {
+      map['start_minute'] = Variable<int>(startMinute.value);
+    }
+    if (durationMs.present) {
+      map['duration_ms'] = Variable<int>(durationMs.value);
+    }
+    if (weekdays.present) {
+      map['weekdays'] = Variable<int>(weekdays.value);
+    }
+    if (intervalWeeks.present) {
+      map['interval_weeks'] = Variable<int>(intervalWeeks.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<String>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<String>(endDate.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<int>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<int>(updatedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<int>(deletedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlanSeriesCompanion(')
+          ..write('internalId: $internalId, ')
+          ..write('publicId: $publicId, ')
+          ..write('activityTypeId: $activityTypeId, ')
+          ..write('title: $title, ')
+          ..write('notes: $notes, ')
+          ..write('startMinute: $startMinute, ')
+          ..write('durationMs: $durationMs, ')
+          ..write('weekdays: $weekdays, ')
+          ..write('intervalWeeks: $intervalWeeks, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class Plans extends Table with TableInfo<Plans, PlanRow> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -1688,6 +2511,17 @@ class Plans extends Table with TableInfo<Plans, PlanRow> {
     requiredDuringInsert: false,
     $customConstraints: '',
   );
+  static const VerificationMeta _seriesIdMeta = const VerificationMeta(
+    'seriesId',
+  );
+  late final GeneratedColumn<int> seriesId = GeneratedColumn<int>(
+    'series_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints: 'REFERENCES plan_series(internal_id)ON DELETE RESTRICT',
+  );
   @override
   List<GeneratedColumn> get $columns => [
     internalId,
@@ -1704,6 +2538,7 @@ class Plans extends Table with TableInfo<Plans, PlanRow> {
     createdAt,
     updatedAt,
     deletedAt,
+    seriesId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1823,6 +2658,12 @@ class Plans extends Table with TableInfo<Plans, PlanRow> {
         deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
       );
     }
+    if (data.containsKey('series_id')) {
+      context.handle(
+        _seriesIdMeta,
+        seriesId.isAcceptableOrUnknown(data['series_id']!, _seriesIdMeta),
+      );
+    }
     return context;
   }
 
@@ -1888,6 +2729,10 @@ class Plans extends Table with TableInfo<Plans, PlanRow> {
         DriftSqlType.int,
         data['${effectivePrefix}deleted_at'],
       ),
+      seriesId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}series_id'],
+      ),
     );
   }
 
@@ -1924,6 +2769,9 @@ class PlanRow extends DataClass implements Insertable<PlanRow> {
   final int createdAt;
   final int updatedAt;
   final int? deletedAt;
+
+  /// v7: the repeating plan this is an occurrence of (ADR-036).
+  final int? seriesId;
   const PlanRow({
     required this.internalId,
     required this.publicId,
@@ -1939,6 +2787,7 @@ class PlanRow extends DataClass implements Insertable<PlanRow> {
     required this.createdAt,
     required this.updatedAt,
     this.deletedAt,
+    this.seriesId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1968,6 +2817,9 @@ class PlanRow extends DataClass implements Insertable<PlanRow> {
     map['updated_at'] = Variable<int>(updatedAt);
     if (!nullToAbsent || deletedAt != null) {
       map['deleted_at'] = Variable<int>(deletedAt);
+    }
+    if (!nullToAbsent || seriesId != null) {
+      map['series_id'] = Variable<int>(seriesId);
     }
     return map;
   }
@@ -2000,6 +2852,9 @@ class PlanRow extends DataClass implements Insertable<PlanRow> {
       deletedAt: deletedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(deletedAt),
+      seriesId: seriesId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(seriesId),
     );
   }
 
@@ -2023,6 +2878,7 @@ class PlanRow extends DataClass implements Insertable<PlanRow> {
       createdAt: serializer.fromJson<int>(json['created_at']),
       updatedAt: serializer.fromJson<int>(json['updated_at']),
       deletedAt: serializer.fromJson<int?>(json['deleted_at']),
+      seriesId: serializer.fromJson<int?>(json['series_id']),
     );
   }
   @override
@@ -2043,6 +2899,7 @@ class PlanRow extends DataClass implements Insertable<PlanRow> {
       'created_at': serializer.toJson<int>(createdAt),
       'updated_at': serializer.toJson<int>(updatedAt),
       'deleted_at': serializer.toJson<int?>(deletedAt),
+      'series_id': serializer.toJson<int?>(seriesId),
     };
   }
 
@@ -2061,6 +2918,7 @@ class PlanRow extends DataClass implements Insertable<PlanRow> {
     int? createdAt,
     int? updatedAt,
     Value<int?> deletedAt = const Value.absent(),
+    Value<int?> seriesId = const Value.absent(),
   }) => PlanRow(
     internalId: internalId ?? this.internalId,
     publicId: publicId ?? this.publicId,
@@ -2082,6 +2940,7 @@ class PlanRow extends DataClass implements Insertable<PlanRow> {
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
     deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+    seriesId: seriesId.present ? seriesId.value : this.seriesId,
   );
   PlanRow copyWithCompanion(PlansCompanion data) {
     return PlanRow(
@@ -2109,6 +2968,7 @@ class PlanRow extends DataClass implements Insertable<PlanRow> {
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      seriesId: data.seriesId.present ? data.seriesId.value : this.seriesId,
     );
   }
 
@@ -2128,7 +2988,8 @@ class PlanRow extends DataClass implements Insertable<PlanRow> {
           ..write('status: $status, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('deletedAt: $deletedAt')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('seriesId: $seriesId')
           ..write(')'))
         .toString();
   }
@@ -2149,6 +3010,7 @@ class PlanRow extends DataClass implements Insertable<PlanRow> {
     createdAt,
     updatedAt,
     deletedAt,
+    seriesId,
   );
   @override
   bool operator ==(Object other) =>
@@ -2167,7 +3029,8 @@ class PlanRow extends DataClass implements Insertable<PlanRow> {
           other.status == this.status &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
-          other.deletedAt == this.deletedAt);
+          other.deletedAt == this.deletedAt &&
+          other.seriesId == this.seriesId);
 }
 
 class PlansCompanion extends UpdateCompanion<PlanRow> {
@@ -2185,6 +3048,7 @@ class PlansCompanion extends UpdateCompanion<PlanRow> {
   final Value<int> createdAt;
   final Value<int> updatedAt;
   final Value<int?> deletedAt;
+  final Value<int?> seriesId;
   const PlansCompanion({
     this.internalId = const Value.absent(),
     this.publicId = const Value.absent(),
@@ -2200,6 +3064,7 @@ class PlansCompanion extends UpdateCompanion<PlanRow> {
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
+    this.seriesId = const Value.absent(),
   });
   PlansCompanion.insert({
     this.internalId = const Value.absent(),
@@ -2216,6 +3081,7 @@ class PlansCompanion extends UpdateCompanion<PlanRow> {
     required int createdAt,
     required int updatedAt,
     this.deletedAt = const Value.absent(),
+    this.seriesId = const Value.absent(),
   }) : publicId = Value(publicId),
        planDate = Value(planDate),
        title = Value(title),
@@ -2236,6 +3102,7 @@ class PlansCompanion extends UpdateCompanion<PlanRow> {
     Expression<int>? createdAt,
     Expression<int>? updatedAt,
     Expression<int>? deletedAt,
+    Expression<int>? seriesId,
   }) {
     return RawValuesInsertable({
       if (internalId != null) 'internal_id': internalId,
@@ -2252,6 +3119,7 @@ class PlansCompanion extends UpdateCompanion<PlanRow> {
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (deletedAt != null) 'deleted_at': deletedAt,
+      if (seriesId != null) 'series_id': seriesId,
     });
   }
 
@@ -2270,6 +3138,7 @@ class PlansCompanion extends UpdateCompanion<PlanRow> {
     Value<int>? createdAt,
     Value<int>? updatedAt,
     Value<int?>? deletedAt,
+    Value<int?>? seriesId,
   }) {
     return PlansCompanion(
       internalId: internalId ?? this.internalId,
@@ -2286,6 +3155,7 @@ class PlansCompanion extends UpdateCompanion<PlanRow> {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
+      seriesId: seriesId ?? this.seriesId,
     );
   }
 
@@ -2334,6 +3204,9 @@ class PlansCompanion extends UpdateCompanion<PlanRow> {
     if (deletedAt.present) {
       map['deleted_at'] = Variable<int>(deletedAt.value);
     }
+    if (seriesId.present) {
+      map['series_id'] = Variable<int>(seriesId.value);
+    }
     return map;
   }
 
@@ -2353,7 +3226,8 @@ class PlansCompanion extends UpdateCompanion<PlanRow> {
           ..write('status: $status, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('deletedAt: $deletedAt')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('seriesId: $seriesId')
           ..write(')'))
         .toString();
   }
@@ -6868,7 +7742,12 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     'idx_activity_fields_parent',
     'CREATE INDEX idx_activity_fields_parent ON activity_fields (parent_field_id) WHERE parent_field_id IS NOT NULL',
   );
+  late final PlanSeries planSeries = PlanSeries(this);
   late final Plans plans = Plans(this);
+  late final Index uxPlansSeriesDate = Index(
+    'ux_plans_series_date',
+    'CREATE UNIQUE INDEX ux_plans_series_date ON plans (series_id, plan_date) WHERE series_id IS NOT NULL',
+  );
   late final Index idxPlansDay = Index(
     'idx_plans_day',
     'CREATE INDEX idx_plans_day ON plans (plan_date, sort_order) WHERE deleted_at IS NULL',
@@ -7003,6 +7882,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     'CREATE TRIGGER trg_measurements_public_id_immutable BEFORE UPDATE OF public_id ON measurements WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
     'trg_measurements_public_id_immutable',
   );
+  late final Trigger trgPlanSeriesPublicIdImmutable = Trigger(
+    'CREATE TRIGGER trg_plan_series_public_id_immutable BEFORE UPDATE OF public_id ON plan_series WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
+    'trg_plan_series_public_id_immutable',
+  );
   late final $AppPreferencesTable appPreferences = $AppPreferencesTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -7013,7 +7896,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     activityFields,
     idxActivityFieldsTypePosition,
     idxActivityFieldsParent,
+    planSeries,
     plans,
+    uxPlansSeriesDate,
     idxPlansDay,
     idxPlansTypeDay,
     activityLogs,
@@ -7052,6 +7937,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     idxMeasurementsTypeDay,
     insightCharts,
     trgMeasurementsPublicIdImmutable,
+    trgPlanSeriesPublicIdImmutable,
     appPreferences,
   ];
   @override
@@ -7217,6 +8103,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       ),
       result: [],
     ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'plan_series',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [],
+    ),
   ]);
 }
 
@@ -7268,6 +8161,25 @@ final class $ActivityTypesReferences
         );
 
     final cache = $_typedResult.readTableOrNull(_activityFieldsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<PlanSeries, List<PlanSeriesRow>>
+  _planSeriesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.planSeries,
+    aliasName: 'activity_types__internal_id__plan_series__activity_type_id',
+  );
+
+  $PlanSeriesProcessedTableManager get planSeriesRefs {
+    final manager = $PlanSeriesTableManager($_db, $_db.planSeries).filter(
+      (f) => f.activityTypeId.internalId.sqlEquals(
+        $_itemColumn<int>('internal_id')!,
+      ),
+    );
+
+    final cache = $_typedResult.readTableOrNull(_planSeriesRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -7417,6 +8329,31 @@ class $ActivityTypesFilterComposer
           }) => $ActivityFieldsFilterComposer(
             $db: $db,
             $table: $db.activityFields,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> planSeriesRefs(
+    Expression<bool> Function($PlanSeriesFilterComposer f) f,
+  ) {
+    final $PlanSeriesFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.internalId,
+      referencedTable: $db.planSeries,
+      getReferencedColumn: (t) => t.activityTypeId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $PlanSeriesFilterComposer(
+            $db: $db,
+            $table: $db.planSeries,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7650,6 +8587,31 @@ class $ActivityTypesAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> planSeriesRefs<T extends Object>(
+    Expression<T> Function($PlanSeriesAnnotationComposer a) f,
+  ) {
+    final $PlanSeriesAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.internalId,
+      referencedTable: $db.planSeries,
+      getReferencedColumn: (t) => t.activityTypeId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $PlanSeriesAnnotationComposer(
+            $db: $db,
+            $table: $db.planSeries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> plansRefs<T extends Object>(
     Expression<T> Function($PlansAnnotationComposer a) f,
   ) {
@@ -7741,6 +8703,7 @@ class $ActivityTypesTableManager
           ActivityTypeRow,
           PrefetchHooks Function({
             bool activityFieldsRefs,
+            bool planSeriesRefs,
             bool plansRefs,
             bool activityLogsRefs,
             bool focusSessionsRefs,
@@ -7824,6 +8787,7 @@ class $ActivityTypesTableManager
           prefetchHooksCallback:
               ({
                 activityFieldsRefs = false,
+                planSeriesRefs = false,
                 plansRefs = false,
                 activityLogsRefs = false,
                 focusSessionsRefs = false,
@@ -7832,6 +8796,7 @@ class $ActivityTypesTableManager
                   db: db,
                   explicitlyWatchedTables: [
                     if (activityFieldsRefs) db.activityFields,
+                    if (planSeriesRefs) db.planSeries,
                     if (plansRefs) db.plans,
                     if (activityLogsRefs) db.activityLogs,
                     if (focusSessionsRefs) db.focusSessions,
@@ -7854,6 +8819,27 @@ class $ActivityTypesTableManager
                                 table,
                                 p0,
                               ).activityFieldsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.activityTypeId == item.internalId,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (planSeriesRefs)
+                        await $_getPrefetchedData<
+                          ActivityTypeRow,
+                          ActivityTypes,
+                          PlanSeriesRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $ActivityTypesReferences
+                              ._planSeriesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $ActivityTypesReferences(
+                                db,
+                                table,
+                                p0,
+                              ).planSeriesRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.activityTypeId == item.internalId,
@@ -7941,6 +8927,7 @@ typedef $ActivityTypesProcessedTableManager =
       ActivityTypeRow,
       PrefetchHooks Function({
         bool activityFieldsRefs,
+        bool planSeriesRefs,
         bool plansRefs,
         bool activityLogsRefs,
         bool focusSessionsRefs,
@@ -8717,6 +9704,579 @@ typedef $ActivityFieldsProcessedTableManager =
         bool logValuesRefs,
       })
     >;
+typedef $PlanSeriesCreateCompanionBuilder = PlanSeriesCompanion Function({
+  Value<int> internalId,
+  required String publicId,
+  Value<int?> activityTypeId,
+  required String title,
+  Value<String?> notes,
+  Value<int?> startMinute,
+  Value<int?> durationMs,
+  required int weekdays,
+  Value<int> intervalWeeks,
+  required String startDate,
+  Value<String?> endDate,
+  required int createdAt,
+  required int updatedAt,
+  Value<int?> deletedAt,
+});
+typedef $PlanSeriesUpdateCompanionBuilder = PlanSeriesCompanion Function({
+  Value<int> internalId,
+  Value<String> publicId,
+  Value<int?> activityTypeId,
+  Value<String> title,
+  Value<String?> notes,
+  Value<int?> startMinute,
+  Value<int?> durationMs,
+  Value<int> weekdays,
+  Value<int> intervalWeeks,
+  Value<String> startDate,
+  Value<String?> endDate,
+  Value<int> createdAt,
+  Value<int> updatedAt,
+  Value<int?> deletedAt,
+});
+
+final class $PlanSeriesReferences
+    extends BaseReferences<_$AppDatabase, PlanSeries, PlanSeriesRow> {
+  $PlanSeriesReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static ActivityTypes _activityTypeIdTable(_$AppDatabase db) =>
+      db.activityTypes.createAlias(
+        'plan_series__activity_type_id__activity_types__internal_id',
+      );
+
+  $ActivityTypesProcessedTableManager? get activityTypeId {
+    final $_column = $_itemColumn<int>('activity_type_id');
+    if ($_column == null) return null;
+    final manager = $ActivityTypesTableManager(
+      $_db,
+      $_db.activityTypes,
+    ).filter((f) => f.internalId.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_activityTypeIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<Plans, List<PlanRow>> _plansRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.plans,
+    aliasName: 'plan_series__internal_id__plans__series_id',
+  );
+
+  $PlansProcessedTableManager get plansRefs {
+    final manager = $PlansTableManager($_db, $_db.plans).filter(
+      (f) => f.seriesId.internalId.sqlEquals($_itemColumn<int>('internal_id')!),
+    );
+
+    final cache = $_typedResult.readTableOrNull(_plansRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $PlanSeriesFilterComposer extends Composer<_$AppDatabase, PlanSeries> {
+  $PlanSeriesFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get internalId => $composableBuilder(
+    column: $table.internalId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get publicId => $composableBuilder(
+    column: $table.publicId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get startMinute => $composableBuilder(
+    column: $table.startMinute,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get durationMs => $composableBuilder(
+    column: $table.durationMs,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get weekdays => $composableBuilder(
+    column: $table.weekdays,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get intervalWeeks => $composableBuilder(
+    column: $table.intervalWeeks,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $ActivityTypesFilterComposer get activityTypeId {
+    final $ActivityTypesFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.activityTypeId,
+      referencedTable: $db.activityTypes,
+      getReferencedColumn: (t) => t.internalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $ActivityTypesFilterComposer(
+            $db: $db,
+            $table: $db.activityTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> plansRefs(
+    Expression<bool> Function($PlansFilterComposer f) f,
+  ) {
+    final $PlansFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.internalId,
+      referencedTable: $db.plans,
+      getReferencedColumn: (t) => t.seriesId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $PlansFilterComposer(
+            $db: $db,
+            $table: $db.plans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $PlanSeriesOrderingComposer extends Composer<_$AppDatabase, PlanSeries> {
+  $PlanSeriesOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get internalId => $composableBuilder(
+    column: $table.internalId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get publicId => $composableBuilder(
+    column: $table.publicId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get startMinute => $composableBuilder(
+    column: $table.startMinute,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get durationMs => $composableBuilder(
+    column: $table.durationMs,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get weekdays => $composableBuilder(
+    column: $table.weekdays,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get intervalWeeks => $composableBuilder(
+    column: $table.intervalWeeks,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $ActivityTypesOrderingComposer get activityTypeId {
+    final $ActivityTypesOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.activityTypeId,
+      referencedTable: $db.activityTypes,
+      getReferencedColumn: (t) => t.internalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $ActivityTypesOrderingComposer(
+            $db: $db,
+            $table: $db.activityTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $PlanSeriesAnnotationComposer
+    extends Composer<_$AppDatabase, PlanSeries> {
+  $PlanSeriesAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get internalId => $composableBuilder(
+    column: $table.internalId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get publicId =>
+      $composableBuilder(column: $table.publicId, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumn<int> get startMinute => $composableBuilder(
+    column: $table.startMinute,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get durationMs => $composableBuilder(
+    column: $table.durationMs,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get weekdays =>
+      $composableBuilder(column: $table.weekdays, builder: (column) => column);
+
+  GeneratedColumn<int> get intervalWeeks => $composableBuilder(
+    column: $table.intervalWeeks,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<String> get endDate =>
+      $composableBuilder(column: $table.endDate, builder: (column) => column);
+
+  GeneratedColumn<int> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<int> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<int> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  $ActivityTypesAnnotationComposer get activityTypeId {
+    final $ActivityTypesAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.activityTypeId,
+      referencedTable: $db.activityTypes,
+      getReferencedColumn: (t) => t.internalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $ActivityTypesAnnotationComposer(
+            $db: $db,
+            $table: $db.activityTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> plansRefs<T extends Object>(
+    Expression<T> Function($PlansAnnotationComposer a) f,
+  ) {
+    final $PlansAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.internalId,
+      referencedTable: $db.plans,
+      getReferencedColumn: (t) => t.seriesId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $PlansAnnotationComposer(
+            $db: $db,
+            $table: $db.plans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $PlanSeriesTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          PlanSeries,
+          PlanSeriesRow,
+          $PlanSeriesFilterComposer,
+          $PlanSeriesOrderingComposer,
+          $PlanSeriesAnnotationComposer,
+          $PlanSeriesCreateCompanionBuilder,
+          $PlanSeriesUpdateCompanionBuilder,
+          (PlanSeriesRow, $PlanSeriesReferences),
+          PlanSeriesRow,
+          PrefetchHooks Function({bool activityTypeId, bool plansRefs})
+        > {
+  $PlanSeriesTableManager(_$AppDatabase db, PlanSeries table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $PlanSeriesFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $PlanSeriesOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $PlanSeriesAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> internalId = const Value.absent(),
+                Value<String> publicId = const Value.absent(),
+                Value<int?> activityTypeId = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<int?> startMinute = const Value.absent(),
+                Value<int?> durationMs = const Value.absent(),
+                Value<int> weekdays = const Value.absent(),
+                Value<int> intervalWeeks = const Value.absent(),
+                Value<String> startDate = const Value.absent(),
+                Value<String?> endDate = const Value.absent(),
+                Value<int> createdAt = const Value.absent(),
+                Value<int> updatedAt = const Value.absent(),
+                Value<int?> deletedAt = const Value.absent(),
+              }) => PlanSeriesCompanion(
+                internalId: internalId,
+                publicId: publicId,
+                activityTypeId: activityTypeId,
+                title: title,
+                notes: notes,
+                startMinute: startMinute,
+                durationMs: durationMs,
+                weekdays: weekdays,
+                intervalWeeks: intervalWeeks,
+                startDate: startDate,
+                endDate: endDate,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> internalId = const Value.absent(),
+                required String publicId,
+                Value<int?> activityTypeId = const Value.absent(),
+                required String title,
+                Value<String?> notes = const Value.absent(),
+                Value<int?> startMinute = const Value.absent(),
+                Value<int?> durationMs = const Value.absent(),
+                required int weekdays,
+                Value<int> intervalWeeks = const Value.absent(),
+                required String startDate,
+                Value<String?> endDate = const Value.absent(),
+                required int createdAt,
+                required int updatedAt,
+                Value<int?> deletedAt = const Value.absent(),
+              }) => PlanSeriesCompanion.insert(
+                internalId: internalId,
+                publicId: publicId,
+                activityTypeId: activityTypeId,
+                title: title,
+                notes: notes,
+                startMinute: startMinute,
+                durationMs: durationMs,
+                weekdays: weekdays,
+                intervalWeeks: intervalWeeks,
+                startDate: startDate,
+                endDate: endDate,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<PlanSeries, PlanSeriesRow>(table),
+                  $PlanSeriesReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({activityTypeId = false, plansRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (plansRefs) db.plans],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (activityTypeId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.activityTypeId,
+                        referencedTable: $PlanSeriesReferences
+                            ._activityTypeIdTable(db),
+                        referencedColumn: $PlanSeriesReferences
+                            ._activityTypeIdTable(db)
+                            .internalId,
+                      ) as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (plansRefs)
+                    await $_getPrefetchedData<
+                      PlanSeriesRow,
+                      PlanSeries,
+                      PlanRow
+                    >(
+                      currentTable: table,
+                      referencedTable: $PlanSeriesReferences._plansRefsTable(
+                        db,
+                      ),
+                      managerFromTypedResult: (p0) =>
+                          $PlanSeriesReferences(db, table, p0).plansRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where(
+                            (e) => e.seriesId == item.internalId,
+                          ),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $PlanSeriesProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      PlanSeries,
+      PlanSeriesRow,
+      $PlanSeriesFilterComposer,
+      $PlanSeriesOrderingComposer,
+      $PlanSeriesAnnotationComposer,
+      $PlanSeriesCreateCompanionBuilder,
+      $PlanSeriesUpdateCompanionBuilder,
+      (PlanSeriesRow, $PlanSeriesReferences),
+      PlanSeriesRow,
+      PrefetchHooks Function({bool activityTypeId, bool plansRefs})
+    >;
 typedef $PlansCreateCompanionBuilder = PlansCompanion Function({
   Value<int> internalId,
   required String publicId,
@@ -8732,6 +10292,7 @@ typedef $PlansCreateCompanionBuilder = PlansCompanion Function({
   required int createdAt,
   required int updatedAt,
   Value<int?> deletedAt,
+  Value<int?> seriesId,
 });
 typedef $PlansUpdateCompanionBuilder = PlansCompanion Function({
   Value<int> internalId,
@@ -8748,6 +10309,7 @@ typedef $PlansUpdateCompanionBuilder = PlansCompanion Function({
   Value<int> createdAt,
   Value<int> updatedAt,
   Value<int?> deletedAt,
+  Value<int?> seriesId,
 });
 
 final class $PlansReferences
@@ -8766,6 +10328,23 @@ final class $PlansReferences
       $_db.activityTypes,
     ).filter((f) => f.internalId.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_activityTypeIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static PlanSeries _seriesIdTable(_$AppDatabase db) =>
+      db.planSeries.createAlias('plans__series_id__plan_series__internal_id');
+
+  $PlanSeriesProcessedTableManager? get seriesId {
+    final $_column = $_itemColumn<int>('series_id');
+    if ($_column == null) return null;
+    final manager = $PlanSeriesTableManager(
+      $_db,
+      $_db.planSeries,
+    ).filter((f) => f.internalId.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_seriesIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -8894,6 +10473,29 @@ class $PlansFilterComposer extends Composer<_$AppDatabase, Plans> {
           }) => $ActivityTypesFilterComposer(
             $db: $db,
             $table: $db.activityTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $PlanSeriesFilterComposer get seriesId {
+    final $PlanSeriesFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.seriesId,
+      referencedTable: $db.planSeries,
+      getReferencedColumn: (t) => t.internalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $PlanSeriesFilterComposer(
+            $db: $db,
+            $table: $db.planSeries,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9049,6 +10651,29 @@ class $PlansOrderingComposer extends Composer<_$AppDatabase, Plans> {
     );
     return composer;
   }
+
+  $PlanSeriesOrderingComposer get seriesId {
+    final $PlanSeriesOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.seriesId,
+      referencedTable: $db.planSeries,
+      getReferencedColumn: (t) => t.internalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $PlanSeriesOrderingComposer(
+            $db: $db,
+            $table: $db.planSeries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $PlansAnnotationComposer extends Composer<_$AppDatabase, Plans> {
@@ -9129,6 +10754,29 @@ class $PlansAnnotationComposer extends Composer<_$AppDatabase, Plans> {
     return composer;
   }
 
+  $PlanSeriesAnnotationComposer get seriesId {
+    final $PlanSeriesAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.seriesId,
+      referencedTable: $db.planSeries,
+      getReferencedColumn: (t) => t.internalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $PlanSeriesAnnotationComposer(
+            $db: $db,
+            $table: $db.planSeries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
   Expression<T> activityLogsRefs<T extends Object>(
     Expression<T> Function($ActivityLogsAnnotationComposer a) f,
   ) {
@@ -9195,6 +10843,7 @@ class $PlansTableManager
           PlanRow,
           PrefetchHooks Function({
             bool activityTypeId,
+            bool seriesId,
             bool activityLogsRefs,
             bool focusSessionsRefs,
           })
@@ -9226,6 +10875,7 @@ class $PlansTableManager
                 Value<int> createdAt = const Value.absent(),
                 Value<int> updatedAt = const Value.absent(),
                 Value<int?> deletedAt = const Value.absent(),
+                Value<int?> seriesId = const Value.absent(),
               }) => PlansCompanion(
                 internalId: internalId,
                 publicId: publicId,
@@ -9241,6 +10891,7 @@ class $PlansTableManager
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 deletedAt: deletedAt,
+                seriesId: seriesId,
               ),
           createCompanionCallback:
               ({
@@ -9258,6 +10909,7 @@ class $PlansTableManager
                 required int createdAt,
                 required int updatedAt,
                 Value<int?> deletedAt = const Value.absent(),
+                Value<int?> seriesId = const Value.absent(),
               }) => PlansCompanion.insert(
                 internalId: internalId,
                 publicId: publicId,
@@ -9273,6 +10925,7 @@ class $PlansTableManager
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 deletedAt: deletedAt,
+                seriesId: seriesId,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -9285,6 +10938,7 @@ class $PlansTableManager
           prefetchHooksCallback:
               ({
                 activityTypeId = false,
+                seriesId = false,
                 activityLogsRefs = false,
                 focusSessionsRefs = false,
               }) {
@@ -9318,6 +10972,18 @@ class $PlansTableManager
                                 ._activityTypeIdTable(db),
                             referencedColumn: $PlansReferences
                                 ._activityTypeIdTable(db)
+                                .internalId,
+                          ) as T;
+                        }
+                        if (seriesId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.seriesId,
+                            referencedTable: $PlansReferences._seriesIdTable(
+                              db,
+                            ),
+                            referencedColumn: $PlansReferences
+                                ._seriesIdTable(db)
                                 .internalId,
                           ) as T;
                         }
@@ -9382,6 +11048,7 @@ typedef $PlansProcessedTableManager =
       PlanRow,
       PrefetchHooks Function({
         bool activityTypeId,
+        bool seriesId,
         bool activityLogsRefs,
         bool focusSessionsRefs,
       })
@@ -13006,6 +14673,8 @@ class $AppDatabaseManager {
       $ActivityTypesTableManager(_db, _db.activityTypes);
   $ActivityFieldsTableManager get activityFields =>
       $ActivityFieldsTableManager(_db, _db.activityFields);
+  $PlanSeriesTableManager get planSeries =>
+      $PlanSeriesTableManager(_db, _db.planSeries);
   $PlansTableManager get plans => $PlansTableManager(_db, _db.plans);
   $ActivityLogsTableManager get activityLogs =>
       $ActivityLogsTableManager(_db, _db.activityLogs);

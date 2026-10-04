@@ -164,14 +164,19 @@ class SetPlanStatus {
 
 /// Moves a plan to another date ("Move to tomorrow", F11): planned times keep
 /// their local wall-clock time, the plan reopens, and it goes to the end of
-/// the target date's manual order.
+/// the target date's manual order. Returns the moved plan.
+///
+/// An occurrence of a repeating plan (ADR-036) moves as a one-off copy: the
+/// occurrence is deleted on its date (so it isn't generated again there) and
+/// the copy, no longer repeating, goes to [to].
 class MovePlan {
-  const MovePlan(this._plans, this._clock);
+  const MovePlan(this._plans, this._ids, this._clock);
 
   final PlanRepository _plans;
+  final IdGenerator _ids;
   final Clock _clock;
 
-  Future<void> call(PlanId id, LocalDate to) async {
+  Future<PlanId> call(PlanId id, LocalDate to) async {
     final plan = await _plans.getPlan(id);
     if (plan == null) {
       throw NotFoundException(debugContext: 'MovePlan ${id.value}');
@@ -179,16 +184,36 @@ class MovePlan {
     final days = plan.planDate.daysUntil(to);
     DateTime? shift(DateTime? instant) =>
         instant == null ? null : _clock.shiftDays(instant, days);
-    await _plans.update(
-      plan.copyWith(
-        planDate: to,
-        plannedStartAt: () => shift(plan.plannedStartAt),
-        plannedEndAt: () => shift(plan.plannedEndAt),
-        sortOrder: await _plans.nextSortOrder(to),
-        status: PlanStatus.planned,
-        updatedAt: _clock.nowUtc(),
-      ),
+    final now = _clock.nowUtc();
+    final moved = plan.copyWith(
+      planDate: to,
+      plannedStartAt: () => shift(plan.plannedStartAt),
+      plannedEndAt: () => shift(plan.plannedEndAt),
+      sortOrder: await _plans.nextSortOrder(to),
+      status: PlanStatus.planned,
+      updatedAt: now,
     );
+    if (!plan.isRepeating) {
+      await _plans.update(moved);
+      return id;
+    }
+    final copy = Plan(
+      id: PlanId(_ids.newId()),
+      planDate: moved.planDate,
+      activityTypeId: plan.activityTypeId,
+      title: plan.title,
+      notes: plan.notes,
+      plannedStartAt: moved.plannedStartAt,
+      plannedEndAt: moved.plannedEndAt,
+      plannedDurationMs: plan.plannedDurationMs,
+      sortOrder: moved.sortOrder,
+      status: PlanStatus.planned,
+      createdAt: now,
+      updatedAt: now,
+    );
+    await _plans.create(copy);
+    await _plans.softDelete(id);
+    return copy.id;
   }
 }
 

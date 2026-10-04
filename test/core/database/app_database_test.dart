@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test(
-    'a fresh database is created at schema v6 with the activity engine',
+    'a fresh database is created at schema v7 with the activity engine',
     () async {
       final db = AppDatabase(NativeDatabase.memory());
       addTearDown(db.close);
@@ -23,7 +23,7 @@ void main() {
             .add(row.read<String>('name'));
       }
 
-      expect(version.read<int>('user_version'), 6);
+      expect(version.read<int>('user_version'), 7);
       expect(byType['table'], [
         'activity_fields',
         'activity_logs',
@@ -34,6 +34,7 @@ void main() {
         'log_group_items',
         'log_values',
         'measurements',
+        'plan_series',
         'plans',
       ]);
       expect(byType['index'], [
@@ -52,8 +53,9 @@ void main() {
         'ux_focus_sessions_one_active',
         'ux_log_values_item',
         'ux_log_values_top_level',
+        'ux_plans_series_date',
       ]);
-      expect(byType['trigger'], hasLength(19));
+      expect(byType['trigger'], hasLength(20));
     },
   );
 
@@ -98,7 +100,7 @@ void main() {
     () async {
       final db = AppDatabase(
         NativeDatabase.memory(
-          setup: (raw) => raw.execute('PRAGMA user_version = 7'),
+          setup: (raw) => raw.execute('PRAGMA user_version = 8'),
         ),
       );
       addTearDown(db.close);

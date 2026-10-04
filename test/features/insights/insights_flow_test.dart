@@ -1,6 +1,16 @@
 import 'package:daylog/core/database/app_database.dart';
 import 'package:daylog/core/ids/id_generator.dart';
+import 'package:daylog/core/logging/app_logger.dart';
+import 'package:daylog/features/activity_logs/data/db_activity_log_repository.dart';
+import 'package:daylog/features/activity_logs/domain/activity_log.dart';
+import 'package:daylog/features/activity_logs/domain/activity_log_use_cases.dart';
+import 'package:daylog/features/activity_logs/domain/field_value.dart';
+import 'package:daylog/features/activity_types/data/db_activity_type_repository.dart';
+import 'package:daylog/features/activity_types/domain/activity_ids.dart';
+import 'package:daylog/features/activity_types/domain/activity_type_use_cases.dart';
+import 'package:daylog/features/insights/presentation/activity_insights_screen.dart';
 import 'package:daylog/features/measurements/data/db_measurement_repository.dart';
+import 'package:daylog/features/plans/data/db_plan_repository.dart';
 import 'package:daylog/features/measurements/domain/measurement.dart';
 import 'package:daylog/features/measurements/domain/measurement_use_cases.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
@@ -94,5 +104,69 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('84.5 kg'), findsOneWidget);
+  });
+
+  testAppWidgets('an activity in Insights opens its progress, worked out '
+      'automatically (ADR-037)', (tester) async {
+    await pumpTestApp(
+      tester,
+      preferences: _onboarded,
+      seed: (db, clock) async {
+        final ids = SequentialIdGenerator();
+        final types = DbActivityTypeRepository(db, clock);
+        final logs = DbActivityLogRepository(db, clock, const AppLogger());
+        final gymId = await CreateActivityType(types, ids)(gymDefinition());
+        final gym = (await types.getType(gymId))!;
+        ActivityFieldId f(String name) =>
+            gym.fields.firstWhere((x) => x.name == name).id;
+        await LogActivity(types, logs, DbPlanRepository(db, clock), ids, clock)(
+          gymId,
+          ActivityLogDraft(
+            startedAt: DateTime.utc(2026, 10, 2, 18),
+            durationMs: 3600000,
+            values: {
+              f('Exercises'): RepeatingGroupValue([
+                GroupItem(
+                  id: GroupItemId(ids.newId()),
+                  values: {
+                    f('Exercise'): const TextValue('Chest Press'),
+                    f('Sets'): RepeatingGroupValue([
+                      GroupItem(
+                        id: GroupItemId(ids.newId()),
+                        values: {
+                          f('Weight'): const NumberValue(60, unitCode: 'kg'),
+                          f('Reps'): const NumberValue(8),
+                        },
+                      ),
+                    ]),
+                  },
+                ),
+              ]),
+            },
+          ),
+        );
+      },
+    );
+    await openTab(tester, 'Insights');
+
+    expect(find.textContaining('1 day'), findsOneWidget);
+    await tester.tap(find.text('Gym'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ActivityInsightsScreen), findsOneWidget);
+    expect(find.text('Progress'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Chest Press · best Weight'),
+      200,
+      // The page's list, not the range chips scrolling sideways in it.
+      scrollable: find
+          .descendant(
+            of: find.byType(ActivityInsightsScreen),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
+    expect(find.text('Chest Press · best Weight'), findsOneWidget);
+    expect(find.byTooltip('Chart options'), findsNothing, reason: 'automatic');
   });
 }

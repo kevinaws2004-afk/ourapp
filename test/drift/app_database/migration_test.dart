@@ -179,4 +179,22 @@ void main() {
     expect(await db.select(db.insightCharts).get(), isEmpty);
     await db.close();
   });
+
+  test('migration from v6 to v7 keeps plans (no series) and adds repeating '
+      'plans', () async {
+    final schema = await verifier.schemaAt(6);
+    final db = AppDatabase(schema.newConnection());
+    const plan = '00000000-0000-7000-8000-000000000001';
+    await db.customStatement(
+      'INSERT INTO plans (internal_id, public_id, plan_date, title, created_at, updated_at) '
+      "VALUES (1, '$plan', '2026-10-04', 'Bath', 1, 1)",
+    );
+
+    await verifier.migrateAndValidate(db, 7);
+
+    final migrated = await db.select(db.plans).getSingle();
+    expect((migrated.publicId, migrated.seriesId), (plan, null));
+    expect(await db.select(db.planSeries).get(), isEmpty);
+    await db.close();
+  });
 }

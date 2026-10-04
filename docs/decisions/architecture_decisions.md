@@ -449,7 +449,7 @@
   - Duration fields aren't chartable as field values yet: they store `duration_ms`, not `normalized_value`.
 
 ### ADR-035: An item on your day is where you log; it saves as you type
-- **Status:** Accepted 2026-10-04 (owner, after using Phases 1–6 on a phone: "the flow is missing… user should not go somewhere else"). Supersedes parts of ADR-028, ADR-030 and ADR-031. **Steps 1–2 implemented 2026-10-04.**
+- **Status:** Accepted 2026-10-04 (owner, after using Phases 1–6 on a phone: "the flow is missing… user should not go somewhere else"). Supersedes parts of ADR-028, ADR-030 and ADR-031. **Implemented 2026-10-04.**
 - **Decision:**
   - **One user-facing concept: an item on a day.** It has a title, date, optional time and planned length, a state (planned, in progress, done, skipped) and what was logged into it. Storage is unchanged: a `Plan`, at most one live `ActivityLog` for it (`activity_logs.plan_id`), and the `ActivityType` that remembers its layout.
   - **Opening an item is where you log into it** (`/item/:planId`). The same screen serves planned, in-progress and done items. Records made without a plan (older data, or from an activity's page) open the same way (`/item/log/:logId`).
@@ -468,9 +468,37 @@
   - Removed: the record form (`LogEditorScreen`), the Quick Record sheet, the Start focus / Record now sheet, "Track details" and "Record again".
   - Domain additions: `EnsureItemActivity`, `AddItemField`, `definitionOf(ActivityType)`, `MarkItemDone`, `DeleteItem` / `RestoreItem`, `partial` on `LogActivity` / `UpdateActivityLog`, `ActivityLogRepository.getLogForPlan`, `ActivityTypeRepository.getActiveTypes`, `DayOverview.entries`. `FinishFocusSession` takes only the session.
   - No schema change.
-  - Next steps of the same rework (planned): week/month planner with repeating items, "Plan next", and automatic per-activity insights.
+  - The rest of the rework: ADR-036 (planner, repeating plans, Plan next) and ADR-037 (automatic insights).
 
 ---
+
+### ADR-036: Week/month planner, repeating plans as generated occurrences, Plan next
+- **Status:** Accepted 2026-10-04 (owner-approved rework, step 3). **Implemented 2026-10-04 (schema v7).**
+- **Decision:**
+  - **Plan tab: Day | Week | Month.** Day is the existing date view. Week stacks the seven days (locale's first day of the week) with their items; a day's heading opens it and "+" plans on it. Month is a calendar with a dot per planned item, in its activity's color; tapping a day opens it.
+  - **Repeating plans** (`plan_series`): weekdays, every 1–4 weeks (stored 1–52) counted from the start week, optional last date. A plan becomes repeating from its options ("Repeat…"); it is the first occurrence.
+  - **Occurrences are ordinary plans**, generated for the dates being viewed (Today, a day, a week, a month grid) by `EnsureSeriesOccurrences`, idempotently. So every occurrence can be opened and logged into, skipped, moved or deleted like any plan, and planned-vs-actual just works.
+  - A unique index on `(series_id, plan_date)` that includes deleted rows means a deleted (or moved) occurrence is never generated again.
+  - **Changing the repeat from an occurrence** = "this and following": the old series ends the day before (deleted if it hadn't started), its later open occurrences (planned, nothing logged) are removed, and a new series starts from this one. **Stop repeating after this** keeps the occurrence and removes later open ones. Editing an occurrence's title or time changes only that one.
+  - **Moving an occurrence** moves a one-off copy (no longer repeating) and deletes the occurrence on its date; Undo deletes the copy and restores the occurrence.
+  - **Plan next…** (any item): pick a date (a week later is suggested) and, for a timed plan, a time → the same title and activity on that date, with the same planned length. Not tied to any kind of activity.
+- **Context:** The owner wants the planner to be the app: day, week and month planning, Gym every Mon/Wed/Fri, and the next appointment planned from where you are.
+- **Reason:** Materialized occurrences keep one model for everything you log into, and need no special read paths. Generating only what's viewed keeps it cheap and unbounded series safe.
+- **Consequences:** Schema v7 (`plan_series`, `plans.series_id`, `ux_plans_series_date`). New use cases `EnsureSeriesOccurrences`, `RepeatPlan`, `StopRepeating`, `PlanNext`; `MovePlan` returns the moved plan. `PlanRepository` gained range and series methods. A repeating plan shows a repeat icon. Phosphor `repeat` and `calendar-plus` were added to the UI icon set (same font version).
+
+### ADR-037: Automatic per-activity insights, worked out from fields
+- **Status:** Accepted 2026-10-04 (owner-approved rework, step 4). **Implemented 2026-10-04.** OQ-14 (keep saved charts?) still awaits the owner; until then saved charts stay, below the automatic ones.
+- **Decision:**
+  - Insights lists each activity done in the range with **days done**, time and how often, and the change vs the previous period. Tapping one opens its **progress page**.
+  - The progress page's charts are **generated from the activity's fields**, never from what the activity is (`autoChartsFor`):
+    - time spent and times done, per week
+    - each top-level Number (total per week) and Rating (average)
+    - inside lists: for each row name logged so far (from the list's first Text field, e.g. each exercise), the best of its Number; when a list has two Numbers (e.g. weight and reps), the best of the first and the **volume** (first × second, summed)
+    - at most 4 row names per list and 16 charts
+  - They use the existing engine (ADR-034) and chart card, with the selected range, change vs previous period and personal best. They aren't saved and have no edit menu.
+  - The user's own saved charts stay below, as "Your own charts" (pending OQ-14).
+- **Context:** The owner: "in a week how many days which activity is done… based on that data graph of progression" without building charts.
+- **Consequences:** `ActivityTotals.days` (distinct `local_date`s); `InsightChartConfig` has value equality (so generated charts are stable provider keys); route `/insights/activity/:typeId`.
 
 ## Pending decisions
 
