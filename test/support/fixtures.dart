@@ -121,3 +121,51 @@ ActivityTypeDefinition walkingDefinition() => const ActivityTypeDefinition(
     ),
   ],
 );
+
+/// Gym (§13, §43): Exercises → Exercise + Sets → Weight (kg) + Reps; two
+/// levels of Repeating Groups (ADR-027).
+ActivityTypeDefinition gymDefinition() => const ActivityTypeDefinition(
+  name: 'Gym',
+  iconId: 'barbell',
+  colorKey: 'coral',
+  supportsTimer: true,
+  fields: [
+    FieldDefinition(
+      name: 'Exercises',
+      type: FieldType.repeatingGroup,
+      config: RepeatingGroupFieldConfig(itemLabel: 'Exercise'),
+      subFields: [
+        FieldDefinition(
+          name: 'Exercise',
+          type: FieldType.text,
+          required: true,
+          config: TextFieldConfig(suggestFromHistory: true),
+        ),
+        FieldDefinition(
+          name: 'Sets',
+          type: FieldType.repeatingGroup,
+          config: RepeatingGroupFieldConfig(itemLabel: 'Set'),
+          subFields: [
+            FieldDefinition(
+              name: 'Weight',
+              type: FieldType.number,
+              dimension: Dimension.mass,
+              config: NumberFieldConfig(
+                decimals: 2,
+                min: 0,
+                defaultUnitCode: 'kg',
+              ),
+              measurable: true,
+            ),
+            FieldDefinition(
+              name: 'Reps',
+              type: FieldType.number,
+              config: NumberFieldConfig(min: 0),
+              measurable: true,
+            ),
+          ],
+        ),
+      ],
+    ),
+  ],
+);

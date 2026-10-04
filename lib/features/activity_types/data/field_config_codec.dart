@@ -10,7 +10,10 @@ import '../domain/field_type.dart';
 /// older and newer configs keep reading.
 abstract final class FieldConfigCodec {
   static String encode(FieldConfig config) => jsonEncode(switch (config) {
-    TextFieldConfig(:final multiline) => {if (multiline) 'multiline': true},
+    TextFieldConfig(:final multiline, :final suggestFromHistory) => {
+      if (multiline) 'multiline': true,
+      if (suggestFromHistory) 'suggest': true,
+    },
     NumberFieldConfig(
       :final decimals,
       :final min,
@@ -34,11 +37,11 @@ abstract final class FieldConfigCodec {
       ],
     },
     RatingFieldConfig(:final max) => {'max': max},
+    RepeatingGroupFieldConfig(:final itemLabel) => {'itemLabel': itemLabel},
     BooleanFieldConfig() ||
     DateFieldConfig() ||
     TimeFieldConfig() ||
-    DurationFieldConfig() ||
-    RepeatingGroupFieldConfig() => <String, Object?>{},
+    DurationFieldConfig() => <String, Object?>{},
   });
 
   static FieldConfig decode(FieldType type, String json) {
@@ -47,7 +50,10 @@ abstract final class FieldConfigCodec {
         ? decoded
         : const <String, Object?>{};
     return switch (type) {
-      FieldType.text => TextFieldConfig(multiline: map['multiline'] == true),
+      FieldType.text => TextFieldConfig(
+        multiline: map['multiline'] == true,
+        suggestFromHistory: map['suggest'] == true,
+      ),
       FieldType.number => NumberFieldConfig(
         decimals: _int(map['decimals']) ?? 0,
         min: _double(map['min']),
@@ -73,7 +79,11 @@ abstract final class FieldConfigCodec {
       FieldType.date => const DateFieldConfig(),
       FieldType.time => const TimeFieldConfig(),
       FieldType.duration => const DurationFieldConfig(),
-      FieldType.repeatingGroup => const RepeatingGroupFieldConfig(),
+      FieldType.repeatingGroup => RepeatingGroupFieldConfig(
+        itemLabel: map['itemLabel'] is String
+            ? map['itemLabel']! as String
+            : '',
+      ),
     };
   }
 

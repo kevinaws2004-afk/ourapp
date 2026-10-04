@@ -14,11 +14,15 @@
 10. Accessibility: ≥ 48dp targets, contrast per tokens, semantics labels for icon buttons and painted content, 200% text scale works, logical focus order.
 11. Illustrations only in onboarding, empty, completion, intro and error screens, never on Insights/History/forms.
 12. Copy: warm, concise, outcome-oriented where helpful, neutral about misses, sentence case, localizable.
-13. Display font only at ≥ 21px; numbers request tabular figures (not effective until ADR-P21 is decided).
+13. Display font only at ≥ 21px; live and tabular numbers use the `numeric*` tokens (DM Mono, ADR-032).
 14. Before calling UI work done, run the visual quality checklist (ui_guidelines.md §10) in light + dark, compact + expanded, text scale 1.0 + 2.0.
 15. Never copy Flowfy or any other product's palette, fonts, illustrations, mascot, layouts or wording.
 16. Icons are Phosphor through `AppIcons`/`ActivityIconRegistry` only (ADR-024): regular weight by default, fill for selected states.
 17. Field editors go through `FieldEditorRegistry` and `FieldEditorShell` (visible label, `*` for required, inline error).
-18. Primary navigation is Today | Plan | Insights | Me, plus the global Record action (ADR-028). Don't add tabs. Activity setup lives under Me → Activities.
+18. Primary navigation is Today | Plan | Insights | Me (ADR-028). No floating Record button: unplanned activities are recorded from Today's "Record something". Don't add tabs or a FAB. Activity setup lives under Me → Activities.
 19. User-facing copy says **Record** ("Record", "Record Reading", "Record deleted"), never "Log". Activity Log is internal only.
 20. Color: only the nine activity-palette colors plus neutrals (ADR-029; sand was removed). Use the semantic roles (`brandPrimary` = teal, `accentDawn` = apricot, `success` = moss, `warning` = apricot, `danger` = rose); never introduce another hue. Moss/apricot are never small text.
+21. Tapping a planned activity records it (or opens its record); plan options (edit, Skip, Move, Delete, Record again) live behind the plan's More button. Never make "Mark as done" the way to complete an activity plan (ADR-030).
+22. Never hard-code what an activity records. Any plan can become trackable via Track details (builder named after the plan), and the record form can edit what an activity tracks (ADR-030).
+23. Charts only through `AppChart` (ADR-033); never use fl_chart widgets in features. Chart copy stays neutral ("+12 % vs previous period").
+24. No size literals in features: use `AppSizes` (badges, touch target, strokes, charts), so the planned visual pass can retune them centrally.

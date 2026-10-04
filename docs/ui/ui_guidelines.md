@@ -17,7 +17,7 @@
 ## 2. Navigation & screen anatomy
 
 - **Primary navigation:** Today · Plan · Insights · Me (ADR-028; supersedes §34). Bottom navigation bar on compact, navigation rail on medium/expanded. Selected item: filled icon + label + soft brand pill. Unselected: regular icon + label. Labels are always visible.
-- **Quick Record** (implemented): a persistent **Record** action on every tab. It's a floating action button on compact and the rail's leading action on larger layouts. It opens the Quick Record sheet for recording an unplanned activity.
+- **Quick Record** (implemented; floating button removed by the owner on 2026-10-04): opened from Today's **Record something** (the Recorded / Also recorded section header and the empty state). There is no floating action button and no rail action. Previously: a persistent **Record** action on every tab, as a floating action button on compact and the rail's leading action on larger layouts. It opens the Quick Record sheet for recording an unplanned activity.
 - **Screen header:** large display-type title that collapses to a compact title on scroll (large-title pattern). Contextual actions as at most 1–2 icon buttons in the header.
 - **Sheets over pages** for short tasks (quick log, add plan, pick value, field config). Full screens for long tasks (log editor with structured data, builder, focus).
 - **Back behavior:** system back/gesture always works; unsaved drafts trigger a calm "Keep editing / Discard" choice.
@@ -26,7 +26,7 @@
 
 Each component consumes tokens only and implements all states from [design_system.md §11](design_system.md#11-component-states).
 
-**Status (Phase 2):**
+**Status (Phase 4):**
 - **Implemented:**
   - `AppButton`: four variants and the large 52dp size. The medium size and loading state aren't built yet.
   - `ActivityBadge`, `SectionHeader`.
@@ -59,11 +59,15 @@ Each component consumes tokens only and implements all states from [design_syste
 | `EmptyState`, `LoadingState`, `ErrorState`, `SuccessState` | See §5 |
 | `SectionHeader` | `labelMedium`/`titleLarge`, optional action |
 | `DurationText` / `NumericText` | Tabular formatting, unit styling (unit in secondary color, smaller) |
-| `TimelineItem` | Planned (outline) / actual (filled) variants; time column, badge, title, duration, summary |
+| `PlanItemTile` | Implemented (`features/plans/presentation/widgets/`). Planned = outline in the activity color; recorded or done = filled soft color with ✓ and "Recorded 45 min of 1 h"; skipped/cancelled = faint outline + label. **Tap = do the plan** (record it, open its record, or toggle a task); a **More** button opens the plan options (ADR-030). No Start button |
+| `DayRecordTile` | Implemented (`features/activity_logs/presentation/`). A record on a day: badge, activity, time, duration, summary |
+| `AppChart` | Implemented (`shared/widgets/charts/`, ADR-033): fl_chart line/bar styled only with tokens; gaps for empty buckets; grouped bars for planned vs actual |
+| `FocusBanner` | Implemented (`features/focus/presentation/`): the live "Reading · 23:14 · Return" item on Today |
+| `TimelineItem` | Planned: a time-column timeline combining both tile kinds (later polish) |
 | `DayArc` | Signature motif (Today header, focus, onboarding) |
 | `Chart` primitives | `LineChart`, `BarChart`, `SparkLine`, `StatTile` (number + delta + sparkline) |
 | `ReorderableFieldList` | Drag handle, haptic, lift animation |
-| `SetTableEditor` | Shared by any Set Table field (not gym-specific) |
+| `RepeatingGroupEditor` | Any Repeating Group (exercises, sets, checklists). Item cards; compact number rows for all-number groups ("Set" = nested group, OQ-01). Not gym-specific |
 
 Do not use raw Material `Card`, `ElevatedButton`, `AlertDialog` etc. in features when a shared component exists.
 
@@ -71,19 +75,20 @@ Do not use raw Material `Card`, `ElevatedButton`, `AlertDialog` etc. in features
 
 ### 4.1 Today (most important screen, §18, §35)
 - **Header:** time-of-day greeting in display type ("Good morning, …" if a name is known; otherwise without name) + date + Day Arc showing the day so far with logged segments.
-- **Morning state:** today's plan as outline (planned) items with time, activity badge, title and a **Start** affordance; tasks with a check control.
+- **Morning state:** today's plan as outline (planned) items with time, activity badge and title. **Tapping a planned activity opens its record form** (ADR-030); tasks have a check control.
 - **During the day:** started/logged items become filled actual items; an in-progress focus session appears as a live item at the top ("Reading · 23:14 · Return").
-- **Evening state:** **What you planned / What actually happened** pairs: plan item with its linked log (actual duration vs planned), unplanned logs listed as extras, open plans offering Skip / Move to tomorrow. Concise day summary line (e.g. total tracked time, count of activities) without scores or grades.
+- **Evening state:** **What you planned / What actually happened** pairs: plan item with its linked log (actual duration vs planned), unplanned logs listed as extras, open plans still tappable to record, with Skip / Move to tomorrow in their More options. Concise day summary line (e.g. total tracked time, count of activities) without scores or grades.
 - Timeline items show: start time, activity, duration, one-line summary from the field type `summarize()` (e.g. "Chest / Shoulders", "Fooled by Randomness").
 - Empty Today: illustration + two clear paths: "Plan your day" and "Log something you've done".
+- **Implemented (Phase 4):** greeting by local hour, date, day summary ("3 records · 2 h 10 min"), Today's plan (shared `PlannedList`, no reordering) where tapping a plan records it (or opens its record), with task checks, ✓ and planned-vs-actual outcomes, "Also recorded" for unplanned records, and the empty state with "Plan your day" / "Record something". Skip, Move to tomorrow, Delete and "Record again" are in each plan's More options. **Not built yet:** the Day Arc header, the live focus item (Phase 5), and a distinct evening layout (the same pairing serves the evening review).
 
-### 4.2 Plan (date-based; calendar implemented, plans in Phase 4)
+### 4.2 Plan (date-based; implemented)
 - **Date selector:**
   - a week strip (seven days, previous/next week) plus a calendar button that opens a month picker for any past or future date
   - the selected date shows as a display-type heading with a relative label (Today / Tomorrow / Yesterday)
   - "Today" jumps back to the current date
-- **Planned:** that date's plans. Timed items are ordered by time, and untimed ones follow in manual order (drag to reorder). Tasks and activity plans share the list, using the outline grammar. Fast inline add: title → optional activity chip → optional time. Until Phase 4 this section shows a calm placeholder.
-- **Recorded:** for today and past dates, what was actually recorded that day: filled grammar, badge, time, duration, summary. Tapping a record opens it. Future dates hide this section.
+- **Planned:** that date's plans. Timed items are ordered by time, and untimed ones follow in manual order (drag to reorder). Tasks and activity plans share the list, using the outline grammar. Fast inline add: title → optional from–to time; enter adds it and keeps the keyboard open. Typing an activity's name selects its chip (a starter template's name installs it), so "Gym" becomes a recordable Gym plan while "Bath" stays a task until the user taps it → **Track details** and chooses fields for it (ADR-030). The "+" opens the full plan sheet (title, activity or "Just a task", start/end or length, notes). **Tapping a plan does it** (ADR-030): an activity plan opens its record form linked to the plan (or, once recorded, its record); a task toggles done. The plan's **More** button opens the plan sheet: edit details, Record it / Record again, Mark as done (tasks), Skip, Reopen, Move to tomorrow, Delete (with Undo).
+- **Recorded / Also recorded:** for today and past dates, records that don't fulfil one of the date's plans (records that do are shown on their plan). Filled grammar, badge, time, duration, summary. Tapping a record opens it. Future dates hide this section.
 - Flow: select date → plans → select a planned activity → do it → record what happened.
 
 ### 4.3 Me → Activities (implemented)
@@ -95,22 +100,35 @@ The reusable Activity Types, managed under Me rather than in a primary tab (ADR-
 ### 4.4 Log editor (generic form renderer, implemented in Phase 2)
 - Header: activity badge + name; time row (start, end/duration) editable with sensible defaults.
 - Fields rendered in configured order with consistent field shells (label, editor, helper/error).
-- Structured fields (Repeating Group, Set Table) expand inline; add-row/add-item actions sit at the end of each group; previous values offered as suggestions.
+- Structured fields (Repeating Group, incl. sets as a nested group) expand inline; the "Add {item}" action sits at the end of each group; a new all-number row starts from the previous row; text fields can offer previously recorded values as suggestions.
 - Notes (built-in) last.
 - Sticky bottom primary action ("Save"); validation on submit, then live.
-- Same layout for create, edit, plan→log and post-focus.
+- Same layout for create, edit, plan→log and post-focus. The app bar has **Edit what to track** (opens the activity's builder; fields reload, input kept). From a plan, a quiet "Planned · 09:00–10:00" line under the app bar shows which plan the record fulfils (ADR-030).
 
 ### 4.5 Activity builder (implemented in Phase 2: one scrolling screen with live preview; two-pane layout on expanded windows later)
 Steps on one screen with progressive sections: Identity (name, icon, color) → Fields (list, add, reorder, configure in sheets) → Behavior (timer, plannable) → live Preview (rendered with the real form renderer). Field type picker groups types like §9 with plain-language descriptions and an example for each.
 
 ### 4.6 Focus Mode
 Full-screen, minimal chrome, activity soft color wash on canvas (dark-leaning in dark theme). Activity name + context (e.g. book), `numericHero` elapsed time, slow arc progress, two controls (Pause/Resume, Finish) as large pill buttons. Discard behind an overflow. Screen stays awake while visible (wakelock is a platform service; decide implementation at Phase 5). Completion: celebration motion + "Reading session complete · 42 minutes" → optional notes and remaining fields.
+- **Implemented (Phase 5):**
+  - activity badge and name, `numericHero` timer (DM Mono, `m:ss` / `h:mm:ss`), Focusing/Paused label
+  - Pause/Resume as the primary pill, Finish (secondary), Discard (tertiary, confirmed)
+  - Finish opens the record form, and saving shows "Reading session complete · 42 min"
+  - `FocusBanner` on Today returns to the session
+- **Not built yet:** the soft color wash, arc progress, keep-awake (no wakelock dependency) and completion motion.
 
 ### 4.7 Insights
 Default cards generated from the user's data (stat tiles with deltas and sparklines; one featured chart). Chart detail: metric selector (e.g. Weight / Reps / Volume / Frequency for an exercise), range segmented control, aggregation, accessible summary text. Comparisons phrased plainly ("+38 min vs last week"). No decoration; data first.
+- **Implemented (Phase 6):**
+  - range chips
+  - Activities totals with neutral "+12 % vs previous period"
+  - saved chart cards: headline in `numericLarge`, change, personal best, `AppChart` line/bar; planned vs actual as grey planned bars next to activity-colored recorded bars
+  - the chart builder sheet
+  - empty states
+- **Not built yet:** sparklines and a separate chart-detail screen (cards show the full chart).
 
 ### 4.8 Me
-**Activities** (implemented, §4.3), body measurements (latest values + trends), preferences (theme, units), data (export if approved), about/privacy statement. A calm settings list built from shared list items, not default settings screens.
+**Activities** (implemented, §4.3), **Body measurements** (implemented in Phase 6: latest values, per-type history with a line chart, add/edit/delete with Undo), preferences (theme, units), data (export if approved), about/privacy statement. A calm settings list built from shared list items, not default settings screens.
 
 ## 5. States
 
@@ -139,7 +157,7 @@ Narrative arc (§33.4): **understand → one meaningful question → personalize
 
 ### 7.1 Quick Record (§37, ADR-028)
 - **Implemented:** the **Record** action opens a sheet titled "What did you do?" listing the user's activities (badge + name). Tapping one opens the record form, so it takes two taps. With no activities yet, the sheet offers "New activity".
-- **Later:** recent/frequent ordering, "Task" quick add (Phase 4), search for long lists, and **instant record** for activities without required fields (saved immediately, with "Add details" and Undo).
+- **Later:** recent/frequent ordering, search for long lists, and **instant record** for activities without required fields (saved immediately, with "Add details" and Undo).
 - Long-press an activity (Activities list / Quick Record) → "Start focus" for timer-capable types (Phase 5).
 - User-facing copy says **Record**, never "Log" (ADR-028). Activity Log stays the internal name.
 

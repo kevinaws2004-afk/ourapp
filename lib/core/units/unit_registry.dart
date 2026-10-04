@@ -16,6 +16,9 @@ enum Dimension {
   temperature('temperature'),
   energy('energy'),
 
+  /// A share of a whole, e.g. body fat (Phase 6).
+  percentage('percentage'),
+
   /// Conversion/formatting only. Durations are stored with the Duration field
   /// type (`duration_ms`), so this isn't offered as a Number dimension.
   duration('duration');
@@ -25,7 +28,14 @@ enum Dimension {
   final String code;
 
   /// Dimensions a Number field may declare.
-  static const numberDimensions = [mass, distance, volume, temperature, energy];
+  static const numberDimensions = [
+    mass,
+    distance,
+    volume,
+    temperature,
+    energy,
+    percentage,
+  ];
 
   static Dimension? fromCode(String? code) {
     for (final d in values) {
@@ -98,6 +108,14 @@ abstract final class UnitRegistry {
       symbol: 'km',
       factor: 1000,
       displayDecimals: 2,
+    ),
+    // Body lengths (Phase 6 measurements).
+    Unit(code: 'cm', dimension: Dimension.distance, symbol: 'cm', factor: 0.01),
+    Unit(
+      code: 'in',
+      dimension: Dimension.distance,
+      symbol: 'in',
+      factor: 0.0254,
     ),
     Unit(
       code: 'mi',
@@ -207,7 +225,16 @@ abstract final class UnitRegistry {
     ),
   ];
 
-  static final Map<String, Unit> _byCode = {for (final u in _units) u.code: u};
+  static const _percent = Unit(
+    code: 'percent',
+    dimension: Dimension.percentage,
+    symbol: '%',
+    factor: 1,
+  );
+
+  static final Map<String, Unit> _byCode = {
+    for (final u in [..._units, _percent]) u.code: u,
+  };
 
   static const Map<Dimension, String> canonicalCodes = {
     Dimension.mass: 'kg',
@@ -215,13 +242,16 @@ abstract final class UnitRegistry {
     Dimension.volume: 'ml',
     Dimension.temperature: 'celsius',
     Dimension.energy: 'kcal',
+    Dimension.percentage: 'percent',
     Dimension.duration: 'ms',
   };
 
   static Unit? byCode(String code) => _byCode[code];
 
-  static List<Unit> forDimension(Dimension dimension) =>
-      _units.where((u) => u.dimension == dimension).toList(growable: false);
+  static List<Unit> forDimension(Dimension dimension) => [
+    ..._units,
+    _percent,
+  ].where((u) => u.dimension == dimension).toList(growable: false);
 
   static Unit canonicalFor(Dimension dimension) =>
       _byCode[canonicalCodes[dimension]]!;

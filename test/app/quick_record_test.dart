@@ -23,43 +23,43 @@ Future<void> seedReading(AppDatabase db, FakeClock clock) => CreateActivityType(
 )(readingDefinition());
 
 void main() {
-  testAppWidgets(
-    'Quick Record is available on every tab and records an unplanned activity in two taps',
-    (tester) async {
-      await pumpTestApp(tester, preferences: _onboarded, seed: seedReading);
-
-      for (final tab in ['Today', 'Plan', 'Insights', 'Me']) {
-        await tester.tap(
-          find.descendant(
-            of: find.byType(NavigationBar),
-            matching: find.text(tab),
-          ),
-        );
-        await tester.pumpAndSettle();
-        expect(
-          find.widgetWithText(FloatingActionButton, 'Record'),
-          findsOneWidget,
-          reason: tab,
-        );
-      }
-
-      await tester.tap(find.widgetWithText(FloatingActionButton, 'Record'));
+  testAppWidgets('there is no floating Record button on any tab', (
+    tester,
+  ) async {
+    await pumpTestApp(tester, preferences: _onboarded, seed: seedReading);
+    for (final tab in ['Today', 'Plan', 'Insights', 'Me']) {
+      await tester.tap(
+        find.descendant(
+          of: find.byType(NavigationBar),
+          matching: find.text(tab),
+        ),
+      );
       await tester.pumpAndSettle();
-      expect(find.text('What did you do?'), findsOneWidget);
-      await tester.tap(find.text('Reading'));
-      await tester.pumpAndSettle();
+      expect(find.byType(FloatingActionButton), findsNothing, reason: tab);
+    }
+  });
 
-      expect(find.byType(LogEditorScreen), findsOneWidget);
-      expect(find.text('Record Reading'), findsOneWidget);
-    },
-  );
+  testAppWidgets('Today records an unplanned activity via Record something', (
+    tester,
+  ) async {
+    await pumpTestApp(tester, preferences: _onboarded, seed: seedReading);
+
+    await tester.tap(find.text('Record something'));
+    await tester.pumpAndSettle();
+    expect(find.text('What did you do?'), findsOneWidget);
+    await tester.tap(find.text('Reading'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(LogEditorScreen), findsOneWidget);
+    expect(find.text('Record Reading'), findsOneWidget);
+  });
 
   testAppWidgets('with no activities, Quick Record offers to create one', (
     tester,
   ) async {
     await pumpTestApp(tester, preferences: _onboarded);
 
-    await tester.tap(find.widgetWithText(FloatingActionButton, 'Record'));
+    await tester.tap(find.text('Record something'));
     await tester.pumpAndSettle();
     expect(
       find.text('Create an activity first, then record it here.'),
@@ -71,24 +71,23 @@ void main() {
     expect(find.byType(ActivityBuilderScreen), findsOneWidget);
   });
 
-  testAppWidgets(
-    'expanded windows put the Record action in the navigation rail',
-    (tester) async {
-      await pumpTestApp(
-        tester,
-        size: const Size(1280, 800),
-        preferences: _onboarded,
-      );
+  testAppWidgets('expanded windows have no Record action in the rail', (
+    tester,
+  ) async {
+    await pumpTestApp(
+      tester,
+      size: const Size(1280, 800),
+      preferences: _onboarded,
+    );
 
-      expect(
-        find.descendant(
-          of: find.byType(NavigationRail),
-          matching: find.byTooltip('Record'),
-        ),
-        findsOneWidget,
-      );
-    },
-  );
+    expect(
+      find.descendant(
+        of: find.byType(NavigationRail),
+        matching: find.byType(FloatingActionButton),
+      ),
+      findsNothing,
+    );
+  });
 
   testAppWidgets(
     'Me links to Activities, where reusable activities are managed',

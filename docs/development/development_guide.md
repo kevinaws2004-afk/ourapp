@@ -129,7 +129,7 @@ Field types are a closed catalog (OQ-01). Prefer composing existing types (e.g. 
    - repository round-trip
    - trigger acceptance
    - editor widget test
-6. **Docs:** [data_architecture.md §4](../architecture/data_architecture.md#4-field-type-catalog), [database.md §3.5](../architecture/database.md#35-log_values-v2-implemented).
+6. **Docs:** [data_architecture.md §4](../architecture/data_architecture.md#4-field-type-catalog), [database.md §3.5](../architecture/database.md#35-log_values-v2-rebuilt-in-v3).
 
 ### Adding a new activity type
 Nothing to implement. It is user data. If you are adding a **starter template**, add an entry to `features/activity_types/presentation/activity_templates.dart` (localized names, placeholder option IDs) and make sure it passes `ActivityTypeValidator`.
@@ -143,10 +143,10 @@ Proposed, for approval. Order is driven by the V1 success criterion (§43): buil
 | 0 | Documentation (this) | Approved docs; pending ADRs decided |
 | 1 ✅ | Scaffold (done 2026-10-03): Flutter project (Android + iOS), git init, lints/analyzer, `app/core/shared` skeleton, drift DB bootstrap + migration runner with **schema v1 = `app_preferences` only** (ADR-012), Clock, ID generator, AppLogger, design tokens + light/dark theme, adaptive 5-tab shell (placeholder tabs), go_router with onboarding redirect (placeholder onboarding), dev-only token showcase, gen-l10n localization, format/analyze/test checks | App builds and launches on Android; iOS project compiles; analyze/format/tests green; tokens reviewable on the showcase |
 | 2 ✅ | Generic engine (**done 2026-10-04**; schema v2 = activity tables; decisions ADR-017–026, OQ-01): activity types + fields (domain/data), the nine scalar/select field types (Repeating Group moves to Phase 3), generic form renderer, log save/edit/delete, builder with preview, starter templates | Create Reading & Language Learning types via the builder and log them with zero type-specific code |
-| 3 | Structured fields: Repeating Group with **relational storage** (ADR-027, schema v3: sub-fields with `parent_field_id`, `log_group_items`, `log_values.group_item_id`), nested sets (Set Table = nested Repeating Group + Number), Gym/Meeting/Cooking templates, exercise autocomplete | §43 gym step works |
-| 4 | Plans & Tasks (schema v4, ADR-018; needs the `planned_duration_ms` sub-decision); plan → log flow; Today (plan + timeline + planned vs actual) | §43 night/morning steps |
-| 5 | Focus mode (timer state machine, resume after kill) | §43 work/reading steps |
-| 6 | Insights engine + charts; body measurements | §43 "see progress over time" |
+| 3 ✅ | Structured fields (**done 2026-10-04**, awaiting owner review): Repeating Group with **relational storage** (ADR-027, schema v3: sub-fields with `parent_field_id`, `log_group_items`, `log_values.group_item_id`), nested sets (Set Table = nested Repeating Group + Number), Gym/Meeting/Cooking templates, exercise autocomplete | §43 gym step works (widget + repository tests; device test written, not yet run) |
+| 4 ✅ | Plans & Tasks (**done 2026-10-04**, awaiting owner review): schema v4 (ADR-018 incl. the owner-confirmed `planned_duration_ms`); plan → record flow; Today (plan + records + planned vs actual) | §43 night/morning steps (widget + repository tests; device test written, not yet run) |
+| 5 ✅ | Focus mode (**done 2026-10-04**, awaiting owner review): schema v5 `focus_sessions` (ADR-031), timestamp-derived timer, start from plans/activities, finish → record form → one transaction, In-progress plans, DM Mono timer digits (ADR-032) | §43 work/reading steps (repository + widget tests) |
+| 6 ✅ | Insights + body measurements (**done 2026-10-04**, awaiting owner review): schema v6 `measurements` + `insight_charts`, generic engine (time, count, any field incl. nested with text filter, volume, PRs, body, planned vs actual), fl_chart via `AppChart` (ADR-033), Me → Body measurements (ADR-034) | §43 "see progress over time" (repository + widget tests) |
 | 7 | Onboarding narrative; Quick Record polish (recent ordering, instant record); history/search | First-run to first record in < 1 minute |
 | 8 | Hardening: performance pass, accessibility pass, tablet layouts, export (if OQ-03 approved), integration test of the full §43 scenario | Release candidate |
 

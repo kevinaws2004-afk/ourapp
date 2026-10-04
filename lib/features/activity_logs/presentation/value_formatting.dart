@@ -6,6 +6,7 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../activity_types/domain/activity_ids.dart';
 import '../../activity_types/domain/activity_type.dart';
 import '../../activity_types/domain/field_config.dart';
+import '../../activity_types/domain/field_type.dart';
 import '../domain/activity_log.dart';
 import '../domain/field_value.dart';
 
@@ -58,7 +59,33 @@ String formatFieldValue(
     DurationValue(:final milliseconds) => formatDuration(l10n, milliseconds),
     RatingValue(:final stars) =>
       '$stars/${(field.config as RatingFieldConfig).max}',
+    RepeatingGroupValue(:final items) => l10n.groupItemCount(
+      (field.config as RepeatingGroupFieldConfig).itemLabel,
+      items.length,
+    ),
   };
+}
+
+/// A group in a summary: its items' first text sub-field ("Chest press,
+/// Squat"), or the item count when it has no text sub-field.
+String formatGroupSummary(
+  BuildContext context,
+  ActivityType type,
+  ActivityField field,
+  RepeatingGroupValue value,
+) {
+  final textField = type
+      .subFieldsOf(field.id, includeRemoved: true)
+      .where((f) => f.type == FieldType.text)
+      .firstOrNull;
+  final names = [
+    if (textField != null)
+      for (final item in value.items)
+        if (item.values[textField.id] case TextValue(:final text)) text,
+  ];
+  return names.isEmpty
+      ? formatFieldValue(context, field, value)
+      : names.join(', ');
 }
 
 /// A short line describing a log for lists: its first few values in field
@@ -70,10 +97,14 @@ String summarizeLog(
   int maxParts = 3,
 }) {
   final parts = <String>[];
-  for (final field in type.fields) {
+  for (final field in type.fields.where((f) => f.parentId == null)) {
     final value = log.values[field.id];
     if (value == null) continue;
-    parts.add(formatFieldValue(context, field, value));
+    parts.add(
+      value is RepeatingGroupValue
+          ? formatGroupSummary(context, type, field, value)
+          : formatFieldValue(context, field, value),
+    );
     if (parts.length == maxParts) break;
   }
   return parts.join(' · ');

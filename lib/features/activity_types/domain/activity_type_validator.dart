@@ -6,14 +6,21 @@ import 'activity_ids.dart';
 import 'activity_type.dart';
 import 'activity_type_definition.dart';
 import 'field_config.dart';
+import 'field_type.dart';
 
-/// Pure validation of an activity type definition (data_architecture.md §3.2).
+/// Pure validation of an activity type definition (data_architecture.md §3.2,
+/// §5.3).
 ///
 /// Issue targets: `name`, `icon`, `color`, or a field key from [fieldKey].
 abstract final class ActivityTypeValidator {
-  /// Stable key for a field's issues: its ID, or `new:<index>` before it has one.
-  static String fieldKey(FieldDefinition field, int index) =>
-      field.id?.value ?? 'new:$index';
+  /// Repeating Groups nest at most two levels: a group may contain a group,
+  /// which may not contain another (ADR-027).
+  static const maxGroupDepth = 2;
+
+  /// Stable key for a field's issues: its ID, or `new:<path>` before it has
+  /// one ([path] is the index path, e.g. `0` or `0.1` for a sub-field).
+  static String fieldKey(FieldDefinition field, String path) =>
+      field.id?.value ?? 'new:$path';
 
   /// Validates [definition]. When updating, pass the [existing] type and the
   /// IDs of fields that already have values, to enforce locked semantics.
@@ -43,28 +50,69 @@ abstract final class ActivityTypeValidator {
         const ValidationIssue(ValidationCode.unknownColor, target: 'color'),
       );
     }
+    _validateScope(
+      definition.fields,
+      pathPrefix: '',
+      depth: 0,
+      parentId: null,
+      existing: existing,
+      fieldsWithValues: fieldsWithValues,
+      issues: issues,
+    );
+    return ValidationResult(issues);
+  }
 
+  /// Validates the fields of one scope (top level, or one group's sub-fields).
+  static void _validateScope(
+    List<FieldDefinition> fields, {
+    required String pathPrefix,
+    required int depth,
+    required ActivityFieldId? parentId,
+    required ActivityType? existing,
+    required Set<ActivityFieldId> fieldsWithValues,
+    required List<ValidationIssue> issues,
+  }) {
     final seenNames = <String>{};
-    for (final (index, field) in definition.fields.indexed) {
-      final key = fieldKey(field, index);
+    for (final (index, field) in fields.indexed) {
+      final path = pathPrefix.isEmpty ? '$index' : '$pathPrefix.$index';
+      final key = fieldKey(field, path);
+      void add(ValidationCode code) =>
+          issues.add(ValidationIssue(code, target: key));
+
       issues.addAll(_validateField(field, key));
       final normalized = field.name.trim().toLowerCase();
       if (normalized.isNotEmpty && !seenNames.add(normalized)) {
-        issues.add(
-          ValidationIssue(ValidationCode.duplicateFieldName, target: key),
-        );
+        add(ValidationCode.duplicateFieldName);
       }
+
       final previous = field.id == null ? null : existing?.fieldById(field.id!);
-      if (previous != null &&
-          fieldsWithValues.contains(previous.id) &&
-          (previous.type != field.type ||
-              previous.dimension != field.dimension)) {
-        issues.add(
-          ValidationIssue(ValidationCode.fieldSemanticsLocked, target: key),
+      if (previous != null) {
+        if (fieldsWithValues.contains(previous.id) &&
+            (previous.type != field.type ||
+                previous.dimension != field.dimension)) {
+          add(ValidationCode.fieldSemanticsLocked);
+        }
+        if (previous.parentId != parentId) {
+          add(ValidationCode.fieldSemanticsLocked);
+        }
+      }
+
+      if (field.type == FieldType.repeatingGroup) {
+        if (depth + 1 > maxGroupDepth) add(ValidationCode.nestingTooDeep);
+        if (field.subFields.isEmpty) add(ValidationCode.subFieldsRequired);
+        _validateScope(
+          field.subFields,
+          pathPrefix: path,
+          depth: depth + 1,
+          parentId: field.id,
+          existing: existing,
+          fieldsWithValues: fieldsWithValues,
+          issues: issues,
         );
+      } else if (field.subFields.isNotEmpty) {
+        add(ValidationCode.valueTypeMismatch);
       }
     }
-    return ValidationResult(issues);
   }
 
   static List<ValidationIssue> _validateField(
@@ -134,12 +182,13 @@ abstract final class ActivityTypeValidator {
             max > RatingFieldConfig.maxScale) {
           add(ValidationCode.invalidRatingScale);
         }
+      case RepeatingGroupFieldConfig(:final itemLabel):
+        if (itemLabel.trim().isEmpty) add(ValidationCode.itemLabelRequired);
       case TextFieldConfig() ||
           BooleanFieldConfig() ||
           DateFieldConfig() ||
           TimeFieldConfig() ||
-          DurationFieldConfig() ||
-          RepeatingGroupFieldConfig():
+          DurationFieldConfig():
         break;
     }
     return issues;

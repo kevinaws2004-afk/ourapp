@@ -54,6 +54,7 @@ extension DimensionCopy on Dimension {
     Dimension.volume => l10n.dimensionVolume,
     Dimension.temperature => l10n.dimensionTemperature,
     Dimension.energy => l10n.dimensionEnergy,
+    Dimension.percentage => l10n.dimensionPercentage,
     Dimension.duration => l10n.durationLabel,
   };
 }

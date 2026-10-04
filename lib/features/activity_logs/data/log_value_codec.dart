@@ -14,7 +14,8 @@ abstract final class LogValueCodec {
   static const _multiSelectVersion = 1;
 
   /// Columns for [value]. Number values get `normalized_value` computed here,
-  /// at write time (ADR-020).
+  /// at write time (ADR-020). A Repeating Group has no value row of its own
+  /// (its items are `log_group_items` rows, ADR-027), so it is rejected.
   static LogValuesCompanion columns(FieldValue value) => switch (value) {
     TextValue(:final text) => LogValuesCompanion(textValue: Value(text)),
     NumberValue(:final value, :final unitCode, :final normalized) =>
@@ -49,6 +50,9 @@ abstract final class LogValueCodec {
     RatingValue(:final stars) => LogValuesCompanion(
       numberValue: Value(stars.toDouble()),
       normalizedValue: Value(stars.toDouble()),
+    ),
+    RepeatingGroupValue() => throw const UnsupportedException(
+      debugContext: 'repeating_group has no log_values row',
     ),
   };
 
@@ -117,8 +121,17 @@ abstract final class LogValueCodec {
         return RatingValue(row.numberValue!.round());
       case FieldType.repeatingGroup:
         throw const UnsupportedException(
-          debugContext: 'repeating_group values (Phase 3)',
+          debugContext: 'repeating_group has no log_values row',
         );
+    }
+  }
+
+  /// [decode], or null when the row can't be read (used for change checks).
+  static FieldValue? decodeOrNull(FieldType type, LogValueRow row) {
+    try {
+      return decode(type, row);
+    } on Object {
+      return null;
     }
   }
 }

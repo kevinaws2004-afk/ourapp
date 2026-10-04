@@ -38,6 +38,7 @@ class FieldDefinition {
     this.dimension,
     this.required = false,
     this.measurable = false,
+    this.subFields = const [],
   });
 
   static const maxNameLength = 40;
@@ -50,23 +51,23 @@ class FieldDefinition {
   final bool measurable;
   final FieldConfig config;
 
-  FieldDefinition withId(ActivityFieldId id) => FieldDefinition(
-    id: id,
-    name: name,
-    type: type,
-    dimension: dimension,
-    required: required,
-    measurable: measurable,
-    config: config,
-  );
+  /// Sub-fields of a Repeating Group, in order (ADR-027); empty otherwise.
+  final List<FieldDefinition> subFields;
 
-  FieldDefinition withConfig(FieldConfig config) => FieldDefinition(
-    id: id,
-    name: name,
+  FieldDefinition copyWith({
+    ActivityFieldId? id,
+    String? name,
+    bool? measurable,
+    FieldConfig? config,
+    List<FieldDefinition>? subFields,
+  }) => FieldDefinition(
+    id: id ?? this.id,
+    name: name ?? this.name,
     type: type,
     dimension: dimension,
     required: required,
-    measurable: measurable,
-    config: config,
+    measurable: measurable ?? this.measurable,
+    config: config ?? this.config,
+    subFields: subFields ?? this.subFields,
   );
 }

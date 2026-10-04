@@ -94,6 +94,7 @@ class DbActivityTypeRepository implements ActivityTypeRepository {
     // Active fields first (by position), then removed ones, for stable display.
     final active = fields.where((f) => f.deletedAt == null);
     final removed = fields.where((f) => f.deletedAt != null);
+    final publicIds = {for (final f in fields) f.internalId: f.publicId};
     return ActivityType(
       id: ActivityTypeId(row.publicId),
       name: row.name,
@@ -113,16 +114,22 @@ class DbActivityTypeRepository implements ActivityTypeRepository {
       ),
       isDeleted: row.deletedAt != null,
       fields: [
-        for (final f in [...active, ...removed]) fieldToDomain(f),
+        for (final f in [...active, ...removed])
+          fieldToDomain(f, parentPublicId: publicIds[f.parentFieldId]),
       ],
     );
   }
 
   /// Shared with the log repository, which renders fields of historical logs.
-  static ActivityField fieldToDomain(ActivityFieldRow f) {
+  /// [parentPublicId] is the public ID of the row's `parent_field_id`.
+  static ActivityField fieldToDomain(
+    ActivityFieldRow f, {
+    String? parentPublicId,
+  }) {
     final type = FieldType.fromStorageKey(f.fieldType);
     return ActivityField(
       id: ActivityFieldId(f.publicId),
+      parentId: parentPublicId == null ? null : ActivityFieldId(parentPublicId),
       name: f.name,
       type: type,
       dimension: Dimension.fromCode(f.dimension),
@@ -141,10 +148,12 @@ class DbActivityTypeRepository implements ActivityTypeRepository {
             .customSelect(
               'SELECT f.public_id FROM activity_fields f '
               'JOIN activity_types t ON t.internal_id = f.activity_type_id '
-              'WHERE t.public_id = ? AND EXISTS '
-              '(SELECT 1 FROM log_values v WHERE v.field_id = f.internal_id)',
+              'WHERE t.public_id = ? AND (EXISTS '
+              '(SELECT 1 FROM log_values v WHERE v.field_id = f.internal_id) '
+              'OR EXISTS (SELECT 1 FROM log_group_items i '
+              'WHERE i.field_id = f.internal_id))',
               variables: [Variable(id.value)],
-              readsFrom: {_db.activityFields, _db.logValues},
+              readsFrom: {_db.activityFields, _db.logValues, _db.logGroupItems},
             )
             .get();
         return {
@@ -178,9 +187,7 @@ class DbActivityTypeRepository implements ActivityTypeRepository {
                   updatedAt: now,
                 ),
               );
-          for (final (position, field) in definition.fields.indexed) {
-            await _insertField(typeId, field, position, now);
-          }
+          await _insertFields(typeId, definition.fields, null, now);
         });
       });
 
@@ -215,32 +222,48 @@ class DbActivityTypeRepository implements ActivityTypeRepository {
           final byPublicId = {for (final f in existing) f.publicId: f};
           final kept = <String>{};
 
-          for (final (position, field) in definition.fields.indexed) {
-            final publicId = field.id!.value;
-            kept.add(publicId);
-            final current = byPublicId[publicId];
-            if (current == null) {
-              await _insertField(type.internalId, field, position, now);
-              continue;
+          Future<void> upsert(List<FieldDefinition> fields, int? parent) async {
+            for (final (position, field) in fields.indexed) {
+              final publicId = field.id!.value;
+              kept.add(publicId);
+              final current = byPublicId[publicId];
+              if (current == null) {
+                final inserted = await _insertField(
+                  type.internalId,
+                  field,
+                  position,
+                  parent,
+                  now,
+                );
+                await _insertFields(
+                  type.internalId,
+                  field.subFields,
+                  inserted,
+                  now,
+                );
+                continue;
+              }
+              await (_db.update(
+                _db.activityFields,
+              )..where((f) => f.internalId.equals(current.internalId))).write(
+                ActivityFieldsCompanion(
+                  name: Value(field.name),
+                  fieldType: Value(field.type.storageKey),
+                  dimension: Value(field.dimension?.code),
+                  position: Value(position),
+                  required: Value(field.required ? 1 : 0),
+                  measurable: Value(field.measurable ? 1 : 0),
+                  configJson: Value(FieldConfigCodec.encode(field.config)),
+                  updatedAt: Value(now),
+                  // Re-adding a removed field restores it.
+                  deletedAt: const Value(null),
+                ),
+              );
+              await upsert(field.subFields, current.internalId);
             }
-            await (_db.update(
-              _db.activityFields,
-            )..where((f) => f.internalId.equals(current.internalId))).write(
-              ActivityFieldsCompanion(
-                name: Value(field.name),
-                fieldType: Value(field.type.storageKey),
-                dimension: Value(field.dimension?.code),
-                position: Value(position),
-                required: Value(field.required ? 1 : 0),
-                measurable: Value(field.measurable ? 1 : 0),
-                configJson: Value(FieldConfigCodec.encode(field.config)),
-                updatedAt: Value(now),
-                deletedAt: const Value(
-                  null,
-                ), // re-adding a removed field restores it
-              ),
-            );
           }
+
+          await upsert(definition.fields, null);
           for (final field in existing) {
             if (!kept.contains(field.publicId) && field.deletedAt == null) {
               await (_db.update(
@@ -256,10 +279,24 @@ class DbActivityTypeRepository implements ActivityTypeRepository {
         });
       });
 
-  Future<void> _insertField(
+  /// Inserts [fields] (and their sub-fields, parents first) under [parent].
+  Future<void> _insertFields(
+    int typeId,
+    List<FieldDefinition> fields,
+    int? parent,
+    int now,
+  ) async {
+    for (final (position, field) in fields.indexed) {
+      final id = await _insertField(typeId, field, position, parent, now);
+      await _insertFields(typeId, field.subFields, id, now);
+    }
+  }
+
+  Future<int> _insertField(
     int typeId,
     FieldDefinition field,
     int position,
+    int? parent,
     int now,
   ) => _db
       .into(_db.activityFields)
@@ -267,6 +304,7 @@ class DbActivityTypeRepository implements ActivityTypeRepository {
         ActivityFieldsCompanion.insert(
           publicId: field.id!.value,
           activityTypeId: typeId,
+          parentFieldId: Value(parent),
           name: field.name,
           fieldType: field.type.storageKey,
           dimension: Value(field.dimension?.code),

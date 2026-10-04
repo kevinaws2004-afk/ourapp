@@ -75,15 +75,91 @@ void main() {
     },
   );
 
-  test('repeating groups cannot be created before Phase 3', () {
-    final d = withFields(const [
-      FieldDefinition(
-        name: 'Sets',
-        type: FieldType.repeatingGroup,
-        config: RepeatingGroupFieldConfig(),
-      ),
-    ]);
-    expect(codes(d), contains(ValidationCode.fieldTypeNotSupportedYet));
+  group('repeating groups', () {
+    const reps = FieldDefinition(
+      name: 'Reps',
+      type: FieldType.number,
+      config: NumberFieldConfig(),
+    );
+    FieldDefinition group(
+      String name, {
+      String itemLabel = 'Item',
+      List<FieldDefinition> subFields = const [reps],
+    }) => FieldDefinition(
+      name: name,
+      type: FieldType.repeatingGroup,
+      config: RepeatingGroupFieldConfig(itemLabel: itemLabel),
+      subFields: subFields,
+    );
+
+    test('the gym template (a group inside a group) is valid', () {
+      expect(codes(gymDefinition()), isEmpty);
+    });
+
+    test('a group needs at least one sub-field and an item name', () {
+      expect(
+        codes(withFields([group('Sets', subFields: const [])])),
+        contains(ValidationCode.subFieldsRequired),
+      );
+      expect(
+        codes(withFields([group('Sets', itemLabel: ' ')])),
+        contains(ValidationCode.itemLabelRequired),
+      );
+    });
+
+    test('groups nest at most two levels', () {
+      final tooDeep = group(
+        'A',
+        subFields: [
+          group('B', subFields: [group('C')]),
+        ],
+      );
+      expect(
+        codes(withFields([tooDeep])),
+        contains(ValidationCode.nestingTooDeep),
+      );
+    });
+
+    test('sub-field names are unique per group, not across groups', () {
+      expect(codes(withFields([group('A'), group('B')])), isEmpty);
+      expect(
+        codes(
+          withFields([
+            group('A', subFields: const [reps, reps]),
+          ]),
+        ),
+        contains(ValidationCode.duplicateFieldName),
+      );
+    });
+
+    test('issues inside a group target the sub-field', () {
+      final result = ActivityTypeValidator.validate(
+        withFields([
+          group(
+            'A',
+            subFields: const [
+              FieldDefinition(
+                name: '',
+                type: FieldType.text,
+                config: TextFieldConfig(),
+              ),
+            ],
+          ),
+        ]),
+      );
+      expect(result.issues.single.target, 'new:0.0');
+    });
+
+    test('only a group may have sub-fields', () {
+      expect(
+        codes(
+          withFields([
+            reps.copyWith(subFields: const [reps]),
+          ]),
+        ),
+        contains(ValidationCode.valueTypeMismatch),
+      );
+    });
   });
 
   group('number fields', () {

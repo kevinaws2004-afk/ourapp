@@ -8,18 +8,21 @@ Gym workouts, reading, focused work, meetings, walks, body measurements, or any 
 
 ## Status
 
-**Phase 2 (generic activity engine): complete**, plus the navigation clarification (ADR-028). Navigation is **Today | Plan | Insights | Me**, with a global **Record** action. You can:
-- set up reusable activities under **Me → Activities** (builder or templates; ten generic field types, nine available now, with Repeating Group coming in Phase 3)
-- **record** what you did from anywhere, including typed values, units, duration and notes
-- use the **date-based Plan tab** to pick any date and see what was recorded that day (plans themselves arrive in Phase 4)
+**Phases 5 (focus) and 6 (insights + body measurements): complete, awaiting owner review.** Phases 1–4 (scaffold, generic engine, structured fields, plans & Today) and the navigation clarification (ADR-028) are done. Navigation is **Today | Plan | Insights | Me**. Tap a plan to record it, or use **Record something** on Today for anything unplanned. You can:
+- set up reusable activities under **Me → Activities** (builder or templates; ten generic field types, including **Repeating Groups**, e.g. exercises with nested sets; templates include Gym, Meeting and Cooking)
+- **record** what you did from anywhere, including typed values, units, duration, notes and lists of items (with suggestions from earlier records, e.g. exercise names)
+- **plan** any date on the Plan tab: activity plans and simple tasks, with optional times or a length, quick add, drag to reorder, skip or move to tomorrow
+- **tap a planned activity to record it** (e.g. a Gym session with all its sets); it then shows ✓, and **Today** shows your plan next to what actually happened ("Recorded 45 min of 1 h") plus anything recorded without a plan
 
-Today and Insights are still placeholders. See [`ai/tasks/current_task.md`](ai/tasks/current_task.md).
+- **focus**: start a timer from a planned activity or an activity's page; pause/resume; it survives the app being closed; finish → record the details → done
+- **understand progress** on Insights: time and counts per activity vs the previous period, and your own charts of anything (time, any number such as the weight of your bench-press sets, volume, personal bests, body measurements, planned vs actual)
+- track **body measurements** under Me See [`ai/tasks/current_task.md`](ai/tasks/current_task.md).
 
 The visible app name **"OurApp"** is temporary. The product name is undecided, and `daylog` is only an internal technical identifier.
 
 ## Tech stack
 
-Flutter · Dart · SQLite via drift (local) · Riverpod 3 · go_router · native animations · Phosphor icons · charts (CustomPaint-based recommended; pending ADR-P11). Android first, iOS-compatible. No backend in V1.
+Flutter · Dart · SQLite via drift (local) · Riverpod 3 · go_router · native animations · Phosphor icons · charts via fl_chart (ADR-033). Android first, iOS-compatible. No backend in V1.
 
 ## Documentation map
 

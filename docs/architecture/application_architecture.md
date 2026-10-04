@@ -10,9 +10,12 @@
 >   - `settings` (preferences)
 >   - `activity_types`: domain, data and presentation (Me → Activities, activity detail, builder, templates)
 >   - `activity_logs`: domain, data and presentation (log editor and generic form renderer)
->   - `plans` (presentation only): the date-based Plan tab, with its calendar/week selector (`planSelectedDateProvider`) and Recorded section (`WatchRecordsForDay`). Plans themselves arrive in Phase 4
+>   - `plans`: domain, data and presentation (plans and tasks, `WatchDayOverview`, the date-based Plan tab with quick add, reorder and the plan sheet)
+>   - `today` (presentation): greeting, today's plan (tap to record or open the record, task check; ADR-030), planned vs actual, unplanned records, empty state
+>   - `focus` (Phase 5, ADR-031): domain/data/presentation (session model and use cases, `DbFocusSessionRepository`, full-screen `FocusScreen`, `FocusBanner`, start choice sheet); `core/transactions/UnitOfWork` + `core/database/DbUnitOfWork`
+>   - `measurements` (Phase 6): domain/data/presentation (Me → Body measurements, per-type history + chart, add/edit sheet)
+>   - `insights` (Phase 6, ADR-034): the generic engine (`insight.dart`, `WatchInsight`), `DbInsightRepository`, the Insights tab, chart cards and the chart builder; shared `AppChart` (fl_chart, ADR-033)
 >   - Quick Record
->   - placeholder tabs for `today` and `insights`
 > - Everything else here is target design.
 
 ---
@@ -171,9 +174,15 @@ Rules:
 - Editors hold no persisted state: they receive the current typed `FieldValue?` and an `onChanged` callback. Draft state lives in the notifier. Clearing an input emits `null` (no value).
 - Validation is domain logic (`LogValidator`). The UI shows the returned `ValidationIssue`s next to the matching field.
 - The log's built-in **start time, duration (ADR-021) and notes** sit outside the renderer, in the log editor screen.
-- Used by: new log and edit log (Phase 2); plan → log (Phase 4); post-focus completion (Phase 5).
+- Used by: new log and edit log (Phase 2); plan → log (Phase 4, ADR-030: tapping a plan opens `LogEditorArgs.create(typeId, planId:)`, route `/logs/new/:typeId?plan=<planId>`; `LogEditorNotifier` loads the plan into `LogEditorState.plan` for the "Planned" line and the default start time); post-focus completion (Phase 5).
 - The builder's live **preview** renders the same `ActivityLogFormFields` with a throwaway draft. There is one renderer, never two.
-- Repeating Group renders a placeholder until Phase 3 implements its relational storage (ADR-027).
+- **Repeating Group** (`RepeatingGroupEditor`, ADR-027) is generic: it never knows what an item represents.
+  - Items render as cards holding a nested `ActivityLogFormFields` for the group's sub-fields, with issue targets prefixed `<itemId>/`.
+  - When every sub-field is a Number, items render as compact rows instead, and a new row starts from the previous row's values (repeat a set in one tap).
+  - "Add {itemLabel}" appends an item whose `GroupItemId` comes from `idGeneratorProvider`. A nested group renders recursively.
+  - The renderer therefore takes the `ActivityType` (`ActivityLogFormFields.type`) to read sub-fields.
+- **Autocomplete:** a single-line Text field with `suggestFromHistory` offers previously recorded values (`textSuggestionsProvider` → `ActivityLogRepository.textSuggestions`), matched case-insensitively anywhere in the text.
+- **Builder:** a group's settings (item name, ordered sub-fields) live in its field sheet; each sub-field is edited in a nested sheet. The type picker hides Repeating Group once the nesting limit is reached.
 
 ## 5. Focus timer architecture
 
@@ -185,7 +194,7 @@ Rules:
 
 ## 6. Navigation
 
-- `go_router` with a `StatefulShellRoute` for the four tabs (Today, Plan, Insights, Me; ADR-028) preserving each tab's stack. The shell hosts the global **Record** action (Quick Record).
+- `go_router` with a `StatefulShellRoute` for the four tabs (Today, Plan, Insights, Me; ADR-028) preserving each tab's stack. The shell has no Record action (owner, 2026-10-04). Quick Record is opened from Today (`openQuickRecord` in the router).
 - Full-screen routes outside the shell: Focus Mode, Activity Builder, Log Editor (on compact), Onboarding.
 - Modal bottom sheets for Quick Record, quick plan/task entry, and pickers. Sheets are not routes unless deep-linking is needed.
 - Onboarding gate (implemented): the router's `redirect` calls `onboardingRedirect()` with the current `onboarding_completed` preference. A `ValueNotifier` fed by the preference stream is the router's `refreshListenable`; the startup snapshot gives the correct first route with no flash.
@@ -201,18 +210,18 @@ Implemented:
 Route parameters are public IDs (ADR-017). Indicative full route map (paths will be reconciled with the implemented ones as features land):
 
 ```text
-/today
-/plan
+/today                           (implemented)
+/plan                            (implemented)
 /me/activities                   (implemented)
 /me/activities/:typeId           (implemented)
 /activities/new, /activities/templates, /activities/:typeId/edit   (implemented)
-/logs/new/:typeId                (implemented; plan context added in Phase 4)
+/logs/new/:typeId[?plan=:planId] (implemented; the plan link was added in Phase 4)
 /logs/:logId                     (implemented)
-/focus/:sessionId
-/insights
-/insights/chart?source=…
+/focus                           (implemented: the active session)
+/focus/finish/:sessionId         (implemented: record form that finishes it)
+/insights                        (implemented)
 /me
-/me/measurements
+/me/measurements[/:type]         (implemented)
 /me/settings
 /history
 /onboarding

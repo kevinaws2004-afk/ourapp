@@ -42,7 +42,7 @@ V1 ships **ten generic field types**. Domain-specific types from §9 (Weight, Di
 | FR-FT-07 | Time | Time (Date + Time = Date + Time fields, or the log's own start) | V1 |
 | FR-FT-08 | Duration | Duration (additional durations; the activity's own elapsed time is built into every log, ADR-021) | V1 |
 | FR-FT-09 | Rating | Rating | V1 |
-| FR-FT-10 | Repeating Group | Set Table, Checklist, Exercise list (Phase 3; relational storage, ADR-027) | V1 |
+| FR-FT-10 | Repeating Group | Set Table, Checklist, Exercise list (implemented in Phase 3; relational storage, ADR-027) | V1 |
 | — | Timer | Not a field type: `supports_timer` on the Activity Type plus the log's built-in duration | V1 |
 
 Each type has defined value semantics, validation, storage mapping, rendering and serialization ([data_architecture.md §4](../architecture/data_architecture.md#4-field-type-catalog)).
@@ -68,7 +68,7 @@ Each type has defined value semantics, validation, storage mapping, rendering an
 | FR-PL-02 | A Plan has a title, optional description, optional scheduled start/end. | V1 | §28 |
 | FR-PL-03 | A Plan can optionally link to an Activity Type. | V1 | §19 |
 | FR-PL-04 | A Plan has a status. Stored: planned, skipped, cancelled, and completed (tasks only). Activity-plan completion and in-progress are **derived** from linked logs/focus sessions (ADR-018). | V1 | §28 |
-| FR-PL-05 | Starting/completing a linked Plan lets the user create the corresponding Log. | V1 | §19, §36 |
+| FR-PL-05 | Starting/completing a linked Plan lets the user create the corresponding Log. Tapping a planned activity opens its record form, linked to the plan (ADR-030). | V1 | §19, §36, ADR-030 |
 | FR-PL-06 | Plan and Log are preserved independently to allow planned-vs-actual comparison. | V1 | §20, §43 |
 | FR-PL-07 | Lightweight Tasks can be created and completed without detailed logging. | V1 | §21, §41 |
 | FR-PL-08 | Plans can be reordered (drag and drop). | V1? | §6 lists drag & drop in stack |
@@ -105,11 +105,11 @@ Each type has defined value semantics, validation, storage mapping, rendering an
 | FR-AN-02 | Time series line graphs (e.g. reading minutes, body weight, exercise weight). | V1 | §25, §41 |
 | FR-AN-03 | Totals (e.g. total reading time this week). | V1 | §25, §41 |
 | FR-AN-04 | Counts (workouts, sessions, completed tasks). | V1 | §25, §41 |
-| FR-AN-05 | Averages. | V1? | §25 lists; §41 omits |
-| FR-AN-06 | Comparisons (this week vs last week, this month vs last month). | V1? | §25 lists; §41 omits |
+| FR-AN-05 | Averages. | V1 (ADR-034) | §25 lists; §41 omits |
+| FR-AN-06 | Comparisons (this week vs last week, this month vs last month). | V1 (ADR-034) | §25 lists; §41 omits |
 | FR-AN-07 | Chart configuration: activity, field, metric, time range, aggregation, chart type. | V1 | §26 |
-| FR-AN-08 | Gym-derived metrics: max weight, max reps, total sets, volume, exercise frequency, progression, PRs. | V1? | §13 vs §44 |
-| FR-AN-09 | Planned vs actual analytics. | V1? | §20, §43 vs §44 |
+| FR-AN-08 | Gym-derived metrics: max weight, max reps, total sets, volume, exercise frequency, progression, PRs. | V1 (ADR-034: generic best/volume/count over any activity) | §13 vs §44 |
+| FR-AN-09 | Planned vs actual analytics. | V1 (ADR-034) | §20, §43 vs §44 |
 | FR-AN-10 | Basic history list. | V1 | §41 |
 
 ### 1.8 Body Measurements
@@ -175,19 +175,19 @@ Product ambiguities found in the spec. **Each needs an owner decision.** Until d
 | ID | Question | Conflict / source | Interim assumption |
 |---|---|---|---|
 | OQ-01 | ~~Which field types ship in V1?~~ | **Resolved 2026-10-04 (owner):** Text, Number, Boolean, Single Select, Multi Select, Date, Time, Duration, Rating, Repeating Group. Domain-specific types are compositions (Number + Unit, Repeating Group + scalars). See §1.2. | — |
-| OQ-02 | Are Personal Records and Planned-vs-Actual analytics V1? §13/§20/§43 imply yes; §44 lists both as future "Advanced Analytics". | §13, §43 vs §44 | Planned-vs-actual **on Today** is V1 (required by §43). PRs and planned-vs-actual *trend charts* are V1? (deferred unless approved). |
+| OQ-02 | ~~Are Personal Records and Planned-vs-Actual analytics V1?~~ **Resolved 2026-10-04 (owner): yes**, plus volume, averages and comparisons (ADR-034). §13/§20/§43 imply yes; §44 lists both as future "Advanced Analytics". | §13, §43 vs §44 | Planned-vs-actual **on Today** is V1 (required by §43). PRs and planned-vs-actual *trend charts* are V1? (deferred unless approved). |
 | OQ-03 | Is Export (JSON/CSV) part of V1? "V1 should eventually support" but not in §41. | §40 vs §41 | Design for it; implement after the core success flow. |
 | OQ-04 | ~~What is a Task in the data model?~~ | **Resolved by ADR-018:** a Task is a Plan with `activity_type_id` NULL; its title is its identity. | — |
 | OQ-05 | Can a Task/Plan exist without a date ("inbox")? | §19 lists dates only | No: every plan has a planned date. |
-| OQ-06 | ~~How is a Plan linked to the Log that fulfils it?~~ | **Resolved by ADR-018:** `activity_logs.plan_id` (added in Phase 4). Activity-plan completion is derived from linked logs. | — |
-| OQ-07 | How is "planned duration" expressed when a plan has no times? | §20, §28; ADR-018 | `plan_date` is required (ADR-018). Planned duration without times: proposed `planned_duration_ms`, **awaiting owner confirmation** before Phase 4. |
+| OQ-06 | ~~How is a Plan linked to the Log that fulfils it?~~ | **Resolved by ADR-018:** `activity_logs.plan_id` (implemented in Phase 4). Activity-plan completion is derived from linked logs. | — |
+| OQ-07 | ~~How is "planned duration" expressed when a plan has no times?~~ | §20, §28; ADR-018 | **Resolved 2026-10-04 (owner):** `plans.planned_duration_ms`, exclusive with `planned_end_at` (ADR-018). Implemented in Phase 4. |
 | OQ-08 | History filters by Tag, Person, Project: no Tag or Project concept exists anywhere else; Person is only a field type. | §38 | V1 filters: Activity, Date, free-text. Person filter = match on Person/Multi-person field values. Tags/Projects deferred until defined. |
 | OQ-09 | Which body measurement types exist, and can users add custom ones? | §23, §29 | Fixed V1 set: weight, height, body_fat, chest, waist, arms, legs. Custom types deferred. |
 | OQ-10 | ~~Log notes/duration vs "Notes"/"Duration" fields~~ | **Resolved by ADR-021:** the activity's actual elapsed duration is `activity_logs.duration_ms`, and notes are a built-in log property. Duration fields are only for additional durations. Templates don't add Notes/Duration fields for these. | — |
 | OQ-11 | Can more than one Focus Session run at once? | §16, §17 | No: one active session at a time. |
 | OQ-12 | Is any crash reporting/diagnostics allowed (would send data off-device)? | §39 | No: local logging only. |
 | OQ-13 | Is an ongoing notification for a running focus timer desired? (Requires notification permission on Android 13+.) | §17 | Not in V1 unless approved; timer correctness does not depend on it. |
-| OQ-14 | Are Insights chart configurations saved by the user (a "dashboard"), or chosen ad hoc? | §26 | Ad hoc selection plus sensible auto-generated defaults; no persistence in V1. |
+| OQ-14 | Are Insights chart configurations saved by the user (a "dashboard"), or chosen ad hoc? | §26 | Recommendation was ad hoc with no persistence. **Phase 6 implemented saved charts (`insight_charts`, ADR-034) and awaits owner confirmation.** |
 | OQ-15 | Exercise identity: is "Chest Press" free text (autocomplete) or a managed entity? Analytics group by it. | §12, §13 | Free text with autocomplete from history; analytics group by normalized (trimmed, case-folded) text. |
 | OQ-16 | ~~Units: kg/lb, km/mi?~~ | **Resolved by ADR-020:** values keep the user's unit (`unit_code`) plus a write-time `normalized_value` in the dimension's canonical unit. The unit registry is in code. | — |
 | OQ-17 | §43 shows "Walk 31m" under Actual but the narrative never logs the walk. | §43 | Treated as an editorial omission: the walk is logged retroactively (manual log). Confirms manual/retroactive logging is required. |

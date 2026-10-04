@@ -2,23 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/design/app_icons.dart';
+import '../core/design/tokens/sizes.dart';
 import '../core/design/context_ext.dart';
 import '../core/design/window_size_class.dart';
 import '../l10n/generated/app_localizations.dart';
 
 /// Adaptive primary navigation (ADR-028, ui_guidelines.md §2): Today, Plan,
-/// Insights, Me. Bottom bar on compact windows, rail on medium/expanded. The
-/// global **Record** action (Quick Record) is available on every tab. Each
-/// tab keeps its own navigation stack.
+/// Insights, Me. Bottom bar on compact windows, rail on medium/expanded. Each
+/// tab keeps its own navigation stack. There is no floating Record button
+/// (owner, 2026-10-04): planned activities are recorded from the plan, and
+/// unplanned ones from Today's "Record something" (Quick Record).
 class AppShell extends StatelessWidget {
-  const AppShell({
-    super.key,
-    required this.navigationShell,
-    required this.onQuickRecord,
-  });
+  const AppShell({super.key, required this.navigationShell});
 
   final StatefulNavigationShell navigationShell;
-  final VoidCallback onQuickRecord;
 
   void _onSelect(int index) => navigationShell.goBranch(
     index,
@@ -33,11 +30,6 @@ class AppShell extends StatelessWidget {
     if (!WindowSizeClass.of(context).usesNavigationRail) {
       return Scaffold(
         body: navigationShell,
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: onQuickRecord,
-          icon: const Icon(AppIcons.record),
-          label: Text(l10n.actionRecord),
-        ),
         bottomNavigationBar: DecoratedBox(
           decoration: BoxDecoration(
             border: Border(top: BorderSide(color: context.colors.borderSubtle)),
@@ -63,11 +55,6 @@ class AppShell extends StatelessWidget {
           NavigationRail(
             selectedIndex: navigationShell.currentIndex,
             onDestinationSelected: _onSelect,
-            leading: FloatingActionButton(
-              tooltip: l10n.actionRecord,
-              onPressed: onQuickRecord,
-              child: const Icon(AppIcons.record),
-            ),
             destinations: [
               for (final d in destinations)
                 NavigationRailDestination(
@@ -77,7 +64,10 @@ class AppShell extends StatelessWidget {
                 ),
             ],
           ),
-          VerticalDivider(width: 1, color: context.colors.borderSubtle),
+          VerticalDivider(
+            width: AppSizes.hairline,
+            color: context.colors.borderSubtle,
+          ),
           Expanded(child: navigationShell),
         ],
       ),

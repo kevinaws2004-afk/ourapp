@@ -3,6 +3,13 @@
 > The canonical source for every visual value in the app. Feature code consumes **semantic tokens** from here and never hardcodes colors, type styles, spacing, radii, shadows, durations or curves.
 > Interaction patterns, screens and states: [ui_guidelines.md](ui_guidelines.md). Layout adaptation: [responsive_design.md](responsive_design.md).
 >
+> **Owner direction for the upcoming visual pass (2026-10-04).** The current look reads as a functional prototype: cream/white surfaces with basic cards and forms. After the core functionality is done, one **dedicated visual/product-design pass across the whole app** will replace the provisional v0 values. It won't patch screens one by one. The brief:
+> - **Colorful, alive, polished, premium, enjoyable**: a product people *want* to open every day. Not the cream/yellow-heavy v0, not all dark, not plain white. A balanced system of soft but meaningful colors; activity colors stay colorful.
+> - Typography, spacing, cards, buttons, icons, progress indicators, illustrations and empty states should feel like a real consumer product. Clean doesn't mean empty.
+> - The product story is **Plan → Do → Record → Measure → Understand → Improve**, not just planning. Today = a living view of the day. Plan = designing the future. Record = naturally continuing a planned activity. Insights = "am I actually improving?" Me = personal configuration.
+> - Planner apps such as PlanWiz are a reference for *quality of feel only*. Never copy their layouts, colors or branding.
+> - **Until then:** no visual redesign, no architecture changes for looks, no new features from this direction. Keep everything token-driven (colors, type, spacing, radii, sizes in `AppSizes`, motion) and in shared components, so the pass can change the visual system without touching domain or database code.
+>
 > **Status: Accepted as provisional v0 (ADR-016).** The *structure* (token categories, semantic roles, rules) is binding. The concrete *values* (hex codes, font families, motif) are provisional until the owner reviews the dev token showcase on a device. "Daylight" is the design direction's name, never the product name (ADR-010). Contrast ratios listed were computed for the proposed values (WCAG 2.x formula).
 
 ---
@@ -130,13 +137,13 @@ Allowed only for: the Day Arc sky wash (subtle, 2 stops, ≤ 15% lightness chang
 |---|---|---|
 | **Display / headline** | **Fraunces** (variable; use soft, low-contrast settings, `opsz` matched to size, weights 500–600) | Warm, editorial, human: gives the "personal, premium" voice and is unlike typical productivity apps |
 | **UI / body** | **DM Sans** (or Manrope as alternative) | Clean, friendly geometric sans with good small-size legibility |
-| **Numeric / data** | UI family with **tabular figures** (`FontFeature.tabularFigures()`) | Stable digits for timers, durations, tables, charts |
+| **Numeric / data** | **DM Mono** (OFL, Regular + Medium; ADR-032), monospaced digits | Stable digits for timers, durations, tables, charts |
 
 Fallback: platform default sans. Fonts are bundled assets; ship only the weights used. Validate the final choice for Latin glyph coverage, tabular figure support, and rendering at small sizes on Android during the token showcase review (ADR-016).
 
 **Bundled files (Phase 1):** `assets/fonts/fraunces/Fraunces-Variable.ttf` (axes opsz, wght, SOFT, WONK) and `assets/fonts/dm_sans/DMSans-Variable.ttf` (axes opsz, wght), each with its `OFL.txt`. Flutter family names: `Fraunces`, `DMSans`. Weight and optical size are applied through `FontVariation`s. Display styles use `SOFT 50, WONK 0`.
 
-**Validation finding: no tabular figures (open, ADR-P21).** Neither bundled variable font has a `tnum` OpenType feature, and both have proportional default digits (checked with fontTools). Numeric tokens still request `FontFeature.tabularFigures()`, but it currently has no effect. This matters first for the Phase 5 focus timer (a jittering `numericHero`), then for durations, set tables and charts. Options are recorded in ADR-P21. The rest of the type system is unaffected.
+**Validation finding (resolved by ADR-032):** neither bundled variable font has a `tnum` feature, so the numeric tokens use DM Mono, whose digits are all the same width.
 
 ### 3.2 Type scale
 
@@ -155,9 +162,9 @@ Size/line-height in logical px. Tokens are semantic; never use raw sizes in feat
 | `labelLarge` | UI | 15 / 20 | 600 | 0.1 | Buttons |
 | `labelMedium` | UI | 13 / 18 | 600 | 0.2 | Chips, tabs, field labels |
 | `labelSmall` | UI | 11 / 14 | 600 | 0.5, uppercase optional | Overlines, chart axes |
-| `numericHero` | UI tabular | 72 / 76 | 300 | −1.5 | Focus timer |
-| `numericLarge` | UI tabular | 34 / 40 | 500 | −0.5 | Insight headline numbers ("4h 32m") |
-| `numericMedium` | UI tabular | 20 / 24 | 600 | 0 | Durations on timeline, set table cells |
+| `numericHero` | DM Mono | 72 / 76 | 400 | −2 | Focus timer |
+| `numericLarge` | DM Mono | 34 / 40 | 500 | −0.5 | Insight headline numbers ("4h 32m") |
+| `numericMedium` | DM Mono | 20 / 24 | 500 | 0 | Durations on timeline, set table cells, focus banner |
 
 Rules: display family only at ≥ 21px; max two families per screen (display + UI); body text never below 14px; hierarchy via size/weight/color, never via ALL CAPS paragraphs. All styles scale with system text size (see accessibility).
 
@@ -195,7 +202,10 @@ Screen margins per breakpoint: [responsive_design.md](responsive_design.md). Pre
 
 Nested radii: inner radius = outer radius − padding (never larger than the container's).
 
-## 6. Borders & separators
+## 6. Borders, separators & component sizes
+
+Component sizes (badges, touch target, strokes, chart line/height, day cell) are `AppSizes` tokens (`core/design/tokens/sizes.dart`); features never use size literals.
+
 
 - `border.hairline` = 1dp `borderSubtle`: default outline for grouped surfaces in light mode (instead of shadows).
 - `border.input` = 1dp `borderStrong`; focused = 2dp `brandPrimary`.

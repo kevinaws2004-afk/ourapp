@@ -37,6 +37,13 @@ class LocalDate implements Comparable<LocalDate> {
     return LocalDate(shifted.year, shifted.month, shifted.day);
   }
 
+  /// Calendar days from this date to [other] (negative if earlier).
+  int daysUntil(LocalDate other) => DateTime.utc(
+    other.year,
+    other.month,
+    other.day,
+  ).difference(DateTime.utc(year, month, day)).inDays;
+
   /// Monday = 1 … Sunday = 7.
   int get weekday => DateTime.utc(year, month, day).weekday;
 

@@ -10,6 +10,7 @@ import '../../domain/field_value.dart';
 import 'choice_editors.dart';
 import 'date_time_editors.dart';
 import 'field_editor_shell.dart';
+import 'repeating_group_editor.dart';
 import 'text_number_editors.dart';
 
 /// The generic form renderer (application_architecture.md §4): renders any
@@ -18,16 +19,25 @@ import 'text_number_editors.dart';
 class ActivityLogFormFields extends StatelessWidget {
   const ActivityLogFormFields({
     super.key,
+    required this.type,
     required this.fields,
     required this.values,
     required this.onChanged,
     this.issues = const [],
+    this.targetPrefix = '',
   });
 
+  /// The activity type [fields] belong to (Repeating Groups read their
+  /// sub-fields from it).
+  final ActivityType type;
   final List<ActivityField> fields;
   final Map<ActivityFieldId, FieldValue> values;
   final void Function(ActivityFieldId fieldId, FieldValue? value) onChanged;
   final List<ValidationIssue> issues;
+
+  /// Prefix of issue targets in this scope: empty at the top level,
+  /// `<itemId>/` inside a Repeating Group item (`LogValidator.itemTarget`).
+  final String targetPrefix;
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +50,17 @@ class ActivityLogFormFields extends StatelessWidget {
             key: ValueKey(field.id),
             label: field.isRemoved ? l10n.fieldRemoved(field.name) : field.name,
             required: field.required && !field.isRemoved,
-            error: firstIssueMessage(l10n, issues, field.id.value),
+            error: firstIssueMessage(
+              l10n,
+              issues,
+              '$targetPrefix${field.id.value}',
+            ),
             child: FieldEditorRegistry.editorFor(
+              type,
               field,
               values[field.id],
               (value) => onChanged(field.id, value),
+              issues: issues,
             ),
           ),
       ],
@@ -56,10 +72,12 @@ class ActivityLogFormFields extends StatelessWidget {
 /// field type without an editor is a compile error.
 abstract final class FieldEditorRegistry {
   static Widget editorFor(
+    ActivityType type,
     ActivityField field,
     FieldValue? value,
-    ValueChanged<FieldValue?> onChanged,
-  ) {
+    ValueChanged<FieldValue?> onChanged, {
+    List<ValidationIssue> issues = const [],
+  }) {
     return switch (field.type) {
       FieldType.text => TextValueEditor(
         field: field,
@@ -102,15 +120,13 @@ abstract final class FieldEditorRegistry {
         value: value as RatingValue?,
         onChanged: onChanged,
       ),
-      FieldType.repeatingGroup => const _UnavailableEditor(),
+      FieldType.repeatingGroup => RepeatingGroupEditor(
+        type: type,
+        field: field,
+        value: value as RepeatingGroupValue?,
+        issues: issues,
+        onChanged: onChanged,
+      ),
     };
   }
-}
-
-class _UnavailableEditor extends StatelessWidget {
-  const _UnavailableEditor();
-
-  @override
-  Widget build(BuildContext context) =>
-      Text(AppLocalizations.of(context).repeatingGroupUnavailable);
 }

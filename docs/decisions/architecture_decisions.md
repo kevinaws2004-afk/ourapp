@@ -167,7 +167,7 @@
   - Future sync maps `public_id` ↔ `internal_id` per device ([future_sync.md](../architecture/future_sync.md)).
 
 ### ADR-018: Normalized plans; a Task is a Plan without an Activity Type; logs reference plans
-- **Status:** Accepted 2026-10-04 (owner decision; resolves ADR-P04). **Implemented in Phase 4** (its migration adds `plans` and `activity_logs.plan_id`).
+- **Status:** Accepted 2026-10-04 (owner decision; resolves ADR-P04). **Implemented 2026-10-04 (Phase 4, schema v4):** `plans` and `activity_logs.plan_id`.
 - **Decision:**
   - One `plans` table: `internal_id`, `public_id`, `plan_date`, nullable `activity_type_id`, `title`, `notes`, `planned_start_at`, `planned_end_at`, `sort_order`, `status`, `created_at`, `updated_at`, `deleted_at`.
   - A **Task** is a plan with `activity_type_id IS NULL`; its title is its identity.
@@ -183,7 +183,8 @@
   - `in_progress` is derived (from an active focus session, Phase 5).
   - The domain computes the effective status; reality (a linked log) wins over a stored `skipped`.
   - Indexes: `(plan_date, sort_order)` and `(activity_type_id, plan_date)`, both partial on `deleted_at IS NULL`. Plus `activity_logs(plan_id)` partial on `plan_id IS NOT NULL` for derived completion.
-  - **Open sub-item, owner confirmation requested:** planned *duration* without times ("Read for 45 minutes", §3.2/§20) has no column in the approved list. The documented proposal is `planned_duration_ms INTEGER NULL` with `CHECK (planned_duration_ms IS NULL OR planned_end_at IS NULL)`, so there is never a second source of planned duration. Not built until confirmed (needed by Phase 4).
+  - **Planned duration sub-item: resolved 2026-10-04 (owner chose "Add it").** `planned_duration_ms INTEGER NULL` with `CHECK (planned_duration_ms IS NULL OR (planned_duration_ms > 0 AND planned_end_at IS NULL))`, so there is never a second source of planned duration. An end time also requires a start time (CHECK).
+  - Integrity triggers (v4): a record may only fulfil a plan of its own activity type (never a task), and a plan with records keeps its activity type.
 
 ### ADR-019: Hybrid typed + JSON value storage
 - **Status:** Accepted 2026-10-04 (owner decision; resolves ADR-P05)
@@ -308,7 +309,7 @@
   Violations surface as `ValidationException`. Every index has a documented query justification ([database.md §6](../architecture/database.md#6-indexes-and-query-plans)).
 
 ### ADR-027: Repeating Groups are stored as relational rows
-- **Status:** Accepted 2026-10-04 (owner decision; resolves the ADR-019 sub-item). **Implemented in Phase 3.**
+- **Status:** Accepted 2026-10-04 (owner decision; resolves the ADR-019 sub-item). **Implemented 2026-10-04 (Phase 3, schema v3).**
 - **Decision:** A Repeating Group's structure is relational:
   - **Sub-fields are real `activity_fields` rows** with `parent_field_id` → the group field. Each has its own `public_id`, `field_type`, `dimension` and semantics lock.
   - **Items are `log_group_items` rows:** `internal_id`, `public_id` (stable item ID), `log_id`, `field_id` (the group field), `parent_item_id` (nested groups), `position`, timestamps.
@@ -326,8 +327,8 @@
     - rebuilds `log_values` (12-step pattern), because its table-level `UNIQUE (log_id, field_id)` becomes two partial unique indexes (top-level values vs item values) and it gains `group_item_id`
   - Triggers are extended for parent/child consistency.
   - Repeating Group fields have no `log_values` row of their own; their presence is their items.
-  - Plans move to schema v4 (Phase 4).
-  - Design: [database.md §3.10](../architecture/database.md#310-repeating-groups-designed-phase-3-adr-027), [data_architecture.md §5.3](../architecture/data_architecture.md#53-repeating-group-phase-3-adr-027).
+  - Plans moved to schema v4 (implemented in Phase 4).
+  - Design: [database.md §3.10](../architecture/database.md#310-repeating-groups-v3-implemented-adr-027), [data_architecture.md §5.3](../architecture/data_architecture.md#53-repeating-group-implemented-in-phase-3-adr-027).
 
 ### ADR-028: Primary navigation, date-based Plan, Activities under Me, "Record" terminology
 - **Status:** Accepted 2026-10-04 (owner product decision; supersedes the spec's recommended navigation in §34 and the Track entry points in §36).
@@ -336,7 +337,7 @@
   - **Plan** is the date-based planning system. A calendar/date selector navigates to any past, present or future date and shows that date's plans alongside what was actually recorded.
   - **Today** is the specialized view of the current date: today's plan, today's reality, and their relationship.
   - **Me → Activities** is where reusable Activity Types are created and configured (builder, templates). It's for setup, not daily recording.
-  - **Quick Record:** a global action, available from every tab, records an activity that wasn't planned.
+  - **Quick Record:** records an activity that wasn't planned. *Amended 2026-10-04 (owner): no floating Record button on every tab, and no rail action.* Quick Record now opens from Today's **Record something** (section header and empty state). Planned activities are recorded by tapping the plan (ADR-030), and an activity's page keeps its Record button.
   - **Terminology:**
     - "Record" is the user-facing action.
     - Activity Log is the internal/domain name.
@@ -347,7 +348,7 @@
 - **Reason:** Navigation follows the core loop. Setup moves out of the way, and recording stays reachable everywhere.
 - **Consequences:**
   - Routes: Me → `/me/activities`, `/me/activities/:typeId`. Plan stays at `/plan` and holds a selected-date state.
-  - The Plan tab's planned section fills in when plans are implemented (Phase 4). Its "Recorded" section for the selected date works now.
+  - The Plan tab shows the selected date's plans paired with their records (Phase 4), plus what was recorded without a plan.
   - Code keeps the domain names (`ActivityLog`, `LogActivity`). Only user-facing copy says "Record".
 
 ### ADR-029: The app's colors come only from the activity palette
@@ -371,6 +372,82 @@
   - Neutrals stay provisional under ADR-016.
   - Removing `sand` means a stored `color_key = 'sand'` renders with the `slate` fallback, and the builder asks for a new color on the next save. No migration is needed: the app is pre-release and no template used sand.
 
+### ADR-030: Plan and Record are one user workflow
+- **Status:** Accepted 2026-10-04 (owner correction after reviewing Phases 3–4). Refines ADR-018 and ADR-028. **Implemented 2026-10-04.**
+- **Decision:**
+  - The domain keeps three concepts: Activity Type (definition), Plan (intention) and Activity Log (reality, "Record" in the UI). The **user workflow is one flow**: plan an activity for a date → tap it → record what actually happened → the record links to the plan → the plan shows as done.
+  - **Tapping a plan does the plan:**
+    - An activity plan that has no record yet (open or skipped) opens **its record form**, linked to the plan (`/logs/new/:typeId?plan=`). For Gym that is the exercises and sets, duration and notes.
+    - A recorded activity plan opens **its record** (the latest, if there are several).
+    - A task (no activity, e.g. "Food") offers **Mark as done** or **Track details**. Its check control ticks it directly.
+  - **Anything can be tracked, with fields the user chooses.** "Track details" opens the activity builder prefilled with the plan's name. The user adds whatever fields they want (Calories, With whom, Pages, sets…). Saving the activity links the plan to it and opens its record form. Later plans with that name link to it automatically.
+  - **What an activity tracks can change while recording.** The record form has "Edit what to track", which opens that activity's builder; the form reloads with the new fields and keeps what was entered.
+  - Starter templates (Gym, Reading, Meeting…) are only optional shortcuts; nothing is specific to them.
+  - **Plan options** (edit details, Skip, Reopen, Move to tomorrow, Delete, and "Record again" for a recorded plan) sit behind a secondary **More** control on the plan, not behind the tap.
+  - "Mark as done" exists **only for tasks**. An activity plan completes by being recorded (derived, ADR-018).
+  - **One session = one record.** A Gym session with ten sets is one record with ten Repeating Group rows (ADR-027). Doing Gym twice is two records; "Record again" links a second record to the same plan.
+  - **The app is a day planner.** Plans are time slots ("21:10–21:55 Reading", "07:30 Gym", "Bath"). Quick add takes a from–to time.
+    - Typing an activity's name ("Gym") plans that activity, not a task with that title.
+    - Typing a starter template's name that isn't installed yet installs the template first.
+    - Anything else is a task.
+  - The record form shows the plan it fulfils ("Planned · Reading · 21:10–21:55") and **prefills the plan's slot** (owner example: Reading 21:10–21:55 → 45 minutes):
+    - **start:** the planned start when there is one; otherwise now (today's plan) or the plan's date at the current time
+    - **duration:** the planned length, as a starting point the user corrects to what actually happened
+  - Quick Record stays the path for unplanned activities.
+- **Context:** In the first Phase 4 build, tapping a plan opened a planning sheet whose visible actions were Skip/Move/Delete/Mark as done. Recording was a small "Start" button, so Plan and Record felt like separate workflows.
+- **Reason:** Planning exists to be lived. The planned item is the natural entry point for recording reality, while intention and reality stay separate in storage for planned-vs-actual.
+- **Consequences:**
+  - The plan tile has no Start button. It shows ✓ when recorded/done and a More button for options.
+  - No schema or domain-rule change: `activity_logs.plan_id`, derived completion and the Repeating Group storage are unchanged.
+
+### ADR-031: Focus sessions derive time from timestamps; the record is created on finish
+- **Status:** Accepted 2026-10-04 (owner chose "Record on finish"; resolves ADR-P09). **Implemented 2026-10-04 (Phase 5, schema v5).**
+- **Decision:**
+  - `focus_sessions` stores `state` (running, paused, finished, discarded), `started_at`, `paused_at`, `paused_duration_ms`, `ended_at`, `duration_ms`, the activity, and the optional plan and record.
+  - **Elapsed time = (end, or pause, or now) − start − completed pauses.** It is computed from persisted timestamps and the `Clock`, never counted in memory, so it survives backgrounding and process death (FR-FO-06).
+  - **One active session** (OQ-11), enforced by a unique partial index.
+  - **Finish:** the session is paused (time frozen) and the record form opens, prefilled with the start and the focused time. Saving creates the record (with `ended_at`, `duration_ms` and the session's plan) and marks the session finished **in one transaction** (`UnitOfWork`). Backing out keeps the session paused. Discard soft-deletes the session and creates no record.
+  - A plan with an active session shows **In progress** (derived). Tapping a planned timer activity offers "Start focus" or "Record now".
+- **Context:** The spec links a session to a log that doesn't exist yet. A long session (§43: 1 h 42 m) must survive the app being killed.
+- **Reason:** No half-finished records; reality is written once, atomically. Required fields are filled in the familiar record form.
+- **Consequences:**
+  - `ActivityLogDraft.endedAt` was added. Its rules: the end must not be before the start, and the duration can't exceed the elapsed time (ADR-021).
+  - No ongoing notification (OQ-13 stays "not in V1"). The timer's correctness doesn't depend on one.
+
+### ADR-032: DM Mono for numeric tokens
+- **Status:** Accepted 2026-10-04 (owner chose "Bundle DM Mono"; resolves ADR-P21). **Implemented 2026-10-04.**
+- **Decision:** `numericHero`, `numericLarge` and `numericMedium` use the bundled **DM Mono** (OFL, Regular + Medium; `assets/fonts/dm_mono/`). Every digit has the same width, so a running timer doesn't jitter. All other text keeps DM Sans and Fraunces.
+- **Context:** Neither bundled variable font has `tnum` (Phase 1 finding).
+- **Consequences:** Adds about 100 KB of font assets. The design-system numeric rows refer to DM Mono.
+
+### ADR-033: Charts use fl_chart behind one shared component
+- **Status:** Accepted 2026-10-04 (owner chose fl_chart; resolves ADR-P11, overriding its CustomPaint recommendation). **Implemented 2026-10-04.**
+- **Decision:**
+  - `fl_chart` (MIT, no network or telemetry, Android + iOS) is wrapped by `shared/widgets/charts/AppChart` (line and bar, one or more series, gaps for empty buckets).
+  - Features never use fl_chart directly. The wrapper styles it only with design tokens (palette accent, neutral grid, theme text styles).
+- **Reason:** Faster to build richer charts (tooltips, grouped bars) with a maintained package, while the wrapper keeps the identity consistent and the package replaceable.
+- **Consequences:** One new dependency (`fl_chart ^1.2.0`). Chart visuals are reviewed in the visual checklist.
+
+### ADR-034: Insights scope, measurements and saved charts
+- **Status:** Accepted 2026-10-04 (owner chose "Core + gym & PRs"; resolves OQ-02 and the V1? status of FR-AN-05/06/08/09). **Implemented 2026-10-04 (Phase 6, schema v6).**
+- **Decision:**
+  - **One generic engine** (FR-AN-01): a chart is a series of `(local_date, value)` points from a source, bucketed (day/week/month) and aggregated (total, average, best, lowest, count, latest) over a range (week/month/3 months/year).
+  - **Sources**, all read with relational SQL over typed, canonical columns:
+    - an activity's recorded time
+    - how often an activity was recorded
+    - any Number or Rating field at any depth, with an optional text filter on the same item, its parent item or the record (e.g. Weight where Exercise = "Chest Press")
+    - **volume** = product of two number sub-fields per group item (weight × reps)
+    - a body measurement
+    - planned vs actual time by plan date
+  - **V1 includes** (owner): totals, counts, averages, line/bar charts, this period vs the previous one, **personal best** (all-time highest value of a field or volume), volume, and planned-vs-actual trends.
+  - The Insights tab shows per-activity totals for the range against the previous one, and the user's **saved charts**: an `insight_charts` table with versioned JSON configs referencing stable public IDs.
+  - **Saving charts departs from the OQ-14 recommendation** (ad hoc charts, no persistence in V1). It was built so FR-AN-07's configuration isn't lost each visit. **It awaits owner confirmation of OQ-14.** If the owner prefers ad hoc charts, the table stays unused and the builder becomes a transient picker.
+  - **Body measurements** use a `measurements` table with the same value + unit + canonical pattern (ADR-020). The fixed V1 types follow the documented OQ-09 recommendation (weight, height, body fat, chest, waist, arms, legs; custom types deferred), and the domain validates them. The unit registry gained `cm`, `in` and a percentage dimension (`percent`).
+- **Context:** The spec's §44 lists PRs and planned-vs-actual analytics as future, while §13/§20/§43 imply them. The owner chose to include them.
+- **Consequences:**
+  - No activity-specific chart code. Gym volume and PRs are generic metrics over Repeating Group rows.
+  - Duration fields aren't chartable as field values yet: they store `duration_ms`, not `normalized_value`.
+
 ---
 
 ## Pending decisions
@@ -382,14 +459,14 @@ Each needs owner approval. **Recommendation** is what the docs currently assume.
 | ~~ADR-P01~~ | SQLite access library | **Resolved → ADR-011 (drift)** | | |
 | ~~ADR-P02~~ | Primary key format | **Resolved → ADR-017 (INTEGER internal key + UUIDv7 public ID)** | | |
 | ~~ADR-P03~~ | Time storage | **Resolved → ADR-013** | | |
-| ~~ADR-P04~~ | Plan schema | **Resolved → ADR-018** (sub-item: `planned_duration_ms` awaiting confirmation) | | |
+| ~~ADR-P04~~ | Plan schema | **Resolved → ADR-018** (sub-item `planned_duration_ms` confirmed 2026-10-04) | | |
 | ~~ADR-P05~~ | Structured values | **Resolved → ADR-019 + ADR-027** (relational Repeating Groups) | | |
 | ~~ADR-P06~~ | Units | **Resolved → ADR-020** | | |
 | ~~ADR-P07~~ | Duration semantics | **Resolved → ADR-021** | | |
 | ~~ADR-P08~~ | Soft delete | **Resolved → ADR-022** | | |
-| **ADR-P09** | Focus session model | Extend §30 table with `activity_type_id`, `plan_id`, `state`, `paused_at`; log created atomically on finish; one active session; timestamp-derived elapsed time | Create the log at session start (in-progress log); in-memory timer | Timer must survive process death; spec links session to a log that doesn't exist yet |
+| ~~ADR-P09~~ | Focus session model | **Resolved → ADR-031** | | |
 | ~~ADR-P10~~ | Use-case naming | **Resolved → ADR-023** | | |
-| **ADR-P11** | Charts | **Custom `CustomPaint` chart primitives** (line, bar, sparkline): small V1 chart set, full control of identity and motion, no dependency | `fl_chart` wrapped behind shared components | Distinct visual identity vs build effort |
+| ~~ADR-P11~~ | Charts | **Resolved → ADR-033 (fl_chart behind `AppChart`)** | | |
 | ~~ADR-P12~~ | Visual identity v0 | **Resolved → ADR-016 (provisional)** | | |
 | ~~ADR-P13~~ | Icon family | **Resolved → ADR-024 (Phosphor, bundled official font)** | | |
 | ~~ADR-P14~~ | Preferences storage | **Resolved → ADR-012 (SQLite, Option A)** | | |
@@ -399,7 +476,7 @@ Each needs owner approval. **Recommendation** is what the docs currently assume.
 | **ADR-P18** | Draft persistence for long logs | Persist in-progress log drafts (e.g. a gym session) so backgrounding/kill doesn't lose input: either a `log_drafts` table (JSON of the form) or saving the log early with `ended_at = NULL` | Memory only (risk of data loss) | §43 gym flow lasts ~1 hour |
 | ~~ADR-P19~~ | Localization infrastructure | **Resolved → ADR-015** | | |
 | ~~ADR-P20~~ | Activity type/field schema | **Resolved → ADR-026** | | |
-| **ADR-P21** | Numeric font with tabular figures | Found in Phase 1: neither bundled font (Fraunces, DM Sans variable builds) has `tnum`. **Recommendation: bundle DM Mono (OFL, same design family as DM Sans) for the `numeric*` tokens only**, after an on-device look at the timer size. Alternatives: (b) a different UI family whose build is verified to include `tnum`; (c) keep proportional digits and accept timer jitter | (b), (c) | Must be decided before Phase 5 (focus timer); affects ADR-016 values only |
+| ~~ADR-P21~~ | Numeric font with tabular figures | **Resolved → ADR-032 (DM Mono for numeric tokens)** | | |
 
 ### Defaults applied at scaffold (owner did not object at the 2026-10-03 gate; revisit before release)
 

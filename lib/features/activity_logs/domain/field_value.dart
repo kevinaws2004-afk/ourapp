@@ -169,3 +169,53 @@ final class RatingValue extends FieldValue {
   @override
   int get hashCode => stars.hashCode;
 }
+
+/// Stable identity of a Repeating Group item (UUIDv7, ADR-027).
+extension type const GroupItemId(String value) {}
+
+/// One item of a Repeating Group: its sub-field values. A nested group's value
+/// is itself a [RepeatingGroupValue] keyed by the nested group field.
+class GroupItem {
+  const GroupItem({required this.id, required this.values});
+
+  final GroupItemId id;
+  final Map<ActivityFieldId, FieldValue> values;
+
+  GroupItem withValues(Map<ActivityFieldId, FieldValue> values) =>
+      GroupItem(id: id, values: values);
+
+  @override
+  bool operator ==(Object other) =>
+      other is GroupItem &&
+      other.id == id &&
+      other.values.length == values.length &&
+      values.entries.every((e) => other.values[e.key] == e.value);
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    Object.hashAllUnordered(
+      values.entries.map((e) => Object.hash(e.key, e.value)),
+    ),
+  );
+}
+
+/// The ordered items of a Repeating Group (stored as rows, ADR-027).
+final class RepeatingGroupValue extends FieldValue {
+  const RepeatingGroupValue(this.items);
+
+  final List<GroupItem> items;
+
+  @override
+  FieldType get fieldType => FieldType.repeatingGroup;
+
+  @override
+  bool operator ==(Object other) =>
+      other is RepeatingGroupValue &&
+      other.items.length == items.length &&
+      Iterable<int>.generate(items.length)
+          .every((i) => other.items[i] == items[i]);
+
+  @override
+  int get hashCode => Object.hashAll(items);
+}

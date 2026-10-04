@@ -27,7 +27,7 @@ repository providers    activityTypeRepositoryProvider = Provider<ActivityTypeRe
 query providers         activeActivityTypesProvider = StreamProvider(...)
                         logsForDayProvider = StreamProvider.family<List<ActivityLog>, LocalDate>(...)
         ▼
-derived providers       dayTimelineProvider.family(LocalDate) → combines plans + logs + types via domain BuildDayTimeline
+derived providers       dayOverviewProvider.family(LocalDate) → combines plans + logs + types via domain WatchDayOverview
         ▼
 controllers/notifiers   LogFormNotifier, ActivityBuilderNotifier, FocusSessionController, QuickLogController
                         (illustrative names; the single Notifier-vs-Controller suffix is chosen at scaffold, see coding_standards.md §2)
@@ -49,7 +49,7 @@ widgets                 ref.watch(...) to render; ref.read(notifier).intent() to
 7. **One provider file per concern**, colocated in the feature's `presentation/` (or `presentation/providers/`). No giant `providers.dart` per app or feature.
 8. **Async UI states are exhaustive:** every `AsyncValue` is rendered with data, loading and error branches using the shared state components ([ui_guidelines.md §States](../ui/ui_guidelines.md#5-states)).
 9. **Side effects (navigation, snackbars, haptics) are triggered from widgets** reacting to notifier results (`ref.listen`), not from inside notifiers, so notifiers stay testable without a `BuildContext`.
-10. **Time:** providers and domain read time from `clockProvider`; never `DateTime.now()` directly. A "current day" provider ticks at local midnight so Today rolls over.
+10. **Time:** providers and domain read time from `clockProvider`; never `DateTime.now()` directly. A "current day" provider that ticks at local midnight (so an open Today rolls over) is **not built yet**; Today reads the date from `clockProvider` when it rebuilds.
 
 ## 3a. Implemented providers (Phase 1)
 
@@ -83,6 +83,14 @@ Riverpod 3 notes: `AsyncValue.value` returns `null` while loading or on error (t
 | `logEditorProvider(LogEditorArgs)` | `AsyncNotifierProvider.autoDispose.family<LogEditorNotifier, …>` | activity_logs/presentation |
 | `recordsForDayProvider(LocalDate)` | `StreamProvider.autoDispose.family<List<DayRecord>, …>` (composite read: `WatchRecordsForDay` = logs for the day + all types via `combineLatest2`) | activity_logs/presentation |
 | `planSelectedDateProvider` | `NotifierProvider<PlanDateNotifier, LocalDate>` (kept while the app runs; starts on today via `Clock`) | plans/presentation |
+| `dayOverviewProvider(LocalDate)` | `StreamProvider.autoDispose.family<DayOverview, …>` (composite read: `WatchDayOverview` = a date's plans + its logs + logs fulfilling its plans + all types, via nested `combineLatest2`) | plans/presentation |
+| `textSuggestionsProvider(fieldId)` | `FutureProvider.autoDispose.family<List<String>, …>` (autocomplete) | activity_logs/presentation |
+| Plan use cases (`createPlanProvider`, `setPlanStatusProvider`, `movePlanProvider`, …) | `Provider` | plans/presentation |
+| `activeFocusSessionProvider` | `StreamProvider<FocusSession?>` (the running/paused session, from SQLite) | focus/presentation |
+| `focusTickProvider` | `StreamProvider.autoDispose<DateTime>`, once a second while a timer is shown (overridden in widget tests); elapsed time still comes from timestamps | focus/presentation |
+| `insightRangeProvider` | `NotifierProvider<InsightRangeNotifier, InsightRange>` (kept while the app runs) | insights/presentation |
+| `insightChartsProvider`, `insightResultProvider(chart)`, `activityTotalsProvider` | `StreamProvider.autoDispose` (`WatchInsight` over repository streams) | insights/presentation |
+| `latestMeasurementsProvider`, `measurementsForTypeProvider(type)` | `StreamProvider.autoDispose` | measurements/presentation |
 
 - Riverpod 3 family notifiers receive their argument through the **constructor** (`LogEditorNotifier(this.args)`). Family keys are value types (`ActivityTypeId`, `LogEditorArgs` with `==`).
 - **Riverpod 3 pauses providers whose widgets are hidden** (e.g. a screen under a pushed route). Repository streams are built with `reactiveQuery` (`core/database/reactive_query.dart`):

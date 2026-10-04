@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/design/app_icons.dart';
+import '../../../core/design/tokens/sizes.dart';
 import '../../../core/errors/app_exception.dart';
 import '../../../core/design/context_ext.dart';
 import '../../../core/design/tokens/spacing.dart';
@@ -29,10 +30,14 @@ class ActivityTypeScreen extends ConsumerWidget {
     required this.onLog,
     required this.onEdit,
     required this.onOpenLog,
+    this.onStartFocus,
   });
 
   final ActivityTypeId typeId;
   final VoidCallback onLog;
+
+  /// Starts a focus session for a timer-capable activity (FR-FO-01).
+  final VoidCallback? onStartFocus;
   final VoidCallback onEdit;
   final ValueChanged<ActivityLog> onOpenLog;
 
@@ -62,7 +67,12 @@ class ActivityTypeScreen extends ConsumerWidget {
             ? const AppErrorState(
                 error: NotFoundException(debugContext: 'activity type'),
               )
-            : _Body(type: type, onLog: onLog, onOpenLog: onOpenLog),
+            : _Body(
+                type: type,
+                onLog: onLog,
+                onOpenLog: onOpenLog,
+                onStartFocus: onStartFocus,
+              ),
       ),
     );
   }
@@ -105,10 +115,12 @@ class _Body extends ConsumerWidget {
     required this.type,
     required this.onLog,
     required this.onOpenLog,
+    this.onStartFocus,
   });
 
   final ActivityType type;
   final VoidCallback onLog;
+  final VoidCallback? onStartFocus;
   final ValueChanged<ActivityLog> onOpenLog;
 
   @override
@@ -134,7 +146,7 @@ class _Body extends ConsumerWidget {
                 ActivityBadge(
                   iconId: type.iconId,
                   colorKey: type.colorKey,
-                  size: 56,
+                  size: AppSizes.badgeLarge,
                 ),
                 const SizedBox(width: AppSpacing.lg),
                 Expanded(
@@ -156,6 +168,17 @@ class _Body extends ConsumerWidget {
             ],
             const SizedBox(height: AppSpacing.xxl),
             AppButton(label: l10n.actionRecord, onPressed: onLog),
+            if (type.supportsTimer &&
+                !type.isDeleted &&
+                onStartFocus != null) ...[
+              const SizedBox(height: AppSpacing.sm),
+              AppButton(
+                label: l10n.focusStart,
+                icon: AppIcons.timer,
+                variant: AppButtonVariant.secondary,
+                onPressed: onStartFocus,
+              ),
+            ],
             SectionHeader(title: l10n.recentEntries),
             AsyncValueView(
               value: logs,

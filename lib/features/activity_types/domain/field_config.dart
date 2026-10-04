@@ -35,16 +35,24 @@ sealed class FieldConfig {
 }
 
 final class TextFieldConfig extends FieldConfig {
-  const TextFieldConfig({this.multiline = false});
+  const TextFieldConfig({
+    this.multiline = false,
+    this.suggestFromHistory = false,
+  });
 
   final bool multiline;
 
-  @override
-  bool operator ==(Object other) =>
-      other is TextFieldConfig && other.multiline == multiline;
+  /// Offer previously entered values while typing (e.g. exercise names).
+  final bool suggestFromHistory;
 
   @override
-  int get hashCode => multiline.hashCode;
+  bool operator ==(Object other) =>
+      other is TextFieldConfig &&
+      other.multiline == multiline &&
+      other.suggestFromHistory == suggestFromHistory;
+
+  @override
+  int get hashCode => Object.hash(multiline, suggestFromHistory);
 }
 
 final class NumberFieldConfig extends FieldConfig {
@@ -200,15 +208,20 @@ final class RatingFieldConfig extends FieldConfig {
   int get hashCode => max.hashCode;
 }
 
-/// Placeholder until Phase 3 decides Repeating Group storage (ADR-019).
+/// Repeating Group presentation config. Its sub-fields are real fields with
+/// `parent_field_id` (ADR-027), not part of this config.
 final class RepeatingGroupFieldConfig extends FieldConfig {
-  const RepeatingGroupFieldConfig();
+  const RepeatingGroupFieldConfig({this.itemLabel = ''});
+
+  /// What one item is called ("Exercise", "Set"); shown on "Add …" buttons.
+  final String itemLabel;
 
   @override
-  bool operator ==(Object other) => other is RepeatingGroupFieldConfig;
+  bool operator ==(Object other) =>
+      other is RepeatingGroupFieldConfig && other.itemLabel == itemLabel;
 
   @override
-  int get hashCode => 4;
+  int get hashCode => itemLabel.hashCode;
 }
 
 bool _listEquals<T>(List<T> a, List<T> b) {

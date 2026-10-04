@@ -113,7 +113,7 @@ UI never updates optimistically from its own copy; the DB stream is the truth. W
 | Navigation | go_router (18.x) | From spec; in use since Phase 1 |
 | Animations | Native Flutter animation APIs first; `flutter_animate` only if it materially simplifies | Pending (ADR-P17) |
 | Drag & drop | Flutter built-ins (`ReorderableListView`, `Draggable`) | Default |
-| Charts | Custom `CustomPaint` chart components (recommended) vs charting package | **Pending** (ADR-P11) |
+| Charts | fl_chart behind the shared `AppChart` component | Accepted (ADR-033) |
 | Icons | Phosphor, bundled official MIT font + generated registry | Accepted (ADR-024) |
 | Localization | `flutter_localizations` + gen-l10n | Accepted (ADR-015) |
 | Backend | None | Accepted (ADR-008) |

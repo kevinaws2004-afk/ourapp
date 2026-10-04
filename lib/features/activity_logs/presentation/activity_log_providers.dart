@@ -7,6 +7,7 @@ import '../../../core/time/clock_provider.dart';
 import '../../../core/time/local_date.dart';
 import '../../activity_types/domain/activity_ids.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
+import '../../plans/presentation/plan_providers.dart';
 import '../data/db_activity_log_repository.dart';
 import '../domain/activity_log.dart';
 import '../domain/activity_log_repository.dart';
@@ -37,10 +38,18 @@ final recordsForDayProvider = StreamProvider.autoDispose
       )(date),
     );
 
+/// Previously recorded text for a field, for autocomplete.
+final textSuggestionsProvider = FutureProvider.autoDispose
+    .family<List<String>, ActivityFieldId>(
+      (ref, fieldId) =>
+          ref.watch(activityLogRepositoryProvider).textSuggestions(fieldId),
+    );
+
 final logActivityProvider = Provider(
   (ref) => LogActivity(
     ref.watch(activityTypeRepositoryProvider),
     ref.watch(activityLogRepositoryProvider),
+    ref.watch(planRepositoryProvider),
     ref.watch(idGeneratorProvider),
     ref.watch(clockProvider),
   ),

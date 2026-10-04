@@ -8,6 +8,7 @@ import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/features/settings/presentation/preferences_providers.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/widgets.dart';
+import 'package:daylog/features/focus/presentation/focus_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -70,6 +71,9 @@ Future<AppDatabase> pumpTestApp(
         appDatabaseProvider.overrideWithValue(db),
         clockProvider.overrideWithValue(clock),
         initialPreferencesProvider.overrideWithValue(preferences),
+        // No once-a-second ticker in widget tests (it would keep frames
+        // pending); timers still derive elapsed time from the fake clock.
+        focusTickProvider.overrideWith((ref) => Stream.value(clock.nowUtc())),
       ],
       child: const App(),
     ),

@@ -641,8 +641,1830 @@ i1.GeneratedColumn<String> _column_36(String aliasedName) =>
       type: i1.DriftSqlType.string,
       $customConstraints: 'NOT NULL',
     );
+
+final class Schema3 extends i0.VersionedSchema {
+  Schema3({required super.database}) : super(version: 3);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    activityTypes,
+    activityFields,
+    idxActivityFieldsTypePosition,
+    idxActivityFieldsParent,
+    activityLogs,
+    idxActivityLogsDay,
+    idxActivityLogsTypeDay,
+    logGroupItems,
+    idxLogGroupItemsLog,
+    logValues,
+    idxLogValuesLog,
+    uxLogValuesTopLevel,
+    uxLogValuesItem,
+    idxLogValuesFieldNormalized,
+    trgLogValuesInsertCheck,
+    trgLogValuesUpdateCheck,
+    trgActivityFieldsSemanticsLocked,
+    trgActivityFieldsOwnerImmutable,
+    trgActivityLogsTypeImmutable,
+    trgActivityTypesPublicIdImmutable,
+    trgActivityFieldsPublicIdImmutable,
+    trgActivityLogsPublicIdImmutable,
+    trgActivityFieldsParentCheck,
+    trgActivityFieldsParentImmutable,
+    trgLogGroupItemsInsertCheck,
+    trgLogGroupItemsStructureImmutable,
+    appPreferences,
+  ];
+  late final Shape0 activityTypes = Shape0(
+    source: i0.VersionedTable(
+      entityName: 'activity_types',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_2,
+        _column_3,
+        _column_4,
+        _column_5,
+        _column_6,
+        _column_7,
+        _column_8,
+        _column_9,
+        _column_10,
+        _column_11,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape5 activityFields = Shape5(
+    source: i0.VersionedTable(
+      entityName: 'activity_fields',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [
+        'CHECK(measurable = 0 OR field_type IN (\'number\', \'rating\', \'duration\', \'boolean\'))',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_12,
+        _column_2,
+        _column_13,
+        _column_14,
+        _column_15,
+        _column_16,
+        _column_17,
+        _column_18,
+        _column_9,
+        _column_10,
+        _column_11,
+        _column_37,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxActivityFieldsTypePosition = i1.Index(
+    'idx_activity_fields_type_position',
+    'CREATE INDEX idx_activity_fields_type_position ON activity_fields (activity_type_id, position)',
+  );
+  final i1.Index idxActivityFieldsParent = i1.Index(
+    'idx_activity_fields_parent',
+    'CREATE INDEX idx_activity_fields_parent ON activity_fields (parent_field_id) WHERE parent_field_id IS NOT NULL',
+  );
+  late final Shape2 activityLogs = Shape2(
+    source: i0.VersionedTable(
+      entityName: 'activity_logs',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [
+        'CHECK(ended_at IS NULL OR ended_at >= started_at)',
+        'CHECK(duration_ms IS NULL OR ended_at IS NULL OR duration_ms <= ended_at - started_at)',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_12,
+        _column_19,
+        _column_20,
+        _column_21,
+        _column_22,
+        _column_23,
+        _column_24,
+        _column_9,
+        _column_10,
+        _column_11,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxActivityLogsDay = i1.Index(
+    'idx_activity_logs_day',
+    'CREATE INDEX idx_activity_logs_day ON activity_logs (local_date, started_at) WHERE deleted_at IS NULL',
+  );
+  final i1.Index idxActivityLogsTypeDay = i1.Index(
+    'idx_activity_logs_type_day',
+    'CREATE INDEX idx_activity_logs_type_day ON activity_logs (activity_type_id, local_date, started_at) WHERE deleted_at IS NULL',
+  );
+  late final Shape6 logGroupItems = Shape6(
+    source: i0.VersionedTable(
+      entityName: 'log_group_items',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_25,
+        _column_26,
+        _column_38,
+        _column_15,
+        _column_9,
+        _column_10,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxLogGroupItemsLog = i1.Index(
+    'idx_log_group_items_log',
+    'CREATE INDEX idx_log_group_items_log ON log_group_items (log_id, parent_item_id, position)',
+  );
+  late final Shape7 logValues = Shape7(
+    source: i0.VersionedTable(
+      entityName: 'log_values',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [
+        'CHECK((text_value IS NOT NULL)+(number_value IS NOT NULL)+(boolean_value IS NOT NULL)+(date_value IS NOT NULL)+(time_value IS NOT NULL)+(duration_ms IS NOT NULL)+(json_value IS NOT NULL)= 1)',
+        'CHECK((number_value IS NULL)=(normalized_value IS NULL))',
+        'CHECK(unit_code IS NULL OR number_value IS NOT NULL)',
+      ],
+      columns: [
+        _column_0,
+        _column_25,
+        _column_26,
+        _column_27,
+        _column_28,
+        _column_29,
+        _column_30,
+        _column_31,
+        _column_32,
+        _column_33,
+        _column_21,
+        _column_34,
+        _column_9,
+        _column_10,
+        _column_39,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxLogValuesLog = i1.Index(
+    'idx_log_values_log',
+    'CREATE INDEX idx_log_values_log ON log_values (log_id, field_id)',
+  );
+  final i1.Index uxLogValuesTopLevel = i1.Index(
+    'ux_log_values_top_level',
+    'CREATE UNIQUE INDEX ux_log_values_top_level ON log_values (log_id, field_id) WHERE group_item_id IS NULL',
+  );
+  final i1.Index uxLogValuesItem = i1.Index(
+    'ux_log_values_item',
+    'CREATE UNIQUE INDEX ux_log_values_item ON log_values (group_item_id, field_id) WHERE group_item_id IS NOT NULL',
+  );
+  final i1.Index idxLogValuesFieldNormalized = i1.Index(
+    'idx_log_values_field_normalized',
+    'CREATE INDEX idx_log_values_field_normalized ON log_values (field_id, normalized_value)',
+  );
+  final i1.Trigger trgLogValuesInsertCheck = i1.Trigger(
+    'CREATE TRIGGER trg_log_values_insert_check BEFORE INSERT ON log_values BEGIN SELECT RAISE (ABORT, \'log_value_field_not_in_log_type\') WHERE (SELECT activity_type_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id);SELECT RAISE (ABORT, \'log_value_scope_mismatch\') WHERE (SELECT parent_field_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT field_id FROM log_group_items WHERE internal_id = NEW.group_item_id) OR(NEW.group_item_id IS NOT NULL AND (SELECT log_id FROM log_group_items WHERE internal_id = NEW.group_item_id) IS NOT NEW.log_id);SELECT RAISE (ABORT, \'log_value_column_mismatch\') WHERE NOT COALESCE((SELECT CASE f.field_type WHEN \'text\' THEN NEW.text_value IS NOT NULL WHEN \'single_select\' THEN NEW.text_value IS NOT NULL WHEN \'number\' THEN NEW.number_value IS NOT NULL AND((NEW.unit_code IS NULL)=(f.dimension IS NULL))WHEN \'rating\' THEN NEW.number_value IS NOT NULL AND NEW.unit_code IS NULL WHEN \'boolean\' THEN NEW.boolean_value IS NOT NULL WHEN \'date\' THEN NEW.date_value IS NOT NULL WHEN \'time\' THEN NEW.time_value IS NOT NULL WHEN \'duration\' THEN NEW.duration_ms IS NOT NULL WHEN \'multi_select\' THEN NEW.json_value IS NOT NULL ELSE 0 END FROM activity_fields AS f WHERE f.internal_id = NEW.field_id), 0);END',
+    'trg_log_values_insert_check',
+  );
+  final i1.Trigger trgLogValuesUpdateCheck = i1.Trigger(
+    'CREATE TRIGGER trg_log_values_update_check BEFORE UPDATE ON log_values BEGIN SELECT RAISE (ABORT, \'log_value_field_not_in_log_type\') WHERE (SELECT activity_type_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id);SELECT RAISE (ABORT, \'log_value_scope_mismatch\') WHERE (SELECT parent_field_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT field_id FROM log_group_items WHERE internal_id = NEW.group_item_id) OR(NEW.group_item_id IS NOT NULL AND (SELECT log_id FROM log_group_items WHERE internal_id = NEW.group_item_id) IS NOT NEW.log_id);SELECT RAISE (ABORT, \'log_value_column_mismatch\') WHERE NOT COALESCE((SELECT CASE f.field_type WHEN \'text\' THEN NEW.text_value IS NOT NULL WHEN \'single_select\' THEN NEW.text_value IS NOT NULL WHEN \'number\' THEN NEW.number_value IS NOT NULL AND((NEW.unit_code IS NULL)=(f.dimension IS NULL))WHEN \'rating\' THEN NEW.number_value IS NOT NULL AND NEW.unit_code IS NULL WHEN \'boolean\' THEN NEW.boolean_value IS NOT NULL WHEN \'date\' THEN NEW.date_value IS NOT NULL WHEN \'time\' THEN NEW.time_value IS NOT NULL WHEN \'duration\' THEN NEW.duration_ms IS NOT NULL WHEN \'multi_select\' THEN NEW.json_value IS NOT NULL ELSE 0 END FROM activity_fields AS f WHERE f.internal_id = NEW.field_id), 0);END',
+    'trg_log_values_update_check',
+  );
+  final i1.Trigger trgActivityFieldsSemanticsLocked = i1.Trigger(
+    'CREATE TRIGGER trg_activity_fields_semantics_locked BEFORE UPDATE OF field_type, dimension ON activity_fields WHEN(OLD.field_type IS NOT NEW.field_type OR OLD.dimension IS NOT NEW.dimension)AND(EXISTS (SELECT 1 FROM log_values WHERE field_id = OLD.internal_id) OR EXISTS (SELECT 1 FROM log_group_items WHERE field_id = OLD.internal_id) OR EXISTS (SELECT 1 FROM activity_fields AS c WHERE c.parent_field_id = OLD.internal_id))BEGIN SELECT RAISE (ABORT, \'activity_field_semantics_locked\');END',
+    'trg_activity_fields_semantics_locked',
+  );
+  final i1.Trigger trgActivityFieldsOwnerImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_fields_owner_immutable BEFORE UPDATE OF activity_type_id ON activity_fields WHEN OLD.activity_type_id IS NOT NEW.activity_type_id BEGIN SELECT RAISE (ABORT, \'activity_field_owner_immutable\');END',
+    'trg_activity_fields_owner_immutable',
+  );
+  final i1.Trigger trgActivityLogsTypeImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_logs_type_immutable BEFORE UPDATE OF activity_type_id ON activity_logs WHEN OLD.activity_type_id IS NOT NEW.activity_type_id BEGIN SELECT RAISE (ABORT, \'activity_log_type_immutable\');END',
+    'trg_activity_logs_type_immutable',
+  );
+  final i1.Trigger trgActivityTypesPublicIdImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_types_public_id_immutable BEFORE UPDATE OF public_id ON activity_types WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
+    'trg_activity_types_public_id_immutable',
+  );
+  final i1.Trigger trgActivityFieldsPublicIdImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_fields_public_id_immutable BEFORE UPDATE OF public_id ON activity_fields WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
+    'trg_activity_fields_public_id_immutable',
+  );
+  final i1.Trigger trgActivityLogsPublicIdImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_logs_public_id_immutable BEFORE UPDATE OF public_id ON activity_logs WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
+    'trg_activity_logs_public_id_immutable',
+  );
+  final i1.Trigger trgActivityFieldsParentCheck = i1.Trigger(
+    'CREATE TRIGGER trg_activity_fields_parent_check BEFORE INSERT ON activity_fields WHEN NEW.parent_field_id IS NOT NULL BEGIN SELECT RAISE (ABORT, \'activity_field_parent_invalid\') WHERE COALESCE((SELECT p.field_type = \'repeating_group\' AND p.activity_type_id = NEW.activity_type_id AND(p.parent_field_id IS NULL OR NEW.field_type <> \'repeating_group\')FROM activity_fields AS p WHERE p.internal_id = NEW.parent_field_id), 0) = 0;END',
+    'trg_activity_fields_parent_check',
+  );
+  final i1.Trigger trgActivityFieldsParentImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_fields_parent_immutable BEFORE UPDATE OF parent_field_id ON activity_fields WHEN OLD.parent_field_id IS NOT NEW.parent_field_id BEGIN SELECT RAISE (ABORT, \'activity_field_parent_immutable\');END',
+    'trg_activity_fields_parent_immutable',
+  );
+  final i1.Trigger trgLogGroupItemsInsertCheck = i1.Trigger(
+    'CREATE TRIGGER trg_log_group_items_insert_check BEFORE INSERT ON log_group_items BEGIN SELECT RAISE (ABORT, \'group_item_field_invalid\') WHERE COALESCE((SELECT f.field_type = \'repeating_group\' AND f.activity_type_id = (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id) FROM activity_fields AS f WHERE f.internal_id = NEW.field_id), 0) = 0;SELECT RAISE (ABORT, \'group_item_parent_invalid\') WHERE (SELECT parent_field_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT field_id FROM log_group_items WHERE internal_id = NEW.parent_item_id) OR(NEW.parent_item_id IS NOT NULL AND (SELECT log_id FROM log_group_items WHERE internal_id = NEW.parent_item_id) IS NOT NEW.log_id);END',
+    'trg_log_group_items_insert_check',
+  );
+  final i1.Trigger trgLogGroupItemsStructureImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_log_group_items_structure_immutable BEFORE UPDATE OF log_id, field_id, parent_item_id, public_id ON log_group_items WHEN OLD.log_id IS NOT NEW.log_id OR OLD.field_id IS NOT NEW.field_id OR OLD.parent_item_id IS NOT NEW.parent_item_id OR OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'group_item_structure_immutable\');END',
+    'trg_log_group_items_structure_immutable',
+  );
+  late final Shape4 appPreferences = Shape4(
+    source: i0.VersionedTable(
+      entityName: 'app_preferences',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY("key")'],
+      columns: [_column_35, _column_36, _column_10],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+}
+
+class Shape5 extends i0.VersionedTable {
+  Shape5({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get internalId =>
+      columnsByName['internal_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get publicId =>
+      columnsByName['public_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get activityTypeId =>
+      columnsByName['activity_type_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get name =>
+      columnsByName['name']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get fieldType =>
+      columnsByName['field_type']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get dimension =>
+      columnsByName['dimension']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get position =>
+      columnsByName['position']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get required =>
+      columnsByName['required']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get measurable =>
+      columnsByName['measurable']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get configJson =>
+      columnsByName['config_json']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get createdAt =>
+      columnsByName['created_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get updatedAt =>
+      columnsByName['updated_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get deletedAt =>
+      columnsByName['deleted_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get parentFieldId =>
+      columnsByName['parent_field_id']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_37(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'parent_field_id',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.int,
+      $customConstraints:
+          'REFERENCES activity_fields(internal_id)ON DELETE RESTRICT',
+    );
+
+class Shape6 extends i0.VersionedTable {
+  Shape6({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get internalId =>
+      columnsByName['internal_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get publicId =>
+      columnsByName['public_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get logId =>
+      columnsByName['log_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get fieldId =>
+      columnsByName['field_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get parentItemId =>
+      columnsByName['parent_item_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get position =>
+      columnsByName['position']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get createdAt =>
+      columnsByName['created_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get updatedAt =>
+      columnsByName['updated_at']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_38(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'parent_item_id',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.int,
+      $customConstraints:
+          'REFERENCES log_group_items(internal_id)ON DELETE CASCADE',
+    );
+
+class Shape7 extends i0.VersionedTable {
+  Shape7({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get internalId =>
+      columnsByName['internal_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get logId =>
+      columnsByName['log_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get fieldId =>
+      columnsByName['field_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get textValue =>
+      columnsByName['text_value']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<double> get numberValue =>
+      columnsByName['number_value']! as i1.GeneratedColumn<double>;
+  i1.GeneratedColumn<String> get unitCode =>
+      columnsByName['unit_code']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<double> get normalizedValue =>
+      columnsByName['normalized_value']! as i1.GeneratedColumn<double>;
+  i1.GeneratedColumn<int> get booleanValue =>
+      columnsByName['boolean_value']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get dateValue =>
+      columnsByName['date_value']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get timeValue =>
+      columnsByName['time_value']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get durationMs =>
+      columnsByName['duration_ms']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get jsonValue =>
+      columnsByName['json_value']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get createdAt =>
+      columnsByName['created_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get updatedAt =>
+      columnsByName['updated_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get groupItemId =>
+      columnsByName['group_item_id']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_39(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'group_item_id',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.int,
+      $customConstraints:
+          'REFERENCES log_group_items(internal_id)ON DELETE CASCADE',
+    );
+
+final class Schema4 extends i0.VersionedSchema {
+  Schema4({required super.database}) : super(version: 4);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    activityTypes,
+    activityFields,
+    idxActivityFieldsTypePosition,
+    idxActivityFieldsParent,
+    plans,
+    idxPlansDay,
+    idxPlansTypeDay,
+    activityLogs,
+    idxActivityLogsDay,
+    idxActivityLogsTypeDay,
+    idxActivityLogsPlan,
+    logGroupItems,
+    idxLogGroupItemsLog,
+    logValues,
+    idxLogValuesLog,
+    uxLogValuesTopLevel,
+    uxLogValuesItem,
+    idxLogValuesFieldNormalized,
+    trgLogValuesInsertCheck,
+    trgLogValuesUpdateCheck,
+    trgActivityFieldsSemanticsLocked,
+    trgActivityFieldsOwnerImmutable,
+    trgActivityLogsTypeImmutable,
+    trgActivityTypesPublicIdImmutable,
+    trgActivityFieldsPublicIdImmutable,
+    trgActivityLogsPublicIdImmutable,
+    trgActivityFieldsParentCheck,
+    trgActivityFieldsParentImmutable,
+    trgLogGroupItemsInsertCheck,
+    trgLogGroupItemsStructureImmutable,
+    trgActivityLogsPlanCheckInsert,
+    trgActivityLogsPlanCheckUpdate,
+    trgPlansTypeLocked,
+    trgPlansPublicIdImmutable,
+    appPreferences,
+  ];
+  late final Shape0 activityTypes = Shape0(
+    source: i0.VersionedTable(
+      entityName: 'activity_types',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_2,
+        _column_3,
+        _column_4,
+        _column_5,
+        _column_6,
+        _column_7,
+        _column_8,
+        _column_9,
+        _column_10,
+        _column_11,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape5 activityFields = Shape5(
+    source: i0.VersionedTable(
+      entityName: 'activity_fields',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [
+        'CHECK(measurable = 0 OR field_type IN (\'number\', \'rating\', \'duration\', \'boolean\'))',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_12,
+        _column_2,
+        _column_13,
+        _column_14,
+        _column_15,
+        _column_16,
+        _column_17,
+        _column_18,
+        _column_9,
+        _column_10,
+        _column_11,
+        _column_37,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxActivityFieldsTypePosition = i1.Index(
+    'idx_activity_fields_type_position',
+    'CREATE INDEX idx_activity_fields_type_position ON activity_fields (activity_type_id, position)',
+  );
+  final i1.Index idxActivityFieldsParent = i1.Index(
+    'idx_activity_fields_parent',
+    'CREATE INDEX idx_activity_fields_parent ON activity_fields (parent_field_id) WHERE parent_field_id IS NOT NULL',
+  );
+  late final Shape8 plans = Shape8(
+    source: i0.VersionedTable(
+      entityName: 'plans',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [
+        'CHECK(planned_end_at IS NULL OR planned_start_at IS NOT NULL)',
+        'CHECK(planned_end_at IS NULL OR planned_end_at >= planned_start_at)',
+        'CHECK(planned_duration_ms IS NULL OR(planned_duration_ms > 0 AND planned_end_at IS NULL))',
+        'CHECK(status <> \'completed\' OR activity_type_id IS NULL)',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_40,
+        _column_41,
+        _column_42,
+        _column_24,
+        _column_43,
+        _column_44,
+        _column_45,
+        _column_8,
+        _column_46,
+        _column_9,
+        _column_10,
+        _column_11,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxPlansDay = i1.Index(
+    'idx_plans_day',
+    'CREATE INDEX idx_plans_day ON plans (plan_date, sort_order) WHERE deleted_at IS NULL',
+  );
+  final i1.Index idxPlansTypeDay = i1.Index(
+    'idx_plans_type_day',
+    'CREATE INDEX idx_plans_type_day ON plans (activity_type_id, plan_date) WHERE deleted_at IS NULL AND activity_type_id IS NOT NULL',
+  );
+  late final Shape9 activityLogs = Shape9(
+    source: i0.VersionedTable(
+      entityName: 'activity_logs',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [
+        'CHECK(ended_at IS NULL OR ended_at >= started_at)',
+        'CHECK(duration_ms IS NULL OR ended_at IS NULL OR duration_ms <= ended_at - started_at)',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_12,
+        _column_19,
+        _column_20,
+        _column_21,
+        _column_22,
+        _column_23,
+        _column_24,
+        _column_9,
+        _column_10,
+        _column_11,
+        _column_47,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxActivityLogsDay = i1.Index(
+    'idx_activity_logs_day',
+    'CREATE INDEX idx_activity_logs_day ON activity_logs (local_date, started_at) WHERE deleted_at IS NULL',
+  );
+  final i1.Index idxActivityLogsTypeDay = i1.Index(
+    'idx_activity_logs_type_day',
+    'CREATE INDEX idx_activity_logs_type_day ON activity_logs (activity_type_id, local_date, started_at) WHERE deleted_at IS NULL',
+  );
+  final i1.Index idxActivityLogsPlan = i1.Index(
+    'idx_activity_logs_plan',
+    'CREATE INDEX idx_activity_logs_plan ON activity_logs (plan_id) WHERE plan_id IS NOT NULL',
+  );
+  late final Shape6 logGroupItems = Shape6(
+    source: i0.VersionedTable(
+      entityName: 'log_group_items',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_25,
+        _column_26,
+        _column_38,
+        _column_15,
+        _column_9,
+        _column_10,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxLogGroupItemsLog = i1.Index(
+    'idx_log_group_items_log',
+    'CREATE INDEX idx_log_group_items_log ON log_group_items (log_id, parent_item_id, position)',
+  );
+  late final Shape7 logValues = Shape7(
+    source: i0.VersionedTable(
+      entityName: 'log_values',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [
+        'CHECK((text_value IS NOT NULL)+(number_value IS NOT NULL)+(boolean_value IS NOT NULL)+(date_value IS NOT NULL)+(time_value IS NOT NULL)+(duration_ms IS NOT NULL)+(json_value IS NOT NULL)= 1)',
+        'CHECK((number_value IS NULL)=(normalized_value IS NULL))',
+        'CHECK(unit_code IS NULL OR number_value IS NOT NULL)',
+      ],
+      columns: [
+        _column_0,
+        _column_25,
+        _column_26,
+        _column_27,
+        _column_28,
+        _column_29,
+        _column_30,
+        _column_31,
+        _column_32,
+        _column_33,
+        _column_21,
+        _column_34,
+        _column_9,
+        _column_10,
+        _column_39,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxLogValuesLog = i1.Index(
+    'idx_log_values_log',
+    'CREATE INDEX idx_log_values_log ON log_values (log_id, field_id)',
+  );
+  final i1.Index uxLogValuesTopLevel = i1.Index(
+    'ux_log_values_top_level',
+    'CREATE UNIQUE INDEX ux_log_values_top_level ON log_values (log_id, field_id) WHERE group_item_id IS NULL',
+  );
+  final i1.Index uxLogValuesItem = i1.Index(
+    'ux_log_values_item',
+    'CREATE UNIQUE INDEX ux_log_values_item ON log_values (group_item_id, field_id) WHERE group_item_id IS NOT NULL',
+  );
+  final i1.Index idxLogValuesFieldNormalized = i1.Index(
+    'idx_log_values_field_normalized',
+    'CREATE INDEX idx_log_values_field_normalized ON log_values (field_id, normalized_value)',
+  );
+  final i1.Trigger trgLogValuesInsertCheck = i1.Trigger(
+    'CREATE TRIGGER trg_log_values_insert_check BEFORE INSERT ON log_values BEGIN SELECT RAISE (ABORT, \'log_value_field_not_in_log_type\') WHERE (SELECT activity_type_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id);SELECT RAISE (ABORT, \'log_value_scope_mismatch\') WHERE (SELECT parent_field_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT field_id FROM log_group_items WHERE internal_id = NEW.group_item_id) OR(NEW.group_item_id IS NOT NULL AND (SELECT log_id FROM log_group_items WHERE internal_id = NEW.group_item_id) IS NOT NEW.log_id);SELECT RAISE (ABORT, \'log_value_column_mismatch\') WHERE NOT COALESCE((SELECT CASE f.field_type WHEN \'text\' THEN NEW.text_value IS NOT NULL WHEN \'single_select\' THEN NEW.text_value IS NOT NULL WHEN \'number\' THEN NEW.number_value IS NOT NULL AND((NEW.unit_code IS NULL)=(f.dimension IS NULL))WHEN \'rating\' THEN NEW.number_value IS NOT NULL AND NEW.unit_code IS NULL WHEN \'boolean\' THEN NEW.boolean_value IS NOT NULL WHEN \'date\' THEN NEW.date_value IS NOT NULL WHEN \'time\' THEN NEW.time_value IS NOT NULL WHEN \'duration\' THEN NEW.duration_ms IS NOT NULL WHEN \'multi_select\' THEN NEW.json_value IS NOT NULL ELSE 0 END FROM activity_fields AS f WHERE f.internal_id = NEW.field_id), 0);END',
+    'trg_log_values_insert_check',
+  );
+  final i1.Trigger trgLogValuesUpdateCheck = i1.Trigger(
+    'CREATE TRIGGER trg_log_values_update_check BEFORE UPDATE ON log_values BEGIN SELECT RAISE (ABORT, \'log_value_field_not_in_log_type\') WHERE (SELECT activity_type_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id);SELECT RAISE (ABORT, \'log_value_scope_mismatch\') WHERE (SELECT parent_field_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT field_id FROM log_group_items WHERE internal_id = NEW.group_item_id) OR(NEW.group_item_id IS NOT NULL AND (SELECT log_id FROM log_group_items WHERE internal_id = NEW.group_item_id) IS NOT NEW.log_id);SELECT RAISE (ABORT, \'log_value_column_mismatch\') WHERE NOT COALESCE((SELECT CASE f.field_type WHEN \'text\' THEN NEW.text_value IS NOT NULL WHEN \'single_select\' THEN NEW.text_value IS NOT NULL WHEN \'number\' THEN NEW.number_value IS NOT NULL AND((NEW.unit_code IS NULL)=(f.dimension IS NULL))WHEN \'rating\' THEN NEW.number_value IS NOT NULL AND NEW.unit_code IS NULL WHEN \'boolean\' THEN NEW.boolean_value IS NOT NULL WHEN \'date\' THEN NEW.date_value IS NOT NULL WHEN \'time\' THEN NEW.time_value IS NOT NULL WHEN \'duration\' THEN NEW.duration_ms IS NOT NULL WHEN \'multi_select\' THEN NEW.json_value IS NOT NULL ELSE 0 END FROM activity_fields AS f WHERE f.internal_id = NEW.field_id), 0);END',
+    'trg_log_values_update_check',
+  );
+  final i1.Trigger trgActivityFieldsSemanticsLocked = i1.Trigger(
+    'CREATE TRIGGER trg_activity_fields_semantics_locked BEFORE UPDATE OF field_type, dimension ON activity_fields WHEN(OLD.field_type IS NOT NEW.field_type OR OLD.dimension IS NOT NEW.dimension)AND(EXISTS (SELECT 1 FROM log_values WHERE field_id = OLD.internal_id) OR EXISTS (SELECT 1 FROM log_group_items WHERE field_id = OLD.internal_id) OR EXISTS (SELECT 1 FROM activity_fields AS c WHERE c.parent_field_id = OLD.internal_id))BEGIN SELECT RAISE (ABORT, \'activity_field_semantics_locked\');END',
+    'trg_activity_fields_semantics_locked',
+  );
+  final i1.Trigger trgActivityFieldsOwnerImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_fields_owner_immutable BEFORE UPDATE OF activity_type_id ON activity_fields WHEN OLD.activity_type_id IS NOT NEW.activity_type_id BEGIN SELECT RAISE (ABORT, \'activity_field_owner_immutable\');END',
+    'trg_activity_fields_owner_immutable',
+  );
+  final i1.Trigger trgActivityLogsTypeImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_logs_type_immutable BEFORE UPDATE OF activity_type_id ON activity_logs WHEN OLD.activity_type_id IS NOT NEW.activity_type_id BEGIN SELECT RAISE (ABORT, \'activity_log_type_immutable\');END',
+    'trg_activity_logs_type_immutable',
+  );
+  final i1.Trigger trgActivityTypesPublicIdImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_types_public_id_immutable BEFORE UPDATE OF public_id ON activity_types WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
+    'trg_activity_types_public_id_immutable',
+  );
+  final i1.Trigger trgActivityFieldsPublicIdImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_fields_public_id_immutable BEFORE UPDATE OF public_id ON activity_fields WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
+    'trg_activity_fields_public_id_immutable',
+  );
+  final i1.Trigger trgActivityLogsPublicIdImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_logs_public_id_immutable BEFORE UPDATE OF public_id ON activity_logs WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
+    'trg_activity_logs_public_id_immutable',
+  );
+  final i1.Trigger trgActivityFieldsParentCheck = i1.Trigger(
+    'CREATE TRIGGER trg_activity_fields_parent_check BEFORE INSERT ON activity_fields WHEN NEW.parent_field_id IS NOT NULL BEGIN SELECT RAISE (ABORT, \'activity_field_parent_invalid\') WHERE COALESCE((SELECT p.field_type = \'repeating_group\' AND p.activity_type_id = NEW.activity_type_id AND(p.parent_field_id IS NULL OR NEW.field_type <> \'repeating_group\')FROM activity_fields AS p WHERE p.internal_id = NEW.parent_field_id), 0) = 0;END',
+    'trg_activity_fields_parent_check',
+  );
+  final i1.Trigger trgActivityFieldsParentImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_fields_parent_immutable BEFORE UPDATE OF parent_field_id ON activity_fields WHEN OLD.parent_field_id IS NOT NEW.parent_field_id BEGIN SELECT RAISE (ABORT, \'activity_field_parent_immutable\');END',
+    'trg_activity_fields_parent_immutable',
+  );
+  final i1.Trigger trgLogGroupItemsInsertCheck = i1.Trigger(
+    'CREATE TRIGGER trg_log_group_items_insert_check BEFORE INSERT ON log_group_items BEGIN SELECT RAISE (ABORT, \'group_item_field_invalid\') WHERE COALESCE((SELECT f.field_type = \'repeating_group\' AND f.activity_type_id = (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id) FROM activity_fields AS f WHERE f.internal_id = NEW.field_id), 0) = 0;SELECT RAISE (ABORT, \'group_item_parent_invalid\') WHERE (SELECT parent_field_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT field_id FROM log_group_items WHERE internal_id = NEW.parent_item_id) OR(NEW.parent_item_id IS NOT NULL AND (SELECT log_id FROM log_group_items WHERE internal_id = NEW.parent_item_id) IS NOT NEW.log_id);END',
+    'trg_log_group_items_insert_check',
+  );
+  final i1.Trigger trgLogGroupItemsStructureImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_log_group_items_structure_immutable BEFORE UPDATE OF log_id, field_id, parent_item_id, public_id ON log_group_items WHEN OLD.log_id IS NOT NEW.log_id OR OLD.field_id IS NOT NEW.field_id OR OLD.parent_item_id IS NOT NEW.parent_item_id OR OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'group_item_structure_immutable\');END',
+    'trg_log_group_items_structure_immutable',
+  );
+  final i1.Trigger trgActivityLogsPlanCheckInsert = i1.Trigger(
+    'CREATE TRIGGER trg_activity_logs_plan_check_insert BEFORE INSERT ON activity_logs WHEN NEW.plan_id IS NOT NULL BEGIN SELECT RAISE (ABORT, \'log_plan_mismatch\') WHERE (SELECT activity_type_id FROM plans WHERE internal_id = NEW.plan_id) IS NOT NEW.activity_type_id;END',
+    'trg_activity_logs_plan_check_insert',
+  );
+  final i1.Trigger trgActivityLogsPlanCheckUpdate = i1.Trigger(
+    'CREATE TRIGGER trg_activity_logs_plan_check_update BEFORE UPDATE OF plan_id ON activity_logs WHEN NEW.plan_id IS NOT NULL BEGIN SELECT RAISE (ABORT, \'log_plan_mismatch\') WHERE (SELECT activity_type_id FROM plans WHERE internal_id = NEW.plan_id) IS NOT NEW.activity_type_id;END',
+    'trg_activity_logs_plan_check_update',
+  );
+  final i1.Trigger trgPlansTypeLocked = i1.Trigger(
+    'CREATE TRIGGER trg_plans_type_locked BEFORE UPDATE OF activity_type_id ON plans WHEN OLD.activity_type_id IS NOT NEW.activity_type_id AND EXISTS (SELECT 1 FROM activity_logs WHERE plan_id = OLD.internal_id) BEGIN SELECT RAISE (ABORT, \'plan_type_locked\');END',
+    'trg_plans_type_locked',
+  );
+  final i1.Trigger trgPlansPublicIdImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_plans_public_id_immutable BEFORE UPDATE OF public_id ON plans WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
+    'trg_plans_public_id_immutable',
+  );
+  late final Shape4 appPreferences = Shape4(
+    source: i0.VersionedTable(
+      entityName: 'app_preferences',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY("key")'],
+      columns: [_column_35, _column_36, _column_10],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+}
+
+class Shape8 extends i0.VersionedTable {
+  Shape8({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get internalId =>
+      columnsByName['internal_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get publicId =>
+      columnsByName['public_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get planDate =>
+      columnsByName['plan_date']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get activityTypeId =>
+      columnsByName['activity_type_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get title =>
+      columnsByName['title']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get notes =>
+      columnsByName['notes']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get plannedStartAt =>
+      columnsByName['planned_start_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get plannedEndAt =>
+      columnsByName['planned_end_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get plannedDurationMs =>
+      columnsByName['planned_duration_ms']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get sortOrder =>
+      columnsByName['sort_order']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get status =>
+      columnsByName['status']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get createdAt =>
+      columnsByName['created_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get updatedAt =>
+      columnsByName['updated_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get deletedAt =>
+      columnsByName['deleted_at']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<String> _column_40(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'plan_date',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL CHECK (plan_date GLOB \'[0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]\')',
+    );
+i1.GeneratedColumn<int> _column_41(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'activity_type_id',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.int,
+      $customConstraints:
+          'REFERENCES activity_types(internal_id)ON DELETE RESTRICT',
+    );
+i1.GeneratedColumn<String> _column_42(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'title',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL CHECK (length(trim(title)) > 0)',
+    );
+i1.GeneratedColumn<int> _column_43(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'planned_start_at',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.int,
+      $customConstraints: '',
+    );
+i1.GeneratedColumn<int> _column_44(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'planned_end_at',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.int,
+      $customConstraints: '',
+    );
+i1.GeneratedColumn<int> _column_45(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'planned_duration_ms',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.int,
+      $customConstraints: '',
+    );
+i1.GeneratedColumn<String> _column_46(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'status',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL DEFAULT \'planned\' CHECK (status IN (\'planned\', \'completed\', \'skipped\', \'cancelled\'))',
+      defaultValue: const i1.CustomExpression('\'planned\''),
+    );
+
+class Shape9 extends i0.VersionedTable {
+  Shape9({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get internalId =>
+      columnsByName['internal_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get publicId =>
+      columnsByName['public_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get activityTypeId =>
+      columnsByName['activity_type_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get startedAt =>
+      columnsByName['started_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get endedAt =>
+      columnsByName['ended_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get durationMs =>
+      columnsByName['duration_ms']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get tzOffsetMinutes =>
+      columnsByName['tz_offset_minutes']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get localDate =>
+      columnsByName['local_date']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get notes =>
+      columnsByName['notes']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get createdAt =>
+      columnsByName['created_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get updatedAt =>
+      columnsByName['updated_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get deletedAt =>
+      columnsByName['deleted_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get planId =>
+      columnsByName['plan_id']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_47(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'plan_id',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'REFERENCES plans(internal_id)ON DELETE RESTRICT',
+    );
+
+final class Schema5 extends i0.VersionedSchema {
+  Schema5({required super.database}) : super(version: 5);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    activityTypes,
+    activityFields,
+    idxActivityFieldsTypePosition,
+    idxActivityFieldsParent,
+    plans,
+    idxPlansDay,
+    idxPlansTypeDay,
+    activityLogs,
+    idxActivityLogsDay,
+    idxActivityLogsTypeDay,
+    idxActivityLogsPlan,
+    logGroupItems,
+    idxLogGroupItemsLog,
+    logValues,
+    idxLogValuesLog,
+    uxLogValuesTopLevel,
+    uxLogValuesItem,
+    idxLogValuesFieldNormalized,
+    trgLogValuesInsertCheck,
+    trgLogValuesUpdateCheck,
+    trgActivityFieldsSemanticsLocked,
+    trgActivityFieldsOwnerImmutable,
+    trgActivityLogsTypeImmutable,
+    trgActivityTypesPublicIdImmutable,
+    trgActivityFieldsPublicIdImmutable,
+    trgActivityLogsPublicIdImmutable,
+    trgActivityFieldsParentCheck,
+    trgActivityFieldsParentImmutable,
+    trgLogGroupItemsInsertCheck,
+    trgLogGroupItemsStructureImmutable,
+    trgActivityLogsPlanCheckInsert,
+    trgActivityLogsPlanCheckUpdate,
+    trgPlansTypeLocked,
+    trgPlansPublicIdImmutable,
+    focusSessions,
+    uxFocusSessionsOneActive,
+    idxFocusSessionsPlan,
+    trgFocusSessionsPlanCheck,
+    trgFocusSessionsPublicIdImmutable,
+    appPreferences,
+  ];
+  late final Shape0 activityTypes = Shape0(
+    source: i0.VersionedTable(
+      entityName: 'activity_types',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_2,
+        _column_3,
+        _column_4,
+        _column_5,
+        _column_6,
+        _column_7,
+        _column_8,
+        _column_9,
+        _column_10,
+        _column_11,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape5 activityFields = Shape5(
+    source: i0.VersionedTable(
+      entityName: 'activity_fields',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [
+        'CHECK(measurable = 0 OR field_type IN (\'number\', \'rating\', \'duration\', \'boolean\'))',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_12,
+        _column_2,
+        _column_13,
+        _column_14,
+        _column_15,
+        _column_16,
+        _column_17,
+        _column_18,
+        _column_9,
+        _column_10,
+        _column_11,
+        _column_37,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxActivityFieldsTypePosition = i1.Index(
+    'idx_activity_fields_type_position',
+    'CREATE INDEX idx_activity_fields_type_position ON activity_fields (activity_type_id, position)',
+  );
+  final i1.Index idxActivityFieldsParent = i1.Index(
+    'idx_activity_fields_parent',
+    'CREATE INDEX idx_activity_fields_parent ON activity_fields (parent_field_id) WHERE parent_field_id IS NOT NULL',
+  );
+  late final Shape8 plans = Shape8(
+    source: i0.VersionedTable(
+      entityName: 'plans',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [
+        'CHECK(planned_end_at IS NULL OR planned_start_at IS NOT NULL)',
+        'CHECK(planned_end_at IS NULL OR planned_end_at >= planned_start_at)',
+        'CHECK(planned_duration_ms IS NULL OR(planned_duration_ms > 0 AND planned_end_at IS NULL))',
+        'CHECK(status <> \'completed\' OR activity_type_id IS NULL)',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_40,
+        _column_41,
+        _column_42,
+        _column_24,
+        _column_43,
+        _column_44,
+        _column_45,
+        _column_8,
+        _column_46,
+        _column_9,
+        _column_10,
+        _column_11,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxPlansDay = i1.Index(
+    'idx_plans_day',
+    'CREATE INDEX idx_plans_day ON plans (plan_date, sort_order) WHERE deleted_at IS NULL',
+  );
+  final i1.Index idxPlansTypeDay = i1.Index(
+    'idx_plans_type_day',
+    'CREATE INDEX idx_plans_type_day ON plans (activity_type_id, plan_date) WHERE deleted_at IS NULL AND activity_type_id IS NOT NULL',
+  );
+  late final Shape9 activityLogs = Shape9(
+    source: i0.VersionedTable(
+      entityName: 'activity_logs',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [
+        'CHECK(ended_at IS NULL OR ended_at >= started_at)',
+        'CHECK(duration_ms IS NULL OR ended_at IS NULL OR duration_ms <= ended_at - started_at)',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_12,
+        _column_19,
+        _column_20,
+        _column_21,
+        _column_22,
+        _column_23,
+        _column_24,
+        _column_9,
+        _column_10,
+        _column_11,
+        _column_47,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxActivityLogsDay = i1.Index(
+    'idx_activity_logs_day',
+    'CREATE INDEX idx_activity_logs_day ON activity_logs (local_date, started_at) WHERE deleted_at IS NULL',
+  );
+  final i1.Index idxActivityLogsTypeDay = i1.Index(
+    'idx_activity_logs_type_day',
+    'CREATE INDEX idx_activity_logs_type_day ON activity_logs (activity_type_id, local_date, started_at) WHERE deleted_at IS NULL',
+  );
+  final i1.Index idxActivityLogsPlan = i1.Index(
+    'idx_activity_logs_plan',
+    'CREATE INDEX idx_activity_logs_plan ON activity_logs (plan_id) WHERE plan_id IS NOT NULL',
+  );
+  late final Shape6 logGroupItems = Shape6(
+    source: i0.VersionedTable(
+      entityName: 'log_group_items',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_25,
+        _column_26,
+        _column_38,
+        _column_15,
+        _column_9,
+        _column_10,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxLogGroupItemsLog = i1.Index(
+    'idx_log_group_items_log',
+    'CREATE INDEX idx_log_group_items_log ON log_group_items (log_id, parent_item_id, position)',
+  );
+  late final Shape7 logValues = Shape7(
+    source: i0.VersionedTable(
+      entityName: 'log_values',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [
+        'CHECK((text_value IS NOT NULL)+(number_value IS NOT NULL)+(boolean_value IS NOT NULL)+(date_value IS NOT NULL)+(time_value IS NOT NULL)+(duration_ms IS NOT NULL)+(json_value IS NOT NULL)= 1)',
+        'CHECK((number_value IS NULL)=(normalized_value IS NULL))',
+        'CHECK(unit_code IS NULL OR number_value IS NOT NULL)',
+      ],
+      columns: [
+        _column_0,
+        _column_25,
+        _column_26,
+        _column_27,
+        _column_28,
+        _column_29,
+        _column_30,
+        _column_31,
+        _column_32,
+        _column_33,
+        _column_21,
+        _column_34,
+        _column_9,
+        _column_10,
+        _column_39,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxLogValuesLog = i1.Index(
+    'idx_log_values_log',
+    'CREATE INDEX idx_log_values_log ON log_values (log_id, field_id)',
+  );
+  final i1.Index uxLogValuesTopLevel = i1.Index(
+    'ux_log_values_top_level',
+    'CREATE UNIQUE INDEX ux_log_values_top_level ON log_values (log_id, field_id) WHERE group_item_id IS NULL',
+  );
+  final i1.Index uxLogValuesItem = i1.Index(
+    'ux_log_values_item',
+    'CREATE UNIQUE INDEX ux_log_values_item ON log_values (group_item_id, field_id) WHERE group_item_id IS NOT NULL',
+  );
+  final i1.Index idxLogValuesFieldNormalized = i1.Index(
+    'idx_log_values_field_normalized',
+    'CREATE INDEX idx_log_values_field_normalized ON log_values (field_id, normalized_value)',
+  );
+  final i1.Trigger trgLogValuesInsertCheck = i1.Trigger(
+    'CREATE TRIGGER trg_log_values_insert_check BEFORE INSERT ON log_values BEGIN SELECT RAISE (ABORT, \'log_value_field_not_in_log_type\') WHERE (SELECT activity_type_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id);SELECT RAISE (ABORT, \'log_value_scope_mismatch\') WHERE (SELECT parent_field_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT field_id FROM log_group_items WHERE internal_id = NEW.group_item_id) OR(NEW.group_item_id IS NOT NULL AND (SELECT log_id FROM log_group_items WHERE internal_id = NEW.group_item_id) IS NOT NEW.log_id);SELECT RAISE (ABORT, \'log_value_column_mismatch\') WHERE NOT COALESCE((SELECT CASE f.field_type WHEN \'text\' THEN NEW.text_value IS NOT NULL WHEN \'single_select\' THEN NEW.text_value IS NOT NULL WHEN \'number\' THEN NEW.number_value IS NOT NULL AND((NEW.unit_code IS NULL)=(f.dimension IS NULL))WHEN \'rating\' THEN NEW.number_value IS NOT NULL AND NEW.unit_code IS NULL WHEN \'boolean\' THEN NEW.boolean_value IS NOT NULL WHEN \'date\' THEN NEW.date_value IS NOT NULL WHEN \'time\' THEN NEW.time_value IS NOT NULL WHEN \'duration\' THEN NEW.duration_ms IS NOT NULL WHEN \'multi_select\' THEN NEW.json_value IS NOT NULL ELSE 0 END FROM activity_fields AS f WHERE f.internal_id = NEW.field_id), 0);END',
+    'trg_log_values_insert_check',
+  );
+  final i1.Trigger trgLogValuesUpdateCheck = i1.Trigger(
+    'CREATE TRIGGER trg_log_values_update_check BEFORE UPDATE ON log_values BEGIN SELECT RAISE (ABORT, \'log_value_field_not_in_log_type\') WHERE (SELECT activity_type_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id);SELECT RAISE (ABORT, \'log_value_scope_mismatch\') WHERE (SELECT parent_field_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT field_id FROM log_group_items WHERE internal_id = NEW.group_item_id) OR(NEW.group_item_id IS NOT NULL AND (SELECT log_id FROM log_group_items WHERE internal_id = NEW.group_item_id) IS NOT NEW.log_id);SELECT RAISE (ABORT, \'log_value_column_mismatch\') WHERE NOT COALESCE((SELECT CASE f.field_type WHEN \'text\' THEN NEW.text_value IS NOT NULL WHEN \'single_select\' THEN NEW.text_value IS NOT NULL WHEN \'number\' THEN NEW.number_value IS NOT NULL AND((NEW.unit_code IS NULL)=(f.dimension IS NULL))WHEN \'rating\' THEN NEW.number_value IS NOT NULL AND NEW.unit_code IS NULL WHEN \'boolean\' THEN NEW.boolean_value IS NOT NULL WHEN \'date\' THEN NEW.date_value IS NOT NULL WHEN \'time\' THEN NEW.time_value IS NOT NULL WHEN \'duration\' THEN NEW.duration_ms IS NOT NULL WHEN \'multi_select\' THEN NEW.json_value IS NOT NULL ELSE 0 END FROM activity_fields AS f WHERE f.internal_id = NEW.field_id), 0);END',
+    'trg_log_values_update_check',
+  );
+  final i1.Trigger trgActivityFieldsSemanticsLocked = i1.Trigger(
+    'CREATE TRIGGER trg_activity_fields_semantics_locked BEFORE UPDATE OF field_type, dimension ON activity_fields WHEN(OLD.field_type IS NOT NEW.field_type OR OLD.dimension IS NOT NEW.dimension)AND(EXISTS (SELECT 1 FROM log_values WHERE field_id = OLD.internal_id) OR EXISTS (SELECT 1 FROM log_group_items WHERE field_id = OLD.internal_id) OR EXISTS (SELECT 1 FROM activity_fields AS c WHERE c.parent_field_id = OLD.internal_id))BEGIN SELECT RAISE (ABORT, \'activity_field_semantics_locked\');END',
+    'trg_activity_fields_semantics_locked',
+  );
+  final i1.Trigger trgActivityFieldsOwnerImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_fields_owner_immutable BEFORE UPDATE OF activity_type_id ON activity_fields WHEN OLD.activity_type_id IS NOT NEW.activity_type_id BEGIN SELECT RAISE (ABORT, \'activity_field_owner_immutable\');END',
+    'trg_activity_fields_owner_immutable',
+  );
+  final i1.Trigger trgActivityLogsTypeImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_logs_type_immutable BEFORE UPDATE OF activity_type_id ON activity_logs WHEN OLD.activity_type_id IS NOT NEW.activity_type_id BEGIN SELECT RAISE (ABORT, \'activity_log_type_immutable\');END',
+    'trg_activity_logs_type_immutable',
+  );
+  final i1.Trigger trgActivityTypesPublicIdImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_types_public_id_immutable BEFORE UPDATE OF public_id ON activity_types WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
+    'trg_activity_types_public_id_immutable',
+  );
+  final i1.Trigger trgActivityFieldsPublicIdImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_fields_public_id_immutable BEFORE UPDATE OF public_id ON activity_fields WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
+    'trg_activity_fields_public_id_immutable',
+  );
+  final i1.Trigger trgActivityLogsPublicIdImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_logs_public_id_immutable BEFORE UPDATE OF public_id ON activity_logs WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
+    'trg_activity_logs_public_id_immutable',
+  );
+  final i1.Trigger trgActivityFieldsParentCheck = i1.Trigger(
+    'CREATE TRIGGER trg_activity_fields_parent_check BEFORE INSERT ON activity_fields WHEN NEW.parent_field_id IS NOT NULL BEGIN SELECT RAISE (ABORT, \'activity_field_parent_invalid\') WHERE COALESCE((SELECT p.field_type = \'repeating_group\' AND p.activity_type_id = NEW.activity_type_id AND(p.parent_field_id IS NULL OR NEW.field_type <> \'repeating_group\')FROM activity_fields AS p WHERE p.internal_id = NEW.parent_field_id), 0) = 0;END',
+    'trg_activity_fields_parent_check',
+  );
+  final i1.Trigger trgActivityFieldsParentImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_fields_parent_immutable BEFORE UPDATE OF parent_field_id ON activity_fields WHEN OLD.parent_field_id IS NOT NEW.parent_field_id BEGIN SELECT RAISE (ABORT, \'activity_field_parent_immutable\');END',
+    'trg_activity_fields_parent_immutable',
+  );
+  final i1.Trigger trgLogGroupItemsInsertCheck = i1.Trigger(
+    'CREATE TRIGGER trg_log_group_items_insert_check BEFORE INSERT ON log_group_items BEGIN SELECT RAISE (ABORT, \'group_item_field_invalid\') WHERE COALESCE((SELECT f.field_type = \'repeating_group\' AND f.activity_type_id = (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id) FROM activity_fields AS f WHERE f.internal_id = NEW.field_id), 0) = 0;SELECT RAISE (ABORT, \'group_item_parent_invalid\') WHERE (SELECT parent_field_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT field_id FROM log_group_items WHERE internal_id = NEW.parent_item_id) OR(NEW.parent_item_id IS NOT NULL AND (SELECT log_id FROM log_group_items WHERE internal_id = NEW.parent_item_id) IS NOT NEW.log_id);END',
+    'trg_log_group_items_insert_check',
+  );
+  final i1.Trigger trgLogGroupItemsStructureImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_log_group_items_structure_immutable BEFORE UPDATE OF log_id, field_id, parent_item_id, public_id ON log_group_items WHEN OLD.log_id IS NOT NEW.log_id OR OLD.field_id IS NOT NEW.field_id OR OLD.parent_item_id IS NOT NEW.parent_item_id OR OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'group_item_structure_immutable\');END',
+    'trg_log_group_items_structure_immutable',
+  );
+  final i1.Trigger trgActivityLogsPlanCheckInsert = i1.Trigger(
+    'CREATE TRIGGER trg_activity_logs_plan_check_insert BEFORE INSERT ON activity_logs WHEN NEW.plan_id IS NOT NULL BEGIN SELECT RAISE (ABORT, \'log_plan_mismatch\') WHERE (SELECT activity_type_id FROM plans WHERE internal_id = NEW.plan_id) IS NOT NEW.activity_type_id;END',
+    'trg_activity_logs_plan_check_insert',
+  );
+  final i1.Trigger trgActivityLogsPlanCheckUpdate = i1.Trigger(
+    'CREATE TRIGGER trg_activity_logs_plan_check_update BEFORE UPDATE OF plan_id ON activity_logs WHEN NEW.plan_id IS NOT NULL BEGIN SELECT RAISE (ABORT, \'log_plan_mismatch\') WHERE (SELECT activity_type_id FROM plans WHERE internal_id = NEW.plan_id) IS NOT NEW.activity_type_id;END',
+    'trg_activity_logs_plan_check_update',
+  );
+  final i1.Trigger trgPlansTypeLocked = i1.Trigger(
+    'CREATE TRIGGER trg_plans_type_locked BEFORE UPDATE OF activity_type_id ON plans WHEN OLD.activity_type_id IS NOT NEW.activity_type_id AND EXISTS (SELECT 1 FROM activity_logs WHERE plan_id = OLD.internal_id) BEGIN SELECT RAISE (ABORT, \'plan_type_locked\');END',
+    'trg_plans_type_locked',
+  );
+  final i1.Trigger trgPlansPublicIdImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_plans_public_id_immutable BEFORE UPDATE OF public_id ON plans WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
+    'trg_plans_public_id_immutable',
+  );
+  late final Shape10 focusSessions = Shape10(
+    source: i0.VersionedTable(
+      entityName: 'focus_sessions',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [
+        'CHECK((state = \'paused\')=(paused_at IS NOT NULL))',
+        'CHECK((state = \'finished\')=(activity_log_id IS NOT NULL AND ended_at IS NOT NULL AND duration_ms IS NOT NULL))',
+        'CHECK(ended_at IS NULL OR ended_at >= started_at)',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_12,
+        _column_47,
+        _column_48,
+        _column_49,
+        _column_19,
+        _column_50,
+        _column_51,
+        _column_20,
+        _column_21,
+        _column_9,
+        _column_10,
+        _column_11,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index uxFocusSessionsOneActive = i1.Index(
+    'ux_focus_sessions_one_active',
+    'CREATE UNIQUE INDEX ux_focus_sessions_one_active ON focus_sessions (state IN (\'running\', \'paused\')) WHERE state IN (\'running\', \'paused\') AND deleted_at IS NULL',
+  );
+  final i1.Index idxFocusSessionsPlan = i1.Index(
+    'idx_focus_sessions_plan',
+    'CREATE INDEX idx_focus_sessions_plan ON focus_sessions (plan_id) WHERE plan_id IS NOT NULL',
+  );
+  final i1.Trigger trgFocusSessionsPlanCheck = i1.Trigger(
+    'CREATE TRIGGER trg_focus_sessions_plan_check BEFORE INSERT ON focus_sessions WHEN NEW.plan_id IS NOT NULL BEGIN SELECT RAISE (ABORT, \'focus_plan_mismatch\') WHERE (SELECT activity_type_id FROM plans WHERE internal_id = NEW.plan_id) IS NOT NEW.activity_type_id;END',
+    'trg_focus_sessions_plan_check',
+  );
+  final i1.Trigger trgFocusSessionsPublicIdImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_focus_sessions_public_id_immutable BEFORE UPDATE OF public_id ON focus_sessions WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
+    'trg_focus_sessions_public_id_immutable',
+  );
+  late final Shape4 appPreferences = Shape4(
+    source: i0.VersionedTable(
+      entityName: 'app_preferences',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY("key")'],
+      columns: [_column_35, _column_36, _column_10],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+}
+
+class Shape10 extends i0.VersionedTable {
+  Shape10({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get internalId =>
+      columnsByName['internal_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get publicId =>
+      columnsByName['public_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get activityTypeId =>
+      columnsByName['activity_type_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get planId =>
+      columnsByName['plan_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get activityLogId =>
+      columnsByName['activity_log_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get state =>
+      columnsByName['state']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get startedAt =>
+      columnsByName['started_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get pausedAt =>
+      columnsByName['paused_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get pausedDurationMs =>
+      columnsByName['paused_duration_ms']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get endedAt =>
+      columnsByName['ended_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get durationMs =>
+      columnsByName['duration_ms']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get createdAt =>
+      columnsByName['created_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get updatedAt =>
+      columnsByName['updated_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get deletedAt =>
+      columnsByName['deleted_at']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_48(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'activity_log_id',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.int,
+      $customConstraints:
+          'REFERENCES activity_logs(internal_id)ON DELETE RESTRICT',
+    );
+i1.GeneratedColumn<String> _column_49(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'state',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL CHECK (state IN (\'running\', \'paused\', \'finished\', \'discarded\'))',
+    );
+i1.GeneratedColumn<int> _column_50(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'paused_at',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.int,
+      $customConstraints: '',
+    );
+i1.GeneratedColumn<int> _column_51(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'paused_duration_ms',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL DEFAULT 0 CHECK (paused_duration_ms >= 0)',
+      defaultValue: const i1.CustomExpression('0'),
+    );
+
+final class Schema6 extends i0.VersionedSchema {
+  Schema6({required super.database}) : super(version: 6);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    activityTypes,
+    activityFields,
+    idxActivityFieldsTypePosition,
+    idxActivityFieldsParent,
+    plans,
+    idxPlansDay,
+    idxPlansTypeDay,
+    activityLogs,
+    idxActivityLogsDay,
+    idxActivityLogsTypeDay,
+    idxActivityLogsPlan,
+    logGroupItems,
+    idxLogGroupItemsLog,
+    logValues,
+    idxLogValuesLog,
+    uxLogValuesTopLevel,
+    uxLogValuesItem,
+    idxLogValuesFieldNormalized,
+    trgLogValuesInsertCheck,
+    trgLogValuesUpdateCheck,
+    trgActivityFieldsSemanticsLocked,
+    trgActivityFieldsOwnerImmutable,
+    trgActivityLogsTypeImmutable,
+    trgActivityTypesPublicIdImmutable,
+    trgActivityFieldsPublicIdImmutable,
+    trgActivityLogsPublicIdImmutable,
+    trgActivityFieldsParentCheck,
+    trgActivityFieldsParentImmutable,
+    trgLogGroupItemsInsertCheck,
+    trgLogGroupItemsStructureImmutable,
+    trgActivityLogsPlanCheckInsert,
+    trgActivityLogsPlanCheckUpdate,
+    trgPlansTypeLocked,
+    trgPlansPublicIdImmutable,
+    focusSessions,
+    uxFocusSessionsOneActive,
+    idxFocusSessionsPlan,
+    trgFocusSessionsPlanCheck,
+    trgFocusSessionsPublicIdImmutable,
+    measurements,
+    idxMeasurementsTypeDay,
+    insightCharts,
+    trgMeasurementsPublicIdImmutable,
+    appPreferences,
+  ];
+  late final Shape0 activityTypes = Shape0(
+    source: i0.VersionedTable(
+      entityName: 'activity_types',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_2,
+        _column_3,
+        _column_4,
+        _column_5,
+        _column_6,
+        _column_7,
+        _column_8,
+        _column_9,
+        _column_10,
+        _column_11,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape5 activityFields = Shape5(
+    source: i0.VersionedTable(
+      entityName: 'activity_fields',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [
+        'CHECK(measurable = 0 OR field_type IN (\'number\', \'rating\', \'duration\', \'boolean\'))',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_12,
+        _column_2,
+        _column_13,
+        _column_14,
+        _column_15,
+        _column_16,
+        _column_17,
+        _column_18,
+        _column_9,
+        _column_10,
+        _column_11,
+        _column_37,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxActivityFieldsTypePosition = i1.Index(
+    'idx_activity_fields_type_position',
+    'CREATE INDEX idx_activity_fields_type_position ON activity_fields (activity_type_id, position)',
+  );
+  final i1.Index idxActivityFieldsParent = i1.Index(
+    'idx_activity_fields_parent',
+    'CREATE INDEX idx_activity_fields_parent ON activity_fields (parent_field_id) WHERE parent_field_id IS NOT NULL',
+  );
+  late final Shape8 plans = Shape8(
+    source: i0.VersionedTable(
+      entityName: 'plans',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [
+        'CHECK(planned_end_at IS NULL OR planned_start_at IS NOT NULL)',
+        'CHECK(planned_end_at IS NULL OR planned_end_at >= planned_start_at)',
+        'CHECK(planned_duration_ms IS NULL OR(planned_duration_ms > 0 AND planned_end_at IS NULL))',
+        'CHECK(status <> \'completed\' OR activity_type_id IS NULL)',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_40,
+        _column_41,
+        _column_42,
+        _column_24,
+        _column_43,
+        _column_44,
+        _column_45,
+        _column_8,
+        _column_46,
+        _column_9,
+        _column_10,
+        _column_11,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxPlansDay = i1.Index(
+    'idx_plans_day',
+    'CREATE INDEX idx_plans_day ON plans (plan_date, sort_order) WHERE deleted_at IS NULL',
+  );
+  final i1.Index idxPlansTypeDay = i1.Index(
+    'idx_plans_type_day',
+    'CREATE INDEX idx_plans_type_day ON plans (activity_type_id, plan_date) WHERE deleted_at IS NULL AND activity_type_id IS NOT NULL',
+  );
+  late final Shape9 activityLogs = Shape9(
+    source: i0.VersionedTable(
+      entityName: 'activity_logs',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [
+        'CHECK(ended_at IS NULL OR ended_at >= started_at)',
+        'CHECK(duration_ms IS NULL OR ended_at IS NULL OR duration_ms <= ended_at - started_at)',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_12,
+        _column_19,
+        _column_20,
+        _column_21,
+        _column_22,
+        _column_23,
+        _column_24,
+        _column_9,
+        _column_10,
+        _column_11,
+        _column_47,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxActivityLogsDay = i1.Index(
+    'idx_activity_logs_day',
+    'CREATE INDEX idx_activity_logs_day ON activity_logs (local_date, started_at) WHERE deleted_at IS NULL',
+  );
+  final i1.Index idxActivityLogsTypeDay = i1.Index(
+    'idx_activity_logs_type_day',
+    'CREATE INDEX idx_activity_logs_type_day ON activity_logs (activity_type_id, local_date, started_at) WHERE deleted_at IS NULL',
+  );
+  final i1.Index idxActivityLogsPlan = i1.Index(
+    'idx_activity_logs_plan',
+    'CREATE INDEX idx_activity_logs_plan ON activity_logs (plan_id) WHERE plan_id IS NOT NULL',
+  );
+  late final Shape6 logGroupItems = Shape6(
+    source: i0.VersionedTable(
+      entityName: 'log_group_items',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_25,
+        _column_26,
+        _column_38,
+        _column_15,
+        _column_9,
+        _column_10,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxLogGroupItemsLog = i1.Index(
+    'idx_log_group_items_log',
+    'CREATE INDEX idx_log_group_items_log ON log_group_items (log_id, parent_item_id, position)',
+  );
+  late final Shape7 logValues = Shape7(
+    source: i0.VersionedTable(
+      entityName: 'log_values',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [
+        'CHECK((text_value IS NOT NULL)+(number_value IS NOT NULL)+(boolean_value IS NOT NULL)+(date_value IS NOT NULL)+(time_value IS NOT NULL)+(duration_ms IS NOT NULL)+(json_value IS NOT NULL)= 1)',
+        'CHECK((number_value IS NULL)=(normalized_value IS NULL))',
+        'CHECK(unit_code IS NULL OR number_value IS NOT NULL)',
+      ],
+      columns: [
+        _column_0,
+        _column_25,
+        _column_26,
+        _column_27,
+        _column_28,
+        _column_29,
+        _column_30,
+        _column_31,
+        _column_32,
+        _column_33,
+        _column_21,
+        _column_34,
+        _column_9,
+        _column_10,
+        _column_39,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxLogValuesLog = i1.Index(
+    'idx_log_values_log',
+    'CREATE INDEX idx_log_values_log ON log_values (log_id, field_id)',
+  );
+  final i1.Index uxLogValuesTopLevel = i1.Index(
+    'ux_log_values_top_level',
+    'CREATE UNIQUE INDEX ux_log_values_top_level ON log_values (log_id, field_id) WHERE group_item_id IS NULL',
+  );
+  final i1.Index uxLogValuesItem = i1.Index(
+    'ux_log_values_item',
+    'CREATE UNIQUE INDEX ux_log_values_item ON log_values (group_item_id, field_id) WHERE group_item_id IS NOT NULL',
+  );
+  final i1.Index idxLogValuesFieldNormalized = i1.Index(
+    'idx_log_values_field_normalized',
+    'CREATE INDEX idx_log_values_field_normalized ON log_values (field_id, normalized_value)',
+  );
+  final i1.Trigger trgLogValuesInsertCheck = i1.Trigger(
+    'CREATE TRIGGER trg_log_values_insert_check BEFORE INSERT ON log_values BEGIN SELECT RAISE (ABORT, \'log_value_field_not_in_log_type\') WHERE (SELECT activity_type_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id);SELECT RAISE (ABORT, \'log_value_scope_mismatch\') WHERE (SELECT parent_field_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT field_id FROM log_group_items WHERE internal_id = NEW.group_item_id) OR(NEW.group_item_id IS NOT NULL AND (SELECT log_id FROM log_group_items WHERE internal_id = NEW.group_item_id) IS NOT NEW.log_id);SELECT RAISE (ABORT, \'log_value_column_mismatch\') WHERE NOT COALESCE((SELECT CASE f.field_type WHEN \'text\' THEN NEW.text_value IS NOT NULL WHEN \'single_select\' THEN NEW.text_value IS NOT NULL WHEN \'number\' THEN NEW.number_value IS NOT NULL AND((NEW.unit_code IS NULL)=(f.dimension IS NULL))WHEN \'rating\' THEN NEW.number_value IS NOT NULL AND NEW.unit_code IS NULL WHEN \'boolean\' THEN NEW.boolean_value IS NOT NULL WHEN \'date\' THEN NEW.date_value IS NOT NULL WHEN \'time\' THEN NEW.time_value IS NOT NULL WHEN \'duration\' THEN NEW.duration_ms IS NOT NULL WHEN \'multi_select\' THEN NEW.json_value IS NOT NULL ELSE 0 END FROM activity_fields AS f WHERE f.internal_id = NEW.field_id), 0);END',
+    'trg_log_values_insert_check',
+  );
+  final i1.Trigger trgLogValuesUpdateCheck = i1.Trigger(
+    'CREATE TRIGGER trg_log_values_update_check BEFORE UPDATE ON log_values BEGIN SELECT RAISE (ABORT, \'log_value_field_not_in_log_type\') WHERE (SELECT activity_type_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id);SELECT RAISE (ABORT, \'log_value_scope_mismatch\') WHERE (SELECT parent_field_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT field_id FROM log_group_items WHERE internal_id = NEW.group_item_id) OR(NEW.group_item_id IS NOT NULL AND (SELECT log_id FROM log_group_items WHERE internal_id = NEW.group_item_id) IS NOT NEW.log_id);SELECT RAISE (ABORT, \'log_value_column_mismatch\') WHERE NOT COALESCE((SELECT CASE f.field_type WHEN \'text\' THEN NEW.text_value IS NOT NULL WHEN \'single_select\' THEN NEW.text_value IS NOT NULL WHEN \'number\' THEN NEW.number_value IS NOT NULL AND((NEW.unit_code IS NULL)=(f.dimension IS NULL))WHEN \'rating\' THEN NEW.number_value IS NOT NULL AND NEW.unit_code IS NULL WHEN \'boolean\' THEN NEW.boolean_value IS NOT NULL WHEN \'date\' THEN NEW.date_value IS NOT NULL WHEN \'time\' THEN NEW.time_value IS NOT NULL WHEN \'duration\' THEN NEW.duration_ms IS NOT NULL WHEN \'multi_select\' THEN NEW.json_value IS NOT NULL ELSE 0 END FROM activity_fields AS f WHERE f.internal_id = NEW.field_id), 0);END',
+    'trg_log_values_update_check',
+  );
+  final i1.Trigger trgActivityFieldsSemanticsLocked = i1.Trigger(
+    'CREATE TRIGGER trg_activity_fields_semantics_locked BEFORE UPDATE OF field_type, dimension ON activity_fields WHEN(OLD.field_type IS NOT NEW.field_type OR OLD.dimension IS NOT NEW.dimension)AND(EXISTS (SELECT 1 FROM log_values WHERE field_id = OLD.internal_id) OR EXISTS (SELECT 1 FROM log_group_items WHERE field_id = OLD.internal_id) OR EXISTS (SELECT 1 FROM activity_fields AS c WHERE c.parent_field_id = OLD.internal_id))BEGIN SELECT RAISE (ABORT, \'activity_field_semantics_locked\');END',
+    'trg_activity_fields_semantics_locked',
+  );
+  final i1.Trigger trgActivityFieldsOwnerImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_fields_owner_immutable BEFORE UPDATE OF activity_type_id ON activity_fields WHEN OLD.activity_type_id IS NOT NEW.activity_type_id BEGIN SELECT RAISE (ABORT, \'activity_field_owner_immutable\');END',
+    'trg_activity_fields_owner_immutable',
+  );
+  final i1.Trigger trgActivityLogsTypeImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_logs_type_immutable BEFORE UPDATE OF activity_type_id ON activity_logs WHEN OLD.activity_type_id IS NOT NEW.activity_type_id BEGIN SELECT RAISE (ABORT, \'activity_log_type_immutable\');END',
+    'trg_activity_logs_type_immutable',
+  );
+  final i1.Trigger trgActivityTypesPublicIdImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_types_public_id_immutable BEFORE UPDATE OF public_id ON activity_types WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
+    'trg_activity_types_public_id_immutable',
+  );
+  final i1.Trigger trgActivityFieldsPublicIdImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_fields_public_id_immutable BEFORE UPDATE OF public_id ON activity_fields WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
+    'trg_activity_fields_public_id_immutable',
+  );
+  final i1.Trigger trgActivityLogsPublicIdImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_logs_public_id_immutable BEFORE UPDATE OF public_id ON activity_logs WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
+    'trg_activity_logs_public_id_immutable',
+  );
+  final i1.Trigger trgActivityFieldsParentCheck = i1.Trigger(
+    'CREATE TRIGGER trg_activity_fields_parent_check BEFORE INSERT ON activity_fields WHEN NEW.parent_field_id IS NOT NULL BEGIN SELECT RAISE (ABORT, \'activity_field_parent_invalid\') WHERE COALESCE((SELECT p.field_type = \'repeating_group\' AND p.activity_type_id = NEW.activity_type_id AND(p.parent_field_id IS NULL OR NEW.field_type <> \'repeating_group\')FROM activity_fields AS p WHERE p.internal_id = NEW.parent_field_id), 0) = 0;END',
+    'trg_activity_fields_parent_check',
+  );
+  final i1.Trigger trgActivityFieldsParentImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_activity_fields_parent_immutable BEFORE UPDATE OF parent_field_id ON activity_fields WHEN OLD.parent_field_id IS NOT NEW.parent_field_id BEGIN SELECT RAISE (ABORT, \'activity_field_parent_immutable\');END',
+    'trg_activity_fields_parent_immutable',
+  );
+  final i1.Trigger trgLogGroupItemsInsertCheck = i1.Trigger(
+    'CREATE TRIGGER trg_log_group_items_insert_check BEFORE INSERT ON log_group_items BEGIN SELECT RAISE (ABORT, \'group_item_field_invalid\') WHERE COALESCE((SELECT f.field_type = \'repeating_group\' AND f.activity_type_id = (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id) FROM activity_fields AS f WHERE f.internal_id = NEW.field_id), 0) = 0;SELECT RAISE (ABORT, \'group_item_parent_invalid\') WHERE (SELECT parent_field_id FROM activity_fields WHERE internal_id = NEW.field_id) IS NOT (SELECT field_id FROM log_group_items WHERE internal_id = NEW.parent_item_id) OR(NEW.parent_item_id IS NOT NULL AND (SELECT log_id FROM log_group_items WHERE internal_id = NEW.parent_item_id) IS NOT NEW.log_id);END',
+    'trg_log_group_items_insert_check',
+  );
+  final i1.Trigger trgLogGroupItemsStructureImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_log_group_items_structure_immutable BEFORE UPDATE OF log_id, field_id, parent_item_id, public_id ON log_group_items WHEN OLD.log_id IS NOT NEW.log_id OR OLD.field_id IS NOT NEW.field_id OR OLD.parent_item_id IS NOT NEW.parent_item_id OR OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'group_item_structure_immutable\');END',
+    'trg_log_group_items_structure_immutable',
+  );
+  final i1.Trigger trgActivityLogsPlanCheckInsert = i1.Trigger(
+    'CREATE TRIGGER trg_activity_logs_plan_check_insert BEFORE INSERT ON activity_logs WHEN NEW.plan_id IS NOT NULL BEGIN SELECT RAISE (ABORT, \'log_plan_mismatch\') WHERE (SELECT activity_type_id FROM plans WHERE internal_id = NEW.plan_id) IS NOT NEW.activity_type_id;END',
+    'trg_activity_logs_plan_check_insert',
+  );
+  final i1.Trigger trgActivityLogsPlanCheckUpdate = i1.Trigger(
+    'CREATE TRIGGER trg_activity_logs_plan_check_update BEFORE UPDATE OF plan_id ON activity_logs WHEN NEW.plan_id IS NOT NULL BEGIN SELECT RAISE (ABORT, \'log_plan_mismatch\') WHERE (SELECT activity_type_id FROM plans WHERE internal_id = NEW.plan_id) IS NOT NEW.activity_type_id;END',
+    'trg_activity_logs_plan_check_update',
+  );
+  final i1.Trigger trgPlansTypeLocked = i1.Trigger(
+    'CREATE TRIGGER trg_plans_type_locked BEFORE UPDATE OF activity_type_id ON plans WHEN OLD.activity_type_id IS NOT NEW.activity_type_id AND EXISTS (SELECT 1 FROM activity_logs WHERE plan_id = OLD.internal_id) BEGIN SELECT RAISE (ABORT, \'plan_type_locked\');END',
+    'trg_plans_type_locked',
+  );
+  final i1.Trigger trgPlansPublicIdImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_plans_public_id_immutable BEFORE UPDATE OF public_id ON plans WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
+    'trg_plans_public_id_immutable',
+  );
+  late final Shape10 focusSessions = Shape10(
+    source: i0.VersionedTable(
+      entityName: 'focus_sessions',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [
+        'CHECK((state = \'paused\')=(paused_at IS NOT NULL))',
+        'CHECK((state = \'finished\')=(activity_log_id IS NOT NULL AND ended_at IS NOT NULL AND duration_ms IS NOT NULL))',
+        'CHECK(ended_at IS NULL OR ended_at >= started_at)',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_12,
+        _column_47,
+        _column_48,
+        _column_49,
+        _column_19,
+        _column_50,
+        _column_51,
+        _column_20,
+        _column_21,
+        _column_9,
+        _column_10,
+        _column_11,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index uxFocusSessionsOneActive = i1.Index(
+    'ux_focus_sessions_one_active',
+    'CREATE UNIQUE INDEX ux_focus_sessions_one_active ON focus_sessions (state IN (\'running\', \'paused\')) WHERE state IN (\'running\', \'paused\') AND deleted_at IS NULL',
+  );
+  final i1.Index idxFocusSessionsPlan = i1.Index(
+    'idx_focus_sessions_plan',
+    'CREATE INDEX idx_focus_sessions_plan ON focus_sessions (plan_id) WHERE plan_id IS NOT NULL',
+  );
+  final i1.Trigger trgFocusSessionsPlanCheck = i1.Trigger(
+    'CREATE TRIGGER trg_focus_sessions_plan_check BEFORE INSERT ON focus_sessions WHEN NEW.plan_id IS NOT NULL BEGIN SELECT RAISE (ABORT, \'focus_plan_mismatch\') WHERE (SELECT activity_type_id FROM plans WHERE internal_id = NEW.plan_id) IS NOT NEW.activity_type_id;END',
+    'trg_focus_sessions_plan_check',
+  );
+  final i1.Trigger trgFocusSessionsPublicIdImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_focus_sessions_public_id_immutable BEFORE UPDATE OF public_id ON focus_sessions WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
+    'trg_focus_sessions_public_id_immutable',
+  );
+  late final Shape11 measurements = Shape11(
+    source: i0.VersionedTable(
+      entityName: 'measurements',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_52,
+        _column_53,
+        _column_54,
+        _column_55,
+        _column_56,
+        _column_22,
+        _column_23,
+        _column_24,
+        _column_9,
+        _column_10,
+        _column_11,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxMeasurementsTypeDay = i1.Index(
+    'idx_measurements_type_day',
+    'CREATE INDEX idx_measurements_type_day ON measurements (measurement_type, local_date, recorded_at) WHERE deleted_at IS NULL',
+  );
+  late final Shape12 insightCharts = Shape12(
+    source: i0.VersionedTable(
+      entityName: 'insight_charts',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_57,
+        _column_58,
+        _column_9,
+        _column_10,
+        _column_11,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger trgMeasurementsPublicIdImmutable = i1.Trigger(
+    'CREATE TRIGGER trg_measurements_public_id_immutable BEFORE UPDATE OF public_id ON measurements WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
+    'trg_measurements_public_id_immutable',
+  );
+  late final Shape4 appPreferences = Shape4(
+    source: i0.VersionedTable(
+      entityName: 'app_preferences',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY("key")'],
+      columns: [_column_35, _column_36, _column_10],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+}
+
+class Shape11 extends i0.VersionedTable {
+  Shape11({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get internalId =>
+      columnsByName['internal_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get publicId =>
+      columnsByName['public_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get measurementType =>
+      columnsByName['measurement_type']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<double> get value =>
+      columnsByName['value']! as i1.GeneratedColumn<double>;
+  i1.GeneratedColumn<String> get unitCode =>
+      columnsByName['unit_code']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<double> get normalizedValue =>
+      columnsByName['normalized_value']! as i1.GeneratedColumn<double>;
+  i1.GeneratedColumn<int> get recordedAt =>
+      columnsByName['recorded_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get tzOffsetMinutes =>
+      columnsByName['tz_offset_minutes']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get localDate =>
+      columnsByName['local_date']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get notes =>
+      columnsByName['notes']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get createdAt =>
+      columnsByName['created_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get updatedAt =>
+      columnsByName['updated_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get deletedAt =>
+      columnsByName['deleted_at']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<String> _column_52(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'measurement_type',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL CHECK (length(measurement_type) > 0)',
+    );
+i1.GeneratedColumn<double> _column_53(String aliasedName) =>
+    i1.GeneratedColumn<double>(
+      'value',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.double,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<String> _column_54(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'unit_code',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<double> _column_55(String aliasedName) =>
+    i1.GeneratedColumn<double>(
+      'normalized_value',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.double,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_56(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'recorded_at',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
+
+class Shape12 extends i0.VersionedTable {
+  Shape12({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get internalId =>
+      columnsByName['internal_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get publicId =>
+      columnsByName['public_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get position =>
+      columnsByName['position']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get configJson =>
+      columnsByName['config_json']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get createdAt =>
+      columnsByName['created_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get updatedAt =>
+      columnsByName['updated_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get deletedAt =>
+      columnsByName['deleted_at']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_57(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'position',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL DEFAULT 0 CHECK (position >= 0)',
+      defaultValue: const i1.CustomExpression('0'),
+    );
+i1.GeneratedColumn<String> _column_58(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'config_json',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL CHECK (json_valid(config_json))',
+    );
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
+  required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
+  required Future<void> Function(i1.Migrator m, Schema4 schema) from3To4,
+  required Future<void> Function(i1.Migrator m, Schema5 schema) from4To5,
+  required Future<void> Function(i1.Migrator m, Schema6 schema) from5To6,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -651,6 +2473,26 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from1To2(migrator, schema);
         return 2;
+      case 2:
+        final schema = Schema3(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from2To3(migrator, schema);
+        return 3;
+      case 3:
+        final schema = Schema4(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from3To4(migrator, schema);
+        return 4;
+      case 4:
+        final schema = Schema5(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from4To5(migrator, schema);
+        return 5;
+      case 5:
+        final schema = Schema6(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from5To6(migrator, schema);
+        return 6;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -659,6 +2501,16 @@ i0.MigrationStepWithVersion migrationSteps({
 
 i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
+  required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
+  required Future<void> Function(i1.Migrator m, Schema4 schema) from3To4,
+  required Future<void> Function(i1.Migrator m, Schema5 schema) from4To5,
+  required Future<void> Function(i1.Migrator m, Schema6 schema) from5To6,
 }) => i0.VersionedSchema.stepByStepHelper(
-  step: migrationSteps(from1To2: from1To2),
+  step: migrationSteps(
+    from1To2: from1To2,
+    from2To3: from2To3,
+    from3To4: from3To4,
+    from4To5: from4To5,
+    from5To6: from5To6,
+  ),
 );

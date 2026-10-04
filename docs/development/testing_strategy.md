@@ -28,7 +28,7 @@
 | **Activity Type creation** | Create with fields; reorder positions persist; required/measurable flags; soft-delete type keeps logs readable; field type locked after values exist; duplicate active name warning |
 | **Custom fields (catalog)** | For every field type: config parse/serialize round-trip; encode/decode round-trip to (text/number/json); validation (required, ranges, rating max, dropdown option exists/archived); summary text; metric descriptors |
 | **Activity Logs** | Save log + values atomically (failure mid-way leaves nothing); edit diff preserves value row IDs; empty values not stored; values for deleted fields still load; `ended_at ≥ started_at`; soft delete + undo |
-| **Repeating groups** (Phase 3) | Relational storage (ADR-027): v2→v3 migration with data; partial unique indexes; parent/child trigger rules; stable item IDs on edit/reorder; nesting limit (2) enforced; canonical unit storage for nested numbers; analytics extraction of nested values |
+| **Repeating groups** (Phase 3) | Relational storage (ADR-027): v2→v3 migration with data; partial unique indexes; parent/child trigger rules; stable item IDs on edit/reorder; nesting limit (2) enforced; canonical unit storage for nested numbers. Analytics extraction of nested values is tested in Phase 6 |
 | **Plans** (Phase 4) | Effective status derivation (a linked log means completed; reality wins over stored `skipped`); stored `completed` only for tasks (CHECK); plan → log links `plan_id`; planned duration from planned times; day ordering |
 | **Timers / Focus** (Phase 5) | Elapsed formula with fake clock across pause/resume cycles; process-death restore (state rebuilt from DB); finish transaction creates the log with `duration_ms` (ADR-021) and links it; discard creates no log; single active session (DB unique index) |
 | **Measurements** | Canonical unit storage and display conversion; series by type/range |
@@ -67,12 +67,12 @@ Other conventions:
 - Pump the app **once per test**. Re-pumping a second `ProviderScope` over the first keeps the old router state.
 - Integration tests (`integration_test/`) run the real `bootstrap()` against the on-device database. Restore `FlutterError.onError` after calling `bootstrap()`, because the framework requires its own handler at test end.
 - `pumpTestApp(seed: (db, clock) async {...})` seeds data through real repositories/use cases before the app starts.
-- `test/support/fixtures.dart`: `SequentialIdGenerator` (deterministic UUIDv7-shaped IDs) and reference definitions (`readingDefinition`, `languageDefinition`, which covers every Phase 2 field type, and `walkingDefinition`, a dimensioned number).
+- `test/support/fixtures.dart`: `SequentialIdGenerator` (deterministic UUIDv7-shaped IDs) and reference definitions (`readingDefinition`, `languageDefinition`, which covers every Phase 2 field type, `walkingDefinition`, a dimensioned number, and `gymDefinition`, two levels of Repeating Groups). Group item IDs in tests must be UUID-shaped (36 chars; the schema CHECKs it).
 - **Lazy lists:** forms are `ListView`s, so off-screen widgets don't exist. Use `scrollUntilVisible(..., scrollable: find.byType(Scrollable).hitTestable().first)` and find inputs by their field label (`find.descendant(of: find.widgetWithText(FieldEditorShell, 'Book *'), matching: find.byType(TextField))`), never by index.
 - **On a real device**, dismiss the soft keyboard (`FocusManager.instance.primaryFocus?.unfocus()`) before tapping buttons near the bottom.
 - **Query plans:** `test/core/database/schema_integrity_test.dart` asserts with `EXPLAIN QUERY PLAN` that every hot path uses its index and history needs no temp sort.
 
-Current suites (153 tests):
+Current suites (269 tests):
 - **core:**
   - UUIDv7
   - `LocalDate`/`LocalTime` (offsets, midnight crossing)
@@ -80,19 +80,36 @@ Current suites (153 tests):
   - icon/color registries
   - WCAG contrast; palette consistency (ADR-029: brand/accent/status equal palette colors; sand removed)
   - window size classes
-  - schema v2 shape and STRICT tables
-  - every trigger and CHECK
-  - query plans
+  - schema v6 shape and STRICT tables
+  - every trigger and CHECK, including the v3 Repeating Group triggers (parent/nesting, item structure, value scope, cascade)
+  - query plans (incl. a log's items, a group's sub-fields, a date's plans with no temp sort, records fulfilling a date's plans, a measurement series, the active focus session)
+  - plan CHECKs and triggers (completed only for tasks, one planned-duration source, record ↔ plan activity, fulfilled plan keeps its activity)
   - `reactiveQuery` (pause/resume, ordering, drift `tableUpdates`)
   - `combineLatest2` (emission, pause propagation)
   - `LocalDate.addDays`/`weekday`
-  - generated drift migration tests v1→v2 (schema plus preference data integrity)
+  - generated drift migration tests v1→…→v6 (schema; preference data survives v1→v2; values survive v2→v3; logs survive v3→v4; v4→v5 and v5→v6 verified)
 - **activity_types:**
-  - validator rules
-  - config codec round-trips
+  - validator rules (incl. groups: sub-fields required, item label, nesting limit, per-group name uniqueness, sub-field issue keys)
+  - config codec round-trips (incl. `suggest`, `itemLabel`)
   - repository/use cases: create, ordered fields, update with reorder/rename/add/remove, soft delete/restore, template install with fresh option IDs, live stream
+- **plans:**
+  - domain: effective status (reality wins), planned length, display order, validator (title, plannable activity, locked activity, time rules), wall-clock day shift across DST, `daysUntil`, record start for a plan (planned start; else today → now, another day → that date at the current time), name matching
+  - repository/use cases: title from activity, appended order, record from plan links and derives completion (and reopens on record delete), records on other days pair with their plan, mismatched plan rejected, task-only completion, move to tomorrow (time kept, reopened, appended), reorder, locked activity, delete/restore, live overview
+- **focus (Phase 5):**
+  - elapsed time excludes pauses; a paused session stands still
+  - survives a restart (a new repository reads the same elapsed time)
+  - only timer activities; one active session (domain and DB unique index)
+  - finish writes the record (duration, end, plan) and the finished state atomically, and the plan goes In progress → completed
+  - a failed record leaves the session running (rollback)
+  - discard creates no record
+  - widgets: plan → Start focus → timer → Finish → prefilled record → "session complete" → plan ✓; Today banner → Return
+- **insights & measurements (Phase 6):**
+  - domain: Monday weeks/month buckets, gaps vs zero-fill, every aggregation, this vs previous period, chart JSON round-trip for every source, measurement validation
+  - repository on real SQLite: nested set weights filtered by exercise (case-insensitive) and personal best; volume = Σ weight × reps; time, count and per-activity totals; planned vs actual by plan date; lb → kg canonical measurements; save/list/delete charts
+  - widgets: empty Insights; build a body-weight chart → latest value + line; record a measurement from Me
 - **activity_logs:**
-  - value validation for all nine types
+  - value validation for all nine scalar types; group validation (required group, item-scoped issue targets, value scope, unique item IDs)
+  - Repeating Group repository: sub-fields under their group, the §43 workout round-trip (Chest Press 50×12, 55×10, 60×8), empty items dropped, edits keep item identity/reorder/remove with cascade, groups lock semantics, sub-field add/remove, text suggestions (distinct, newest first, deleted logs excluded)
   - logs for a day (local day, active, time order); `WatchRecordsForDay` pairs records with their types, including archived ones
   - repository/use cases: every storage path round-trips, `local_date` from offset, write-time unit normalization, diffed edits keep row identity, soft delete/undo, history order, removed fields keep values, semantics lock enforced by the domain **and** the DB trigger, live stream
 - **widgets:**
@@ -102,14 +119,21 @@ Current suites (153 tests):
   - builder create + inline validation
   - log with required-field validation and history summary
   - delete + Undo
-  - navigation (ADR-028): four tabs, Quick Record on every tab and in the rail, two-tap Quick Record, empty Quick Record → builder, Me → Activities
+  - navigation (ADR-028): four tabs, no floating Record button (compact or rail), Quick Record from Today's "Record something", empty Quick Record → builder, Me → Activities
   - Plan tab: opens on today with Planned and Recorded sections, week navigation, future dates hide Recorded, record → edit, calendar picker
   - renderer: every editor in order, archived options hidden, typed emission and clearing, invalid numbers
+  - Plans & Today (ADR-030): quick-add task + complete, tapping a task toggles it, tapping a planned activity opens its linked record form ("Planned · …") → save → ✓ "Recorded" → tapping again opens the record, plan options (Record it, no Mark as done for activities) → move to tomorrow with Undo, Today greeting and tap-to-record, empty Today → Plan tab
+  - planned Gym → tap → one exercise, three sets → save → ✓, stored as one linked record with four group items
+  - any plan is trackable: task "Food" → Track details → builder prefilled "Food" → add a Number field → save → record form ("Planned · Food") → save → ✓; tapping a task offers Mark as done / Track details
+  - quick add: typing "reading" links the Reading activity; typing "Gym" installs the template and plans it; a 21:10–21:55 plan prefills 45 min ("Recorded 45 min of 45 min")
+  - Repeating Groups: recording the §43 workout (sets prefilled from the previous set, reopened intact), item-scoped required error, exercise autocomplete; builder creates a group with a sub-field in a nested sheet
 - **integration (device):**
   - `app_launch_test` (real bootstrap/DB)
   - `activity_engine_flow_test` (Me → Activities → template → record → history on native SQLite, in-memory DB)
+  - `repeating_group_flow_test` (Gym template → exercise with three sets → reopen, on native SQLite; Phase 3)
+  - `plan_flow_test` (template → quick-add activity plan → tap it → record → Today shows ✓; Phase 4, ADR-030)
 
-  Both pass on the Android API 37 emulator and the iOS 27 simulator.
+  The first two pass on the Android API 37 emulator and the iOS 27 simulator. `repeating_group_flow_test` (Phase 3) and `plan_flow_test` (Phase 4) are written but **not yet run on a device** (owner asked to skip device runs while coding).
 
 ## 5. Coverage
 

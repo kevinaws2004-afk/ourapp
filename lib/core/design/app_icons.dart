@@ -42,6 +42,15 @@ abstract final class AppIcons {
   static const ratingEmpty = PhosphorGlyphs.star;
   static const ratingFull = PhosphorFillGlyphs.star;
 
+  // Plans (Phase 4).
+  static const taskOpen = PhosphorGlyphs.circle;
+  static const taskDone = PhosphorFillGlyphs.checkCircle;
+  static const start = PhosphorGlyphs.play;
+  static const pause = PhosphorGlyphs.pause;
+  static const measurements = PhosphorGlyphs.ruler;
+  static const skip = PhosphorGlyphs.skipForward;
+  static const moveToTomorrow = PhosphorGlyphs.arrowBendUpRight;
+
   // Field type icons (builder field-type picker).
   static const fieldText = PhosphorGlyphs.textAa;
   static const fieldNumber = PhosphorGlyphs.hash;

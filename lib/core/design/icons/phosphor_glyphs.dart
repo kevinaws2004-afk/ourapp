@@ -38,6 +38,12 @@ abstract final class PhosphorGlyphs {
   static const rows = IconData(0xe5a2, fontFamily: 'Phosphor');
   static const radioButton = IconData(0xeb08, fontFamily: 'Phosphor');
   static const caretLeft = IconData(0xe138, fontFamily: 'Phosphor');
+  static const circle = IconData(0xe18a, fontFamily: 'Phosphor');
+  static const play = IconData(0xe3d0, fontFamily: 'Phosphor');
+  static const skipForward = IconData(0xe5a6, fontFamily: 'Phosphor');
+  static const arrowBendUpRight = IconData(0xe026, fontFamily: 'Phosphor');
+  static const pause = IconData(0xe39e, fontFamily: 'Phosphor');
+  static const ruler = IconData(0xe6b8, fontFamily: 'Phosphor');
   static const barbell = IconData(0xe0b6, fontFamily: 'Phosphor');
   static const bookOpen = IconData(0xe0e6, fontFamily: 'Phosphor');
   static const briefcase = IconData(0xe0ee, fontFamily: 'Phosphor');
@@ -103,4 +109,5 @@ abstract final class PhosphorFillGlyphs {
   static const chartLineUp = IconData(0xe156, fontFamily: 'PhosphorFill');
   static const user = IconData(0xe4c2, fontFamily: 'PhosphorFill');
   static const star = IconData(0xe46a, fontFamily: 'PhosphorFill');
+  static const checkCircle = IconData(0xe184, fontFamily: 'PhosphorFill');
 }

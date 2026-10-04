@@ -83,7 +83,7 @@ See [error_handling.md](error_handling.md). Summary: typed `AppException`s from 
 
 ## Dependencies
 
-**Direct dependencies in use (Phase 1).** `pubspec.yaml` is authoritative; keep this list in sync.
+**Direct dependencies in use (through Phase 6).** `pubspec.yaml` is authoritative; keep this list in sync.
 
 | Package | Purpose | Decision |
 |---|---|---|
@@ -91,6 +91,7 @@ See [error_handling.md](error_handling.md). Summary: typed `AppException`s from 
 | `go_router` | Routing | Spec / architecture.md §7 |
 | `drift`, `drift_flutter` | SQLite access, on-device connection | ADR-011 |
 | `flutter_localizations` (SDK), `intl` | Localization | ADR-015 |
+| `fl_chart` ^1.2 | Charts, only through `shared/widgets/charts/AppChart` (Phase 6) | ADR-033 |
 | dev: `drift_dev`, `build_runner` | drift code generation | ADR-011 |
 | dev: `flutter_lints`, `flutter_test`, `integration_test` (SDK) | Lints and tests | — |
 

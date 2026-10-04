@@ -6,6 +6,7 @@ import 'package:daylog/features/activity_logs/domain/activity_log_use_cases.dart
 import 'package:daylog/features/activity_logs/domain/field_value.dart';
 import 'package:daylog/features/activity_logs/presentation/log_editor_screen.dart';
 import 'package:daylog/features/activity_types/data/db_activity_type_repository.dart';
+import 'package:daylog/features/plans/data/db_plan_repository.dart';
 import 'package:daylog/features/activity_types/domain/activity_type_use_cases.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/features/settings/domain/theme_preference.dart';
@@ -31,6 +32,7 @@ Future<void> seedTodayRecord(AppDatabase db, FakeClock clock) async {
   await LogActivity(
     types,
     DbActivityLogRepository(db, clock, const AppLogger()),
+    DbPlanRepository(db, clock),
     ids,
     clock,
   )(

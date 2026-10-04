@@ -51,5 +51,14 @@ AppException translateStorageError(
       cause: error,
     );
   }
+  if (message.contains('plan_type_locked')) {
+    return ValidationException(
+      const [
+        ValidationIssue(ValidationCode.planActivityLocked, target: 'activity'),
+      ],
+      debugContext: operation,
+      cause: error,
+    );
+  }
   return StorageException(debugContext: operation, cause: error);
 }

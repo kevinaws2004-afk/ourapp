@@ -124,12 +124,6 @@ abstract class AppLocalizations {
   /// **'Me'**
   String get navMe;
 
-  /// Placeholder message on the Today tab until the feature is built.
-  ///
-  /// In en, this message translates to:
-  /// **'Your plan for today and what actually happened will appear here.'**
-  String get todayPlaceholder;
-
   /// Placeholder message on the Track tab until the feature is built.
   ///
   /// In en, this message translates to:
@@ -724,12 +718,6 @@ abstract class AppLocalizations {
   /// **'No'**
   String get booleanNo;
 
-  /// Placeholder for an unsupported field type.
-  ///
-  /// In en, this message translates to:
-  /// **'Repeating groups arrive in a later update.'**
-  String get repeatingGroupUnavailable;
-
   /// Template picker title.
   ///
   /// In en, this message translates to:
@@ -1209,6 +1197,1194 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nothing recorded on this day.'**
   String get planRecordedEmpty;
+
+  /// Summary of a repeating group: its item label and number of items, e.g. 'Set × 3'.
+  ///
+  /// In en, this message translates to:
+  /// **'{itemLabel} × {count}'**
+  String groupItemCount(String itemLabel, int count);
+
+  /// Title of one repeating-group item, e.g. 'Set 2'.
+  ///
+  /// In en, this message translates to:
+  /// **'{itemLabel} {number}'**
+  String groupItemTitle(String itemLabel, int number);
+
+  /// Button adding an item to a repeating group, e.g. 'Add Set'.
+  ///
+  /// In en, this message translates to:
+  /// **'Add {itemLabel}'**
+  String addGroupItem(String itemLabel);
+
+  /// Tooltip removing one repeating-group item.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {itemLabel}'**
+  String removeGroupItem(String itemLabel);
+
+  /// Field editor: what one item of a repeating group is called.
+  ///
+  /// In en, this message translates to:
+  /// **'Item name'**
+  String get itemLabelLabel;
+
+  /// Helper text for the repeating-group item name.
+  ///
+  /// In en, this message translates to:
+  /// **'Shown on the add button, like “Add Set”'**
+  String get itemLabelHelper;
+
+  /// Field editor: heading for a repeating group's sub-fields.
+  ///
+  /// In en, this message translates to:
+  /// **'Fields in each item'**
+  String get subFieldsLabel;
+
+  /// Field editor: shown when a repeating group has no sub-fields yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the fields each item records, like weight and reps.'**
+  String get subFieldsEmpty;
+
+  /// Field editor: adds a sub-field to a repeating group.
+  ///
+  /// In en, this message translates to:
+  /// **'Add field to item'**
+  String get addSubField;
+
+  /// Text field setting: offer previously entered values while typing.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggest previous entries'**
+  String get suggestFromHistoryLabel;
+
+  /// Subtitle for the suggest-previous-entries setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Handy for names you repeat, like exercises'**
+  String get suggestFromHistoryHint;
+
+  /// Validation message.
+  ///
+  /// In en, this message translates to:
+  /// **'Add at least one field to each item.'**
+  String get validationSubFieldsRequired;
+
+  /// Validation message.
+  ///
+  /// In en, this message translates to:
+  /// **'Groups can only be nested one level deep.'**
+  String get validationNestingTooDeep;
+
+  /// Validation message.
+  ///
+  /// In en, this message translates to:
+  /// **'Give each item a name, like “Set”.'**
+  String get validationItemLabelRequired;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Gym'**
+  String get templateGym;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Exercises'**
+  String get templateGymExercises;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise'**
+  String get templateGymExerciseItem;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise'**
+  String get templateGymExercise;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Sets'**
+  String get templateGymSets;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Set'**
+  String get templateGymSetItem;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get templateGymWeight;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Reps'**
+  String get templateGymReps;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Meeting'**
+  String get templateMeeting;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'People'**
+  String get templateMeetingPeople;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Topics'**
+  String get templateMeetingTopics;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Decisions'**
+  String get templateMeetingDecisions;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Action items'**
+  String get templateMeetingActionItems;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Action item'**
+  String get templateMeetingActionItem;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Item'**
+  String get templateMeetingActionItemText;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get templateMeetingActionItemDone;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Cooking'**
+  String get templateCooking;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe'**
+  String get templateCookingRecipe;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Servings'**
+  String get templateCookingServings;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Calories'**
+  String get templateCookingCalories;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get templateCookingRating;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredients'**
+  String get templateCookingIngredients;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredient'**
+  String get templateCookingIngredientItem;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredient'**
+  String get templateCookingIngredient;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Have it'**
+  String get templateCookingHaveIt;
+
+  /// Plan sheet: which activity the plan is for (or a task).
+  ///
+  /// In en, this message translates to:
+  /// **'Activity'**
+  String get planActivityLabel;
+
+  /// Plan sheet chip: a plan without an activity (a Task).
+  ///
+  /// In en, this message translates to:
+  /// **'Just a task'**
+  String get planTaskChoice;
+
+  /// Plan tab quick add: button adding the typed plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Add plan'**
+  String get planAddAction;
+
+  /// Plan tab quick add: button choosing an optional time.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get planAddTime;
+
+  /// Plan tab quick add: hint in the title field.
+  ///
+  /// In en, this message translates to:
+  /// **'Add something to this day'**
+  String get planQuickAddHint;
+
+  /// Section title for records that weren't planned, shown under the plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Also recorded'**
+  String get planAlsoRecordedSection;
+
+  /// Shown when every record of the day fulfils a plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything recorded was planned.'**
+  String get planNothingUnplanned;
+
+  /// Plan sheet: shown when the plan has no start time.
+  ///
+  /// In en, this message translates to:
+  /// **'Any time'**
+  String get planAnyTime;
+
+  /// Plan sheet: shown when the plan has no end time.
+  ///
+  /// In en, this message translates to:
+  /// **'No end time'**
+  String get planNoEnd;
+
+  /// Plan sheet: planned start time label.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get planStartLabel;
+
+  /// Plan sheet: planned end time label.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get planEndLabel;
+
+  /// Plan sheet: planned duration without fixed times, e.g. read for 45 minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'How long'**
+  String get planDurationLabel;
+
+  /// Plan sheet title when creating a plan; also the tooltip of the add button.
+  ///
+  /// In en, this message translates to:
+  /// **'New plan'**
+  String get planNewTitle;
+
+  /// Plan sheet title when editing a plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get planEditTitle;
+
+  /// Plan sheet: title field.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get planTitleLabel;
+
+  /// Plan sheet: helper under the title field.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional for an activity: it uses the activity\'s name'**
+  String get planTitleHelper;
+
+  /// Plan sheet action: open the record form for this plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Record it'**
+  String get planRecordIt;
+
+  /// Completes a task (no record is created).
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as done'**
+  String get planCompleteTask;
+
+  /// Reopens a completed task.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as not done'**
+  String get planReopenTask;
+
+  /// Plan sheet action: skip this plan. Neutral, not a failure.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get planSkip;
+
+  /// Plan sheet action: make a skipped, cancelled or done plan open again.
+  ///
+  /// In en, this message translates to:
+  /// **'Reopen'**
+  String get planReopen;
+
+  /// Plan sheet action: move the plan to the next day.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to tomorrow'**
+  String get planMoveToTomorrow;
+
+  /// Plan sheet action: delete the plan (with Undo).
+  ///
+  /// In en, this message translates to:
+  /// **'Delete plan'**
+  String get planDelete;
+
+  /// Snackbar after deleting a plan (with Undo).
+  ///
+  /// In en, this message translates to:
+  /// **'Plan deleted'**
+  String get planDeletedMessage;
+
+  /// Snackbar after moving a plan (with Undo).
+  ///
+  /// In en, this message translates to:
+  /// **'Moved to tomorrow'**
+  String get planMovedMessage;
+
+  /// Snackbar after skipping a plan (with Undo).
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get planSkippedMessage;
+
+  /// Snackbar after completing a task (with Undo).
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get planTaskDoneMessage;
+
+  /// Accessibility label of a plan's drag handle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reorder'**
+  String get planReorderHandle;
+
+  /// Status of a completed task.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get planStatusDone;
+
+  /// Status of an activity plan with a record but no duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded'**
+  String get planStatusRecorded;
+
+  /// Status of a skipped plan. Neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get planStatusSkipped;
+
+  /// Status of a cancelled plan. Neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get planStatusCancelled;
+
+  /// Today greeting before noon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get todayGreetingMorning;
+
+  /// Today greeting from noon to 18:00.
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon'**
+  String get todayGreetingAfternoon;
+
+  /// Today greeting in the evening and at night.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get todayGreetingEvening;
+
+  /// Today: section title for today's plans.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s plan'**
+  String get todayPlanSection;
+
+  /// Today: opens the Plan tab on today.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get todayEditPlan;
+
+  /// Today: no plans but there are records.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing planned for today.'**
+  String get todayNothingPlanned;
+
+  /// Today empty state title.
+  ///
+  /// In en, this message translates to:
+  /// **'A fresh day'**
+  String get todayEmptyTitle;
+
+  /// Today empty state message.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan what you want to do, or record something you\'ve already done.'**
+  String get todayEmptyMessage;
+
+  /// Today empty state: primary action.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan your day'**
+  String get todayPlanYourDay;
+
+  /// Today empty state: secondary action (Quick Record).
+  ///
+  /// In en, this message translates to:
+  /// **'Record something'**
+  String get todayRecordSomething;
+
+  /// Validation message.
+  ///
+  /// In en, this message translates to:
+  /// **'Use either an end time or a length, not both.'**
+  String get validationPlannedDurationConflict;
+
+  /// Validation message.
+  ///
+  /// In en, this message translates to:
+  /// **'This activity can\'t be planned.'**
+  String get validationActivityNotPlannable;
+
+  /// Validation message.
+  ///
+  /// In en, this message translates to:
+  /// **'This plan already has a record, so its activity can\'t change.'**
+  String get validationPlanActivityLocked;
+
+  /// Validation message.
+  ///
+  /// In en, this message translates to:
+  /// **'Record this activity to complete the plan.'**
+  String get validationOnlyTasksCanBeCompleted;
+
+  /// Validation message.
+  ///
+  /// In en, this message translates to:
+  /// **'This plan is for a different activity.'**
+  String get validationPlanRecordMismatch;
+
+  /// Outcome of a recorded plan without a planned length.
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded {duration}'**
+  String planRecordedDuration(String duration);
+
+  /// Planned vs actual: actual duration of the planned duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded {actual} of {planned}'**
+  String planRecordedOfPlanned(String actual, String planned);
+
+  /// A planned time range.
+  ///
+  /// In en, this message translates to:
+  /// **'{start}–{end}'**
+  String planTimeRange(String start, String end);
+
+  /// Today: count of records and total recorded time.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 record} other{{count} records}} · {duration}'**
+  String todaySummary(int count, String duration);
+
+  /// Tooltip of a plan's More button: edit, skip, move, delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan options'**
+  String get planOptions;
+
+  /// Plan options: record another session for an already recorded plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Record again'**
+  String get planRecordAgain;
+
+  /// Screen reader hint for tapping a recorded plan.
+  ///
+  /// In en, this message translates to:
+  /// **'open its record'**
+  String get planOpenRecordHint;
+
+  /// Screen reader hint for tapping a planned activity.
+  ///
+  /// In en, this message translates to:
+  /// **'record {title}'**
+  String planRecordHint(String title);
+
+  /// Record form: the plan this record fulfils, e.g. 'Planned · Gym · 45 min'.
+  ///
+  /// In en, this message translates to:
+  /// **'Planned · {details}'**
+  String planPlannedContext(String details);
+
+  /// Snackbar when quick add installed a starter template matching the typed name.
+  ///
+  /// In en, this message translates to:
+  /// **'Added the {name} activity, so you can record it from the plan'**
+  String planActivityAdded(String name);
+
+  /// Time picker title: planned start time.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get planPickStart;
+
+  /// Time picker title: planned end time; cancel for no end.
+  ///
+  /// In en, this message translates to:
+  /// **'To (optional)'**
+  String get planPickEnd;
+
+  /// Starter template content (becomes editable user data once added). What a gym session trained, e.g. Chest.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus'**
+  String get templateGymFocus;
+
+  /// Turn a plan into something you record, with fields you choose.
+  ///
+  /// In en, this message translates to:
+  /// **'Track details'**
+  String get planTrackDetails;
+
+  /// Explains Track details.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose what to record for {title}, then record it'**
+  String planTrackDetailsHint(String title);
+
+  /// Record form action: change this activity's fields.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit what to track'**
+  String get recordEditFields;
+
+  /// Starts a focus timer for the activity.
+  ///
+  /// In en, this message translates to:
+  /// **'Start focus'**
+  String get focusStart;
+
+  /// Explains Start focus.
+  ///
+  /// In en, this message translates to:
+  /// **'Time it now; record the details when you finish'**
+  String get focusStartHint;
+
+  /// Records the activity right away, without a timer.
+  ///
+  /// In en, this message translates to:
+  /// **'Record now'**
+  String get recordNow;
+
+  /// Explains Record now.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter what you did'**
+  String get recordNowHint;
+
+  /// Focus timer: pause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get focusPause;
+
+  /// Focus timer: resume.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get focusResume;
+
+  /// Focus timer: finish and record the session.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get focusFinish;
+
+  /// Focus timer: end without recording.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard session'**
+  String get focusDiscard;
+
+  /// Confirmation title before discarding a focus session.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard this session?'**
+  String get focusDiscardTitle;
+
+  /// Confirmation message before discarding a focus session.
+  ///
+  /// In en, this message translates to:
+  /// **'The timed session won\'t be recorded.'**
+  String get focusDiscardMessage;
+
+  /// Focus timer state.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get focusPaused;
+
+  /// Focus timer state.
+  ///
+  /// In en, this message translates to:
+  /// **'Focusing'**
+  String get focusRunning;
+
+  /// Screen reader label of the timer.
+  ///
+  /// In en, this message translates to:
+  /// **'Focused time'**
+  String get focusElapsedLabel;
+
+  /// Today banner: go back to the running focus session.
+  ///
+  /// In en, this message translates to:
+  /// **'Return'**
+  String get focusReturn;
+
+  /// Focus screen when nothing is running.
+  ///
+  /// In en, this message translates to:
+  /// **'No focus session'**
+  String get focusNoneTitle;
+
+  /// Focus screen when nothing is running.
+  ///
+  /// In en, this message translates to:
+  /// **'Start one from a plan or an activity.'**
+  String get focusNoneMessage;
+
+  /// Plan status while a focus session runs on it.
+  ///
+  /// In en, this message translates to:
+  /// **'In progress'**
+  String get planStatusInProgress;
+
+  /// Validation message.
+  ///
+  /// In en, this message translates to:
+  /// **'A focus session is already running.'**
+  String get validationFocusAlreadyActive;
+
+  /// Validation message.
+  ///
+  /// In en, this message translates to:
+  /// **'This activity doesn\'t use a timer.'**
+  String get validationActivityHasNoTimer;
+
+  /// Validation message.
+  ///
+  /// In en, this message translates to:
+  /// **'This focus session has already ended.'**
+  String get validationFocusNotActive;
+
+  /// Feedback after finishing a focus session (FR-FO-05).
+  ///
+  /// In en, this message translates to:
+  /// **'{activity} session complete · {duration}'**
+  String focusComplete(String activity, String duration);
+
+  /// Unit dimension: a share, e.g. body fat %.
+  ///
+  /// In en, this message translates to:
+  /// **'Percentage'**
+  String get dimensionPercentage;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Activities'**
+  String get insightActivitySection;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Add chart'**
+  String get insightAddChart;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit chart'**
+  String get insightEditChart;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'total'**
+  String get insightAggSum;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'average'**
+  String get insightAggAverage;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'best'**
+  String get insightAggMax;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'lowest'**
+  String get insightAggMin;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'count'**
+  String get insightAggCount;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'latest'**
+  String get insightAggLatest;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'All activities'**
+  String get insightAllActivities;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get insightBucketDay;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get insightBucketWeek;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get insightBucketMonth;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Bars'**
+  String get insightChartBar;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Line'**
+  String get insightChartLine;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Chart deleted'**
+  String get insightChartDeleted;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Chart options'**
+  String get insightChartOptions;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Chart'**
+  String get insightChartTypeLabel;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your charts'**
+  String get insightChartsSection;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Build your first chart'**
+  String get insightChartsEmptyTitle;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Chart anything you record: time, how often, any number (like the weight of your sets), volume, body measurements, or planned vs actual.'**
+  String get insightChartsEmptyMessage;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an activity'**
+  String get insightChooseActivity;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose'**
+  String get insightChooseField;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get insightDelete;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get insightEdit;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Field'**
+  String get insightFieldLabel;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Only where'**
+  String get insightFilterLabel;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Value, e.g. Chest Press'**
+  String get insightFilterValueHint;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Group by'**
+  String get insightGroupByLabel;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Group'**
+  String get insightGroupLabel;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Show'**
+  String get insightHowLabel;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Body measurement'**
+  String get insightKindBody;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'How often'**
+  String get insightKindCount;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'A field'**
+  String get insightKindField;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Planned vs actual'**
+  String get insightKindPlannedVsActual;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get insightKindTime;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume'**
+  String get insightKindVolume;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing recorded in this period.'**
+  String get insightNoActivity;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'No data in this period yet.'**
+  String get insightNoData;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything'**
+  String get insightNoFilter;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'This activity has no number fields.'**
+  String get insightNoNumberFields;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'This activity has no group with two number fields (like weight and reps).'**
+  String get insightNoVolumeGroups;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Grey: planned · Colour: recorded'**
+  String get insightPlannedVsActualLegend;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get insightRangeWeek;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get insightRangeMonth;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'3 months'**
+  String get insightRangeQuarter;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get insightRangeYear;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get insightTitleLabel;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'What to chart'**
+  String get insightWhatLabel;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight, body fat and other measurements'**
+  String get meMeasurementsSubtitle;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Add measurement'**
+  String get measurementAdd;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete measurement'**
+  String get measurementDelete;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Measurement deleted'**
+  String get measurementDeleted;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get measurementHistory;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing recorded yet'**
+  String get measurementNone;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get measurementValue;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Body measurements'**
+  String get measurementsTitle;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Track your body over time. Each one becomes a chart.'**
+  String get measurementsIntro;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get measurementWeight;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Height'**
+  String get measurementHeight;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Body fat'**
+  String get measurementBodyFat;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get measurementChest;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Waist'**
+  String get measurementWaist;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Arms'**
+  String get measurementArms;
+
+  /// Insights / body measurements copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Legs'**
+  String get measurementLegs;
+
+  /// Neutral comparison with the previous period.
+  ///
+  /// In en, this message translates to:
+  /// **'{change} vs previous period'**
+  String insightChange(String change);
+
+  /// All-time best value and its date.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal best {value} · {date}'**
+  String insightPersonalBest(String value, String date);
+
+  /// Planned vs actual totals.
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded {actual} of {planned} planned'**
+  String insightPlannedVsActualSummary(String actual, String planned);
+
+  /// How often an activity was recorded.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{once} other{{count} times}}'**
+  String insightTimesRecorded(int count);
+
+  /// Default chart title.
+  ///
+  /// In en, this message translates to:
+  /// **'{activity} · time'**
+  String insightTitleTime(String activity);
+
+  /// Default chart title.
+  ///
+  /// In en, this message translates to:
+  /// **'{activity} · how often'**
+  String insightTitleCount(String activity);
+
+  /// Default chart title.
+  ///
+  /// In en, this message translates to:
+  /// **'{activity} · volume'**
+  String insightTitleVolume(String activity);
+
+  /// Explains the volume metric.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume = {amount} × {count} per item'**
+  String insightVolumeFormula(String amount, String count);
+
+  /// Today: count of records when none has a duration.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 record} other{{count} records}}'**
+  String todaySummaryCount(int count);
 }
 
 class _AppLocalizationsDelegate

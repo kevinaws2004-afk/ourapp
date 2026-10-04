@@ -38,6 +38,7 @@ class ActivityBuilderState {
     this.issues = const [],
     this.isSaving = false,
     this.isDirty = false,
+    this.lockedFieldIds = const {},
   });
 
   final ActivityTypeId? typeId;
@@ -52,6 +53,10 @@ class ActivityBuilderState {
   final bool isSaving;
   final bool isDirty;
 
+  /// Fields (at any depth) that already have entries: their type and unit
+  /// dimension are locked (ADR-026).
+  final Set<ActivityFieldId> lockedFieldIds;
+
   bool get isNew => typeId == null;
 
   ActivityTypeDefinition toDefinition() => ActivityTypeDefinition(
@@ -64,10 +69,19 @@ class ActivityBuilderState {
     fields: [for (final f in fields) f.definition],
   );
 
-  /// Issues for a builder field, matched by the validator's field key.
+  /// Issues for a builder field and its sub-fields, matched by the
+  /// validator's field keys.
   List<ValidationIssue> issuesForField(int index) {
-    final key = ActivityTypeValidator.fieldKey(fields[index].definition, index);
-    return issues.where((i) => i.target == key).toList();
+    final keys = <String>{};
+    void collect(FieldDefinition field, String path) {
+      keys.add(ActivityTypeValidator.fieldKey(field, path));
+      for (final (i, sub) in field.subFields.indexed) {
+        collect(sub, '$path.$i');
+      }
+    }
+
+    collect(fields[index].definition, '$index');
+    return issues.where((i) => keys.contains(i.target)).toList();
   }
 
   ActivityBuilderState copyWith({
@@ -93,19 +107,40 @@ class ActivityBuilderState {
     issues: issues ?? this.issues,
     isSaving: isSaving ?? this.isSaving,
     isDirty: isDirty ?? this.isDirty,
+    lockedFieldIds: lockedFieldIds,
   );
 }
 
-/// Builder for a new type (`null`) or an existing one.
+/// What the builder edits: an existing type, or a new one optionally named
+/// up front (e.g. from a plan: "Food" → set up what to track, ADR-030).
+class ActivityBuilderArgs {
+  const ActivityBuilderArgs({this.typeId, this.initialName = ''});
+
+  final ActivityTypeId? typeId;
+  final String initialName;
+
+  @override
+  bool operator ==(Object other) =>
+      other is ActivityBuilderArgs &&
+      other.typeId == typeId &&
+      other.initialName == initialName;
+
+  @override
+  int get hashCode => Object.hash(typeId, initialName);
+}
+
+/// Builder for a new type or an existing one.
 final activityBuilderProvider = AsyncNotifierProvider.autoDispose
-    .family<ActivityBuilderNotifier, ActivityBuilderState, ActivityTypeId?>(
+    .family<ActivityBuilderNotifier, ActivityBuilderState, ActivityBuilderArgs>(
       ActivityBuilderNotifier.new,
     );
 
 class ActivityBuilderNotifier extends AsyncNotifier<ActivityBuilderState> {
-  ActivityBuilderNotifier(this.typeId);
+  ActivityBuilderNotifier(this.args);
 
-  final ActivityTypeId? typeId;
+  final ActivityBuilderArgs args;
+
+  ActivityTypeId? get typeId => args.typeId;
   int _nextKey = 0;
 
   ActivityBuilderState get _state => state.requireValue;
@@ -117,7 +152,7 @@ class ActivityBuilderNotifier extends AsyncNotifier<ActivityBuilderState> {
     final id = typeId;
     if (id == null) {
       return ActivityBuilderState(
-        name: '',
+        name: args.initialName.trim(),
         iconId: 'sparkle',
         colorKey: ActivityColorKey.sage.name,
         fields: const [],
@@ -137,18 +172,22 @@ class ActivityBuilderNotifier extends AsyncNotifier<ActivityBuilderState> {
       description: type.description ?? '',
       supportsTimer: type.supportsTimer,
       supportsPlanning: type.supportsPlanning,
+      lockedFieldIds: locked,
       fields: [
         for (final field in type.activeFields)
           BuilderField(
             key: _key(),
-            definition: _definitionOf(field),
+            definition: _definitionOf(type, field),
             locked: locked.contains(field.id),
           ),
       ],
     );
   }
 
-  static FieldDefinition _definitionOf(ActivityField field) => FieldDefinition(
+  static FieldDefinition _definitionOf(
+    ActivityType type,
+    ActivityField field,
+  ) => FieldDefinition(
     id: field.id,
     name: field.name,
     type: field.type,
@@ -156,6 +195,9 @@ class ActivityBuilderNotifier extends AsyncNotifier<ActivityBuilderState> {
     required: field.required,
     measurable: field.measurable,
     config: field.config,
+    subFields: [
+      for (final sub in type.subFieldsOf(field.id)) _definitionOf(type, sub),
+    ],
   );
 
   void _update(ActivityBuilderState next) =>

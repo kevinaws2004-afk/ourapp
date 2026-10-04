@@ -6,7 +6,10 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   final cases = <FieldType, FieldConfig>{
-    FieldType.text: const TextFieldConfig(multiline: true),
+    FieldType.text: const TextFieldConfig(
+      multiline: true,
+      suggestFromHistory: true,
+    ),
     FieldType.number: const NumberFieldConfig(
       decimals: 2,
       min: 0,
@@ -24,6 +27,7 @@ void main() {
     FieldType.time: const TimeFieldConfig(),
     FieldType.duration: const DurationFieldConfig(),
     FieldType.rating: const RatingFieldConfig(max: 10),
+    FieldType.repeatingGroup: const RepeatingGroupFieldConfig(itemLabel: 'Set'),
   };
 
   for (final MapEntry(key: type, value: config) in cases.entries) {

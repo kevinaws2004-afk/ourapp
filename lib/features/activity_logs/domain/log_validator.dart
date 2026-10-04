@@ -4,6 +4,7 @@ import '../../../core/units/unit_registry.dart';
 import '../../activity_types/domain/activity_ids.dart';
 import '../../activity_types/domain/activity_type.dart';
 import '../../activity_types/domain/field_config.dart';
+import '../../activity_types/domain/field_type.dart';
 import 'activity_log.dart';
 import 'field_value.dart';
 
@@ -29,33 +30,118 @@ abstract final class LogValidator {
         ),
       );
     }
+    if (draft.endedAt case final ended?) {
+      if (ended.isBefore(draft.startedAt)) {
+        issues.add(
+          const ValidationIssue(ValidationCode.endBeforeStart, target: 'start'),
+        );
+      } else if (duration != null &&
+          duration > ended.difference(draft.startedAt).inMilliseconds) {
+        issues.add(
+          const ValidationIssue(
+            ValidationCode.durationExceedsElapsed,
+            target: 'duration',
+          ),
+        );
+      }
+    }
     if ((draft.notes?.length ?? 0) > ActivityLogDraft.maxNotesLength) {
       issues.add(
         const ValidationIssue(ValidationCode.textTooLong, target: 'notes'),
       );
     }
 
-    for (final field in type.activeFields) {
-      if (field.required && !draft.values.containsKey(field.id)) {
+    _validateScope(
+      type,
+      fields: type.activeFields,
+      parentId: null,
+      values: draft.values,
+      existing: existing,
+      targetPrefix: '',
+      issues: issues,
+    );
+    return ValidationResult(issues);
+  }
+
+  /// Issue target for a value inside a Repeating Group item.
+  static String itemTarget(GroupItemId itemId, ActivityFieldId fieldId) =>
+      '${itemId.value}/${fieldId.value}';
+
+  /// Validates the values of one scope: the top level, or one group item
+  /// (whose allowed fields are the group's sub-fields).
+  static void _validateScope(
+    ActivityType type, {
+    required List<ActivityField> fields,
+    required ActivityFieldId? parentId,
+    required Map<ActivityFieldId, FieldValue> values,
+    required Map<ActivityFieldId, FieldValue> existing,
+    required String targetPrefix,
+    required List<ValidationIssue> issues,
+  }) {
+    String target(ActivityFieldId id) => '$targetPrefix${id.value}';
+    for (final field in fields) {
+      if (field.required && !values.containsKey(field.id)) {
         issues.add(
-          ValidationIssue(ValidationCode.required, target: field.id.value),
+          ValidationIssue(ValidationCode.required, target: target(field.id)),
         );
       }
     }
-    for (final MapEntry(key: fieldId, :value) in draft.values.entries) {
+    for (final MapEntry(key: fieldId, :value) in values.entries) {
       final field = type.fieldById(fieldId);
+      final previous = existing[fieldId];
+      final inScope = field != null && field.parentId == parentId;
       final unchangedHistorical =
-          field != null && field.isRemoved && existing[fieldId] == value;
-      if (field == null || (field.isRemoved && !unchangedHistorical)) {
+          inScope && field.isRemoved && previous == value;
+      if (!inScope || (field.isRemoved && !unchangedHistorical)) {
         issues.add(
-          ValidationIssue(ValidationCode.unknownField, target: fieldId.value),
+          ValidationIssue(ValidationCode.unknownField, target: target(fieldId)),
         );
         continue;
       }
       if (unchangedHistorical) continue;
-      issues.addAll(validateValue(field, value, previous: existing[fieldId]));
+      if (value is RepeatingGroupValue &&
+          field.type == FieldType.repeatingGroup) {
+        _validateGroup(type, field, value, previous, targetPrefix, issues);
+      } else {
+        for (final issue in validateValue(field, value, previous: previous)) {
+          issues.add(ValidationIssue(issue.code, target: target(fieldId)));
+        }
+      }
     }
-    return ValidationResult(issues);
+  }
+
+  static void _validateGroup(
+    ActivityType type,
+    ActivityField group,
+    RepeatingGroupValue value,
+    FieldValue? previous,
+    String targetPrefix,
+    List<ValidationIssue> issues,
+  ) {
+    final previousItems = {
+      if (previous is RepeatingGroupValue)
+        for (final item in previous.items) item.id: item,
+    };
+    final seen = <GroupItemId>{};
+    for (final item in value.items) {
+      if (!seen.add(item.id)) {
+        issues.add(
+          ValidationIssue(
+            ValidationCode.valueTypeMismatch,
+            target: '$targetPrefix${group.id.value}',
+          ),
+        );
+      }
+      _validateScope(
+        type,
+        fields: type.subFieldsOf(group.id),
+        parentId: group.id,
+        values: item.values,
+        existing: previousItems[item.id]?.values ?? const {},
+        targetPrefix: '${item.id.value}/',
+        issues: issues,
+      );
+    }
   }
 
   /// Validates one value. An archived option is accepted only if it was
@@ -122,6 +208,9 @@ abstract final class LogValidator {
           add(ValidationCode.ratingOutOfRange);
         }
       case (BooleanValue() || DateValue(), _):
+        break;
+      case (RepeatingGroupValue(), _):
+        // Validated item by item in [_validateGroup] (needs the activity type).
         break;
       default:
         add(ValidationCode.valueTypeMismatch);

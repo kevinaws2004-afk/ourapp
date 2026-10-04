@@ -11,42 +11,56 @@ String errorMessage(AppLocalizations l10n, Object error) => switch (error) {
   _ => l10n.errorGeneric,
 };
 
-String validationMessage(AppLocalizations l10n, ValidationCode code) =>
-    switch (code) {
-      ValidationCode.required => l10n.validationRequired,
-      ValidationCode.nameRequired => l10n.validationNameRequired,
-      ValidationCode.nameTooLong => l10n.validationNameTooLong,
-      ValidationCode.duplicateFieldName => l10n.validationDuplicateFieldName,
-      ValidationCode.unknownIcon => l10n.validationUnknownIcon,
-      ValidationCode.unknownColor => l10n.validationUnknownColor,
-      ValidationCode.textTooLong => l10n.validationTextTooLong,
-      ValidationCode.notANumber => l10n.validationNotANumber,
-      ValidationCode.belowMinimum => l10n.validationBelowMinimum,
-      ValidationCode.aboveMaximum => l10n.validationAboveMaximum,
-      ValidationCode.tooManyDecimals => l10n.validationTooManyDecimals,
-      ValidationCode.unitRequired => l10n.validationUnitRequired,
-      ValidationCode.unitNotAllowed => l10n.validationUnitNotAllowed,
-      ValidationCode.unknownOption => l10n.validationUnknownOption,
-      ValidationCode.unknownField => l10n.validationUnknownField,
-      ValidationCode.valueTypeMismatch => l10n.validationValueTypeMismatch,
-      ValidationCode.archivedOption => l10n.validationArchivedOption,
-      ValidationCode.duplicateOption => l10n.validationDuplicateOption,
-      ValidationCode.optionLabelRequired => l10n.validationOptionLabelRequired,
-      ValidationCode.optionsRequired => l10n.validationOptionsRequired,
-      ValidationCode.ratingOutOfRange => l10n.validationRatingOutOfRange,
-      ValidationCode.invalidRatingScale => l10n.validationInvalidRatingScale,
-      ValidationCode.invalidMinMax => l10n.validationInvalidMinMax,
-      ValidationCode.negativeDuration => l10n.validationNegativeDuration,
-      ValidationCode.durationExceedsElapsed =>
-        l10n.validationDurationExceedsElapsed,
-      ValidationCode.endBeforeStart => l10n.validationEndBeforeStart,
-      ValidationCode.fieldSemanticsLocked =>
-        l10n.validationFieldSemanticsLocked,
-      ValidationCode.fieldTypeNotSupportedYet =>
-        l10n.validationFieldTypeNotSupportedYet,
-      ValidationCode.invalidDate => l10n.validationInvalidDate,
-      ValidationCode.invalidTime => l10n.validationInvalidTime,
-    };
+String validationMessage(
+  AppLocalizations l10n,
+  ValidationCode code,
+) => switch (code) {
+  ValidationCode.required => l10n.validationRequired,
+  ValidationCode.nameRequired => l10n.validationNameRequired,
+  ValidationCode.nameTooLong => l10n.validationNameTooLong,
+  ValidationCode.duplicateFieldName => l10n.validationDuplicateFieldName,
+  ValidationCode.unknownIcon => l10n.validationUnknownIcon,
+  ValidationCode.unknownColor => l10n.validationUnknownColor,
+  ValidationCode.textTooLong => l10n.validationTextTooLong,
+  ValidationCode.notANumber => l10n.validationNotANumber,
+  ValidationCode.belowMinimum => l10n.validationBelowMinimum,
+  ValidationCode.aboveMaximum => l10n.validationAboveMaximum,
+  ValidationCode.tooManyDecimals => l10n.validationTooManyDecimals,
+  ValidationCode.unitRequired => l10n.validationUnitRequired,
+  ValidationCode.unitNotAllowed => l10n.validationUnitNotAllowed,
+  ValidationCode.unknownOption => l10n.validationUnknownOption,
+  ValidationCode.unknownField => l10n.validationUnknownField,
+  ValidationCode.valueTypeMismatch => l10n.validationValueTypeMismatch,
+  ValidationCode.archivedOption => l10n.validationArchivedOption,
+  ValidationCode.duplicateOption => l10n.validationDuplicateOption,
+  ValidationCode.optionLabelRequired => l10n.validationOptionLabelRequired,
+  ValidationCode.optionsRequired => l10n.validationOptionsRequired,
+  ValidationCode.ratingOutOfRange => l10n.validationRatingOutOfRange,
+  ValidationCode.invalidRatingScale => l10n.validationInvalidRatingScale,
+  ValidationCode.invalidMinMax => l10n.validationInvalidMinMax,
+  ValidationCode.negativeDuration => l10n.validationNegativeDuration,
+  ValidationCode.durationExceedsElapsed =>
+    l10n.validationDurationExceedsElapsed,
+  ValidationCode.endBeforeStart => l10n.validationEndBeforeStart,
+  ValidationCode.fieldSemanticsLocked => l10n.validationFieldSemanticsLocked,
+  ValidationCode.fieldTypeNotSupportedYet =>
+    l10n.validationFieldTypeNotSupportedYet,
+  ValidationCode.invalidDate => l10n.validationInvalidDate,
+  ValidationCode.invalidTime => l10n.validationInvalidTime,
+  ValidationCode.subFieldsRequired => l10n.validationSubFieldsRequired,
+  ValidationCode.nestingTooDeep => l10n.validationNestingTooDeep,
+  ValidationCode.itemLabelRequired => l10n.validationItemLabelRequired,
+  ValidationCode.plannedDurationConflict =>
+    l10n.validationPlannedDurationConflict,
+  ValidationCode.activityNotPlannable => l10n.validationActivityNotPlannable,
+  ValidationCode.planActivityLocked => l10n.validationPlanActivityLocked,
+  ValidationCode.onlyTasksCanBeCompleted =>
+    l10n.validationOnlyTasksCanBeCompleted,
+  ValidationCode.planRecordMismatch => l10n.validationPlanRecordMismatch,
+  ValidationCode.focusAlreadyActive => l10n.validationFocusAlreadyActive,
+  ValidationCode.activityHasNoTimer => l10n.validationActivityHasNoTimer,
+  ValidationCode.focusNotActive => l10n.validationFocusNotActive,
+};
 
 /// The first message for [target] in [issues], if any.
 String? firstIssueMessage(

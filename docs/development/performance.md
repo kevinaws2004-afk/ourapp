@@ -35,7 +35,7 @@ Data scale assumption: ~10–50k logs, 100k–500k value rows (see [database.md 
 
 - Pure Dart computation over range-bounded data; memoize per (source, range, aggregation) via providers.
 - Move to `Isolate.run` when a computation exceeds ~16 ms on the profiling device.
-- Nested Repeating Group values (Phase 3) must stay queryable without hot-path JSON parsing; the storage choice is the ADR-019 sub-decision. Measure analytics queries with `EXPLAIN QUERY PLAN`.
+- Nested Repeating Group values are relational rows (ADR-027), so they are queryable without JSON parsing. A page of logs loads in three queries (logs, items, values). Item and sub-field paths are covered by query-plan tests; analytics joins are measured with `EXPLAIN QUERY PLAN` in Phase 6.
 
 ## 4. UI
 

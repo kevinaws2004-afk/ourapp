@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test(
-    'a fresh database is created at schema v2 with the activity engine',
+    'a fresh database is created at schema v6 with the activity engine',
     () async {
       final db = AppDatabase(NativeDatabase.memory());
       addTearDown(db.close);
@@ -23,21 +23,37 @@ void main() {
             .add(row.read<String>('name'));
       }
 
-      expect(version.read<int>('user_version'), 2);
+      expect(version.read<int>('user_version'), 6);
       expect(byType['table'], [
         'activity_fields',
         'activity_logs',
         'activity_types',
         'app_preferences',
+        'focus_sessions',
+        'insight_charts',
+        'log_group_items',
         'log_values',
+        'measurements',
+        'plans',
       ]);
       expect(byType['index'], [
+        'idx_activity_fields_parent',
         'idx_activity_fields_type_position',
         'idx_activity_logs_day',
+        'idx_activity_logs_plan',
         'idx_activity_logs_type_day',
+        'idx_focus_sessions_plan',
+        'idx_log_group_items_log',
         'idx_log_values_field_normalized',
+        'idx_log_values_log',
+        'idx_measurements_type_day',
+        'idx_plans_day',
+        'idx_plans_type_day',
+        'ux_focus_sessions_one_active',
+        'ux_log_values_item',
+        'ux_log_values_top_level',
       ]);
-      expect(byType['trigger'], hasLength(8));
+      expect(byType['trigger'], hasLength(19));
     },
   );
 
@@ -54,7 +70,12 @@ void main() {
       'activity_types',
       'activity_fields',
       'activity_logs',
+      'log_group_items',
       'log_values',
+      'plans',
+      'focus_sessions',
+      'measurements',
+      'insight_charts',
     ]) {
       expect(strict[table], isTrue, reason: table);
     }
@@ -77,7 +98,7 @@ void main() {
     () async {
       final db = AppDatabase(
         NativeDatabase.memory(
-          setup: (raw) => raw.execute('PRAGMA user_version = 3'),
+          setup: (raw) => raw.execute('PRAGMA user_version = 7'),
         ),
       );
       addTearDown(db.close);

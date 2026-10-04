@@ -1,6 +1,9 @@
--- Activity engine schema, v2 (docs/architecture/database.md §3.2–3.6).
+-- Activity engine schema, v6 (docs/architecture/database.md §3.2–3.11).
 -- ADR-017 (identity), ADR-019 (typed values), ADR-020 (units), ADR-021
--- (durations), ADR-022 (soft delete), ADR-026 (relational schema, triggers).
+-- (durations), ADR-022 (soft delete), ADR-026 (relational schema, triggers),
+-- ADR-027 (relational Repeating Groups, added in v3), ADR-018 (plans, added
+-- in v4), ADR-031 (focus sessions, added in v5), ADR-034 (measurements and
+-- saved insight charts, added in v6).
 -- Keep database.md in sync with every change here.
 
 CREATE TABLE activity_types (
@@ -34,11 +37,47 @@ CREATE TABLE activity_fields (
   created_at       INTEGER NOT NULL,
   updated_at       INTEGER NOT NULL,
   deleted_at       INTEGER,
+  -- v3: sub-field of a Repeating Group (ADR-027). Added with ALTER TABLE, so it is last.
+  parent_field_id  INTEGER REFERENCES activity_fields (internal_id) ON DELETE RESTRICT,
   CHECK (measurable = 0 OR field_type IN ('number', 'rating', 'duration', 'boolean'))
 ) STRICT AS ActivityFieldRow;
 
 -- Ordered fields of a type (renderer/builder; includes removed fields for history).
 CREATE INDEX idx_activity_fields_type_position ON activity_fields (activity_type_id, position);
+-- v3: sub-fields of a Repeating Group.
+CREATE INDEX idx_activity_fields_parent ON activity_fields (parent_field_id) WHERE parent_field_id IS NOT NULL;
+
+-- v4: a Plan is an intention for a date (ADR-018). A Task is a plan without an
+-- activity type. Completion of an activity plan is derived from its linked
+-- logs, so 'completed' is stored only for tasks. Planned duration is either
+-- the time range or planned_duration_ms, never both.
+CREATE TABLE plans (
+  internal_id         INTEGER NOT NULL PRIMARY KEY,
+  public_id           TEXT NOT NULL UNIQUE CHECK (length(public_id) = 36),
+  plan_date           TEXT NOT NULL CHECK (plan_date GLOB '[0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]'),
+  activity_type_id    INTEGER REFERENCES activity_types (internal_id) ON DELETE RESTRICT,
+  title               TEXT NOT NULL CHECK (length(trim(title)) > 0),
+  notes               TEXT,
+  planned_start_at    INTEGER,
+  planned_end_at      INTEGER,
+  planned_duration_ms INTEGER,
+  sort_order          INTEGER NOT NULL DEFAULT 0,
+  status              TEXT NOT NULL DEFAULT 'planned'
+                      CHECK (status IN ('planned', 'completed', 'skipped', 'cancelled')),
+  created_at          INTEGER NOT NULL,
+  updated_at          INTEGER NOT NULL,
+  deleted_at          INTEGER,
+  CHECK (planned_end_at IS NULL OR planned_start_at IS NOT NULL),
+  CHECK (planned_end_at IS NULL OR planned_end_at >= planned_start_at),
+  CHECK (planned_duration_ms IS NULL OR (planned_duration_ms > 0 AND planned_end_at IS NULL)),
+  CHECK (status <> 'completed' OR activity_type_id IS NULL)
+) STRICT AS PlanRow;
+
+-- A date's plans in order (Plan tab, Today).
+CREATE INDEX idx_plans_day ON plans (plan_date, sort_order) WHERE deleted_at IS NULL;
+-- Plans of a type over dates (planned-vs-actual analytics).
+CREATE INDEX idx_plans_type_day ON plans (activity_type_id, plan_date)
+  WHERE deleted_at IS NULL AND activity_type_id IS NOT NULL;
 
 CREATE TABLE activity_logs (
   internal_id       INTEGER NOT NULL PRIMARY KEY,
@@ -53,6 +92,7 @@ CREATE TABLE activity_logs (
   created_at        INTEGER NOT NULL,
   updated_at        INTEGER NOT NULL,
   deleted_at        INTEGER,
+  plan_id           INTEGER REFERENCES plans (internal_id) ON DELETE RESTRICT,
   CHECK (ended_at IS NULL OR ended_at >= started_at),
   CHECK (duration_ms IS NULL OR ended_at IS NULL OR duration_ms <= ended_at - started_at)
 ) STRICT AS ActivityLogRow;
@@ -63,6 +103,23 @@ CREATE INDEX idx_activity_logs_day
 -- Activity history (newest first) and analytics ranges per type.
 CREATE INDEX idx_activity_logs_type_day
   ON activity_logs (activity_type_id, local_date, started_at) WHERE deleted_at IS NULL;
+-- v4: the logs that fulfil a plan (derived plan completion).
+CREATE INDEX idx_activity_logs_plan ON activity_logs (plan_id) WHERE plan_id IS NOT NULL;
+
+-- v3: one row per Repeating Group item (an exercise, a set, a checklist item).
+CREATE TABLE log_group_items (
+  internal_id    INTEGER NOT NULL PRIMARY KEY,
+  public_id      TEXT NOT NULL UNIQUE CHECK (length(public_id) = 36),
+  log_id         INTEGER NOT NULL REFERENCES activity_logs (internal_id) ON DELETE CASCADE,
+  field_id       INTEGER NOT NULL REFERENCES activity_fields (internal_id) ON DELETE RESTRICT,
+  parent_item_id INTEGER REFERENCES log_group_items (internal_id) ON DELETE CASCADE,
+  position       INTEGER NOT NULL CHECK (position >= 0),
+  created_at     INTEGER NOT NULL,
+  updated_at     INTEGER NOT NULL
+) STRICT AS LogGroupItemRow;
+
+-- A log's items, by parent and position (loads the whole tree for a page of logs).
+CREATE INDEX idx_log_group_items_log ON log_group_items (log_id, parent_item_id, position);
 
 CREATE TABLE log_values (
   internal_id      INTEGER NOT NULL PRIMARY KEY,
@@ -79,7 +136,8 @@ CREATE TABLE log_values (
   json_value       TEXT CHECK (json_value IS NULL OR json_valid(json_value)),
   created_at       INTEGER NOT NULL,
   updated_at       INTEGER NOT NULL,
-  UNIQUE (log_id, field_id),
+  -- v3: the Repeating Group item this value belongs to (NULL = top-level value).
+  group_item_id    INTEGER REFERENCES log_group_items (internal_id) ON DELETE CASCADE,
   CHECK ((text_value IS NOT NULL) + (number_value IS NOT NULL) + (boolean_value IS NOT NULL)
        + (date_value IS NOT NULL) + (time_value IS NOT NULL) + (duration_ms IS NOT NULL)
        + (json_value IS NOT NULL) = 1),
@@ -87,17 +145,30 @@ CREATE TABLE log_values (
   CHECK (unit_code IS NULL OR number_value IS NOT NULL)
 ) STRICT AS LogValueRow;
 
+-- Values for a page of logs (top-level and item values); also the FK cascade path.
+CREATE INDEX idx_log_values_log ON log_values (log_id, field_id);
+-- One value per field: per log for top-level values, per item for item values.
+CREATE UNIQUE INDEX ux_log_values_top_level ON log_values (log_id, field_id) WHERE group_item_id IS NULL;
+CREATE UNIQUE INDEX ux_log_values_item ON log_values (group_item_id, field_id) WHERE group_item_id IS NOT NULL;
+
 -- Historical values for a field; also backs the semantics-lock EXISTS check.
 CREATE INDEX idx_log_values_field_normalized ON log_values (field_id, normalized_value);
 
--- Historical-integrity triggers (ADR-026). Error codes are translated to
--- ValidationException by the data layer (core/database/sqlite_error_translator.dart).
+-- Historical-integrity triggers (ADR-026, ADR-027). Error codes are translated
+-- by the data layer (core/database/storage_guard.dart).
 
 CREATE TRIGGER trg_log_values_insert_check BEFORE INSERT ON log_values
 BEGIN
   SELECT RAISE(ABORT, 'log_value_field_not_in_log_type')
   WHERE (SELECT activity_type_id FROM activity_fields WHERE internal_id = NEW.field_id)
         IS NOT (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id);
+  -- Top-level values are for top-level fields; item values are for sub-fields
+  -- of the item's group, in the same log.
+  SELECT RAISE(ABORT, 'log_value_scope_mismatch')
+  WHERE (SELECT parent_field_id FROM activity_fields WHERE internal_id = NEW.field_id)
+        IS NOT (SELECT field_id FROM log_group_items WHERE internal_id = NEW.group_item_id)
+     OR (NEW.group_item_id IS NOT NULL
+         AND (SELECT log_id FROM log_group_items WHERE internal_id = NEW.group_item_id) IS NOT NEW.log_id);
   SELECT RAISE(ABORT, 'log_value_column_mismatch')
   WHERE NOT COALESCE((
     SELECT CASE f.field_type
@@ -110,8 +181,7 @@ BEGIN
       WHEN 'time' THEN NEW.time_value IS NOT NULL
       WHEN 'duration' THEN NEW.duration_ms IS NOT NULL
       WHEN 'multi_select' THEN NEW.json_value IS NOT NULL
-      WHEN 'repeating_group' THEN NEW.json_value IS NOT NULL
-      ELSE 0
+      ELSE 0 -- repeating_group: structure lives in log_group_items, never a value row
     END
     FROM activity_fields f WHERE f.internal_id = NEW.field_id), 0);
 END;
@@ -121,6 +191,13 @@ BEGIN
   SELECT RAISE(ABORT, 'log_value_field_not_in_log_type')
   WHERE (SELECT activity_type_id FROM activity_fields WHERE internal_id = NEW.field_id)
         IS NOT (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id);
+  -- Top-level values are for top-level fields; item values are for sub-fields
+  -- of the item's group, in the same log.
+  SELECT RAISE(ABORT, 'log_value_scope_mismatch')
+  WHERE (SELECT parent_field_id FROM activity_fields WHERE internal_id = NEW.field_id)
+        IS NOT (SELECT field_id FROM log_group_items WHERE internal_id = NEW.group_item_id)
+     OR (NEW.group_item_id IS NOT NULL
+         AND (SELECT log_id FROM log_group_items WHERE internal_id = NEW.group_item_id) IS NOT NEW.log_id);
   SELECT RAISE(ABORT, 'log_value_column_mismatch')
   WHERE NOT COALESCE((
     SELECT CASE f.field_type
@@ -133,8 +210,7 @@ BEGIN
       WHEN 'time' THEN NEW.time_value IS NOT NULL
       WHEN 'duration' THEN NEW.duration_ms IS NOT NULL
       WHEN 'multi_select' THEN NEW.json_value IS NOT NULL
-      WHEN 'repeating_group' THEN NEW.json_value IS NOT NULL
-      ELSE 0
+      ELSE 0 -- repeating_group: structure lives in log_group_items, never a value row
     END
     FROM activity_fields f WHERE f.internal_id = NEW.field_id), 0);
 END;
@@ -142,7 +218,9 @@ END;
 CREATE TRIGGER trg_activity_fields_semantics_locked
 BEFORE UPDATE OF field_type, dimension ON activity_fields
 WHEN (OLD.field_type IS NOT NEW.field_type OR OLD.dimension IS NOT NEW.dimension)
-  AND EXISTS (SELECT 1 FROM log_values WHERE field_id = OLD.internal_id)
+  AND (EXISTS (SELECT 1 FROM log_values WHERE field_id = OLD.internal_id)
+       OR EXISTS (SELECT 1 FROM log_group_items WHERE field_id = OLD.internal_id)
+       OR EXISTS (SELECT 1 FROM activity_fields c WHERE c.parent_field_id = OLD.internal_id))
 BEGIN
   SELECT RAISE(ABORT, 'activity_field_semantics_locked');
 END;
@@ -177,6 +255,179 @@ END;
 
 CREATE TRIGGER trg_activity_logs_public_id_immutable
 BEFORE UPDATE OF public_id ON activity_logs
+WHEN OLD.public_id IS NOT NEW.public_id
+BEGIN
+  SELECT RAISE(ABORT, 'public_id_immutable');
+END;
+
+-- v3 (ADR-027): a sub-field's parent is a Repeating Group of the same type, and
+-- nesting stops at two levels (a nested group can't contain another group).
+CREATE TRIGGER trg_activity_fields_parent_check
+BEFORE INSERT ON activity_fields
+WHEN NEW.parent_field_id IS NOT NULL
+BEGIN
+  SELECT RAISE(ABORT, 'activity_field_parent_invalid')
+  WHERE COALESCE((
+    SELECT p.field_type = 'repeating_group'
+       AND p.activity_type_id = NEW.activity_type_id
+       AND (p.parent_field_id IS NULL OR NEW.field_type <> 'repeating_group')
+    FROM activity_fields p WHERE p.internal_id = NEW.parent_field_id), 0) = 0;
+END;
+
+CREATE TRIGGER trg_activity_fields_parent_immutable
+BEFORE UPDATE OF parent_field_id ON activity_fields
+WHEN OLD.parent_field_id IS NOT NEW.parent_field_id
+BEGIN
+  SELECT RAISE(ABORT, 'activity_field_parent_immutable');
+END;
+
+-- v3: an item belongs to a Repeating Group field of its log's type; a nested
+-- item's parent is an item of the parent group, in the same log.
+CREATE TRIGGER trg_log_group_items_insert_check BEFORE INSERT ON log_group_items
+BEGIN
+  SELECT RAISE(ABORT, 'group_item_field_invalid')
+  WHERE COALESCE((
+    SELECT f.field_type = 'repeating_group'
+       AND f.activity_type_id = (SELECT activity_type_id FROM activity_logs WHERE internal_id = NEW.log_id)
+    FROM activity_fields f WHERE f.internal_id = NEW.field_id), 0) = 0;
+  SELECT RAISE(ABORT, 'group_item_parent_invalid')
+  WHERE (SELECT parent_field_id FROM activity_fields WHERE internal_id = NEW.field_id)
+        IS NOT (SELECT field_id FROM log_group_items WHERE internal_id = NEW.parent_item_id)
+     OR (NEW.parent_item_id IS NOT NULL
+         AND (SELECT log_id FROM log_group_items WHERE internal_id = NEW.parent_item_id) IS NOT NEW.log_id);
+END;
+
+CREATE TRIGGER trg_log_group_items_structure_immutable
+BEFORE UPDATE OF log_id, field_id, parent_item_id, public_id ON log_group_items
+WHEN OLD.log_id IS NOT NEW.log_id
+  OR OLD.field_id IS NOT NEW.field_id
+  OR OLD.parent_item_id IS NOT NEW.parent_item_id
+  OR OLD.public_id IS NOT NEW.public_id
+BEGIN
+  SELECT RAISE(ABORT, 'group_item_structure_immutable');
+END;
+
+-- v4: a log may only fulfil a plan of its own activity type (never a task).
+CREATE TRIGGER trg_activity_logs_plan_check_insert
+BEFORE INSERT ON activity_logs
+WHEN NEW.plan_id IS NOT NULL
+BEGIN
+  SELECT RAISE(ABORT, 'log_plan_mismatch')
+  WHERE (SELECT activity_type_id FROM plans WHERE internal_id = NEW.plan_id)
+        IS NOT NEW.activity_type_id;
+END;
+
+CREATE TRIGGER trg_activity_logs_plan_check_update
+BEFORE UPDATE OF plan_id ON activity_logs
+WHEN NEW.plan_id IS NOT NULL
+BEGIN
+  SELECT RAISE(ABORT, 'log_plan_mismatch')
+  WHERE (SELECT activity_type_id FROM plans WHERE internal_id = NEW.plan_id)
+        IS NOT NEW.activity_type_id;
+END;
+
+-- v4: a plan fulfilled by logs keeps its activity type.
+CREATE TRIGGER trg_plans_type_locked
+BEFORE UPDATE OF activity_type_id ON plans
+WHEN OLD.activity_type_id IS NOT NEW.activity_type_id
+  AND EXISTS (SELECT 1 FROM activity_logs WHERE plan_id = OLD.internal_id)
+BEGIN
+  SELECT RAISE(ABORT, 'plan_type_locked');
+END;
+
+CREATE TRIGGER trg_plans_public_id_immutable
+BEFORE UPDATE OF public_id ON plans
+WHEN OLD.public_id IS NOT NEW.public_id
+BEGIN
+  SELECT RAISE(ABORT, 'public_id_immutable');
+END;
+
+-- v5: a focus timer (ADR-031). Elapsed time is derived from these timestamps,
+-- never counted in memory, so it survives the app being killed. Finishing
+-- creates the record and links it in one transaction.
+CREATE TABLE focus_sessions (
+  internal_id        INTEGER NOT NULL PRIMARY KEY,
+  public_id          TEXT NOT NULL UNIQUE CHECK (length(public_id) = 36),
+  activity_type_id   INTEGER NOT NULL REFERENCES activity_types (internal_id) ON DELETE RESTRICT,
+  plan_id            INTEGER REFERENCES plans (internal_id) ON DELETE RESTRICT,
+  activity_log_id    INTEGER REFERENCES activity_logs (internal_id) ON DELETE RESTRICT,
+  state              TEXT NOT NULL CHECK (state IN ('running', 'paused', 'finished', 'discarded')),
+  started_at         INTEGER NOT NULL,
+  paused_at          INTEGER,
+  paused_duration_ms INTEGER NOT NULL DEFAULT 0 CHECK (paused_duration_ms >= 0),
+  ended_at           INTEGER,
+  duration_ms        INTEGER CHECK (duration_ms IS NULL OR duration_ms >= 0),
+  created_at         INTEGER NOT NULL,
+  updated_at         INTEGER NOT NULL,
+  deleted_at         INTEGER,
+  CHECK ((state = 'paused') = (paused_at IS NOT NULL)),
+  CHECK ((state = 'finished') = (activity_log_id IS NOT NULL AND ended_at IS NOT NULL AND duration_ms IS NOT NULL)),
+  CHECK (ended_at IS NULL OR ended_at >= started_at)
+) STRICT AS FocusSessionRow;
+
+-- At most one active session (OQ-11), enforced by the database; also the
+-- index for "the active session" lookups.
+CREATE UNIQUE INDEX ux_focus_sessions_one_active
+  ON focus_sessions (state IN ('running', 'paused'))
+  WHERE state IN ('running', 'paused') AND deleted_at IS NULL;
+
+-- The active session of a plan (derived "in progress").
+CREATE INDEX idx_focus_sessions_plan ON focus_sessions (plan_id) WHERE plan_id IS NOT NULL;
+
+-- A session's plan must be for the session's activity.
+CREATE TRIGGER trg_focus_sessions_plan_check
+BEFORE INSERT ON focus_sessions
+WHEN NEW.plan_id IS NOT NULL
+BEGIN
+  SELECT RAISE(ABORT, 'focus_plan_mismatch')
+  WHERE (SELECT activity_type_id FROM plans WHERE internal_id = NEW.plan_id)
+        IS NOT NEW.activity_type_id;
+END;
+
+CREATE TRIGGER trg_focus_sessions_public_id_immutable
+BEFORE UPDATE OF public_id ON focus_sessions
+WHEN OLD.public_id IS NOT NEW.public_id
+BEGIN
+  SELECT RAISE(ABORT, 'public_id_immutable');
+END;
+
+-- v6: body measurements (§23; OQ-09 fixed types, validated in the domain).
+-- Same unit pattern as values: as entered + canonical at write (ADR-020).
+CREATE TABLE measurements (
+  internal_id       INTEGER NOT NULL PRIMARY KEY,
+  public_id         TEXT NOT NULL UNIQUE CHECK (length(public_id) = 36),
+  measurement_type  TEXT NOT NULL CHECK (length(measurement_type) > 0),
+  value             REAL NOT NULL,
+  unit_code         TEXT NOT NULL,
+  normalized_value  REAL NOT NULL,
+  recorded_at       INTEGER NOT NULL,
+  tz_offset_minutes INTEGER NOT NULL CHECK (tz_offset_minutes BETWEEN -1080 AND 1080),
+  local_date        TEXT NOT NULL CHECK (local_date GLOB '[0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]'),
+  notes             TEXT,
+  created_at        INTEGER NOT NULL,
+  updated_at        INTEGER NOT NULL,
+  deleted_at        INTEGER
+) STRICT AS MeasurementRow;
+
+-- A type's history and series over dates (newest first, ranges).
+CREATE INDEX idx_measurements_type_day
+  ON measurements (measurement_type, local_date, recorded_at) WHERE deleted_at IS NULL;
+
+-- v6: the user's saved Insights charts (FR-AN-07). `config_json` is versioned
+-- ("v") and references activities/fields by public ID. A handful of rows, so
+-- no index beyond the public ID: a scan + sort is cheapest.
+CREATE TABLE insight_charts (
+  internal_id INTEGER NOT NULL PRIMARY KEY,
+  public_id   TEXT NOT NULL UNIQUE CHECK (length(public_id) = 36),
+  position    INTEGER NOT NULL DEFAULT 0 CHECK (position >= 0),
+  config_json TEXT NOT NULL CHECK (json_valid(config_json)),
+  created_at  INTEGER NOT NULL,
+  updated_at  INTEGER NOT NULL,
+  deleted_at  INTEGER
+) STRICT AS InsightChartRow;
+
+CREATE TRIGGER trg_measurements_public_id_immutable
+BEFORE UPDATE OF public_id ON measurements
 WHEN OLD.public_id IS NOT NEW.public_id
 BEGIN
   SELECT RAISE(ABORT, 'public_id_immutable');

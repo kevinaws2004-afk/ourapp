@@ -229,4 +229,87 @@ void main() {
       );
     });
   });
+
+  group('repeating groups', () {
+    const sets = ActivityFieldId('sets');
+    const reps = ActivityFieldId('reps');
+    const top = ActivityFieldId('note');
+    final type = typeWith([
+      field('sets', FieldType.repeatingGroup, required: true),
+      const ActivityField(
+        id: reps,
+        parentId: sets,
+        name: 'reps',
+        type: FieldType.number,
+        position: 0,
+        required: true,
+        measurable: true,
+        config: NumberFieldConfig(min: 0),
+      ),
+      field('note', FieldType.text),
+    ]);
+    ActivityLogDraft draft(Map<ActivityFieldId, FieldValue> values) =>
+        ActivityLogDraft(startedAt: DateTime.utc(2026), values: values);
+    List<(ValidationCode, String?)> issues(
+      Map<ActivityFieldId, FieldValue> values,
+    ) => [
+      for (final i in LogValidator.validate(type, draft(values)).issues)
+        (i.code, i.target),
+    ];
+    const item = GroupItemId('i1');
+
+    test('a required group needs at least one item', () {
+      expect(issues({}), [(ValidationCode.required, 'sets')]);
+    });
+
+    test('sub-field issues target the item', () {
+      expect(
+        issues({
+          sets: const RepeatingGroupValue([
+            GroupItem(id: item, values: {reps: NumberValue(-1)}),
+          ]),
+        }),
+        [(ValidationCode.belowMinimum, LogValidator.itemTarget(item, reps))],
+      );
+      expect(
+        issues({
+          sets: const RepeatingGroupValue([GroupItem(id: item, values: {})]),
+        }),
+        [(ValidationCode.required, LogValidator.itemTarget(item, reps))],
+      );
+    });
+
+    test('a value must be in its own scope', () {
+      expect(
+        issues({
+          sets: const RepeatingGroupValue([]),
+          reps: const NumberValue(3),
+        }),
+        contains((ValidationCode.unknownField, 'reps')),
+      );
+      expect(
+        issues({
+          sets: const RepeatingGroupValue([
+            GroupItem(
+              id: item,
+              values: {reps: NumberValue(3), top: TextValue('x')},
+            ),
+          ]),
+        }),
+        [(ValidationCode.unknownField, LogValidator.itemTarget(item, top))],
+      );
+    });
+
+    test('item IDs are unique within a group', () {
+      expect(
+        issues({
+          sets: const RepeatingGroupValue([
+            GroupItem(id: item, values: {reps: NumberValue(3)}),
+            GroupItem(id: item, values: {reps: NumberValue(4)}),
+          ]),
+        }),
+        [(ValidationCode.valueTypeMismatch, 'sets')],
+      );
+    });
+  });
 }

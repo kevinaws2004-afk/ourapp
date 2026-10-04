@@ -11,6 +11,7 @@ import 'package:daylog/features/activity_types/domain/field_config.dart';
 import 'package:daylog/features/activity_types/domain/field_type.dart';
 import 'package:daylog/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 ActivityField field(
@@ -35,21 +36,37 @@ Future<Map<ActivityFieldId, FieldValue?>> pumpForm(
   List<ActivityField> fields,
 ) async {
   final changes = <ActivityFieldId, FieldValue?>{};
+  final epoch = DateTime.utc(2026);
+  final type = ActivityType(
+    id: const ActivityTypeId('form-test'),
+    name: 'Form test',
+    iconId: 'sparkle',
+    colorKey: 'sage',
+    supportsTimer: false,
+    supportsPlanning: true,
+    sortOrder: 0,
+    fields: fields,
+    createdAt: epoch,
+    updatedAt: epoch,
+  );
   await tester.pumpWidget(
-    MaterialApp(
-      theme: AppTheme.light,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: Scaffold(
-        body: SingleChildScrollView(
-          child: StatefulBuilder(
-            builder: (context, setState) => ActivityLogFormFields(
-              fields: fields,
-              values: {
-                for (final e in changes.entries)
-                  if (e.value != null) e.key: e.value!,
-              },
-              onChanged: (id, value) => setState(() => changes[id] = value),
+    ProviderScope(
+      child: MaterialApp(
+        theme: AppTheme.light,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: StatefulBuilder(
+              builder: (context, setState) => ActivityLogFormFields(
+                type: type,
+                fields: fields,
+                values: {
+                  for (final e in changes.entries)
+                    if (e.value != null) e.key: e.value!,
+                },
+                onChanged: (id, value) => setState(() => changes[id] = value),
+              ),
             ),
           ),
         ),

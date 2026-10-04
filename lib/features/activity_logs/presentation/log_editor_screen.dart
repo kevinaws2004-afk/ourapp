@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/design/app_icons.dart';
+import '../../../core/design/tokens/sizes.dart';
+import '../../../core/design/context_ext.dart';
 import '../../../core/design/tokens/spacing.dart';
 import '../../../core/design/window_size_class.dart';
 import '../../../l10n/generated/app_localizations.dart';
@@ -11,7 +13,10 @@ import '../../../shared/errors/error_copy.dart';
 import '../../../shared/widgets/activity_badge.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/state_views.dart';
+import '../../plans/presentation/plan_formatting.dart';
+import '../../activity_types/domain/activity_ids.dart';
 import 'activity_log_providers.dart';
+import 'value_formatting.dart';
 import 'form/activity_log_form.dart';
 import 'form/date_time_editors.dart';
 import 'form/field_editor_shell.dart';
@@ -20,9 +25,13 @@ import 'log_editor_notifier.dart';
 /// Create or edit a log (ui_guidelines.md §4.4): built-in time, duration and
 /// notes around the generic form renderer.
 class LogEditorScreen extends ConsumerWidget {
-  const LogEditorScreen({super.key, required this.args});
+  const LogEditorScreen({super.key, required this.args, this.onEditFields});
 
   final LogEditorArgs args;
+
+  /// Opens the activity's builder to change what it tracks; the form reloads
+  /// its fields afterwards (customizable while recording, ADR-030).
+  final Future<Object?> Function(ActivityTypeId typeId)? onEditFields;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -46,7 +55,7 @@ class LogEditorScreen extends ConsumerWidget {
                     ActivityBadge(
                       iconId: state.type.iconId,
                       colorKey: state.type.colorKey,
-                      size: 32,
+                      size: AppSizes.badgeSmall,
                     ),
                     const SizedBox(width: AppSpacing.md),
                     Flexible(
@@ -60,6 +69,15 @@ class LogEditorScreen extends ConsumerWidget {
                   ],
                 ),
           actions: [
+            if (state != null && onEditFields != null)
+              IconButton(
+                tooltip: l10n.recordEditFields,
+                icon: const Icon(AppIcons.edit),
+                onPressed: () async {
+                  await onEditFields!(state.type.id);
+                  await ref.read(logEditorProvider(args).notifier).reloadType();
+                },
+              ),
             if (state != null && !state.isNew)
               IconButton(
                 tooltip: l10n.actionDelete,
@@ -156,6 +174,33 @@ class _LogForm extends ConsumerWidget {
             AppSpacing.huge,
           ),
           children: [
+            if (state.plan case final plan?) ...[
+              // Which plan this record fulfils (ADR-030).
+              Row(
+                children: [
+                  Icon(
+                    AppIcons.plan.outline,
+                    size: AppSpacing.lg,
+                    color: context.colors.textSecondary,
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      l10n.planPlannedContext(
+                        [
+                          plan.title,
+                          ?formatPlanTime(context, plan),
+                        ].join(' · '),
+                      ),
+                      style: context.textStyles.bodyMedium?.copyWith(
+                        color: context.colors.textSecondary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.lg),
+            ],
             FieldEditorShell(
               label: l10n.whenLabel,
               child: _StartedAtPicker(
@@ -172,6 +217,7 @@ class _LogForm extends ConsumerWidget {
               ),
             ),
             ActivityLogFormFields(
+              type: state.type,
               fields: state.visibleFields,
               values: state.values,
               issues: state.issues,
@@ -205,8 +251,18 @@ class _LogForm extends ConsumerWidget {
       final saved = await ref.read(logEditorProvider(args).notifier).save();
       if (!context.mounted) return;
       if (saved) {
-        Navigator.of(context).pop();
-        showMessageSnackBar(context, l10n.recordSaved);
+        final state = ref.read(logEditorProvider(args)).value;
+        Navigator.of(context).pop(true);
+        showMessageSnackBar(
+          context,
+          // FR-FO-05: "Reading session complete · 42 min".
+          args.focusId != null && state != null
+              ? l10n.focusComplete(
+                  state.type.name,
+                  formatDuration(l10n, state.durationMs ?? 0),
+                )
+              : l10n.recordSaved,
+        );
       } else {
         showMessageSnackBar(context, l10n.errorValidation);
       }

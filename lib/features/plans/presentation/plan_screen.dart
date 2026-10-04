@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/design/app_icons.dart';
+import '../../../core/design/tokens/sizes.dart';
 import '../../../core/design/context_ext.dart';
 import '../../../core/design/tokens/radius.dart';
 import '../../../core/design/tokens/spacing.dart';
@@ -9,21 +10,35 @@ import '../../../core/design/window_size_class.dart';
 import '../../../core/time/clock_provider.dart';
 import '../../../core/time/local_date.dart';
 import '../../../l10n/generated/app_localizations.dart';
-import '../../../shared/widgets/activity_badge.dart';
 import '../../../shared/widgets/section_header.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../../activity_logs/domain/activity_log.dart';
-import '../../activity_logs/domain/watch_records_for_day.dart';
-import '../../activity_logs/presentation/activity_log_providers.dart';
-import '../../activity_logs/presentation/value_formatting.dart';
+import '../../activity_logs/presentation/day_record_tile.dart';
+import '../domain/watch_day_overview.dart';
 import 'plan_date_notifier.dart';
+import 'plan_editor_sheet.dart';
+import 'plan_providers.dart';
+import 'widgets/plan_quick_add.dart';
+import 'widgets/planned_list.dart';
 
 /// Plan tab (ADR-028, ui_guidelines.md §4.2): the date-based planning system.
-/// Select any date → its plans (Phase 4) and what was actually recorded.
+/// Select any date → its plans, paired with what was actually recorded, plus
+/// records that weren't planned (F3, F3a).
 class PlanScreen extends ConsumerWidget {
-  const PlanScreen({super.key, required this.onOpenRecord});
+  const PlanScreen({
+    super.key,
+    required this.onOpenRecord,
+    required this.onRecordPlan,
+    required this.onTrackPlan,
+  });
 
   final ValueChanged<ActivityLog> onOpenRecord;
+
+  /// Opens the record form for an activity plan (F5).
+  final ValueChanged<PlannedItem> onRecordPlan;
+
+  /// Sets up what to track for a task plan, then records it (ADR-030).
+  final ValueChanged<PlannedItem> onTrackPlan;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,21 +64,92 @@ class PlanScreen extends ConsumerWidget {
               _DateHeading(selected: selected, today: today),
               const SizedBox(height: AppSpacing.md),
               _WeekStrip(selected: selected, today: today),
-              SectionHeader(title: l10n.planPlannedSection),
-              Text(
-                l10n.planPlannedEmpty,
-                style: context.textStyles.bodyLarge?.copyWith(
-                  color: context.colors.textSecondary,
+              SectionHeader(
+                title: l10n.planPlannedSection,
+                trailing: IconButton(
+                  tooltip: l10n.planNewTitle,
+                  icon: const Icon(AppIcons.add),
+                  onPressed: () => showPlanEditor(context, date: selected),
                 ),
               ),
-              if (selected.compareTo(today) <= 0) ...[
-                SectionHeader(title: l10n.planRecordedSection),
-                _RecordedList(date: selected, onOpenRecord: onOpenRecord),
-              ],
+              PlanQuickAdd(key: ValueKey(selected), date: selected),
+              const SizedBox(height: AppSpacing.md),
+              AsyncValueView<DayOverview>(
+                value: ref.watch(dayOverviewProvider(selected)),
+                onRetry: () => ref.invalidate(dayOverviewProvider(selected)),
+                data: (overview) => _DayContent(
+                  overview: overview,
+                  showRecorded: selected.compareTo(today) <= 0,
+                  onOpenRecord: onOpenRecord,
+                  onRecordPlan: onRecordPlan,
+                  onTrackPlan: onTrackPlan,
+                ),
+              ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _DayContent extends StatelessWidget {
+  const _DayContent({
+    required this.overview,
+    required this.showRecorded,
+    required this.onOpenRecord,
+    required this.onRecordPlan,
+    required this.onTrackPlan,
+  });
+
+  final DayOverview overview;
+  final bool showRecorded;
+  final ValueChanged<ActivityLog> onOpenRecord;
+  final ValueChanged<PlannedItem> onRecordPlan;
+
+  /// Sets up what to track for a task plan, then records it (ADR-030).
+  final ValueChanged<PlannedItem> onTrackPlan;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final quiet = context.textStyles.bodyLarge?.copyWith(
+      color: context.colors.textSecondary,
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (overview.planned.isEmpty)
+          Text(l10n.planPlannedEmpty, style: quiet)
+        else
+          PlannedList(
+            items: overview.planned,
+            onRecord: onRecordPlan,
+            onOpenRecord: onOpenRecord,
+            onTrack: onTrackPlan,
+            reorderable: true,
+          ),
+        if (showRecorded) ...[
+          SectionHeader(
+            title: overview.planned.isEmpty
+                ? l10n.planRecordedSection
+                : l10n.planAlsoRecordedSection,
+          ),
+          if (overview.unplanned.isEmpty)
+            Text(
+              overview.records.isEmpty
+                  ? l10n.planRecordedEmpty
+                  : l10n.planNothingUnplanned,
+              style: quiet,
+            )
+          else
+            for (final record in overview.unplanned)
+              DayRecordTile(
+                record: record,
+                onTap: () => onOpenRecord(record.log),
+              ),
+        ],
+      ],
     );
   }
 }
@@ -211,7 +297,7 @@ class _DayCell extends StatelessWidget {
         borderRadius: AppRadius.mdAll,
         onTap: onTap,
         child: Container(
-          constraints: const BoxConstraints(minHeight: 56),
+          constraints: const BoxConstraints(minHeight: AppSizes.dayCell),
           margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
           decoration: BoxDecoration(
             color: isSelected ? colors.brandPrimarySoft : null,
@@ -241,55 +327,6 @@ class _DayCell extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _RecordedList extends ConsumerWidget {
-  const _RecordedList({required this.date, required this.onOpenRecord});
-
-  final LocalDate date;
-  final ValueChanged<ActivityLog> onOpenRecord;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
-    final material = MaterialLocalizations.of(context);
-    return AsyncValueView<List<DayRecord>>(
-      value: ref.watch(recordsForDayProvider(date)),
-      onRetry: () => ref.invalidate(recordsForDayProvider(date)),
-      data: (records) => records.isEmpty
-          ? Text(
-              l10n.planRecordedEmpty,
-              style: context.textStyles.bodyLarge?.copyWith(
-                color: context.colors.textSecondary,
-              ),
-            )
-          : Column(
-              children: [
-                for (final DayRecord(:log, :type) in records)
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: ActivityBadge(
-                      iconId: type.iconId,
-                      colorKey: type.colorKey,
-                    ),
-                    title: Text(
-                      [
-                        type.name,
-                        material.formatTimeOfDay(
-                          TimeOfDay.fromDateTime(log.startedAt.toLocal()),
-                        ),
-                        if (log.durationMs != null)
-                          formatDuration(l10n, log.durationMs!),
-                      ].join(' · '),
-                    ),
-                    subtitle: Text(summarizeLog(context, type, log)),
-                    trailing: const Icon(AppIcons.chevron),
-                    onTap: () => onOpenRecord(log),
-                  ),
-              ],
-            ),
     );
   }
 }

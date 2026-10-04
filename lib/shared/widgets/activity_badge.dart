@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/design/context_ext.dart';
+import '../../core/design/tokens/sizes.dart';
 import '../../core/design/icons/activity_icon_registry.dart';
 import '../../core/design/tokens/activity_palette.dart';
 import '../../core/design/tokens/radius.dart';
@@ -12,7 +13,7 @@ class ActivityBadge extends StatelessWidget {
     super.key,
     required this.iconId,
     required this.colorKey,
-    this.size = 40,
+    this.size = AppSizes.badge,
   });
 
   final String iconId;

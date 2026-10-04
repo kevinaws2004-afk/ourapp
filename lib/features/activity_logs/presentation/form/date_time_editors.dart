@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/design/app_icons.dart';
+import '../../../../core/design/tokens/sizes.dart';
 import '../../../../core/design/tokens/spacing.dart';
 import '../../../../core/time/local_date.dart';
 import '../../../../l10n/generated/app_localizations.dart';
@@ -127,7 +128,7 @@ class _DurationInputState extends State<DurationInput> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     Widget box(TextEditingController controller, String suffix) => SizedBox(
-      width: 96,
+      width: AppSizes.durationBox,
       child: TextField(
         controller: controller,
         keyboardType: TextInputType.number,

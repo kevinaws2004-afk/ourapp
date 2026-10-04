@@ -114,6 +114,17 @@ enum ValidationCode {
   fieldTypeNotSupportedYet,
   invalidDate,
   invalidTime,
+  subFieldsRequired,
+  nestingTooDeep,
+  itemLabelRequired,
+  plannedDurationConflict,
+  activityNotPlannable,
+  planActivityLocked,
+  onlyTasksCanBeCompleted,
+  planRecordMismatch,
+  focusAlreadyActive,
+  activityHasNoTimer,
+  focusNotActive,
 }
 
 /// The result of pure domain validation: empty means valid.

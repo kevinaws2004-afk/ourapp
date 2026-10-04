@@ -14,10 +14,15 @@ class ActivityField {
     required this.measurable,
     required this.config,
     this.dimension,
+    this.parentId,
     this.isRemoved = false,
   });
 
   final ActivityFieldId id;
+
+  /// The Repeating Group this field belongs to; null for top-level fields
+  /// (ADR-027). Immutable once created.
+  final ActivityFieldId? parentId;
   final String name;
   final FieldType type;
 
@@ -62,15 +67,25 @@ class ActivityType {
   final bool supportsPlanning;
   final int sortOrder;
 
-  /// All fields in position order, including removed ones (for history).
+  /// All fields, including removed ones (for history) and Repeating Group
+  /// sub-fields (`parentId != null`), ordered by position within their parent.
   final List<ActivityField> fields;
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool isDeleted;
 
-  /// Fields offered in new logs, in order.
+  /// Top-level fields offered in new logs, in order.
   List<ActivityField> get activeFields =>
-      fields.where((f) => !f.isRemoved).toList();
+      fields.where((f) => !f.isRemoved && f.parentId == null).toList();
+
+  /// Sub-fields of a Repeating Group in order (removed ones only when
+  /// [includeRemoved]).
+  List<ActivityField> subFieldsOf(
+    ActivityFieldId groupId, {
+    bool includeRemoved = false,
+  }) => fields
+      .where((f) => f.parentId == groupId && (includeRemoved || !f.isRemoved))
+      .toList();
 
   ActivityField? fieldById(ActivityFieldId id) {
     for (final field in fields) {

@@ -9,9 +9,11 @@ import '../../../../core/units/unit_registry.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/activity_ids.dart';
 import '../../domain/activity_type_definition.dart';
+import '../../domain/activity_type_validator.dart';
 import '../../domain/field_config.dart';
 import '../../domain/field_type.dart';
 import '../field_type_copy.dart';
+import 'field_type_picker_sheet.dart';
 
 /// Result of editing a field: the new definition, or a request to remove it.
 sealed class FieldEditResult {
@@ -28,30 +30,49 @@ final class FieldRemoved extends FieldEditResult {
   const FieldRemoved();
 }
 
-/// Configures one field (ui_guidelines.md §4.5). [locked] fields can't change
-/// their unit dimension because they already have entries.
+/// Configures one field (ui_guidelines.md §4.5). Fields in [lockedFieldIds]
+/// can't change their unit dimension because they already have entries.
+/// [depth] is how many Repeating Groups contain the field (0 = top level); a
+/// group's sub-fields are edited in a nested sheet (ADR-027).
 Future<FieldEditResult?> showFieldEditor(
   BuildContext context, {
   required FieldDefinition initial,
   required bool isNew,
-  bool locked = false,
+  Set<ActivityFieldId> lockedFieldIds = const {},
+  int depth = 0,
 }) => showModalBottomSheet<FieldEditResult>(
   context: context,
   isScrollControlled: true,
-  builder: (_) =>
-      _FieldEditorSheet(initial: initial, isNew: isNew, locked: locked),
+  builder: (_) => _FieldEditorSheet(
+    initial: initial,
+    isNew: isNew,
+    lockedFieldIds: lockedFieldIds,
+    depth: depth,
+  ),
+);
+
+/// A new field of [type] with its default settings.
+FieldDefinition newFieldDefinition(FieldType type) => FieldDefinition(
+  name: '',
+  type: type,
+  config: FieldConfig.defaultFor(type),
+  measurable: type.measurableByDefault,
 );
 
 class _FieldEditorSheet extends ConsumerStatefulWidget {
   const _FieldEditorSheet({
     required this.initial,
     required this.isNew,
-    required this.locked,
+    required this.lockedFieldIds,
+    required this.depth,
   });
 
   final FieldDefinition initial;
   final bool isNew;
-  final bool locked;
+  final Set<ActivityFieldId> lockedFieldIds;
+  final int depth;
+
+  bool get locked => initial.id != null && lockedFieldIds.contains(initial.id);
 
   @override
   ConsumerState<_FieldEditorSheet> createState() => _FieldEditorSheetState();
@@ -63,6 +84,7 @@ class _FieldEditorSheetState extends ConsumerState<_FieldEditorSheet> {
   late bool _measurable = widget.initial.measurable;
   late Dimension? _dimension = widget.initial.dimension;
   late FieldConfig _config = widget.initial.config;
+  late List<FieldDefinition> _subFields = widget.initial.subFields;
 
   FieldType get _type => widget.initial.type;
 
@@ -82,6 +104,7 @@ class _FieldEditorSheetState extends ConsumerState<_FieldEditorSheet> {
         required: _required,
         measurable: _type.canBeMeasurable && _measurable,
         config: _config,
+        subFields: _type == FieldType.repeatingGroup ? _subFields : const [],
       ),
     ),
   );
@@ -169,13 +192,29 @@ class _FieldEditorSheetState extends ConsumerState<_FieldEditorSheet> {
   }
 
   List<Widget> _typeSpecific(AppLocalizations l10n) => switch (_config) {
-    TextFieldConfig(:final multiline) => [
+    final TextFieldConfig config => [
       SwitchListTile(
         contentPadding: EdgeInsets.zero,
         title: Text(l10n.multilineLabel),
-        value: multiline,
-        onChanged: (v) =>
-            setState(() => _config = TextFieldConfig(multiline: v)),
+        value: config.multiline,
+        onChanged: (v) => setState(
+          () => _config = TextFieldConfig(
+            multiline: v,
+            suggestFromHistory: config.suggestFromHistory,
+          ),
+        ),
+      ),
+      SwitchListTile(
+        contentPadding: EdgeInsets.zero,
+        title: Text(l10n.suggestFromHistoryLabel),
+        subtitle: Text(l10n.suggestFromHistoryHint),
+        value: config.suggestFromHistory,
+        onChanged: (v) => setState(
+          () => _config = TextFieldConfig(
+            multiline: config.multiline,
+            suggestFromHistory: v,
+          ),
+        ),
       ),
     ],
     final NumberFieldConfig config => _numberSettings(l10n, config),
@@ -210,11 +249,28 @@ class _FieldEditorSheetState extends ConsumerState<_FieldEditorSheet> {
         ),
       ),
     ],
+    RepeatingGroupFieldConfig(:final itemLabel) => [
+      TextFormField(
+        initialValue: itemLabel,
+        textCapitalization: TextCapitalization.sentences,
+        decoration: InputDecoration(
+          labelText: l10n.itemLabelLabel,
+          helperText: l10n.itemLabelHelper,
+        ),
+        onChanged: (v) =>
+            setState(() => _config = RepeatingGroupFieldConfig(itemLabel: v)),
+      ),
+      _SubFieldsEditor(
+        subFields: _subFields,
+        lockedFieldIds: widget.lockedFieldIds,
+        depth: widget.depth + 1,
+        onChanged: (fields) => setState(() => _subFields = fields),
+      ),
+    ],
     BooleanFieldConfig() ||
     DateFieldConfig() ||
     TimeFieldConfig() ||
-    DurationFieldConfig() ||
-    RepeatingGroupFieldConfig() => const [],
+    DurationFieldConfig() => const [],
   };
 
   List<Widget> _numberSettings(
@@ -404,6 +460,128 @@ class _OptionsEditor extends ConsumerWidget {
                 ],
               ),
             ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// The sub-fields of a Repeating Group: tap to edit (in a nested sheet), drag
+/// to reorder, add with the type picker. A nested group is offered only while
+/// below the nesting limit (ADR-027).
+class _SubFieldsEditor extends StatelessWidget {
+  const _SubFieldsEditor({
+    required this.subFields,
+    required this.lockedFieldIds,
+    required this.depth,
+    required this.onChanged,
+  });
+
+  final List<FieldDefinition> subFields;
+  final Set<ActivityFieldId> lockedFieldIds;
+
+  /// Depth of the sub-fields themselves (1 = inside a top-level group).
+  final int depth;
+  final ValueChanged<List<FieldDefinition>> onChanged;
+
+  bool get _allowGroup => depth < ActivityTypeValidator.maxGroupDepth;
+
+  Future<void> _add(BuildContext context) async {
+    final type = await showFieldTypePicker(context, allowGroup: _allowGroup);
+    if (type == null || !context.mounted) return;
+    final result = await showFieldEditor(
+      context,
+      initial: newFieldDefinition(type),
+      isNew: true,
+      lockedFieldIds: lockedFieldIds,
+      depth: depth,
+    );
+    if (result case FieldSaved(:final definition)) {
+      onChanged([...subFields, definition]);
+    }
+  }
+
+  Future<void> _edit(BuildContext context, int index) async {
+    final result = await showFieldEditor(
+      context,
+      initial: subFields[index],
+      isNew: false,
+      lockedFieldIds: lockedFieldIds,
+      depth: depth,
+    );
+    switch (result) {
+      case FieldSaved(:final definition):
+        onChanged([...subFields]..[index] = definition);
+      case FieldRemoved():
+        onChanged([...subFields]..removeAt(index));
+      case null:
+        break;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(
+            top: AppSpacing.lg,
+            bottom: AppSpacing.sm,
+          ),
+          child: Text(
+            l10n.subFieldsLabel,
+            style: context.textStyles.labelMedium,
+          ),
+        ),
+        if (subFields.isEmpty)
+          Text(
+            l10n.subFieldsEmpty,
+            style: context.textStyles.bodyMedium?.copyWith(
+              color: context.colors.textSecondary,
+            ),
+          ),
+        ReorderableListView(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          buildDefaultDragHandles: false,
+          onReorderItem: (oldIndex, newIndex) {
+            final fields = [...subFields];
+            fields.insert(newIndex, fields.removeAt(oldIndex));
+            onChanged(fields);
+          },
+          children: [
+            for (final (index, field) in subFields.indexed)
+              ListTile(
+                key: ObjectKey(field),
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(field.type.icon),
+                title: Text(field.name),
+                subtitle: Text(
+                  [
+                    field.type.label(l10n),
+                    if (field.required) l10n.requiredBadge,
+                  ].join(' · '),
+                ),
+                trailing: ReorderableDragStartListener(
+                  index: index,
+                  child: const Padding(
+                    padding: EdgeInsets.all(AppSpacing.md),
+                    child: Icon(AppIcons.dragHandle),
+                  ),
+                ),
+                onTap: () => _edit(context, index),
+              ),
+          ],
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton.icon(
+            icon: const Icon(AppIcons.add),
+            label: Text(l10n.addSubField),
+            onPressed: () => _add(context),
           ),
         ),
       ],

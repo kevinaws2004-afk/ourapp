@@ -128,4 +128,153 @@ List<ActivityTypeDefinition> activityTemplates(AppLocalizations l10n) => [
       ),
     ],
   ),
+  ActivityTypeDefinition(
+    name: l10n.templateGym,
+    iconId: 'barbell',
+    colorKey: 'coral',
+    supportsTimer: true,
+    fields: [
+      // What the session trained ("Chest", "Chest / Shoulders"), §18.
+      FieldDefinition(
+        name: l10n.templateGymFocus,
+        type: FieldType.text,
+        config: const TextFieldConfig(suggestFromHistory: true),
+      ),
+      FieldDefinition(
+        name: l10n.templateGymExercises,
+        type: FieldType.repeatingGroup,
+        config: RepeatingGroupFieldConfig(
+          itemLabel: l10n.templateGymExerciseItem,
+        ),
+        subFields: [
+          FieldDefinition(
+            name: l10n.templateGymExercise,
+            type: FieldType.text,
+            required: true,
+            config: const TextFieldConfig(suggestFromHistory: true),
+          ),
+          FieldDefinition(
+            name: l10n.templateGymSets,
+            type: FieldType.repeatingGroup,
+            config: RepeatingGroupFieldConfig(
+              itemLabel: l10n.templateGymSetItem,
+            ),
+            subFields: [
+              FieldDefinition(
+                name: l10n.templateGymWeight,
+                type: FieldType.number,
+                dimension: Dimension.mass,
+                config: const NumberFieldConfig(
+                  decimals: 2,
+                  min: 0,
+                  defaultUnitCode: 'kg',
+                ),
+                measurable: true,
+              ),
+              FieldDefinition(
+                name: l10n.templateGymReps,
+                type: FieldType.number,
+                config: const NumberFieldConfig(min: 0),
+                measurable: true,
+              ),
+            ],
+          ),
+        ],
+      ),
+    ],
+  ),
+  ActivityTypeDefinition(
+    name: l10n.templateMeeting,
+    iconId: 'users-three',
+    colorKey: 'slate',
+    supportsTimer: true,
+    fields: [
+      FieldDefinition(
+        name: l10n.templateMeetingPeople,
+        type: FieldType.text,
+        config: const TextFieldConfig(),
+      ),
+      FieldDefinition(
+        name: l10n.templateMeetingTopics,
+        type: FieldType.text,
+        config: const TextFieldConfig(multiline: true),
+      ),
+      FieldDefinition(
+        name: l10n.templateMeetingDecisions,
+        type: FieldType.text,
+        config: const TextFieldConfig(multiline: true),
+      ),
+      FieldDefinition(
+        name: l10n.templateMeetingActionItems,
+        type: FieldType.repeatingGroup,
+        config: RepeatingGroupFieldConfig(
+          itemLabel: l10n.templateMeetingActionItem,
+        ),
+        subFields: [
+          FieldDefinition(
+            name: l10n.templateMeetingActionItemText,
+            type: FieldType.text,
+            required: true,
+            config: const TextFieldConfig(),
+          ),
+          FieldDefinition(
+            name: l10n.templateMeetingActionItemDone,
+            type: FieldType.boolean,
+            config: const BooleanFieldConfig(),
+          ),
+        ],
+      ),
+    ],
+  ),
+  ActivityTypeDefinition(
+    name: l10n.templateCooking,
+    iconId: 'cooking-pot',
+    colorKey: 'rose',
+    supportsTimer: true,
+    fields: [
+      FieldDefinition(
+        name: l10n.templateCookingRecipe,
+        type: FieldType.text,
+        config: const TextFieldConfig(suggestFromHistory: true),
+      ),
+      FieldDefinition(
+        name: l10n.templateCookingServings,
+        type: FieldType.number,
+        config: const NumberFieldConfig(min: 0),
+      ),
+      FieldDefinition(
+        name: l10n.templateCookingCalories,
+        type: FieldType.number,
+        dimension: Dimension.energy,
+        config: const NumberFieldConfig(min: 0, defaultUnitCode: 'kcal'),
+        measurable: true,
+      ),
+      FieldDefinition(
+        name: l10n.templateCookingRating,
+        type: FieldType.rating,
+        config: const RatingFieldConfig(),
+        measurable: true,
+      ),
+      FieldDefinition(
+        name: l10n.templateCookingIngredients,
+        type: FieldType.repeatingGroup,
+        config: RepeatingGroupFieldConfig(
+          itemLabel: l10n.templateCookingIngredientItem,
+        ),
+        subFields: [
+          FieldDefinition(
+            name: l10n.templateCookingIngredient,
+            type: FieldType.text,
+            required: true,
+            config: const TextFieldConfig(suggestFromHistory: true),
+          ),
+          FieldDefinition(
+            name: l10n.templateCookingHaveIt,
+            type: FieldType.boolean,
+            config: const BooleanFieldConfig(),
+          ),
+        ],
+      ),
+    ],
+  ),
 ];

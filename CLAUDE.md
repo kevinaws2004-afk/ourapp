@@ -10,7 +10,7 @@ Core loop: **Plan → Do → Log → Measure → Understand.** Gym, Reading, Wor
 
 **Current phase:** see [`ai/tasks/current_task.md`](ai/tasks/current_task.md). Only work on the phase the owner has approved there.
 
-**Navigation & terminology (ADR-028):** Today | Plan | Insights | Me, plus a global Quick Record action. Plan is date-based (calendar). Reusable activities are configured under Me → Activities. UI copy says **Record**; Activity Log is the internal/domain name.
+**Navigation & terminology (ADR-028):** Today | Plan | Insights | Me. No floating Record button; unplanned activities are recorded from Today's "Record something" (Quick Record), planned ones by tapping the plan (ADR-030). Plan is date-based (calendar). Reusable activities are configured under Me → Activities. UI copy says **Record**; Activity Log is the internal/domain name.
 
 **Naming rule (ADR-010):** the product name is **undecided**.
 - `daylog` / `com.ourapp.daylog` are internal technical identifiers only (Dart package, app/bundle ID). Never present "Daylog" as the product name in UI, copy, docs prose or marketing.
@@ -28,7 +28,7 @@ If code and docs disagree, the docs win unless the owner says otherwise; fix the
 
 ## 3. Technology stack
 
-Flutter · Dart 3 (null-safe) · SQLite (local, V1 source of truth) · Riverpod · go_router · native Flutter animations · gesture/drag-and-drop built-ins · CustomPaint-based charts (pending ADR-P11) · drift for SQLite (ADR-011) · gen-l10n localization (ADR-015) · Phosphor icons via the bundled official font + generated registry (ADR-024). Riverpod 3 providers are hand-written; no riverpod_generator, no freezed (ADR-014). **No backend.** Android first, iOS-compatible.
+Flutter · Dart 3 (null-safe) · SQLite (local, V1 source of truth) · Riverpod · go_router · native Flutter animations · gesture/drag-and-drop built-ins · fl_chart behind the shared `AppChart` (ADR-033) · drift for SQLite (ADR-011) · gen-l10n localization (ADR-015) · Phosphor icons via the bundled official font + generated registry (ADR-024) · DM Mono for numeric tokens (ADR-032). Riverpod 3 providers are hand-written; no riverpod_generator, no freezed (ADR-014). **No backend.** Android first, iOS-compatible.
 
 ## 4. Where things live
 
@@ -38,9 +38,9 @@ Flutter · Dart 3 (null-safe) · SQLite (local, V1 source of truth) · Riverpod 
 | `lib/app/` | Bootstrap, root `App`, router (`router.dart`), adaptive shell, startup failure screen, provider logger, `dev/` (debug-only token showcase) |
 | `lib/core/` | `database/` (drift DB, all table definitions incl. `tables/activity_engine.drift`, `guardStorage`, `isActive`, `reactiveQuery`), `design/` (tokens, theme, Phosphor icons and registries, window size classes), `errors/` (AppException), `time/` (Clock, LocalDate), `ids/` (UUIDv7), `units/` (unit registry), `logging/` (AppLogger) |
 | `lib/shared/widgets/` | Reusable design-system components |
-| `lib/features/<feature>/{data,domain,presentation}/` | Feature code (only the layers that are needed). Implemented: `settings` (preferences, Me), `activity_types` (types, fields, builder, templates, Me → Activities), `activity_logs` (logs, typed values, generic form renderer, record form, Quick Record), `plans` (date-based Plan tab; plans themselves in Phase 4). Placeholders: `today`, `insights` |
+| `lib/features/<feature>/{data,domain,presentation}/` | Feature code (only the layers that are needed). Implemented: `settings` (preferences, Me), `activity_types` (types, fields, builder, templates, Me → Activities), `activity_logs` (logs, typed values, generic form renderer, record form, Quick Record), `plans` (plans and tasks, day overview, date-based Plan tab), `today` (Today screen), `focus` (focus timer, ADR-031), `measurements` (Me → Body measurements), `insights` (generic analytics engine + charts, ADR-034) |
 | `lib/l10n/` | ARB strings (`app_en.arb`) + committed gen-l10n output |
-| `assets/fonts/` | Bundled fonts with licenses: Fraunces and DM Sans (OFL), Phosphor icons (MIT) |
+| `assets/fonts/` | Bundled fonts with licenses: Fraunces, DM Sans and DM Mono (OFL), Phosphor icons (MIT) |
 | `tool/` | `generate_phosphor_glyphs.py` (icon constants and registry) |
 | `drift_schemas/` | Exported schema snapshots per version (for migration tests) |
 | `test/`, `integration_test/` | Unit/widget/repository tests mirroring `lib/`; on-device launch test |
@@ -87,9 +87,9 @@ Unit tests for domain rules; repository tests against real in-memory SQLite (no 
 
 ## 9. Database rules
 
-- **Schema:** generic STRICT tables only; schema v2 = activity engine. Triggers lock field semantics once values exist (ADR-026).
+- **Schema:** generic STRICT tables only; schema v2 = activity engine; v3 = relational Repeating Groups (ADR-027); v4 = plans + `activity_logs.plan_id` (ADR-018); v5 = focus sessions (ADR-031); v6 = measurements + saved insight charts (ADR-034). Triggers lock field semantics once values exist (ADR-026) and enforce group structure.
 - **Identity:** INTEGER FKs/joins, UUIDv7 `public_id`s (ADR-017).
-- **Values:** typed value columns, with JSON only for multi-select/repeating groups (ADR-019).
+- **Values:** typed value columns, with JSON only for multi-select (ADR-019). Repeating Groups are rows: `log_group_items` + scoped `log_values` (ADR-027).
 - **Units:** user unit + write-time `normalized_value` (ADR-020); durations as `duration_ms` (ADR-021).
 - **Soft delete:** via the shared `isActive` predicate (ADR-022).
 - **Repositories:** wrapped in `guardStorage` (ADR-025); live queries via `reactiveQuery` + `tableUpdates`.

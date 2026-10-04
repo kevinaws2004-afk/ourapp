@@ -8,6 +8,7 @@ import 'package:daylog/features/activity_logs/domain/activity_log_use_cases.dart
 import 'package:daylog/features/activity_logs/domain/field_value.dart';
 import 'package:daylog/features/activity_logs/domain/watch_records_for_day.dart';
 import 'package:daylog/features/activity_types/data/db_activity_type_repository.dart';
+import 'package:daylog/features/plans/data/db_plan_repository.dart';
 import 'package:daylog/features/activity_types/domain/activity_ids.dart';
 import 'package:daylog/features/activity_types/domain/activity_type.dart';
 import 'package:daylog/features/activity_types/domain/activity_type_definition.dart';
@@ -37,7 +38,13 @@ void main() {
     types = DbActivityTypeRepository(db, clock);
     logs = DbActivityLogRepository(db, clock, const AppLogger());
     ids = SequentialIdGenerator();
-    logActivity = LogActivity(types, logs, ids, clock);
+    logActivity = LogActivity(
+      types,
+      logs,
+      DbPlanRepository(db, clock),
+      ids,
+      clock,
+    );
     updateLog = UpdateActivityLog(types, logs, clock);
   });
 

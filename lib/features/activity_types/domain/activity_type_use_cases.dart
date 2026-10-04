@@ -8,11 +8,23 @@ import 'field_config.dart';
 
 // Use cases for activity types (ADR-023: verb + domain object; `call`).
 
-/// Assigns UUIDv7 IDs to new fields and to select options that lack one.
+/// Assigns UUIDv7 IDs to new fields (recursively, for Repeating Group
+/// sub-fields) and normalizes names.
 ActivityTypeDefinition _withIds(
   ActivityTypeDefinition definition,
   IdGenerator ids,
 ) {
+  FieldDefinition assign(FieldDefinition field) => FieldDefinition(
+    id: field.id ?? ActivityFieldId(ids.newId()),
+    name: field.name.trim(),
+    type: field.type,
+    dimension: field.dimension,
+    required: field.required,
+    measurable: field.type.canBeMeasurable && field.measurable,
+    config: field.config,
+    subFields: [for (final sub in field.subFields) assign(sub)],
+  );
+
   return ActivityTypeDefinition(
     name: definition.name.trim(),
     iconId: definition.iconId,
@@ -20,18 +32,7 @@ ActivityTypeDefinition _withIds(
     description: _trimToNull(definition.description),
     supportsTimer: definition.supportsTimer,
     supportsPlanning: definition.supportsPlanning,
-    fields: [
-      for (final field in definition.fields)
-        FieldDefinition(
-          id: field.id ?? ActivityFieldId(ids.newId()),
-          name: field.name.trim(),
-          type: field.type,
-          dimension: field.dimension,
-          required: field.required,
-          measurable: field.type.canBeMeasurable && field.measurable,
-          config: field.config,
-        ),
-    ],
+    fields: [for (final field in definition.fields) assign(field)],
   );
 }
 
@@ -112,23 +113,20 @@ class InstallActivityTemplate {
       description: template.description,
       supportsTimer: template.supportsTimer,
       supportsPlanning: template.supportsPlanning,
-      fields: [
-        for (final field in template.fields)
-          switch (field.config) {
-            SelectFieldConfig(:final options) => field.withConfig(
-              SelectFieldConfig(
-                options: [
-                  for (final option in options)
-                    SelectOption(
-                      id: SelectOptionId(_ids.newId()),
-                      label: option.label,
-                    ),
-                ],
-              ),
-            ),
-            _ => field,
-          },
-      ],
+      fields: [for (final field in template.fields) _freshOptionIds(field)],
     ),
+  );
+
+  FieldDefinition _freshOptionIds(FieldDefinition field) => field.copyWith(
+    config: switch (field.config) {
+      SelectFieldConfig(:final options) => SelectFieldConfig(
+        options: [
+          for (final option in options)
+            SelectOption(id: SelectOptionId(_ids.newId()), label: option.label),
+        ],
+      ),
+      final other => other,
+    },
+    subFields: [for (final sub in field.subFields) _freshOptionIds(sub)],
   );
 }

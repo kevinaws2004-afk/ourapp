@@ -13,8 +13,7 @@ enum FieldType {
   duration('duration'),
   rating('rating'),
 
-  /// Phase 3. Its storage sub-decision is pending (ADR-019), so it can't be
-  /// created yet.
+  /// A list of items with typed sub-fields, stored relationally (ADR-027).
   repeatingGroup('repeating_group');
 
   const FieldType(this.storageKey);
@@ -22,8 +21,8 @@ enum FieldType {
   /// Value of `activity_fields.field_type`.
   final String storageKey;
 
-  /// Types that can be created in the current phase.
-  bool get isAvailable => this != FieldType.repeatingGroup;
+  /// Types that can be created (all of them since Phase 3).
+  bool get isAvailable => true;
 
   /// Types whose values can feed analytics (`measurable`).
   bool get canBeMeasurable =>

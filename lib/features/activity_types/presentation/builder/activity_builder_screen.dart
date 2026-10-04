@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/design/app_icons.dart';
+import '../../../../core/design/tokens/sizes.dart';
 import '../../../../core/design/context_ext.dart';
 import '../../../../core/design/icons/activity_icon_registry.dart';
 import '../../../../core/design/keys/activity_icon_ids.dart';
@@ -20,7 +21,6 @@ import '../../../activity_logs/presentation/form/activity_log_form.dart';
 import '../../domain/activity_ids.dart';
 import '../../domain/activity_type.dart';
 import '../../domain/activity_type_definition.dart';
-import '../../domain/field_config.dart';
 import '../field_type_copy.dart';
 import 'activity_builder_notifier.dart';
 import 'field_editor_sheet.dart';
@@ -29,14 +29,20 @@ import 'field_type_picker_sheet.dart';
 /// Create or edit an Activity Type (user_flows.md F2, ui_guidelines.md §4.5).
 /// Returns the saved type's ID when popped after saving.
 class ActivityBuilderScreen extends ConsumerWidget {
-  const ActivityBuilderScreen({super.key, this.typeId});
+  const ActivityBuilderScreen({super.key, this.typeId, this.initialName = ''});
 
   final ActivityTypeId? typeId;
+
+  /// A new activity's name, prefilled (e.g. from a plan's title).
+  final String initialName;
+
+  ActivityBuilderArgs get _args =>
+      ActivityBuilderArgs(typeId: typeId, initialName: initialName);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final builder = ref.watch(activityBuilderProvider(typeId));
+    final builder = ref.watch(activityBuilderProvider(_args));
     final dirty = builder.value?.isDirty ?? false;
     return PopScope(
       canPop: !dirty,
@@ -54,8 +60,8 @@ class ActivityBuilderScreen extends ConsumerWidget {
         ),
         body: AsyncValueView(
           value: builder,
-          onRetry: () => ref.invalidate(activityBuilderProvider(typeId)),
-          data: (state) => _BuilderBody(typeId: typeId, state: state),
+          onRetry: () => ref.invalidate(activityBuilderProvider(_args)),
+          data: (state) => _BuilderBody(args: _args, state: state),
         ),
       ),
     );
@@ -85,15 +91,15 @@ Future<bool> _confirmDiscard(BuildContext context) async {
 }
 
 class _BuilderBody extends ConsumerWidget {
-  const _BuilderBody({required this.typeId, required this.state});
+  const _BuilderBody({required this.args, required this.state});
 
-  final ActivityTypeId? typeId;
+  final ActivityBuilderArgs args;
   final ActivityBuilderState state;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final notifier = ref.read(activityBuilderProvider(typeId).notifier);
+    final notifier = ref.read(activityBuilderProvider(args).notifier);
     final margin = WindowSizeClass.of(context).screenMargin;
     return Align(
       alignment: Alignment.topCenter,
@@ -112,7 +118,7 @@ class _BuilderBody extends ConsumerWidget {
                 ActivityBadge(
                   iconId: state.iconId,
                   colorKey: state.colorKey,
-                  size: 56,
+                  size: AppSizes.badgeLarge,
                 ),
                 const SizedBox(width: AppSpacing.lg),
                 Expanded(
@@ -155,7 +161,7 @@ class _BuilderBody extends ConsumerWidget {
               title: l10n.fieldsSectionTitle,
               subtitle: l10n.fieldsSectionHint,
             ),
-            _FieldList(typeId: typeId, state: state),
+            _FieldList(args: args, state: state),
             Align(
               alignment: Alignment.centerLeft,
               child: TextButton.icon(
@@ -202,12 +208,7 @@ class _BuilderBody extends ConsumerWidget {
     final result = await showFieldEditor(
       context,
       isNew: true,
-      initial: FieldDefinition(
-        name: '',
-        type: type,
-        config: FieldConfig.defaultFor(type),
-        measurable: type.measurableByDefault,
-      ),
+      initial: newFieldDefinition(type),
     );
     if (result case FieldSaved(:final definition)) {
       notifier.addField(definition);
@@ -217,9 +218,7 @@ class _BuilderBody extends ConsumerWidget {
   Future<void> _save(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context);
     try {
-      final id = await ref
-          .read(activityBuilderProvider(typeId).notifier)
-          .save();
+      final id = await ref.read(activityBuilderProvider(args).notifier).save();
       if (!context.mounted) return;
       if (id == null) {
         showMessageSnackBar(context, l10n.errorValidation);
@@ -235,15 +234,15 @@ class _BuilderBody extends ConsumerWidget {
 }
 
 class _FieldList extends ConsumerWidget {
-  const _FieldList({required this.typeId, required this.state});
+  const _FieldList({required this.args, required this.state});
 
-  final ActivityTypeId? typeId;
+  final ActivityBuilderArgs args;
   final ActivityBuilderState state;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final notifier = ref.read(activityBuilderProvider(typeId).notifier);
+    final notifier = ref.read(activityBuilderProvider(args).notifier);
     return ReorderableListView(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -279,7 +278,7 @@ class _FieldList extends ConsumerWidget {
                 if (field.locked)
                   Icon(
                     AppIcons.locked,
-                    size: 18,
+                    size: AppSizes.iconSmall,
                     color: context.colors.textTertiary,
                   ),
                 ReorderableDragStartListener(
@@ -296,7 +295,7 @@ class _FieldList extends ConsumerWidget {
                 context,
                 initial: field.definition,
                 isNew: false,
-                locked: field.locked,
+                lockedFieldIds: state.lockedFieldIds,
               );
               switch (result) {
                 case FieldSaved(:final definition):
@@ -338,13 +337,16 @@ class _IconPicker extends StatelessWidget {
             borderRadius: AppRadius.mdAll,
             onTap: () => onSelected(id),
             child: Container(
-              width: 48,
-              height: 48,
+              width: AppSizes.touchTarget,
+              height: AppSizes.touchTarget,
               decoration: BoxDecoration(
                 color: id == selected ? colors.soft : null,
                 borderRadius: AppRadius.mdAll,
                 border: id == selected
-                    ? Border.all(color: colors.solid, width: 2)
+                    ? Border.all(
+                        color: colors.solid,
+                        width: AppSizes.selectionRing,
+                      )
                     : null,
               ),
               child: Icon(
@@ -382,13 +384,16 @@ class _ColorPicker extends StatelessWidget {
               customBorder: const CircleBorder(),
               onTap: () => onSelected(key.name),
               child: Container(
-                width: 48,
-                height: 48,
+                width: AppSizes.touchTarget,
+                height: AppSizes.touchTarget,
                 padding: const EdgeInsets.all(AppSpacing.xs),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: key.name == selected
-                      ? Border.all(color: context.colors.textPrimary, width: 2)
+                      ? Border.all(
+                          color: context.colors.textPrimary,
+                          width: AppSizes.selectionRing,
+                        )
                       : null,
                 ),
                 child: DecoratedBox(
@@ -420,19 +425,7 @@ class _PreviewState extends State<_Preview> {
 
   @override
   Widget build(BuildContext context) {
-    final fields = [
-      for (final (index, f) in widget.state.fields.indexed)
-        ActivityField(
-          id: f.definition.id ?? ActivityFieldId('preview:${f.key}'),
-          name: f.definition.name.isEmpty ? '—' : f.definition.name,
-          type: f.definition.type,
-          dimension: f.definition.dimension,
-          position: index,
-          required: f.definition.required,
-          measurable: f.definition.measurable,
-          config: f.definition.config,
-        ),
-    ];
+    final type = _previewType(widget.state);
     return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surfaceBase,
@@ -442,7 +435,8 @@ class _PreviewState extends State<_Preview> {
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: ActivityLogFormFields(
-          fields: fields,
+          type: type,
+          fields: type.activeFields,
           values: _values,
           onChanged: (id, value) => setState(
             () => value == null ? _values.remove(id) : _values[id] = value,
@@ -451,4 +445,51 @@ class _PreviewState extends State<_Preview> {
       ),
     );
   }
+}
+
+/// A throwaway type for the preview: draft fields (and sub-fields) with
+/// placeholder IDs until they are saved.
+ActivityType _previewType(ActivityBuilderState state) {
+  final fields = <ActivityField>[];
+  void add(
+    FieldDefinition definition,
+    String key,
+    int position,
+    ActivityFieldId? parentId,
+  ) {
+    final id = definition.id ?? ActivityFieldId('preview:$key');
+    fields.add(
+      ActivityField(
+        id: id,
+        parentId: parentId,
+        name: definition.name.isEmpty ? '—' : definition.name,
+        type: definition.type,
+        dimension: definition.dimension,
+        position: position,
+        required: definition.required,
+        measurable: definition.measurable,
+        config: definition.config,
+      ),
+    );
+    for (final (index, sub) in definition.subFields.indexed) {
+      add(sub, '$key.$index', index, id);
+    }
+  }
+
+  for (final (index, f) in state.fields.indexed) {
+    add(f.definition, f.key, index, null);
+  }
+  final epoch = DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
+  return ActivityType(
+    id: const ActivityTypeId('preview'),
+    name: state.name,
+    iconId: state.iconId,
+    colorKey: state.colorKey,
+    supportsTimer: state.supportsTimer,
+    supportsPlanning: state.supportsPlanning,
+    sortOrder: 0,
+    fields: fields,
+    createdAt: epoch,
+    updatedAt: epoch,
+  );
 }

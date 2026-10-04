@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 abstract final class AppTypography {
   static const displayFamily = 'Fraunces';
   static const uiFamily = 'DMSans';
+  static const numericFamily = 'DMMono';
 
   static final displayLarge = _display(
     size: 40,
@@ -54,28 +55,24 @@ abstract final class AppTypography {
     tracking: 0.5,
   );
 
-  // Numeric styles request tabular figures. The bundled DM Sans build has no
-  // `tnum` feature, so digits stay proportional until that finding is resolved
-  // (design_system.md §3.1). Nothing updates numbers live before Phase 5.
-  static final numericHero = _ui(
+  // Numeric styles use DM Mono (ADR-032): every digit has the same width, so
+  // a running timer doesn't jitter. Its static weights are Regular and Medium.
+  static final numericHero = _numeric(
     size: 72,
     lineHeight: 76,
-    weight: 300,
-    tracking: -1.5,
-    tabular: true,
+    weight: FontWeight.w400,
+    tracking: -2,
   );
-  static final numericLarge = _ui(
+  static final numericLarge = _numeric(
     size: 34,
     lineHeight: 40,
-    weight: 500,
+    weight: FontWeight.w500,
     tracking: -0.5,
-    tabular: true,
   );
-  static final numericMedium = _ui(
+  static final numericMedium = _numeric(
     size: 20,
     lineHeight: 24,
-    weight: 600,
-    tabular: true,
+    weight: FontWeight.w500,
   );
 
   /// Material [TextTheme] from the scale. Slots the scale doesn't define map
@@ -120,12 +117,24 @@ abstract final class AppTypography {
     ],
   );
 
+  static TextStyle _numeric({
+    required double size,
+    required double lineHeight,
+    required FontWeight weight,
+    double tracking = 0,
+  }) => TextStyle(
+    fontFamily: numericFamily,
+    fontSize: size,
+    height: lineHeight / size,
+    letterSpacing: tracking,
+    fontWeight: weight,
+  );
+
   static TextStyle _ui({
     required double size,
     required double lineHeight,
     required int weight,
     double tracking = 0,
-    bool tabular = false,
   }) => TextStyle(
     fontFamily: uiFamily,
     fontSize: size,
@@ -137,6 +146,5 @@ abstract final class AppTypography {
       // DM Sans' optical-size axis spans 9–40.
       FontVariation.opticalSize(size.clamp(9, 40).toDouble()),
     ],
-    fontFeatures: tabular ? const [FontFeature.tabularFigures()] : null,
   );
 }

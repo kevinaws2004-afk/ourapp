@@ -14,6 +14,7 @@
 - **Activity Log**: what actually happened (times, notes, field values). Reality.
 - **Plan**: what the user intends (date, optional time/duration, optional Activity Type, status). Intention.
 - **Task**: a lightweight plan item with no detailed logging (e.g. "Buy milk"). It is a Plan with no Activity Type (ADR-018).
+- **Plan → Record is one workflow (ADR-030):** tapping a planned activity opens its record form linked to the plan; saving completes the plan. One session = one record (sets are rows inside it). Only tasks have "Mark as done".
 - **Measurement**: a value analyzable over time; also **Body Measurements** (weight, height, body fat, chest, waist, arms, legs), stored separately.
 - **Focus Session**: full-screen timer whose active duration lands in a Log.
 - **Repeating Group**: the structured field type (exercise list; sets = a nested Repeating Group of Numbers). "Set Table" from the spec is a composition, not a type (OQ-01).
@@ -29,6 +30,6 @@
 
 **Out of V1:** accounts, cloud sync, social, leaderboards, multiplayer, AI, subscriptions, recommendations, web/desktop, cross-device sync, app blocking, wearables, automation. Also unspecified (so not V1): recurring plans, reminders, goals, streaks, widgets, import.
 
-**Field types (OQ-01, resolved):** Text, Number (+ optional unit dimension), Boolean, Single Select, Multi Select, Date, Time, Duration, Rating, Repeating Group (Phase 3). Domain-specific types are compositions, never new types. Every log also has a built-in start, actual duration and notes.
+**Field types (OQ-01, resolved):** Text, Number (+ optional unit dimension), Boolean, Single Select, Multi Select, Date, Time, Duration, Rating, Repeating Group (implemented in Phase 3; Gym, Meeting and Cooking templates use it). Domain-specific types are compositions, never new types. Every log also has a built-in start, actual duration and notes.
 
-**Open product questions:** in [requirements.md](../../docs/product/requirements.md#open-questions). OQ-01, 04, 06, 10 and 16 are resolved (by ADRs 017–026), and OQ-07 awaits the `planned_duration_ms` decision. Do not resolve the others silently; follow the interim assumption or ask.
+**Open product questions:** in [requirements.md](../../docs/product/requirements.md#open-questions). OQ-01, 02, 04, 06, 07, 10 and 16 are resolved (ADRs 017–034). OQ-09 (fixed measurement types) and OQ-13 (no focus notification) follow their recommendations. OQ-14 (saved charts) was implemented ahead of confirmation. Do not resolve the others silently; follow the interim assumption or ask.

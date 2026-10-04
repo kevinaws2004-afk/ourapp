@@ -2,6 +2,8 @@
 
 > Compressed context. Canonical: [design_system.md](../../docs/ui/design_system.md), [ui_guidelines.md](../../docs/ui/ui_guidelines.md), [responsive_design.md](../../docs/ui/responsive_design.md). Status of concrete values: accepted as provisional v0 (ADR-016), pending the owner's on-device showcase review. "Daylight" is not the product name.
 
+**Upcoming (owner, 2026-10-04):** a dedicated visual pass after core functionality. The target is colorful, alive and premium (not cream-heavy, not all dark, not plain white). Story: Plan → Do → Record → Measure → Understand → Improve. Until then: no redesign or new features; keep everything token-driven (incl. `AppSizes`) so the look can change without domain/DB changes. See design_system.md (top note).
+
 **Feel:** calm, premium, personal, modern, visually distinctive, easy on the eyes, fast, uncluttered, intentionally designed. One recognizable visual world, not a set of screens.
 
 **Identity "Daylight":** the shape and light of a day.

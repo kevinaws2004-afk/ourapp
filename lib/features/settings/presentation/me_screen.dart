@@ -12,10 +12,12 @@ class MeScreen extends StatelessWidget {
   const MeScreen({
     super.key,
     required this.onOpenActivities,
+    required this.onOpenMeasurements,
     this.onOpenTokenShowcase,
   });
 
   final VoidCallback onOpenActivities;
+  final VoidCallback onOpenMeasurements;
 
   /// Debug-only entry point; ignored in release builds.
   final VoidCallback? onOpenTokenShowcase;
@@ -34,6 +36,13 @@ class MeScreen extends StatelessWidget {
             subtitle: Text(l10n.meActivitiesSubtitle),
             trailing: const Icon(AppIcons.chevron),
             onTap: onOpenActivities,
+          ),
+          ListTile(
+            leading: const Icon(AppIcons.measurements),
+            title: Text(l10n.measurementsTitle),
+            subtitle: Text(l10n.meMeasurementsSubtitle),
+            trailing: const Icon(AppIcons.chevron),
+            onTap: onOpenMeasurements,
           ),
           if (kDebugMode && onOpenTokenShowcase != null)
             ListTile(
