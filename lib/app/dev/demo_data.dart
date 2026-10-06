@@ -31,10 +31,14 @@ import '../../l10n/generated/app_localizations.dart';
 /// (activity names are unique).
 enum DemoDataResult { loaded, alreadyLoaded, namesTaken }
 
+/// [from]..[to] (defaults: six weeks up to today) picks the days that get
+/// records. Plans for today and tomorrow are added only when [to] is today.
 Future<DemoDataResult> loadDemoData(
   ProviderContainer container,
-  AppLocalizations l10n,
-) async {
+  AppLocalizations l10n, {
+  LocalDate? from,
+  LocalDate? to,
+}) async {
   final types = container.read(activityTypeRepositoryProvider);
   final charts = container.read(insightRepositoryProvider);
   if ((await charts.watchCharts().first).any((c) => c.title == _marker)) {
@@ -70,6 +74,9 @@ Future<DemoDataResult> loadDemoData(
 
   final now = clock.nowUtc();
   final today = LocalDate.ofInstant(now, clock.offsetAt(now));
+  final first = from ?? today.addDays(-42);
+  final last = to ?? today;
+  final span = first.daysUntil(last);
   DateTime at(LocalDate date, int hour, [int minute = 0]) =>
       _localToUtc(clock, date, hour, minute);
   int minutes(int m) => Duration(minutes: m).inMilliseconds;
@@ -92,8 +99,10 @@ Future<DemoDataResult> loadDemoData(
   var gymSession = 0;
 
   // Six weeks of history, oldest first; today only gets what already ended.
-  for (var back = 42; back >= 0; back--) {
-    final date = today.addDays(-back);
+  for (var i = 0; i <= span; i++) {
+    final date = first.addDays(i);
+    // Days before today; plans are made for the last two weeks.
+    final back = date.daysUntil(today);
     final weekday = DateTime.utc(date.year, date.month, date.day).weekday;
     bool ended(DateTime start, int durationMin) =>
         start.add(Duration(minutes: durationMin)).isBefore(now);
@@ -120,7 +129,7 @@ Future<DemoDataResult> loadDemoData(
             startedAt: start,
             durationMs: minutes(duration),
             planId: planId,
-            values: {workProject: TextValue(projects[(42 - back) ~/ 15 % 3])},
+            values: {workProject: TextValue(projects[i ~/ 15 % 3])},
           ),
         );
       }
@@ -194,7 +203,7 @@ Future<DemoDataResult> loadDemoData(
             startedAt: start,
             durationMs: minutes(duration),
             values: {
-              readingBook: TextValue(books[(42 - back) ~/ 15 % 3]),
+              readingBook: TextValue(books[i ~/ 15 % 3]),
               readingPages: NumberValue((12 + random.nextInt(30)).toDouble()),
               readingRating: RatingValue(3 + random.nextInt(3)),
             },
@@ -225,8 +234,8 @@ Future<DemoDataResult> loadDemoData(
     }
 
     // Weekly body measurements, trending down slowly.
-    if (back % 7 == 0) {
-      final week = (42 - back) ~/ 7;
+    if (date.daysUntil(last) % 7 == 0) {
+      final week = i ~/ 7;
       final recordedAt = at(date, 7, 30);
       if (recordedAt.isBefore(now)) {
         for (final (type, value, unit) in [
@@ -251,36 +260,39 @@ Future<DemoDataResult> loadDemoData(
       type: MeasurementType.height,
       value: 178,
       unitCode: 'cm',
-      recordedAt: at(today.addDays(-42), 7, 30),
+      recordedAt: at(first, 7, 30),
     ),
   );
 
-  // Today and tomorrow: tasks and evening plans.
-  await createPlan(
-    PlanDraft(
-      planDate: today,
-      title: '',
-      activityTypeId: reading.id,
-      plannedStartAt: at(today, 21, 30),
-      plannedDurationMs: minutes(30),
-    ),
-  );
-  await createPlan(PlanDraft(planDate: today, title: 'Buy groceries'));
-  final dentist = await createPlan(
-    PlanDraft(planDate: today, title: 'Call the dentist'),
-  );
-  await setPlanStatus(dentist, PlanStatus.completed);
-  final tomorrow = today.addDays(1);
-  await createPlan(
-    PlanDraft(
-      planDate: tomorrow,
-      title: 'Morning walk',
-      activityTypeId: walking.id,
-      plannedStartAt: at(tomorrow, 7),
-      plannedDurationMs: minutes(30),
-    ),
-  );
-  await createPlan(PlanDraft(planDate: tomorrow, title: 'Pay rent'));
+  // Today and tomorrow: tasks and evening plans (only when the range
+  // reaches today).
+  if (last == today) {
+    await createPlan(
+      PlanDraft(
+        planDate: today,
+        title: '',
+        activityTypeId: reading.id,
+        plannedStartAt: at(today, 21, 30),
+        plannedDurationMs: minutes(30),
+      ),
+    );
+    await createPlan(PlanDraft(planDate: today, title: 'Buy groceries'));
+    final dentist = await createPlan(
+      PlanDraft(planDate: today, title: 'Call the dentist'),
+    );
+    await setPlanStatus(dentist, PlanStatus.completed);
+    final tomorrow = today.addDays(1);
+    await createPlan(
+      PlanDraft(
+        planDate: tomorrow,
+        title: 'Morning walk',
+        activityTypeId: walking.id,
+        plannedStartAt: at(tomorrow, 7),
+        plannedDurationMs: minutes(30),
+      ),
+    );
+    await createPlan(PlanDraft(planDate: tomorrow, title: 'Pay rent'));
+  }
 
   // Saved charts (ADR-034).
   final chestPressFilter = TextFilter(

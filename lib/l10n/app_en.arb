@@ -215,7 +215,7 @@
   "@fieldTypePickerTitle": {
     "description": "Title of the field type picker."
   },
-  "fieldTypeText": "Text",
+  "fieldTypeText": "Words",
   "@fieldTypeText": {
     "description": "Field type name: Text."
   },
@@ -223,15 +223,15 @@
   "@fieldTypeTextDescription": {
     "description": "Field type description for Text."
   },
-  "fieldTypeNumber": "Number",
+  "fieldTypeNumber": "An amount",
   "@fieldTypeNumber": {
     "description": "Field type name: Number."
   },
-  "fieldTypeNumberDescription": "Counts or amounts, optionally with a unit like kg or km",
+  "fieldTypeNumberDescription": "A number, optionally in a unit like kg, km or pages",
   "@fieldTypeNumberDescription": {
     "description": "Field type description for Number."
   },
-  "fieldTypeBoolean": "Yes / No",
+  "fieldTypeBoolean": "Yes or no",
   "@fieldTypeBoolean": {
     "description": "Field type name: Yes / No."
   },
@@ -239,7 +239,7 @@
   "@fieldTypeBooleanDescription": {
     "description": "Field type description for Yes / No."
   },
-  "fieldTypeSingleSelect": "Single choice",
+  "fieldTypeSingleSelect": "One choice",
   "@fieldTypeSingleSelect": {
     "description": "Field type name: Single choice."
   },
@@ -247,7 +247,7 @@
   "@fieldTypeSingleSelectDescription": {
     "description": "Field type description for Single choice."
   },
-  "fieldTypeMultiSelect": "Multiple choice",
+  "fieldTypeMultiSelect": "Several choices",
   "@fieldTypeMultiSelect": {
     "description": "Field type name: Multiple choice."
   },
@@ -255,7 +255,7 @@
   "@fieldTypeMultiSelectDescription": {
     "description": "Field type description for Multiple choice."
   },
-  "fieldTypeDate": "Date",
+  "fieldTypeDate": "A date",
   "@fieldTypeDate": {
     "description": "Field type name: Date."
   },
@@ -263,7 +263,7 @@
   "@fieldTypeDateDescription": {
     "description": "Field type description for Date."
   },
-  "fieldTypeTime": "Time",
+  "fieldTypeTime": "A time of day",
   "@fieldTypeTime": {
     "description": "Field type name: Time."
   },
@@ -271,7 +271,7 @@
   "@fieldTypeTimeDescription": {
     "description": "Field type description for Time."
   },
-  "fieldTypeDuration": "Duration",
+  "fieldTypeDuration": "Time spent",
   "@fieldTypeDuration": {
     "description": "Field type name: Duration."
   },
@@ -279,7 +279,7 @@
   "@fieldTypeDurationDescription": {
     "description": "Field type description for Duration."
   },
-  "fieldTypeRating": "Rating",
+  "fieldTypeRating": "A rating",
   "@fieldTypeRating": {
     "description": "Field type name: Rating."
   },
@@ -287,7 +287,7 @@
   "@fieldTypeRatingDescription": {
     "description": "Field type description for Rating."
   },
-  "fieldTypeRepeatingGroup": "List",
+  "fieldTypeRepeatingGroup": "A list",
   "@fieldTypeRepeatingGroup": {
     "description": "Field type name: Repeating group."
   },
@@ -1585,7 +1585,7 @@
   "@itemDeleted": {
     "description": "Snackbar after deleting an item."
   },
-  "itemNothingToLogHint": "Add what you want to log: a number, a list (like exercises → sets), yes/no, a rating… or just write notes.",
+  "itemNothingToLogHint": "What do you want to keep track of? Pick one, or just write notes.",
   "@itemNothingToLogHint": {
     "description": "Shown in an item whose activity has no fields yet."
   },
@@ -1625,14 +1625,6 @@
   "itemAddToLogTitle": "What do you want to log?",
   "@itemAddToLogTitle": {
     "description": "Title of the sheet for adding something to log."
-  },
-  "itemAddReadyMade": "Ready-made",
-  "@itemAddReadyMade": {
-    "description": "Section of ready-made things to log (sets & reps, checklist)."
-  },
-  "itemAddOneThing": "Or add one thing",
-  "@itemAddOneThing": {
-    "description": "Section of single things to log (number, text, list…)."
   },
   "shapeSetsReps": "Sets & reps",
   "@shapeSetsReps": {
@@ -2277,5 +2269,237 @@
   "builderFewerIcons": "Fewer icons",
   "@builderFewerIcons": {
     "description": "Activity builder: shows only the suggested icons."
+  },
+  "itemLastTime": "Last time · {date}",
+  "@itemLastTime": {
+    "description": "Item screen: heading of the card showing what was logged the previous time.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "itemUseLastTime": "Use last time",
+  "@itemUseLastTime": {
+    "description": "Item screen: copies what was logged last time into this item, ready to adjust."
+  },
+  "groupLastTime": "Last time: {summary}",
+  "@groupLastTime": {
+    "description": "Under a list row: what was logged for a row with this name last time (e.g. \"Last time: Bench press 60 kg × 8 (×2)\").",
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "groupUseLastTime": "Use",
+  "@groupUseLastTime": {
+    "description": "Fills a list row with what was logged for it last time."
+  },
+  "restAction": "Rest",
+  "@restAction": {
+    "description": "Button under a list of number rows (e.g. sets): starts a rest timer."
+  },
+  "restLeft": "Rest {time}",
+  "@restLeft": {
+    "description": "Rest timer: time left.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "restOver": "Rest over",
+  "@restOver": {
+    "description": "Rest timer: the rest has ended."
+  },
+  "restLess": "−15 s",
+  "@restLess": {
+    "description": "Rest timer: take 15 seconds off."
+  },
+  "restMore": "+15 s",
+  "@restMore": {
+    "description": "Rest timer: add 15 seconds."
+  },
+  "restStop": "Stop",
+  "@restStop": {
+    "description": "Rest timer: stop it."
+  },
+  "itemAddQuick": "Quick",
+  "@itemAddQuick": {
+    "description": "Add to log sheet: heading of the one-tap choices."
+  },
+  "itemAddMoreKinds": "More kinds of detail",
+  "@itemAddMoreKinds": {
+    "description": "Add to log sheet: expands every kind of detail (advanced)."
+  },
+  "quickHowItWent": "How it went",
+  "@quickHowItWent": {
+    "description": "Quick thing to log: a 1–5 rating, also its default name."
+  },
+  "quickHowItWentDescription": "A rating from 1 to 5",
+  "@quickHowItWentDescription": {
+    "description": "Description of the quick rating."
+  },
+  "quickAmount": "An amount",
+  "@quickAmount": {
+    "description": "Quick thing to log: a number you name (pages, km, glasses…)."
+  },
+  "quickAmountDescription": "A number you name, like pages, km or glasses",
+  "@quickAmountDescription": {
+    "description": "Description of the quick amount."
+  },
+  "itemQuickMore": "More…",
+  "@itemQuickMore": {
+    "description": "Item with nothing to log yet: opens every choice."
+  },
+  "fieldAdvanced": "Advanced",
+  "@fieldAdvanced": {
+    "description": "Field sheet: expands the less common settings."
+  },
+  "planDuplicate": "Duplicate",
+  "@planDuplicate": {
+    "description": "Plan quick action: copy the item on the same day."
+  },
+  "planDuplicatedMessage": "Duplicated",
+  "@planDuplicatedMessage": {
+    "description": "Snackbar after duplicating an item."
+  },
+  "planQuickActionsHint": "show quick actions",
+  "@planQuickActionsHint": {
+    "description": "Screen-reader hint for long-pressing a day row."
+  },
+  "templateRunning": "Running",
+  "@templateRunning": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateRunningDistance": "Distance",
+  "@templateRunningDistance": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateRunningRoute": "Route",
+  "@templateRunningRoute": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateRunningFelt": "How it felt",
+  "@templateRunningFelt": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateStudy": "Study",
+  "@templateStudy": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateStudySubject": "Subject",
+  "@templateStudySubject": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateStudyCovered": "What I covered",
+  "@templateStudyCovered": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateStudyFocus": "Focus",
+  "@templateStudyFocus": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMeditation": "Meditation",
+  "@templateMeditation": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMeditationKind": "Kind",
+  "@templateMeditationKind": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMeditationBreathing": "Breathing",
+  "@templateMeditationBreathing": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMeditationBodyScan": "Body scan",
+  "@templateMeditationBodyScan": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMeditationGuided": "Guided",
+  "@templateMeditationGuided": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMeditationSilent": "Silent",
+  "@templateMeditationSilent": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMeditationCalm": "Calm afterwards",
+  "@templateMeditationCalm": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateWater": "Water",
+  "@templateWater": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateWaterGlasses": "Glasses",
+  "@templateWaterGlasses": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSleep": "Sleep",
+  "@templateSleep": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSleepQuality": "Quality",
+  "@templateSleepQuality": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSleepWokeUp": "Woke up in the night",
+  "@templateSleepWokeUp": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMood": "Mood",
+  "@templateMood": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMoodRating": "Mood",
+  "@templateMoodRating": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMoodFeelings": "Feelings",
+  "@templateMoodFeelings": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMoodCalm": "Calm",
+  "@templateMoodCalm": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMoodHappy": "Happy",
+  "@templateMoodHappy": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMoodEnergetic": "Energetic",
+  "@templateMoodEnergetic": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMoodTired": "Tired",
+  "@templateMoodTired": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMoodStressed": "Stressed",
+  "@templateMoodStressed": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMoodAnxious": "Anxious",
+  "@templateMoodAnxious": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePreviewAdd": "Add {name}",
+  "@templatePreviewAdd": {
+    "description": "Template preview: adds the template as an activity.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "templatesYoullLog": "What you'll log",
+  "@templatesYoullLog": {
+    "description": "Template preview: heading above the form preview."
+  },
+  "templatesAlreadyAdded": "Already in your activities",
+  "@templatesAlreadyAdded": {
+    "description": "Template gallery: a template whose name an activity already uses."
   }
 }

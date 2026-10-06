@@ -53,27 +53,39 @@ class DbActivityLogRepository implements ActivityLogRepository {
     int limit = 50,
   }) => guardStorageStream(
     'watchLogsForType',
-    _watch(() async {
-      final type = await (_db.select(
-        _db.activityTypes,
-      )..where((t) => t.publicId.equals(typeId.value))).getSingleOrNull();
-      if (type == null) return const <ActivityLog>[];
-      final rows =
-          await (_db.select(_db.activityLogs)
-                ..where(
-                  (l) =>
-                      l.activityTypeId.equals(type.internalId) &
-                      isActive(l.deletedAt),
-                )
-                ..orderBy([
-                  (l) => OrderingTerm.desc(l.localDate),
-                  (l) => OrderingTerm.desc(l.startedAt),
-                ])
-                ..limit(limit))
-              .get();
-      return _hydrate(rows, {type.internalId: type.publicId});
-    }),
+    _watch(() => _logsForType(typeId, limit)),
   );
+
+  @override
+  Future<List<ActivityLog>> recentLogsForType(
+    ActivityTypeId typeId, {
+    int limit = 10,
+  }) => guardStorage('recentLogsForType', () => _logsForType(typeId, limit));
+
+  /// A type's latest [limit] logs, newest first (`idx_activity_logs_type_day`).
+  Future<List<ActivityLog>> _logsForType(
+    ActivityTypeId typeId,
+    int limit,
+  ) async {
+    final type = await (_db.select(
+      _db.activityTypes,
+    )..where((t) => t.publicId.equals(typeId.value))).getSingleOrNull();
+    if (type == null) return const <ActivityLog>[];
+    final rows =
+        await (_db.select(_db.activityLogs)
+              ..where(
+                (l) =>
+                    l.activityTypeId.equals(type.internalId) &
+                    isActive(l.deletedAt),
+              )
+              ..orderBy([
+                (l) => OrderingTerm.desc(l.localDate),
+                (l) => OrderingTerm.desc(l.startedAt),
+              ])
+              ..limit(limit))
+            .get();
+    return _hydrate(rows, {type.internalId: type.publicId});
+  }
 
   @override
   Stream<List<ActivityLog>> watchLogsForDay(

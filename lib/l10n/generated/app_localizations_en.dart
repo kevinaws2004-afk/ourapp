@@ -179,67 +179,67 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fieldTypePickerTitle => 'Choose a field type';
 
   @override
-  String get fieldTypeText => 'Text';
+  String get fieldTypeText => 'Words';
 
   @override
   String get fieldTypeTextDescription =>
       'Words, a short note or a long description, like what the doctor said';
 
   @override
-  String get fieldTypeNumber => 'Number';
+  String get fieldTypeNumber => 'An amount';
 
   @override
   String get fieldTypeNumberDescription =>
-      'Counts or amounts, optionally with a unit like kg or km';
+      'A number, optionally in a unit like kg, km or pages';
 
   @override
-  String get fieldTypeBoolean => 'Yes / No';
+  String get fieldTypeBoolean => 'Yes or no';
 
   @override
   String get fieldTypeBooleanDescription =>
       'Something that did or didn\'t happen';
 
   @override
-  String get fieldTypeSingleSelect => 'Single choice';
+  String get fieldTypeSingleSelect => 'One choice';
 
   @override
   String get fieldTypeSingleSelectDescription =>
       'Pick one option from your list';
 
   @override
-  String get fieldTypeMultiSelect => 'Multiple choice';
+  String get fieldTypeMultiSelect => 'Several choices';
 
   @override
   String get fieldTypeMultiSelectDescription =>
       'Pick any options from your list';
 
   @override
-  String get fieldTypeDate => 'Date';
+  String get fieldTypeDate => 'A date';
 
   @override
   String get fieldTypeDateDescription => 'A calendar date';
 
   @override
-  String get fieldTypeTime => 'Time';
+  String get fieldTypeTime => 'A time of day';
 
   @override
   String get fieldTypeTimeDescription => 'A time of day';
 
   @override
-  String get fieldTypeDuration => 'Duration';
+  String get fieldTypeDuration => 'Time spent';
 
   @override
   String get fieldTypeDurationDescription =>
       'An amount of time, like rest or practice time';
 
   @override
-  String get fieldTypeRating => 'Rating';
+  String get fieldTypeRating => 'A rating';
 
   @override
   String get fieldTypeRatingDescription => 'Stars on a scale you choose';
 
   @override
-  String get fieldTypeRepeatingGroup => 'List';
+  String get fieldTypeRepeatingGroup => 'A list';
 
   @override
   String get fieldTypeRepeatingGroupDescription =>
@@ -1202,7 +1202,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get itemNothingToLogHint =>
-      'Add what you want to log: a number, a list (like exercises → sets), yes/no, a rating… or just write notes.';
+      'What do you want to keep track of? Pick one, or just write notes.';
 
   @override
   String get itemTimerOtherRunning => 'Another timer is running';
@@ -1226,12 +1226,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get itemAddToLogTitle => 'What do you want to log?';
-
-  @override
-  String get itemAddReadyMade => 'Ready-made';
-
-  @override
-  String get itemAddOneThing => 'Or add one thing';
 
   @override
   String get shapeSetsReps => 'Sets & reps';
@@ -1687,4 +1681,172 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get builderFewerIcons => 'Fewer icons';
+
+  @override
+  String itemLastTime(String date) {
+    return 'Last time · $date';
+  }
+
+  @override
+  String get itemUseLastTime => 'Use last time';
+
+  @override
+  String groupLastTime(String summary) {
+    return 'Last time: $summary';
+  }
+
+  @override
+  String get groupUseLastTime => 'Use';
+
+  @override
+  String get restAction => 'Rest';
+
+  @override
+  String restLeft(String time) {
+    return 'Rest $time';
+  }
+
+  @override
+  String get restOver => 'Rest over';
+
+  @override
+  String get restLess => '−15 s';
+
+  @override
+  String get restMore => '+15 s';
+
+  @override
+  String get restStop => 'Stop';
+
+  @override
+  String get itemAddQuick => 'Quick';
+
+  @override
+  String get itemAddMoreKinds => 'More kinds of detail';
+
+  @override
+  String get quickHowItWent => 'How it went';
+
+  @override
+  String get quickHowItWentDescription => 'A rating from 1 to 5';
+
+  @override
+  String get quickAmount => 'An amount';
+
+  @override
+  String get quickAmountDescription =>
+      'A number you name, like pages, km or glasses';
+
+  @override
+  String get itemQuickMore => 'More…';
+
+  @override
+  String get fieldAdvanced => 'Advanced';
+
+  @override
+  String get planDuplicate => 'Duplicate';
+
+  @override
+  String get planDuplicatedMessage => 'Duplicated';
+
+  @override
+  String get planQuickActionsHint => 'show quick actions';
+
+  @override
+  String get templateRunning => 'Running';
+
+  @override
+  String get templateRunningDistance => 'Distance';
+
+  @override
+  String get templateRunningRoute => 'Route';
+
+  @override
+  String get templateRunningFelt => 'How it felt';
+
+  @override
+  String get templateStudy => 'Study';
+
+  @override
+  String get templateStudySubject => 'Subject';
+
+  @override
+  String get templateStudyCovered => 'What I covered';
+
+  @override
+  String get templateStudyFocus => 'Focus';
+
+  @override
+  String get templateMeditation => 'Meditation';
+
+  @override
+  String get templateMeditationKind => 'Kind';
+
+  @override
+  String get templateMeditationBreathing => 'Breathing';
+
+  @override
+  String get templateMeditationBodyScan => 'Body scan';
+
+  @override
+  String get templateMeditationGuided => 'Guided';
+
+  @override
+  String get templateMeditationSilent => 'Silent';
+
+  @override
+  String get templateMeditationCalm => 'Calm afterwards';
+
+  @override
+  String get templateWater => 'Water';
+
+  @override
+  String get templateWaterGlasses => 'Glasses';
+
+  @override
+  String get templateSleep => 'Sleep';
+
+  @override
+  String get templateSleepQuality => 'Quality';
+
+  @override
+  String get templateSleepWokeUp => 'Woke up in the night';
+
+  @override
+  String get templateMood => 'Mood';
+
+  @override
+  String get templateMoodRating => 'Mood';
+
+  @override
+  String get templateMoodFeelings => 'Feelings';
+
+  @override
+  String get templateMoodCalm => 'Calm';
+
+  @override
+  String get templateMoodHappy => 'Happy';
+
+  @override
+  String get templateMoodEnergetic => 'Energetic';
+
+  @override
+  String get templateMoodTired => 'Tired';
+
+  @override
+  String get templateMoodStressed => 'Stressed';
+
+  @override
+  String get templateMoodAnxious => 'Anxious';
+
+  @override
+  String templatePreviewAdd(String name) {
+    return 'Add $name';
+  }
+
+  @override
+  String get templatesYoullLog => 'What you\'ll log';
+
+  @override
+  String get templatesAlreadyAdded => 'Already in your activities';
 }

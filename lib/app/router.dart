@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -36,6 +35,7 @@ import '../features/measurements/presentation/measurement_type_screen.dart';
 import '../features/measurements/presentation/measurements_screen.dart';
 import 'app_shell.dart';
 import 'dev/demo_data.dart';
+import 'dev/dev_tools.dart';
 import 'dev/token_showcase_screen.dart';
 
 /// All route paths. Routing lives only here (application_architecture.md §6).
@@ -258,11 +258,14 @@ final routerProvider = Provider<GoRouter>((ref) {
                 builder: (context, state) => MeScreen(
                   onOpenActivities: () => context.go(AppRoutes.activities),
                   onOpenMeasurements: () => context.go(AppRoutes.measurements),
-                  onOpenTokenShowcase: kDebugMode
+                  onOpenTokenShowcase: devToolsEnabled
                       ? () => context.push(AppRoutes.tokenShowcase)
                       : null,
-                  onLoadDemoData: kDebugMode
+                  onLoadDemoData: devToolsEnabled
                       ? () => unawaited(_loadDemoData(context))
+                      : null,
+                  onLoadRecentDemoData: devToolsEnabled
+                      ? () => unawaited(_loadDemoData(context, lastDays: 10))
                       : null,
                 ),
                 routes: [
@@ -384,7 +387,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           },
         ),
       ),
-      if (kDebugMode)
+      if (devToolsEnabled)
         GoRoute(
           parentNavigatorKey: rootNavigatorKey,
           path: AppRoutes.tokenShowcase,
@@ -400,12 +403,18 @@ final routerProvider = Provider<GoRouter>((ref) {
   return router;
 });
 
-/// Debug-only: fills an empty app with demo data (dev/demo_data.dart).
-Future<void> _loadDemoData(BuildContext context) async {
+/// Developer tools only: fills the app with demo data (dev/demo_data.dart):
+/// six weeks up to today, or with [lastDays] the days ending yesterday.
+Future<void> _loadDemoData(BuildContext context, {int? lastDays}) async {
   final messenger = ScaffoldMessenger.of(context);
+  final container = ProviderScope.containerOf(context);
+  final clock = container.read(clockProvider);
+  final yesterday = currentLocalDate(clock).addDays(-1);
   final result = await loadDemoData(
-    ProviderScope.containerOf(context),
+    container,
     AppLocalizations.of(context),
+    from: lastDays == null ? null : yesterday.addDays(-(lastDays - 1)),
+    to: lastDays == null ? null : yesterday,
   );
   // Developer tooling: intentionally not localized (coding_standards.md §4).
   messenger.showSnackBar(

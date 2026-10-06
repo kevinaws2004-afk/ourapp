@@ -25,11 +25,11 @@ void main() {
 
     await scrollAndTap(tester, find.text('Add field'));
     await tester.dragUntilVisible(
-      find.text('List'),
+      find.text('A list'),
       find.byType(ListView).last,
       const Offset(0, -200),
     );
-    await tester.tap(find.text('List'));
+    await tester.tap(find.text('A list'));
     await tester.pumpAndSettle();
     await tester.enterText(
       find.widgetWithText(TextField, 'Field name'),
@@ -43,7 +43,7 @@ void main() {
 
     // Sub-fields are added in a nested sheet.
     await scrollAndTap(tester, find.text('Add field to item'));
-    await tester.tap(find.text('Number'));
+    await tester.tap(find.text('An amount'));
     await tester.pumpAndSettle();
     await tester.enterText(
       find.widgetWithText(TextField, 'Field name').last,

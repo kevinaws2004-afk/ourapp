@@ -14,6 +14,13 @@ abstract interface class ActivityLogRepository {
     int limit = 50,
   });
 
+  /// The latest [limit] logs of a type, newest first, read once (logging
+  /// from memory, ADR-041).
+  Future<List<ActivityLog>> recentLogsForType(
+    ActivityTypeId typeId, {
+    int limit = 10,
+  });
+
   /// Logs whose local day is [date], in time order (`idx_activity_logs_day`).
   Stream<List<ActivityLog>> watchLogsForDay(LocalDate date);
 

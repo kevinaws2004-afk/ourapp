@@ -19,6 +19,8 @@ import '../../../../shared/widgets/state_views.dart';
 import '../../../activity_logs/presentation/activity_log_providers.dart';
 import '../../../activity_logs/presentation/form/activity_log_form.dart';
 import '../../../activity_logs/presentation/form/add_detail_scope.dart';
+import '../../../activity_logs/presentation/form/rest_timer_scope.dart';
+import '../../../activity_logs/presentation/form/row_memory_scope.dart';
 import '../../../activity_logs/presentation/form/date_time_editors.dart';
 import '../../../activity_logs/presentation/form/field_editor_shell.dart';
 import '../../../activity_logs/presentation/value_formatting.dart';
@@ -38,6 +40,8 @@ import '../plan_formatting.dart';
 import '../plan_providers.dart';
 import 'add_to_log_sheet.dart';
 import 'item_notifier.dart';
+import 'last_time_card.dart';
+import 'rest_timer.dart';
 
 /// One item on your day (ADR-035): the place you log into. Planned, in
 /// progress or done, it's the same screen; what you enter is saved as you
@@ -100,6 +104,7 @@ class ItemScreen extends ConsumerWidget {
               ),
           ],
         ),
+        bottomNavigationBar: const RestTimerBar(),
         body: AsyncValueView(
           value: item,
           onRetry: () => ref.invalidate(itemProvider(args)),
@@ -282,34 +287,68 @@ class _ItemBody extends ConsumerWidget {
             const SizedBox(height: AppSpacing.md),
             _ItemActions(args: args, state: state, onOpenTimer: onOpenTimer),
             const SizedBox(height: AppSpacing.lg),
+            LastTimeCard(args: args, state: state),
             if (type != null && fields.isNotEmpty)
               AddDetailScope(
                 onAddDetail: (group) =>
                     unawaited(_addToLog(context, ref, args, state, group)),
-                child: ActivityLogFormFields(
-                  type: type,
-                  fields: fields,
-                  values: state.values,
-                  issues: state.issues,
-                  onChanged: notifier.setValue,
+                child: RowMemoryScope(
+                  except: state.logId,
+                  child: RestTimerScope(
+                    onRest: ref.read(restTimerProvider.notifier).start,
+                    child: ActivityLogFormFields(
+                      type: type,
+                      fields: fields,
+                      values: state.values,
+                      issues: state.issues,
+                      onChanged: notifier.setValue,
+                    ),
+                  ),
                 ),
               )
-            else
-              Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                child: Text(l10n.itemNothingToLogHint, style: quiet),
+            else ...[
+              // Nothing to log yet: the likely things, one tap each (B3).
+              Text(l10n.itemNothingToLogHint, style: quiet),
+              const SizedBox(height: AppSpacing.sm),
+              Wrap(
+                spacing: AppSpacing.sm,
+                runSpacing: AppSpacing.xs,
+                children: [
+                  for (final option in quickLogOptions(l10n).take(3))
+                    ActionChip(
+                      avatar: Icon(option.icon),
+                      label: Text(option.label),
+                      onPressed: () => unawaited(
+                        _addToLog(
+                          context,
+                          ref,
+                          args,
+                          state,
+                          null,
+                          preset: option.choice,
+                        ),
+                      ),
+                    ),
+                  ActionChip(
+                    label: Text(l10n.itemQuickMore),
+                    onPressed: () =>
+                        unawaited(_addToLog(context, ref, args, state, null)),
+                  ),
+                ],
               ),
+            ],
             // Anything can be logged, added right here (ADR-035).
-            Align(
-              alignment: Alignment.centerLeft,
-              child: AppButton(
-                label: l10n.itemAddToLog,
-                icon: AppIcons.add,
-                variant: AppButtonVariant.secondary,
-                onPressed: () =>
-                    unawaited(_addToLog(context, ref, args, state, null)),
+            if (type != null && fields.isNotEmpty)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: AppButton(
+                  label: l10n.itemAddToLog,
+                  icon: AppIcons.add,
+                  variant: AppButtonVariant.secondary,
+                  onPressed: () =>
+                      unawaited(_addToLog(context, ref, args, state, null)),
+                ),
               ),
-            ),
             const SizedBox(height: AppSpacing.lg),
             FieldEditorShell(
               label: l10n.notesLabel,
@@ -663,14 +702,16 @@ class _StartedAtPicker extends StatelessWidget {
 }
 
 /// Adds something new to log to the item (or a detail to the list [parent]),
-/// then reloads it with what's been entered kept (ADR-035).
+/// then reloads it with what's been entered kept (ADR-035). A [preset] (a
+/// quick choice, B3) skips the "What do you want to log?" sheet.
 Future<void> _addToLog(
   BuildContext context,
   WidgetRef ref,
   ItemArgs args,
   ItemState state,
-  ActivityField? parent,
-) async {
+  ActivityField? parent, {
+  Object? preset,
+}) async {
   final l10n = AppLocalizations.of(context);
   final type = state.type;
   var depth = 0;
@@ -682,7 +723,9 @@ Future<void> _addToLog(
       id = type.fieldById(id)?.parentId;
     }
   }
-  final field = await showAddToLogSheet(context, depth: depth);
+  final field = preset == null
+      ? await showAddToLogSheet(context, depth: depth)
+      : await configureChoice(context, preset, depth: depth);
   if (field == null || !context.mounted) return;
   final notifier = ref.read(itemProvider(args).notifier);
   try {

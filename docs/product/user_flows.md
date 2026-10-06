@@ -65,10 +65,11 @@ Example: Plan Oct 4 → Gym, Reading, Doctor call.
 ## F6. Gym workout (FR-LG-07, §43 "Gym")
 
 1. Open the planned Gym (F5), or add "Gym" with **Start now** (F8). Optionally **Start timer**.
-2. **Add exercise** → name with autocomplete from history (e.g. "Chest Press").
-3. **Add set** row: weight, reps. A new row pre-fills from the previous row.
-4. Repeat sets, add more exercises. Each change is saved, so nothing is lost if the app is backgrounded or killed mid-workout.
-5. Finish the timer (if running) → its time fills the workout's duration and the workout is done; without a timer, **Mark done**.
+2. A new session can start from last time: **Use last time** copies the previous workout, ready to adjust (B1).
+3. **Add exercise** → name with autocomplete from history (e.g. "Chest Press"); "Last time: Chest Press 60 kg × 8 (×2)" appears, and **Use** copies those sets (B2).
+4. **Add set** row: weight, reps. A new row pre-fills from the previous row. **Rest** starts a rest countdown between sets (B5).
+5. Repeat sets, add more exercises. Each change is saved, so nothing is lost if the app is backgrounded or killed mid-workout.
+6. Finish the timer (if running) → its time fills the workout's duration and the workout is done; without a timer, **Mark done**.
 
 ## F7. Timer (FR-FO-01…06, §43 "Work"/"Reading")
 

@@ -293,4 +293,156 @@ List<ActivityTypeDefinition> activityTemplates(AppLocalizations l10n) => [
       ),
     ],
   ),
+  // Phase B (B8) templates. Body weight lives in Me → Body measurements.
+  ActivityTypeDefinition(
+    name: l10n.templateRunning,
+    iconId: 'person-simple-run',
+    colorKey: 'rose',
+    supportsTimer: true,
+    fields: [
+      FieldDefinition(
+        name: l10n.templateRunningDistance,
+        type: FieldType.number,
+        dimension: Dimension.distance,
+        config: const NumberFieldConfig(
+          decimals: 2,
+          min: 0,
+          defaultUnitCode: 'km',
+        ),
+        measurable: true,
+      ),
+      FieldDefinition(
+        name: l10n.templateRunningRoute,
+        type: FieldType.text,
+        config: const TextFieldConfig(suggestFromHistory: true),
+      ),
+      FieldDefinition(
+        name: l10n.templateRunningFelt,
+        type: FieldType.rating,
+        config: const RatingFieldConfig(),
+        measurable: true,
+      ),
+    ],
+  ),
+  ActivityTypeDefinition(
+    name: l10n.templateStudy,
+    iconId: 'graduation-cap',
+    colorKey: 'lilac',
+    supportsTimer: true,
+    fields: [
+      FieldDefinition(
+        name: l10n.templateStudySubject,
+        type: FieldType.text,
+        config: const TextFieldConfig(suggestFromHistory: true),
+      ),
+      FieldDefinition(
+        name: l10n.templateStudyCovered,
+        type: FieldType.text,
+        config: const TextFieldConfig(multiline: true),
+      ),
+      FieldDefinition(
+        name: l10n.templateStudyFocus,
+        type: FieldType.rating,
+        config: const RatingFieldConfig(),
+        measurable: true,
+      ),
+    ],
+  ),
+  ActivityTypeDefinition(
+    name: l10n.templateMeditation,
+    iconId: 'flower-lotus',
+    colorKey: 'teal',
+    supportsTimer: true,
+    fields: [
+      FieldDefinition(
+        name: l10n.templateMeditationKind,
+        type: FieldType.singleSelect,
+        config: SelectFieldConfig(
+          options: [
+            for (final (i, label) in [
+              l10n.templateMeditationBreathing,
+              l10n.templateMeditationBodyScan,
+              l10n.templateMeditationGuided,
+              l10n.templateMeditationSilent,
+            ].indexed)
+              SelectOption(
+                id: SelectOptionId('template-option-$i'),
+                label: label,
+              ),
+          ],
+        ),
+      ),
+      FieldDefinition(
+        name: l10n.templateMeditationCalm,
+        type: FieldType.rating,
+        config: const RatingFieldConfig(),
+        measurable: true,
+      ),
+    ],
+  ),
+  ActivityTypeDefinition(
+    name: l10n.templateWater,
+    iconId: 'drop',
+    colorKey: 'sky',
+    fields: [
+      FieldDefinition(
+        name: l10n.templateWaterGlasses,
+        type: FieldType.number,
+        config: const NumberFieldConfig(min: 0),
+        measurable: true,
+      ),
+    ],
+  ),
+  ActivityTypeDefinition(
+    name: l10n.templateSleep,
+    iconId: 'bed',
+    colorKey: 'slate',
+    supportsTimer: true,
+    fields: [
+      FieldDefinition(
+        name: l10n.templateSleepQuality,
+        type: FieldType.rating,
+        config: const RatingFieldConfig(),
+        measurable: true,
+      ),
+      FieldDefinition(
+        name: l10n.templateSleepWokeUp,
+        type: FieldType.boolean,
+        config: const BooleanFieldConfig(),
+      ),
+    ],
+  ),
+  ActivityTypeDefinition(
+    name: l10n.templateMood,
+    iconId: 'heart',
+    colorKey: 'rose',
+    fields: [
+      FieldDefinition(
+        name: l10n.templateMoodRating,
+        type: FieldType.rating,
+        config: const RatingFieldConfig(),
+        measurable: true,
+      ),
+      FieldDefinition(
+        name: l10n.templateMoodFeelings,
+        type: FieldType.multiSelect,
+        config: SelectFieldConfig(
+          options: [
+            for (final (i, label) in [
+              l10n.templateMoodCalm,
+              l10n.templateMoodHappy,
+              l10n.templateMoodEnergetic,
+              l10n.templateMoodTired,
+              l10n.templateMoodStressed,
+              l10n.templateMoodAnxious,
+            ].indexed)
+              SelectOption(
+                id: SelectOptionId('template-option-$i'),
+                label: label,
+              ),
+          ],
+        ),
+      ),
+    ],
+  ),
 ];

@@ -397,7 +397,7 @@ abstract class AppLocalizations {
   /// Field type name: Text.
   ///
   /// In en, this message translates to:
-  /// **'Text'**
+  /// **'Words'**
   String get fieldTypeText;
 
   /// Field type description for Text.
@@ -409,19 +409,19 @@ abstract class AppLocalizations {
   /// Field type name: Number.
   ///
   /// In en, this message translates to:
-  /// **'Number'**
+  /// **'An amount'**
   String get fieldTypeNumber;
 
   /// Field type description for Number.
   ///
   /// In en, this message translates to:
-  /// **'Counts or amounts, optionally with a unit like kg or km'**
+  /// **'A number, optionally in a unit like kg, km or pages'**
   String get fieldTypeNumberDescription;
 
   /// Field type name: Yes / No.
   ///
   /// In en, this message translates to:
-  /// **'Yes / No'**
+  /// **'Yes or no'**
   String get fieldTypeBoolean;
 
   /// Field type description for Yes / No.
@@ -433,7 +433,7 @@ abstract class AppLocalizations {
   /// Field type name: Single choice.
   ///
   /// In en, this message translates to:
-  /// **'Single choice'**
+  /// **'One choice'**
   String get fieldTypeSingleSelect;
 
   /// Field type description for Single choice.
@@ -445,7 +445,7 @@ abstract class AppLocalizations {
   /// Field type name: Multiple choice.
   ///
   /// In en, this message translates to:
-  /// **'Multiple choice'**
+  /// **'Several choices'**
   String get fieldTypeMultiSelect;
 
   /// Field type description for Multiple choice.
@@ -457,7 +457,7 @@ abstract class AppLocalizations {
   /// Field type name: Date.
   ///
   /// In en, this message translates to:
-  /// **'Date'**
+  /// **'A date'**
   String get fieldTypeDate;
 
   /// Field type description for Date.
@@ -469,7 +469,7 @@ abstract class AppLocalizations {
   /// Field type name: Time.
   ///
   /// In en, this message translates to:
-  /// **'Time'**
+  /// **'A time of day'**
   String get fieldTypeTime;
 
   /// Field type description for Time.
@@ -481,7 +481,7 @@ abstract class AppLocalizations {
   /// Field type name: Duration.
   ///
   /// In en, this message translates to:
-  /// **'Duration'**
+  /// **'Time spent'**
   String get fieldTypeDuration;
 
   /// Field type description for Duration.
@@ -493,7 +493,7 @@ abstract class AppLocalizations {
   /// Field type name: Rating.
   ///
   /// In en, this message translates to:
-  /// **'Rating'**
+  /// **'A rating'**
   String get fieldTypeRating;
 
   /// Field type description for Rating.
@@ -505,7 +505,7 @@ abstract class AppLocalizations {
   /// Field type name: Repeating group.
   ///
   /// In en, this message translates to:
-  /// **'List'**
+  /// **'A list'**
   String get fieldTypeRepeatingGroup;
 
   /// Field type description for Repeating group.
@@ -2281,7 +2281,7 @@ abstract class AppLocalizations {
   /// Shown in an item whose activity has no fields yet.
   ///
   /// In en, this message translates to:
-  /// **'Add what you want to log: a number, a list (like exercises → sets), yes/no, a rating… or just write notes.'**
+  /// **'What do you want to keep track of? Pick one, or just write notes.'**
   String get itemNothingToLogHint;
 
   /// Shown in an item when a timer runs for a different item.
@@ -2319,18 +2319,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'What do you want to log?'**
   String get itemAddToLogTitle;
-
-  /// Section of ready-made things to log (sets & reps, checklist).
-  ///
-  /// In en, this message translates to:
-  /// **'Ready-made'**
-  String get itemAddReadyMade;
-
-  /// Section of single things to log (number, text, list…).
-  ///
-  /// In en, this message translates to:
-  /// **'Or add one thing'**
-  String get itemAddOneThing;
 
   /// Ready-made: exercises, each with sets of weight × reps.
   ///
@@ -3135,6 +3123,324 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Fewer icons'**
   String get builderFewerIcons;
+
+  /// Item screen: heading of the card showing what was logged the previous time.
+  ///
+  /// In en, this message translates to:
+  /// **'Last time · {date}'**
+  String itemLastTime(String date);
+
+  /// Item screen: copies what was logged last time into this item, ready to adjust.
+  ///
+  /// In en, this message translates to:
+  /// **'Use last time'**
+  String get itemUseLastTime;
+
+  /// Under a list row: what was logged for a row with this name last time (e.g. "Last time: Bench press 60 kg × 8 (×2)").
+  ///
+  /// In en, this message translates to:
+  /// **'Last time: {summary}'**
+  String groupLastTime(String summary);
+
+  /// Fills a list row with what was logged for it last time.
+  ///
+  /// In en, this message translates to:
+  /// **'Use'**
+  String get groupUseLastTime;
+
+  /// Button under a list of number rows (e.g. sets): starts a rest timer.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest'**
+  String get restAction;
+
+  /// Rest timer: time left.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest {time}'**
+  String restLeft(String time);
+
+  /// Rest timer: the rest has ended.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest over'**
+  String get restOver;
+
+  /// Rest timer: take 15 seconds off.
+  ///
+  /// In en, this message translates to:
+  /// **'−15 s'**
+  String get restLess;
+
+  /// Rest timer: add 15 seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'+15 s'**
+  String get restMore;
+
+  /// Rest timer: stop it.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get restStop;
+
+  /// Add to log sheet: heading of the one-tap choices.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick'**
+  String get itemAddQuick;
+
+  /// Add to log sheet: expands every kind of detail (advanced).
+  ///
+  /// In en, this message translates to:
+  /// **'More kinds of detail'**
+  String get itemAddMoreKinds;
+
+  /// Quick thing to log: a 1–5 rating, also its default name.
+  ///
+  /// In en, this message translates to:
+  /// **'How it went'**
+  String get quickHowItWent;
+
+  /// Description of the quick rating.
+  ///
+  /// In en, this message translates to:
+  /// **'A rating from 1 to 5'**
+  String get quickHowItWentDescription;
+
+  /// Quick thing to log: a number you name (pages, km, glasses…).
+  ///
+  /// In en, this message translates to:
+  /// **'An amount'**
+  String get quickAmount;
+
+  /// Description of the quick amount.
+  ///
+  /// In en, this message translates to:
+  /// **'A number you name, like pages, km or glasses'**
+  String get quickAmountDescription;
+
+  /// Item with nothing to log yet: opens every choice.
+  ///
+  /// In en, this message translates to:
+  /// **'More…'**
+  String get itemQuickMore;
+
+  /// Field sheet: expands the less common settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get fieldAdvanced;
+
+  /// Plan quick action: copy the item on the same day.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate'**
+  String get planDuplicate;
+
+  /// Snackbar after duplicating an item.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicated'**
+  String get planDuplicatedMessage;
+
+  /// Screen-reader hint for long-pressing a day row.
+  ///
+  /// In en, this message translates to:
+  /// **'show quick actions'**
+  String get planQuickActionsHint;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Running'**
+  String get templateRunning;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get templateRunningDistance;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Route'**
+  String get templateRunningRoute;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'How it felt'**
+  String get templateRunningFelt;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Study'**
+  String get templateStudy;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Subject'**
+  String get templateStudySubject;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'What I covered'**
+  String get templateStudyCovered;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Focus'**
+  String get templateStudyFocus;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Meditation'**
+  String get templateMeditation;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Kind'**
+  String get templateMeditationKind;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Breathing'**
+  String get templateMeditationBreathing;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Body scan'**
+  String get templateMeditationBodyScan;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Guided'**
+  String get templateMeditationGuided;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Silent'**
+  String get templateMeditationSilent;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Calm afterwards'**
+  String get templateMeditationCalm;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Water'**
+  String get templateWater;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Glasses'**
+  String get templateWaterGlasses;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep'**
+  String get templateSleep;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Quality'**
+  String get templateSleepQuality;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Woke up in the night'**
+  String get templateSleepWokeUp;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Mood'**
+  String get templateMood;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Mood'**
+  String get templateMoodRating;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Feelings'**
+  String get templateMoodFeelings;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Calm'**
+  String get templateMoodCalm;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Happy'**
+  String get templateMoodHappy;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Energetic'**
+  String get templateMoodEnergetic;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Tired'**
+  String get templateMoodTired;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Stressed'**
+  String get templateMoodStressed;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Anxious'**
+  String get templateMoodAnxious;
+
+  /// Template preview: adds the template as an activity.
+  ///
+  /// In en, this message translates to:
+  /// **'Add {name}'**
+  String templatePreviewAdd(String name);
+
+  /// Template preview: heading above the form preview.
+  ///
+  /// In en, this message translates to:
+  /// **'What you\'ll log'**
+  String get templatesYoullLog;
+
+  /// Template gallery: a template whose name an activity already uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Already in your activities'**
+  String get templatesAlreadyAdded;
 }
 
 class _AppLocalizationsDelegate

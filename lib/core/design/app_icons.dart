@@ -51,6 +51,7 @@ abstract final class AppIcons {
   static const skip = PhosphorGlyphs.skipForward;
   static const moveToTomorrow = PhosphorGlyphs.arrowBendUpRight;
   static const repeat = PhosphorGlyphs.repeat;
+  static const duplicate = PhosphorGlyphs.calendarPlus;
   static const planNext = PhosphorGlyphs.calendarPlus;
 
   // Field type icons (builder field-type picker).

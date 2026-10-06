@@ -32,8 +32,12 @@ class PlanItemTile extends StatelessWidget {
     required this.onTap,
     required this.onMore,
     required this.onToggleDone,
+    this.onLongPress,
     this.dragHandle,
   });
+
+  /// Quick actions (B7).
+  final VoidCallback? onLongPress;
 
   final PlannedItem item;
   final VoidCallback onTap;
@@ -99,11 +103,13 @@ class PlanItemTile extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: Semantics(
         onTapHint: tapHint,
+        onLongPressHint: onLongPress == null ? null : l10n.planQuickActionsHint,
         child: Material(
           type: MaterialType.transparency,
           child: InkWell(
             borderRadius: AppRadius.mdAll,
             onTap: onTap,
+            onLongPress: onLongPress,
             child: Ink(
               decoration: decoration,
               child: Padding(

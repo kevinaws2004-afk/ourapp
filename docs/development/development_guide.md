@@ -58,7 +58,7 @@ flutter devices                                    # wait until the emulator is 
 flutter run -d emulator-5554
 ```
 
-On first launch the app shows the placeholder onboarding screen; "Get started" leads to Today. In debug builds, Me → "Design tokens (debug)" opens the token showcase (theme switch, "Show onboarding again"), and Me → "Load demo data (debug)" adds six weeks of sample records, plans, measurements and charts through the normal use cases (`lib/app/dev/demo_data.dart`). It adds to existing data, once (a second tap does nothing), and the records can only be removed one by one, so use it on test installs.
+On first launch the app shows the placeholder onboarding screen; "Get started" leads to Today. Developer tools show under Me → Developer in debug builds, or in any build made with `--dart-define=DEV_TOOLS=true` (`lib/app/dev/dev_tools.dart`): "Design tokens" opens the token showcase (theme switch, "Show onboarding again"); "Load demo data (6 weeks)" adds six weeks of sample records up to today plus today's/tomorrow's plans, measurements and charts; "Load demo data (last 10 days)" adds records for the 10 days ending yesterday. Both write through the normal use cases (`lib/app/dev/demo_data.dart`), add to existing data once (a second tap does nothing) and refuse when Gym, Reading, Walking or Focused work already exist; the records can only be removed one by one, so use them on test installs. To put demo data on a phone running a release build: install a release built with `DEV_TOOLS=true`, load it, then reinstall the plain release (same signing key, so the data stays).
 
 ## 4. Workflow
 

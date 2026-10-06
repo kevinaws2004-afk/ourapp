@@ -89,6 +89,10 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Walking'));
       await tester.pumpAndSettle();
+      // The preview shows the real form before adding it (B8).
+      expect(find.text("What you'll log"), findsOneWidget);
+      expect(find.text('Distance'), findsOneWidget);
+      await scrollAndTap(tester, find.text('Add Walking'));
 
       expect(find.byType(ActivityTypeScreen), findsOneWidget);
       expect(
@@ -118,8 +122,10 @@ void main() {
 
     await tester.tap(find.text('Start from a template'));
     await tester.pumpAndSettle();
+    expect(find.text('Already in your activities'), findsOneWidget);
     await tester.tap(find.text('Walking'));
     await tester.pumpAndSettle();
+    await scrollAndTap(tester, find.text('Add Walking'));
 
     expect(
       find.text('You already have an activity with this name.'),
@@ -143,7 +149,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await scrollAndTap(tester, find.text('Add field'));
-    await tester.tap(find.text('Rating'));
+    await tester.tap(find.text('A rating'));
     await tester.pumpAndSettle();
     await tester.enterText(
       find.widgetWithText(TextField, 'Field name'),

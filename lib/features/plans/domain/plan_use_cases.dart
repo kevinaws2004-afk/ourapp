@@ -239,3 +239,30 @@ class RestorePlan {
 
   Future<void> call(PlanId id) => _plans.restore(id);
 }
+
+/// A copy of a plan on the same day (B7): same title, activity, time and
+/// notes; a one-off (not repeating), planned, nothing logged. Returns it.
+class DuplicatePlan {
+  const DuplicatePlan(this._plans, this._create);
+
+  final PlanRepository _plans;
+  final CreatePlan _create;
+
+  Future<PlanId> call(PlanId id) async {
+    final plan = await _plans.getPlan(id);
+    if (plan == null) {
+      throw NotFoundException(debugContext: 'DuplicatePlan ${id.value}');
+    }
+    return _create(
+      PlanDraft(
+        planDate: plan.planDate,
+        title: plan.title,
+        activityTypeId: plan.activityTypeId,
+        notes: plan.notes,
+        plannedStartAt: plan.plannedStartAt,
+        plannedEndAt: plan.plannedEndAt,
+        plannedDurationMs: plan.plannedDurationMs,
+      ),
+    );
+  }
+}

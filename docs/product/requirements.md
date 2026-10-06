@@ -59,6 +59,9 @@ Each type has defined value semantics, validation, storage mapping, rendering an
 | FR-LG-06 | **Log something now:** the quick add's **Start now** adds an unplanned item at the current time and opens it to log into (no separate Quick Record sheet). | V1 | §37, ADR-028, ADR-035, ADR-039 |
 | FR-LG-07 | Gym: user can add exercises, add sets per exercise (weight × reps), and record workout duration. | V1 | §12, §41 |
 | FR-LG-08 | Logs for archived Activity Types or removed fields remain viewable. | V1 | implied |
+| FR-LG-09 | An empty item can start from the activity's last log in one tap ("Use last time"); a named list row shows what it was last time and can copy it (ADR-041). | V1 | ADR-041 |
+| FR-LG-10 | Lists of numbers (e.g. sets) offer an optional rest timer while logging; it isn't stored (ADR-041). | V1 | ADR-041 |
+| FR-LG-11 | An item with nothing to log offers one-tap choices (how it went, an amount, sets & reps); every field type stays available under "More kinds of detail" (ADR-041). | V1 | ADR-041 |
 
 ### 1.4 Plans & Tasks
 
@@ -74,6 +77,7 @@ Each type has defined value semantics, validation, storage mapping, rendering an
 | FR-PL-08 | Plans can be reordered (drag and drop). | V1? | §6 lists drag & drop in stack |
 | FR-PL-09 | The Plan tab is date-based: a week and a month view reach any past, present or future date; tapping a day opens it, shown the same way as Today. | V1 | ADR-028, ADR-039 |
 | FR-PL-10 | For a selected date, the user sees what was planned next to what was actually recorded, including past dates (review). | V1 | §20, ADR-028 |
+| FR-PL-11 | Long-pressing a day row offers quick actions: mark done / not done, move to tomorrow, duplicate, skip, delete, each with Undo (ADR-041). | V1 | ADR-041 |
 
 ### 1.5 Focus Mode & Timer
 

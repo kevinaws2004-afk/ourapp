@@ -25,9 +25,18 @@ Future<FieldDefinition?> showAddToLogSheet(
     isScrollControlled: true,
     builder: (_) => _AddToLogSheet(depth: depth),
   );
-  if (choice is FieldDefinition || choice == null || !context.mounted) {
-    return choice as FieldDefinition?;
-  }
+  if (choice == null || !context.mounted) return null;
+  return configureChoice(context, choice, depth: depth);
+}
+
+/// A chosen [QuickLog.choice] as a field: ready as it is, or named in the
+/// field sheet first (a [FieldType]).
+Future<FieldDefinition?> configureChoice(
+  BuildContext context,
+  Object choice, {
+  int depth = 0,
+}) async {
+  if (choice is FieldDefinition) return choice;
   final result = await showFieldEditor(
     context,
     initial: newFieldDefinition(choice as FieldType),
@@ -36,6 +45,40 @@ Future<FieldDefinition?> showAddToLogSheet(
   );
   return result is FieldSaved ? result.definition : null;
 }
+
+/// One quick thing to log (B3): a ready field ([FieldDefinition]) or a kind
+/// to name first ([FieldType]).
+typedef QuickLog = ({
+  String label,
+  String description,
+  IconData icon,
+  Object choice,
+});
+
+/// The few things most items need, in one tap (B3, ADR-041): how it went,
+/// an amount, and the ready-made lists. Plain data, nothing special once
+/// added; every other kind is under "More kinds of detail".
+List<QuickLog> quickLogOptions(AppLocalizations l10n, {int depth = 0}) => [
+  (
+    label: l10n.quickHowItWent,
+    description: l10n.quickHowItWentDescription,
+    icon: AppIcons.fieldRating,
+    choice: FieldDefinition(
+      name: l10n.quickHowItWent,
+      type: FieldType.rating,
+      config: const RatingFieldConfig(),
+      measurable: true,
+    ),
+  ),
+  (
+    label: l10n.quickAmount,
+    description: l10n.quickAmountDescription,
+    icon: AppIcons.fieldNumber,
+    choice: FieldType.number,
+  ),
+  for (final (label, description, icon, field) in _readyMade(l10n, depth))
+    (label: label, description: description, icon: icon, choice: field),
+];
 
 bool _canNestList(int depth) => depth < ActivityTypeValidator.maxGroupDepth;
 
@@ -124,7 +167,6 @@ class _AddToLogSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final readyMade = _readyMade(l10n, depth);
     final types = [
       for (final type in FieldType.values)
         if (type != FieldType.repeatingGroup || _canNestList(depth)) type,
@@ -135,35 +177,39 @@ class _AddToLogSheet extends StatelessWidget {
     return SafeArea(
       child: DraggableScrollableSheet(
         expand: false,
-        initialChildSize: 0.8,
+        initialChildSize: 0.7,
         maxChildSize: 0.95,
         builder: (context, controller) => ListView(
           controller: controller,
           padding: const EdgeInsets.all(AppSpacing.lg),
           children: [
             Text(l10n.itemAddToLogTitle, style: context.textStyles.titleLarge),
-            if (readyMade.isNotEmpty) ...[
-              const SizedBox(height: AppSpacing.lg),
-              Text(l10n.itemAddReadyMade, style: heading),
-              for (final (title, description, icon, field) in readyMade)
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: Icon(icon),
-                  title: Text(title),
-                  subtitle: Text(description),
-                  onTap: () => Navigator.of(context).pop(field),
-                ),
-            ],
             const SizedBox(height: AppSpacing.lg),
-            Text(l10n.itemAddOneThing, style: heading),
-            for (final type in types)
+            Text(l10n.itemAddQuick, style: heading),
+            for (final option in quickLogOptions(l10n, depth: depth))
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                leading: Icon(type.icon),
-                title: Text(type.label(l10n)),
-                subtitle: Text(type.description(l10n)),
-                onTap: () => Navigator.of(context).pop(type),
+                leading: Icon(option.icon),
+                title: Text(option.label),
+                subtitle: Text(option.description),
+                onTap: () => Navigator.of(context).pop(option.choice),
               ),
+            // Every kind of detail, for when the quick ones don't fit (B3).
+            ExpansionTile(
+              tilePadding: EdgeInsets.zero,
+              childrenPadding: EdgeInsets.zero,
+              title: Text(l10n.itemAddMoreKinds, style: heading),
+              children: [
+                for (final type in types)
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: Icon(type.icon),
+                    title: Text(type.label(l10n)),
+                    subtitle: Text(type.description(l10n)),
+                    onTap: () => Navigator.of(context).pop(type),
+                  ),
+              ],
+            ),
           ],
         ),
       ),

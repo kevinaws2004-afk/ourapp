@@ -59,6 +59,14 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Reading'));
     await tester.pumpAndSettle();
+    // The gallery previews a template; Add installs it (B8).
+    await tester.scrollUntilVisible(
+      find.text('Add Reading'),
+      200,
+      scrollable: find.byType(Scrollable).last,
+    );
+    await tester.tap(find.text('Add Reading'));
+    await tester.pumpAndSettle();
 
     await tapTab('Plan');
     // The week opens; tapping today's heading opens the day (A1).

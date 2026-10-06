@@ -13,6 +13,8 @@ import '../domain/activity_log.dart';
 import '../domain/activity_log_repository.dart';
 import '../domain/activity_log_use_cases.dart';
 import '../domain/watch_records_for_day.dart';
+import '../domain/field_value.dart';
+import '../domain/log_memory.dart';
 
 final activityLogRepositoryProvider = Provider<ActivityLogRepository>(
   (ref) => DbActivityLogRepository(
@@ -70,3 +72,33 @@ final deleteActivityLogProvider = Provider(
 final restoreActivityLogProvider = Provider(
   (ref) => RestoreActivityLog(ref.watch(activityLogRepositoryProvider)),
 );
+
+final lastLogOfTypeProvider = Provider(
+  (ref) => LastLogOfType(ref.watch(activityLogRepositoryProvider)),
+);
+
+final lastRowNamedProvider = Provider(
+  (ref) => LastRowNamed(ref.watch(activityLogRepositoryProvider)),
+);
+
+/// Which row to remember (B2): a list of an activity, its naming field, the
+/// name, and the log to leave out.
+typedef RowMemoryKey = ({
+  ActivityTypeId typeId,
+  ActivityFieldId groupFieldId,
+  ActivityFieldId nameFieldId,
+  String name,
+  ActivityLogId? except,
+});
+
+/// The last time a list row with this name was logged (B2).
+final lastRowProvider = FutureProvider.autoDispose
+    .family<GroupItem?, RowMemoryKey>(
+      (ref, key) => ref.watch(lastRowNamedProvider)(
+        key.typeId,
+        groupFieldId: key.groupFieldId,
+        nameFieldId: key.nameFieldId,
+        name: key.name,
+        except: key.except,
+      ),
+    );

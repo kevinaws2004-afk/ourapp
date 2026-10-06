@@ -47,7 +47,7 @@ lib/
 | `bootstrap.dart` | Error handlers → open + migrate DB → read preferences snapshot → `runApp` |
 | `startup_failure_app.dart` | Shown if the DB can't be opened/migrated; offers retry, never deletes data |
 | `provider_logger.dart` | Riverpod `ProviderObserver` that logs provider failures |
-| `dev/` | Debug-only token showcase (`token_showcase_screen.dart`, `showcase_sections.dart`), registered only when `kDebugMode`; demo data loader (`demo_data.dart`, Me → "Load demo data (debug)", writes through the normal use cases) |
+| `dev/` | Developer tools, only when `devToolsEnabled` (`dev_tools.dart`: debug builds or `--dart-define=DEV_TOOLS=true`): token showcase (`token_showcase_screen.dart`, `showcase_sections.dart`); demo data loader (`demo_data.dart`, Me → Developer → "Load demo data (6 weeks)" / "(last 10 days)", an optional date range, writes through the normal use cases) |
 
 ### 1.2 `core/`
 

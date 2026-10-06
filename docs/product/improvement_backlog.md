@@ -2,7 +2,7 @@
 
 > **Status: proposal, not approved scope.** Written 2026-10-05 after a hands-on evaluation of the app on the Android emulator (fresh install, then demo data). Nothing here is a requirement until the owner approves it and it moves into [`requirements.md`](requirements.md) / [`ai/tasks/current_task.md`](../../ai/tasks/current_task.md). Items marked **(decision)** need the owner first; some conflict with the current spec and are flagged.
 >
-> **Done:** A1–A8 (2026-10-05, ADR-039); A9–A19 (2026-10-05, ADR-040, schema v8); A20–A27 (2026-10-05). Phase A is complete.
+> **Done:** A1–A8 (2026-10-05, ADR-039); A9–A19 (2026-10-05, ADR-040, schema v8); A20–A27 (2026-10-05). Phase A is complete. B1–B8 (2026-10-05, ADR-041; B6 is the row check from A17). Phase B is complete.
 >
 > Size: **S** = hours, **M** = 1–2 days, **L** = several days.
 
@@ -72,14 +72,14 @@ The core works and some parts are strong, but the app does not yet feel like som
 
 ## Phase B: Effortless logging (the main improvement)
 
-- [ ] B1. **Repeat last time:** reopening an activity pre-fills the previous session's exercises and weights ("Same as Tuesday"), ready to adjust. **L**
-- [ ] B2. **Per-exercise memory:** typing "Bench" suggests "Bench press" and shows "last: 60 kg × 8". **M**
-- [ ] B3. **Unknown item → smart suggestions** ("How long?", "How did it go?" rating, "Note") instead of the field-type menu; the full builder moves behind **Advanced**. **M**
-- [ ] B4. Friendlier builder wording ("Number" → "An amount (kg, km, pages…)"); Required / Decimal places / Min-Max under Advanced. **S**
-- [ ] B5. Optional rest timer between sets. **M**
-- [ ] B6. Quick finish: tap "Done ✓" on the Today row for simple items without opening them. **S**
-- [ ] B7. Long-press row actions: Move to tomorrow, Duplicate, Skip, Delete. **M**
-- [ ] B8. Template gallery with previews (Gym, Running, Reading, Study, Meditation, Water, Sleep, Mood, Weight, Work blocks, Language). **M**
+- [x] B1. **Repeat last time:** reopening an activity pre-fills the previous session's exercises and weights ("Same as Tuesday"), ready to adjust. **L**
+- [x] B2. **Per-exercise memory:** typing "Bench" suggests "Bench press" and shows "last: 60 kg × 8". **M**
+- [x] B3. **Unknown item → smart suggestions** ("How long?", "How did it go?" rating, "Note") instead of the field-type menu; the full builder moves behind **Advanced**. **M**
+- [x] B4. Friendlier builder wording ("Number" → "An amount (kg, km, pages…)"); Required / Decimal places / Min-Max under Advanced. **S**
+- [x] B5. Optional rest timer between sets. **M**
+- [x] B6. Quick finish: tap "Done ✓" on the Today row for simple items without opening them. **S**
+- [x] B7. Long-press row actions: Move to tomorrow, Duplicate, Skip, Delete. **M**
+- [x] B8. Template gallery with previews (Gym, Running, Reading, Study, Meditation, Water, Sleep, Mood, Weight, Work blocks, Language). **M**
 
 ## Phase C: First run and retention
 

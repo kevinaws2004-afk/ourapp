@@ -15,9 +15,14 @@ import '../../../activity_types/domain/activity_type.dart';
 import '../../../activity_types/domain/field_config.dart';
 import '../../../activity_types/domain/field_type.dart';
 import '../../domain/field_value.dart';
+import '../../domain/log_memory.dart';
 import '../../domain/log_validator.dart';
+import '../activity_log_providers.dart';
+import '../value_formatting.dart';
 import 'activity_log_form.dart';
 import 'add_detail_scope.dart';
+import 'rest_timer_scope.dart';
+import 'row_memory_scope.dart';
 import 'text_number_editors.dart';
 
 /// Edits a Repeating Group (ADR-027): an ordered list of items, each holding
@@ -115,6 +120,7 @@ class RepeatingGroupEditor extends ConsumerWidget {
                 )
               : _ItemCard(
                   key: ValueKey(item.id),
+                  group: field,
                   title: l10n.groupItemTitle(_itemLabel, index + 1),
                   removeLabel: l10n.removeGroupItem(_itemLabel),
                   type: type,
@@ -132,6 +138,14 @@ class RepeatingGroupEditor extends ConsumerWidget {
                 label: Text(l10n.addGroupItem(_itemLabel)),
                 onPressed: () => add(actionsContext),
               ),
+              // Rows of numbers (e.g. sets) can have a rest between them (B5).
+              if (compact && _items.isNotEmpty)
+                if (RestTimerScope.maybeOf(context) case final rest?)
+                  TextButton.icon(
+                    icon: const Icon(AppIcons.timer),
+                    label: Text(l10n.restAction),
+                    onPressed: rest.onRest,
+                  ),
               const Spacer(),
               // Logging into an item: the list can grow a new detail, kept in
               // a menu so it doesn't compete with adding a row (A13).
@@ -158,6 +172,7 @@ class RepeatingGroupEditor extends ConsumerWidget {
 class _ItemCard extends StatelessWidget {
   const _ItemCard({
     super.key,
+    required this.group,
     required this.title,
     required this.removeLabel,
     required this.type,
@@ -168,6 +183,7 @@ class _ItemCard extends StatelessWidget {
     required this.onRemove,
   });
 
+  final ActivityField group;
   final String title;
   final String removeLabel;
   final ActivityType type;
@@ -221,11 +237,104 @@ class _ItemCard extends StatelessWidget {
                 ),
               ),
             ),
+            _LastRowHint(
+              type: type,
+              group: group,
+              fields: fields,
+              item: item,
+              onUse: onChanged,
+            ),
           ],
         ),
       ),
     ),
   );
+}
+
+/// "Last time: Bench press 60 kg × 8 (×2)" under a named row with nothing
+/// else filled in yet, and **Use** to start from it (B2, ADR-041). Only while
+/// logging into an item ([RowMemoryScope]).
+class _LastRowHint extends ConsumerWidget {
+  const _LastRowHint({
+    required this.type,
+    required this.group,
+    required this.fields,
+    required this.item,
+    required this.onUse,
+  });
+
+  final ActivityType type;
+  final ActivityField group;
+  final List<ActivityField> fields;
+  final GroupItem item;
+  final ValueChanged<GroupItem> onUse;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final scope = RowMemoryScope.maybeOf(context);
+    final nameField = fields
+        .where((f) => f.type == FieldType.text && !f.isRemoved)
+        .firstOrNull;
+    final name = switch (nameField == null ? null : item.values[nameField.id]) {
+      TextValue(:final text) => text.trim(),
+      _ => '',
+    };
+    // Only for a row that has its name and nothing else yet.
+    if (scope == null ||
+        nameField == null ||
+        name.isEmpty ||
+        item.values.length > 1) {
+      return const SizedBox.shrink();
+    }
+    final last = ref
+        .watch(
+          lastRowProvider((
+            typeId: type.id,
+            groupFieldId: group.id,
+            nameFieldId: nameField.id,
+            name: name.toLowerCase(),
+            except: scope.except,
+          )),
+        )
+        .value;
+    if (last == null || last.values.length < 2) return const SizedBox.shrink();
+    final l10n = AppLocalizations.of(context);
+    final summary = formatGroupSummary(
+      context,
+      type,
+      group,
+      RepeatingGroupValue([last]),
+    );
+    return Padding(
+      padding: const EdgeInsets.only(right: AppSpacing.md),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              l10n.groupLastTime(summary),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: context.textStyles.bodyMedium?.copyWith(
+                color: context.colors.textSecondary,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              final copy = copyRow(last, ref.read(idGeneratorProvider));
+              onUse(
+                item.withValues({
+                  ...copy.values,
+                  nameField.id: item.values[nameField.id]!,
+                }),
+              );
+            },
+            child: Text(l10n.groupUseLastTime),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 /// One all-number item as a single row of labelled number inputs.

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/design/app_icons.dart';
@@ -18,6 +17,7 @@ class MeScreen extends StatelessWidget {
     required this.onOpenMeasurements,
     this.onOpenTokenShowcase,
     this.onLoadDemoData,
+    this.onLoadRecentDemoData,
   });
 
   final VoidCallback onOpenActivities;
@@ -26,8 +26,11 @@ class MeScreen extends StatelessWidget {
   /// Debug-only entry point; ignored in release builds.
   final VoidCallback? onOpenTokenShowcase;
 
-  /// Debug-only demo data loader; ignored in release builds.
+  /// Developer tools: demo data for six weeks up to today.
   final VoidCallback? onLoadDemoData;
+
+  /// Developer tools: demo data for the last 10 days, ending yesterday.
+  final VoidCallback? onLoadRecentDemoData;
 
   @override
   Widget build(BuildContext context) {
@@ -62,12 +65,14 @@ class MeScreen extends StatelessWidget {
                 trailing: const Icon(AppIcons.chevron),
                 onTap: onOpenMeasurements,
               ),
-              // Release builds never show developer tools (A3).
-              if (kDebugMode &&
-                  (onOpenTokenShowcase != null || onLoadDemoData != null)) ...[
+              // Plain release builds never show developer tools (A3).
+              // Only when the router passes them (debug or DEV_TOOLS builds).
+              if (onOpenTokenShowcase != null ||
+                  onLoadDemoData != null ||
+                  onLoadRecentDemoData != null) ...[
                 // Developer tooling: intentionally not localized
                 // (coding_standards.md §4).
-                const SectionHeader(title: 'Developer (debug builds only)'),
+                const SectionHeader(title: 'Developer'),
                 if (onOpenTokenShowcase != null)
                   ListTile(
                     leading: const Icon(AppIcons.developer),
@@ -78,8 +83,14 @@ class MeScreen extends StatelessWidget {
                 if (onLoadDemoData != null)
                   ListTile(
                     leading: const Icon(AppIcons.developer),
-                    title: const Text('Load demo data'),
+                    title: const Text('Load demo data (6 weeks)'),
                     onTap: onLoadDemoData,
+                  ),
+                if (onLoadRecentDemoData != null)
+                  ListTile(
+                    leading: const Icon(AppIcons.developer),
+                    title: const Text('Load demo data (last 10 days)'),
+                    onTap: onLoadRecentDemoData,
                   ),
               ],
             ],

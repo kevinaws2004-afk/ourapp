@@ -21,9 +21,9 @@ import '../../../activity_logs/domain/field_value.dart';
 import '../../../activity_logs/presentation/form/activity_log_form.dart';
 import '../../domain/activity_ids.dart';
 import '../../domain/activity_type.dart';
-import '../../domain/activity_type_definition.dart';
 import '../field_type_copy.dart';
 import '../activity_appearance_copy.dart';
+import '../preview_type.dart';
 import 'activity_builder_notifier.dart';
 import 'field_editor_sheet.dart';
 import 'field_type_picker_sheet.dart';
@@ -461,47 +461,11 @@ class _PreviewState extends State<_Preview> {
 
 /// A throwaway type for the preview: draft fields (and sub-fields) with
 /// placeholder IDs until they are saved.
-ActivityType _previewType(ActivityBuilderState state) {
-  final fields = <ActivityField>[];
-  void add(
-    FieldDefinition definition,
-    String key,
-    int position,
-    ActivityFieldId? parentId,
-  ) {
-    final id = definition.id ?? ActivityFieldId('preview:$key');
-    fields.add(
-      ActivityField(
-        id: id,
-        parentId: parentId,
-        name: definition.name.isEmpty ? '—' : definition.name,
-        type: definition.type,
-        dimension: definition.dimension,
-        position: position,
-        required: definition.required,
-        measurable: definition.measurable,
-        config: definition.config,
-      ),
-    );
-    for (final (index, sub) in definition.subFields.indexed) {
-      add(sub, '$key.$index', index, id);
-    }
-  }
-
-  for (final (index, f) in state.fields.indexed) {
-    add(f.definition, f.key, index, null);
-  }
-  final epoch = DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
-  return ActivityType(
-    id: const ActivityTypeId('preview'),
-    name: state.name,
-    iconId: state.iconId,
-    colorKey: state.colorKey,
-    supportsTimer: state.supportsTimer,
-    supportsPlanning: state.supportsPlanning,
-    sortOrder: 0,
-    fields: fields,
-    createdAt: epoch,
-    updatedAt: epoch,
-  );
-}
+ActivityType _previewType(ActivityBuilderState state) => previewType(
+  name: state.name,
+  iconId: state.iconId,
+  colorKey: state.colorKey,
+  supportsTimer: state.supportsTimer,
+  supportsPlanning: state.supportsPlanning,
+  fields: [for (final f in state.fields) (f.definition, f.key)],
+);

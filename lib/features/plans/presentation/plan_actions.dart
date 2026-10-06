@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/design/app_icons.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/errors/error_copy.dart';
 import '../../../shared/widgets/state_views.dart';
@@ -114,6 +115,79 @@ class PlanActions {
     );
   }
 
+  /// A copy of the item on the same day (B7), with Undo.
+  Future<void> duplicate(PlannedItem item) {
+    final duplicate = _ref.read(duplicatePlanProvider);
+    final delete = _ref.read(deleteItemProvider);
+    PlanId? copy;
+    return _run(
+      () async => copy = await duplicate(item.plan.id),
+      message: _l10n.planDuplicatedMessage,
+      undo: () async {
+        if (copy case final id?) await delete(id);
+      },
+    );
+  }
+
+  /// The quick actions on a long-press (B7): done / not done, move to
+  /// tomorrow, duplicate, skip, delete. Each acts at once, with Undo.
+  Future<void> quickActions(PlannedItem item) async {
+    final l10n = _l10n;
+    final open = item.isOpen;
+    final action = await showModalBottomSheet<_QuickAction>(
+      context: _context,
+      builder: (context) {
+        ListTile tile(IconData icon, String label, _QuickAction value) =>
+            ListTile(
+              leading: Icon(icon),
+              title: Text(label),
+              onTap: () => Navigator.of(context).pop(value),
+            );
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (canToggleDone(item))
+                tile(
+                  AppIcons.taskDone,
+                  open ? l10n.planCompleteTask : l10n.planReopenTask,
+                  _QuickAction.toggleDone,
+                ),
+              if (open)
+                tile(
+                  AppIcons.moveToTomorrow,
+                  l10n.planMoveToTomorrow,
+                  _QuickAction.moveToTomorrow,
+                ),
+              tile(
+                AppIcons.duplicate,
+                l10n.planDuplicate,
+                _QuickAction.duplicate,
+              ),
+              if (open) tile(AppIcons.skip, l10n.planSkip, _QuickAction.skip),
+              tile(AppIcons.delete, l10n.planDelete, _QuickAction.delete),
+            ],
+          ),
+        );
+      },
+    );
+    if (!_context.mounted) return;
+    switch (action) {
+      case _QuickAction.toggleDone:
+        await toggleDone(item);
+      case _QuickAction.moveToTomorrow:
+        await moveToTomorrow(item);
+      case _QuickAction.duplicate:
+        await duplicate(item);
+      case _QuickAction.skip:
+        await skip(item);
+      case _QuickAction.delete:
+        await delete(item);
+      case null:
+        break;
+    }
+  }
+
   /// Makes the plan repeat on chosen days (ADR-036).
   Future<void> repeat(PlannedItem item) async {
     final rule = await showRepeatSheet(_context, date: item.plan.planDate);
@@ -172,3 +246,5 @@ class PlanActions {
     return action;
   }
 }
+
+enum _QuickAction { toggleDone, moveToTomorrow, duplicate, skip, delete }

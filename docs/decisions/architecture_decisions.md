@@ -546,6 +546,21 @@
   - "N done" on a day counts items marked done (or past days' logged items), not every item with a log.
   - Migration test v7→v8 keeps plans, their logs, series links and sort order, and checks the rebuilt table's triggers still guard it.
 
+### ADR-041: Logging from memory, quick choices, rest timer and quick actions (Phase B)
+- **Status:** Accepted 2026-10-05 (owner approved backlog Phase B, B1–B8). **Implemented 2026-10-05.** No schema change.
+- **Decision:**
+  - **Use last time (B1):** an empty item of an activity shows its most recent log with something in it ("Last time · Fri, Oct 2" + summary) and **Use last time**, which copies the values with fresh list-row IDs (`copyValues`) into the item, ready to adjust. Never automatic: nothing is copied until tapped.
+  - **Row memory (B2):** a list row that has its name and nothing else shows "Last time: Chest Press 60 kg × 8 (×2)" from the newest earlier row with that name (any depth, case-insensitive; `findLastRow`, `LastRowNamed`) and **Use** to copy its details. Generic: the name is the row's first Text sub-field. Only while logging into an item (`RowMemoryScope`).
+  - Lookups read once through `ActivityLogRepository.recentLogsForType` (latest 10 / 30 logs), not the live history stream.
+  - **Quick choices (B3):** an item with nothing to log offers chips for "How it went" (a 1–5 rating added at once), "An amount" (a number you name) and "Sets & reps", plus "More…". The "Add to log" sheet lists these quick choices first and puts every field type under "More kinds of detail".
+  - **Plainer field sheet (B4):** field types read "Words", "An amount", "Yes or no", "One choice", "Several choices", "A date", "A time of day", "Time spent", "A rating", "A list". Required, Show in insights, decimals, min/max and the text options sit under **Advanced**.
+  - **Rest timer (B5):** all-number lists (e.g. sets) offer **Rest** in an item; a bar at the bottom counts down (90 s by default; −15 s / +15 s; the last length is remembered while the app runs) and buzzes lightly at the end. It's in memory only (`restTimerProvider`) and never logged.
+  - **Quick finish (B6)** is the row check from A17 (ADR-040).
+  - **Quick actions (B7):** long-press a day row → mark done / not done, move to tomorrow, **Duplicate** (`DuplicatePlan`: same day, title, activity, time and notes; a planned one-off), skip, delete; each with Undo.
+  - **Template gallery (B8):** cards per template (badge, name, fields, or "Already in your activities"); tapping previews the real form (`previewType`, shared with the builder) with **Add {name}**. New templates: Running, Study, Meditation, Water, Sleep, Mood. Body weight stays in Me → Body measurements.
+- **Context:** The evaluation found logging asked people to design forms and start from blank every time (backlog Phase B).
+- **Consequences:** No schema change; templates and quick choices are plain data and nothing treats them specially. A one-time read was added to the log repository. The rest timer's haptic needs no permission.
+
 ## Pending decisions
 
 Each needs owner approval. **Recommendation** is what the docs currently assume. Resolved entries are struck through and point to their accepted ADR.

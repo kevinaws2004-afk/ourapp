@@ -65,6 +65,14 @@ void main() {
     await tester.tap(find.text('Start from a template'));
     await tester.pumpAndSettle();
     await scrollAndTap(tester, find.text('Gym'));
+    // The gallery previews a template; Add installs it (B8).
+    await tester.scrollUntilVisible(
+      find.text('Add Gym'),
+      200,
+      scrollable: find.byType(Scrollable).last,
+    );
+    await tester.tap(find.text('Add Gym'));
+    await tester.pumpAndSettle();
     expect(find.byType(ActivityTypeScreen), findsOneWidget);
 
     await tester.tap(find.widgetWithText(FilledButton, 'Record'));

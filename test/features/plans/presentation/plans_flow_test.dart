@@ -421,9 +421,11 @@ void main() {
     testAppWidgets('Sets & reps in one tap, then log a set', (tester) async {
       await openNewItem(tester, 'Leg day');
 
-      await scrollAndTap(tester, find.text('Add to log'));
-      await tester.tap(find.text('Sets & reps'));
-      await tester.pumpAndSettle();
+      // An item with nothing to log offers the likely things (B3).
+      await scrollAndTap(
+        tester,
+        find.widgetWithText(ActionChip, 'Sets & reps'),
+      );
 
       await scrollAndTap(tester, find.text('Add Exercise'));
       await enterField(tester, 'Exercise', 'Squat');
@@ -445,8 +447,7 @@ void main() {
     ) async {
       await openNewItem(tester, 'Lunch');
 
-      await scrollAndTap(tester, find.text('Add to log'));
-      await scrollAndTap(tester, find.text('Number'));
+      await scrollAndTap(tester, find.widgetWithText(ActionChip, 'An amount'));
       await tester.enterText(
         find.widgetWithText(TextField, 'Field name'),
         'Calories',
@@ -463,13 +464,15 @@ void main() {
     testAppWidgets('a list can get another detail where it is', (tester) async {
       await openNewItem(tester, 'Doctor visit');
 
-      await scrollAndTap(tester, find.text('Add to log'));
+      await scrollAndTap(tester, find.widgetWithText(ActionChip, 'More…'));
       await tester.tap(find.text('Checklist'));
       await tester.pumpAndSettle();
       await scrollAndTap(tester, find.byTooltip('Item list options'));
       await tester.tap(find.text('Add a detail to each Item'));
       await tester.pumpAndSettle();
-      await scrollAndTap(tester, find.text('Text'));
+      await tester.tap(find.text('More kinds of detail'));
+      await tester.pumpAndSettle();
+      await scrollAndTap(tester, find.text('Words'));
       await tester.enterText(
         find.widgetWithText(TextField, 'Field name'),
         'Dose',
@@ -542,7 +545,7 @@ void main() {
       await openItem(tester, find.text('Read'));
 
       await scrollAndTap(tester, find.text('Add to log'));
-      await scrollAndTap(tester, find.text('Number'));
+      await scrollAndTap(tester, find.text('An amount'));
       await tester.enterText(
         find.widgetWithText(TextField, 'Field name'),
         'Pages',

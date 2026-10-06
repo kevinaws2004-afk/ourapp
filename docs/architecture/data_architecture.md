@@ -229,6 +229,8 @@ InsightSeries (buckets + total, count, average, best, latest) ──▶ AppChart
 
 **Results** (`WatchInsight`): the period (`from`, `to`), the series for the range, the period value against the previous period of the same length, and the **personal best** (all-time highest point) for field and volume sources; for a volume also the **best day** (highest per-day total, `bestDayTotal`). `InsightRange.bucket` gives automatic charts a bucket that fits the range. Default aggregations: time/count/volume = total, body = latest, field = best.
 
+**Logging from memory** (ADR-041, `activity_logs/domain/log_memory.dart`): `LastLogOfType` (newest log of a type with values, except the item's own) and `LastRowNamed` / `findLastRow` (newest list row with a given name, any depth) read once through `ActivityLogRepository.recentLogsForType`; `copyValues` / `copyRow` give copied rows fresh `GroupItemId`s. `DuplicatePlan` copies a plan on its day through `CreatePlan`.
+
 **Saved charts** (`InsightChartConfig`: title, source, aggregation, bucket, line/bar) are persisted in `insight_charts` as versioned JSON (`InsightChartCodec`, `"v": 1`). This departs from the OQ-14 recommendation and awaits owner confirmation.
 
 **Display:** canonical values convert to the field's (or measurement type's) default unit; durations show as time (`InsightDisplay`).

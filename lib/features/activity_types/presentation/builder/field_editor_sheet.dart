@@ -173,20 +173,29 @@ class _FieldEditorSheetState extends ConsumerState<_FieldEditorSheet> {
                 textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(labelText: l10n.fieldNameLabel),
               ),
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(l10n.requiredLabel),
-                value: _required,
-                onChanged: (v) => setState(() => _required = v),
-              ),
-              if (_type.canBeMeasurable)
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(l10n.measurableLabel),
-                  value: _measurable,
-                  onChanged: (v) => setState(() => _measurable = v),
-                ),
               ..._typeSpecific(l10n),
+              // Settings most people never need (B4).
+              ExpansionTile(
+                tilePadding: EdgeInsets.zero,
+                childrenPadding: EdgeInsets.zero,
+                title: Text(l10n.fieldAdvanced),
+                children: [
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(l10n.requiredLabel),
+                    value: _required,
+                    onChanged: (v) => setState(() => _required = v),
+                  ),
+                  if (_type.canBeMeasurable)
+                    SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(l10n.measurableLabel),
+                      value: _measurable,
+                      onChanged: (v) => setState(() => _measurable = v),
+                    ),
+                  ..._advancedTypeSpecific(l10n),
+                ],
+              ),
               const SizedBox(height: AppSpacing.lg),
               Row(
                 children: [
@@ -211,32 +220,46 @@ class _FieldEditorSheetState extends ConsumerState<_FieldEditorSheet> {
     );
   }
 
+  /// The less common settings of the field's type, under Advanced (B4).
+  List<Widget> _advancedTypeSpecific(AppLocalizations l10n) =>
+      switch (_config) {
+        final TextFieldConfig config => [
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(l10n.multilineLabel),
+            value: config.multiline,
+            onChanged: (v) => setState(
+              () => _config = TextFieldConfig(
+                multiline: v,
+                suggestFromHistory: config.suggestFromHistory,
+              ),
+            ),
+          ),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(l10n.suggestFromHistoryLabel),
+            subtitle: Text(l10n.suggestFromHistoryHint),
+            value: config.suggestFromHistory,
+            onChanged: (v) => setState(
+              () => _config = TextFieldConfig(
+                multiline: config.multiline,
+                suggestFromHistory: v,
+              ),
+            ),
+          ),
+        ],
+        final NumberFieldConfig config => _numberAdvanced(l10n, config),
+        SelectFieldConfig() ||
+        RatingFieldConfig() ||
+        RepeatingGroupFieldConfig() ||
+        BooleanFieldConfig() ||
+        DateFieldConfig() ||
+        TimeFieldConfig() ||
+        DurationFieldConfig() => const [],
+      };
+
   List<Widget> _typeSpecific(AppLocalizations l10n) => switch (_config) {
-    final TextFieldConfig config => [
-      SwitchListTile(
-        contentPadding: EdgeInsets.zero,
-        title: Text(l10n.multilineLabel),
-        value: config.multiline,
-        onChanged: (v) => setState(
-          () => _config = TextFieldConfig(
-            multiline: v,
-            suggestFromHistory: config.suggestFromHistory,
-          ),
-        ),
-      ),
-      SwitchListTile(
-        contentPadding: EdgeInsets.zero,
-        title: Text(l10n.suggestFromHistoryLabel),
-        subtitle: Text(l10n.suggestFromHistoryHint),
-        value: config.suggestFromHistory,
-        onChanged: (v) => setState(
-          () => _config = TextFieldConfig(
-            multiline: config.multiline,
-            suggestFromHistory: v,
-          ),
-        ),
-      ),
-    ],
+    TextFieldConfig() => const [],
     final NumberFieldConfig config => _numberSettings(l10n, config),
     final SelectFieldConfig config => [
       _OptionsEditor(
@@ -336,48 +359,54 @@ class _FieldEditorSheetState extends ConsumerState<_FieldEditorSheet> {
             ),
           ),
         ),
-      ListTile(
-        contentPadding: EdgeInsets.zero,
-        title: Text(l10n.decimalsLabel),
-        trailing: DropdownButton<int>(
-          value: config.decimals,
-          items: [
-            for (var i = 0; i <= NumberFieldConfig.maxDecimals; i++)
-              DropdownMenuItem(value: i, child: Text('$i')),
-          ],
-          onChanged: (v) =>
-              setState(() => _config = config.copyWith(decimals: v)),
-        ),
-      ),
-      Row(
-        children: [
-          Expanded(
-            child: _NumberInput(
-              label: l10n.minimumLabel,
-              value: config.min,
-              onChanged: (v) => setState(
-                () => _config = (_config as NumberFieldConfig).copyWith(
-                  min: () => v,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: _NumberInput(
-              label: l10n.maximumLabel,
-              value: config.max,
-              onChanged: (v) => setState(
-                () => _config = (_config as NumberFieldConfig).copyWith(
-                  max: () => v,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
     ];
   }
+
+  List<Widget> _numberAdvanced(
+    AppLocalizations l10n,
+    NumberFieldConfig config,
+  ) => [
+    ListTile(
+      contentPadding: EdgeInsets.zero,
+      title: Text(l10n.decimalsLabel),
+      trailing: DropdownButton<int>(
+        value: config.decimals,
+        items: [
+          for (var i = 0; i <= NumberFieldConfig.maxDecimals; i++)
+            DropdownMenuItem(value: i, child: Text('$i')),
+        ],
+        onChanged: (v) =>
+            setState(() => _config = config.copyWith(decimals: v)),
+      ),
+    ),
+    Row(
+      children: [
+        Expanded(
+          child: _NumberInput(
+            label: l10n.minimumLabel,
+            value: config.min,
+            onChanged: (v) => setState(
+              () => _config = (_config as NumberFieldConfig).copyWith(
+                min: () => v,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.md),
+        Expanded(
+          child: _NumberInput(
+            label: l10n.maximumLabel,
+            value: config.max,
+            onChanged: (v) => setState(
+              () => _config = (_config as NumberFieldConfig).copyWith(
+                max: () => v,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  ];
 }
 
 class _NumberInput extends StatelessWidget {

@@ -5,6 +5,7 @@ import 'package:daylog/core/time/local_date.dart';
 import 'package:daylog/features/activity_logs/data/db_activity_log_repository.dart';
 import 'package:daylog/features/activity_logs/domain/activity_log.dart';
 import 'package:daylog/features/activity_logs/domain/activity_log_use_cases.dart';
+import 'package:daylog/features/activity_logs/domain/log_memory.dart';
 import 'package:daylog/features/activity_logs/domain/field_value.dart';
 import 'package:daylog/features/activity_types/data/db_activity_type_repository.dart';
 import 'package:daylog/features/activity_types/domain/activity_type.dart';
@@ -163,6 +164,52 @@ void main() {
         ),
       ),
     );
+  });
+
+  test('duplicating a plan copies it on the same day as a new, open one '
+      '(B7)', () async {
+    final type = await reading();
+    final nine = DateTime.utc(2026, 10, 4, 7);
+    final id = await createPlan(
+      PlanDraft(
+        planDate: today,
+        title: 'Read',
+        activityTypeId: type.id,
+        notes: 'Chapter 3',
+        plannedStartAt: nine,
+        plannedDurationMs: 1800000,
+      ),
+    );
+    await SetPlanStatus(plans, clock)(id, PlanStatus.completed);
+
+    final copyId = await DuplicatePlan(plans, createPlan)(id);
+
+    final copy = (await plans.getPlan(copyId))!;
+    expect(copyId, isNot(id));
+    expect(
+      (copy.planDate, copy.title, copy.activityTypeId, copy.notes),
+      (today, 'Read', type.id, 'Chapter 3'),
+    );
+    expect((copy.plannedStartAt, copy.plannedDurationMs), (nine, 1800000));
+    expect(copy.status, PlanStatus.planned);
+    expect(copy.seriesId, isNull);
+  });
+
+  test('the last log of an activity skips the item\'s own and empty ones '
+      '(B1)', () async {
+    final type = await reading();
+    final older = await record(type);
+    clock.advance(const Duration(hours: 1));
+    final mine = await record(type);
+    clock.advance(const Duration(hours: 1));
+    await logActivity(
+      type.id,
+      ActivityLogDraft(startedAt: clock.nowUtc(), values: const {}),
+      partial: true,
+    );
+
+    final last = await LastLogOfType(logs)(type.id, except: mine);
+    expect(last?.id, older);
   });
 
   test('any item can be marked done by status (ADR-040)', () async {

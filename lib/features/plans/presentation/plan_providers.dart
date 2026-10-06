@@ -61,6 +61,13 @@ final updatePlanProvider = Provider(
   ),
 );
 
+final duplicatePlanProvider = Provider(
+  (ref) => DuplicatePlan(
+    ref.watch(planRepositoryProvider),
+    ref.watch(createPlanProvider),
+  ),
+);
+
 final assignPlanActivityProvider = Provider(
   (ref) => AssignPlanActivity(
     ref.watch(updatePlanProvider),

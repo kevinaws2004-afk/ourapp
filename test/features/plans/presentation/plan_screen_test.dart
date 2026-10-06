@@ -63,7 +63,15 @@ Future<void> openPlanTab(WidgetTester tester) async {
 /// Sat Oct 3 2026.
 Future<void> openPlan(WidgetTester tester) async {
   await openPlanTab(tester);
-  await tester.tap(find.text('Saturday, October 3, 2026'));
+  final today = find.text('Saturday, October 3, 2026');
+  await tester.scrollUntilVisible(
+    today,
+    200,
+    scrollable: find.byType(Scrollable).hitTestable().first,
+  );
+  await tester.ensureVisible(today);
+  await tester.pumpAndSettle();
+  await tester.tap(today);
   await tester.pumpAndSettle();
   expect(find.byType(DayScreen), findsOneWidget);
 }

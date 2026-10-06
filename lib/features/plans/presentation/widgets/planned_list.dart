@@ -49,6 +49,7 @@ class PlannedList extends ConsumerWidget {
         onToggleDone: PlanActions.canToggleDone(item)
             ? () => actions.toggleDone(item)
             : null,
+        onLongPress: () => unawaited(actions.quickActions(item)),
         dragHandle: dragHandle,
       ),
       RecordEntry(:final record) => DayRecordTile(
