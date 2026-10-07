@@ -6915,6 +6915,1710 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Done'**
   String get templatePackingPackingListDone;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Ayurvedic morning'**
+  String get templateAyurvedicMorning;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Up before sunrise'**
+  String get templateAyurvedicMorningUpBeforeSunrise;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Practices'**
+  String get templateAyurvedicMorningPractices;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Tongue scraping'**
+  String get templateAyurvedicMorningPracticesTongueScraping;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Oil pulling'**
+  String get templateAyurvedicMorningPracticesOilPulling;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Abhyanga'**
+  String get templateAyurvedicMorningPracticesAbhyanga;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Warm water'**
+  String get templateAyurvedicMorningPracticesWarmWater;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Neti'**
+  String get templateAyurvedicMorningPracticesNeti;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Felt after'**
+  String get templateAyurvedicMorningFeltAfter;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Hair oiling'**
+  String get templateHairOiling;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Oil'**
+  String get templateHairOilingOil;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Left on overnight'**
+  String get templateHairOilingLeftOnOvernight;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Massage & spa'**
+  String get templateMassageAndSpa;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Kind'**
+  String get templateMassageAndSpaKind;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Massage'**
+  String get templateMassageAndSpaKindMassage;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Spa'**
+  String get templateMassageAndSpaKindSpa;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Facial'**
+  String get templateMassageAndSpaKindFacial;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Foot massage'**
+  String get templateMassageAndSpaKindFootMassage;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Self-massage'**
+  String get templateMassageAndSpaKindSelfMassage;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Felt after'**
+  String get templateMassageAndSpaFeltAfter;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Cost'**
+  String get templateMassageAndSpaCost;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Sauna & cold plunge'**
+  String get templateSaunaAndColdPlunge;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Kind'**
+  String get templateSaunaAndColdPlungeKind;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Sauna'**
+  String get templateSaunaAndColdPlungeKindSauna;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Cold plunge'**
+  String get templateSaunaAndColdPlungeKindColdPlunge;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Steam room'**
+  String get templateSaunaAndColdPlungeKindSteamRoom;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Contrast'**
+  String get templateSaunaAndColdPlungeKindContrast;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Rounds'**
+  String get templateSaunaAndColdPlungeRounds;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature'**
+  String get templateSaunaAndColdPlungeTemperature;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Pain'**
+  String get templatePain;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Where'**
+  String get templatePainWhere;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Head'**
+  String get templatePainWhereHead;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Neck'**
+  String get templatePainWhereNeck;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get templatePainWhereBack;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Joints'**
+  String get templatePainWhereJoints;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Stomach'**
+  String get templatePainWhereStomach;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Muscles'**
+  String get templatePainWhereMuscles;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Level'**
+  String get templatePainLevel;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Possible trigger'**
+  String get templatePainPossibleTrigger;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Digestion'**
+  String get templateDigestion;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get templateDigestionType;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Hard'**
+  String get templateDigestionTypeHard;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get templateDigestionTypeNormal;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Soft'**
+  String get templateDigestionTypeSoft;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Loose'**
+  String get templateDigestionTypeLoose;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Bloating'**
+  String get templateDigestionBloating;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get templateDigestionNotes;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Energy check'**
+  String get templateEnergyCheck;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Energy'**
+  String get templateEnergyCheckEnergy;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Focus'**
+  String get templateEnergyCheckFocus;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Protein'**
+  String get templateProtein;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Protein'**
+  String get templateProteinProtein;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Fruit & veg'**
+  String get templateFruitAndVeg;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Portions'**
+  String get templateFruitAndVegPortions;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Colours eaten'**
+  String get templateFruitAndVegColoursEaten;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Green'**
+  String get templateFruitAndVegColoursEatenGreen;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Red'**
+  String get templateFruitAndVegColoursEatenRed;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Orange'**
+  String get templateFruitAndVegColoursEatenOrange;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow'**
+  String get templateFruitAndVegColoursEatenYellow;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Purple'**
+  String get templateFruitAndVegColoursEatenPurple;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'White'**
+  String get templateFruitAndVegColoursEatenWhite;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Packed lunch'**
+  String get templatePackedLunch;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'For'**
+  String get templatePackedLunchFor;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'What went in'**
+  String get templatePackedLunchWhatWentIn;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Eaten'**
+  String get templatePackedLunchEaten;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'House help'**
+  String get templateHouseHelp;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Who'**
+  String get templateHouseHelpWho;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Came today'**
+  String get templateHouseHelpCameToday;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks'**
+  String get templateHouseHelpTasks;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Sweeping'**
+  String get templateHouseHelpTasksSweeping;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Mopping'**
+  String get templateHouseHelpTasksMopping;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Dishes'**
+  String get templateHouseHelpTasksDishes;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Laundry'**
+  String get templateHouseHelpTasksLaundry;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Cooking'**
+  String get templateHouseHelpTasksCooking;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Dusting'**
+  String get templateHouseHelpTasksDusting;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get templateHouseHelpPaid;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Car care'**
+  String get templateCarCare;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'What'**
+  String get templateCarCareWhat;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Fuel'**
+  String get templateCarCareWhatFuel;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Wash'**
+  String get templateCarCareWhatWash;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Service'**
+  String get templateCarCareWhatService;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Tyres'**
+  String get templateCarCareWhatTyres;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Oil change'**
+  String get templateCarCareWhatOilChange;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Repair'**
+  String get templateCarCareWhatRepair;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Odometer'**
+  String get templateCarCareOdometer;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Cost'**
+  String get templateCarCareCost;
+
+  /// Template gallery: a category heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Money'**
+  String get templateCategoryMoney;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Investing'**
+  String get templateInvesting;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Fund or asset'**
+  String get templateInvestingFundOrAsset;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Kind'**
+  String get templateInvestingKind;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Buy'**
+  String get templateInvestingKindBuy;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Sell'**
+  String get templateInvestingKindSell;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'SIP'**
+  String get templateInvestingKindSIP;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Deposit'**
+  String get templateInvestingKindDeposit;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Dividend'**
+  String get templateInvestingKindDividend;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get templateInvestingAmount;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Savings'**
+  String get templateSavings;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Goal'**
+  String get templateSavingsGoal;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Added'**
+  String get templateSavingsAdded;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Total so far'**
+  String get templateSavingsTotalSoFar;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'School run'**
+  String get templateSchoolRun;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Child'**
+  String get templateSchoolRunChild;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'How'**
+  String get templateSchoolRunHow;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Car'**
+  String get templateSchoolRunHowCar;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Walk'**
+  String get templateSchoolRunHowWalk;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Bus'**
+  String get templateSchoolRunHowBus;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Bike'**
+  String get templateSchoolRunHowBike;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Auto'**
+  String get templateSchoolRunHowAuto;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'School van'**
+  String get templateSchoolRunHowSchoolVan;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'On time'**
+  String get templateSchoolRunOnTime;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Client work'**
+  String get templateClientWork;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Client'**
+  String get templateClientWorkClient;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Task'**
+  String get templateClientWorkTask;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Billable'**
+  String get templateClientWorkBillable;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Shift'**
+  String get templateShift;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Shift'**
+  String get templateShiftShift;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Morning'**
+  String get templateShiftShiftMorning;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get templateShiftShiftDay;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Evening'**
+  String get templateShiftShiftEvening;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Night'**
+  String get templateShiftShiftNight;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Split'**
+  String get templateShiftShiftSplit;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Took a break'**
+  String get templateShiftTookABreak;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Earned'**
+  String get templateShiftEarned;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Gig work'**
+  String get templateGigWork;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Platform'**
+  String get templateGigWorkPlatform;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Trips or orders'**
+  String get templateGigWorkTripsOrOrders;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Earned'**
+  String get templateGigWorkEarned;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get templateGigWorkDistance;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Networking'**
+  String get templateNetworking;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Person'**
+  String get templateNetworkingPerson;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Where we met'**
+  String get templateNetworkingWhereWeMet;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Follow up on'**
+  String get templateNetworkingFollowUpOn;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly review'**
+  String get templateWeeklyReview;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Wins'**
+  String get templateWeeklyReviewWins;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Lessons'**
+  String get templateWeeklyReviewLessons;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Next week'**
+  String get templateWeeklyReviewNextWeek;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Priority'**
+  String get templateWeeklyReviewNextWeekItem;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Priority'**
+  String get templateWeeklyReviewNextWeekPriority;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get templateWeeklyReviewNextWeekDone;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Goal check-in'**
+  String get templateGoalCheckIn;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Goal'**
+  String get templateGoalCheckInGoal;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get templateGoalCheckInProgress;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Next step'**
+  String get templateGoalCheckInNextStep;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Tuition'**
+  String get templateTuition;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Subject'**
+  String get templateTuitionSubject;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Topic'**
+  String get templateTuitionTopic;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Test score'**
+  String get templateTuitionTestScore;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Exam prep'**
+  String get templateExamPrep;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Exam'**
+  String get templateExamPrepExam;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Topics covered'**
+  String get templateExamPrepTopicsCovered;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Mock test score'**
+  String get templateExamPrepMockTestScore;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Confidence'**
+  String get templateExamPrepConfidence;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Flashcards'**
+  String get templateFlashcards;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Deck'**
+  String get templateFlashcardsDeck;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Cards reviewed'**
+  String get templateFlashcardsCardsReviewed;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Correct'**
+  String get templateFlashcardsCorrect;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Teaching'**
+  String get templateTeaching;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Topic'**
+  String get templateTeachingTopic;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Students'**
+  String get templateTeachingStudents;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'How it went'**
+  String get templateTeachingHowItWent;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Surya namaskar'**
+  String get templateSuryaNamaskar;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Rounds'**
+  String get templateSuryaNamaskarRounds;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Felt after'**
+  String get templateSuryaNamaskarFeltAfter;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Pilates'**
+  String get templatePilates;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Kind'**
+  String get templatePilatesKind;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Mat'**
+  String get templatePilatesKindMat;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Reformer'**
+  String get templatePilatesKindReformer;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Felt after'**
+  String get templatePilatesFeltAfter;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Climbing'**
+  String get templateClimbing;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Kind'**
+  String get templateClimbingKind;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Bouldering'**
+  String get templateClimbingKindBouldering;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Top rope'**
+  String get templateClimbingKindTopRope;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Lead'**
+  String get templateClimbingKindLead;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Outdoor'**
+  String get templateClimbingKindOutdoor;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Routes'**
+  String get templateClimbingRoutes;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Hardest grade'**
+  String get templateClimbingHardestGrade;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Martial arts'**
+  String get templateMartialArts;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Style'**
+  String get templateMartialArtsStyle;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Techniques'**
+  String get templateMartialArtsTechniques;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Sparring rounds'**
+  String get templateMartialArtsSparringRounds;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Golf'**
+  String get templateGolf;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Course'**
+  String get templateGolfCourse;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Holes'**
+  String get templateGolfHoles;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'9'**
+  String get templateGolfHoles9;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'18'**
+  String get templateGolfHoles18;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Score'**
+  String get templateGolfScore;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Winter sports'**
+  String get templateWinterSports;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Kind'**
+  String get templateWinterSportsKind;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Skiing'**
+  String get templateWinterSportsKindSkiing;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Snowboarding'**
+  String get templateWinterSportsKindSnowboarding;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Ice skating'**
+  String get templateWinterSportsKindIceSkating;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Sledging'**
+  String get templateWinterSportsKindSledging;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Runs'**
+  String get templateWinterSportsRuns;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Where'**
+  String get templateWinterSportsWhere;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Pranayama'**
+  String get templatePranayama;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Technique'**
+  String get templatePranayamaTechnique;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Anulom vilom'**
+  String get templatePranayamaTechniqueAnulomVilom;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Kapalbhati'**
+  String get templatePranayamaTechniqueKapalbhati;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Bhramari'**
+  String get templatePranayamaTechniqueBhramari;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Bhastrika'**
+  String get templatePranayamaTechniqueBhastrika;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Ujjayi'**
+  String get templatePranayamaTechniqueUjjayi;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Rounds'**
+  String get templatePranayamaRounds;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Time outdoors'**
+  String get templateTimeOutdoors;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Where'**
+  String get templateTimeOutdoorsWhere;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Morning sunlight'**
+  String get templateTimeOutdoorsMorningSunlight;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Felt after'**
+  String get templateTimeOutdoorsFeltAfter;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Social media'**
+  String get templateSocialMedia;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Apps'**
+  String get templateSocialMediaApps;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Instagram'**
+  String get templateSocialMediaAppsInstagram;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'YouTube'**
+  String get templateSocialMediaAppsYouTube;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'TikTok'**
+  String get templateSocialMediaAppsTikTok;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp'**
+  String get templateSocialMediaAppsWhatsApp;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Facebook'**
+  String get templateSocialMediaAppsFacebook;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'X'**
+  String get templateSocialMediaAppsX;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Reddit'**
+  String get templateSocialMediaAppsReddit;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Snapchat'**
+  String get templateSocialMediaAppsSnapchat;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Time spent'**
+  String get templateSocialMediaTimeSpent;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Felt after'**
+  String get templateSocialMediaFeltAfter;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'News'**
+  String get templateNews;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Source'**
+  String get templateNewsSource;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'What stood out'**
+  String get templateNewsWhatStoodOut;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Kind act'**
+  String get templateKindAct;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'What I did'**
+  String get templateKindActWhatIDid;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'For whom'**
+  String get templateKindActForWhom;
+
+  /// Template gallery: a category heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Faith & spirituality'**
+  String get templateCategoryFaithAndSpirituality;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Puja'**
+  String get templatePuja;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Deity or occasion'**
+  String get templatePujaDeityOrOccasion;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Offerings'**
+  String get templatePujaOfferings;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Flowers'**
+  String get templatePujaOfferingsFlowers;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Diya'**
+  String get templatePujaOfferingsDiya;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Incense'**
+  String get templatePujaOfferingsIncense;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Prasad'**
+  String get templatePujaOfferingsPrasad;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Aarti'**
+  String get templatePujaOfferingsAarti;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'With family'**
+  String get templatePujaWithFamily;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Salah'**
+  String get templateSalah;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Prayers'**
+  String get templateSalahPrayers;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Fajr'**
+  String get templateSalahPrayersFajr;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Dhuhr'**
+  String get templateSalahPrayersDhuhr;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Asr'**
+  String get templateSalahPrayersAsr;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Maghrib'**
+  String get templateSalahPrayersMaghrib;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Isha'**
+  String get templateSalahPrayersIsha;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'On time'**
+  String get templateSalahOnTime;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'At the mosque'**
+  String get templateSalahAtTheMosque;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Scripture reading'**
+  String get templateScriptureReading;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Text'**
+  String get templateScriptureReadingText;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Passage'**
+  String get templateScriptureReadingPassage;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Reflection'**
+  String get templateScriptureReadingReflection;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Chanting'**
+  String get templateChanting;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Mantra'**
+  String get templateChantingMantra;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Malas'**
+  String get templateChantingMalas;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Count'**
+  String get templateChantingCount;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Religious fast'**
+  String get templateReligiousFast;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Occasion'**
+  String get templateReligiousFastOccasion;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Kind'**
+  String get templateReligiousFastKind;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Sunrise to sunset'**
+  String get templateReligiousFastKindSunriseToSunset;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Water only'**
+  String get templateReligiousFastKindWaterOnly;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Fruit and milk'**
+  String get templateReligiousFastKindFruitAndMilk;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'One meal'**
+  String get templateReligiousFastKindOneMeal;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'No water'**
+  String get templateReligiousFastKindNoWater;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Broke the fast at'**
+  String get templateReligiousFastBrokeTheFastAt;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Watching sport'**
+  String get templateWatchingSport;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Match'**
+  String get templateWatchingSportMatch;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Team'**
+  String get templateWatchingSportTeam;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Result'**
+  String get templateWatchingSportResult;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Won'**
+  String get templateWatchingSportResultWon;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Lost'**
+  String get templateWatchingSportResultLost;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Draw'**
+  String get templateWatchingSportResultDraw;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'No result'**
+  String get templateWatchingSportResultNoResult;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Fishing'**
+  String get templateFishing;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Spot'**
+  String get templateFishingSpot;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Catch'**
+  String get templateFishingCatch;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Fish'**
+  String get templateFishingCatchItem;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Fish'**
+  String get templateFishingCatchFish;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get templateFishingCatchWeight;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Content creation'**
+  String get templateContentCreation;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Platform'**
+  String get templateContentCreationPlatform;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'YouTube'**
+  String get templateContentCreationPlatformYouTube;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Instagram'**
+  String get templateContentCreationPlatformInstagram;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'TikTok'**
+  String get templateContentCreationPlatformTikTok;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Blog'**
+  String get templateContentCreationPlatformBlog;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Podcast'**
+  String get templateContentCreationPlatformPodcast;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get templateContentCreationPlatformOther;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Piece'**
+  String get templateContentCreationPiece;
+
+  /// Starter template content (becomes editable user data once added).
+  ///
+  /// In en, this message translates to:
+  /// **'Views'**
+  String get templateContentCreationViews;
 }
 
 class _AppLocalizationsDelegate

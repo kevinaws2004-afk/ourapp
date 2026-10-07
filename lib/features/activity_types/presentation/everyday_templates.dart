@@ -93,6 +93,46 @@ List<TemplateCategory> templateCategories(AppLocalizations l10n) {
         ]),
         _number(l10n.templateGroomingCost, decimals: 2),
       ]),
+      _template(l10n.templateAyurvedicMorning, 'leaf', 'teal', [
+        _yesNo(l10n.templateAyurvedicMorningUpBeforeSunrise),
+        _multiChoice(l10n.templateAyurvedicMorningPractices, [
+          l10n.templateAyurvedicMorningPracticesTongueScraping,
+          l10n.templateAyurvedicMorningPracticesOilPulling,
+          l10n.templateAyurvedicMorningPracticesAbhyanga,
+          l10n.templateAyurvedicMorningPracticesWarmWater,
+          l10n.templateAyurvedicMorningPracticesNeti,
+        ]),
+        _rating(l10n.templateAyurvedicMorningFeltAfter),
+      ]),
+      _template(l10n.templateHairOiling, 'drop', 'coral', [
+        _text(l10n.templateHairOilingOil, suggest: true),
+        _yesNo(l10n.templateHairOilingLeftOnOvernight),
+      ]),
+      _template(l10n.templateMassageAndSpa, 'sparkle', 'lilac', timer: true, [
+        _choice(l10n.templateMassageAndSpaKind, [
+          l10n.templateMassageAndSpaKindMassage,
+          l10n.templateMassageAndSpaKindSpa,
+          l10n.templateMassageAndSpaKindFacial,
+          l10n.templateMassageAndSpaKindFootMassage,
+          l10n.templateMassageAndSpaKindSelfMassage,
+        ]),
+        _rating(l10n.templateMassageAndSpaFeltAfter),
+        _number(l10n.templateMassageAndSpaCost, decimals: 2),
+      ]),
+      _template(l10n.templateSaunaAndColdPlunge, 'drop', 'sky', timer: true, [
+        _choice(l10n.templateSaunaAndColdPlungeKind, [
+          l10n.templateSaunaAndColdPlungeKindSauna,
+          l10n.templateSaunaAndColdPlungeKindColdPlunge,
+          l10n.templateSaunaAndColdPlungeKindSteamRoom,
+          l10n.templateSaunaAndColdPlungeKindContrast,
+        ]),
+        _number(l10n.templateSaunaAndColdPlungeRounds),
+        _number(
+          l10n.templateSaunaAndColdPlungeTemperature,
+          dimension: Dimension.temperature,
+          unit: 'celsius',
+        ),
+      ]),
     ]),
     TemplateCategory(l10n.templateCategoryHealth, [
       _template(l10n.templateMedication, 'pill', 'rose', [
@@ -184,6 +224,32 @@ List<TemplateCategory> templateCategories(AppLocalizations l10n) {
         ),
         _rating(l10n.templatePhysiotherapyPainLevel),
       ]),
+      _template(l10n.templatePain, 'first-aid', 'rose', [
+        _multiChoice(l10n.templatePainWhere, [
+          l10n.templatePainWhereHead,
+          l10n.templatePainWhereNeck,
+          l10n.templatePainWhereBack,
+          l10n.templatePainWhereJoints,
+          l10n.templatePainWhereStomach,
+          l10n.templatePainWhereMuscles,
+        ]),
+        _rating(l10n.templatePainLevel),
+        _text(l10n.templatePainPossibleTrigger),
+      ]),
+      _template(l10n.templateDigestion, 'leaf', 'teal', [
+        _choice(l10n.templateDigestionType, [
+          l10n.templateDigestionTypeHard,
+          l10n.templateDigestionTypeNormal,
+          l10n.templateDigestionTypeSoft,
+          l10n.templateDigestionTypeLoose,
+        ]),
+        _yesNo(l10n.templateDigestionBloating),
+        _text(l10n.templateDigestionNotes, multiline: true),
+      ]),
+      _template(l10n.templateEnergyCheck, 'lightbulb', 'coral', [
+        _rating(l10n.templateEnergyCheckEnergy),
+        _rating(l10n.templateEnergyCheckFocus),
+      ]),
     ]),
     TemplateCategory(l10n.templateCategoryFoodAndDrink, [
       _template(l10n.templateMeal, 'fork-knife', 'coral', [
@@ -240,6 +306,29 @@ List<TemplateCategory> templateCategories(AppLocalizations l10n) {
           _text(l10n.templateMealPrepDishesDish, required: true, suggest: true),
           _number(l10n.templateMealPrepDishesPortions),
         ]),
+      ]),
+      _template(l10n.templateProtein, 'fork-knife', 'coral', [
+        _number(
+          l10n.templateProteinProtein,
+          dimension: Dimension.mass,
+          unit: 'g',
+        ),
+      ]),
+      _template(l10n.templateFruitAndVeg, 'leaf', 'teal', [
+        _number(l10n.templateFruitAndVegPortions),
+        _multiChoice(l10n.templateFruitAndVegColoursEaten, [
+          l10n.templateFruitAndVegColoursEatenGreen,
+          l10n.templateFruitAndVegColoursEatenRed,
+          l10n.templateFruitAndVegColoursEatenOrange,
+          l10n.templateFruitAndVegColoursEatenYellow,
+          l10n.templateFruitAndVegColoursEatenPurple,
+          l10n.templateFruitAndVegColoursEatenWhite,
+        ]),
+      ]),
+      _template(l10n.templatePackedLunch, 'fork-knife', 'sky', [
+        _text(l10n.templatePackedLunchFor, suggest: true),
+        _text(l10n.templatePackedLunchWhatWentIn, multiline: true),
+        _yesNo(l10n.templatePackedLunchEaten),
       ]),
     ]),
     TemplateCategory(l10n.templateCategoryHomeAndChores, [
@@ -326,6 +415,37 @@ List<TemplateCategory> templateCategories(AppLocalizations l10n) {
           l10n.templateDeclutterWhereTheyWentThrownAway,
         ]),
       ]),
+      _template(l10n.templateHouseHelp, 'house', 'teal', [
+        _text(l10n.templateHouseHelpWho, suggest: true),
+        _yesNo(l10n.templateHouseHelpCameToday),
+        _multiChoice(l10n.templateHouseHelpTasks, [
+          l10n.templateHouseHelpTasksSweeping,
+          l10n.templateHouseHelpTasksMopping,
+          l10n.templateHouseHelpTasksDishes,
+          l10n.templateHouseHelpTasksLaundry,
+          l10n.templateHouseHelpTasksCooking,
+          l10n.templateHouseHelpTasksDusting,
+        ]),
+        _number(l10n.templateHouseHelpPaid, decimals: 2),
+      ]),
+      _template(l10n.templateCarCare, 'car', 'slate', [
+        _multiChoice(l10n.templateCarCareWhat, [
+          l10n.templateCarCareWhatFuel,
+          l10n.templateCarCareWhatWash,
+          l10n.templateCarCareWhatService,
+          l10n.templateCarCareWhatTyres,
+          l10n.templateCarCareWhatOilChange,
+          l10n.templateCarCareWhatRepair,
+        ]),
+        _number(
+          l10n.templateCarCareOdometer,
+          dimension: Dimension.distance,
+          unit: 'km',
+        ),
+        _number(l10n.templateCarCareCost, decimals: 2),
+      ]),
+    ]),
+    TemplateCategory(l10n.templateCategoryMoney, [
       _template(l10n.templateBills, 'wallet', 'slate', [
         _list(l10n.templateBillsBills, l10n.templateBillsBillsItem, [
           _text(l10n.templateBillsBillsBill, required: true, suggest: true),
@@ -351,6 +471,26 @@ List<TemplateCategory> templateCategories(AppLocalizations l10n) {
         _number(l10n.templateBudgetReviewSpentThisWeek, decimals: 2),
         _number(l10n.templateBudgetReviewSaved, decimals: 2),
         _rating(l10n.templateBudgetReviewOnTrack),
+      ]),
+      _template(l10n.templateInvesting, 'wallet', 'sky', [
+        _text(l10n.templateInvestingFundOrAsset, suggest: true),
+        _choice(l10n.templateInvestingKind, [
+          l10n.templateInvestingKindBuy,
+          l10n.templateInvestingKindSell,
+          l10n.templateInvestingKindSIP,
+          l10n.templateInvestingKindDeposit,
+          l10n.templateInvestingKindDividend,
+        ]),
+        _number(l10n.templateInvestingAmount, decimals: 2),
+      ]),
+      _template(l10n.templateSavings, 'wallet', 'teal', [
+        _text(l10n.templateSavingsGoal, suggest: true),
+        _number(l10n.templateSavingsAdded, decimals: 2),
+        _number(l10n.templateSavingsTotalSoFar, decimals: 2),
+      ]),
+      _template(l10n.templateDonation, 'wallet', 'teal', [
+        _text(l10n.templateDonationCause, suggest: true),
+        _number(l10n.templateDonationAmount, decimals: 2),
       ]),
     ]),
     TemplateCategory(l10n.templateCategoryFamilyAndCare, [
@@ -424,6 +564,18 @@ List<TemplateCategory> templateCategories(AppLocalizations l10n) {
         ]),
         _text(l10n.templateCaringForSomeoneNotes, multiline: true),
       ]),
+      _template(l10n.templateSchoolRun, 'car', 'sky', [
+        _text(l10n.templateSchoolRunChild, suggest: true),
+        _choice(l10n.templateSchoolRunHow, [
+          l10n.templateSchoolRunHowCar,
+          l10n.templateSchoolRunHowWalk,
+          l10n.templateSchoolRunHowBus,
+          l10n.templateSchoolRunHowBike,
+          l10n.templateSchoolRunHowAuto,
+          l10n.templateSchoolRunHowSchoolVan,
+        ]),
+        _yesNo(l10n.templateSchoolRunOnTime),
+      ]),
     ]),
     TemplateCategory(l10n.templateCategoryWork, [
       starter(l10n.templateFocusedWork),
@@ -490,6 +642,55 @@ List<TemplateCategory> templateCategories(AppLocalizations l10n) {
         _text(l10n.templatePresentationAudience),
         _rating(l10n.templatePresentationHowItWent),
       ]),
+      _template(l10n.templateClientWork, 'briefcase', 'lilac', timer: true, [
+        _text(l10n.templateClientWorkClient, suggest: true),
+        _text(l10n.templateClientWorkTask),
+        _yesNo(l10n.templateClientWorkBillable),
+      ]),
+      _template(l10n.templateShift, 'briefcase', 'slate', timer: true, [
+        _choice(l10n.templateShiftShift, [
+          l10n.templateShiftShiftMorning,
+          l10n.templateShiftShiftDay,
+          l10n.templateShiftShiftEvening,
+          l10n.templateShiftShiftNight,
+          l10n.templateShiftShiftSplit,
+        ]),
+        _yesNo(l10n.templateShiftTookABreak),
+        _number(l10n.templateShiftEarned, decimals: 2),
+      ]),
+      _template(l10n.templateGigWork, 'car', 'coral', timer: true, [
+        _text(l10n.templateGigWorkPlatform, suggest: true),
+        _number(l10n.templateGigWorkTripsOrOrders),
+        _number(l10n.templateGigWorkEarned, decimals: 2),
+        _number(
+          l10n.templateGigWorkDistance,
+          dimension: Dimension.distance,
+          unit: 'km',
+          decimals: 1,
+        ),
+      ]),
+      _template(l10n.templateNetworking, 'users-three', 'sky', [
+        _text(l10n.templateNetworkingPerson, suggest: true),
+        _text(l10n.templateNetworkingWhereWeMet),
+        _date(l10n.templateNetworkingFollowUpOn),
+      ]),
+      _template(l10n.templateWeeklyReview, 'notebook', 'teal', [
+        _text(l10n.templateWeeklyReviewWins, multiline: true),
+        _text(l10n.templateWeeklyReviewLessons, multiline: true),
+        _list(
+          l10n.templateWeeklyReviewNextWeek,
+          l10n.templateWeeklyReviewNextWeekItem,
+          [
+            _text(l10n.templateWeeklyReviewNextWeekPriority, required: true),
+            _yesNo(l10n.templateWeeklyReviewNextWeekDone),
+          ],
+        ),
+      ]),
+      _template(l10n.templateGoalCheckIn, 'target', 'coral', [
+        _text(l10n.templateGoalCheckInGoal, suggest: true),
+        _rating(l10n.templateGoalCheckInProgress),
+        _text(l10n.templateGoalCheckInNextStep),
+      ]),
     ]),
     TemplateCategory(l10n.templateCategoryLearning, [
       starter(l10n.templateStudy),
@@ -544,6 +745,37 @@ List<TemplateCategory> templateCategories(AppLocalizations l10n) {
         _text(l10n.templateSkillPracticeWhatIPractised, multiline: true),
         _rating(l10n.templateSkillPracticeProgress),
       ]),
+      _template(l10n.templateTuition, 'graduation-cap', 'sky', timer: true, [
+        _text(l10n.templateTuitionSubject, suggest: true),
+        _text(l10n.templateTuitionTopic),
+        _number(l10n.templateTuitionTestScore, decimals: 1),
+      ]),
+      _template(l10n.templateExamPrep, 'notebook', 'coral', timer: true, [
+        _text(l10n.templateExamPrepExam, suggest: true),
+        _text(l10n.templateExamPrepTopicsCovered, multiline: true),
+        _number(l10n.templateExamPrepMockTestScore, decimals: 1),
+        _rating(l10n.templateExamPrepConfidence),
+      ]),
+      _template(l10n.templateFlashcards, 'brain', 'lilac', [
+        _text(l10n.templateFlashcardsDeck, suggest: true),
+        _number(l10n.templateFlashcardsCardsReviewed),
+        _number(
+          l10n.templateFlashcardsCorrect,
+          dimension: Dimension.percentage,
+          unit: 'percent',
+        ),
+      ]),
+      _template(
+        l10n.templateTeaching,
+        'presentation-chart',
+        'teal',
+        timer: true,
+        [
+          _text(l10n.templateTeachingTopic),
+          _number(l10n.templateTeachingStudents),
+          _rating(l10n.templateTeachingHowItWent),
+        ],
+      ),
     ]),
     TemplateCategory(l10n.templateCategoryExerciseAndSport, [
       starter(l10n.templateGym),
@@ -663,6 +895,50 @@ List<TemplateCategory> templateCategories(AppLocalizations l10n) {
       _template(l10n.templateDailySteps, 'person-simple-walk', 'teal', [
         _number(l10n.templateDailyStepsSteps),
       ]),
+      _template(l10n.templateSuryaNamaskar, 'yin-yang', 'coral', timer: true, [
+        _number(l10n.templateSuryaNamaskarRounds),
+        _rating(l10n.templateSuryaNamaskarFeltAfter),
+      ]),
+      _template(l10n.templatePilates, 'flower-lotus', 'rose', timer: true, [
+        _choice(l10n.templatePilatesKind, [
+          l10n.templatePilatesKindMat,
+          l10n.templatePilatesKindReformer,
+        ]),
+        _rating(l10n.templatePilatesFeltAfter),
+      ]),
+      _template(l10n.templateClimbing, 'mountains', 'coral', timer: true, [
+        _choice(l10n.templateClimbingKind, [
+          l10n.templateClimbingKindBouldering,
+          l10n.templateClimbingKindTopRope,
+          l10n.templateClimbingKindLead,
+          l10n.templateClimbingKindOutdoor,
+        ]),
+        _number(l10n.templateClimbingRoutes),
+        _text(l10n.templateClimbingHardestGrade),
+      ]),
+      _template(l10n.templateMartialArts, 'target', 'slate', timer: true, [
+        _text(l10n.templateMartialArtsStyle, suggest: true),
+        _text(l10n.templateMartialArtsTechniques, multiline: true),
+        _number(l10n.templateMartialArtsSparringRounds),
+      ]),
+      _template(l10n.templateGolf, 'target', 'teal', timer: true, [
+        _text(l10n.templateGolfCourse, suggest: true),
+        _choice(l10n.templateGolfHoles, [
+          l10n.templateGolfHoles9,
+          l10n.templateGolfHoles18,
+        ]),
+        _number(l10n.templateGolfScore),
+      ]),
+      _template(l10n.templateWinterSports, 'mountains', 'sky', timer: true, [
+        _choice(l10n.templateWinterSportsKind, [
+          l10n.templateWinterSportsKindSkiing,
+          l10n.templateWinterSportsKindSnowboarding,
+          l10n.templateWinterSportsKindIceSkating,
+          l10n.templateWinterSportsKindSledging,
+        ]),
+        _number(l10n.templateWinterSportsRuns),
+        _text(l10n.templateWinterSportsWhere, suggest: true),
+      ]),
     ]),
     TemplateCategory(l10n.templateCategoryMindAndWellbeing, [
       starter(l10n.templateMeditation),
@@ -711,6 +987,98 @@ List<TemplateCategory> templateCategories(AppLocalizations l10n) {
       _template(l10n.templateAffirmations, 'sparkle', 'rose', [
         _text(l10n.templateAffirmationsTodaySAffirmation, multiline: true),
         _yesNo(l10n.templateAffirmationsSaidOutLoud),
+      ]),
+      _template(l10n.templatePranayama, 'leaf', 'teal', timer: true, [
+        _choice(l10n.templatePranayamaTechnique, [
+          l10n.templatePranayamaTechniqueAnulomVilom,
+          l10n.templatePranayamaTechniqueKapalbhati,
+          l10n.templatePranayamaTechniqueBhramari,
+          l10n.templatePranayamaTechniqueBhastrika,
+          l10n.templatePranayamaTechniqueUjjayi,
+        ]),
+        _number(l10n.templatePranayamaRounds),
+      ]),
+      _template(l10n.templateTimeOutdoors, 'leaf', 'teal', timer: true, [
+        _text(l10n.templateTimeOutdoorsWhere),
+        _yesNo(l10n.templateTimeOutdoorsMorningSunlight),
+        _rating(l10n.templateTimeOutdoorsFeltAfter),
+      ]),
+      _template(l10n.templateSocialMedia, 'phone', 'lilac', [
+        _multiChoice(l10n.templateSocialMediaApps, [
+          l10n.templateSocialMediaAppsInstagram,
+          l10n.templateSocialMediaAppsYouTube,
+          l10n.templateSocialMediaAppsTikTok,
+          l10n.templateSocialMediaAppsWhatsApp,
+          l10n.templateSocialMediaAppsFacebook,
+          l10n.templateSocialMediaAppsX,
+          l10n.templateSocialMediaAppsReddit,
+          l10n.templateSocialMediaAppsSnapchat,
+        ]),
+        _duration(l10n.templateSocialMediaTimeSpent),
+        _rating(l10n.templateSocialMediaFeltAfter),
+      ]),
+      _template(l10n.templateNews, 'globe', 'slate', [
+        _text(l10n.templateNewsSource, suggest: true),
+        _text(l10n.templateNewsWhatStoodOut, multiline: true),
+      ]),
+      _template(l10n.templateKindAct, 'heart', 'rose', [
+        _text(l10n.templateKindActWhatIDid, multiline: true),
+        _text(l10n.templateKindActForWhom),
+      ]),
+    ]),
+    TemplateCategory(l10n.templateCategoryFaithAndSpirituality, [
+      _template(l10n.templatePrayerAndWorship, 'star', 'slate', timer: true, [
+        _text(l10n.templatePrayerAndWorshipPracticeOrPlace, suggest: true),
+        _text(l10n.templatePrayerAndWorshipReflection, multiline: true),
+      ]),
+      _template(l10n.templatePuja, 'sparkle', 'coral', [
+        _text(l10n.templatePujaDeityOrOccasion, suggest: true),
+        _multiChoice(l10n.templatePujaOfferings, [
+          l10n.templatePujaOfferingsFlowers,
+          l10n.templatePujaOfferingsDiya,
+          l10n.templatePujaOfferingsIncense,
+          l10n.templatePujaOfferingsPrasad,
+          l10n.templatePujaOfferingsAarti,
+        ]),
+        _yesNo(l10n.templatePujaWithFamily),
+      ]),
+      _template(l10n.templateSalah, 'star', 'teal', [
+        _multiChoice(l10n.templateSalahPrayers, [
+          l10n.templateSalahPrayersFajr,
+          l10n.templateSalahPrayersDhuhr,
+          l10n.templateSalahPrayersAsr,
+          l10n.templateSalahPrayersMaghrib,
+          l10n.templateSalahPrayersIsha,
+        ]),
+        _yesNo(l10n.templateSalahOnTime),
+        _yesNo(l10n.templateSalahAtTheMosque),
+      ]),
+      _template(
+        l10n.templateScriptureReading,
+        'book-open',
+        'lilac',
+        timer: true,
+        [
+          _text(l10n.templateScriptureReadingText, suggest: true),
+          _text(l10n.templateScriptureReadingPassage),
+          _text(l10n.templateScriptureReadingReflection, multiline: true),
+        ],
+      ),
+      _template(l10n.templateChanting, 'flower-lotus', 'lilac', timer: true, [
+        _text(l10n.templateChantingMantra, suggest: true),
+        _number(l10n.templateChantingMalas),
+        _number(l10n.templateChantingCount),
+      ]),
+      _template(l10n.templateReligiousFast, 'moon', 'slate', [
+        _text(l10n.templateReligiousFastOccasion, suggest: true),
+        _choice(l10n.templateReligiousFastKind, [
+          l10n.templateReligiousFastKindSunriseToSunset,
+          l10n.templateReligiousFastKindWaterOnly,
+          l10n.templateReligiousFastKindFruitAndMilk,
+          l10n.templateReligiousFastKindOneMeal,
+          l10n.templateReligiousFastKindNoWater,
+        ]),
+        _time(l10n.templateReligiousFastBrokeTheFastAt),
       ]),
     ]),
     TemplateCategory(l10n.templateCategoryHobbiesAndFun, [
@@ -798,6 +1166,40 @@ List<TemplateCategory> templateCategories(AppLocalizations l10n) {
         _text(l10n.templateListeningToMusicArtistOrAlbum, suggest: true),
         _rating(l10n.templateListeningToMusicEnjoyed),
       ]),
+      _template(l10n.templateWatchingSport, 'soccer-ball', 'coral', [
+        _text(l10n.templateWatchingSportMatch, suggest: true),
+        _text(l10n.templateWatchingSportTeam, suggest: true),
+        _choice(l10n.templateWatchingSportResult, [
+          l10n.templateWatchingSportResultWon,
+          l10n.templateWatchingSportResultLost,
+          l10n.templateWatchingSportResultDraw,
+          l10n.templateWatchingSportResultNoResult,
+        ]),
+      ]),
+      _template(l10n.templateFishing, 'drop', 'sky', timer: true, [
+        _text(l10n.templateFishingSpot, suggest: true),
+        _list(l10n.templateFishingCatch, l10n.templateFishingCatchItem, [
+          _text(l10n.templateFishingCatchFish, required: true, suggest: true),
+          _number(
+            l10n.templateFishingCatchWeight,
+            dimension: Dimension.mass,
+            unit: 'kg',
+            decimals: 2,
+          ),
+        ]),
+      ]),
+      _template(l10n.templateContentCreation, 'camera', 'rose', timer: true, [
+        _choice(l10n.templateContentCreationPlatform, [
+          l10n.templateContentCreationPlatformYouTube,
+          l10n.templateContentCreationPlatformInstagram,
+          l10n.templateContentCreationPlatformTikTok,
+          l10n.templateContentCreationPlatformBlog,
+          l10n.templateContentCreationPlatformPodcast,
+          l10n.templateContentCreationPlatformOther,
+        ]),
+        _text(l10n.templateContentCreationPiece),
+        _number(l10n.templateContentCreationViews),
+      ]),
     ]),
     TemplateCategory(l10n.templateCategoryFriendsAndCommunity, [
       _template(
@@ -830,14 +1232,6 @@ List<TemplateCategory> templateCategories(AppLocalizations l10n) {
         _text(l10n.templateVolunteeringOrganization, suggest: true),
         _text(l10n.templateVolunteeringWhatIDid, multiline: true),
         _number(l10n.templateVolunteeringPeopleHelped),
-      ]),
-      _template(l10n.templatePrayerAndWorship, 'star', 'slate', timer: true, [
-        _text(l10n.templatePrayerAndWorshipPracticeOrPlace, suggest: true),
-        _text(l10n.templatePrayerAndWorshipReflection, multiline: true),
-      ]),
-      _template(l10n.templateDonation, 'wallet', 'teal', [
-        _text(l10n.templateDonationCause, suggest: true),
-        _number(l10n.templateDonationAmount, decimals: 2),
       ]),
     ]),
     TemplateCategory(l10n.templateCategoryTravelAndErrands, [

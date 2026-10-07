@@ -3591,4 +3591,857 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get templatePackingPackingListDone => 'Done';
+
+  @override
+  String get templateAyurvedicMorning => 'Ayurvedic morning';
+
+  @override
+  String get templateAyurvedicMorningUpBeforeSunrise => 'Up before sunrise';
+
+  @override
+  String get templateAyurvedicMorningPractices => 'Practices';
+
+  @override
+  String get templateAyurvedicMorningPracticesTongueScraping =>
+      'Tongue scraping';
+
+  @override
+  String get templateAyurvedicMorningPracticesOilPulling => 'Oil pulling';
+
+  @override
+  String get templateAyurvedicMorningPracticesAbhyanga => 'Abhyanga';
+
+  @override
+  String get templateAyurvedicMorningPracticesWarmWater => 'Warm water';
+
+  @override
+  String get templateAyurvedicMorningPracticesNeti => 'Neti';
+
+  @override
+  String get templateAyurvedicMorningFeltAfter => 'Felt after';
+
+  @override
+  String get templateHairOiling => 'Hair oiling';
+
+  @override
+  String get templateHairOilingOil => 'Oil';
+
+  @override
+  String get templateHairOilingLeftOnOvernight => 'Left on overnight';
+
+  @override
+  String get templateMassageAndSpa => 'Massage & spa';
+
+  @override
+  String get templateMassageAndSpaKind => 'Kind';
+
+  @override
+  String get templateMassageAndSpaKindMassage => 'Massage';
+
+  @override
+  String get templateMassageAndSpaKindSpa => 'Spa';
+
+  @override
+  String get templateMassageAndSpaKindFacial => 'Facial';
+
+  @override
+  String get templateMassageAndSpaKindFootMassage => 'Foot massage';
+
+  @override
+  String get templateMassageAndSpaKindSelfMassage => 'Self-massage';
+
+  @override
+  String get templateMassageAndSpaFeltAfter => 'Felt after';
+
+  @override
+  String get templateMassageAndSpaCost => 'Cost';
+
+  @override
+  String get templateSaunaAndColdPlunge => 'Sauna & cold plunge';
+
+  @override
+  String get templateSaunaAndColdPlungeKind => 'Kind';
+
+  @override
+  String get templateSaunaAndColdPlungeKindSauna => 'Sauna';
+
+  @override
+  String get templateSaunaAndColdPlungeKindColdPlunge => 'Cold plunge';
+
+  @override
+  String get templateSaunaAndColdPlungeKindSteamRoom => 'Steam room';
+
+  @override
+  String get templateSaunaAndColdPlungeKindContrast => 'Contrast';
+
+  @override
+  String get templateSaunaAndColdPlungeRounds => 'Rounds';
+
+  @override
+  String get templateSaunaAndColdPlungeTemperature => 'Temperature';
+
+  @override
+  String get templatePain => 'Pain';
+
+  @override
+  String get templatePainWhere => 'Where';
+
+  @override
+  String get templatePainWhereHead => 'Head';
+
+  @override
+  String get templatePainWhereNeck => 'Neck';
+
+  @override
+  String get templatePainWhereBack => 'Back';
+
+  @override
+  String get templatePainWhereJoints => 'Joints';
+
+  @override
+  String get templatePainWhereStomach => 'Stomach';
+
+  @override
+  String get templatePainWhereMuscles => 'Muscles';
+
+  @override
+  String get templatePainLevel => 'Level';
+
+  @override
+  String get templatePainPossibleTrigger => 'Possible trigger';
+
+  @override
+  String get templateDigestion => 'Digestion';
+
+  @override
+  String get templateDigestionType => 'Type';
+
+  @override
+  String get templateDigestionTypeHard => 'Hard';
+
+  @override
+  String get templateDigestionTypeNormal => 'Normal';
+
+  @override
+  String get templateDigestionTypeSoft => 'Soft';
+
+  @override
+  String get templateDigestionTypeLoose => 'Loose';
+
+  @override
+  String get templateDigestionBloating => 'Bloating';
+
+  @override
+  String get templateDigestionNotes => 'Notes';
+
+  @override
+  String get templateEnergyCheck => 'Energy check';
+
+  @override
+  String get templateEnergyCheckEnergy => 'Energy';
+
+  @override
+  String get templateEnergyCheckFocus => 'Focus';
+
+  @override
+  String get templateProtein => 'Protein';
+
+  @override
+  String get templateProteinProtein => 'Protein';
+
+  @override
+  String get templateFruitAndVeg => 'Fruit & veg';
+
+  @override
+  String get templateFruitAndVegPortions => 'Portions';
+
+  @override
+  String get templateFruitAndVegColoursEaten => 'Colours eaten';
+
+  @override
+  String get templateFruitAndVegColoursEatenGreen => 'Green';
+
+  @override
+  String get templateFruitAndVegColoursEatenRed => 'Red';
+
+  @override
+  String get templateFruitAndVegColoursEatenOrange => 'Orange';
+
+  @override
+  String get templateFruitAndVegColoursEatenYellow => 'Yellow';
+
+  @override
+  String get templateFruitAndVegColoursEatenPurple => 'Purple';
+
+  @override
+  String get templateFruitAndVegColoursEatenWhite => 'White';
+
+  @override
+  String get templatePackedLunch => 'Packed lunch';
+
+  @override
+  String get templatePackedLunchFor => 'For';
+
+  @override
+  String get templatePackedLunchWhatWentIn => 'What went in';
+
+  @override
+  String get templatePackedLunchEaten => 'Eaten';
+
+  @override
+  String get templateHouseHelp => 'House help';
+
+  @override
+  String get templateHouseHelpWho => 'Who';
+
+  @override
+  String get templateHouseHelpCameToday => 'Came today';
+
+  @override
+  String get templateHouseHelpTasks => 'Tasks';
+
+  @override
+  String get templateHouseHelpTasksSweeping => 'Sweeping';
+
+  @override
+  String get templateHouseHelpTasksMopping => 'Mopping';
+
+  @override
+  String get templateHouseHelpTasksDishes => 'Dishes';
+
+  @override
+  String get templateHouseHelpTasksLaundry => 'Laundry';
+
+  @override
+  String get templateHouseHelpTasksCooking => 'Cooking';
+
+  @override
+  String get templateHouseHelpTasksDusting => 'Dusting';
+
+  @override
+  String get templateHouseHelpPaid => 'Paid';
+
+  @override
+  String get templateCarCare => 'Car care';
+
+  @override
+  String get templateCarCareWhat => 'What';
+
+  @override
+  String get templateCarCareWhatFuel => 'Fuel';
+
+  @override
+  String get templateCarCareWhatWash => 'Wash';
+
+  @override
+  String get templateCarCareWhatService => 'Service';
+
+  @override
+  String get templateCarCareWhatTyres => 'Tyres';
+
+  @override
+  String get templateCarCareWhatOilChange => 'Oil change';
+
+  @override
+  String get templateCarCareWhatRepair => 'Repair';
+
+  @override
+  String get templateCarCareOdometer => 'Odometer';
+
+  @override
+  String get templateCarCareCost => 'Cost';
+
+  @override
+  String get templateCategoryMoney => 'Money';
+
+  @override
+  String get templateInvesting => 'Investing';
+
+  @override
+  String get templateInvestingFundOrAsset => 'Fund or asset';
+
+  @override
+  String get templateInvestingKind => 'Kind';
+
+  @override
+  String get templateInvestingKindBuy => 'Buy';
+
+  @override
+  String get templateInvestingKindSell => 'Sell';
+
+  @override
+  String get templateInvestingKindSIP => 'SIP';
+
+  @override
+  String get templateInvestingKindDeposit => 'Deposit';
+
+  @override
+  String get templateInvestingKindDividend => 'Dividend';
+
+  @override
+  String get templateInvestingAmount => 'Amount';
+
+  @override
+  String get templateSavings => 'Savings';
+
+  @override
+  String get templateSavingsGoal => 'Goal';
+
+  @override
+  String get templateSavingsAdded => 'Added';
+
+  @override
+  String get templateSavingsTotalSoFar => 'Total so far';
+
+  @override
+  String get templateSchoolRun => 'School run';
+
+  @override
+  String get templateSchoolRunChild => 'Child';
+
+  @override
+  String get templateSchoolRunHow => 'How';
+
+  @override
+  String get templateSchoolRunHowCar => 'Car';
+
+  @override
+  String get templateSchoolRunHowWalk => 'Walk';
+
+  @override
+  String get templateSchoolRunHowBus => 'Bus';
+
+  @override
+  String get templateSchoolRunHowBike => 'Bike';
+
+  @override
+  String get templateSchoolRunHowAuto => 'Auto';
+
+  @override
+  String get templateSchoolRunHowSchoolVan => 'School van';
+
+  @override
+  String get templateSchoolRunOnTime => 'On time';
+
+  @override
+  String get templateClientWork => 'Client work';
+
+  @override
+  String get templateClientWorkClient => 'Client';
+
+  @override
+  String get templateClientWorkTask => 'Task';
+
+  @override
+  String get templateClientWorkBillable => 'Billable';
+
+  @override
+  String get templateShift => 'Shift';
+
+  @override
+  String get templateShiftShift => 'Shift';
+
+  @override
+  String get templateShiftShiftMorning => 'Morning';
+
+  @override
+  String get templateShiftShiftDay => 'Day';
+
+  @override
+  String get templateShiftShiftEvening => 'Evening';
+
+  @override
+  String get templateShiftShiftNight => 'Night';
+
+  @override
+  String get templateShiftShiftSplit => 'Split';
+
+  @override
+  String get templateShiftTookABreak => 'Took a break';
+
+  @override
+  String get templateShiftEarned => 'Earned';
+
+  @override
+  String get templateGigWork => 'Gig work';
+
+  @override
+  String get templateGigWorkPlatform => 'Platform';
+
+  @override
+  String get templateGigWorkTripsOrOrders => 'Trips or orders';
+
+  @override
+  String get templateGigWorkEarned => 'Earned';
+
+  @override
+  String get templateGigWorkDistance => 'Distance';
+
+  @override
+  String get templateNetworking => 'Networking';
+
+  @override
+  String get templateNetworkingPerson => 'Person';
+
+  @override
+  String get templateNetworkingWhereWeMet => 'Where we met';
+
+  @override
+  String get templateNetworkingFollowUpOn => 'Follow up on';
+
+  @override
+  String get templateWeeklyReview => 'Weekly review';
+
+  @override
+  String get templateWeeklyReviewWins => 'Wins';
+
+  @override
+  String get templateWeeklyReviewLessons => 'Lessons';
+
+  @override
+  String get templateWeeklyReviewNextWeek => 'Next week';
+
+  @override
+  String get templateWeeklyReviewNextWeekItem => 'Priority';
+
+  @override
+  String get templateWeeklyReviewNextWeekPriority => 'Priority';
+
+  @override
+  String get templateWeeklyReviewNextWeekDone => 'Done';
+
+  @override
+  String get templateGoalCheckIn => 'Goal check-in';
+
+  @override
+  String get templateGoalCheckInGoal => 'Goal';
+
+  @override
+  String get templateGoalCheckInProgress => 'Progress';
+
+  @override
+  String get templateGoalCheckInNextStep => 'Next step';
+
+  @override
+  String get templateTuition => 'Tuition';
+
+  @override
+  String get templateTuitionSubject => 'Subject';
+
+  @override
+  String get templateTuitionTopic => 'Topic';
+
+  @override
+  String get templateTuitionTestScore => 'Test score';
+
+  @override
+  String get templateExamPrep => 'Exam prep';
+
+  @override
+  String get templateExamPrepExam => 'Exam';
+
+  @override
+  String get templateExamPrepTopicsCovered => 'Topics covered';
+
+  @override
+  String get templateExamPrepMockTestScore => 'Mock test score';
+
+  @override
+  String get templateExamPrepConfidence => 'Confidence';
+
+  @override
+  String get templateFlashcards => 'Flashcards';
+
+  @override
+  String get templateFlashcardsDeck => 'Deck';
+
+  @override
+  String get templateFlashcardsCardsReviewed => 'Cards reviewed';
+
+  @override
+  String get templateFlashcardsCorrect => 'Correct';
+
+  @override
+  String get templateTeaching => 'Teaching';
+
+  @override
+  String get templateTeachingTopic => 'Topic';
+
+  @override
+  String get templateTeachingStudents => 'Students';
+
+  @override
+  String get templateTeachingHowItWent => 'How it went';
+
+  @override
+  String get templateSuryaNamaskar => 'Surya namaskar';
+
+  @override
+  String get templateSuryaNamaskarRounds => 'Rounds';
+
+  @override
+  String get templateSuryaNamaskarFeltAfter => 'Felt after';
+
+  @override
+  String get templatePilates => 'Pilates';
+
+  @override
+  String get templatePilatesKind => 'Kind';
+
+  @override
+  String get templatePilatesKindMat => 'Mat';
+
+  @override
+  String get templatePilatesKindReformer => 'Reformer';
+
+  @override
+  String get templatePilatesFeltAfter => 'Felt after';
+
+  @override
+  String get templateClimbing => 'Climbing';
+
+  @override
+  String get templateClimbingKind => 'Kind';
+
+  @override
+  String get templateClimbingKindBouldering => 'Bouldering';
+
+  @override
+  String get templateClimbingKindTopRope => 'Top rope';
+
+  @override
+  String get templateClimbingKindLead => 'Lead';
+
+  @override
+  String get templateClimbingKindOutdoor => 'Outdoor';
+
+  @override
+  String get templateClimbingRoutes => 'Routes';
+
+  @override
+  String get templateClimbingHardestGrade => 'Hardest grade';
+
+  @override
+  String get templateMartialArts => 'Martial arts';
+
+  @override
+  String get templateMartialArtsStyle => 'Style';
+
+  @override
+  String get templateMartialArtsTechniques => 'Techniques';
+
+  @override
+  String get templateMartialArtsSparringRounds => 'Sparring rounds';
+
+  @override
+  String get templateGolf => 'Golf';
+
+  @override
+  String get templateGolfCourse => 'Course';
+
+  @override
+  String get templateGolfHoles => 'Holes';
+
+  @override
+  String get templateGolfHoles9 => '9';
+
+  @override
+  String get templateGolfHoles18 => '18';
+
+  @override
+  String get templateGolfScore => 'Score';
+
+  @override
+  String get templateWinterSports => 'Winter sports';
+
+  @override
+  String get templateWinterSportsKind => 'Kind';
+
+  @override
+  String get templateWinterSportsKindSkiing => 'Skiing';
+
+  @override
+  String get templateWinterSportsKindSnowboarding => 'Snowboarding';
+
+  @override
+  String get templateWinterSportsKindIceSkating => 'Ice skating';
+
+  @override
+  String get templateWinterSportsKindSledging => 'Sledging';
+
+  @override
+  String get templateWinterSportsRuns => 'Runs';
+
+  @override
+  String get templateWinterSportsWhere => 'Where';
+
+  @override
+  String get templatePranayama => 'Pranayama';
+
+  @override
+  String get templatePranayamaTechnique => 'Technique';
+
+  @override
+  String get templatePranayamaTechniqueAnulomVilom => 'Anulom vilom';
+
+  @override
+  String get templatePranayamaTechniqueKapalbhati => 'Kapalbhati';
+
+  @override
+  String get templatePranayamaTechniqueBhramari => 'Bhramari';
+
+  @override
+  String get templatePranayamaTechniqueBhastrika => 'Bhastrika';
+
+  @override
+  String get templatePranayamaTechniqueUjjayi => 'Ujjayi';
+
+  @override
+  String get templatePranayamaRounds => 'Rounds';
+
+  @override
+  String get templateTimeOutdoors => 'Time outdoors';
+
+  @override
+  String get templateTimeOutdoorsWhere => 'Where';
+
+  @override
+  String get templateTimeOutdoorsMorningSunlight => 'Morning sunlight';
+
+  @override
+  String get templateTimeOutdoorsFeltAfter => 'Felt after';
+
+  @override
+  String get templateSocialMedia => 'Social media';
+
+  @override
+  String get templateSocialMediaApps => 'Apps';
+
+  @override
+  String get templateSocialMediaAppsInstagram => 'Instagram';
+
+  @override
+  String get templateSocialMediaAppsYouTube => 'YouTube';
+
+  @override
+  String get templateSocialMediaAppsTikTok => 'TikTok';
+
+  @override
+  String get templateSocialMediaAppsWhatsApp => 'WhatsApp';
+
+  @override
+  String get templateSocialMediaAppsFacebook => 'Facebook';
+
+  @override
+  String get templateSocialMediaAppsX => 'X';
+
+  @override
+  String get templateSocialMediaAppsReddit => 'Reddit';
+
+  @override
+  String get templateSocialMediaAppsSnapchat => 'Snapchat';
+
+  @override
+  String get templateSocialMediaTimeSpent => 'Time spent';
+
+  @override
+  String get templateSocialMediaFeltAfter => 'Felt after';
+
+  @override
+  String get templateNews => 'News';
+
+  @override
+  String get templateNewsSource => 'Source';
+
+  @override
+  String get templateNewsWhatStoodOut => 'What stood out';
+
+  @override
+  String get templateKindAct => 'Kind act';
+
+  @override
+  String get templateKindActWhatIDid => 'What I did';
+
+  @override
+  String get templateKindActForWhom => 'For whom';
+
+  @override
+  String get templateCategoryFaithAndSpirituality => 'Faith & spirituality';
+
+  @override
+  String get templatePuja => 'Puja';
+
+  @override
+  String get templatePujaDeityOrOccasion => 'Deity or occasion';
+
+  @override
+  String get templatePujaOfferings => 'Offerings';
+
+  @override
+  String get templatePujaOfferingsFlowers => 'Flowers';
+
+  @override
+  String get templatePujaOfferingsDiya => 'Diya';
+
+  @override
+  String get templatePujaOfferingsIncense => 'Incense';
+
+  @override
+  String get templatePujaOfferingsPrasad => 'Prasad';
+
+  @override
+  String get templatePujaOfferingsAarti => 'Aarti';
+
+  @override
+  String get templatePujaWithFamily => 'With family';
+
+  @override
+  String get templateSalah => 'Salah';
+
+  @override
+  String get templateSalahPrayers => 'Prayers';
+
+  @override
+  String get templateSalahPrayersFajr => 'Fajr';
+
+  @override
+  String get templateSalahPrayersDhuhr => 'Dhuhr';
+
+  @override
+  String get templateSalahPrayersAsr => 'Asr';
+
+  @override
+  String get templateSalahPrayersMaghrib => 'Maghrib';
+
+  @override
+  String get templateSalahPrayersIsha => 'Isha';
+
+  @override
+  String get templateSalahOnTime => 'On time';
+
+  @override
+  String get templateSalahAtTheMosque => 'At the mosque';
+
+  @override
+  String get templateScriptureReading => 'Scripture reading';
+
+  @override
+  String get templateScriptureReadingText => 'Text';
+
+  @override
+  String get templateScriptureReadingPassage => 'Passage';
+
+  @override
+  String get templateScriptureReadingReflection => 'Reflection';
+
+  @override
+  String get templateChanting => 'Chanting';
+
+  @override
+  String get templateChantingMantra => 'Mantra';
+
+  @override
+  String get templateChantingMalas => 'Malas';
+
+  @override
+  String get templateChantingCount => 'Count';
+
+  @override
+  String get templateReligiousFast => 'Religious fast';
+
+  @override
+  String get templateReligiousFastOccasion => 'Occasion';
+
+  @override
+  String get templateReligiousFastKind => 'Kind';
+
+  @override
+  String get templateReligiousFastKindSunriseToSunset => 'Sunrise to sunset';
+
+  @override
+  String get templateReligiousFastKindWaterOnly => 'Water only';
+
+  @override
+  String get templateReligiousFastKindFruitAndMilk => 'Fruit and milk';
+
+  @override
+  String get templateReligiousFastKindOneMeal => 'One meal';
+
+  @override
+  String get templateReligiousFastKindNoWater => 'No water';
+
+  @override
+  String get templateReligiousFastBrokeTheFastAt => 'Broke the fast at';
+
+  @override
+  String get templateWatchingSport => 'Watching sport';
+
+  @override
+  String get templateWatchingSportMatch => 'Match';
+
+  @override
+  String get templateWatchingSportTeam => 'Team';
+
+  @override
+  String get templateWatchingSportResult => 'Result';
+
+  @override
+  String get templateWatchingSportResultWon => 'Won';
+
+  @override
+  String get templateWatchingSportResultLost => 'Lost';
+
+  @override
+  String get templateWatchingSportResultDraw => 'Draw';
+
+  @override
+  String get templateWatchingSportResultNoResult => 'No result';
+
+  @override
+  String get templateFishing => 'Fishing';
+
+  @override
+  String get templateFishingSpot => 'Spot';
+
+  @override
+  String get templateFishingCatch => 'Catch';
+
+  @override
+  String get templateFishingCatchItem => 'Fish';
+
+  @override
+  String get templateFishingCatchFish => 'Fish';
+
+  @override
+  String get templateFishingCatchWeight => 'Weight';
+
+  @override
+  String get templateContentCreation => 'Content creation';
+
+  @override
+  String get templateContentCreationPlatform => 'Platform';
+
+  @override
+  String get templateContentCreationPlatformYouTube => 'YouTube';
+
+  @override
+  String get templateContentCreationPlatformInstagram => 'Instagram';
+
+  @override
+  String get templateContentCreationPlatformTikTok => 'TikTok';
+
+  @override
+  String get templateContentCreationPlatformBlog => 'Blog';
+
+  @override
+  String get templateContentCreationPlatformPodcast => 'Podcast';
+
+  @override
+  String get templateContentCreationPlatformOther => 'Other';
+
+  @override
+  String get templateContentCreationPiece => 'Piece';
+
+  @override
+  String get templateContentCreationViews => 'Views';
 }

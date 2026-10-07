@@ -64,11 +64,13 @@ void main() {
       'Health',
       'Food & drink',
       'Home & chores',
+      'Money',
       'Family & care',
       'Work',
       'Learning',
       'Exercise & sport',
       'Mind & wellbeing',
+      'Faith & spirituality',
       'Hobbies & fun',
       'Friends & community',
       'Travel & errands',
@@ -76,7 +78,7 @@ void main() {
     for (final category in categories) {
       expect(category.templates, isNotEmpty, reason: category.name);
     }
-    expect(templates.length, greaterThanOrEqualTo(90));
+    expect(templates.length, greaterThanOrEqualTo(140));
     expect(
       templates.map((t) => t.name),
       containsAll([
@@ -89,6 +91,13 @@ void main() {
         'Journal',
         'Screen time',
         'Expense',
+        'Puja',
+        'Salah',
+        'Pranayama',
+        'Tuition',
+        'House help',
+        'Gig work',
+        'Social media',
       ]),
     );
   });
