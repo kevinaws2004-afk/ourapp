@@ -40,7 +40,7 @@ class DayItems extends ConsumerWidget {
   /// Opens a record made without a plan.
   final ValueChanged<ActivityLog> onOpenRecord;
 
-  /// Picks a template or makes a new activity for quick add.
+  /// Picks an activity from the list, or makes a new one, for quick add.
   final ActivityChooser chooser;
 
   /// Offers "Start now" in quick add (today only).

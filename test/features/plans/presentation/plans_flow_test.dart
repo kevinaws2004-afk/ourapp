@@ -19,7 +19,7 @@ import '../../../support/fake_clock.dart';
 import '../../../support/fixtures.dart';
 import '../../../support/test_app.dart';
 import '../../activity_types/presentation/activities_flow_test.dart'
-    show enterField, findTemplate, scrollAndTap;
+    show enterField, findActivity, scrollAndTap;
 import 'plan_screen_test.dart' show openPlan, openPlanTab;
 
 const _onboarded = PreferencesSnapshot(
@@ -270,16 +270,17 @@ void main() {
       expect(find.text('Set a time'), findsOneWidget);
     });
 
-    testAppWidgets('"Templates" plans one from the gallery; a new name is '
-        'offered as your own, and backing out of the builder adds nothing', (
+    testAppWidgets('"Browse activities" plans one from the list; a new name '
+        'is offered as your own, and backing out of the builder adds nothing', (
       tester,
     ) async {
       await pumpTestApp(tester, preferences: _onboarded);
 
-      await tester.tap(find.text('Templates'));
+      await tester.tap(find.text('Browse activities'));
       await tester.pumpAndSettle();
-      await findTemplate(tester, 'walk', 'Walking');
-      await scrollAndTap(tester, find.text('Add Walking'));
+      expect(find.text('Choose an activity'), findsOneWidget);
+      await findActivity(tester, 'walk', 'Walking');
+      await scrollAndTap(tester, find.text('Use Walking'));
       // Back on the day, the new activity is chosen, ready to add.
       expect(find.widgetWithText(ChoiceChip, 'Walking'), findsOneWidget);
       expect(find.text('Set a time'), findsOneWidget);
@@ -301,8 +302,8 @@ void main() {
       expect(itemRow('Piano'), findsNothing, reason: 'nothing without one');
     });
 
-    testAppWidgets('typing suggests ready-made templates; tapping one fills '
-        'the name', (tester) async {
+    testAppWidgets('typing suggests built-in activities with what they log; '
+        'tapping one fills the name', (tester) async {
       await pumpTestApp(tester, preferences: _onboarded);
 
       await tester.enterText(
@@ -310,15 +311,18 @@ void main() {
         'gy',
       );
       await tester.pump();
-      expect(find.textContaining('Ready-made · Workout'), findsOneWidget);
+      expect(find.textContaining('Workout · Exercises'), findsOneWidget);
+      expect(find.textContaining('Ready-made'), findsNothing, reason: 'one');
 
       await tester.tap(find.text('Gym'));
       await tester.pump();
       expect(find.widgetWithText(TextField, 'Gym'), findsOneWidget);
     });
 
-    testAppWidgets('an existing activity is suggested instead of its '
-        'template, so typing never makes a second one (A8)', (tester) async {
+    testAppWidgets('your activity is suggested instead of the built-in one '
+        'with its name, so typing never makes a second one (A8)', (
+      tester,
+    ) async {
       await pumpTestApp(tester, preferences: _onboarded, seed: seedReading);
 
       await tester.enterText(
@@ -326,9 +330,9 @@ void main() {
         'Rea',
       );
       await tester.pump();
-      expect(find.text('Your activity'), findsOneWidget);
-      // Other templates containing "rea" (Breathing…) may show; Reading's not.
-      expect(find.text('Ready-made · Book · Pages · Rating'), findsNothing);
+      // Others containing "rea" (Breathing…) may show; Reading only once.
+      expect(find.widgetWithText(ListTile, 'Reading'), findsOneWidget);
+      expect(find.text('Your activity'), findsNothing, reason: 'no labels');
     });
 
     testAppWidgets('one sheet sets the time: a suggested start and a length', (
@@ -391,7 +395,7 @@ void main() {
     expect(find.text('Book *'), findsOneWidget, reason: 'not a task');
   });
 
-  testAppWidgets('typing a starter template\'s name installs it and plans it', (
+  testAppWidgets('typing a built-in activity\'s name saves it and plans it', (
     tester,
   ) async {
     await pumpTestApp(tester, preferences: _onboarded);
@@ -634,7 +638,10 @@ void main() {
       await tester.tap(find.byTooltip('New plan').first);
       await tester.pumpAndSettle();
       expect(find.text('Just a task'), findsNothing);
-      expect(find.widgetWithText(ActionChip, 'Templates'), findsOneWidget);
+      expect(
+        find.widgetWithText(ActionChip, 'Browse activities'),
+        findsOneWidget,
+      );
       expect(find.widgetWithText(ActionChip, 'Make your own'), findsOneWidget);
 
       await tester.enterText(find.widgetWithText(TextField, 'Title'), 'Swim');

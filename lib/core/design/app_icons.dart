@@ -37,7 +37,7 @@ abstract final class AppIcons {
   static const archive = PhosphorGlyphs.archive;
   static const info = PhosphorGlyphs.info;
   static const timer = PhosphorGlyphs.timer;
-  static const template = PhosphorGlyphs.listChecks;
+  static const browse = PhosphorGlyphs.listChecks;
   static const developer = PhosphorGlyphs.palette;
   static const ratingEmpty = PhosphorGlyphs.star;
   static const ratingFull = PhosphorFillGlyphs.star;

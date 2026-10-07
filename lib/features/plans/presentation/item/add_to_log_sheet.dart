@@ -82,7 +82,7 @@ List<QuickLog> quickLogOptions(AppLocalizations l10n, {int depth = 0}) => [
 
 bool _canNestList(int depth) => depth < ActivityTypeValidator.maxGroupDepth;
 
-/// Ready-made shapes: plain data, like the starter templates. Nothing about
+/// Ready-made shapes: plain data, like the built-in activities. Nothing about
 /// them is special once added.
 List<(String, String, IconData, FieldDefinition)> _readyMade(
   AppLocalizations l10n,
@@ -94,26 +94,26 @@ List<(String, String, IconData, FieldDefinition)> _readyMade(
       l10n.shapeSetsRepsDescription,
       AppIcons.fieldRepeatingGroup,
       FieldDefinition(
-        name: l10n.templateGymExercises,
+        name: l10n.builtInGymExercises,
         type: FieldType.repeatingGroup,
         config: RepeatingGroupFieldConfig(
-          itemLabel: l10n.templateGymExerciseItem,
+          itemLabel: l10n.builtInGymExerciseItem,
         ),
         subFields: [
           FieldDefinition(
-            name: l10n.templateGymExercise,
+            name: l10n.builtInGymExercise,
             type: FieldType.text,
             config: const TextFieldConfig(suggestFromHistory: true),
           ),
           FieldDefinition(
-            name: l10n.templateGymSets,
+            name: l10n.builtInGymSets,
             type: FieldType.repeatingGroup,
             config: RepeatingGroupFieldConfig(
-              itemLabel: l10n.templateGymSetItem,
+              itemLabel: l10n.builtInGymSetItem,
             ),
             subFields: [
               FieldDefinition(
-                name: l10n.templateGymWeight,
+                name: l10n.builtInGymWeight,
                 type: FieldType.number,
                 dimension: Dimension.mass,
                 config: const NumberFieldConfig(
@@ -124,7 +124,7 @@ List<(String, String, IconData, FieldDefinition)> _readyMade(
                 measurable: true,
               ),
               FieldDefinition(
-                name: l10n.templateGymReps,
+                name: l10n.builtInGymReps,
                 type: FieldType.number,
                 config: const NumberFieldConfig(min: 0),
                 measurable: true,
@@ -138,7 +138,7 @@ List<(String, String, IconData, FieldDefinition)> _readyMade(
     (
       l10n.shapeChecklist,
       l10n.shapeChecklistDescription,
-      AppIcons.template,
+      AppIcons.browse,
       FieldDefinition(
         name: l10n.shapeChecklist,
         type: FieldType.repeatingGroup,

@@ -9,7 +9,7 @@ import '../features/activity_types/domain/activity_ids.dart';
 import '../features/activity_types/presentation/activities_screen.dart';
 import '../features/activity_types/presentation/activity_type_screen.dart';
 import '../features/activity_types/presentation/builder/activity_builder_screen.dart';
-import '../features/activity_types/presentation/template_picker_screen.dart';
+import '../features/activity_types/presentation/browse_activities_screen.dart';
 import '../features/insights/presentation/activity_insights_screen.dart';
 import '../features/insights/presentation/insights_screen.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
@@ -69,7 +69,9 @@ abstract final class AppRoutes {
   /// A new activity named up front (e.g. a plan's title, ADR-030).
   static String newActivityNamed(String name) =>
       '$newActivity?name=${Uri.encodeQueryComponent(name)}';
-  static const templates = '/activities/templates';
+
+  /// Choosing an activity for a day (ADR-042).
+  static const browseActivities = '/activities/browse';
   static String editActivity(ActivityTypeId id) =>
       '/activities/${id.value}/edit';
 
@@ -171,20 +173,13 @@ final routerProvider = Provider<GoRouter>((ref) {
     }
   }
 
-  /// Where a new item on a day gets an activity that isn't one of yours
-  /// yet: the template gallery, or the builder to make your own.
+  /// Where a new item on a day gets its activity: the list of activities,
+  /// or the builder to make your own.
   ActivityChooser chooser(BuildContext context) => ActivityChooser(
-    pickTemplate: () => context.push<ActivityTypeId>(AppRoutes.templates),
+    browse: () => context.push<ActivityTypeId>(AppRoutes.browseActivities),
     makeOwn: (name) =>
         context.push<ActivityTypeId>(AppRoutes.newActivityNamed(name)),
   );
-
-  Future<void> openTemplates(BuildContext context) async {
-    final id = await context.push<ActivityTypeId>(AppRoutes.templates);
-    if (id != null && context.mounted) {
-      unawaited(context.push(AppRoutes.activity(id)));
-    }
-  }
 
   final router = GoRouter(
     navigatorKey: rootNavigatorKey,
@@ -305,9 +300,8 @@ final routerProvider = Provider<GoRouter>((ref) {
                     path: 'activities',
                     builder: (context, state) => ActivitiesScreen(
                       onNewActivity: () => unawaited(openNewActivity(context)),
-                      onFromTemplate: () => unawaited(openTemplates(context)),
-                      onOpenType: (type) =>
-                          unawaited(context.push(AppRoutes.activity(type.id))),
+                      onOpenActivity: (id) =>
+                          unawaited(context.push(AppRoutes.activity(id))),
                       onRecordType: (type) =>
                           unawaited(doNow(context, type.id)),
                     ),
@@ -348,8 +342,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         parentNavigatorKey: rootNavigatorKey,
-        path: AppRoutes.templates,
-        builder: (context, state) => const TemplatePickerScreen(),
+        path: AppRoutes.browseActivities,
+        builder: (context, state) => const BrowseActivitiesScreen(),
       ),
       GoRoute(
         parentNavigatorKey: rootNavigatorKey,

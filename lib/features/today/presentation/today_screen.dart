@@ -35,7 +35,7 @@ class TodayScreen extends ConsumerWidget {
   /// Returns to the running timer's item.
   final VoidCallback onOpenFocus;
 
-  /// Picks a template or makes a new activity for what's added to a day.
+  /// Picks an activity from the list, or makes a new one, for the day.
   final ActivityChooser chooser;
 
   @override

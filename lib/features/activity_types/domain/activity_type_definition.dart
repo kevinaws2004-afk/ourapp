@@ -3,7 +3,7 @@ import 'activity_ids.dart';
 import 'field_config.dart';
 import 'field_type.dart';
 
-/// What the user defines in the builder (or a template provides). Input to
+/// What the user defines in the builder (or a built-in activity provides). Input to
 /// `CreateActivityType` / `UpdateActivityType`. Field order is list order.
 class ActivityTypeDefinition {
   const ActivityTypeDefinition({

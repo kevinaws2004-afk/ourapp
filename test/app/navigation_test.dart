@@ -71,10 +71,14 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.text('The reusable activities you plan and record.'),
+        find.text(
+          'Everything you can plan and record. Use any of them as it is, '
+          'change it, or make your own.',
+        ),
         findsOneWidget,
       );
-      expect(find.text('Reading'), findsOneWidget);
+      expect(find.text('Yours'), findsOneWidget);
+      expect(find.text('Reading'), findsOneWidget, reason: 'listed once');
     },
   );
 }

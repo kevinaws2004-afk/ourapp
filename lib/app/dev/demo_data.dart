@@ -13,7 +13,7 @@ import '../../features/activity_types/domain/activity_ids.dart';
 import '../../features/activity_types/domain/activity_type.dart';
 import '../../features/activity_types/domain/activity_type_use_cases.dart';
 import '../../features/activity_types/domain/field_config.dart';
-import '../../features/activity_types/presentation/everyday_templates.dart';
+import '../../features/activity_types/presentation/built_in_activities.dart';
 import '../../features/activity_types/presentation/activity_type_providers.dart';
 import '../../features/insights/domain/insight.dart';
 import '../../features/insights/presentation/insight_providers.dart';
@@ -45,10 +45,10 @@ Future<DemoDataResult> loadDemoData(
     return DemoDataResult.alreadyLoaded;
   }
   final demoNames = [
-    l10n.templateReading,
-    l10n.templateFocusedWork,
-    l10n.templateWalking,
-    l10n.templateGym,
+    l10n.builtInReading,
+    l10n.builtInFocusedWork,
+    l10n.builtInWalking,
+    l10n.builtInGym,
   ];
   final existing = await types.getActiveTypes();
   if (existing.any((t) => demoNames.any((n) => sameActivityName(t.name, n)))) {
@@ -56,7 +56,7 @@ Future<DemoDataResult> loadDemoData(
   }
 
   final clock = container.read(clockProvider);
-  final install = container.read(installActivityTemplateProvider);
+  final install = container.read(addBuiltInActivityProvider);
   final logActivity = container.read(logActivityProvider);
   final createPlan = container.read(createPlanProvider);
   final setPlanStatus = container.read(setPlanStatusProvider);
@@ -64,13 +64,13 @@ Future<DemoDataResult> loadDemoData(
   final saveChart = container.read(saveInsightChartProvider);
   final random = Random(42);
 
-  final templates = {for (final t in activityTemplates(l10n)) t.name: t};
+  final builtIns = {for (final t in builtInActivities(l10n)) t.name: t};
   Future<ActivityType> installNamed(String name) async =>
-      (await types.getType(await install(templates[name]!)))!;
-  final reading = await installNamed(l10n.templateReading);
-  final work = await installNamed(l10n.templateFocusedWork);
-  final walking = await installNamed(l10n.templateWalking);
-  final gym = await installNamed(l10n.templateGym);
+      (await types.getType(await install(builtIns[name]!)))!;
+  final reading = await installNamed(l10n.builtInReading);
+  final work = await installNamed(l10n.builtInFocusedWork);
+  final walking = await installNamed(l10n.builtInWalking);
+  final gym = await installNamed(l10n.builtInGym);
 
   final now = clock.nowUtc();
   final today = LocalDate.ofInstant(now, clock.offsetAt(now));
@@ -81,7 +81,7 @@ Future<DemoDataResult> loadDemoData(
       _localToUtc(clock, date, hour, minute);
   int minutes(int m) => Duration(minutes: m).inMilliseconds;
 
-  // Field IDs by position (templates are plain data; never match by name).
+  // Field IDs by position (built-in activities are plain data; never match by name).
   final [readingBook, readingPages, readingRating] = _children(reading);
   final [workProject] = _children(work);
   final [walkDistance, walkSteps, _, walkLocation] = _children(walking);
@@ -352,7 +352,7 @@ Future<DemoDataResult> loadDemoData(
 const _marker = 'Gym volume';
 
 /// Live fields under [parent] (top level when null), in form order.
-/// The [index]th option of a select field (templates are plain data; never
+/// The [index]th option of a select field (built-in activities are plain data; never
 /// match by label).
 SelectOptionId _option(ActivityType type, ActivityFieldId field, int index) =>
     (type.fieldById(field)!.config as SelectFieldConfig).options[index].id;

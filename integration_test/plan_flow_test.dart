@@ -55,17 +55,21 @@ void main() {
     await tapTab('Me');
     await tester.tap(find.text('Activities'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Start from a template'));
+    // One list of activities: search it, then tap the built-in one (ADR-042).
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Search activities'),
+      'Reading',
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text('Reading'));
     await tester.pumpAndSettle();
-    // The gallery previews a template; Add installs it (B8).
+    // Its preview shows the form; Use saves it as one of yours (B8).
     await tester.scrollUntilVisible(
-      find.text('Add Reading'),
+      find.text('Use Reading'),
       200,
       scrollable: find.byType(Scrollable).last,
     );
-    await tester.tap(find.text('Add Reading'));
+    await tester.tap(find.text('Use Reading'));
     await tester.pumpAndSettle();
 
     await tapTab('Plan');

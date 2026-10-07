@@ -91,21 +91,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newActivity => 'New activity';
 
   @override
-  String get fromTemplate => 'Start from a template';
-
-  @override
-  String activityFieldCount(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count fields',
-      one: '1 field',
-      zero: 'No extra fields',
-    );
-    return '$_temp0';
-  }
-
-  @override
   String activityArchived(String name) {
     return '$name deleted';
   }
@@ -340,78 +325,77 @@ class AppLocalizationsEn extends AppLocalizations {
   String get booleanNo => 'No';
 
   @override
-  String get templatesTitle => 'Start from a template';
+  String get activitiesBrowseTitle => 'Choose an activity';
 
   @override
-  String get templatesSubtitle =>
-      'Templates are just a starting point. You can change everything afterwards.';
+  String get activitiesBrowseSubtitle =>
+      'Use any of these as it is, change it later, or make your own.';
 
   @override
-  String get templatesSearchHint => 'Search templates';
+  String get activitiesSearchHint => 'Search activities';
 
   @override
-  String get templatesNoMatch =>
-      'No template matches. Go back and make your own instead.';
+  String get activitiesNoMatch => 'No activity matches. Make your own instead.';
 
   @override
-  String get templateReading => 'Reading';
+  String get builtInReading => 'Reading';
 
   @override
-  String get templateReadingBook => 'Book';
+  String get builtInReadingBook => 'Book';
 
   @override
-  String get templateReadingPages => 'Pages';
+  String get builtInReadingPages => 'Pages';
 
   @override
-  String get templateReadingRating => 'Rating';
+  String get builtInReadingRating => 'Rating';
 
   @override
-  String get templateFocusedWork => 'Focused work';
+  String get builtInFocusedWork => 'Focused work';
 
   @override
-  String get templateFocusedWorkProject => 'Project';
+  String get builtInFocusedWorkProject => 'Project';
 
   @override
-  String get templateWalking => 'Walking';
+  String get builtInWalking => 'Walking';
 
   @override
-  String get templateWalkingDistance => 'Distance';
+  String get builtInWalkingDistance => 'Distance';
 
   @override
-  String get templateWalkingSteps => 'Steps';
+  String get builtInWalkingSteps => 'Steps';
 
   @override
-  String get templateWalkingCalories => 'Calories';
+  String get builtInWalkingCalories => 'Calories';
 
   @override
-  String get templateWalkingLocation => 'Location';
+  String get builtInWalkingLocation => 'Location';
 
   @override
-  String get templateLanguage => 'Language learning';
+  String get builtInLanguage => 'Language learning';
 
   @override
-  String get templateLanguageLanguage => 'Language';
+  String get builtInLanguageLanguage => 'Language';
 
   @override
-  String get templateLanguageWords => 'Words learned';
+  String get builtInLanguageWords => 'Words learned';
 
   @override
-  String get templateLanguageLesson => 'Lesson';
+  String get builtInLanguageLesson => 'Lesson';
 
   @override
-  String get templateLanguageDifficulty => 'Difficulty';
+  String get builtInLanguageDifficulty => 'Difficulty';
 
   @override
-  String get templateLanguageSpanish => 'Spanish';
+  String get builtInLanguageSpanish => 'Spanish';
 
   @override
-  String get templateLanguageFrench => 'French';
+  String get builtInLanguageFrench => 'French';
 
   @override
-  String get templateLanguageGerman => 'German';
+  String get builtInLanguageGerman => 'German';
 
   @override
-  String get templateLanguageJapanese => 'Japanese';
+  String get builtInLanguageJapanese => 'Japanese';
 
   @override
   String get errorGeneric => 'Something went wrong. Please try again.';
@@ -543,14 +527,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get activitiesSubtitle =>
-      'The reusable activities you plan and record.';
-
-  @override
-  String get activitiesEmptyTitle => 'No activities yet';
-
-  @override
-  String get activitiesEmptyMessage =>
-      'Build an activity that records exactly what matters to you, or start from a template.';
+      'Everything you can plan and record. Use any of them as it is, change it, or make your own.';
 
   @override
   String get meActivitiesSubtitle => 'Create and configure what you record';
@@ -632,79 +609,79 @@ class AppLocalizationsEn extends AppLocalizations {
       'Give each item a name, like “Set”.';
 
   @override
-  String get templateGym => 'Gym';
+  String get builtInGym => 'Gym';
 
   @override
-  String get templateGymExercises => 'Exercises';
+  String get builtInGymExercises => 'Exercises';
 
   @override
-  String get templateGymExerciseItem => 'Exercise';
+  String get builtInGymExerciseItem => 'Exercise';
 
   @override
-  String get templateGymExercise => 'Exercise';
+  String get builtInGymExercise => 'Exercise';
 
   @override
-  String get templateGymSets => 'Sets';
+  String get builtInGymSets => 'Sets';
 
   @override
-  String get templateGymSetItem => 'Set';
+  String get builtInGymSetItem => 'Set';
 
   @override
-  String get templateGymWeight => 'Weight';
+  String get builtInGymWeight => 'Weight';
 
   @override
-  String get templateGymReps => 'Reps';
+  String get builtInGymReps => 'Reps';
 
   @override
-  String get templateMeeting => 'Meeting';
+  String get builtInMeeting => 'Meeting';
 
   @override
-  String get templateMeetingPeople => 'People';
+  String get builtInMeetingPeople => 'People';
 
   @override
-  String get templateMeetingTopics => 'Topics';
+  String get builtInMeetingTopics => 'Topics';
 
   @override
-  String get templateMeetingDecisions => 'Decisions';
+  String get builtInMeetingDecisions => 'Decisions';
 
   @override
-  String get templateMeetingActionItems => 'Action items';
+  String get builtInMeetingActionItems => 'Action items';
 
   @override
-  String get templateMeetingActionItem => 'Action item';
+  String get builtInMeetingActionItem => 'Action item';
 
   @override
-  String get templateMeetingActionItemText => 'Item';
+  String get builtInMeetingActionItemText => 'Item';
 
   @override
-  String get templateMeetingActionItemDone => 'Done';
+  String get builtInMeetingActionItemDone => 'Done';
 
   @override
-  String get templateCooking => 'Cooking';
+  String get builtInCooking => 'Cooking';
 
   @override
-  String get templateCookingRecipe => 'Recipe';
+  String get builtInCookingRecipe => 'Recipe';
 
   @override
-  String get templateCookingServings => 'Servings';
+  String get builtInCookingServings => 'Servings';
 
   @override
-  String get templateCookingCalories => 'Calories';
+  String get builtInCookingCalories => 'Calories';
 
   @override
-  String get templateCookingRating => 'Rating';
+  String get builtInCookingRating => 'Rating';
 
   @override
-  String get templateCookingIngredients => 'Ingredients';
+  String get builtInCookingIngredients => 'Ingredients';
 
   @override
-  String get templateCookingIngredientItem => 'Ingredient';
+  String get builtInCookingIngredientItem => 'Ingredient';
 
   @override
-  String get templateCookingIngredient => 'Ingredient';
+  String get builtInCookingIngredient => 'Ingredient';
 
   @override
-  String get templateCookingHaveIt => 'Have it';
+  String get builtInCookingHaveIt => 'Have it';
 
   @override
   String get planActivityLabel => 'Activity';
@@ -722,7 +699,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planQuickAddHint => 'Add an activity to this day';
 
   @override
-  String get planBrowseTemplates => 'Templates';
+  String get planBrowseActivities => 'Browse activities';
 
   @override
   String get planMakeOwn => 'Make your own';
@@ -866,28 +843,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planPickEnd => 'To (optional)';
 
   @override
-  String get templateGymFocus => 'Workout';
+  String get builtInGymFocus => 'Workout';
 
   @override
-  String get templateGymPush => 'Push';
+  String get builtInGymPush => 'Push';
 
   @override
-  String get templateGymPull => 'Pull';
+  String get builtInGymPull => 'Pull';
 
   @override
-  String get templateGymLegs => 'Legs';
+  String get builtInGymLegs => 'Legs';
 
   @override
-  String get templateGymUpperBody => 'Upper body';
+  String get builtInGymUpperBody => 'Upper body';
 
   @override
-  String get templateGymLowerBody => 'Lower body';
+  String get builtInGymLowerBody => 'Lower body';
 
   @override
-  String get templateGymFullBody => 'Full body';
+  String get builtInGymFullBody => 'Full body';
 
   @override
-  String get templateGymCardio => 'Cardio';
+  String get builtInGymCardio => 'Cardio';
 
   @override
   String get focusStart => 'Start focus';
@@ -1401,14 +1378,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planRecent => 'Recent';
 
   @override
-  String get planSuggestionYours => 'Your activity';
-
-  @override
-  String planSuggestionReadyMade(String fields) {
-    return 'Ready-made · $fields';
-  }
-
-  @override
   String get planTimeSheetTitle => 'When?';
 
   @override
@@ -1774,2674 +1743,2673 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planQuickActionsHint => 'show quick actions';
 
   @override
-  String get templateRunning => 'Running';
+  String get builtInRunning => 'Running';
 
   @override
-  String get templateRunningDistance => 'Distance';
+  String get builtInRunningDistance => 'Distance';
 
   @override
-  String get templateRunningRoute => 'Route';
+  String get builtInRunningRoute => 'Route';
 
   @override
-  String get templateRunningFelt => 'How it felt';
+  String get builtInRunningFelt => 'How it felt';
 
   @override
-  String get templateStudy => 'Study';
+  String get builtInStudy => 'Study';
 
   @override
-  String get templateStudySubject => 'Subject';
+  String get builtInStudySubject => 'Subject';
 
   @override
-  String get templateStudyCovered => 'What I covered';
+  String get builtInStudyCovered => 'What I covered';
 
   @override
-  String get templateStudyFocus => 'Focus';
+  String get builtInStudyFocus => 'Focus';
 
   @override
-  String get templateMeditation => 'Meditation';
+  String get builtInMeditation => 'Meditation';
 
   @override
-  String get templateMeditationKind => 'Kind';
+  String get builtInMeditationKind => 'Kind';
 
   @override
-  String get templateMeditationBreathing => 'Breathing';
+  String get builtInMeditationBreathing => 'Breathing';
 
   @override
-  String get templateMeditationBodyScan => 'Body scan';
+  String get builtInMeditationBodyScan => 'Body scan';
 
   @override
-  String get templateMeditationGuided => 'Guided';
+  String get builtInMeditationGuided => 'Guided';
 
   @override
-  String get templateMeditationSilent => 'Silent';
+  String get builtInMeditationSilent => 'Silent';
 
   @override
-  String get templateMeditationCalm => 'Calm afterwards';
+  String get builtInMeditationCalm => 'Calm afterwards';
 
   @override
-  String get templateWater => 'Water';
+  String get builtInWater => 'Water';
 
   @override
-  String get templateWaterGlasses => 'Glasses';
+  String get builtInWaterGlasses => 'Glasses';
 
   @override
-  String get templateSleep => 'Sleep';
+  String get builtInSleep => 'Sleep';
 
   @override
-  String get templateSleepQuality => 'Quality';
+  String get builtInSleepQuality => 'Quality';
 
   @override
-  String get templateSleepWokeUp => 'Woke up in the night';
+  String get builtInSleepWokeUp => 'Woke up in the night';
 
   @override
-  String get templateMood => 'Mood';
+  String get builtInMood => 'Mood';
 
   @override
-  String get templateMoodRating => 'Mood';
+  String get builtInMoodRating => 'Mood';
 
   @override
-  String get templateMoodFeelings => 'Feelings';
+  String get builtInMoodFeelings => 'Feelings';
 
   @override
-  String get templateMoodCalm => 'Calm';
+  String get builtInMoodCalm => 'Calm';
 
   @override
-  String get templateMoodHappy => 'Happy';
+  String get builtInMoodHappy => 'Happy';
 
   @override
-  String get templateMoodEnergetic => 'Energetic';
+  String get builtInMoodEnergetic => 'Energetic';
 
   @override
-  String get templateMoodTired => 'Tired';
+  String get builtInMoodTired => 'Tired';
 
   @override
-  String get templateMoodStressed => 'Stressed';
+  String get builtInMoodStressed => 'Stressed';
 
   @override
-  String get templateMoodAnxious => 'Anxious';
+  String get builtInMoodAnxious => 'Anxious';
 
   @override
-  String templatePreviewAdd(String name) {
-    return 'Add $name';
+  String activityPreviewUse(String name) {
+    return 'Use $name';
   }
 
   @override
-  String get templatesYoullLog => 'What you\'ll log';
+  String get activityPreviewYoullLog => 'What you\'ll log';
 
   @override
-  String get templatesAlreadyAdded => 'Already in your activities';
+  String get builtInCategorySleepAndSelfCare => 'Sleep & self-care';
 
   @override
-  String get templateCategorySleepAndSelfCare => 'Sleep & self-care';
+  String get builtInNap => 'Nap';
 
   @override
-  String get templateNap => 'Nap';
+  String get builtInNapFeltAfter => 'Felt after';
 
   @override
-  String get templateNapFeltAfter => 'Felt after';
+  String get builtInMorningRoutine => 'Morning routine';
 
   @override
-  String get templateMorningRoutine => 'Morning routine';
+  String get builtInMorningRoutineWokeUpAt => 'Woke up at';
 
   @override
-  String get templateMorningRoutineWokeUpAt => 'Woke up at';
+  String get builtInMorningRoutineSteps => 'Steps';
 
   @override
-  String get templateMorningRoutineSteps => 'Steps';
+  String get builtInMorningRoutineStepsItem => 'Step';
 
   @override
-  String get templateMorningRoutineStepsItem => 'Step';
+  String get builtInMorningRoutineStepsStep => 'Step';
 
   @override
-  String get templateMorningRoutineStepsStep => 'Step';
+  String get builtInMorningRoutineStepsDone => 'Done';
 
   @override
-  String get templateMorningRoutineStepsDone => 'Done';
+  String get builtInMorningRoutineEnergy => 'Energy';
 
   @override
-  String get templateMorningRoutineEnergy => 'Energy';
+  String get builtInEveningRoutine => 'Evening routine';
 
   @override
-  String get templateEveningRoutine => 'Evening routine';
+  String get builtInEveningRoutineLightsOutAt => 'Lights out at';
 
   @override
-  String get templateEveningRoutineLightsOutAt => 'Lights out at';
+  String get builtInEveningRoutineSteps => 'Steps';
 
   @override
-  String get templateEveningRoutineSteps => 'Steps';
+  String get builtInEveningRoutineStepsItem => 'Step';
 
   @override
-  String get templateEveningRoutineStepsItem => 'Step';
+  String get builtInEveningRoutineStepsStep => 'Step';
 
   @override
-  String get templateEveningRoutineStepsStep => 'Step';
+  String get builtInEveningRoutineStepsDone => 'Done';
 
   @override
-  String get templateEveningRoutineStepsDone => 'Done';
-
-  @override
-  String get templateEveningRoutineScreensOffAnHourBefore =>
+  String get builtInEveningRoutineScreensOffAnHourBefore =>
       'Screens off an hour before';
 
   @override
-  String get templateShower => 'Shower';
+  String get builtInShower => 'Shower';
 
   @override
-  String get templateShowerKind => 'Kind';
+  String get builtInShowerKind => 'Kind';
 
   @override
-  String get templateShowerKindShower => 'Shower';
+  String get builtInShowerKindShower => 'Shower';
 
   @override
-  String get templateShowerKindBath => 'Bath';
+  String get builtInShowerKindBath => 'Bath';
 
   @override
-  String get templateShowerKindColdShower => 'Cold shower';
+  String get builtInShowerKindColdShower => 'Cold shower';
 
   @override
-  String get templateShowerFeltAfter => 'Felt after';
+  String get builtInShowerFeltAfter => 'Felt after';
 
   @override
-  String get templateSkincare => 'Skincare';
+  String get builtInSkincare => 'Skincare';
 
   @override
-  String get templateSkincareProducts => 'Products';
+  String get builtInSkincareProducts => 'Products';
 
   @override
-  String get templateSkincareProductsCleanser => 'Cleanser';
+  String get builtInSkincareProductsCleanser => 'Cleanser';
 
   @override
-  String get templateSkincareProductsToner => 'Toner';
+  String get builtInSkincareProductsToner => 'Toner';
 
   @override
-  String get templateSkincareProductsSerum => 'Serum';
+  String get builtInSkincareProductsSerum => 'Serum';
 
   @override
-  String get templateSkincareProductsMoisturizer => 'Moisturizer';
+  String get builtInSkincareProductsMoisturizer => 'Moisturizer';
 
   @override
-  String get templateSkincareProductsSunscreen => 'Sunscreen';
+  String get builtInSkincareProductsSunscreen => 'Sunscreen';
 
   @override
-  String get templateSkincareProductsMask => 'Mask';
+  String get builtInSkincareProductsMask => 'Mask';
 
   @override
-  String get templateSkincareSkinToday => 'Skin today';
+  String get builtInSkincareSkinToday => 'Skin today';
 
   @override
-  String get templateOralCare => 'Oral care';
+  String get builtInOralCare => 'Oral care';
 
   @override
-  String get templateOralCareBrushed => 'Brushed';
+  String get builtInOralCareBrushed => 'Brushed';
 
   @override
-  String get templateOralCareFlossed => 'Flossed';
+  String get builtInOralCareFlossed => 'Flossed';
 
   @override
-  String get templateOralCareMouthwash => 'Mouthwash';
+  String get builtInOralCareMouthwash => 'Mouthwash';
 
   @override
-  String get templateGrooming => 'Grooming';
+  String get builtInGrooming => 'Grooming';
 
   @override
-  String get templateGroomingWhat => 'What';
+  String get builtInGroomingWhat => 'What';
 
   @override
-  String get templateGroomingWhatHaircut => 'Haircut';
+  String get builtInGroomingWhatHaircut => 'Haircut';
 
   @override
-  String get templateGroomingWhatShave => 'Shave';
+  String get builtInGroomingWhatShave => 'Shave';
 
   @override
-  String get templateGroomingWhatBeardTrim => 'Beard trim';
+  String get builtInGroomingWhatBeardTrim => 'Beard trim';
 
   @override
-  String get templateGroomingWhatNails => 'Nails';
+  String get builtInGroomingWhatNails => 'Nails';
 
   @override
-  String get templateGroomingWhatHairWash => 'Hair wash';
+  String get builtInGroomingWhatHairWash => 'Hair wash';
 
   @override
-  String get templateGroomingCost => 'Cost';
+  String get builtInGroomingCost => 'Cost';
 
   @override
-  String get templateCategoryHealth => 'Health';
+  String get builtInCategoryHealth => 'Health';
 
   @override
-  String get templateMedication => 'Medication';
+  String get builtInMedication => 'Medication';
 
   @override
-  String get templateMedicationMedicine => 'Medicine';
+  String get builtInMedicationMedicine => 'Medicine';
 
   @override
-  String get templateMedicationDose => 'Dose';
+  String get builtInMedicationDose => 'Dose';
 
   @override
-  String get templateMedicationTaken => 'Taken';
+  String get builtInMedicationTaken => 'Taken';
 
   @override
-  String get templateMedicationSideEffects => 'Side effects';
+  String get builtInMedicationSideEffects => 'Side effects';
 
   @override
-  String get templateVitaminsAndSupplements => 'Vitamins & supplements';
+  String get builtInVitaminsAndSupplements => 'Vitamins & supplements';
 
   @override
-  String get templateVitaminsAndSupplementsSupplements => 'Supplements';
+  String get builtInVitaminsAndSupplementsSupplements => 'Supplements';
 
   @override
-  String get templateVitaminsAndSupplementsSupplementsItem => 'Supplement';
+  String get builtInVitaminsAndSupplementsSupplementsItem => 'Supplement';
 
   @override
-  String get templateVitaminsAndSupplementsSupplementsSupplement =>
-      'Supplement';
+  String get builtInVitaminsAndSupplementsSupplementsSupplement => 'Supplement';
 
   @override
-  String get templateVitaminsAndSupplementsSupplementsTaken => 'Taken';
+  String get builtInVitaminsAndSupplementsSupplementsTaken => 'Taken';
 
   @override
-  String get templateDoctorVisit => 'Doctor visit';
+  String get builtInDoctorVisit => 'Doctor visit';
 
   @override
-  String get templateDoctorVisitDoctorOrClinic => 'Doctor or clinic';
+  String get builtInDoctorVisitDoctorOrClinic => 'Doctor or clinic';
 
   @override
-  String get templateDoctorVisitReason => 'Reason';
+  String get builtInDoctorVisitReason => 'Reason';
 
   @override
-  String get templateDoctorVisitWhatTheySaid => 'What they said';
+  String get builtInDoctorVisitWhatTheySaid => 'What they said';
 
   @override
-  String get templateDoctorVisitNextVisit => 'Next visit';
+  String get builtInDoctorVisitNextVisit => 'Next visit';
 
   @override
-  String get templateSymptoms => 'Symptoms';
+  String get builtInSymptoms => 'Symptoms';
 
   @override
-  String get templateSymptomsSymptoms => 'Symptoms';
+  String get builtInSymptomsSymptoms => 'Symptoms';
 
   @override
-  String get templateSymptomsSymptomsHeadache => 'Headache';
+  String get builtInSymptomsSymptomsHeadache => 'Headache';
 
   @override
-  String get templateSymptomsSymptomsFever => 'Fever';
+  String get builtInSymptomsSymptomsFever => 'Fever';
 
   @override
-  String get templateSymptomsSymptomsCough => 'Cough';
+  String get builtInSymptomsSymptomsCough => 'Cough';
 
   @override
-  String get templateSymptomsSymptomsSoreThroat => 'Sore throat';
+  String get builtInSymptomsSymptomsSoreThroat => 'Sore throat';
 
   @override
-  String get templateSymptomsSymptomsFatigue => 'Fatigue';
+  String get builtInSymptomsSymptomsFatigue => 'Fatigue';
 
   @override
-  String get templateSymptomsSymptomsNausea => 'Nausea';
+  String get builtInSymptomsSymptomsNausea => 'Nausea';
 
   @override
-  String get templateSymptomsSymptomsPain => 'Pain';
+  String get builtInSymptomsSymptomsPain => 'Pain';
 
   @override
-  String get templateSymptomsSeverity => 'Severity';
+  String get builtInSymptomsSeverity => 'Severity';
 
   @override
-  String get templateSymptomsNotes => 'Notes';
+  String get builtInSymptomsNotes => 'Notes';
 
   @override
-  String get templateBloodPressure => 'Blood pressure';
+  String get builtInBloodPressure => 'Blood pressure';
 
   @override
-  String get templateBloodPressureSystolic => 'Systolic';
+  String get builtInBloodPressureSystolic => 'Systolic';
 
   @override
-  String get templateBloodPressureDiastolic => 'Diastolic';
+  String get builtInBloodPressureDiastolic => 'Diastolic';
 
   @override
-  String get templateBloodPressurePulse => 'Pulse';
+  String get builtInBloodPressurePulse => 'Pulse';
 
   @override
-  String get templateBloodSugar => 'Blood sugar';
+  String get builtInBloodSugar => 'Blood sugar';
 
   @override
-  String get templateBloodSugarReading => 'Reading';
+  String get builtInBloodSugarReading => 'Reading';
 
   @override
-  String get templateBloodSugarWhen => 'When';
+  String get builtInBloodSugarWhen => 'When';
 
   @override
-  String get templateBloodSugarWhenFasting => 'Fasting';
+  String get builtInBloodSugarWhenFasting => 'Fasting';
 
   @override
-  String get templateBloodSugarWhenBeforeAMeal => 'Before a meal';
+  String get builtInBloodSugarWhenBeforeAMeal => 'Before a meal';
 
   @override
-  String get templateBloodSugarWhenAfterAMeal => 'After a meal';
+  String get builtInBloodSugarWhenAfterAMeal => 'After a meal';
 
   @override
-  String get templateBloodSugarWhenBedtime => 'Bedtime';
+  String get builtInBloodSugarWhenBedtime => 'Bedtime';
 
   @override
-  String get templateBodyTemperature => 'Body temperature';
+  String get builtInBodyTemperature => 'Body temperature';
 
   @override
-  String get templateBodyTemperatureTemperature => 'Temperature';
+  String get builtInBodyTemperatureTemperature => 'Temperature';
 
   @override
-  String get templatePeriod => 'Period';
+  String get builtInPeriod => 'Period';
 
   @override
-  String get templatePeriodFlow => 'Flow';
+  String get builtInPeriodFlow => 'Flow';
 
   @override
-  String get templatePeriodFlowSpotting => 'Spotting';
+  String get builtInPeriodFlowSpotting => 'Spotting';
 
   @override
-  String get templatePeriodFlowLight => 'Light';
+  String get builtInPeriodFlowLight => 'Light';
 
   @override
-  String get templatePeriodFlowMedium => 'Medium';
+  String get builtInPeriodFlowMedium => 'Medium';
 
   @override
-  String get templatePeriodFlowHeavy => 'Heavy';
+  String get builtInPeriodFlowHeavy => 'Heavy';
 
   @override
-  String get templatePeriodSymptoms => 'Symptoms';
+  String get builtInPeriodSymptoms => 'Symptoms';
 
   @override
-  String get templatePeriodSymptomsCramps => 'Cramps';
+  String get builtInPeriodSymptomsCramps => 'Cramps';
 
   @override
-  String get templatePeriodSymptomsBloating => 'Bloating';
+  String get builtInPeriodSymptomsBloating => 'Bloating';
 
   @override
-  String get templatePeriodSymptomsHeadache => 'Headache';
+  String get builtInPeriodSymptomsHeadache => 'Headache';
 
   @override
-  String get templatePeriodSymptomsMoodSwings => 'Mood swings';
+  String get builtInPeriodSymptomsMoodSwings => 'Mood swings';
 
   @override
-  String get templatePeriodSymptomsFatigue => 'Fatigue';
+  String get builtInPeriodSymptomsFatigue => 'Fatigue';
 
   @override
-  String get templatePeriodSymptomsCravings => 'Cravings';
+  String get builtInPeriodSymptomsCravings => 'Cravings';
 
   @override
-  String get templatePeriodNotes => 'Notes';
+  String get builtInPeriodNotes => 'Notes';
 
   @override
-  String get templatePhysiotherapy => 'Physiotherapy';
+  String get builtInPhysiotherapy => 'Physiotherapy';
 
   @override
-  String get templatePhysiotherapyExercises => 'Exercises';
+  String get builtInPhysiotherapyExercises => 'Exercises';
 
   @override
-  String get templatePhysiotherapyExercisesItem => 'Exercise';
+  String get builtInPhysiotherapyExercisesItem => 'Exercise';
 
   @override
-  String get templatePhysiotherapyExercisesExercise => 'Exercise';
+  String get builtInPhysiotherapyExercisesExercise => 'Exercise';
 
   @override
-  String get templatePhysiotherapyExercisesDone => 'Done';
+  String get builtInPhysiotherapyExercisesDone => 'Done';
 
   @override
-  String get templatePhysiotherapyPainLevel => 'Pain level';
+  String get builtInPhysiotherapyPainLevel => 'Pain level';
 
   @override
-  String get templateCategoryFoodAndDrink => 'Food & drink';
+  String get builtInCategoryFoodAndDrink => 'Food & drink';
 
   @override
-  String get templateMeal => 'Meal';
+  String get builtInMeal => 'Meal';
 
   @override
-  String get templateMealMeal => 'Meal';
+  String get builtInMealMeal => 'Meal';
 
   @override
-  String get templateMealMealBreakfast => 'Breakfast';
+  String get builtInMealMealBreakfast => 'Breakfast';
 
   @override
-  String get templateMealMealLunch => 'Lunch';
+  String get builtInMealMealLunch => 'Lunch';
 
   @override
-  String get templateMealMealDinner => 'Dinner';
+  String get builtInMealMealDinner => 'Dinner';
 
   @override
-  String get templateMealMealSnack => 'Snack';
+  String get builtInMealMealSnack => 'Snack';
 
   @override
-  String get templateMealWhatIAte => 'What I ate';
+  String get builtInMealWhatIAte => 'What I ate';
 
   @override
-  String get templateMealCalories => 'Calories';
+  String get builtInMealCalories => 'Calories';
 
   @override
-  String get templateMealHowHealthy => 'How healthy';
+  String get builtInMealHowHealthy => 'How healthy';
 
   @override
-  String get templateMealAteOut => 'Ate out';
+  String get builtInMealAteOut => 'Ate out';
 
   @override
-  String get templateCoffeeAndTea => 'Coffee & tea';
+  String get builtInCoffeeAndTea => 'Coffee & tea';
 
   @override
-  String get templateCoffeeAndTeaDrink => 'Drink';
+  String get builtInCoffeeAndTeaDrink => 'Drink';
 
   @override
-  String get templateCoffeeAndTeaDrinkCoffee => 'Coffee';
+  String get builtInCoffeeAndTeaDrinkCoffee => 'Coffee';
 
   @override
-  String get templateCoffeeAndTeaDrinkEspresso => 'Espresso';
+  String get builtInCoffeeAndTeaDrinkEspresso => 'Espresso';
 
   @override
-  String get templateCoffeeAndTeaDrinkTea => 'Tea';
+  String get builtInCoffeeAndTeaDrinkTea => 'Tea';
 
   @override
-  String get templateCoffeeAndTeaDrinkGreenTea => 'Green tea';
+  String get builtInCoffeeAndTeaDrinkGreenTea => 'Green tea';
 
   @override
-  String get templateCoffeeAndTeaDrinkHerbalTea => 'Herbal tea';
+  String get builtInCoffeeAndTeaDrinkHerbalTea => 'Herbal tea';
 
   @override
-  String get templateCoffeeAndTeaCups => 'Cups';
+  String get builtInCoffeeAndTeaCups => 'Cups';
 
   @override
-  String get templateFasting => 'Fasting';
+  String get builtInFasting => 'Fasting';
 
   @override
-  String get templateFastingPlan => 'Plan';
+  String get builtInFastingPlan => 'Plan';
 
   @override
-  String get templateFastingPlan1212 => '12:12';
+  String get builtInFastingPlan1212 => '12:12';
 
   @override
-  String get templateFastingPlan168 => '16:8';
+  String get builtInFastingPlan168 => '16:8';
 
   @override
-  String get templateFastingPlan186 => '18:6';
+  String get builtInFastingPlan186 => '18:6';
 
   @override
-  String get templateFastingPlan204 => '20:4';
+  String get builtInFastingPlan204 => '20:4';
 
   @override
-  String get templateFastingPlan24Hours => '24 hours';
+  String get builtInFastingPlan24Hours => '24 hours';
 
   @override
-  String get templateFastingBrokeTheFastAt => 'Broke the fast at';
+  String get builtInFastingBrokeTheFastAt => 'Broke the fast at';
 
   @override
-  String get templateFastingHowItFelt => 'How it felt';
+  String get builtInFastingHowItFelt => 'How it felt';
 
   @override
-  String get templateAlcohol => 'Alcohol';
+  String get builtInAlcohol => 'Alcohol';
 
   @override
-  String get templateAlcoholDrinks => 'Drinks';
+  String get builtInAlcoholDrinks => 'Drinks';
 
   @override
-  String get templateAlcoholKind => 'Kind';
+  String get builtInAlcoholKind => 'Kind';
 
   @override
-  String get templateAlcoholKindBeer => 'Beer';
+  String get builtInAlcoholKindBeer => 'Beer';
 
   @override
-  String get templateAlcoholKindWine => 'Wine';
+  String get builtInAlcoholKindWine => 'Wine';
 
   @override
-  String get templateAlcoholKindSpirits => 'Spirits';
+  String get builtInAlcoholKindSpirits => 'Spirits';
 
   @override
-  String get templateAlcoholKindCocktail => 'Cocktail';
+  String get builtInAlcoholKindCocktail => 'Cocktail';
 
   @override
-  String get templateAlcoholKindCider => 'Cider';
+  String get builtInAlcoholKindCider => 'Cider';
 
   @override
-  String get templateMealPrep => 'Meal prep';
+  String get builtInMealPrep => 'Meal prep';
 
   @override
-  String get templateMealPrepDishes => 'Dishes';
+  String get builtInMealPrepDishes => 'Dishes';
 
   @override
-  String get templateMealPrepDishesItem => 'Dish';
+  String get builtInMealPrepDishesItem => 'Dish';
 
   @override
-  String get templateMealPrepDishesDish => 'Dish';
+  String get builtInMealPrepDishesDish => 'Dish';
 
   @override
-  String get templateMealPrepDishesPortions => 'Portions';
+  String get builtInMealPrepDishesPortions => 'Portions';
 
   @override
-  String get templateCategoryHomeAndChores => 'Home & chores';
+  String get builtInCategoryHomeAndChores => 'Home & chores';
 
   @override
-  String get templateCleaning => 'Cleaning';
+  String get builtInCleaning => 'Cleaning';
 
   @override
-  String get templateCleaningRooms => 'Rooms';
+  String get builtInCleaningRooms => 'Rooms';
 
   @override
-  String get templateCleaningRoomsKitchen => 'Kitchen';
+  String get builtInCleaningRoomsKitchen => 'Kitchen';
 
   @override
-  String get templateCleaningRoomsBathroom => 'Bathroom';
+  String get builtInCleaningRoomsBathroom => 'Bathroom';
 
   @override
-  String get templateCleaningRoomsBedroom => 'Bedroom';
+  String get builtInCleaningRoomsBedroom => 'Bedroom';
 
   @override
-  String get templateCleaningRoomsLivingRoom => 'Living room';
+  String get builtInCleaningRoomsLivingRoom => 'Living room';
 
   @override
-  String get templateCleaningRoomsWholeHome => 'Whole home';
+  String get builtInCleaningRoomsWholeHome => 'Whole home';
 
   @override
-  String get templateCleaningTasks => 'Tasks';
+  String get builtInCleaningTasks => 'Tasks';
 
   @override
-  String get templateCleaningTasksItem => 'Task';
+  String get builtInCleaningTasksItem => 'Task';
 
   @override
-  String get templateCleaningTasksTask => 'Task';
+  String get builtInCleaningTasksTask => 'Task';
 
   @override
-  String get templateCleaningTasksDone => 'Done';
+  String get builtInCleaningTasksDone => 'Done';
 
   @override
-  String get templateLaundry => 'Laundry';
+  String get builtInLaundry => 'Laundry';
 
   @override
-  String get templateLaundryLoads => 'Loads';
+  String get builtInLaundryLoads => 'Loads';
 
   @override
-  String get templateLaundrySteps => 'Steps';
+  String get builtInLaundrySteps => 'Steps';
 
   @override
-  String get templateLaundryStepsWashed => 'Washed';
+  String get builtInLaundryStepsWashed => 'Washed';
 
   @override
-  String get templateLaundryStepsDried => 'Dried';
+  String get builtInLaundryStepsDried => 'Dried';
 
   @override
-  String get templateLaundryStepsFolded => 'Folded';
+  String get builtInLaundryStepsFolded => 'Folded';
 
   @override
-  String get templateLaundryStepsIroned => 'Ironed';
+  String get builtInLaundryStepsIroned => 'Ironed';
 
   @override
-  String get templateLaundryStepsPutAway => 'Put away';
+  String get builtInLaundryStepsPutAway => 'Put away';
 
   @override
-  String get templateDishes => 'Dishes';
+  String get builtInDishes => 'Dishes';
 
   @override
-  String get templateDishesHow => 'How';
+  String get builtInDishesHow => 'How';
 
   @override
-  String get templateDishesHowByHand => 'By hand';
+  String get builtInDishesHowByHand => 'By hand';
 
   @override
-  String get templateDishesHowDishwasher => 'Dishwasher';
+  String get builtInDishesHowDishwasher => 'Dishwasher';
 
   @override
-  String get templateDishesKitchenWiped => 'Kitchen wiped';
+  String get builtInDishesKitchenWiped => 'Kitchen wiped';
 
   @override
-  String get templateGroceries => 'Groceries';
+  String get builtInGroceries => 'Groceries';
 
   @override
-  String get templateGroceriesStore => 'Store';
+  String get builtInGroceriesStore => 'Store';
 
   @override
-  String get templateGroceriesShoppingList => 'Shopping list';
+  String get builtInGroceriesShoppingList => 'Shopping list';
 
   @override
-  String get templateGroceriesShoppingListItem => 'Item';
+  String get builtInGroceriesShoppingListItem => 'Item';
 
   @override
-  String get templateGroceriesShoppingListGotIt => 'Got it';
+  String get builtInGroceriesShoppingListGotIt => 'Got it';
 
   @override
-  String get templateGroceriesSpent => 'Spent';
+  String get builtInGroceriesSpent => 'Spent';
 
   @override
-  String get templateGardening => 'Gardening';
+  String get builtInGardening => 'Gardening';
 
   @override
-  String get templateGardeningTasks => 'Tasks';
+  String get builtInGardeningTasks => 'Tasks';
 
   @override
-  String get templateGardeningTasksWatering => 'Watering';
+  String get builtInGardeningTasksWatering => 'Watering';
 
   @override
-  String get templateGardeningTasksPlanting => 'Planting';
+  String get builtInGardeningTasksPlanting => 'Planting';
 
   @override
-  String get templateGardeningTasksWeeding => 'Weeding';
+  String get builtInGardeningTasksWeeding => 'Weeding';
 
   @override
-  String get templateGardeningTasksPruning => 'Pruning';
+  String get builtInGardeningTasksPruning => 'Pruning';
 
   @override
-  String get templateGardeningTasksMowing => 'Mowing';
+  String get builtInGardeningTasksMowing => 'Mowing';
 
   @override
-  String get templateGardeningTasksHarvesting => 'Harvesting';
+  String get builtInGardeningTasksHarvesting => 'Harvesting';
 
   @override
-  String get templateGardeningPlants => 'Plants';
+  String get builtInGardeningPlants => 'Plants';
 
   @override
-  String get templatePlantCare => 'Plant care';
+  String get builtInPlantCare => 'Plant care';
 
   @override
-  String get templatePlantCarePlants => 'Plants';
+  String get builtInPlantCarePlants => 'Plants';
 
   @override
-  String get templatePlantCarePlantsItem => 'Plant';
+  String get builtInPlantCarePlantsItem => 'Plant';
 
   @override
-  String get templatePlantCarePlantsPlant => 'Plant';
+  String get builtInPlantCarePlantsPlant => 'Plant';
 
   @override
-  String get templatePlantCarePlantsWatered => 'Watered';
+  String get builtInPlantCarePlantsWatered => 'Watered';
 
   @override
-  String get templatePlantCarePlantsFed => 'Fed';
+  String get builtInPlantCarePlantsFed => 'Fed';
 
   @override
-  String get templateHomeRepair => 'Home repair';
+  String get builtInHomeRepair => 'Home repair';
 
   @override
-  String get templateHomeRepairProject => 'Project';
+  String get builtInHomeRepairProject => 'Project';
 
   @override
-  String get templateHomeRepairWhatWasDone => 'What was done';
+  String get builtInHomeRepairWhatWasDone => 'What was done';
 
   @override
-  String get templateHomeRepairCost => 'Cost';
+  String get builtInHomeRepairCost => 'Cost';
 
   @override
-  String get templateDeclutter => 'Declutter';
+  String get builtInDeclutter => 'Declutter';
 
   @override
-  String get templateDeclutterArea => 'Area';
+  String get builtInDeclutterArea => 'Area';
 
   @override
-  String get templateDeclutterItemsRemoved => 'Items removed';
+  String get builtInDeclutterItemsRemoved => 'Items removed';
 
   @override
-  String get templateDeclutterWhereTheyWent => 'Where they went';
+  String get builtInDeclutterWhereTheyWent => 'Where they went';
 
   @override
-  String get templateDeclutterWhereTheyWentDonated => 'Donated';
+  String get builtInDeclutterWhereTheyWentDonated => 'Donated';
 
   @override
-  String get templateDeclutterWhereTheyWentSold => 'Sold';
+  String get builtInDeclutterWhereTheyWentSold => 'Sold';
 
   @override
-  String get templateDeclutterWhereTheyWentRecycled => 'Recycled';
+  String get builtInDeclutterWhereTheyWentRecycled => 'Recycled';
 
   @override
-  String get templateDeclutterWhereTheyWentThrownAway => 'Thrown away';
+  String get builtInDeclutterWhereTheyWentThrownAway => 'Thrown away';
 
   @override
-  String get templateBills => 'Bills';
+  String get builtInBills => 'Bills';
 
   @override
-  String get templateBillsBills => 'Bills';
+  String get builtInBillsBills => 'Bills';
 
   @override
-  String get templateBillsBillsItem => 'Bill';
+  String get builtInBillsBillsItem => 'Bill';
 
   @override
-  String get templateBillsBillsBill => 'Bill';
+  String get builtInBillsBillsBill => 'Bill';
 
   @override
-  String get templateBillsBillsAmount => 'Amount';
+  String get builtInBillsBillsAmount => 'Amount';
 
   @override
-  String get templateBillsBillsPaid => 'Paid';
+  String get builtInBillsBillsPaid => 'Paid';
 
   @override
-  String get templateExpense => 'Expense';
+  String get builtInExpense => 'Expense';
 
   @override
-  String get templateExpenseAmount => 'Amount';
+  String get builtInExpenseAmount => 'Amount';
 
   @override
-  String get templateExpenseCategory => 'Category';
+  String get builtInExpenseCategory => 'Category';
 
   @override
-  String get templateExpenseCategoryFood => 'Food';
+  String get builtInExpenseCategoryFood => 'Food';
 
   @override
-  String get templateExpenseCategoryTransport => 'Transport';
+  String get builtInExpenseCategoryTransport => 'Transport';
 
   @override
-  String get templateExpenseCategoryHome => 'Home';
+  String get builtInExpenseCategoryHome => 'Home';
 
   @override
-  String get templateExpenseCategoryHealth => 'Health';
+  String get builtInExpenseCategoryHealth => 'Health';
 
   @override
-  String get templateExpenseCategoryFun => 'Fun';
+  String get builtInExpenseCategoryFun => 'Fun';
 
   @override
-  String get templateExpenseCategoryShopping => 'Shopping';
+  String get builtInExpenseCategoryShopping => 'Shopping';
 
   @override
-  String get templateExpenseCategoryBills => 'Bills';
+  String get builtInExpenseCategoryBills => 'Bills';
 
   @override
-  String get templateExpenseCategoryOther => 'Other';
+  String get builtInExpenseCategoryOther => 'Other';
 
   @override
-  String get templateExpenseWhatFor => 'What for';
+  String get builtInExpenseWhatFor => 'What for';
 
   @override
-  String get templateBudgetReview => 'Budget review';
+  String get builtInBudgetReview => 'Budget review';
 
   @override
-  String get templateBudgetReviewSpentThisWeek => 'Spent this week';
+  String get builtInBudgetReviewSpentThisWeek => 'Spent this week';
 
   @override
-  String get templateBudgetReviewSaved => 'Saved';
+  String get builtInBudgetReviewSaved => 'Saved';
 
   @override
-  String get templateBudgetReviewOnTrack => 'On track';
+  String get builtInBudgetReviewOnTrack => 'On track';
 
   @override
-  String get templateCategoryFamilyAndCare => 'Family & care';
+  String get builtInCategoryFamilyAndCare => 'Family & care';
 
   @override
-  String get templateChildcare => 'Childcare';
+  String get builtInChildcare => 'Childcare';
 
   @override
-  String get templateChildcareChild => 'Child';
+  String get builtInChildcareChild => 'Child';
 
   @override
-  String get templateChildcareWhatWeDid => 'What we did';
+  String get builtInChildcareWhatWeDid => 'What we did';
 
   @override
-  String get templateChildcareWhatWeDidMeals => 'Meals';
+  String get builtInChildcareWhatWeDidMeals => 'Meals';
 
   @override
-  String get templateChildcareWhatWeDidSchoolRun => 'School run';
+  String get builtInChildcareWhatWeDidSchoolRun => 'School run';
 
   @override
-  String get templateChildcareWhatWeDidHomework => 'Homework';
+  String get builtInChildcareWhatWeDidHomework => 'Homework';
 
   @override
-  String get templateChildcareWhatWeDidPlaytime => 'Playtime';
+  String get builtInChildcareWhatWeDidPlaytime => 'Playtime';
 
   @override
-  String get templateChildcareWhatWeDidBath => 'Bath';
+  String get builtInChildcareWhatWeDidBath => 'Bath';
 
   @override
-  String get templateChildcareWhatWeDidBedtime => 'Bedtime';
+  String get builtInChildcareWhatWeDidBedtime => 'Bedtime';
 
   @override
-  String get templateChildcareNotes => 'Notes';
+  String get builtInChildcareNotes => 'Notes';
 
   @override
-  String get templateBabyFeeding => 'Baby feeding';
+  String get builtInBabyFeeding => 'Baby feeding';
 
   @override
-  String get templateBabyFeedingKind => 'Kind';
+  String get builtInBabyFeedingKind => 'Kind';
 
   @override
-  String get templateBabyFeedingKindBreastLeft => 'Breast (left)';
+  String get builtInBabyFeedingKindBreastLeft => 'Breast (left)';
 
   @override
-  String get templateBabyFeedingKindBreastRight => 'Breast (right)';
+  String get builtInBabyFeedingKindBreastRight => 'Breast (right)';
 
   @override
-  String get templateBabyFeedingKindBottle => 'Bottle';
+  String get builtInBabyFeedingKindBottle => 'Bottle';
 
   @override
-  String get templateBabyFeedingKindSolids => 'Solids';
+  String get builtInBabyFeedingKindSolids => 'Solids';
 
   @override
-  String get templateBabyFeedingAmount => 'Amount';
+  String get builtInBabyFeedingAmount => 'Amount';
 
   @override
-  String get templateBabyFeedingNotes => 'Notes';
+  String get builtInBabyFeedingNotes => 'Notes';
 
   @override
-  String get templateDiaperChange => 'Diaper change';
+  String get builtInDiaperChange => 'Diaper change';
 
   @override
-  String get templateDiaperChangeKind => 'Kind';
+  String get builtInDiaperChangeKind => 'Kind';
 
   @override
-  String get templateDiaperChangeKindWet => 'Wet';
+  String get builtInDiaperChangeKindWet => 'Wet';
 
   @override
-  String get templateDiaperChangeKindDirty => 'Dirty';
+  String get builtInDiaperChangeKindDirty => 'Dirty';
 
   @override
-  String get templateDiaperChangeKindBoth => 'Both';
+  String get builtInDiaperChangeKindBoth => 'Both';
 
   @override
-  String get templatePetCare => 'Pet care';
+  String get builtInPetCare => 'Pet care';
 
   @override
-  String get templatePetCarePet => 'Pet';
+  String get builtInPetCarePet => 'Pet';
 
   @override
-  String get templatePetCareCare => 'Care';
+  String get builtInPetCareCare => 'Care';
 
   @override
-  String get templatePetCareCareFed => 'Fed';
+  String get builtInPetCareCareFed => 'Fed';
 
   @override
-  String get templatePetCareCareWalked => 'Walked';
+  String get builtInPetCareCareWalked => 'Walked';
 
   @override
-  String get templatePetCareCareGroomed => 'Groomed';
+  String get builtInPetCareCareGroomed => 'Groomed';
 
   @override
-  String get templatePetCareCarePlayed => 'Played';
+  String get builtInPetCareCarePlayed => 'Played';
 
   @override
-  String get templatePetCareCareMedicine => 'Medicine';
+  String get builtInPetCareCareMedicine => 'Medicine';
 
   @override
-  String get templatePetCareCareVetVisit => 'Vet visit';
+  String get builtInPetCareCareVetVisit => 'Vet visit';
 
   @override
-  String get templatePetCareNotes => 'Notes';
+  String get builtInPetCareNotes => 'Notes';
 
   @override
-  String get templateDogWalk => 'Dog walk';
+  String get builtInDogWalk => 'Dog walk';
 
   @override
-  String get templateDogWalkDog => 'Dog';
+  String get builtInDogWalkDog => 'Dog';
 
   @override
-  String get templateDogWalkDistance => 'Distance';
+  String get builtInDogWalkDistance => 'Distance';
 
   @override
-  String get templateFamilyTime => 'Family time';
+  String get builtInFamilyTime => 'Family time';
 
   @override
-  String get templateFamilyTimeWho => 'Who';
+  String get builtInFamilyTimeWho => 'Who';
 
   @override
-  String get templateFamilyTimeWhatWeDid => 'What we did';
+  String get builtInFamilyTimeWhatWeDid => 'What we did';
 
   @override
-  String get templateFamilyTimeHowItFelt => 'How it felt';
+  String get builtInFamilyTimeHowItFelt => 'How it felt';
 
   @override
-  String get templateCaringForSomeone => 'Caring for someone';
+  String get builtInCaringForSomeone => 'Caring for someone';
 
   @override
-  String get templateCaringForSomeoneWho => 'Who';
+  String get builtInCaringForSomeoneWho => 'Who';
 
   @override
-  String get templateCaringForSomeoneHelpGiven => 'Help given';
+  String get builtInCaringForSomeoneHelpGiven => 'Help given';
 
   @override
-  String get templateCaringForSomeoneHelpGivenCompany => 'Company';
+  String get builtInCaringForSomeoneHelpGivenCompany => 'Company';
 
   @override
-  String get templateCaringForSomeoneHelpGivenMeals => 'Meals';
+  String get builtInCaringForSomeoneHelpGivenMeals => 'Meals';
 
   @override
-  String get templateCaringForSomeoneHelpGivenErrands => 'Errands';
+  String get builtInCaringForSomeoneHelpGivenErrands => 'Errands';
 
   @override
-  String get templateCaringForSomeoneHelpGivenMedicine => 'Medicine';
+  String get builtInCaringForSomeoneHelpGivenMedicine => 'Medicine';
 
   @override
-  String get templateCaringForSomeoneHelpGivenAppointments => 'Appointments';
+  String get builtInCaringForSomeoneHelpGivenAppointments => 'Appointments';
 
   @override
-  String get templateCaringForSomeoneNotes => 'Notes';
+  String get builtInCaringForSomeoneNotes => 'Notes';
 
   @override
-  String get templateCategoryWork => 'Work';
+  String get builtInCategoryWork => 'Work';
 
   @override
-  String get templateDailyPlanning => 'Daily planning';
+  String get builtInDailyPlanning => 'Daily planning';
 
   @override
-  String get templateDailyPlanningTopPriorities => 'Top priorities';
+  String get builtInDailyPlanningTopPriorities => 'Top priorities';
 
   @override
-  String get templateDailyPlanningTopPrioritiesItem => 'Priority';
+  String get builtInDailyPlanningTopPrioritiesItem => 'Priority';
 
   @override
-  String get templateDailyPlanningTopPrioritiesPriority => 'Priority';
+  String get builtInDailyPlanningTopPrioritiesPriority => 'Priority';
 
   @override
-  String get templateDailyPlanningTopPrioritiesDone => 'Done';
+  String get builtInDailyPlanningTopPrioritiesDone => 'Done';
 
   @override
-  String get templateDailyPlanningNotes => 'Notes';
+  String get builtInDailyPlanningNotes => 'Notes';
 
   @override
-  String get templateCommute => 'Commute';
+  String get builtInCommute => 'Commute';
 
   @override
-  String get templateCommuteHow => 'How';
+  String get builtInCommuteHow => 'How';
 
   @override
-  String get templateCommuteHowCar => 'Car';
+  String get builtInCommuteHowCar => 'Car';
 
   @override
-  String get templateCommuteHowBus => 'Bus';
+  String get builtInCommuteHowBus => 'Bus';
 
   @override
-  String get templateCommuteHowTrain => 'Train';
+  String get builtInCommuteHowTrain => 'Train';
 
   @override
-  String get templateCommuteHowBike => 'Bike';
+  String get builtInCommuteHowBike => 'Bike';
 
   @override
-  String get templateCommuteHowWalk => 'Walk';
+  String get builtInCommuteHowWalk => 'Walk';
 
   @override
-  String get templateCommuteHowOther => 'Other';
+  String get builtInCommuteHowOther => 'Other';
 
   @override
-  String get templateCommuteDistance => 'Distance';
+  String get builtInCommuteDistance => 'Distance';
 
   @override
-  String get templateCommuteHowItWent => 'How it went';
+  String get builtInCommuteHowItWent => 'How it went';
 
   @override
-  String get templateEmailAndAdmin => 'Email & admin';
+  String get builtInEmailAndAdmin => 'Email & admin';
 
   @override
-  String get templateEmailAndAdminEmailsHandled => 'Emails handled';
+  String get builtInEmailAndAdminEmailsHandled => 'Emails handled';
 
   @override
-  String get templateEmailAndAdminInboxZero => 'Inbox zero';
+  String get builtInEmailAndAdminInboxZero => 'Inbox zero';
 
   @override
-  String get templateCoding => 'Coding';
+  String get builtInCoding => 'Coding';
 
   @override
-  String get templateCodingProject => 'Project';
+  String get builtInCodingProject => 'Project';
 
   @override
-  String get templateCodingWhatIBuilt => 'What I built';
+  String get builtInCodingWhatIBuilt => 'What I built';
 
   @override
-  String get templateCodingCommits => 'Commits';
+  String get builtInCodingCommits => 'Commits';
 
   @override
-  String get templateSideProject => 'Side project';
+  String get builtInSideProject => 'Side project';
 
   @override
-  String get templateSideProjectProject => 'Project';
+  String get builtInSideProjectProject => 'Project';
 
   @override
-  String get templateSideProjectProgress => 'Progress';
+  String get builtInSideProjectProgress => 'Progress';
 
   @override
-  String get templateSideProjectMomentum => 'Momentum';
+  String get builtInSideProjectMomentum => 'Momentum';
 
   @override
-  String get templateJobSearch => 'Job search';
+  String get builtInJobSearch => 'Job search';
 
   @override
-  String get templateJobSearchCompany => 'Company';
+  String get builtInJobSearchCompany => 'Company';
 
   @override
-  String get templateJobSearchRole => 'Role';
+  String get builtInJobSearchRole => 'Role';
 
   @override
-  String get templateJobSearchStage => 'Stage';
+  String get builtInJobSearchStage => 'Stage';
 
   @override
-  String get templateJobSearchStageApplied => 'Applied';
+  String get builtInJobSearchStageApplied => 'Applied';
 
   @override
-  String get templateJobSearchStageInterview => 'Interview';
+  String get builtInJobSearchStageInterview => 'Interview';
 
   @override
-  String get templateJobSearchStageOffer => 'Offer';
+  String get builtInJobSearchStageOffer => 'Offer';
 
   @override
-  String get templateJobSearchStageRejected => 'Rejected';
+  String get builtInJobSearchStageRejected => 'Rejected';
 
   @override
-  String get templateJobSearchStageFollowingUp => 'Following up';
+  String get builtInJobSearchStageFollowingUp => 'Following up';
 
   @override
-  String get templateJobSearchNotes => 'Notes';
+  String get builtInJobSearchNotes => 'Notes';
 
   @override
-  String get templatePresentation => 'Presentation';
+  String get builtInPresentation => 'Presentation';
 
   @override
-  String get templatePresentationTopic => 'Topic';
+  String get builtInPresentationTopic => 'Topic';
 
   @override
-  String get templatePresentationAudience => 'Audience';
+  String get builtInPresentationAudience => 'Audience';
 
   @override
-  String get templatePresentationHowItWent => 'How it went';
+  String get builtInPresentationHowItWent => 'How it went';
 
   @override
-  String get templateCategoryLearning => 'Learning';
+  String get builtInCategoryLearning => 'Learning';
 
   @override
-  String get templateClass => 'Class';
+  String get builtInClass => 'Class';
 
   @override
-  String get templateClassCourse => 'Course';
+  String get builtInClassCourse => 'Course';
 
   @override
-  String get templateClassTopic => 'Topic';
+  String get builtInClassTopic => 'Topic';
 
   @override
-  String get templateClassNotes => 'Notes';
+  String get builtInClassNotes => 'Notes';
 
   @override
-  String get templateClassUnderstood => 'Understood';
+  String get builtInClassUnderstood => 'Understood';
 
   @override
-  String get templateHomework => 'Homework';
+  String get builtInHomework => 'Homework';
 
   @override
-  String get templateHomeworkSubject => 'Subject';
+  String get builtInHomeworkSubject => 'Subject';
 
   @override
-  String get templateHomeworkTask => 'Task';
+  String get builtInHomeworkTask => 'Task';
 
   @override
-  String get templateHomeworkFinished => 'Finished';
+  String get builtInHomeworkFinished => 'Finished';
 
   @override
-  String get templateOnlineCourse => 'Online course';
+  String get builtInOnlineCourse => 'Online course';
 
   @override
-  String get templateOnlineCourseCourse => 'Course';
+  String get builtInOnlineCourseCourse => 'Course';
 
   @override
-  String get templateOnlineCourseLessonsDone => 'Lessons done';
+  String get builtInOnlineCourseLessonsDone => 'Lessons done';
 
   @override
-  String get templateOnlineCourseTakeaways => 'Takeaways';
+  String get builtInOnlineCourseTakeaways => 'Takeaways';
 
   @override
-  String get templateMusicPractice => 'Music practice';
+  String get builtInMusicPractice => 'Music practice';
 
   @override
-  String get templateMusicPracticeInstrument => 'Instrument';
+  String get builtInMusicPracticeInstrument => 'Instrument';
 
   @override
-  String get templateMusicPracticeInstrumentGuitar => 'Guitar';
+  String get builtInMusicPracticeInstrumentGuitar => 'Guitar';
 
   @override
-  String get templateMusicPracticeInstrumentPiano => 'Piano';
+  String get builtInMusicPracticeInstrumentPiano => 'Piano';
 
   @override
-  String get templateMusicPracticeInstrumentDrums => 'Drums';
+  String get builtInMusicPracticeInstrumentDrums => 'Drums';
 
   @override
-  String get templateMusicPracticeInstrumentViolin => 'Violin';
+  String get builtInMusicPracticeInstrumentViolin => 'Violin';
 
   @override
-  String get templateMusicPracticeInstrumentVoice => 'Voice';
+  String get builtInMusicPracticeInstrumentVoice => 'Voice';
 
   @override
-  String get templateMusicPracticeInstrumentOther => 'Other';
+  String get builtInMusicPracticeInstrumentOther => 'Other';
 
   @override
-  String get templateMusicPracticePieces => 'Pieces';
+  String get builtInMusicPracticePieces => 'Pieces';
 
   @override
-  String get templateMusicPracticePiecesItem => 'Piece';
+  String get builtInMusicPracticePiecesItem => 'Piece';
 
   @override
-  String get templateMusicPracticePiecesPiece => 'Piece';
+  String get builtInMusicPracticePiecesPiece => 'Piece';
 
   @override
-  String get templateMusicPracticePiecesTempoBpm => 'Tempo (bpm)';
+  String get builtInMusicPracticePiecesTempoBpm => 'Tempo (bpm)';
 
   @override
-  String get templateMusicPracticeHowItWent => 'How it went';
+  String get builtInMusicPracticeHowItWent => 'How it went';
 
   @override
-  String get templateSkillPractice => 'Skill practice';
+  String get builtInSkillPractice => 'Skill practice';
 
   @override
-  String get templateSkillPracticeSkill => 'Skill';
+  String get builtInSkillPracticeSkill => 'Skill';
 
   @override
-  String get templateSkillPracticeWhatIPractised => 'What I practised';
+  String get builtInSkillPracticeWhatIPractised => 'What I practised';
 
   @override
-  String get templateSkillPracticeProgress => 'Progress';
+  String get builtInSkillPracticeProgress => 'Progress';
 
   @override
-  String get templateCategoryExerciseAndSport => 'Exercise & sport';
+  String get builtInCategoryExerciseAndSport => 'Exercise & sport';
 
   @override
-  String get templateCycling => 'Cycling';
+  String get builtInCycling => 'Cycling';
 
   @override
-  String get templateCyclingDistance => 'Distance';
+  String get builtInCyclingDistance => 'Distance';
 
   @override
-  String get templateCyclingRoute => 'Route';
+  String get builtInCyclingRoute => 'Route';
 
   @override
-  String get templateCyclingFelt => 'Felt';
+  String get builtInCyclingFelt => 'Felt';
 
   @override
-  String get templateSwimming => 'Swimming';
+  String get builtInSwimming => 'Swimming';
 
   @override
-  String get templateSwimmingDistance => 'Distance';
+  String get builtInSwimmingDistance => 'Distance';
 
   @override
-  String get templateSwimmingLaps => 'Laps';
+  String get builtInSwimmingLaps => 'Laps';
 
   @override
-  String get templateSwimmingStrokes => 'Strokes';
+  String get builtInSwimmingStrokes => 'Strokes';
 
   @override
-  String get templateSwimmingStrokesFreestyle => 'Freestyle';
+  String get builtInSwimmingStrokesFreestyle => 'Freestyle';
 
   @override
-  String get templateSwimmingStrokesBreaststroke => 'Breaststroke';
+  String get builtInSwimmingStrokesBreaststroke => 'Breaststroke';
 
   @override
-  String get templateSwimmingStrokesBackstroke => 'Backstroke';
+  String get builtInSwimmingStrokesBackstroke => 'Backstroke';
 
   @override
-  String get templateSwimmingStrokesButterfly => 'Butterfly';
+  String get builtInSwimmingStrokesButterfly => 'Butterfly';
 
   @override
-  String get templateYoga => 'Yoga';
+  String get builtInYoga => 'Yoga';
 
   @override
-  String get templateYogaStyle => 'Style';
+  String get builtInYogaStyle => 'Style';
 
   @override
-  String get templateYogaStyleHatha => 'Hatha';
+  String get builtInYogaStyleHatha => 'Hatha';
 
   @override
-  String get templateYogaStyleVinyasa => 'Vinyasa';
+  String get builtInYogaStyleVinyasa => 'Vinyasa';
 
   @override
-  String get templateYogaStyleYin => 'Yin';
+  String get builtInYogaStyleYin => 'Yin';
 
   @override
-  String get templateYogaStylePower => 'Power';
+  String get builtInYogaStylePower => 'Power';
 
   @override
-  String get templateYogaStyleRestorative => 'Restorative';
+  String get builtInYogaStyleRestorative => 'Restorative';
 
   @override
-  String get templateYogaFeltAfter => 'Felt after';
+  String get builtInYogaFeltAfter => 'Felt after';
 
   @override
-  String get templateStretching => 'Stretching';
+  String get builtInStretching => 'Stretching';
 
   @override
-  String get templateStretchingAreas => 'Areas';
+  String get builtInStretchingAreas => 'Areas';
 
   @override
-  String get templateStretchingAreasNeck => 'Neck';
+  String get builtInStretchingAreasNeck => 'Neck';
 
   @override
-  String get templateStretchingAreasShoulders => 'Shoulders';
+  String get builtInStretchingAreasShoulders => 'Shoulders';
 
   @override
-  String get templateStretchingAreasBack => 'Back';
+  String get builtInStretchingAreasBack => 'Back';
 
   @override
-  String get templateStretchingAreasHips => 'Hips';
+  String get builtInStretchingAreasHips => 'Hips';
 
   @override
-  String get templateStretchingAreasLegs => 'Legs';
+  String get builtInStretchingAreasLegs => 'Legs';
 
   @override
-  String get templateStretchingAreasFullBody => 'Full body';
+  String get builtInStretchingAreasFullBody => 'Full body';
 
   @override
-  String get templateHomeWorkout => 'Home workout';
+  String get builtInHomeWorkout => 'Home workout';
 
   @override
-  String get templateHomeWorkoutExercises => 'Exercises';
+  String get builtInHomeWorkoutExercises => 'Exercises';
 
   @override
-  String get templateHomeWorkoutExercisesItem => 'Exercise';
+  String get builtInHomeWorkoutExercisesItem => 'Exercise';
 
   @override
-  String get templateHomeWorkoutExercisesExercise => 'Exercise';
+  String get builtInHomeWorkoutExercisesExercise => 'Exercise';
 
   @override
-  String get templateHomeWorkoutExercisesReps => 'Reps';
+  String get builtInHomeWorkoutExercisesReps => 'Reps';
 
   @override
-  String get templateHomeWorkoutExercisesRounds => 'Rounds';
+  String get builtInHomeWorkoutExercisesRounds => 'Rounds';
 
   @override
-  String get templateHomeWorkoutEffort => 'Effort';
+  String get builtInHomeWorkoutEffort => 'Effort';
 
   @override
-  String get templateHiking => 'Hiking';
+  String get builtInHiking => 'Hiking';
 
   @override
-  String get templateHikingTrail => 'Trail';
+  String get builtInHikingTrail => 'Trail';
 
   @override
-  String get templateHikingDistance => 'Distance';
+  String get builtInHikingDistance => 'Distance';
 
   @override
-  String get templateHikingElevationGain => 'Elevation gain';
+  String get builtInHikingElevationGain => 'Elevation gain';
 
   @override
-  String get templateHikingFelt => 'Felt';
+  String get builtInHikingFelt => 'Felt';
 
   @override
-  String get templateTeamSport => 'Team sport';
+  String get builtInTeamSport => 'Team sport';
 
   @override
-  String get templateTeamSportSport => 'Sport';
+  String get builtInTeamSportSport => 'Sport';
 
   @override
-  String get templateTeamSportSportFootball => 'Football';
+  String get builtInTeamSportSportFootball => 'Football';
 
   @override
-  String get templateTeamSportSportBasketball => 'Basketball';
+  String get builtInTeamSportSportBasketball => 'Basketball';
 
   @override
-  String get templateTeamSportSportCricket => 'Cricket';
+  String get builtInTeamSportSportCricket => 'Cricket';
 
   @override
-  String get templateTeamSportSportVolleyball => 'Volleyball';
+  String get builtInTeamSportSportVolleyball => 'Volleyball';
 
   @override
-  String get templateTeamSportSportHockey => 'Hockey';
+  String get builtInTeamSportSportHockey => 'Hockey';
 
   @override
-  String get templateTeamSportSportOther => 'Other';
+  String get builtInTeamSportSportOther => 'Other';
 
   @override
-  String get templateTeamSportResult => 'Result';
+  String get builtInTeamSportResult => 'Result';
 
   @override
-  String get templateTeamSportResultWon => 'Won';
+  String get builtInTeamSportResultWon => 'Won';
 
   @override
-  String get templateTeamSportResultLost => 'Lost';
+  String get builtInTeamSportResultLost => 'Lost';
 
   @override
-  String get templateTeamSportResultDraw => 'Draw';
+  String get builtInTeamSportResultDraw => 'Draw';
 
   @override
-  String get templateTeamSportResultJustPlayed => 'Just played';
+  String get builtInTeamSportResultJustPlayed => 'Just played';
 
   @override
-  String get templateTeamSportHowIPlayed => 'How I played';
+  String get builtInTeamSportHowIPlayed => 'How I played';
 
   @override
-  String get templateRacketSport => 'Racket sport';
+  String get builtInRacketSport => 'Racket sport';
 
   @override
-  String get templateRacketSportSport => 'Sport';
+  String get builtInRacketSportSport => 'Sport';
 
   @override
-  String get templateRacketSportSportTennis => 'Tennis';
+  String get builtInRacketSportSportTennis => 'Tennis';
 
   @override
-  String get templateRacketSportSportBadminton => 'Badminton';
+  String get builtInRacketSportSportBadminton => 'Badminton';
 
   @override
-  String get templateRacketSportSportSquash => 'Squash';
+  String get builtInRacketSportSportSquash => 'Squash';
 
   @override
-  String get templateRacketSportSportTableTennis => 'Table tennis';
+  String get builtInRacketSportSportTableTennis => 'Table tennis';
 
   @override
-  String get templateRacketSportSportPadel => 'Padel';
+  String get builtInRacketSportSportPadel => 'Padel';
 
   @override
-  String get templateRacketSportOpponent => 'Opponent';
+  String get builtInRacketSportOpponent => 'Opponent';
 
   @override
-  String get templateRacketSportResult => 'Result';
+  String get builtInRacketSportResult => 'Result';
 
   @override
-  String get templateRacketSportResultWon => 'Won';
+  String get builtInRacketSportResultWon => 'Won';
 
   @override
-  String get templateRacketSportResultLost => 'Lost';
+  String get builtInRacketSportResultLost => 'Lost';
 
   @override
-  String get templateRacketSportResultJustPlayed => 'Just played';
+  String get builtInRacketSportResultJustPlayed => 'Just played';
 
   @override
-  String get templateDance => 'Dance';
+  String get builtInDance => 'Dance';
 
   @override
-  String get templateDanceStyle => 'Style';
+  String get builtInDanceStyle => 'Style';
 
   @override
-  String get templateDanceFun => 'Fun';
+  String get builtInDanceFun => 'Fun';
 
   @override
-  String get templateDailySteps => 'Daily steps';
+  String get builtInDailySteps => 'Daily steps';
 
   @override
-  String get templateDailyStepsSteps => 'Steps';
+  String get builtInDailyStepsSteps => 'Steps';
 
   @override
-  String get templateCategoryMindAndWellbeing => 'Mind & wellbeing';
+  String get builtInCategoryMindAndWellbeing => 'Mind & wellbeing';
 
   @override
-  String get templateJournal => 'Journal';
+  String get builtInJournal => 'Journal';
 
   @override
-  String get templateJournalEntry => 'Entry';
+  String get builtInJournalEntry => 'Entry';
 
   @override
-  String get templateJournalHowTheDayWas => 'How the day was';
+  String get builtInJournalHowTheDayWas => 'How the day was';
 
   @override
-  String get templateGratitude => 'Gratitude';
+  String get builtInGratitude => 'Gratitude';
 
   @override
-  String get templateGratitudeGratefulFor => 'Grateful for';
+  String get builtInGratitudeGratefulFor => 'Grateful for';
 
   @override
-  String get templateGratitudeGratefulForItem => 'Thing';
+  String get builtInGratitudeGratefulForItem => 'Thing';
 
   @override
-  String get templateGratitudeGratefulForThing => 'Thing';
+  String get builtInGratitudeGratefulForThing => 'Thing';
 
   @override
-  String get templateBreathing => 'Breathing';
+  String get builtInBreathing => 'Breathing';
 
   @override
-  String get templateBreathingTechnique => 'Technique';
+  String get builtInBreathingTechnique => 'Technique';
 
   @override
-  String get templateBreathingTechniqueBoxBreathing => 'Box breathing';
+  String get builtInBreathingTechniqueBoxBreathing => 'Box breathing';
 
   @override
-  String get templateBreathingTechnique478 => '4-7-8';
+  String get builtInBreathingTechnique478 => '4-7-8';
 
   @override
-  String get templateBreathingTechniqueDeepBelly => 'Deep belly';
+  String get builtInBreathingTechniqueDeepBelly => 'Deep belly';
 
   @override
-  String get templateBreathingTechniqueAlternateNostril => 'Alternate nostril';
+  String get builtInBreathingTechniqueAlternateNostril => 'Alternate nostril';
 
   @override
-  String get templateBreathingRounds => 'Rounds';
+  String get builtInBreathingRounds => 'Rounds';
 
   @override
-  String get templateTherapySession => 'Therapy session';
+  String get builtInTherapySession => 'Therapy session';
 
   @override
-  String get templateTherapySessionWith => 'With';
+  String get builtInTherapySessionWith => 'With';
 
   @override
-  String get templateTherapySessionTalkedAbout => 'Talked about';
+  String get builtInTherapySessionTalkedAbout => 'Talked about';
 
   @override
-  String get templateTherapySessionTakeaways => 'Takeaways';
+  String get builtInTherapySessionTakeaways => 'Takeaways';
 
   @override
-  String get templateTherapySessionFeltAfter => 'Felt after';
+  String get builtInTherapySessionFeltAfter => 'Felt after';
 
   @override
-  String get templateScreenTime => 'Screen time';
+  String get builtInScreenTime => 'Screen time';
 
   @override
-  String get templateScreenTimeTotal => 'Total';
+  String get builtInScreenTimeTotal => 'Total';
 
   @override
-  String get templateScreenTimePickups => 'Pickups';
+  String get builtInScreenTimePickups => 'Pickups';
 
   @override
-  String get templateScreenTimeMostUsedApp => 'Most used app';
+  String get builtInScreenTimeMostUsedApp => 'Most used app';
 
   @override
-  String get templateHabitToBreak => 'Habit to break';
+  String get builtInHabitToBreak => 'Habit to break';
 
   @override
-  String get templateHabitToBreakHabit => 'Habit';
+  String get builtInHabitToBreakHabit => 'Habit';
 
   @override
-  String get templateHabitToBreakKeptClearToday => 'Kept clear today';
+  String get builtInHabitToBreakKeptClearToday => 'Kept clear today';
 
   @override
-  String get templateHabitToBreakUrges => 'Urges';
+  String get builtInHabitToBreakUrges => 'Urges';
 
   @override
-  String get templateHabitToBreakNotes => 'Notes';
+  String get builtInHabitToBreakNotes => 'Notes';
 
   @override
-  String get templateDigitalDetox => 'Digital detox';
+  String get builtInDigitalDetox => 'Digital detox';
 
   @override
-  String get templateDigitalDetoxPhoneAway => 'Phone away';
+  String get builtInDigitalDetoxPhoneAway => 'Phone away';
 
   @override
-  String get templateDigitalDetoxHowItFelt => 'How it felt';
+  String get builtInDigitalDetoxHowItFelt => 'How it felt';
 
   @override
-  String get templateAffirmations => 'Affirmations';
+  String get builtInAffirmations => 'Affirmations';
 
   @override
-  String get templateAffirmationsTodaySAffirmation => 'Today\'s affirmation';
+  String get builtInAffirmationsTodaySAffirmation => 'Today\'s affirmation';
 
   @override
-  String get templateAffirmationsSaidOutLoud => 'Said out loud';
+  String get builtInAffirmationsSaidOutLoud => 'Said out loud';
 
   @override
-  String get templateCategoryHobbiesAndFun => 'Hobbies & fun';
+  String get builtInCategoryHobbiesAndFun => 'Hobbies & fun';
 
   @override
-  String get templateTVAndMovies => 'TV & movies';
+  String get builtInTVAndMovies => 'TV & movies';
 
   @override
-  String get templateTVAndMoviesTitle => 'Title';
+  String get builtInTVAndMoviesTitle => 'Title';
 
   @override
-  String get templateTVAndMoviesKind => 'Kind';
+  String get builtInTVAndMoviesKind => 'Kind';
 
   @override
-  String get templateTVAndMoviesKindMovie => 'Movie';
+  String get builtInTVAndMoviesKindMovie => 'Movie';
 
   @override
-  String get templateTVAndMoviesKindSeries => 'Series';
+  String get builtInTVAndMoviesKindSeries => 'Series';
 
   @override
-  String get templateTVAndMoviesKindDocumentary => 'Documentary';
+  String get builtInTVAndMoviesKindDocumentary => 'Documentary';
 
   @override
-  String get templateTVAndMoviesKindShow => 'Show';
+  String get builtInTVAndMoviesKindShow => 'Show';
 
   @override
-  String get templateTVAndMoviesEpisodes => 'Episodes';
+  String get builtInTVAndMoviesEpisodes => 'Episodes';
 
   @override
-  String get templateTVAndMoviesRating => 'Rating';
+  String get builtInTVAndMoviesRating => 'Rating';
 
   @override
-  String get templateGaming => 'Gaming';
+  String get builtInGaming => 'Gaming';
 
   @override
-  String get templateGamingGame => 'Game';
+  String get builtInGamingGame => 'Game';
 
   @override
-  String get templateGamingPlatform => 'Platform';
+  String get builtInGamingPlatform => 'Platform';
 
   @override
-  String get templateGamingPlatformPC => 'PC';
+  String get builtInGamingPlatformPC => 'PC';
 
   @override
-  String get templateGamingPlatformConsole => 'Console';
+  String get builtInGamingPlatformConsole => 'Console';
 
   @override
-  String get templateGamingPlatformMobile => 'Mobile';
+  String get builtInGamingPlatformMobile => 'Mobile';
 
   @override
-  String get templateGamingPlatformBoardGame => 'Board game';
+  String get builtInGamingPlatformBoardGame => 'Board game';
 
   @override
-  String get templateGamingPlatformCards => 'Cards';
+  String get builtInGamingPlatformCards => 'Cards';
 
   @override
-  String get templateGamingFun => 'Fun';
+  String get builtInGamingFun => 'Fun';
 
   @override
-  String get templatePodcast => 'Podcast';
+  String get builtInPodcast => 'Podcast';
 
   @override
-  String get templatePodcastShow => 'Show';
+  String get builtInPodcastShow => 'Show';
 
   @override
-  String get templatePodcastEpisode => 'Episode';
+  String get builtInPodcastEpisode => 'Episode';
 
   @override
-  String get templatePodcastTakeaways => 'Takeaways';
+  String get builtInPodcastTakeaways => 'Takeaways';
 
   @override
-  String get templateDrawingAndPainting => 'Drawing & painting';
+  String get builtInDrawingAndPainting => 'Drawing & painting';
 
   @override
-  String get templateDrawingAndPaintingMedium => 'Medium';
+  String get builtInDrawingAndPaintingMedium => 'Medium';
 
   @override
-  String get templateDrawingAndPaintingMediumPencil => 'Pencil';
+  String get builtInDrawingAndPaintingMediumPencil => 'Pencil';
 
   @override
-  String get templateDrawingAndPaintingMediumInk => 'Ink';
+  String get builtInDrawingAndPaintingMediumInk => 'Ink';
 
   @override
-  String get templateDrawingAndPaintingMediumWatercolor => 'Watercolor';
+  String get builtInDrawingAndPaintingMediumWatercolor => 'Watercolor';
 
   @override
-  String get templateDrawingAndPaintingMediumAcrylic => 'Acrylic';
+  String get builtInDrawingAndPaintingMediumAcrylic => 'Acrylic';
 
   @override
-  String get templateDrawingAndPaintingMediumOil => 'Oil';
+  String get builtInDrawingAndPaintingMediumOil => 'Oil';
 
   @override
-  String get templateDrawingAndPaintingMediumDigital => 'Digital';
+  String get builtInDrawingAndPaintingMediumDigital => 'Digital';
 
   @override
-  String get templateDrawingAndPaintingPiece => 'Piece';
+  String get builtInDrawingAndPaintingPiece => 'Piece';
 
   @override
-  String get templateDrawingAndPaintingHappyWithIt => 'Happy with it';
+  String get builtInDrawingAndPaintingHappyWithIt => 'Happy with it';
 
   @override
-  String get templatePhotography => 'Photography';
+  String get builtInPhotography => 'Photography';
 
   @override
-  String get templatePhotographySubject => 'Subject';
+  String get builtInPhotographySubject => 'Subject';
 
   @override
-  String get templatePhotographyPhotosTaken => 'Photos taken';
+  String get builtInPhotographyPhotosTaken => 'Photos taken';
 
   @override
-  String get templatePhotographyKeepers => 'Keepers';
+  String get builtInPhotographyKeepers => 'Keepers';
 
   @override
-  String get templateWriting => 'Writing';
+  String get builtInWriting => 'Writing';
 
   @override
-  String get templateWritingProject => 'Project';
+  String get builtInWritingProject => 'Project';
 
   @override
-  String get templateWritingWords => 'Words';
+  String get builtInWritingWords => 'Words';
 
   @override
-  String get templateWritingNotes => 'Notes';
+  String get builtInWritingNotes => 'Notes';
 
   @override
-  String get templateCrafts => 'Crafts';
+  String get builtInCrafts => 'Crafts';
 
   @override
-  String get templateCraftsCraft => 'Craft';
+  String get builtInCraftsCraft => 'Craft';
 
   @override
-  String get templateCraftsCraftKnitting => 'Knitting';
+  String get builtInCraftsCraftKnitting => 'Knitting';
 
   @override
-  String get templateCraftsCraftCrochet => 'Crochet';
+  String get builtInCraftsCraftCrochet => 'Crochet';
 
   @override
-  String get templateCraftsCraftSewing => 'Sewing';
+  String get builtInCraftsCraftSewing => 'Sewing';
 
   @override
-  String get templateCraftsCraftWoodwork => 'Woodwork';
+  String get builtInCraftsCraftWoodwork => 'Woodwork';
 
   @override
-  String get templateCraftsCraftPottery => 'Pottery';
+  String get builtInCraftsCraftPottery => 'Pottery';
 
   @override
-  String get templateCraftsCraftOther => 'Other';
+  String get builtInCraftsCraftOther => 'Other';
 
   @override
-  String get templateCraftsProject => 'Project';
+  String get builtInCraftsProject => 'Project';
 
   @override
-  String get templateCraftsProgress => 'Progress';
+  String get builtInCraftsProgress => 'Progress';
 
   @override
-  String get templatePuzzles => 'Puzzles';
+  String get builtInPuzzles => 'Puzzles';
 
   @override
-  String get templatePuzzlesGame => 'Game';
+  String get builtInPuzzlesGame => 'Game';
 
   @override
-  String get templatePuzzlesGameSudoku => 'Sudoku';
+  String get builtInPuzzlesGameSudoku => 'Sudoku';
 
   @override
-  String get templatePuzzlesGameCrossword => 'Crossword';
+  String get builtInPuzzlesGameCrossword => 'Crossword';
 
   @override
-  String get templatePuzzlesGameChess => 'Chess';
+  String get builtInPuzzlesGameChess => 'Chess';
 
   @override
-  String get templatePuzzlesGameJigsaw => 'Jigsaw';
+  String get builtInPuzzlesGameJigsaw => 'Jigsaw';
 
   @override
-  String get templatePuzzlesGameWordGame => 'Word game';
+  String get builtInPuzzlesGameWordGame => 'Word game';
 
   @override
-  String get templatePuzzlesGameOther => 'Other';
+  String get builtInPuzzlesGameOther => 'Other';
 
   @override
-  String get templatePuzzlesSolved => 'Solved';
+  String get builtInPuzzlesSolved => 'Solved';
 
   @override
-  String get templatePuzzlesScore => 'Score';
+  String get builtInPuzzlesScore => 'Score';
 
   @override
-  String get templateListeningToMusic => 'Listening to music';
+  String get builtInListeningToMusic => 'Listening to music';
 
   @override
-  String get templateListeningToMusicArtistOrAlbum => 'Artist or album';
+  String get builtInListeningToMusicArtistOrAlbum => 'Artist or album';
 
   @override
-  String get templateListeningToMusicEnjoyed => 'Enjoyed';
+  String get builtInListeningToMusicEnjoyed => 'Enjoyed';
 
   @override
-  String get templateCategoryFriendsAndCommunity => 'Friends & community';
+  String get builtInCategoryFriendsAndCommunity => 'Friends & community';
 
   @override
-  String get templateTimeWithFriends => 'Time with friends';
+  String get builtInTimeWithFriends => 'Time with friends';
 
   @override
-  String get templateTimeWithFriendsWho => 'Who';
+  String get builtInTimeWithFriendsWho => 'Who';
 
   @override
-  String get templateTimeWithFriendsWhatWeDid => 'What we did';
+  String get builtInTimeWithFriendsWhatWeDid => 'What we did';
 
   @override
-  String get templateTimeWithFriendsHowItFelt => 'How it felt';
+  String get builtInTimeWithFriendsHowItFelt => 'How it felt';
 
   @override
-  String get templatePhoneCall => 'Phone call';
+  String get builtInPhoneCall => 'Phone call';
 
   @override
-  String get templatePhoneCallWho => 'Who';
+  String get builtInPhoneCallWho => 'Who';
 
   @override
-  String get templatePhoneCallTalkedAbout => 'Talked about';
+  String get builtInPhoneCallTalkedAbout => 'Talked about';
 
   @override
-  String get templatePhoneCallFollowUpNeeded => 'Follow up needed';
+  String get builtInPhoneCallFollowUpNeeded => 'Follow up needed';
 
   @override
-  String get templateDateNight => 'Date night';
+  String get builtInDateNight => 'Date night';
 
   @override
-  String get templateDateNightWhere => 'Where';
+  String get builtInDateNightWhere => 'Where';
 
   @override
-  String get templateDateNightWhatWeDid => 'What we did';
+  String get builtInDateNightWhatWeDid => 'What we did';
 
   @override
-  String get templateDateNightRating => 'Rating';
+  String get builtInDateNightRating => 'Rating';
 
   @override
-  String get templateEvent => 'Event';
+  String get builtInEvent => 'Event';
 
   @override
-  String get templateEventEvent => 'Event';
+  String get builtInEventEvent => 'Event';
 
   @override
-  String get templateEventWhere => 'Where';
+  String get builtInEventWhere => 'Where';
 
   @override
-  String get templateEventHowItWas => 'How it was';
+  String get builtInEventHowItWas => 'How it was';
 
   @override
-  String get templateVolunteering => 'Volunteering';
+  String get builtInVolunteering => 'Volunteering';
 
   @override
-  String get templateVolunteeringOrganization => 'Organization';
+  String get builtInVolunteeringOrganization => 'Organization';
 
   @override
-  String get templateVolunteeringWhatIDid => 'What I did';
+  String get builtInVolunteeringWhatIDid => 'What I did';
 
   @override
-  String get templateVolunteeringPeopleHelped => 'People helped';
+  String get builtInVolunteeringPeopleHelped => 'People helped';
 
   @override
-  String get templatePrayerAndWorship => 'Prayer & worship';
+  String get builtInPrayerAndWorship => 'Prayer & worship';
 
   @override
-  String get templatePrayerAndWorshipPracticeOrPlace => 'Practice or place';
+  String get builtInPrayerAndWorshipPracticeOrPlace => 'Practice or place';
 
   @override
-  String get templatePrayerAndWorshipReflection => 'Reflection';
+  String get builtInPrayerAndWorshipReflection => 'Reflection';
 
   @override
-  String get templateDonation => 'Donation';
+  String get builtInDonation => 'Donation';
 
   @override
-  String get templateDonationCause => 'Cause';
+  String get builtInDonationCause => 'Cause';
 
   @override
-  String get templateDonationAmount => 'Amount';
+  String get builtInDonationAmount => 'Amount';
 
   @override
-  String get templateCategoryTravelAndErrands => 'Travel & errands';
+  String get builtInCategoryTravelAndErrands => 'Travel & errands';
 
   @override
-  String get templateErrands => 'Errands';
+  String get builtInErrands => 'Errands';
 
   @override
-  String get templateErrandsErrands => 'Errands';
+  String get builtInErrandsErrands => 'Errands';
 
   @override
-  String get templateErrandsErrandsItem => 'Errand';
+  String get builtInErrandsErrandsItem => 'Errand';
 
   @override
-  String get templateErrandsErrandsErrand => 'Errand';
+  String get builtInErrandsErrandsErrand => 'Errand';
 
   @override
-  String get templateErrandsErrandsDone => 'Done';
+  String get builtInErrandsErrandsDone => 'Done';
 
   @override
-  String get templateAppointment => 'Appointment';
+  String get builtInAppointment => 'Appointment';
 
   @override
-  String get templateAppointmentWith => 'With';
+  String get builtInAppointmentWith => 'With';
 
   @override
-  String get templateAppointmentPurpose => 'Purpose';
+  String get builtInAppointmentPurpose => 'Purpose';
 
   @override
-  String get templateAppointmentNextAppointment => 'Next appointment';
+  String get builtInAppointmentNextAppointment => 'Next appointment';
 
   @override
-  String get templateDriving => 'Driving';
+  String get builtInDriving => 'Driving';
 
   @override
-  String get templateDrivingDistance => 'Distance';
+  String get builtInDrivingDistance => 'Distance';
 
   @override
-  String get templateDrivingFuel => 'Fuel';
+  String get builtInDrivingFuel => 'Fuel';
 
   @override
-  String get templateDrivingPurpose => 'Purpose';
+  String get builtInDrivingPurpose => 'Purpose';
 
   @override
-  String get templateTrip => 'Trip';
+  String get builtInTrip => 'Trip';
 
   @override
-  String get templateTripDestination => 'Destination';
+  String get builtInTripDestination => 'Destination';
 
   @override
-  String get templateTripTravelBy => 'Travel by';
+  String get builtInTripTravelBy => 'Travel by';
 
   @override
-  String get templateTripTravelByPlane => 'Plane';
+  String get builtInTripTravelByPlane => 'Plane';
 
   @override
-  String get templateTripTravelByTrain => 'Train';
+  String get builtInTripTravelByTrain => 'Train';
 
   @override
-  String get templateTripTravelByCar => 'Car';
+  String get builtInTripTravelByCar => 'Car';
 
   @override
-  String get templateTripTravelByBus => 'Bus';
+  String get builtInTripTravelByBus => 'Bus';
 
   @override
-  String get templateTripTravelByBoat => 'Boat';
+  String get builtInTripTravelByBoat => 'Boat';
 
   @override
-  String get templateTripHighlights => 'Highlights';
+  String get builtInTripHighlights => 'Highlights';
 
   @override
-  String get templatePacking => 'Packing';
+  String get builtInPacking => 'Packing';
 
   @override
-  String get templatePackingPackingList => 'Packing list';
+  String get builtInPackingPackingList => 'Packing list';
 
   @override
-  String get templatePackingPackingListItem => 'Item';
+  String get builtInPackingPackingListItem => 'Item';
 
   @override
-  String get templatePackingPackingListDone => 'Done';
+  String get builtInPackingPackingListDone => 'Done';
 
   @override
-  String get templateAyurvedicMorning => 'Ayurvedic morning';
+  String get builtInAyurvedicMorning => 'Ayurvedic morning';
 
   @override
-  String get templateAyurvedicMorningUpBeforeSunrise => 'Up before sunrise';
+  String get builtInAyurvedicMorningUpBeforeSunrise => 'Up before sunrise';
 
   @override
-  String get templateAyurvedicMorningPractices => 'Practices';
+  String get builtInAyurvedicMorningPractices => 'Practices';
 
   @override
-  String get templateAyurvedicMorningPracticesTongueScraping =>
+  String get builtInAyurvedicMorningPracticesTongueScraping =>
       'Tongue scraping';
 
   @override
-  String get templateAyurvedicMorningPracticesOilPulling => 'Oil pulling';
+  String get builtInAyurvedicMorningPracticesOilPulling => 'Oil pulling';
 
   @override
-  String get templateAyurvedicMorningPracticesAbhyanga => 'Abhyanga';
+  String get builtInAyurvedicMorningPracticesAbhyanga => 'Abhyanga';
 
   @override
-  String get templateAyurvedicMorningPracticesWarmWater => 'Warm water';
+  String get builtInAyurvedicMorningPracticesWarmWater => 'Warm water';
 
   @override
-  String get templateAyurvedicMorningPracticesNeti => 'Neti';
+  String get builtInAyurvedicMorningPracticesNeti => 'Neti';
 
   @override
-  String get templateAyurvedicMorningFeltAfter => 'Felt after';
+  String get builtInAyurvedicMorningFeltAfter => 'Felt after';
 
   @override
-  String get templateHairOiling => 'Hair oiling';
+  String get builtInHairOiling => 'Hair oiling';
 
   @override
-  String get templateHairOilingOil => 'Oil';
+  String get builtInHairOilingOil => 'Oil';
 
   @override
-  String get templateHairOilingLeftOnOvernight => 'Left on overnight';
+  String get builtInHairOilingLeftOnOvernight => 'Left on overnight';
 
   @override
-  String get templateMassageAndSpa => 'Massage & spa';
+  String get builtInMassageAndSpa => 'Massage & spa';
 
   @override
-  String get templateMassageAndSpaKind => 'Kind';
+  String get builtInMassageAndSpaKind => 'Kind';
 
   @override
-  String get templateMassageAndSpaKindMassage => 'Massage';
+  String get builtInMassageAndSpaKindMassage => 'Massage';
 
   @override
-  String get templateMassageAndSpaKindSpa => 'Spa';
+  String get builtInMassageAndSpaKindSpa => 'Spa';
 
   @override
-  String get templateMassageAndSpaKindFacial => 'Facial';
+  String get builtInMassageAndSpaKindFacial => 'Facial';
 
   @override
-  String get templateMassageAndSpaKindFootMassage => 'Foot massage';
+  String get builtInMassageAndSpaKindFootMassage => 'Foot massage';
 
   @override
-  String get templateMassageAndSpaKindSelfMassage => 'Self-massage';
+  String get builtInMassageAndSpaKindSelfMassage => 'Self-massage';
 
   @override
-  String get templateMassageAndSpaFeltAfter => 'Felt after';
+  String get builtInMassageAndSpaFeltAfter => 'Felt after';
 
   @override
-  String get templateMassageAndSpaCost => 'Cost';
+  String get builtInMassageAndSpaCost => 'Cost';
 
   @override
-  String get templateSaunaAndColdPlunge => 'Sauna & cold plunge';
+  String get builtInSaunaAndColdPlunge => 'Sauna & cold plunge';
 
   @override
-  String get templateSaunaAndColdPlungeKind => 'Kind';
+  String get builtInSaunaAndColdPlungeKind => 'Kind';
 
   @override
-  String get templateSaunaAndColdPlungeKindSauna => 'Sauna';
+  String get builtInSaunaAndColdPlungeKindSauna => 'Sauna';
 
   @override
-  String get templateSaunaAndColdPlungeKindColdPlunge => 'Cold plunge';
+  String get builtInSaunaAndColdPlungeKindColdPlunge => 'Cold plunge';
 
   @override
-  String get templateSaunaAndColdPlungeKindSteamRoom => 'Steam room';
+  String get builtInSaunaAndColdPlungeKindSteamRoom => 'Steam room';
 
   @override
-  String get templateSaunaAndColdPlungeKindContrast => 'Contrast';
+  String get builtInSaunaAndColdPlungeKindContrast => 'Contrast';
 
   @override
-  String get templateSaunaAndColdPlungeRounds => 'Rounds';
+  String get builtInSaunaAndColdPlungeRounds => 'Rounds';
 
   @override
-  String get templateSaunaAndColdPlungeTemperature => 'Temperature';
+  String get builtInSaunaAndColdPlungeTemperature => 'Temperature';
 
   @override
-  String get templatePain => 'Pain';
+  String get builtInPain => 'Pain';
 
   @override
-  String get templatePainWhere => 'Where';
+  String get builtInPainWhere => 'Where';
 
   @override
-  String get templatePainWhereHead => 'Head';
+  String get builtInPainWhereHead => 'Head';
 
   @override
-  String get templatePainWhereNeck => 'Neck';
+  String get builtInPainWhereNeck => 'Neck';
 
   @override
-  String get templatePainWhereBack => 'Back';
+  String get builtInPainWhereBack => 'Back';
 
   @override
-  String get templatePainWhereJoints => 'Joints';
+  String get builtInPainWhereJoints => 'Joints';
 
   @override
-  String get templatePainWhereStomach => 'Stomach';
+  String get builtInPainWhereStomach => 'Stomach';
 
   @override
-  String get templatePainWhereMuscles => 'Muscles';
+  String get builtInPainWhereMuscles => 'Muscles';
 
   @override
-  String get templatePainLevel => 'Level';
+  String get builtInPainLevel => 'Level';
 
   @override
-  String get templatePainPossibleTrigger => 'Possible trigger';
+  String get builtInPainPossibleTrigger => 'Possible trigger';
 
   @override
-  String get templateDigestion => 'Digestion';
+  String get builtInDigestion => 'Digestion';
 
   @override
-  String get templateDigestionType => 'Type';
+  String get builtInDigestionType => 'Type';
 
   @override
-  String get templateDigestionTypeHard => 'Hard';
+  String get builtInDigestionTypeHard => 'Hard';
 
   @override
-  String get templateDigestionTypeNormal => 'Normal';
+  String get builtInDigestionTypeNormal => 'Normal';
 
   @override
-  String get templateDigestionTypeSoft => 'Soft';
+  String get builtInDigestionTypeSoft => 'Soft';
 
   @override
-  String get templateDigestionTypeLoose => 'Loose';
+  String get builtInDigestionTypeLoose => 'Loose';
 
   @override
-  String get templateDigestionBloating => 'Bloating';
+  String get builtInDigestionBloating => 'Bloating';
 
   @override
-  String get templateDigestionNotes => 'Notes';
+  String get builtInDigestionNotes => 'Notes';
 
   @override
-  String get templateEnergyCheck => 'Energy check';
+  String get builtInEnergyCheck => 'Energy check';
 
   @override
-  String get templateEnergyCheckEnergy => 'Energy';
+  String get builtInEnergyCheckEnergy => 'Energy';
 
   @override
-  String get templateEnergyCheckFocus => 'Focus';
+  String get builtInEnergyCheckFocus => 'Focus';
 
   @override
-  String get templateProtein => 'Protein';
+  String get builtInProtein => 'Protein';
 
   @override
-  String get templateProteinProtein => 'Protein';
+  String get builtInProteinProtein => 'Protein';
 
   @override
-  String get templateFruitAndVeg => 'Fruit & veg';
+  String get builtInFruitAndVeg => 'Fruit & veg';
 
   @override
-  String get templateFruitAndVegPortions => 'Portions';
+  String get builtInFruitAndVegPortions => 'Portions';
 
   @override
-  String get templateFruitAndVegColoursEaten => 'Colours eaten';
+  String get builtInFruitAndVegColoursEaten => 'Colours eaten';
 
   @override
-  String get templateFruitAndVegColoursEatenGreen => 'Green';
+  String get builtInFruitAndVegColoursEatenGreen => 'Green';
 
   @override
-  String get templateFruitAndVegColoursEatenRed => 'Red';
+  String get builtInFruitAndVegColoursEatenRed => 'Red';
 
   @override
-  String get templateFruitAndVegColoursEatenOrange => 'Orange';
+  String get builtInFruitAndVegColoursEatenOrange => 'Orange';
 
   @override
-  String get templateFruitAndVegColoursEatenYellow => 'Yellow';
+  String get builtInFruitAndVegColoursEatenYellow => 'Yellow';
 
   @override
-  String get templateFruitAndVegColoursEatenPurple => 'Purple';
+  String get builtInFruitAndVegColoursEatenPurple => 'Purple';
 
   @override
-  String get templateFruitAndVegColoursEatenWhite => 'White';
+  String get builtInFruitAndVegColoursEatenWhite => 'White';
 
   @override
-  String get templatePackedLunch => 'Packed lunch';
+  String get builtInPackedLunch => 'Packed lunch';
 
   @override
-  String get templatePackedLunchFor => 'For';
+  String get builtInPackedLunchFor => 'For';
 
   @override
-  String get templatePackedLunchWhatWentIn => 'What went in';
+  String get builtInPackedLunchWhatWentIn => 'What went in';
 
   @override
-  String get templatePackedLunchEaten => 'Eaten';
+  String get builtInPackedLunchEaten => 'Eaten';
 
   @override
-  String get templateHouseHelp => 'House help';
+  String get builtInHouseHelp => 'House help';
 
   @override
-  String get templateHouseHelpWho => 'Who';
+  String get builtInHouseHelpWho => 'Who';
 
   @override
-  String get templateHouseHelpCameToday => 'Came today';
+  String get builtInHouseHelpCameToday => 'Came today';
 
   @override
-  String get templateHouseHelpTasks => 'Tasks';
+  String get builtInHouseHelpTasks => 'Tasks';
 
   @override
-  String get templateHouseHelpTasksSweeping => 'Sweeping';
+  String get builtInHouseHelpTasksSweeping => 'Sweeping';
 
   @override
-  String get templateHouseHelpTasksMopping => 'Mopping';
+  String get builtInHouseHelpTasksMopping => 'Mopping';
 
   @override
-  String get templateHouseHelpTasksDishes => 'Dishes';
+  String get builtInHouseHelpTasksDishes => 'Dishes';
 
   @override
-  String get templateHouseHelpTasksLaundry => 'Laundry';
+  String get builtInHouseHelpTasksLaundry => 'Laundry';
 
   @override
-  String get templateHouseHelpTasksCooking => 'Cooking';
+  String get builtInHouseHelpTasksCooking => 'Cooking';
 
   @override
-  String get templateHouseHelpTasksDusting => 'Dusting';
+  String get builtInHouseHelpTasksDusting => 'Dusting';
 
   @override
-  String get templateHouseHelpPaid => 'Paid';
+  String get builtInHouseHelpPaid => 'Paid';
 
   @override
-  String get templateCarCare => 'Car care';
+  String get builtInCarCare => 'Car care';
 
   @override
-  String get templateCarCareWhat => 'What';
+  String get builtInCarCareWhat => 'What';
 
   @override
-  String get templateCarCareWhatFuel => 'Fuel';
+  String get builtInCarCareWhatFuel => 'Fuel';
 
   @override
-  String get templateCarCareWhatWash => 'Wash';
+  String get builtInCarCareWhatWash => 'Wash';
 
   @override
-  String get templateCarCareWhatService => 'Service';
+  String get builtInCarCareWhatService => 'Service';
 
   @override
-  String get templateCarCareWhatTyres => 'Tyres';
+  String get builtInCarCareWhatTyres => 'Tyres';
 
   @override
-  String get templateCarCareWhatOilChange => 'Oil change';
+  String get builtInCarCareWhatOilChange => 'Oil change';
 
   @override
-  String get templateCarCareWhatRepair => 'Repair';
+  String get builtInCarCareWhatRepair => 'Repair';
 
   @override
-  String get templateCarCareOdometer => 'Odometer';
+  String get builtInCarCareOdometer => 'Odometer';
 
   @override
-  String get templateCarCareCost => 'Cost';
+  String get builtInCarCareCost => 'Cost';
 
   @override
-  String get templateCategoryMoney => 'Money';
+  String get builtInCategoryMoney => 'Money';
 
   @override
-  String get templateInvesting => 'Investing';
+  String get builtInInvesting => 'Investing';
 
   @override
-  String get templateInvestingFundOrAsset => 'Fund or asset';
+  String get builtInInvestingFundOrAsset => 'Fund or asset';
 
   @override
-  String get templateInvestingKind => 'Kind';
+  String get builtInInvestingKind => 'Kind';
 
   @override
-  String get templateInvestingKindBuy => 'Buy';
+  String get builtInInvestingKindBuy => 'Buy';
 
   @override
-  String get templateInvestingKindSell => 'Sell';
+  String get builtInInvestingKindSell => 'Sell';
 
   @override
-  String get templateInvestingKindSIP => 'SIP';
+  String get builtInInvestingKindSIP => 'SIP';
 
   @override
-  String get templateInvestingKindDeposit => 'Deposit';
+  String get builtInInvestingKindDeposit => 'Deposit';
 
   @override
-  String get templateInvestingKindDividend => 'Dividend';
+  String get builtInInvestingKindDividend => 'Dividend';
 
   @override
-  String get templateInvestingAmount => 'Amount';
+  String get builtInInvestingAmount => 'Amount';
 
   @override
-  String get templateSavings => 'Savings';
+  String get builtInSavings => 'Savings';
 
   @override
-  String get templateSavingsGoal => 'Goal';
+  String get builtInSavingsGoal => 'Goal';
 
   @override
-  String get templateSavingsAdded => 'Added';
+  String get builtInSavingsAdded => 'Added';
 
   @override
-  String get templateSavingsTotalSoFar => 'Total so far';
+  String get builtInSavingsTotalSoFar => 'Total so far';
 
   @override
-  String get templateSchoolRun => 'School run';
+  String get builtInSchoolRun => 'School run';
 
   @override
-  String get templateSchoolRunChild => 'Child';
+  String get builtInSchoolRunChild => 'Child';
 
   @override
-  String get templateSchoolRunHow => 'How';
+  String get builtInSchoolRunHow => 'How';
 
   @override
-  String get templateSchoolRunHowCar => 'Car';
+  String get builtInSchoolRunHowCar => 'Car';
 
   @override
-  String get templateSchoolRunHowWalk => 'Walk';
+  String get builtInSchoolRunHowWalk => 'Walk';
 
   @override
-  String get templateSchoolRunHowBus => 'Bus';
+  String get builtInSchoolRunHowBus => 'Bus';
 
   @override
-  String get templateSchoolRunHowBike => 'Bike';
+  String get builtInSchoolRunHowBike => 'Bike';
 
   @override
-  String get templateSchoolRunHowAuto => 'Auto';
+  String get builtInSchoolRunHowAuto => 'Auto';
 
   @override
-  String get templateSchoolRunHowSchoolVan => 'School van';
+  String get builtInSchoolRunHowSchoolVan => 'School van';
 
   @override
-  String get templateSchoolRunOnTime => 'On time';
+  String get builtInSchoolRunOnTime => 'On time';
 
   @override
-  String get templateClientWork => 'Client work';
+  String get builtInClientWork => 'Client work';
 
   @override
-  String get templateClientWorkClient => 'Client';
+  String get builtInClientWorkClient => 'Client';
 
   @override
-  String get templateClientWorkTask => 'Task';
+  String get builtInClientWorkTask => 'Task';
 
   @override
-  String get templateClientWorkBillable => 'Billable';
+  String get builtInClientWorkBillable => 'Billable';
 
   @override
-  String get templateShift => 'Shift';
+  String get builtInShift => 'Shift';
 
   @override
-  String get templateShiftShift => 'Shift';
+  String get builtInShiftShift => 'Shift';
 
   @override
-  String get templateShiftShiftMorning => 'Morning';
+  String get builtInShiftShiftMorning => 'Morning';
 
   @override
-  String get templateShiftShiftDay => 'Day';
+  String get builtInShiftShiftDay => 'Day';
 
   @override
-  String get templateShiftShiftEvening => 'Evening';
+  String get builtInShiftShiftEvening => 'Evening';
 
   @override
-  String get templateShiftShiftNight => 'Night';
+  String get builtInShiftShiftNight => 'Night';
 
   @override
-  String get templateShiftShiftSplit => 'Split';
+  String get builtInShiftShiftSplit => 'Split';
 
   @override
-  String get templateShiftTookABreak => 'Took a break';
+  String get builtInShiftTookABreak => 'Took a break';
 
   @override
-  String get templateShiftEarned => 'Earned';
+  String get builtInShiftEarned => 'Earned';
 
   @override
-  String get templateGigWork => 'Gig work';
+  String get builtInGigWork => 'Gig work';
 
   @override
-  String get templateGigWorkPlatform => 'Platform';
+  String get builtInGigWorkPlatform => 'Platform';
 
   @override
-  String get templateGigWorkTripsOrOrders => 'Trips or orders';
+  String get builtInGigWorkTripsOrOrders => 'Trips or orders';
 
   @override
-  String get templateGigWorkEarned => 'Earned';
+  String get builtInGigWorkEarned => 'Earned';
 
   @override
-  String get templateGigWorkDistance => 'Distance';
+  String get builtInGigWorkDistance => 'Distance';
 
   @override
-  String get templateNetworking => 'Networking';
+  String get builtInNetworking => 'Networking';
 
   @override
-  String get templateNetworkingPerson => 'Person';
+  String get builtInNetworkingPerson => 'Person';
 
   @override
-  String get templateNetworkingWhereWeMet => 'Where we met';
+  String get builtInNetworkingWhereWeMet => 'Where we met';
 
   @override
-  String get templateNetworkingFollowUpOn => 'Follow up on';
+  String get builtInNetworkingFollowUpOn => 'Follow up on';
 
   @override
-  String get templateWeeklyReview => 'Weekly review';
+  String get builtInWeeklyReview => 'Weekly review';
 
   @override
-  String get templateWeeklyReviewWins => 'Wins';
+  String get builtInWeeklyReviewWins => 'Wins';
 
   @override
-  String get templateWeeklyReviewLessons => 'Lessons';
+  String get builtInWeeklyReviewLessons => 'Lessons';
 
   @override
-  String get templateWeeklyReviewNextWeek => 'Next week';
+  String get builtInWeeklyReviewNextWeek => 'Next week';
 
   @override
-  String get templateWeeklyReviewNextWeekItem => 'Priority';
+  String get builtInWeeklyReviewNextWeekItem => 'Priority';
 
   @override
-  String get templateWeeklyReviewNextWeekPriority => 'Priority';
+  String get builtInWeeklyReviewNextWeekPriority => 'Priority';
 
   @override
-  String get templateWeeklyReviewNextWeekDone => 'Done';
+  String get builtInWeeklyReviewNextWeekDone => 'Done';
 
   @override
-  String get templateGoalCheckIn => 'Goal check-in';
+  String get builtInGoalCheckIn => 'Goal check-in';
 
   @override
-  String get templateGoalCheckInGoal => 'Goal';
+  String get builtInGoalCheckInGoal => 'Goal';
 
   @override
-  String get templateGoalCheckInProgress => 'Progress';
+  String get builtInGoalCheckInProgress => 'Progress';
 
   @override
-  String get templateGoalCheckInNextStep => 'Next step';
+  String get builtInGoalCheckInNextStep => 'Next step';
 
   @override
-  String get templateTuition => 'Tuition';
+  String get builtInTuition => 'Tuition';
 
   @override
-  String get templateTuitionSubject => 'Subject';
+  String get builtInTuitionSubject => 'Subject';
 
   @override
-  String get templateTuitionTopic => 'Topic';
+  String get builtInTuitionTopic => 'Topic';
 
   @override
-  String get templateTuitionTestScore => 'Test score';
+  String get builtInTuitionTestScore => 'Test score';
 
   @override
-  String get templateExamPrep => 'Exam prep';
+  String get builtInExamPrep => 'Exam prep';
 
   @override
-  String get templateExamPrepExam => 'Exam';
+  String get builtInExamPrepExam => 'Exam';
 
   @override
-  String get templateExamPrepTopicsCovered => 'Topics covered';
+  String get builtInExamPrepTopicsCovered => 'Topics covered';
 
   @override
-  String get templateExamPrepMockTestScore => 'Mock test score';
+  String get builtInExamPrepMockTestScore => 'Mock test score';
 
   @override
-  String get templateExamPrepConfidence => 'Confidence';
+  String get builtInExamPrepConfidence => 'Confidence';
 
   @override
-  String get templateFlashcards => 'Flashcards';
+  String get builtInFlashcards => 'Flashcards';
 
   @override
-  String get templateFlashcardsDeck => 'Deck';
+  String get builtInFlashcardsDeck => 'Deck';
 
   @override
-  String get templateFlashcardsCardsReviewed => 'Cards reviewed';
+  String get builtInFlashcardsCardsReviewed => 'Cards reviewed';
 
   @override
-  String get templateFlashcardsCorrect => 'Correct';
+  String get builtInFlashcardsCorrect => 'Correct';
 
   @override
-  String get templateTeaching => 'Teaching';
+  String get builtInTeaching => 'Teaching';
 
   @override
-  String get templateTeachingTopic => 'Topic';
+  String get builtInTeachingTopic => 'Topic';
 
   @override
-  String get templateTeachingStudents => 'Students';
+  String get builtInTeachingStudents => 'Students';
 
   @override
-  String get templateTeachingHowItWent => 'How it went';
+  String get builtInTeachingHowItWent => 'How it went';
 
   @override
-  String get templateSuryaNamaskar => 'Surya namaskar';
+  String get builtInSuryaNamaskar => 'Surya namaskar';
 
   @override
-  String get templateSuryaNamaskarRounds => 'Rounds';
+  String get builtInSuryaNamaskarRounds => 'Rounds';
 
   @override
-  String get templateSuryaNamaskarFeltAfter => 'Felt after';
+  String get builtInSuryaNamaskarFeltAfter => 'Felt after';
 
   @override
-  String get templatePilates => 'Pilates';
+  String get builtInPilates => 'Pilates';
 
   @override
-  String get templatePilatesKind => 'Kind';
+  String get builtInPilatesKind => 'Kind';
 
   @override
-  String get templatePilatesKindMat => 'Mat';
+  String get builtInPilatesKindMat => 'Mat';
 
   @override
-  String get templatePilatesKindReformer => 'Reformer';
+  String get builtInPilatesKindReformer => 'Reformer';
 
   @override
-  String get templatePilatesFeltAfter => 'Felt after';
+  String get builtInPilatesFeltAfter => 'Felt after';
 
   @override
-  String get templateClimbing => 'Climbing';
+  String get builtInClimbing => 'Climbing';
 
   @override
-  String get templateClimbingKind => 'Kind';
+  String get builtInClimbingKind => 'Kind';
 
   @override
-  String get templateClimbingKindBouldering => 'Bouldering';
+  String get builtInClimbingKindBouldering => 'Bouldering';
 
   @override
-  String get templateClimbingKindTopRope => 'Top rope';
+  String get builtInClimbingKindTopRope => 'Top rope';
 
   @override
-  String get templateClimbingKindLead => 'Lead';
+  String get builtInClimbingKindLead => 'Lead';
 
   @override
-  String get templateClimbingKindOutdoor => 'Outdoor';
+  String get builtInClimbingKindOutdoor => 'Outdoor';
 
   @override
-  String get templateClimbingRoutes => 'Routes';
+  String get builtInClimbingRoutes => 'Routes';
 
   @override
-  String get templateClimbingHardestGrade => 'Hardest grade';
+  String get builtInClimbingHardestGrade => 'Hardest grade';
 
   @override
-  String get templateMartialArts => 'Martial arts';
+  String get builtInMartialArts => 'Martial arts';
 
   @override
-  String get templateMartialArtsStyle => 'Style';
+  String get builtInMartialArtsStyle => 'Style';
 
   @override
-  String get templateMartialArtsTechniques => 'Techniques';
+  String get builtInMartialArtsTechniques => 'Techniques';
 
   @override
-  String get templateMartialArtsSparringRounds => 'Sparring rounds';
+  String get builtInMartialArtsSparringRounds => 'Sparring rounds';
 
   @override
-  String get templateGolf => 'Golf';
+  String get builtInGolf => 'Golf';
 
   @override
-  String get templateGolfCourse => 'Course';
+  String get builtInGolfCourse => 'Course';
 
   @override
-  String get templateGolfHoles => 'Holes';
+  String get builtInGolfHoles => 'Holes';
 
   @override
-  String get templateGolfHoles9 => '9';
+  String get builtInGolfHoles9 => '9';
 
   @override
-  String get templateGolfHoles18 => '18';
+  String get builtInGolfHoles18 => '18';
 
   @override
-  String get templateGolfScore => 'Score';
+  String get builtInGolfScore => 'Score';
 
   @override
-  String get templateWinterSports => 'Winter sports';
+  String get builtInWinterSports => 'Winter sports';
 
   @override
-  String get templateWinterSportsKind => 'Kind';
+  String get builtInWinterSportsKind => 'Kind';
 
   @override
-  String get templateWinterSportsKindSkiing => 'Skiing';
+  String get builtInWinterSportsKindSkiing => 'Skiing';
 
   @override
-  String get templateWinterSportsKindSnowboarding => 'Snowboarding';
+  String get builtInWinterSportsKindSnowboarding => 'Snowboarding';
 
   @override
-  String get templateWinterSportsKindIceSkating => 'Ice skating';
+  String get builtInWinterSportsKindIceSkating => 'Ice skating';
 
   @override
-  String get templateWinterSportsKindSledging => 'Sledging';
+  String get builtInWinterSportsKindSledging => 'Sledging';
 
   @override
-  String get templateWinterSportsRuns => 'Runs';
+  String get builtInWinterSportsRuns => 'Runs';
 
   @override
-  String get templateWinterSportsWhere => 'Where';
+  String get builtInWinterSportsWhere => 'Where';
 
   @override
-  String get templatePranayama => 'Pranayama';
+  String get builtInPranayama => 'Pranayama';
 
   @override
-  String get templatePranayamaTechnique => 'Technique';
+  String get builtInPranayamaTechnique => 'Technique';
 
   @override
-  String get templatePranayamaTechniqueAnulomVilom => 'Anulom vilom';
+  String get builtInPranayamaTechniqueAnulomVilom => 'Anulom vilom';
 
   @override
-  String get templatePranayamaTechniqueKapalbhati => 'Kapalbhati';
+  String get builtInPranayamaTechniqueKapalbhati => 'Kapalbhati';
 
   @override
-  String get templatePranayamaTechniqueBhramari => 'Bhramari';
+  String get builtInPranayamaTechniqueBhramari => 'Bhramari';
 
   @override
-  String get templatePranayamaTechniqueBhastrika => 'Bhastrika';
+  String get builtInPranayamaTechniqueBhastrika => 'Bhastrika';
 
   @override
-  String get templatePranayamaTechniqueUjjayi => 'Ujjayi';
+  String get builtInPranayamaTechniqueUjjayi => 'Ujjayi';
 
   @override
-  String get templatePranayamaRounds => 'Rounds';
+  String get builtInPranayamaRounds => 'Rounds';
 
   @override
-  String get templateTimeOutdoors => 'Time outdoors';
+  String get builtInTimeOutdoors => 'Time outdoors';
 
   @override
-  String get templateTimeOutdoorsWhere => 'Where';
+  String get builtInTimeOutdoorsWhere => 'Where';
 
   @override
-  String get templateTimeOutdoorsMorningSunlight => 'Morning sunlight';
+  String get builtInTimeOutdoorsMorningSunlight => 'Morning sunlight';
 
   @override
-  String get templateTimeOutdoorsFeltAfter => 'Felt after';
+  String get builtInTimeOutdoorsFeltAfter => 'Felt after';
 
   @override
-  String get templateSocialMedia => 'Social media';
+  String get builtInSocialMedia => 'Social media';
 
   @override
-  String get templateSocialMediaApps => 'Apps';
+  String get builtInSocialMediaApps => 'Apps';
 
   @override
-  String get templateSocialMediaAppsInstagram => 'Instagram';
+  String get builtInSocialMediaAppsInstagram => 'Instagram';
 
   @override
-  String get templateSocialMediaAppsYouTube => 'YouTube';
+  String get builtInSocialMediaAppsYouTube => 'YouTube';
 
   @override
-  String get templateSocialMediaAppsTikTok => 'TikTok';
+  String get builtInSocialMediaAppsTikTok => 'TikTok';
 
   @override
-  String get templateSocialMediaAppsWhatsApp => 'WhatsApp';
+  String get builtInSocialMediaAppsWhatsApp => 'WhatsApp';
 
   @override
-  String get templateSocialMediaAppsFacebook => 'Facebook';
+  String get builtInSocialMediaAppsFacebook => 'Facebook';
 
   @override
-  String get templateSocialMediaAppsX => 'X';
+  String get builtInSocialMediaAppsX => 'X';
 
   @override
-  String get templateSocialMediaAppsReddit => 'Reddit';
+  String get builtInSocialMediaAppsReddit => 'Reddit';
 
   @override
-  String get templateSocialMediaAppsSnapchat => 'Snapchat';
+  String get builtInSocialMediaAppsSnapchat => 'Snapchat';
 
   @override
-  String get templateSocialMediaTimeSpent => 'Time spent';
+  String get builtInSocialMediaTimeSpent => 'Time spent';
 
   @override
-  String get templateSocialMediaFeltAfter => 'Felt after';
+  String get builtInSocialMediaFeltAfter => 'Felt after';
 
   @override
-  String get templateNews => 'News';
+  String get builtInNews => 'News';
 
   @override
-  String get templateNewsSource => 'Source';
+  String get builtInNewsSource => 'Source';
 
   @override
-  String get templateNewsWhatStoodOut => 'What stood out';
+  String get builtInNewsWhatStoodOut => 'What stood out';
 
   @override
-  String get templateKindAct => 'Kind act';
+  String get builtInKindAct => 'Kind act';
 
   @override
-  String get templateKindActWhatIDid => 'What I did';
+  String get builtInKindActWhatIDid => 'What I did';
 
   @override
-  String get templateKindActForWhom => 'For whom';
+  String get builtInKindActForWhom => 'For whom';
 
   @override
-  String get templateCategoryFaithAndSpirituality => 'Faith & spirituality';
+  String get builtInCategoryFaithAndSpirituality => 'Faith & spirituality';
 
   @override
-  String get templatePuja => 'Puja';
+  String get builtInPuja => 'Puja';
 
   @override
-  String get templatePujaDeityOrOccasion => 'Deity or occasion';
+  String get builtInPujaDeityOrOccasion => 'Deity or occasion';
 
   @override
-  String get templatePujaOfferings => 'Offerings';
+  String get builtInPujaOfferings => 'Offerings';
 
   @override
-  String get templatePujaOfferingsFlowers => 'Flowers';
+  String get builtInPujaOfferingsFlowers => 'Flowers';
 
   @override
-  String get templatePujaOfferingsDiya => 'Diya';
+  String get builtInPujaOfferingsDiya => 'Diya';
 
   @override
-  String get templatePujaOfferingsIncense => 'Incense';
+  String get builtInPujaOfferingsIncense => 'Incense';
 
   @override
-  String get templatePujaOfferingsPrasad => 'Prasad';
+  String get builtInPujaOfferingsPrasad => 'Prasad';
 
   @override
-  String get templatePujaOfferingsAarti => 'Aarti';
+  String get builtInPujaOfferingsAarti => 'Aarti';
 
   @override
-  String get templatePujaWithFamily => 'With family';
+  String get builtInPujaWithFamily => 'With family';
 
   @override
-  String get templateSalah => 'Salah';
+  String get builtInSalah => 'Salah';
 
   @override
-  String get templateSalahPrayers => 'Prayers';
+  String get builtInSalahPrayers => 'Prayers';
 
   @override
-  String get templateSalahPrayersFajr => 'Fajr';
+  String get builtInSalahPrayersFajr => 'Fajr';
 
   @override
-  String get templateSalahPrayersDhuhr => 'Dhuhr';
+  String get builtInSalahPrayersDhuhr => 'Dhuhr';
 
   @override
-  String get templateSalahPrayersAsr => 'Asr';
+  String get builtInSalahPrayersAsr => 'Asr';
 
   @override
-  String get templateSalahPrayersMaghrib => 'Maghrib';
+  String get builtInSalahPrayersMaghrib => 'Maghrib';
 
   @override
-  String get templateSalahPrayersIsha => 'Isha';
+  String get builtInSalahPrayersIsha => 'Isha';
 
   @override
-  String get templateSalahOnTime => 'On time';
+  String get builtInSalahOnTime => 'On time';
 
   @override
-  String get templateSalahAtTheMosque => 'At the mosque';
+  String get builtInSalahAtTheMosque => 'At the mosque';
 
   @override
-  String get templateScriptureReading => 'Scripture reading';
+  String get builtInScriptureReading => 'Scripture reading';
 
   @override
-  String get templateScriptureReadingText => 'Text';
+  String get builtInScriptureReadingText => 'Text';
 
   @override
-  String get templateScriptureReadingPassage => 'Passage';
+  String get builtInScriptureReadingPassage => 'Passage';
 
   @override
-  String get templateScriptureReadingReflection => 'Reflection';
+  String get builtInScriptureReadingReflection => 'Reflection';
 
   @override
-  String get templateChanting => 'Chanting';
+  String get builtInChanting => 'Chanting';
 
   @override
-  String get templateChantingMantra => 'Mantra';
+  String get builtInChantingMantra => 'Mantra';
 
   @override
-  String get templateChantingMalas => 'Malas';
+  String get builtInChantingMalas => 'Malas';
 
   @override
-  String get templateChantingCount => 'Count';
+  String get builtInChantingCount => 'Count';
 
   @override
-  String get templateReligiousFast => 'Religious fast';
+  String get builtInReligiousFast => 'Religious fast';
 
   @override
-  String get templateReligiousFastOccasion => 'Occasion';
+  String get builtInReligiousFastOccasion => 'Occasion';
 
   @override
-  String get templateReligiousFastKind => 'Kind';
+  String get builtInReligiousFastKind => 'Kind';
 
   @override
-  String get templateReligiousFastKindSunriseToSunset => 'Sunrise to sunset';
+  String get builtInReligiousFastKindSunriseToSunset => 'Sunrise to sunset';
 
   @override
-  String get templateReligiousFastKindWaterOnly => 'Water only';
+  String get builtInReligiousFastKindWaterOnly => 'Water only';
 
   @override
-  String get templateReligiousFastKindFruitAndMilk => 'Fruit and milk';
+  String get builtInReligiousFastKindFruitAndMilk => 'Fruit and milk';
 
   @override
-  String get templateReligiousFastKindOneMeal => 'One meal';
+  String get builtInReligiousFastKindOneMeal => 'One meal';
 
   @override
-  String get templateReligiousFastKindNoWater => 'No water';
+  String get builtInReligiousFastKindNoWater => 'No water';
 
   @override
-  String get templateReligiousFastBrokeTheFastAt => 'Broke the fast at';
+  String get builtInReligiousFastBrokeTheFastAt => 'Broke the fast at';
 
   @override
-  String get templateWatchingSport => 'Watching sport';
+  String get builtInWatchingSport => 'Watching sport';
 
   @override
-  String get templateWatchingSportMatch => 'Match';
+  String get builtInWatchingSportMatch => 'Match';
 
   @override
-  String get templateWatchingSportTeam => 'Team';
+  String get builtInWatchingSportTeam => 'Team';
 
   @override
-  String get templateWatchingSportResult => 'Result';
+  String get builtInWatchingSportResult => 'Result';
 
   @override
-  String get templateWatchingSportResultWon => 'Won';
+  String get builtInWatchingSportResultWon => 'Won';
 
   @override
-  String get templateWatchingSportResultLost => 'Lost';
+  String get builtInWatchingSportResultLost => 'Lost';
 
   @override
-  String get templateWatchingSportResultDraw => 'Draw';
+  String get builtInWatchingSportResultDraw => 'Draw';
 
   @override
-  String get templateWatchingSportResultNoResult => 'No result';
+  String get builtInWatchingSportResultNoResult => 'No result';
 
   @override
-  String get templateFishing => 'Fishing';
+  String get builtInFishing => 'Fishing';
 
   @override
-  String get templateFishingSpot => 'Spot';
+  String get builtInFishingSpot => 'Spot';
 
   @override
-  String get templateFishingCatch => 'Catch';
+  String get builtInFishingCatch => 'Catch';
 
   @override
-  String get templateFishingCatchItem => 'Fish';
+  String get builtInFishingCatchItem => 'Fish';
 
   @override
-  String get templateFishingCatchFish => 'Fish';
+  String get builtInFishingCatchFish => 'Fish';
 
   @override
-  String get templateFishingCatchWeight => 'Weight';
+  String get builtInFishingCatchWeight => 'Weight';
 
   @override
-  String get templateContentCreation => 'Content creation';
+  String get builtInContentCreation => 'Content creation';
 
   @override
-  String get templateContentCreationPlatform => 'Platform';
+  String get builtInContentCreationPlatform => 'Platform';
 
   @override
-  String get templateContentCreationPlatformYouTube => 'YouTube';
+  String get builtInContentCreationPlatformYouTube => 'YouTube';
 
   @override
-  String get templateContentCreationPlatformInstagram => 'Instagram';
+  String get builtInContentCreationPlatformInstagram => 'Instagram';
 
   @override
-  String get templateContentCreationPlatformTikTok => 'TikTok';
+  String get builtInContentCreationPlatformTikTok => 'TikTok';
 
   @override
-  String get templateContentCreationPlatformBlog => 'Blog';
+  String get builtInContentCreationPlatformBlog => 'Blog';
 
   @override
-  String get templateContentCreationPlatformPodcast => 'Podcast';
+  String get builtInContentCreationPlatformPodcast => 'Podcast';
 
   @override
-  String get templateContentCreationPlatformOther => 'Other';
+  String get builtInContentCreationPlatformOther => 'Other';
 
   @override
-  String get templateContentCreationPiece => 'Piece';
+  String get builtInContentCreationPiece => 'Piece';
 
   @override
-  String get templateContentCreationViews => 'Views';
+  String get builtInContentCreationViews => 'Views';
+
+  @override
+  String get activitiesYours => 'Yours';
 }

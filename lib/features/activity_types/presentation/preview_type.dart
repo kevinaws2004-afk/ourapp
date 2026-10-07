@@ -3,7 +3,7 @@ import '../domain/activity_type.dart';
 import '../domain/activity_type_definition.dart';
 
 /// An unsaved activity built from definitions, for showing the real form
-/// (the builder's live preview, a template's preview, B8). Each field gets
+/// (the builder's live preview, a built-in activity's preview, B8). Each field gets
 /// a stable preview ID from its key.
 ActivityType previewType({
   required String name,

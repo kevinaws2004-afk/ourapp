@@ -35,7 +35,7 @@ Use these terms exactly in code, UI discussions and docs.
 
 | Term | Definition | Spec |
 |---|---|---|
-| **Activity Type** | A reusable definition/template (e.g. Gym, Reading). Defines name, icon, appearance, ordered fields, which fields are measurable, timer support, plannability. **Not an event.** | §3.1 |
+| **Activity Type** | A reusable definition (UI: an activity, e.g. Gym, Reading); built-in ones and the user's own are the same thing (ADR-042). Defines name, icon, appearance, ordered fields, which fields are measurable, timer support, plannability. **Not an event.** | §3.1 |
 | **Activity Field** (Field) | One configurable input belonging to an Activity Type: name, field type, position, required, config. | §10 |
 | **Field Type** | The kind of input/value a field holds (Text, Number, Duration, Set Table…). A fixed catalog provided by the app. | §9 |
 | **Activity Log** (Log) | Internal/domain name for what actually happened: an Activity Type instance with times and field values. Represents **reality**. In the UI this is a **record**: users *record* an activity (ADR-028). | §3.3 |
@@ -71,7 +71,7 @@ The analytics engine does not know what an activity *means*. It only understands
 | **Today** | The specialized view of the current date: today's plan, today's reality (what was recorded) and their planned-vs-actual relationship (§35). |
 | **Plan** | The date-based planning system. A calendar/date selector reaches any past, present or future date and shows that date's plans next to what was actually recorded. Flow: select a date → its plans → select a planned activity → do it → record what happened. Plans include tasks. |
 | **Insights** | Progress, measurements and patterns. |
-| **Me** | **Activities** (create/configure reusable Activity Types: builder, templates), body measurements, preferences, settings, export. |
+| **Me** | **Activities** (one list of activities: yours and built-in ones; builder), body measurements, preferences, settings, export. |
 
 Cross-cutting: **logging into items** (anything unplanned is added to the day with "Start now" and opened; §37, ADR-035), **Focus Mode** (§16), **Search & History** (§38), **Onboarding** (§33.4).
 
@@ -84,11 +84,11 @@ Every log already has a built-in start time, actual **duration** (ADR-021) and *
 | Activity | Spec fields → V1 composition | Status |
 |---|---|---|
 | Gym (§12) | Exercises → Repeating Group { Exercise: Text, Sets → Repeating Group { Weight: Number (mass), Reps: Number } } | Phase 3 (Repeating Group) |
-| Reading (§14) | Book: Text · Pages: Number · Rating: Rating; the timer fills the log's duration | Phase 2 template |
+| Reading (§14) | Book: Text · Pages: Number · Rating: Rating; the timer fills the log's duration | Phase 2 built-in |
 | Meeting (§22) | People: Multi Select or Text · Topics/Decisions: Text (multi-line) · Action items: Repeating Group { Item: Text, Done: Boolean } | Phase 3 |
-| Walking (§2.1) | Distance: Number (distance) · Steps: Number · Calories: Number (energy) · Location: Text | Phase 2 template |
-| Focused Work | Project: Text; timer | Phase 2 template |
-| Language Learning (§31) | Language: Single Select · Words learned: Number · Lesson: Text · Difficulty: Rating | Phase 2 template |
+| Walking (§2.1) | Distance: Number (distance) · Steps: Number · Calories: Number (energy) · Location: Text | Phase 2 built-in |
+| Focused Work | Project: Text; timer | Phase 2 built-in |
+| Language Learning (§31) | Language: Single Select · Words learned: Number · Lesson: Text · Difficulty: Rating | Phase 2 built-in |
 | Cooking (§32) | Recipe: Text · Servings: Number · Calories: Number (energy) · Rating · Ingredients: Repeating Group { Item, Done } | Phase 3 |
 
 ## 8. V1 scope summary

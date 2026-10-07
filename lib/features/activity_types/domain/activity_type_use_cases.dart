@@ -155,23 +155,23 @@ class RestoreActivityType {
   Future<void> call(ActivityTypeId id) => _repository.restore(id);
 }
 
-/// A starter template is plain data (data_architecture.md §9). Installing it
+/// A built-in activity is plain data (data_architecture.md §9). Installing it
 /// creates an ordinary type with fresh IDs (including select option IDs).
-class InstallActivityTemplate {
-  const InstallActivityTemplate(this._create, this._ids);
+class AddBuiltInActivity {
+  const AddBuiltInActivity(this._create, this._ids);
 
   final CreateActivityType _create;
   final IdGenerator _ids;
 
-  Future<ActivityTypeId> call(ActivityTypeDefinition template) => _create(
+  Future<ActivityTypeId> call(ActivityTypeDefinition builtIn) => _create(
     ActivityTypeDefinition(
-      name: template.name,
-      iconId: template.iconId,
-      colorKey: template.colorKey,
-      description: template.description,
-      supportsTimer: template.supportsTimer,
-      supportsPlanning: template.supportsPlanning,
-      fields: [for (final field in template.fields) _freshOptionIds(field)],
+      name: builtIn.name,
+      iconId: builtIn.iconId,
+      colorKey: builtIn.colorKey,
+      description: builtIn.description,
+      supportsTimer: builtIn.supportsTimer,
+      supportsPlanning: builtIn.supportsPlanning,
+      fields: [for (final field in builtIn.fields) _freshOptionIds(field)],
     ),
   );
 

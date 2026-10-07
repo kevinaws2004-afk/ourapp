@@ -16,7 +16,7 @@ import '../../../../shared/widgets/state_views.dart';
 import '../../../activity_types/domain/activity_ids.dart';
 import '../../../activity_types/domain/activity_type.dart';
 import '../../../activity_types/domain/activity_type_definition.dart';
-import '../../../activity_types/presentation/everyday_templates.dart';
+import '../../../activity_types/presentation/built_in_activities.dart';
 import '../../../activity_types/presentation/activity_type_providers.dart';
 import '../../domain/plan.dart';
 import '../../domain/plan_title_match.dart';
@@ -27,17 +27,18 @@ import 'plan_time_sheet.dart';
 
 /// Fast day planning (F3): type what you'll do and press enter (or "+") to
 /// add it to the day; the keyboard stays open for the next one. While
-/// typing, matching activities and ready-made templates are suggested (A6),
+/// typing, matching activities are suggested (A6): yours first, then
+/// built-in ones, shown the same way (ADR-042),
 /// and two actions appear: **Start now** (today only: it starts now and opens
 /// right away, ADR-035) and a time, chosen in one sheet (A5).
 ///
 /// Every item comes from an activity. Typing an activity's name ("Gym")
 /// plans that activity, so its item has its fields (ADR-030); its chip
-/// lights up to show it. A template's name installs that template first,
-/// unless an activity already has the name (names are unique, A8). Any other
+/// lights up to show it. A built-in activity's name saves it as yours first,
+/// unless one of yours already has the name (names are unique, A8). Any other
 /// name ("Bath") opens the builder to make it your own: you choose what to
-/// log, and the new activity is added to the day. **Templates** and **Make
-/// your own** do the same without typing ([chooser]).
+/// log, and the new activity is added to the day. **Browse activities** and
+/// **Make your own** do the same without typing ([chooser]).
 class PlanQuickAdd extends ConsumerStatefulWidget {
   const PlanQuickAdd({
     super.key,
@@ -51,7 +52,8 @@ class PlanQuickAdd extends ConsumerStatefulWidget {
 
   final LocalDate date;
 
-  /// Picks a template or makes a new activity for what's being added.
+  /// Picks an activity from the list, or makes a new one, for what's being
+  /// added.
   final ActivityChooser chooser;
 
   /// Offers "Start now" (today only): the item starts now and opens right
@@ -121,8 +123,8 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
           ).toUtc();
   }
 
-  /// The activity for this plan: the chosen chip, an activity with the typed
-  /// name, or a starter template with that name (installed now). Null when
+  /// The activity for this plan: the chosen chip, one of yours with the typed
+  /// name, or a built-in one with that name (saved as yours now). Null when
   /// nothing has the name yet.
   Future<ActivityTypeId?> _resolveActivity(AppLocalizations l10n) async {
     if (_typeId case final id?) return id;
@@ -130,14 +132,14 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
       // Not plannable (or it would be a chip): validation says so.
       return type.id;
     }
-    final template = matchByName<ActivityTypeDefinition>(
+    final builtIn = matchByName<ActivityTypeDefinition>(
       _title.text,
-      activityTemplates(l10n),
+      builtInActivities(l10n),
       (t) => t.name,
     );
-    if (template == null) return null;
-    // No pop-up: the suggestion already said it's ready-made (A9).
-    return ref.read(installActivityTemplateProvider)(template);
+    if (builtIn == null) return null;
+    // No pop-up: it was suggested like any activity (A9).
+    return ref.read(addBuiltInActivityProvider)(builtIn);
   }
 
   Future<void> _add({bool now = false}) async {
@@ -187,8 +189,8 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
     }
   }
 
-  /// Chooses the activity from [pick] (a template, or a new one of your
-  /// own); its chip lights up, ready to add or give a time.
+  /// Chooses the activity from [pick] (the list of activities, or a new one
+  /// of your own); its chip lights up, ready to add or give a time.
   Future<void> _choose(Future<ActivityTypeId?> Function() pick) async {
     final id = await pick();
     if (id == null || !mounted) return;
@@ -260,12 +262,12 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
           _Suggestions(
             text: _title.text,
             types: recent,
-            templates: [
-              for (final t in activityTemplates(l10n))
-                if (matchByName(t.name, active, (a) => a.name) == null) t,
+            builtIns: [
+              for (final d in builtInActivities(l10n))
+                if (matchByName(d.name, active, (a) => a.name) == null) d,
             ],
             onType: (type) => _useName(type.name),
-            onTemplate: (template) => _useName(template.name),
+            onBuiltIn: (definition) => _useName(definition.name),
             onMakeOwn: _add,
           ),
         if (!_hasInput) ...[
@@ -275,10 +277,10 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
             runSpacing: AppSpacing.xs,
             children: [
               AppButton(
-                label: l10n.planBrowseTemplates,
-                icon: AppIcons.template,
+                label: l10n.planBrowseActivities,
+                icon: AppIcons.browse,
                 variant: AppButtonVariant.tertiary,
-                onPressed: () => _choose(widget.chooser.pickTemplate),
+                onPressed: () => _choose(widget.chooser.browse),
               ),
               AppButton(
                 label: l10n.planMakeOwn,
@@ -345,14 +347,15 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
   }
 }
 
-/// Activities and ready-made templates matching what's being typed (A6).
+/// Activities matching what's being typed (A6): yours, then built-in ones,
+/// each with what it logs and nothing marking which is which (ADR-042).
 class _Suggestions extends StatelessWidget {
   const _Suggestions({
     required this.text,
     required this.types,
-    required this.templates,
+    required this.builtIns,
     required this.onType,
-    required this.onTemplate,
+    required this.onBuiltIn,
     required this.onMakeOwn,
   });
 
@@ -361,10 +364,10 @@ class _Suggestions extends StatelessWidget {
   final String text;
   final List<ActivityType> types;
 
-  /// Templates no activity has the name of yet.
-  final List<ActivityTypeDefinition> templates;
+  /// Built-in activities none of yours has the name of.
+  final List<ActivityTypeDefinition> builtIns;
   final ValueChanged<ActivityType> onType;
-  final ValueChanged<ActivityTypeDefinition> onTemplate;
+  final ValueChanged<ActivityTypeDefinition> onBuiltIn;
 
   /// Makes the typed name a new activity of your own.
   final VoidCallback onMakeOwn;
@@ -378,20 +381,20 @@ class _Suggestions extends StatelessWidget {
       (t) => t.name,
       limit: _limit,
     );
-    final matchingTemplates = suggestByName(
+    final matchingBuiltIns = suggestByName(
       text,
-      templates,
+      builtIns,
       (t) => t.name,
       limit: _limit - matchingTypes.length,
     );
-    final exact = matchByName(text, matchingTemplates, (t) => t.name);
+    final exact = matchByName(text, matchingBuiltIns, (t) => t.name);
     // Offer to make it your own unless the name is already taken (A8).
     final name = text.trim();
     final isNew =
         name.isNotEmpty &&
         exact == null &&
         matchByName(text, types, (t) => t.name) == null;
-    if (matchingTypes.isEmpty && matchingTemplates.isEmpty && !isNew) {
+    if (matchingTypes.isEmpty && matchingBuiltIns.isEmpty && !isNew) {
       return const SizedBox.shrink();
     }
     return Padding(
@@ -404,19 +407,17 @@ class _Suggestions extends StatelessWidget {
               iconId: type.iconId,
               colorKey: type.colorKey,
               title: type.name,
-              subtitle: l10n.planSuggestionYours,
+              subtitle: type.activeFields.map((f) => f.name).join(' · '),
               onTap: () => onType(type),
             ),
-          for (final template in matchingTemplates)
+          for (final definition in matchingBuiltIns)
             _SuggestionTile(
-              iconId: template.iconId,
-              colorKey: template.colorKey,
-              title: template.name,
-              subtitle: l10n.planSuggestionReadyMade(
-                template.fields.map((f) => f.name).join(' · '),
-              ),
-              selected: identical(template, exact),
-              onTap: () => onTemplate(template),
+              iconId: definition.iconId,
+              colorKey: definition.colorKey,
+              title: definition.name,
+              subtitle: definition.fields.map((f) => f.name).join(' · '),
+              selected: identical(definition, exact),
+              onTap: () => onBuiltIn(definition),
             ),
           if (isNew)
             ListTile(
@@ -458,7 +459,9 @@ class _SuggestionTile extends StatelessWidget {
       size: AppSizes.badgeSmall,
     ),
     title: Text(title),
-    subtitle: Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis),
+    subtitle: subtitle.isEmpty
+        ? null
+        : Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis),
     trailing: selected
         ? Icon(AppIcons.check, color: context.colors.brandPrimary)
         : null,

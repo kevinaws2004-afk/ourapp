@@ -53,7 +53,7 @@ class _PlanEditorSheet extends ConsumerStatefulWidget {
   final LocalDate date;
   final PlannedItem? item;
 
-  /// Offers Templates and Make your own. A new plan without an activity
+  /// Offers Browse activities and Make your own. A new plan without an activity
   /// is made your own on saving: every new item comes from an activity.
   final ActivityChooser? chooser;
 
@@ -137,8 +137,8 @@ class _PlanEditorSheetState extends ConsumerState<_PlanEditorSheet> {
     }
   }
 
-  /// Chooses the activity from [pick] (a template, or a new one of your
-  /// own).
+  /// Chooses the activity from [pick] (the list of activities, or a new
+  /// one of your own).
   Future<void> _choose(Future<ActivityTypeId?> Function() pick) async {
     final id = await pick();
     if (id != null && mounted) setState(() => _typeId = id);
@@ -256,9 +256,9 @@ class _PlanEditorSheetState extends ConsumerState<_PlanEditorSheet> {
                       ),
                     if (widget.chooser case final chooser?) ...[
                       ActionChip(
-                        avatar: const Icon(AppIcons.template),
-                        label: Text(l10n.planBrowseTemplates),
-                        onPressed: () => _choose(chooser.pickTemplate),
+                        avatar: const Icon(AppIcons.browse),
+                        label: Text(l10n.planBrowseActivities),
+                        onPressed: () => _choose(chooser.browse),
                       ),
                       ActionChip(
                         avatar: const Icon(AppIcons.add),

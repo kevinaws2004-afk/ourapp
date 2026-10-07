@@ -48,8 +48,8 @@ final restoreActivityTypeProvider = Provider(
   (ref) => RestoreActivityType(ref.watch(activityTypeRepositoryProvider)),
 );
 
-final installActivityTemplateProvider = Provider(
-  (ref) => InstallActivityTemplate(
+final addBuiltInActivityProvider = Provider(
+  (ref) => AddBuiltInActivity(
     ref.watch(createActivityTypeProvider),
     ref.watch(idGeneratorProvider),
   ),

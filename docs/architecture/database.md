@@ -395,7 +395,7 @@ Rules, enforced by triggers and the domain:
 | Create/update activity type | `activity_types` + insert/update/soft-delete `activity_fields` (sub-fields after their parent) + position rewrite |
 | Log activity / update log | `activity_logs` + insert/reposition/delete `log_group_items` + upsert/delete `log_values` |
 | Delete/restore log or type | the row's `deleted_at` + `updated_at` |
-| Install template | type + fields |
+| Use a built-in activity | type + fields |
 | Reorder plans | `sort_order` of the date's untimed plans |
 | Finish a focus session | the record (+ items + values) and the session's finished state (`UnitOfWork`, ADR-031) |
 
