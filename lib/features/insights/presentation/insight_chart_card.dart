@@ -119,7 +119,12 @@ class InsightChartCard extends ConsumerWidget {
                   data: (result) => _Content(
                     chart: chart,
                     result: result,
-                    display: InsightDisplay.of(l10n, chart.source, type),
+                    display: InsightDisplay.of(
+                      l10n,
+                      chart.source,
+                      type,
+                      material: MaterialLocalizations.of(context),
+                    ),
                     accent: accent,
                     itemLabel: _itemLabel(chart.source, type),
                   ),
@@ -241,18 +246,14 @@ class _Content extends StatelessWidget {
           kind: chart.kind == ChartKind.bar || planned != null
               ? AppChartKind.bar
               : AppChartKind.line,
-          // A partial first bucket is labelled with the period's first day,
-          // so the chart starts where the period does (A20).
+          // Every bucket is whole (A2), labelled by its first day.
           labels: [
             for (final b in series.buckets)
-              bucketLabel(
-                context,
-                b.start.compareTo(result.from) < 0 ? result.from : b.start,
-                chart.bucket,
-              ),
+              bucketLabel(context, b.start, result.bucket),
           ],
           formatValue: display.axis,
           wholeNumbers: display.wholeNumbers,
+          fixedMax: display.fixedMax,
           series: [
             if (planned != null)
               ChartSeries(

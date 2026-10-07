@@ -220,22 +220,27 @@ InsightSeries (buckets + total, count, average, best, latest) ──▶ AppChart
 **InsightSource** variants (sealed):
 - `ActivityDurationSource(type)`: `activity_logs.duration_ms` per record (ADR-021).
 - `ActivityCountSource(type)`: 1 per record.
-- `FieldValueSource(type, field, filter?)`: `log_values.normalized_value` of a Number or Rating field at any depth.
+- `FieldValueSource(type, field, filter?)`: a field's value as a number at any depth: `normalized_value` (Number, Rating), else `duration_ms` (Duration), `boolean_value` (Yes/No: 1/0, averaged into a share), `time_value` (Time of day: minutes after midnight) (ADR-043).
   - The optional `TextFilter(field, value)` keeps values whose own item, parent item or record has that text (case-insensitive). Example: Weight of sets whose exercise is "Chest Press" (OQ-15: free text, case-folded).
-  - Duration fields aren't chartable here yet (they store `duration_ms`).
-- `VolumeSource(type, group, amount, count, filter?)`: amount × count per group item, e.g. kg × reps per set (FR-AN-08).
+- `VolumeSource(type, group, amount, count, filter?, formula)`: per group item, `product` = amount × count (e.g. kg × reps per set, FR-AN-08) or `estimatedMax` = amount × (1 + count / 30) (Epley; the amount for one rep).
 - `MeasurementSource(type)`: `measurements.normalized_value`.
 - `PlannedVsActualSource(type?)`: planned length (`planned_end_at − planned_start_at` or `planned_duration_ms`) and recorded `duration_ms` of linked records, both by `plan_date` (FR-AN-09).
 
-**Results** (`WatchInsight`): the period (`from`, `to`), the series for the range, the period value against the previous period of the same length, and the **personal best** (all-time highest point) for field and volume sources; for a volume also the **best day** (highest per-day total, `bestDayTotal`). `InsightRange.bucket` gives automatic charts a bucket that fits the range. Default aggregations: time/count/volume = total, body = latest, field = best.
+**Results** (`WatchInsight`): the period (`from`, `to`), the bucket used (`InsightRange.fit`: a saved chart's grouping, coarser past 60 buckets), the series (every bucket whole; the first holds its days before the period, the stats don't), the period value against the previous period of the same length, and the **personal best** by the field's "better is" (`BestIs` highest / lowest / none; `watchBest`) for field and volume sources; for a volume product also the **best day** (`watchBestDay`). Only the period and the one before are read (`watchPoints(from: InsightRange.loadFrom)`). `InsightRange.bucket` gives automatic charts a bucket that fits the range. Default aggregations: time/count/volume = total, body = latest; a field by its type and config (`defaultAggregationFor`).
+
+**Number "show as" and "better is"** (ADR-043): `NumberFieldConfig.summary` (total / average / latest) and `better` (higher / lower / neither) decide a top-level number's chart (sum bars; average or latest line) and what "best" means.
+
+**Done records** (A8): counts, days, streaks and the calendar only count records with something in them: `duration_ms`, notes, any value, or a plan marked done.
+
+**Other reads** (`InsightRepository`): `watchDayCounts` (records done per day, one activity or all), `watchTimeByActivity`, `watchPlanAdherence` (`PlanDay`: planned = not skipped/cancelled, today's only once done; done = marked done or logged on a past day), `watchActiveDays` (streaks: `weekStreaks`), `watchChoicePicks` (single: `text_value`; multi: `json_value` option IDs; `optionCounts`), `watchStartMinutes` (local minute of `started_at`; `partOfDay`), `watchRowNames` (list row names in the period, most used first). Domain helpers: `planShareBuckets`, `activityChange` (by time, else by count), `InsightSummary`.
 
 **Logging from memory** (ADR-041, `activity_logs/domain/log_memory.dart`): `LastLogOfType` (newest log of a type with values, except the item's own) and `LastRowNamed` / `findLastRow` (newest list row with a given name, any depth) read once through `ActivityLogRepository.recentLogsForType`; `copyValues` / `copyRow` give copied rows fresh `GroupItemId`s. `DuplicatePlan` copies a plan on its day through `CreatePlan`.
 
 **Saved charts** (`InsightChartConfig`: title, source, aggregation, bucket, line/bar) are persisted in `insight_charts` as versioned JSON (`InsightChartCodec`, `"v": 1`). This departs from the OQ-14 recommendation and awaits owner confirmation.
 
-**Display:** canonical values convert to the field's (or measurement type's) default unit; durations show as time (`InsightDisplay`).
+**Display:** canonical values convert to the field's (or measurement type's) default unit; durations show as time; yes/no as a percentage (axis 0–100 %); times of day as clock times; ratings on a 0–scale axis (`InsightDisplay`).
 
-Queries are relational, with no JSON on these paths ([database.md §6](database.md#6-indexes-and-query-plans)). No task-completion source yet.
+Queries are relational, with no JSON on these paths except multi-select picks ([database.md §6](database.md#6-indexes-and-query-plans)). Plan vs reality covers tasks too (all plans).
 
 ## 9. Built-in activities
 

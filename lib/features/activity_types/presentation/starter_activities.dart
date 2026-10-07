@@ -257,7 +257,11 @@ List<ActivityTypeDefinition> starterActivities(AppLocalizations l10n) => [
         name: l10n.builtInCookingCalories,
         type: FieldType.number,
         dimension: Dimension.energy,
-        config: const NumberFieldConfig(min: 0, defaultUnitCode: 'kcal'),
+        config: const NumberFieldConfig(
+          min: 0,
+          defaultUnitCode: 'kcal',
+          better: BetterDirection.neither,
+        ),
         measurable: true,
       ),
       FieldDefinition(

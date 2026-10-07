@@ -20,6 +20,9 @@ import 'package:daylog/features/plans/data/db_plan_repository.dart';
 import 'package:daylog/features/plans/domain/plan.dart';
 import 'package:daylog/features/plans/domain/plan_use_cases.dart';
 import 'package:daylog/features/insights/domain/auto_insights.dart';
+import 'package:daylog/features/insights/domain/insight_repository.dart';
+import 'package:daylog/features/activity_types/domain/field_config.dart';
+import 'package:daylog/features/activity_types/domain/field_type.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/fake_clock.dart';
@@ -212,7 +215,11 @@ void main() {
     );
 
     final (planned, actual) = await insights
-        .watchPlannedVsActual(reading.id)
+        .watchPlannedVsActual(
+          reading.id,
+          from: LocalDate(2026, 9, 1),
+          today: LocalDate(2026, 10, 3),
+        )
         .first;
     expect(planned.single, DataPoint(LocalDate(2026, 9, 30), 3600000));
     expect(actual.single, DataPoint(LocalDate(2026, 9, 30), 45 * 60000));
@@ -269,40 +276,53 @@ void main() {
     expect(await insights.watchCharts().first, isEmpty);
   });
 
-  test('automatic charts (ADR-037): per exercise best weight and volume, '
-      'from the fields alone, with real data behind them', () async {
-    final gym = await install(gymDefinition());
-    await workout(gym, DateTime.utc(2026, 9, 28, 18), {
-      'Chest Press': [(50, 12), (55, 10)],
-      'Squat': [(80, 8)],
-    });
-    await workout(gym, DateTime.utc(2026, 9, 30, 18), {
-      'Chest Press': [(60, 8)],
-    });
-    final exercise = field(gym, 'Exercise');
-    final names = await logs.textSuggestions(exercise);
+  test(
+    'automatic charts (ADR-037): per exercise, most done first, the '
+    'best weight, estimated 1-rep max, volume and total reps (B5, C1)',
+    () async {
+      final gym = await install(gymDefinition());
+      await workout(gym, DateTime.utc(2026, 9, 28, 18), {
+        'Chest Press': [(50, 12), (55, 10)],
+        'Squat': [(80, 8)],
+      });
+      await workout(gym, DateTime.utc(2026, 9, 30, 18), {
+        'Chest Press': [(60, 8)],
+      });
+      final exercise = field(gym, 'Exercise');
+      final names = await insights
+          .watchRowNames(gym.id, LocalDate(2026, 9, 1), LocalDate(2026, 10, 1))
+          .first;
 
-    expect(names.toSet(), {'Chest Press', 'Squat'});
-    final charts = autoChartsFor(gym, {
-      exercise: [...names]..sort(),
-    });
+      expect(names[exercise], ['Chest Press', 'Squat'], reason: 'most used');
+      final charts = autoChartsFor(gym, names);
 
-    expect(
-      [for (final c in charts) (c.kind, c.rowName, c.fieldName)],
-      [
-        (AutoChartKind.time, null, null),
-        (AutoChartKind.count, null, null),
-        (AutoChartKind.best, 'Chest Press', 'Weight'),
-        (AutoChartKind.volume, 'Chest Press', null),
-        (AutoChartKind.best, 'Squat', 'Weight'),
-        (AutoChartKind.volume, 'Squat', null),
-      ],
-    );
-    final best = await insights.watchPoints(charts[2].config.source).first;
-    expect(aggregate(best, Aggregation.max), 60);
-    final volume = await insights.watchPoints(charts[3].config.source).first;
-    expect(aggregate(volume, Aggregation.sum), 50 * 12 + 55 * 10 + 60 * 8);
-  });
+      expect(
+        [for (final c in charts) (c.kind, c.rowName, c.fieldName)],
+        [
+          (AutoChartKind.time, null, null),
+          (AutoChartKind.count, null, null),
+          (AutoChartKind.best, 'Chest Press', 'Weight'),
+          (AutoChartKind.estimatedMax, 'Chest Press', null),
+          (AutoChartKind.volume, 'Chest Press', null),
+          (AutoChartKind.rowTotal, 'Chest Press', 'Reps'),
+          (AutoChartKind.best, 'Squat', 'Weight'),
+          (AutoChartKind.estimatedMax, 'Squat', null),
+          (AutoChartKind.volume, 'Squat', null),
+          (AutoChartKind.rowTotal, 'Squat', 'Reps'),
+        ],
+      );
+      Future<List<DataPoint>> points(int i) =>
+          insights.watchPoints(charts[i].config.source).first;
+      expect(aggregate(await points(2), Aggregation.max), 60);
+      // Epley: 50 × 1.4 = 70, 55 × 1.33 = 73.3, 60 × 1.27 = 76: the last set.
+      expect(aggregate(await points(3), Aggregation.max), closeTo(76, 0.001));
+      expect(
+        aggregate(await points(4), Aggregation.sum),
+        50 * 12 + 55 * 10 + 60 * 8,
+      );
+      expect(aggregate(await points(5), Aggregation.sum), 12 + 10 + 8);
+    },
+  );
 
   test(
     'automatic charts for a plain activity: its numbers and ratings',
@@ -322,4 +342,301 @@ void main() {
       );
     },
   );
+
+  group('insights rework (ADR-043)', () {
+    /// An activity with one field of each chartable kind.
+    Future<ActivityType> installHealth() => install(
+      const ActivityTypeDefinition(
+        name: 'Health check',
+        iconId: 'heart',
+        colorKey: 'rose',
+        fields: [
+          FieldDefinition(
+            name: 'Systolic',
+            type: FieldType.number,
+            config: NumberFieldConfig(
+              summary: NumberSummary.average,
+              better: BetterDirection.lower,
+            ),
+            measurable: true,
+          ),
+          FieldDefinition(
+            name: 'Took meds',
+            type: FieldType.boolean,
+            config: BooleanFieldConfig(),
+          ),
+          FieldDefinition(
+            name: 'Bedtime',
+            type: FieldType.time,
+            config: TimeFieldConfig(),
+          ),
+          FieldDefinition(
+            name: 'Walk',
+            type: FieldType.duration,
+            config: DurationFieldConfig(),
+            measurable: true,
+          ),
+          FieldDefinition(
+            name: 'Feeling',
+            type: FieldType.singleSelect,
+            config: SelectFieldConfig(
+              options: [
+                SelectOption(id: SelectOptionId('ok'), label: 'OK'),
+                SelectOption(id: SelectOptionId('low'), label: 'Low'),
+              ],
+            ),
+          ),
+          FieldDefinition(
+            name: 'Tags',
+            type: FieldType.multiSelect,
+            config: SelectFieldConfig(
+              options: [
+                SelectOption(id: SelectOptionId('a'), label: 'A'),
+                SelectOption(id: SelectOptionId('b'), label: 'B'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+
+    Future<void> check(
+      ActivityType t,
+      DateTime at, {
+      required double systolic,
+      required bool meds,
+      required LocalTime bedtime,
+      required int walkMs,
+      required String feeling,
+      required List<String> tags,
+    }) => logActivity(
+      t.id,
+      ActivityLogDraft(
+        startedAt: at,
+        values: {
+          field(t, 'Systolic'): NumberValue(systolic),
+          field(t, 'Took meds'): BooleanValue(meds),
+          field(t, 'Bedtime'): TimeValue(bedtime),
+          field(t, 'Walk'): DurationValue(walkMs),
+          field(t, 'Feeling'): SingleSelectValue(SelectOptionId(feeling)),
+          field(t, 'Tags'): MultiSelectValue([
+            for (final tag in tags) SelectOptionId(tag),
+          ]),
+        },
+      ),
+    );
+
+    test('durations, yes/no and times of day chart like numbers (B1, B2, '
+        'B4); the lowest is best when lower is better (A3)', () async {
+      final t = await installHealth();
+      await check(
+        t,
+        DateTime.utc(2026, 9, 29, 8),
+        systolic: 128,
+        meds: true,
+        bedtime: LocalTime.hm(23, 0),
+        walkMs: 1800000,
+        feeling: 'ok',
+        tags: ['a', 'b'],
+      );
+      await check(
+        t,
+        DateTime.utc(2026, 9, 30, 8),
+        systolic: 118,
+        meds: false,
+        bedtime: LocalTime.hm(22, 30),
+        walkMs: 600000,
+        feeling: 'ok',
+        tags: ['b'],
+      );
+      Future<List<DataPoint>> values(String name) =>
+          insights.watchPoints(FieldValueSource(t.id, field(t, name))).first;
+
+      expect((await values('Walk')).map((p) => p.value), [1800000, 600000]);
+      expect(aggregate(await values('Took meds'), Aggregation.average), 0.5);
+      expect(
+        aggregate(await values('Bedtime'), Aggregation.average),
+        (23 * 60 + 22 * 60 + 30) / 2,
+      );
+      final systolic = FieldValueSource(t.id, field(t, 'Systolic'));
+      expect(
+        await insights.watchBest(systolic, BestIs.lowest).first,
+        DataPoint(LocalDate(2026, 9, 30), 118),
+      );
+      expect(await insights.watchBest(systolic, BestIs.none).first, isNull);
+
+      final picks = await insights
+          .watchChoicePicks(
+            field(t, 'Feeling'),
+            LocalDate(2026, 9, 1),
+            LocalDate(2026, 10, 1),
+          )
+          .first;
+      expect(picks, [
+        ['ok'],
+        ['ok'],
+      ]);
+      final tags = await insights
+          .watchChoicePicks(
+            field(t, 'Tags'),
+            LocalDate(2026, 9, 1),
+            LocalDate(2026, 10, 1),
+          )
+          .first;
+      expect(optionCounts(tags, ['a', 'b']), [('b', 2), ('a', 1)]);
+    });
+
+    test('automatic charts follow each field\'s type and "show as" '
+        '(A1, ADR-043); choices become breakdowns (B3)', () async {
+      final t = await installHealth();
+      final charts = autoChartsFor(t, const {});
+      expect(
+        [
+          for (final c in charts.skip(2))
+            (c.kind, c.fieldName, c.config.aggregation, c.config.kind),
+        ],
+        [
+          (
+            AutoChartKind.value,
+            'Systolic',
+            Aggregation.average,
+            ChartKind.line,
+          ),
+          (
+            AutoChartKind.yesShare,
+            'Took meds',
+            Aggregation.average,
+            ChartKind.bar,
+          ),
+          (AutoChartKind.value, 'Bedtime', Aggregation.average, ChartKind.line),
+          (AutoChartKind.value, 'Walk', Aggregation.sum, ChartKind.bar),
+        ],
+      );
+      expect(charts[2].bestIs, BestIs.lowest);
+      expect(autoBreakdownsFor(t).map((b) => b.field.name), [
+        'Feeling',
+        'Tags',
+      ]);
+    });
+
+    test('only the shown period is read; the all-time best is its own '
+        'query (E1)', () async {
+      final gym = await install(gymDefinition());
+      await workout(gym, DateTime.utc(2026, 6, 1, 18), {
+        'Squat': [(120, 3)],
+      });
+      await workout(gym, DateTime.utc(2026, 9, 30, 18), {
+        'Squat': [(100, 5)],
+      });
+      final weight = FieldValueSource(gym.id, field(gym, 'Weight'));
+
+      final recent = await insights
+          .watchPoints(weight, from: LocalDate(2026, 9, 1))
+          .first;
+      expect(recent.map((p) => p.value), [100]);
+      expect(
+        await insights.watchBest(weight, BestIs.highest).first,
+        DataPoint(LocalDate(2026, 6, 1), 120),
+      );
+    });
+
+    test('an item opened and left empty doesn\'t count as done (A8)', () async {
+      final reading = await install(readingDefinition());
+      await logActivity(
+        reading.id,
+        ActivityLogDraft(startedAt: clock.nowUtc(), values: const {}),
+        partial: true,
+      );
+      await logActivity(
+        reading.id,
+        ActivityLogDraft(
+          startedAt: clock.nowUtc(),
+          values: const {},
+          notes: 'x',
+        ),
+        partial: true,
+      );
+      final from = LocalDate(2026, 9, 1);
+      final to = LocalDate(2026, 10, 1);
+
+      expect(
+        (await insights.watchActivityTotals(from, to).first)[reading.id]!.count,
+        1,
+      );
+      expect(await insights.watchDayCounts(reading.id, from, to).first, {
+        LocalDate(2026, 10, 1): 1,
+      });
+      expect(
+        await insights.watchPoints(ActivityCountSource(reading.id)).first,
+        hasLength(1),
+      );
+    });
+
+    test('plans: skipped ones and today\'s open ones aren\'t planned yet '
+        '(A4, A6); done ones count for plan vs reality (H3)', () async {
+      final reading = await install(readingDefinition());
+      final create = CreatePlan(plans, types, ids, clock);
+      final setStatus = SetPlanStatus(plans, clock);
+      Future<PlanId> plan(LocalDate date) => create(
+        PlanDraft(
+          planDate: date,
+          title: 'Read',
+          activityTypeId: reading.id,
+          plannedDurationMs: 3600000,
+        ),
+      );
+      final today = LocalDate(2026, 10, 1);
+      final done = await plan(LocalDate(2026, 9, 29));
+      await setStatus(done, PlanStatus.completed);
+      final skipped = await plan(LocalDate(2026, 9, 29));
+      await setStatus(skipped, PlanStatus.skipped);
+      await plan(LocalDate(2026, 9, 30)); // missed
+      await plan(today); // still open today
+
+      final (planned, _) = await insights
+          .watchPlannedVsActual(
+            reading.id,
+            from: LocalDate(2026, 9, 1),
+            today: today,
+          )
+          .first;
+      expect(planned.map((p) => p.date), [
+        LocalDate(2026, 9, 29),
+        LocalDate(2026, 9, 30),
+      ]);
+
+      final days = await insights
+          .watchPlanAdherence(LocalDate(2026, 9, 1), today)
+          .first;
+      expect(days, [
+        PlanDay(LocalDate(2026, 9, 29), planned: 1, done: 1),
+        PlanDay(LocalDate(2026, 9, 30), planned: 1, done: 0),
+      ]);
+    });
+
+    test('streak days, time per activity and start times (local)', () async {
+      final reading = await install(readingDefinition());
+      // 22:30 UTC on Sep 30 with the clock's offset (0) is 22:30 local.
+      await logActivity(
+        reading.id,
+        ActivityLogDraft(
+          startedAt: DateTime.utc(2026, 9, 30, 22, 30),
+          durationMs: 1200000,
+          values: const {},
+        ),
+        partial: true,
+      );
+      final from = LocalDate(2026, 9, 1);
+      final to = LocalDate(2026, 10, 1);
+
+      expect((await insights.watchActiveDays().first)[reading.id], {
+        LocalDate(2026, 9, 30),
+      });
+      final time = await insights.watchTimeByActivity(from, to).first;
+      expect(time.single.durationMs, 1200000);
+      expect(await insights.watchStartMinutes(reading.id, from, to).first, [
+        22 * 60 + 30,
+      ]);
+    });
+  });
 }

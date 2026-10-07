@@ -14,6 +14,7 @@ import '../../activity_types/domain/field_type.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
 import '../../measurements/domain/measurement.dart';
 import '../../measurements/presentation/measurement_copy.dart';
+import '../domain/auto_insights.dart';
 import '../domain/insight.dart';
 import 'insight_formatting.dart';
 import 'insight_providers.dart';
@@ -34,7 +35,8 @@ Future<void> showChartBuilder(
   builder: (_) => _ChartBuilderSheet(initial: initial),
 );
 
-/// Number/rating fields of [type] at any depth, with their group path.
+/// Chartable fields of [type] at any depth (Number, Rating, Duration,
+/// Yes/No, Time of day), with their group path.
 List<(ActivityField, String)> _numberFields(ActivityType type) {
   String path(ActivityField f) {
     final names = <String>[f.name];
@@ -51,7 +53,13 @@ List<(ActivityField, String)> _numberFields(ActivityType type) {
   return [
     for (final f in type.fields)
       if (!f.isRemoved &&
-          (f.type == FieldType.number || f.type == FieldType.rating))
+          const {
+            FieldType.number,
+            FieldType.rating,
+            FieldType.duration,
+            FieldType.boolean,
+            FieldType.time,
+          }.contains(f.type))
         (f, path(f)),
   ];
 }
@@ -392,6 +400,13 @@ class _ChartBuilderSheetState extends ConsumerState<_ChartBuilderSheet> {
                           onChanged: (id) => setState(() {
                             _fieldId = id;
                             _filterFieldId = null;
+                            // The field's own way of summing up (ADR-043).
+                            final field = id == null
+                                ? null
+                                : type?.fieldById(id);
+                            if (field != null) {
+                              _aggregation = defaultAggregationFor(field);
+                            }
                           }),
                         ),
                 ),

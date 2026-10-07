@@ -2536,10 +2536,10 @@ abstract class AppLocalizations {
   /// **'Progress'**
   String get insightProgressSection;
 
-  /// Empty state of an activity's insights page.
+  /// Activity progress page: nothing in the selected period (C4).
   ///
   /// In en, this message translates to:
-  /// **'Log {name} a few times and its progress shows here.'**
+  /// **'Nothing logged for {name} in this period. Pick a longer period above to see its progress.'**
   String insightActivityEmpty(String name);
 
   /// Tap hint on an activity row in Insights.
@@ -8583,6 +8583,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Yours'**
   String get activitiesYours;
+
+  /// Field sheet (Advanced): how a number is summed up over a period in Insights (ADR-043).
+  ///
+  /// In en, this message translates to:
+  /// **'In insights, show it as'**
+  String get numberSummaryLabel;
+
+  /// Number summary: add the values up (pages, kilometres).
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get numberSummaryTotal;
+
+  /// Number summary: average the values (blood pressure, score).
+  ///
+  /// In en, this message translates to:
+  /// **'Average'**
+  String get numberSummaryAverage;
+
+  /// Number summary: the most recent value (odometer, balance).
+  ///
+  /// In en, this message translates to:
+  /// **'Latest'**
+  String get numberSummaryLatest;
+
+  /// Field sheet (Advanced): which way is better, for "best" in Insights (ADR-043).
+  ///
+  /// In en, this message translates to:
+  /// **'Better is'**
+  String get betterDirectionLabel;
+
+  /// Better direction: higher values are better.
+  ///
+  /// In en, this message translates to:
+  /// **'Higher'**
+  String get betterHigher;
+
+  /// Better direction: lower values are better (pace, blood pressure).
+  ///
+  /// In en, this message translates to:
+  /// **'Lower'**
+  String get betterLower;
+
+  /// Better direction: no best is shown (money, temperature).
+  ///
+  /// In en, this message translates to:
+  /// **'Neither'**
+  String get betterNeither;
+
+  /// Insights: a share in percent (yes/no fields, plans done).
+  ///
+  /// In en, this message translates to:
+  /// **'{value} %'**
+  String insightPercent(String value);
+
+  /// Automatic chart: a list number per row, summed up its own way.
+  ///
+  /// In en, this message translates to:
+  /// **'{row} · {field}'**
+  String insightAutoRowValue(String row, String field);
+
+  /// Automatic chart: estimated one-repetition maximum (weight × reps lists).
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated 1-rep max'**
+  String get insightAutoEstimatedMax;
+
+  /// Automatic chart: estimated one-repetition maximum of one row (e.g. an exercise).
+  ///
+  /// In en, this message translates to:
+  /// **'{row} · estimated 1-rep max'**
+  String insightAutoRowEstimatedMax(String row);
+
+  /// Automatic chart: the second number of a weight × reps list added up (e.g. total reps).
+  ///
+  /// In en, this message translates to:
+  /// **'{row} · total {field}'**
+  String insightAutoRowTotal(String row, String field);
+
+  /// Automatic chart: the second number of a weight × reps list added up, for a list without row names.
+  ///
+  /// In en, this message translates to:
+  /// **'Total {field}'**
+  String insightAutoTotal(String field);
+
+  /// Automatic chart: share of "yes" for a yes/no field.
+  ///
+  /// In en, this message translates to:
+  /// **'{field} · how often yes'**
+  String insightAutoYesShare(String field);
+
+  /// Insights: weeks in a row with something done, and the longest run (H4).
+  ///
+  /// In en, this message translates to:
+  /// **'{current, plural, =1{1 week in a row} other{{current} weeks in a row}} · best {longest}'**
+  String insightStreak(int current, int longest);
+
+  /// Insights: no current run; the longest one (H4).
+  ///
+  /// In en, this message translates to:
+  /// **'Best run {longest, plural, =1{1 week} other{{longest} weeks}}'**
+  String insightStreakEnded(int longest);
+
+  /// Insights: heading above the calendar of days something was done (H1).
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency'**
+  String get insightConsistencySection;
+
+  /// Insights calendar caption: days with something done out of the period (H1).
+  ///
+  /// In en, this message translates to:
+  /// **'{days} of {total} days'**
+  String insightDaysOfPeriod(int days, int total);
+
+  /// Activity progress: heading above the part of day it is usually done.
+  ///
+  /// In en, this message translates to:
+  /// **'When you do it'**
+  String get insightWhenSection;
+
+  /// Part of day: 5:00–12:00.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning'**
+  String get insightMorning;
+
+  /// Part of day: 12:00–17:00.
+  ///
+  /// In en, this message translates to:
+  /// **'Afternoon'**
+  String get insightAfternoon;
+
+  /// Part of day: 17:00–22:00.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening'**
+  String get insightEvening;
+
+  /// Part of day: 22:00–5:00.
+  ///
+  /// In en, this message translates to:
+  /// **'Night'**
+  String get insightNight;
+
+  /// Activity progress: shows charts for every list row (e.g. exercise), not just the six most used (C3).
+  ///
+  /// In en, this message translates to:
+  /// **'Show every row'**
+  String get insightShowAllRows;
+
+  /// Automatic breakdown subtitle for a choice field (B3).
+  ///
+  /// In en, this message translates to:
+  /// **'How often each'**
+  String get insightChoiceTimes;
+
+  /// Insights home: heading of the period summary (H5).
+  ///
+  /// In en, this message translates to:
+  /// **'At a glance'**
+  String get insightSummarySection;
+
+  /// Insights summary tile: days with something done.
+  ///
+  /// In en, this message translates to:
+  /// **'Days active'**
+  String get insightDaysActive;
+
+  /// Insights summary tile: recorded time.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get insightTimeRecorded;
+
+  /// Insights summary tile: records done.
+  ///
+  /// In en, this message translates to:
+  /// **'Things done'**
+  String get insightThingsDone;
+
+  /// Insights home: stacked bars of recorded time per activity (H2).
+  ///
+  /// In en, this message translates to:
+  /// **'Where your time went'**
+  String get insightTimeByActivitySection;
+
+  /// Insights home: share of planned items done (H3).
+  ///
+  /// In en, this message translates to:
+  /// **'Plan vs reality'**
+  String get insightPlanSection;
+
+  /// Insights home: plan vs reality headline.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {planned} planned items done'**
+  String insightPlanDone(int done, int planned);
+
+  /// Insights home: plan vs reality with no plans.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing was planned in this period.'**
+  String get insightPlanEmpty;
+
+  /// Insights home: heading above activities with history but nothing in the period (B6).
+  ///
+  /// In en, this message translates to:
+  /// **'Not done this period'**
+  String get insightNotThisPeriod;
+
+  /// Where your time went legend: activities beyond the ones named.
+  ///
+  /// In en, this message translates to:
+  /// **'+{count} more'**
+  String insightActivityLegendMore(int count);
+
+  /// Insights: a change of a share in percentage points (plan vs reality).
+  ///
+  /// In en, this message translates to:
+  /// **'{change} pts'**
+  String insightPoints(String change);
 }
 
 class _AppLocalizationsDelegate

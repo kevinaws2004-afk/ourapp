@@ -57,6 +57,25 @@ void main() {
     );
   });
 
+  test('a number keeps how Insights sums it up and which way is better, '
+      'and older configs read as total / higher (ADR-043)', () {
+    const config = NumberFieldConfig(
+      summary: NumberSummary.average,
+      better: BetterDirection.lower,
+    );
+    final json = FieldConfigCodec.encode(config);
+    expect(FieldConfigCodec.decode(FieldType.number, json), config);
+    expect(
+      FieldConfigCodec.encode(const NumberFieldConfig()),
+      isNot(contains('summary')),
+    );
+    final old = FieldConfigCodec.decode(FieldType.number, '{"decimals": 1}');
+    expect(old, isA<NumberFieldConfig>());
+    old as NumberFieldConfig;
+    expect(old.summary, NumberSummary.total);
+    expect(old.better, BetterDirection.higher);
+  });
+
   test('options are identified by stable IDs, not labels', () {
     final json = FieldConfigCodec.encode(cases[FieldType.singleSelect]!);
     expect(json, contains('"id":"a"'));

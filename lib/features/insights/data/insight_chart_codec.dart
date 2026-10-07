@@ -46,6 +46,7 @@ abstract final class InsightChartCodec {
       :final amountFieldId,
       :final countFieldId,
       :final filter,
+      :final formula,
     ) =>
       {
         'kind': 'volume',
@@ -53,6 +54,8 @@ abstract final class InsightChartCodec {
         'group': groupFieldId.value,
         'amount': amountFieldId.value,
         'count': countFieldId.value,
+        // Absent means a product (charts saved before the formula existed).
+        if (formula != VolumeFormula.product) 'formula': formula.name,
         ..._filter(filter),
       },
     MeasurementSource(:final type) => {
@@ -104,6 +107,9 @@ abstract final class InsightChartCodec {
         amountFieldId: field('amount'),
         countFieldId: field('count'),
         filter: filter,
+        formula:
+            VolumeFormula.values.asNameMap()[s['formula']] ??
+            VolumeFormula.product,
       ),
       'measurement' => switch (MeasurementType.fromStorageKey(
         s['measurement']! as String,

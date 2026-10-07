@@ -99,10 +99,10 @@ Today in the evening shows the day's items: what was done (with what was logged 
 ## F12. Insights (FR-AN-01…07)
 
 Implemented in Phase 6 (ADR-034); automatic progress added by ADR-037.
-1. The Insights tab shows a range (Week / Month / 3 months / Year) with its exact dates ("Sep 4 – Oct 3"), and each activity done in it: **days done**, time and how often, with the change vs the previous period.
-2. **Tap an activity → its progress**, worked out automatically from what it logs: time and times done per week, each number and rating, and for lists, each row's best and volume (Gym: "Chest Press · best Weight", "Chest Press · volume", per exercise). Nothing to build.
+1. The Insights tab shows a range (Week / Month / 3 months / Year) with its exact dates ("Sep 4 – Oct 3"), then (ADR-043): **At a glance** (days active, time, things done, each vs the previous period), **Consistency** (a calendar of the days something was done), **Where your time went** (stacked bars per activity), **Plan vs reality** (share of planned items done), and each activity done in it: **days done**, time and how often, the change vs the previous period and its **week streak**. Activities with history but nothing in the period follow under "Not done this period".
+2. **Tap an activity → its progress**, worked out automatically from what it logs: its summary and streak, its calendar, when in the day it's usually done, time and times done, each field by its type (numbers by their "show as", ratings, durations, yes/no as "how often yes", times of day, choices as "how often each"), and for lists, each row's best, estimated 1-rep max, volume and total reps (Gym: "Chest Press · best Weight", per exercise; the six most used in the period, then "Show every row"). Nothing to build. An empty period suggests a longer one.
 3. **Your own charts** (below, optional): **Add chart** → what to chart:
-   - Time, How often, A field (any number at any depth, e.g. Exercises › Sets › Weight, optionally "Only where Exercise = Chest Press")
+   - Time, How often, A field (any number, rating, duration, yes/no or time of day at any depth, e.g. Exercises › Sets › Weight, optionally "Only where Exercise = Chest Press", with chips of the values already logged); choosing a field picks its own way of summing up
    - Volume (weight × reps)
    - Body measurement
    - Planned vs actual

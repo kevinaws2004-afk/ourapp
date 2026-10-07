@@ -366,6 +366,41 @@ class _FieldEditorSheetState extends ConsumerState<_FieldEditorSheet> {
     AppLocalizations l10n,
     NumberFieldConfig config,
   ) => [
+    // How Insights sums it up and what "best" means (ADR-043).
+    ListTile(
+      contentPadding: EdgeInsets.zero,
+      title: Text(l10n.numberSummaryLabel),
+      trailing: DropdownButton<NumberSummary>(
+        value: config.summary,
+        items: [
+          for (final s in NumberSummary.values)
+            DropdownMenuItem(
+              value: s,
+              child: Text(numberSummaryLabel(l10n, s)),
+            ),
+        ],
+        onChanged: (v) => setState(
+          () => _config = (_config as NumberFieldConfig).copyWith(summary: v),
+        ),
+      ),
+    ),
+    ListTile(
+      contentPadding: EdgeInsets.zero,
+      title: Text(l10n.betterDirectionLabel),
+      trailing: DropdownButton<BetterDirection>(
+        value: config.better,
+        items: [
+          for (final b in BetterDirection.values)
+            DropdownMenuItem(
+              value: b,
+              child: Text(betterDirectionLabel(l10n, b)),
+            ),
+        ],
+        onChanged: (v) => setState(
+          () => _config = (_config as NumberFieldConfig).copyWith(better: v),
+        ),
+      ),
+    ),
     ListTile(
       contentPadding: EdgeInsets.zero,
       title: Text(l10n.decimalsLabel),

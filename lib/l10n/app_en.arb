@@ -1818,9 +1818,9 @@
   "@insightProgressSection": {
     "description": "Section on an activity's insights page with its automatic charts."
   },
-  "insightActivityEmpty": "Log {name} a few times and its progress shows here.",
+  "insightActivityEmpty": "Nothing logged for {name} in this period. Pick a longer period above to see its progress.",
   "@insightActivityEmpty": {
-    "description": "Empty state of an activity's insights page.",
+    "description": "Activity progress page: nothing in the selected period (C4).",
     "placeholders": {
       "name": {
         "type": "String"
@@ -5924,5 +5924,228 @@
   "activitiesYours": "Yours",
   "@activitiesYours": {
     "description": "Activity list: heading above the user's own activities (built-in ones follow under their categories)."
+  },
+  "numberSummaryLabel": "In insights, show it as",
+  "@numberSummaryLabel": {
+    "description": "Field sheet (Advanced): how a number is summed up over a period in Insights (ADR-043)."
+  },
+  "numberSummaryTotal": "Total",
+  "@numberSummaryTotal": {
+    "description": "Number summary: add the values up (pages, kilometres)."
+  },
+  "numberSummaryAverage": "Average",
+  "@numberSummaryAverage": {
+    "description": "Number summary: average the values (blood pressure, score)."
+  },
+  "numberSummaryLatest": "Latest",
+  "@numberSummaryLatest": {
+    "description": "Number summary: the most recent value (odometer, balance)."
+  },
+  "betterDirectionLabel": "Better is",
+  "@betterDirectionLabel": {
+    "description": "Field sheet (Advanced): which way is better, for \"best\" in Insights (ADR-043)."
+  },
+  "betterHigher": "Higher",
+  "@betterHigher": {
+    "description": "Better direction: higher values are better."
+  },
+  "betterLower": "Lower",
+  "@betterLower": {
+    "description": "Better direction: lower values are better (pace, blood pressure)."
+  },
+  "betterNeither": "Neither",
+  "@betterNeither": {
+    "description": "Better direction: no best is shown (money, temperature)."
+  },
+  "insightPercent": "{value} %",
+  "@insightPercent": {
+    "description": "Insights: a share in percent (yes/no fields, plans done).",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "insightAutoRowValue": "{row} · {field}",
+  "@insightAutoRowValue": {
+    "description": "Automatic chart: a list number per row, summed up its own way.",
+    "placeholders": {
+      "row": {
+        "type": "String"
+      },
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "insightAutoEstimatedMax": "Estimated 1-rep max",
+  "@insightAutoEstimatedMax": {
+    "description": "Automatic chart: estimated one-repetition maximum (weight × reps lists)."
+  },
+  "insightAutoRowEstimatedMax": "{row} · estimated 1-rep max",
+  "@insightAutoRowEstimatedMax": {
+    "description": "Automatic chart: estimated one-repetition maximum of one row (e.g. an exercise).",
+    "placeholders": {
+      "row": {
+        "type": "String"
+      }
+    }
+  },
+  "insightAutoRowTotal": "{row} · total {field}",
+  "@insightAutoRowTotal": {
+    "description": "Automatic chart: the second number of a weight × reps list added up (e.g. total reps).",
+    "placeholders": {
+      "row": {
+        "type": "String"
+      },
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "insightAutoTotal": "Total {field}",
+  "@insightAutoTotal": {
+    "description": "Automatic chart: the second number of a weight × reps list added up, for a list without row names.",
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "insightAutoYesShare": "{field} · how often yes",
+  "@insightAutoYesShare": {
+    "description": "Automatic chart: share of \"yes\" for a yes/no field.",
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "insightStreak": "{current, plural, =1{1 week in a row} other{{current} weeks in a row}} · best {longest}",
+  "@insightStreak": {
+    "description": "Insights: weeks in a row with something done, and the longest run (H4).",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "longest": {
+        "type": "int"
+      }
+    }
+  },
+  "insightStreakEnded": "Best run {longest, plural, =1{1 week} other{{longest} weeks}}",
+  "@insightStreakEnded": {
+    "description": "Insights: no current run; the longest one (H4).",
+    "placeholders": {
+      "longest": {
+        "type": "int"
+      }
+    }
+  },
+  "insightConsistencySection": "Consistency",
+  "@insightConsistencySection": {
+    "description": "Insights: heading above the calendar of days something was done (H1)."
+  },
+  "insightDaysOfPeriod": "{days} of {total} days",
+  "@insightDaysOfPeriod": {
+    "description": "Insights calendar caption: days with something done out of the period (H1).",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "insightWhenSection": "When you do it",
+  "@insightWhenSection": {
+    "description": "Activity progress: heading above the part of day it is usually done."
+  },
+  "insightMorning": "Morning",
+  "@insightMorning": {
+    "description": "Part of day: 5:00–12:00."
+  },
+  "insightAfternoon": "Afternoon",
+  "@insightAfternoon": {
+    "description": "Part of day: 12:00–17:00."
+  },
+  "insightEvening": "Evening",
+  "@insightEvening": {
+    "description": "Part of day: 17:00–22:00."
+  },
+  "insightNight": "Night",
+  "@insightNight": {
+    "description": "Part of day: 22:00–5:00."
+  },
+  "insightShowAllRows": "Show every row",
+  "@insightShowAllRows": {
+    "description": "Activity progress: shows charts for every list row (e.g. exercise), not just the six most used (C3)."
+  },
+  "insightChoiceTimes": "How often each",
+  "@insightChoiceTimes": {
+    "description": "Automatic breakdown subtitle for a choice field (B3)."
+  },
+  "insightSummarySection": "At a glance",
+  "@insightSummarySection": {
+    "description": "Insights home: heading of the period summary (H5)."
+  },
+  "insightDaysActive": "Days active",
+  "@insightDaysActive": {
+    "description": "Insights summary tile: days with something done."
+  },
+  "insightTimeRecorded": "Time",
+  "@insightTimeRecorded": {
+    "description": "Insights summary tile: recorded time."
+  },
+  "insightThingsDone": "Things done",
+  "@insightThingsDone": {
+    "description": "Insights summary tile: records done."
+  },
+  "insightTimeByActivitySection": "Where your time went",
+  "@insightTimeByActivitySection": {
+    "description": "Insights home: stacked bars of recorded time per activity (H2)."
+  },
+  "insightPlanSection": "Plan vs reality",
+  "@insightPlanSection": {
+    "description": "Insights home: share of planned items done (H3)."
+  },
+  "insightPlanDone": "{done} of {planned} planned items done",
+  "@insightPlanDone": {
+    "description": "Insights home: plan vs reality headline.",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "planned": {
+        "type": "int"
+      }
+    }
+  },
+  "insightPlanEmpty": "Nothing was planned in this period.",
+  "@insightPlanEmpty": {
+    "description": "Insights home: plan vs reality with no plans."
+  },
+  "insightNotThisPeriod": "Not done this period",
+  "@insightNotThisPeriod": {
+    "description": "Insights home: heading above activities with history but nothing in the period (B6)."
+  },
+  "insightActivityLegendMore": "+{count} more",
+  "@insightActivityLegendMore": {
+    "description": "Where your time went legend: activities beyond the ones named.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "insightPoints": "{change} pts",
+  "@insightPoints": {
+    "description": "Insights: a change of a share in percentage points (plan vs reality).",
+    "placeholders": {
+      "change": {
+        "type": "String"
+      }
+    }
   }
 }

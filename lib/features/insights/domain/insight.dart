@@ -40,7 +40,34 @@ enum InsightRange {
     month || quarter => Bucket.week,
     year => Bucket.month,
   };
+
+  /// [chosen] (a saved chart's grouping), made coarser when it would draw
+  /// more than [maxBuckets] bars or points for this range (D3).
+  Bucket fit(Bucket chosen, {int maxBuckets = 60}) {
+    int count(Bucket b) => switch (b) {
+      Bucket.day => days,
+      Bucket.week => (days / 7).ceil(),
+      Bucket.month => (days / 30).ceil(),
+    };
+    var bucket = chosen;
+    while (bucket != Bucket.month && count(bucket) > maxBuckets) {
+      bucket = Bucket.values[bucket.index + 1];
+    }
+    return bucket;
+  }
+
+  /// The first day any chart of this range needs: the previous period (for
+  /// the comparison) or the start of the first bucket, whichever is earlier.
+  LocalDate loadFrom(LocalDate today, Bucket bucket) {
+    final (prevFrom, _) = previous(today);
+    final first = bucketStart(window(today).$1, bucket);
+    return first.compareTo(prevFrom) < 0 ? first : prevFrom;
+  }
 }
+
+/// What "best" means for a value (ADR-043): the highest, the lowest, or
+/// nothing (money, temperature).
+enum BestIs { highest, lowest, none }
 
 /// Keeps values whose item, parent item or record has this text value in
 /// [fieldId] (e.g. Weight of sets where Exercise = "Chest Press").
@@ -91,8 +118,9 @@ final class ActivityCountSource extends InsightSource {
   int get hashCode => typeId.hashCode;
 }
 
-/// Values of any Number, Rating or Duration field, top level or inside a
-/// Repeating Group (one point per value, canonical unit).
+/// Values of any Number, Rating, Duration (ms), Yes/No (1 or 0) or Time of
+/// day (minutes after midnight) field, top level or inside a Repeating
+/// Group: one point per value, numbers in their canonical unit.
 final class FieldValueSource extends InsightSource {
   const FieldValueSource(this.typeId, this.fieldId, {this.filter});
 
@@ -111,8 +139,18 @@ final class FieldValueSource extends InsightSource {
   int get hashCode => Object.hash(typeId, fieldId, filter);
 }
 
-/// The product of two number sub-fields per group item, e.g. volume =
-/// weight × reps per set (FR-AN-08), in the first field's canonical unit.
+/// How two number sub-fields of a group item combine.
+enum VolumeFormula {
+  /// amount × count, e.g. volume = weight × reps per set (FR-AN-08).
+  product,
+
+  /// The estimated one-repetition maximum (Epley): amount × (1 + count /
+  /// 30), or the amount itself for a single repetition.
+  estimatedMax,
+}
+
+/// Two number sub-fields combined per group item ([formula]), in the first
+/// field's canonical unit.
 final class VolumeSource extends InsightSource {
   const VolumeSource(
     this.typeId, {
@@ -120,6 +158,7 @@ final class VolumeSource extends InsightSource {
     required this.amountFieldId,
     required this.countFieldId,
     this.filter,
+    this.formula = VolumeFormula.product,
   });
 
   final ActivityTypeId typeId;
@@ -127,6 +166,7 @@ final class VolumeSource extends InsightSource {
   final ActivityFieldId amountFieldId;
   final ActivityFieldId countFieldId;
   final TextFilter? filter;
+  final VolumeFormula formula;
 
   @override
   bool operator ==(Object other) =>
@@ -135,11 +175,18 @@ final class VolumeSource extends InsightSource {
       other.groupFieldId == groupFieldId &&
       other.amountFieldId == amountFieldId &&
       other.countFieldId == countFieldId &&
-      other.filter == filter;
+      other.filter == filter &&
+      other.formula == formula;
 
   @override
-  int get hashCode =>
-      Object.hash(typeId, groupFieldId, amountFieldId, countFieldId, filter);
+  int get hashCode => Object.hash(
+    typeId,
+    groupFieldId,
+    amountFieldId,
+    countFieldId,
+    filter,
+    formula,
+  );
 }
 
 /// A body measurement (FR-BM-03), canonical unit.
@@ -303,7 +350,10 @@ double? aggregate(List<DataPoint> points, Aggregation aggregation) {
   };
 }
 
-/// Buckets [points] over `[from, to]` and computes the stats (pure).
+/// Buckets [points] over `[from, to]` and computes the stats (pure). Every
+/// bucket is whole (A2): the first one also holds the days of its week or
+/// month before [from], so it isn't a misleading short bar; the stats cover
+/// `[from, to]` only.
 InsightSeries buildSeries(
   List<DataPoint> points, {
   required LocalDate from,
@@ -315,13 +365,15 @@ InsightSeries buildSeries(
     for (final p in points)
       if (p.date.compareTo(from) >= 0 && p.date.compareTo(to) <= 0) p,
   ];
+  final first = bucketStart(from, bucket);
   final byBucket = <LocalDate, List<DataPoint>>{};
-  for (final p in inRange) {
+  for (final p in points) {
+    if (p.date.compareTo(first) < 0 || p.date.compareTo(to) > 0) continue;
     byBucket.putIfAbsent(bucketStart(p.date, bucket), () => []).add(p);
   }
   final buckets = <SeriesBucket>[];
   for (
-    var start = bucketStart(from, bucket);
+    var start = first;
     start.compareTo(to) <= 0;
     start = _nextBucket(start, bucket)
   ) {
@@ -343,13 +395,86 @@ InsightSeries buildSeries(
     total: total,
     count: inRange.length,
     average: inRange.isEmpty ? null : total / inRange.length,
-    best: inRange.isEmpty
-        ? null
-        : inRange.reduce((a, b) => b.value > a.value ? b : a),
+    best: bestOf(inRange, BestIs.highest),
     latest: inRange.isEmpty
         ? null
         : inRange.reduce((a, b) => b.date.compareTo(a.date) >= 0 ? b : a),
   );
+}
+
+/// The best single point of [points] by [bestIs] (the latest one on a tie),
+/// or null when there's none or nothing counts as best.
+DataPoint? bestOf(List<DataPoint> points, BestIs bestIs) {
+  if (points.isEmpty || bestIs == BestIs.none) return null;
+  return points.reduce(
+    (a, b) => switch (bestIs) {
+      BestIs.highest => b.value >= a.value ? b : a,
+      BestIs.lowest => b.value <= a.value ? b : a,
+      BestIs.none => a,
+    },
+  );
+}
+
+/// Consecutive weeks (Monday to Sunday) with at least one of [days]: the
+/// run still going (this week, or last week while this one has nothing yet)
+/// and the longest ever (H4).
+({int current, int longest}) weekStreaks(
+  Iterable<LocalDate> days,
+  LocalDate today,
+) {
+  final weeks = {for (final d in days) bucketStart(d, Bucket.week)};
+  if (weeks.isEmpty) return (current: 0, longest: 0);
+  final sorted = weeks.toList()..sort();
+  var longest = 1;
+  var run = 1;
+  for (var i = 1; i < sorted.length; i++) {
+    run = sorted[i - 1].addDays(7) == sorted[i] ? run + 1 : 1;
+    if (run > longest) longest = run;
+  }
+  final thisWeek = bucketStart(today, Bucket.week);
+  var week = weeks.contains(thisWeek) ? thisWeek : thisWeek.addDays(-7);
+  var current = 0;
+  while (weeks.contains(week)) {
+    current++;
+    week = week.addDays(-7);
+  }
+  return (current: current, longest: longest);
+}
+
+/// How often each of a choice field's options was picked over a period, most
+/// picked first (B3). Ties keep the field's option order.
+List<(String optionId, int count)> optionCounts(
+  Iterable<List<String>> picks,
+  List<String> optionOrder,
+) {
+  final counts = <String, int>{};
+  for (final pick in picks) {
+    for (final id in pick) {
+      counts[id] = (counts[id] ?? 0) + 1;
+    }
+  }
+  int order(String id) {
+    final i = optionOrder.indexOf(id);
+    return i < 0 ? optionOrder.length : i;
+  }
+
+  return counts.entries.map((e) => (e.key, e.value)).toList()..sort((a, b) {
+    final byCount = b.$2.compareTo(a.$2);
+    return byCount != 0 ? byCount : order(a.$1).compareTo(order(b.$1));
+  });
+}
+
+/// When in the day something is usually done (H: per activity).
+enum PartOfDay { morning, afternoon, evening, night }
+
+/// The part of day of [minuteOfDay]: morning 5–12, afternoon 12–17,
+/// evening 17–22, night 22–5.
+PartOfDay partOfDay(int minuteOfDay) {
+  final hour = minuteOfDay ~/ 60;
+  if (hour >= 5 && hour < 12) return PartOfDay.morning;
+  if (hour >= 12 && hour < 17) return PartOfDay.afternoon;
+  if (hour >= 17 && hour < 22) return PartOfDay.evening;
+  return PartOfDay.night;
 }
 
 /// The highest per-day total of [points] (e.g. the best day's volume, A21),
