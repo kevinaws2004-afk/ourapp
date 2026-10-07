@@ -281,12 +281,9 @@ void main() {
       expect(find.text('Choose an activity'), findsOneWidget);
       await findActivity(tester, 'walk', 'Walking');
       await scrollAndTap(tester, find.text('Use Walking'));
-      // Back on the day, the new activity is chosen, ready to add.
-      expect(find.widgetWithText(ChoiceChip, 'Walking'), findsOneWidget);
-      expect(find.text('Set a time'), findsOneWidget);
-      await tester.tap(find.byTooltip('Add plan'));
-      await tester.pumpAndSettle();
+      // Back on the day, it's already added: no extra "+" (owner, bug fix).
       expect(itemRow('Walking'), findsOneWidget);
+      expect(find.text('Set a time'), findsNothing, reason: 'input cleared');
 
       await tester.enterText(
         find.widgetWithText(TextField, 'Add an activity to this day'),
@@ -300,6 +297,20 @@ void main() {
       await tester.pageBack();
       await tester.pumpAndSettle();
       expect(itemRow('Piano'), findsNothing, reason: 'nothing without one');
+    });
+
+    testAppWidgets('"Make your own" adds the new activity to the day as '
+        'soon as it is saved', (tester) async {
+      await pumpTestApp(tester, preferences: _onboarded);
+
+      await tester.tap(find.text('Make your own'));
+      await tester.pumpAndSettle();
+      expect(find.text('New activity'), findsOneWidget);
+      await tester.enterText(find.byType(TextField).first, 'Piano');
+      await tester.pumpAndSettle();
+      await saveOwnActivity(tester, 'Piano');
+
+      expect(itemRow('Piano'), findsOneWidget);
     });
 
     testAppWidgets('typing suggests built-in activities with what they log; '

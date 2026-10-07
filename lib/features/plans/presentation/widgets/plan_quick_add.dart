@@ -189,8 +189,8 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
     }
   }
 
-  /// Chooses the activity from [pick] (the list of activities, or a new one
-  /// of your own); its chip lights up, ready to add or give a time.
+  /// Adds the activity chosen with [pick] (the list of activities, or a new
+  /// one of your own) to the day straight away; choosing it is the intent.
   Future<void> _choose(Future<ActivityTypeId?> Function() pick) async {
     final id = await pick();
     if (id == null || !mounted) return;
@@ -198,6 +198,7 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
       _typeId = id;
       _matchedByName = false;
     });
+    await _add();
   }
 
   Future<void> _pickTime() async {
