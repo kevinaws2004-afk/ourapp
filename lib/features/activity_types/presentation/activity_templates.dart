@@ -8,8 +8,9 @@ import '../domain/field_type.dart';
 /// Starter templates (data_architecture.md §9): plain data, localized here
 /// because their names become the user's own editable content once added.
 /// Option IDs are placeholders; installing assigns fresh UUIDv7 IDs. No code
-/// may treat a template-derived type specially.
-List<ActivityTypeDefinition> activityTemplates(AppLocalizations l10n) => [
+/// may treat a template-derived type specially. The gallery shows them with
+/// the everyday ones, by category (`templateCategories`).
+List<ActivityTypeDefinition> starterTemplates(AppLocalizations l10n) => [
   ActivityTypeDefinition(
     name: l10n.templateReading,
     iconId: 'book-open',

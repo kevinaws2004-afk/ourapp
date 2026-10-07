@@ -16,7 +16,7 @@ import '../../../../shared/widgets/state_views.dart';
 import '../../../activity_types/domain/activity_ids.dart';
 import '../../../activity_types/domain/activity_type.dart';
 import '../../../activity_types/domain/activity_type_definition.dart';
-import '../../../activity_types/presentation/activity_templates.dart';
+import '../../../activity_types/presentation/everyday_templates.dart';
 import '../../../activity_types/presentation/activity_type_providers.dart';
 import '../../domain/plan.dart';
 import '../../domain/plan_title_match.dart';

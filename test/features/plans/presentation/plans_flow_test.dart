@@ -19,7 +19,7 @@ import '../../../support/fake_clock.dart';
 import '../../../support/fixtures.dart';
 import '../../../support/test_app.dart';
 import '../../activity_types/presentation/activities_flow_test.dart'
-    show enterField, scrollAndTap;
+    show enterField, findTemplate, scrollAndTap;
 import 'plan_screen_test.dart' show openPlan, openPlanTab;
 
 const _onboarded = PreferencesSnapshot(
@@ -278,8 +278,7 @@ void main() {
 
       await tester.tap(find.text('Templates'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Walking'));
-      await tester.pumpAndSettle();
+      await findTemplate(tester, 'walk', 'Walking');
       await scrollAndTap(tester, find.text('Add Walking'));
       // Back on the day, the new activity is chosen, ready to add.
       expect(find.widgetWithText(ChoiceChip, 'Walking'), findsOneWidget);
@@ -328,7 +327,8 @@ void main() {
       );
       await tester.pump();
       expect(find.text('Your activity'), findsOneWidget);
-      expect(find.textContaining('Ready-made'), findsNothing);
+      // Other templates containing "rea" (Breathing…) may show; Reading's not.
+      expect(find.text('Ready-made · Book · Pages · Rating'), findsNothing);
     });
 
     testAppWidgets('one sheet sets the time: a suggested start and a length', (
@@ -511,7 +511,7 @@ void main() {
     });
 
     testAppWidgets('a list can get another detail where it is', (tester) async {
-      await openNewItem(tester, 'Doctor visit');
+      await openNewItem(tester, 'Clinic follow-up');
 
       await scrollAndTap(tester, find.widgetWithText(ActionChip, 'More…'));
       await tester.tap(find.text('Checklist'));

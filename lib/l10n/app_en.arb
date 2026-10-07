@@ -436,6 +436,14 @@
   "@templatesSubtitle": {
     "description": "Template picker subtitle."
   },
+  "templatesSearchHint": "Search templates",
+  "@templatesSearchHint": {
+    "description": "Template picker: hint in the search field (matches names, categories and what they log)."
+  },
+  "templatesNoMatch": "No template matches. Go back and make your own instead.",
+  "@templatesNoMatch": {
+    "description": "Template picker: shown when the search matches nothing."
+  },
   "templateReading": "Reading",
   "@templateReading": {
     "description": "Starter template content (becomes editable user data once added)."
@@ -2522,5 +2530,2297 @@
   "templatesAlreadyAdded": "Already in your activities",
   "@templatesAlreadyAdded": {
     "description": "Template gallery: a template whose name an activity already uses."
+  },
+  "templateCategorySleepAndSelfCare": "Sleep & self-care",
+  "@templateCategorySleepAndSelfCare": {
+    "description": "Template gallery: a category heading."
+  },
+  "templateNap": "Nap",
+  "@templateNap": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateNapFeltAfter": "Felt after",
+  "@templateNapFeltAfter": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMorningRoutine": "Morning routine",
+  "@templateMorningRoutine": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMorningRoutineWokeUpAt": "Woke up at",
+  "@templateMorningRoutineWokeUpAt": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMorningRoutineSteps": "Steps",
+  "@templateMorningRoutineSteps": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMorningRoutineStepsItem": "Step",
+  "@templateMorningRoutineStepsItem": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMorningRoutineStepsStep": "Step",
+  "@templateMorningRoutineStepsStep": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMorningRoutineStepsDone": "Done",
+  "@templateMorningRoutineStepsDone": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMorningRoutineEnergy": "Energy",
+  "@templateMorningRoutineEnergy": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateEveningRoutine": "Evening routine",
+  "@templateEveningRoutine": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateEveningRoutineLightsOutAt": "Lights out at",
+  "@templateEveningRoutineLightsOutAt": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateEveningRoutineSteps": "Steps",
+  "@templateEveningRoutineSteps": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateEveningRoutineStepsItem": "Step",
+  "@templateEveningRoutineStepsItem": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateEveningRoutineStepsStep": "Step",
+  "@templateEveningRoutineStepsStep": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateEveningRoutineStepsDone": "Done",
+  "@templateEveningRoutineStepsDone": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateEveningRoutineScreensOffAnHourBefore": "Screens off an hour before",
+  "@templateEveningRoutineScreensOffAnHourBefore": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateShower": "Shower",
+  "@templateShower": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateShowerKind": "Kind",
+  "@templateShowerKind": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateShowerKindShower": "Shower",
+  "@templateShowerKindShower": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateShowerKindBath": "Bath",
+  "@templateShowerKindBath": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateShowerKindColdShower": "Cold shower",
+  "@templateShowerKindColdShower": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateShowerFeltAfter": "Felt after",
+  "@templateShowerFeltAfter": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSkincare": "Skincare",
+  "@templateSkincare": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSkincareProducts": "Products",
+  "@templateSkincareProducts": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSkincareProductsCleanser": "Cleanser",
+  "@templateSkincareProductsCleanser": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSkincareProductsToner": "Toner",
+  "@templateSkincareProductsToner": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSkincareProductsSerum": "Serum",
+  "@templateSkincareProductsSerum": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSkincareProductsMoisturizer": "Moisturizer",
+  "@templateSkincareProductsMoisturizer": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSkincareProductsSunscreen": "Sunscreen",
+  "@templateSkincareProductsSunscreen": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSkincareProductsMask": "Mask",
+  "@templateSkincareProductsMask": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSkincareSkinToday": "Skin today",
+  "@templateSkincareSkinToday": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateOralCare": "Oral care",
+  "@templateOralCare": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateOralCareBrushed": "Brushed",
+  "@templateOralCareBrushed": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateOralCareFlossed": "Flossed",
+  "@templateOralCareFlossed": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateOralCareMouthwash": "Mouthwash",
+  "@templateOralCareMouthwash": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGrooming": "Grooming",
+  "@templateGrooming": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGroomingWhat": "What",
+  "@templateGroomingWhat": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGroomingWhatHaircut": "Haircut",
+  "@templateGroomingWhatHaircut": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGroomingWhatShave": "Shave",
+  "@templateGroomingWhatShave": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGroomingWhatBeardTrim": "Beard trim",
+  "@templateGroomingWhatBeardTrim": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGroomingWhatNails": "Nails",
+  "@templateGroomingWhatNails": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGroomingWhatHairWash": "Hair wash",
+  "@templateGroomingWhatHairWash": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGroomingCost": "Cost",
+  "@templateGroomingCost": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCategoryHealth": "Health",
+  "@templateCategoryHealth": {
+    "description": "Template gallery: a category heading."
+  },
+  "templateMedication": "Medication",
+  "@templateMedication": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMedicationMedicine": "Medicine",
+  "@templateMedicationMedicine": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMedicationDose": "Dose",
+  "@templateMedicationDose": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMedicationTaken": "Taken",
+  "@templateMedicationTaken": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMedicationSideEffects": "Side effects",
+  "@templateMedicationSideEffects": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateVitaminsAndSupplements": "Vitamins & supplements",
+  "@templateVitaminsAndSupplements": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateVitaminsAndSupplementsSupplements": "Supplements",
+  "@templateVitaminsAndSupplementsSupplements": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateVitaminsAndSupplementsSupplementsItem": "Supplement",
+  "@templateVitaminsAndSupplementsSupplementsItem": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateVitaminsAndSupplementsSupplementsSupplement": "Supplement",
+  "@templateVitaminsAndSupplementsSupplementsSupplement": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateVitaminsAndSupplementsSupplementsTaken": "Taken",
+  "@templateVitaminsAndSupplementsSupplementsTaken": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDoctorVisit": "Doctor visit",
+  "@templateDoctorVisit": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDoctorVisitDoctorOrClinic": "Doctor or clinic",
+  "@templateDoctorVisitDoctorOrClinic": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDoctorVisitReason": "Reason",
+  "@templateDoctorVisitReason": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDoctorVisitWhatTheySaid": "What they said",
+  "@templateDoctorVisitWhatTheySaid": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDoctorVisitNextVisit": "Next visit",
+  "@templateDoctorVisitNextVisit": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSymptoms": "Symptoms",
+  "@templateSymptoms": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSymptomsSymptoms": "Symptoms",
+  "@templateSymptomsSymptoms": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSymptomsSymptomsHeadache": "Headache",
+  "@templateSymptomsSymptomsHeadache": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSymptomsSymptomsFever": "Fever",
+  "@templateSymptomsSymptomsFever": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSymptomsSymptomsCough": "Cough",
+  "@templateSymptomsSymptomsCough": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSymptomsSymptomsSoreThroat": "Sore throat",
+  "@templateSymptomsSymptomsSoreThroat": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSymptomsSymptomsFatigue": "Fatigue",
+  "@templateSymptomsSymptomsFatigue": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSymptomsSymptomsNausea": "Nausea",
+  "@templateSymptomsSymptomsNausea": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSymptomsSymptomsPain": "Pain",
+  "@templateSymptomsSymptomsPain": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSymptomsSeverity": "Severity",
+  "@templateSymptomsSeverity": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSymptomsNotes": "Notes",
+  "@templateSymptomsNotes": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBloodPressure": "Blood pressure",
+  "@templateBloodPressure": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBloodPressureSystolic": "Systolic",
+  "@templateBloodPressureSystolic": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBloodPressureDiastolic": "Diastolic",
+  "@templateBloodPressureDiastolic": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBloodPressurePulse": "Pulse",
+  "@templateBloodPressurePulse": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBloodSugar": "Blood sugar",
+  "@templateBloodSugar": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBloodSugarReading": "Reading",
+  "@templateBloodSugarReading": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBloodSugarWhen": "When",
+  "@templateBloodSugarWhen": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBloodSugarWhenFasting": "Fasting",
+  "@templateBloodSugarWhenFasting": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBloodSugarWhenBeforeAMeal": "Before a meal",
+  "@templateBloodSugarWhenBeforeAMeal": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBloodSugarWhenAfterAMeal": "After a meal",
+  "@templateBloodSugarWhenAfterAMeal": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBloodSugarWhenBedtime": "Bedtime",
+  "@templateBloodSugarWhenBedtime": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBodyTemperature": "Body temperature",
+  "@templateBodyTemperature": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBodyTemperatureTemperature": "Temperature",
+  "@templateBodyTemperatureTemperature": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePeriod": "Period",
+  "@templatePeriod": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePeriodFlow": "Flow",
+  "@templatePeriodFlow": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePeriodFlowSpotting": "Spotting",
+  "@templatePeriodFlowSpotting": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePeriodFlowLight": "Light",
+  "@templatePeriodFlowLight": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePeriodFlowMedium": "Medium",
+  "@templatePeriodFlowMedium": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePeriodFlowHeavy": "Heavy",
+  "@templatePeriodFlowHeavy": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePeriodSymptoms": "Symptoms",
+  "@templatePeriodSymptoms": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePeriodSymptomsCramps": "Cramps",
+  "@templatePeriodSymptomsCramps": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePeriodSymptomsBloating": "Bloating",
+  "@templatePeriodSymptomsBloating": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePeriodSymptomsHeadache": "Headache",
+  "@templatePeriodSymptomsHeadache": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePeriodSymptomsMoodSwings": "Mood swings",
+  "@templatePeriodSymptomsMoodSwings": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePeriodSymptomsFatigue": "Fatigue",
+  "@templatePeriodSymptomsFatigue": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePeriodSymptomsCravings": "Cravings",
+  "@templatePeriodSymptomsCravings": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePeriodNotes": "Notes",
+  "@templatePeriodNotes": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePhysiotherapy": "Physiotherapy",
+  "@templatePhysiotherapy": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePhysiotherapyExercises": "Exercises",
+  "@templatePhysiotherapyExercises": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePhysiotherapyExercisesItem": "Exercise",
+  "@templatePhysiotherapyExercisesItem": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePhysiotherapyExercisesExercise": "Exercise",
+  "@templatePhysiotherapyExercisesExercise": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePhysiotherapyExercisesDone": "Done",
+  "@templatePhysiotherapyExercisesDone": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePhysiotherapyPainLevel": "Pain level",
+  "@templatePhysiotherapyPainLevel": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCategoryFoodAndDrink": "Food & drink",
+  "@templateCategoryFoodAndDrink": {
+    "description": "Template gallery: a category heading."
+  },
+  "templateMeal": "Meal",
+  "@templateMeal": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMealMeal": "Meal",
+  "@templateMealMeal": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMealMealBreakfast": "Breakfast",
+  "@templateMealMealBreakfast": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMealMealLunch": "Lunch",
+  "@templateMealMealLunch": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMealMealDinner": "Dinner",
+  "@templateMealMealDinner": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMealMealSnack": "Snack",
+  "@templateMealMealSnack": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMealWhatIAte": "What I ate",
+  "@templateMealWhatIAte": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMealCalories": "Calories",
+  "@templateMealCalories": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMealHowHealthy": "How healthy",
+  "@templateMealHowHealthy": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMealAteOut": "Ate out",
+  "@templateMealAteOut": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCoffeeAndTea": "Coffee & tea",
+  "@templateCoffeeAndTea": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCoffeeAndTeaDrink": "Drink",
+  "@templateCoffeeAndTeaDrink": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCoffeeAndTeaDrinkCoffee": "Coffee",
+  "@templateCoffeeAndTeaDrinkCoffee": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCoffeeAndTeaDrinkEspresso": "Espresso",
+  "@templateCoffeeAndTeaDrinkEspresso": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCoffeeAndTeaDrinkTea": "Tea",
+  "@templateCoffeeAndTeaDrinkTea": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCoffeeAndTeaDrinkGreenTea": "Green tea",
+  "@templateCoffeeAndTeaDrinkGreenTea": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCoffeeAndTeaDrinkHerbalTea": "Herbal tea",
+  "@templateCoffeeAndTeaDrinkHerbalTea": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCoffeeAndTeaCups": "Cups",
+  "@templateCoffeeAndTeaCups": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateFasting": "Fasting",
+  "@templateFasting": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateFastingPlan": "Plan",
+  "@templateFastingPlan": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateFastingPlan1212": "12:12",
+  "@templateFastingPlan1212": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateFastingPlan168": "16:8",
+  "@templateFastingPlan168": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateFastingPlan186": "18:6",
+  "@templateFastingPlan186": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateFastingPlan204": "20:4",
+  "@templateFastingPlan204": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateFastingPlan24Hours": "24 hours",
+  "@templateFastingPlan24Hours": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateFastingBrokeTheFastAt": "Broke the fast at",
+  "@templateFastingBrokeTheFastAt": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateFastingHowItFelt": "How it felt",
+  "@templateFastingHowItFelt": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateAlcohol": "Alcohol",
+  "@templateAlcohol": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateAlcoholDrinks": "Drinks",
+  "@templateAlcoholDrinks": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateAlcoholKind": "Kind",
+  "@templateAlcoholKind": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateAlcoholKindBeer": "Beer",
+  "@templateAlcoholKindBeer": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateAlcoholKindWine": "Wine",
+  "@templateAlcoholKindWine": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateAlcoholKindSpirits": "Spirits",
+  "@templateAlcoholKindSpirits": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateAlcoholKindCocktail": "Cocktail",
+  "@templateAlcoholKindCocktail": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateAlcoholKindCider": "Cider",
+  "@templateAlcoholKindCider": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMealPrep": "Meal prep",
+  "@templateMealPrep": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMealPrepDishes": "Dishes",
+  "@templateMealPrepDishes": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMealPrepDishesItem": "Dish",
+  "@templateMealPrepDishesItem": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMealPrepDishesDish": "Dish",
+  "@templateMealPrepDishesDish": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMealPrepDishesPortions": "Portions",
+  "@templateMealPrepDishesPortions": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCategoryHomeAndChores": "Home & chores",
+  "@templateCategoryHomeAndChores": {
+    "description": "Template gallery: a category heading."
+  },
+  "templateCleaning": "Cleaning",
+  "@templateCleaning": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCleaningRooms": "Rooms",
+  "@templateCleaningRooms": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCleaningRoomsKitchen": "Kitchen",
+  "@templateCleaningRoomsKitchen": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCleaningRoomsBathroom": "Bathroom",
+  "@templateCleaningRoomsBathroom": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCleaningRoomsBedroom": "Bedroom",
+  "@templateCleaningRoomsBedroom": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCleaningRoomsLivingRoom": "Living room",
+  "@templateCleaningRoomsLivingRoom": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCleaningRoomsWholeHome": "Whole home",
+  "@templateCleaningRoomsWholeHome": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCleaningTasks": "Tasks",
+  "@templateCleaningTasks": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCleaningTasksItem": "Task",
+  "@templateCleaningTasksItem": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCleaningTasksTask": "Task",
+  "@templateCleaningTasksTask": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCleaningTasksDone": "Done",
+  "@templateCleaningTasksDone": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateLaundry": "Laundry",
+  "@templateLaundry": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateLaundryLoads": "Loads",
+  "@templateLaundryLoads": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateLaundrySteps": "Steps",
+  "@templateLaundrySteps": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateLaundryStepsWashed": "Washed",
+  "@templateLaundryStepsWashed": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateLaundryStepsDried": "Dried",
+  "@templateLaundryStepsDried": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateLaundryStepsFolded": "Folded",
+  "@templateLaundryStepsFolded": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateLaundryStepsIroned": "Ironed",
+  "@templateLaundryStepsIroned": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateLaundryStepsPutAway": "Put away",
+  "@templateLaundryStepsPutAway": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDishes": "Dishes",
+  "@templateDishes": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDishesHow": "How",
+  "@templateDishesHow": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDishesHowByHand": "By hand",
+  "@templateDishesHowByHand": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDishesHowDishwasher": "Dishwasher",
+  "@templateDishesHowDishwasher": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDishesKitchenWiped": "Kitchen wiped",
+  "@templateDishesKitchenWiped": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGroceries": "Groceries",
+  "@templateGroceries": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGroceriesStore": "Store",
+  "@templateGroceriesStore": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGroceriesShoppingList": "Shopping list",
+  "@templateGroceriesShoppingList": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGroceriesShoppingListItem": "Item",
+  "@templateGroceriesShoppingListItem": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGroceriesShoppingListGotIt": "Got it",
+  "@templateGroceriesShoppingListGotIt": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGroceriesSpent": "Spent",
+  "@templateGroceriesSpent": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGardening": "Gardening",
+  "@templateGardening": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGardeningTasks": "Tasks",
+  "@templateGardeningTasks": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGardeningTasksWatering": "Watering",
+  "@templateGardeningTasksWatering": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGardeningTasksPlanting": "Planting",
+  "@templateGardeningTasksPlanting": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGardeningTasksWeeding": "Weeding",
+  "@templateGardeningTasksWeeding": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGardeningTasksPruning": "Pruning",
+  "@templateGardeningTasksPruning": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGardeningTasksMowing": "Mowing",
+  "@templateGardeningTasksMowing": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGardeningTasksHarvesting": "Harvesting",
+  "@templateGardeningTasksHarvesting": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGardeningPlants": "Plants",
+  "@templateGardeningPlants": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePlantCare": "Plant care",
+  "@templatePlantCare": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePlantCarePlants": "Plants",
+  "@templatePlantCarePlants": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePlantCarePlantsItem": "Plant",
+  "@templatePlantCarePlantsItem": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePlantCarePlantsPlant": "Plant",
+  "@templatePlantCarePlantsPlant": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePlantCarePlantsWatered": "Watered",
+  "@templatePlantCarePlantsWatered": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePlantCarePlantsFed": "Fed",
+  "@templatePlantCarePlantsFed": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHomeRepair": "Home repair",
+  "@templateHomeRepair": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHomeRepairProject": "Project",
+  "@templateHomeRepairProject": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHomeRepairWhatWasDone": "What was done",
+  "@templateHomeRepairWhatWasDone": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHomeRepairCost": "Cost",
+  "@templateHomeRepairCost": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDeclutter": "Declutter",
+  "@templateDeclutter": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDeclutterArea": "Area",
+  "@templateDeclutterArea": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDeclutterItemsRemoved": "Items removed",
+  "@templateDeclutterItemsRemoved": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDeclutterWhereTheyWent": "Where they went",
+  "@templateDeclutterWhereTheyWent": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDeclutterWhereTheyWentDonated": "Donated",
+  "@templateDeclutterWhereTheyWentDonated": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDeclutterWhereTheyWentSold": "Sold",
+  "@templateDeclutterWhereTheyWentSold": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDeclutterWhereTheyWentRecycled": "Recycled",
+  "@templateDeclutterWhereTheyWentRecycled": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDeclutterWhereTheyWentThrownAway": "Thrown away",
+  "@templateDeclutterWhereTheyWentThrownAway": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBills": "Bills",
+  "@templateBills": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBillsBills": "Bills",
+  "@templateBillsBills": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBillsBillsItem": "Bill",
+  "@templateBillsBillsItem": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBillsBillsBill": "Bill",
+  "@templateBillsBillsBill": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBillsBillsAmount": "Amount",
+  "@templateBillsBillsAmount": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBillsBillsPaid": "Paid",
+  "@templateBillsBillsPaid": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateExpense": "Expense",
+  "@templateExpense": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateExpenseAmount": "Amount",
+  "@templateExpenseAmount": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateExpenseCategory": "Category",
+  "@templateExpenseCategory": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateExpenseCategoryFood": "Food",
+  "@templateExpenseCategoryFood": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateExpenseCategoryTransport": "Transport",
+  "@templateExpenseCategoryTransport": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateExpenseCategoryHome": "Home",
+  "@templateExpenseCategoryHome": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateExpenseCategoryHealth": "Health",
+  "@templateExpenseCategoryHealth": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateExpenseCategoryFun": "Fun",
+  "@templateExpenseCategoryFun": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateExpenseCategoryShopping": "Shopping",
+  "@templateExpenseCategoryShopping": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateExpenseCategoryBills": "Bills",
+  "@templateExpenseCategoryBills": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateExpenseCategoryOther": "Other",
+  "@templateExpenseCategoryOther": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateExpenseWhatFor": "What for",
+  "@templateExpenseWhatFor": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBudgetReview": "Budget review",
+  "@templateBudgetReview": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBudgetReviewSpentThisWeek": "Spent this week",
+  "@templateBudgetReviewSpentThisWeek": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBudgetReviewSaved": "Saved",
+  "@templateBudgetReviewSaved": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBudgetReviewOnTrack": "On track",
+  "@templateBudgetReviewOnTrack": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCategoryFamilyAndCare": "Family & care",
+  "@templateCategoryFamilyAndCare": {
+    "description": "Template gallery: a category heading."
+  },
+  "templateChildcare": "Childcare",
+  "@templateChildcare": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateChildcareChild": "Child",
+  "@templateChildcareChild": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateChildcareWhatWeDid": "What we did",
+  "@templateChildcareWhatWeDid": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateChildcareWhatWeDidMeals": "Meals",
+  "@templateChildcareWhatWeDidMeals": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateChildcareWhatWeDidSchoolRun": "School run",
+  "@templateChildcareWhatWeDidSchoolRun": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateChildcareWhatWeDidHomework": "Homework",
+  "@templateChildcareWhatWeDidHomework": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateChildcareWhatWeDidPlaytime": "Playtime",
+  "@templateChildcareWhatWeDidPlaytime": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateChildcareWhatWeDidBath": "Bath",
+  "@templateChildcareWhatWeDidBath": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateChildcareWhatWeDidBedtime": "Bedtime",
+  "@templateChildcareWhatWeDidBedtime": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateChildcareNotes": "Notes",
+  "@templateChildcareNotes": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBabyFeeding": "Baby feeding",
+  "@templateBabyFeeding": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBabyFeedingKind": "Kind",
+  "@templateBabyFeedingKind": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBabyFeedingKindBreastLeft": "Breast (left)",
+  "@templateBabyFeedingKindBreastLeft": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBabyFeedingKindBreastRight": "Breast (right)",
+  "@templateBabyFeedingKindBreastRight": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBabyFeedingKindBottle": "Bottle",
+  "@templateBabyFeedingKindBottle": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBabyFeedingKindSolids": "Solids",
+  "@templateBabyFeedingKindSolids": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBabyFeedingAmount": "Amount",
+  "@templateBabyFeedingAmount": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBabyFeedingNotes": "Notes",
+  "@templateBabyFeedingNotes": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDiaperChange": "Diaper change",
+  "@templateDiaperChange": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDiaperChangeKind": "Kind",
+  "@templateDiaperChangeKind": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDiaperChangeKindWet": "Wet",
+  "@templateDiaperChangeKindWet": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDiaperChangeKindDirty": "Dirty",
+  "@templateDiaperChangeKindDirty": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDiaperChangeKindBoth": "Both",
+  "@templateDiaperChangeKindBoth": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePetCare": "Pet care",
+  "@templatePetCare": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePetCarePet": "Pet",
+  "@templatePetCarePet": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePetCareCare": "Care",
+  "@templatePetCareCare": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePetCareCareFed": "Fed",
+  "@templatePetCareCareFed": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePetCareCareWalked": "Walked",
+  "@templatePetCareCareWalked": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePetCareCareGroomed": "Groomed",
+  "@templatePetCareCareGroomed": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePetCareCarePlayed": "Played",
+  "@templatePetCareCarePlayed": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePetCareCareMedicine": "Medicine",
+  "@templatePetCareCareMedicine": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePetCareCareVetVisit": "Vet visit",
+  "@templatePetCareCareVetVisit": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePetCareNotes": "Notes",
+  "@templatePetCareNotes": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDogWalk": "Dog walk",
+  "@templateDogWalk": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDogWalkDog": "Dog",
+  "@templateDogWalkDog": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDogWalkDistance": "Distance",
+  "@templateDogWalkDistance": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateFamilyTime": "Family time",
+  "@templateFamilyTime": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateFamilyTimeWho": "Who",
+  "@templateFamilyTimeWho": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateFamilyTimeWhatWeDid": "What we did",
+  "@templateFamilyTimeWhatWeDid": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateFamilyTimeHowItFelt": "How it felt",
+  "@templateFamilyTimeHowItFelt": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCaringForSomeone": "Caring for someone",
+  "@templateCaringForSomeone": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCaringForSomeoneWho": "Who",
+  "@templateCaringForSomeoneWho": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCaringForSomeoneHelpGiven": "Help given",
+  "@templateCaringForSomeoneHelpGiven": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCaringForSomeoneHelpGivenCompany": "Company",
+  "@templateCaringForSomeoneHelpGivenCompany": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCaringForSomeoneHelpGivenMeals": "Meals",
+  "@templateCaringForSomeoneHelpGivenMeals": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCaringForSomeoneHelpGivenErrands": "Errands",
+  "@templateCaringForSomeoneHelpGivenErrands": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCaringForSomeoneHelpGivenMedicine": "Medicine",
+  "@templateCaringForSomeoneHelpGivenMedicine": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCaringForSomeoneHelpGivenAppointments": "Appointments",
+  "@templateCaringForSomeoneHelpGivenAppointments": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCaringForSomeoneNotes": "Notes",
+  "@templateCaringForSomeoneNotes": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCategoryWork": "Work",
+  "@templateCategoryWork": {
+    "description": "Template gallery: a category heading."
+  },
+  "templateDailyPlanning": "Daily planning",
+  "@templateDailyPlanning": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDailyPlanningTopPriorities": "Top priorities",
+  "@templateDailyPlanningTopPriorities": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDailyPlanningTopPrioritiesItem": "Priority",
+  "@templateDailyPlanningTopPrioritiesItem": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDailyPlanningTopPrioritiesPriority": "Priority",
+  "@templateDailyPlanningTopPrioritiesPriority": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDailyPlanningTopPrioritiesDone": "Done",
+  "@templateDailyPlanningTopPrioritiesDone": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDailyPlanningNotes": "Notes",
+  "@templateDailyPlanningNotes": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCommute": "Commute",
+  "@templateCommute": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCommuteHow": "How",
+  "@templateCommuteHow": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCommuteHowCar": "Car",
+  "@templateCommuteHowCar": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCommuteHowBus": "Bus",
+  "@templateCommuteHowBus": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCommuteHowTrain": "Train",
+  "@templateCommuteHowTrain": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCommuteHowBike": "Bike",
+  "@templateCommuteHowBike": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCommuteHowWalk": "Walk",
+  "@templateCommuteHowWalk": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCommuteHowOther": "Other",
+  "@templateCommuteHowOther": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCommuteDistance": "Distance",
+  "@templateCommuteDistance": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCommuteHowItWent": "How it went",
+  "@templateCommuteHowItWent": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateEmailAndAdmin": "Email & admin",
+  "@templateEmailAndAdmin": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateEmailAndAdminEmailsHandled": "Emails handled",
+  "@templateEmailAndAdminEmailsHandled": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateEmailAndAdminInboxZero": "Inbox zero",
+  "@templateEmailAndAdminInboxZero": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCoding": "Coding",
+  "@templateCoding": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCodingProject": "Project",
+  "@templateCodingProject": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCodingWhatIBuilt": "What I built",
+  "@templateCodingWhatIBuilt": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCodingCommits": "Commits",
+  "@templateCodingCommits": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSideProject": "Side project",
+  "@templateSideProject": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSideProjectProject": "Project",
+  "@templateSideProjectProject": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSideProjectProgress": "Progress",
+  "@templateSideProjectProgress": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSideProjectMomentum": "Momentum",
+  "@templateSideProjectMomentum": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateJobSearch": "Job search",
+  "@templateJobSearch": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateJobSearchCompany": "Company",
+  "@templateJobSearchCompany": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateJobSearchRole": "Role",
+  "@templateJobSearchRole": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateJobSearchStage": "Stage",
+  "@templateJobSearchStage": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateJobSearchStageApplied": "Applied",
+  "@templateJobSearchStageApplied": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateJobSearchStageInterview": "Interview",
+  "@templateJobSearchStageInterview": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateJobSearchStageOffer": "Offer",
+  "@templateJobSearchStageOffer": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateJobSearchStageRejected": "Rejected",
+  "@templateJobSearchStageRejected": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateJobSearchStageFollowingUp": "Following up",
+  "@templateJobSearchStageFollowingUp": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateJobSearchNotes": "Notes",
+  "@templateJobSearchNotes": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePresentation": "Presentation",
+  "@templatePresentation": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePresentationTopic": "Topic",
+  "@templatePresentationTopic": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePresentationAudience": "Audience",
+  "@templatePresentationAudience": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePresentationHowItWent": "How it went",
+  "@templatePresentationHowItWent": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCategoryLearning": "Learning",
+  "@templateCategoryLearning": {
+    "description": "Template gallery: a category heading."
+  },
+  "templateClass": "Class",
+  "@templateClass": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateClassCourse": "Course",
+  "@templateClassCourse": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateClassTopic": "Topic",
+  "@templateClassTopic": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateClassNotes": "Notes",
+  "@templateClassNotes": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateClassUnderstood": "Understood",
+  "@templateClassUnderstood": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHomework": "Homework",
+  "@templateHomework": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHomeworkSubject": "Subject",
+  "@templateHomeworkSubject": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHomeworkTask": "Task",
+  "@templateHomeworkTask": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHomeworkFinished": "Finished",
+  "@templateHomeworkFinished": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateOnlineCourse": "Online course",
+  "@templateOnlineCourse": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateOnlineCourseCourse": "Course",
+  "@templateOnlineCourseCourse": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateOnlineCourseLessonsDone": "Lessons done",
+  "@templateOnlineCourseLessonsDone": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateOnlineCourseTakeaways": "Takeaways",
+  "@templateOnlineCourseTakeaways": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMusicPractice": "Music practice",
+  "@templateMusicPractice": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMusicPracticeInstrument": "Instrument",
+  "@templateMusicPracticeInstrument": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMusicPracticeInstrumentGuitar": "Guitar",
+  "@templateMusicPracticeInstrumentGuitar": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMusicPracticeInstrumentPiano": "Piano",
+  "@templateMusicPracticeInstrumentPiano": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMusicPracticeInstrumentDrums": "Drums",
+  "@templateMusicPracticeInstrumentDrums": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMusicPracticeInstrumentViolin": "Violin",
+  "@templateMusicPracticeInstrumentViolin": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMusicPracticeInstrumentVoice": "Voice",
+  "@templateMusicPracticeInstrumentVoice": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMusicPracticeInstrumentOther": "Other",
+  "@templateMusicPracticeInstrumentOther": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMusicPracticePieces": "Pieces",
+  "@templateMusicPracticePieces": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMusicPracticePiecesItem": "Piece",
+  "@templateMusicPracticePiecesItem": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMusicPracticePiecesPiece": "Piece",
+  "@templateMusicPracticePiecesPiece": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMusicPracticePiecesTempoBpm": "Tempo (bpm)",
+  "@templateMusicPracticePiecesTempoBpm": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateMusicPracticeHowItWent": "How it went",
+  "@templateMusicPracticeHowItWent": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSkillPractice": "Skill practice",
+  "@templateSkillPractice": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSkillPracticeSkill": "Skill",
+  "@templateSkillPracticeSkill": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSkillPracticeWhatIPractised": "What I practised",
+  "@templateSkillPracticeWhatIPractised": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSkillPracticeProgress": "Progress",
+  "@templateSkillPracticeProgress": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCategoryExerciseAndSport": "Exercise & sport",
+  "@templateCategoryExerciseAndSport": {
+    "description": "Template gallery: a category heading."
+  },
+  "templateCycling": "Cycling",
+  "@templateCycling": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCyclingDistance": "Distance",
+  "@templateCyclingDistance": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCyclingRoute": "Route",
+  "@templateCyclingRoute": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCyclingFelt": "Felt",
+  "@templateCyclingFelt": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSwimming": "Swimming",
+  "@templateSwimming": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSwimmingDistance": "Distance",
+  "@templateSwimmingDistance": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSwimmingLaps": "Laps",
+  "@templateSwimmingLaps": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSwimmingStrokes": "Strokes",
+  "@templateSwimmingStrokes": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSwimmingStrokesFreestyle": "Freestyle",
+  "@templateSwimmingStrokesFreestyle": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSwimmingStrokesBreaststroke": "Breaststroke",
+  "@templateSwimmingStrokesBreaststroke": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSwimmingStrokesBackstroke": "Backstroke",
+  "@templateSwimmingStrokesBackstroke": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateSwimmingStrokesButterfly": "Butterfly",
+  "@templateSwimmingStrokesButterfly": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateYoga": "Yoga",
+  "@templateYoga": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateYogaStyle": "Style",
+  "@templateYogaStyle": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateYogaStyleHatha": "Hatha",
+  "@templateYogaStyleHatha": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateYogaStyleVinyasa": "Vinyasa",
+  "@templateYogaStyleVinyasa": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateYogaStyleYin": "Yin",
+  "@templateYogaStyleYin": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateYogaStylePower": "Power",
+  "@templateYogaStylePower": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateYogaStyleRestorative": "Restorative",
+  "@templateYogaStyleRestorative": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateYogaFeltAfter": "Felt after",
+  "@templateYogaFeltAfter": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateStretching": "Stretching",
+  "@templateStretching": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateStretchingAreas": "Areas",
+  "@templateStretchingAreas": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateStretchingAreasNeck": "Neck",
+  "@templateStretchingAreasNeck": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateStretchingAreasShoulders": "Shoulders",
+  "@templateStretchingAreasShoulders": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateStretchingAreasBack": "Back",
+  "@templateStretchingAreasBack": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateStretchingAreasHips": "Hips",
+  "@templateStretchingAreasHips": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateStretchingAreasLegs": "Legs",
+  "@templateStretchingAreasLegs": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateStretchingAreasFullBody": "Full body",
+  "@templateStretchingAreasFullBody": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHomeWorkout": "Home workout",
+  "@templateHomeWorkout": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHomeWorkoutExercises": "Exercises",
+  "@templateHomeWorkoutExercises": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHomeWorkoutExercisesItem": "Exercise",
+  "@templateHomeWorkoutExercisesItem": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHomeWorkoutExercisesExercise": "Exercise",
+  "@templateHomeWorkoutExercisesExercise": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHomeWorkoutExercisesReps": "Reps",
+  "@templateHomeWorkoutExercisesReps": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHomeWorkoutExercisesRounds": "Rounds",
+  "@templateHomeWorkoutExercisesRounds": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHomeWorkoutEffort": "Effort",
+  "@templateHomeWorkoutEffort": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHiking": "Hiking",
+  "@templateHiking": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHikingTrail": "Trail",
+  "@templateHikingTrail": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHikingDistance": "Distance",
+  "@templateHikingDistance": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHikingElevationGain": "Elevation gain",
+  "@templateHikingElevationGain": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHikingFelt": "Felt",
+  "@templateHikingFelt": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTeamSport": "Team sport",
+  "@templateTeamSport": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTeamSportSport": "Sport",
+  "@templateTeamSportSport": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTeamSportSportFootball": "Football",
+  "@templateTeamSportSportFootball": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTeamSportSportBasketball": "Basketball",
+  "@templateTeamSportSportBasketball": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTeamSportSportCricket": "Cricket",
+  "@templateTeamSportSportCricket": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTeamSportSportVolleyball": "Volleyball",
+  "@templateTeamSportSportVolleyball": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTeamSportSportHockey": "Hockey",
+  "@templateTeamSportSportHockey": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTeamSportSportOther": "Other",
+  "@templateTeamSportSportOther": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTeamSportResult": "Result",
+  "@templateTeamSportResult": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTeamSportResultWon": "Won",
+  "@templateTeamSportResultWon": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTeamSportResultLost": "Lost",
+  "@templateTeamSportResultLost": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTeamSportResultDraw": "Draw",
+  "@templateTeamSportResultDraw": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTeamSportResultJustPlayed": "Just played",
+  "@templateTeamSportResultJustPlayed": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTeamSportHowIPlayed": "How I played",
+  "@templateTeamSportHowIPlayed": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateRacketSport": "Racket sport",
+  "@templateRacketSport": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateRacketSportSport": "Sport",
+  "@templateRacketSportSport": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateRacketSportSportTennis": "Tennis",
+  "@templateRacketSportSportTennis": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateRacketSportSportBadminton": "Badminton",
+  "@templateRacketSportSportBadminton": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateRacketSportSportSquash": "Squash",
+  "@templateRacketSportSportSquash": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateRacketSportSportTableTennis": "Table tennis",
+  "@templateRacketSportSportTableTennis": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateRacketSportSportPadel": "Padel",
+  "@templateRacketSportSportPadel": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateRacketSportOpponent": "Opponent",
+  "@templateRacketSportOpponent": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateRacketSportResult": "Result",
+  "@templateRacketSportResult": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateRacketSportResultWon": "Won",
+  "@templateRacketSportResultWon": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateRacketSportResultLost": "Lost",
+  "@templateRacketSportResultLost": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateRacketSportResultJustPlayed": "Just played",
+  "@templateRacketSportResultJustPlayed": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDance": "Dance",
+  "@templateDance": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDanceStyle": "Style",
+  "@templateDanceStyle": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDanceFun": "Fun",
+  "@templateDanceFun": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDailySteps": "Daily steps",
+  "@templateDailySteps": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDailyStepsSteps": "Steps",
+  "@templateDailyStepsSteps": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCategoryMindAndWellbeing": "Mind & wellbeing",
+  "@templateCategoryMindAndWellbeing": {
+    "description": "Template gallery: a category heading."
+  },
+  "templateJournal": "Journal",
+  "@templateJournal": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateJournalEntry": "Entry",
+  "@templateJournalEntry": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateJournalHowTheDayWas": "How the day was",
+  "@templateJournalHowTheDayWas": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGratitude": "Gratitude",
+  "@templateGratitude": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGratitudeGratefulFor": "Grateful for",
+  "@templateGratitudeGratefulFor": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGratitudeGratefulForItem": "Thing",
+  "@templateGratitudeGratefulForItem": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGratitudeGratefulForThing": "Thing",
+  "@templateGratitudeGratefulForThing": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBreathing": "Breathing",
+  "@templateBreathing": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBreathingTechnique": "Technique",
+  "@templateBreathingTechnique": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBreathingTechniqueBoxBreathing": "Box breathing",
+  "@templateBreathingTechniqueBoxBreathing": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBreathingTechnique478": "4-7-8",
+  "@templateBreathingTechnique478": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBreathingTechniqueDeepBelly": "Deep belly",
+  "@templateBreathingTechniqueDeepBelly": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBreathingTechniqueAlternateNostril": "Alternate nostril",
+  "@templateBreathingTechniqueAlternateNostril": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateBreathingRounds": "Rounds",
+  "@templateBreathingRounds": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTherapySession": "Therapy session",
+  "@templateTherapySession": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTherapySessionWith": "With",
+  "@templateTherapySessionWith": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTherapySessionTalkedAbout": "Talked about",
+  "@templateTherapySessionTalkedAbout": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTherapySessionTakeaways": "Takeaways",
+  "@templateTherapySessionTakeaways": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTherapySessionFeltAfter": "Felt after",
+  "@templateTherapySessionFeltAfter": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateScreenTime": "Screen time",
+  "@templateScreenTime": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateScreenTimeTotal": "Total",
+  "@templateScreenTimeTotal": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateScreenTimePickups": "Pickups",
+  "@templateScreenTimePickups": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateScreenTimeMostUsedApp": "Most used app",
+  "@templateScreenTimeMostUsedApp": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHabitToBreak": "Habit to break",
+  "@templateHabitToBreak": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHabitToBreakHabit": "Habit",
+  "@templateHabitToBreakHabit": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHabitToBreakKeptClearToday": "Kept clear today",
+  "@templateHabitToBreakKeptClearToday": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHabitToBreakUrges": "Urges",
+  "@templateHabitToBreakUrges": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateHabitToBreakNotes": "Notes",
+  "@templateHabitToBreakNotes": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDigitalDetox": "Digital detox",
+  "@templateDigitalDetox": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDigitalDetoxPhoneAway": "Phone away",
+  "@templateDigitalDetoxPhoneAway": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDigitalDetoxHowItFelt": "How it felt",
+  "@templateDigitalDetoxHowItFelt": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateAffirmations": "Affirmations",
+  "@templateAffirmations": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateAffirmationsTodaySAffirmation": "Today's affirmation",
+  "@templateAffirmationsTodaySAffirmation": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateAffirmationsSaidOutLoud": "Said out loud",
+  "@templateAffirmationsSaidOutLoud": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCategoryHobbiesAndFun": "Hobbies & fun",
+  "@templateCategoryHobbiesAndFun": {
+    "description": "Template gallery: a category heading."
+  },
+  "templateTVAndMovies": "TV & movies",
+  "@templateTVAndMovies": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTVAndMoviesTitle": "Title",
+  "@templateTVAndMoviesTitle": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTVAndMoviesKind": "Kind",
+  "@templateTVAndMoviesKind": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTVAndMoviesKindMovie": "Movie",
+  "@templateTVAndMoviesKindMovie": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTVAndMoviesKindSeries": "Series",
+  "@templateTVAndMoviesKindSeries": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTVAndMoviesKindDocumentary": "Documentary",
+  "@templateTVAndMoviesKindDocumentary": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTVAndMoviesKindShow": "Show",
+  "@templateTVAndMoviesKindShow": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTVAndMoviesEpisodes": "Episodes",
+  "@templateTVAndMoviesEpisodes": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTVAndMoviesRating": "Rating",
+  "@templateTVAndMoviesRating": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGaming": "Gaming",
+  "@templateGaming": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGamingGame": "Game",
+  "@templateGamingGame": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGamingPlatform": "Platform",
+  "@templateGamingPlatform": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGamingPlatformPC": "PC",
+  "@templateGamingPlatformPC": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGamingPlatformConsole": "Console",
+  "@templateGamingPlatformConsole": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGamingPlatformMobile": "Mobile",
+  "@templateGamingPlatformMobile": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGamingPlatformBoardGame": "Board game",
+  "@templateGamingPlatformBoardGame": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGamingPlatformCards": "Cards",
+  "@templateGamingPlatformCards": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateGamingFun": "Fun",
+  "@templateGamingFun": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePodcast": "Podcast",
+  "@templatePodcast": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePodcastShow": "Show",
+  "@templatePodcastShow": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePodcastEpisode": "Episode",
+  "@templatePodcastEpisode": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePodcastTakeaways": "Takeaways",
+  "@templatePodcastTakeaways": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDrawingAndPainting": "Drawing & painting",
+  "@templateDrawingAndPainting": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDrawingAndPaintingMedium": "Medium",
+  "@templateDrawingAndPaintingMedium": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDrawingAndPaintingMediumPencil": "Pencil",
+  "@templateDrawingAndPaintingMediumPencil": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDrawingAndPaintingMediumInk": "Ink",
+  "@templateDrawingAndPaintingMediumInk": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDrawingAndPaintingMediumWatercolor": "Watercolor",
+  "@templateDrawingAndPaintingMediumWatercolor": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDrawingAndPaintingMediumAcrylic": "Acrylic",
+  "@templateDrawingAndPaintingMediumAcrylic": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDrawingAndPaintingMediumOil": "Oil",
+  "@templateDrawingAndPaintingMediumOil": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDrawingAndPaintingMediumDigital": "Digital",
+  "@templateDrawingAndPaintingMediumDigital": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDrawingAndPaintingPiece": "Piece",
+  "@templateDrawingAndPaintingPiece": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDrawingAndPaintingHappyWithIt": "Happy with it",
+  "@templateDrawingAndPaintingHappyWithIt": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePhotography": "Photography",
+  "@templatePhotography": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePhotographySubject": "Subject",
+  "@templatePhotographySubject": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePhotographyPhotosTaken": "Photos taken",
+  "@templatePhotographyPhotosTaken": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePhotographyKeepers": "Keepers",
+  "@templatePhotographyKeepers": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateWriting": "Writing",
+  "@templateWriting": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateWritingProject": "Project",
+  "@templateWritingProject": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateWritingWords": "Words",
+  "@templateWritingWords": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateWritingNotes": "Notes",
+  "@templateWritingNotes": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCrafts": "Crafts",
+  "@templateCrafts": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCraftsCraft": "Craft",
+  "@templateCraftsCraft": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCraftsCraftKnitting": "Knitting",
+  "@templateCraftsCraftKnitting": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCraftsCraftCrochet": "Crochet",
+  "@templateCraftsCraftCrochet": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCraftsCraftSewing": "Sewing",
+  "@templateCraftsCraftSewing": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCraftsCraftWoodwork": "Woodwork",
+  "@templateCraftsCraftWoodwork": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCraftsCraftPottery": "Pottery",
+  "@templateCraftsCraftPottery": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCraftsCraftOther": "Other",
+  "@templateCraftsCraftOther": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCraftsProject": "Project",
+  "@templateCraftsProject": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCraftsProgress": "Progress",
+  "@templateCraftsProgress": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePuzzles": "Puzzles",
+  "@templatePuzzles": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePuzzlesGame": "Game",
+  "@templatePuzzlesGame": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePuzzlesGameSudoku": "Sudoku",
+  "@templatePuzzlesGameSudoku": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePuzzlesGameCrossword": "Crossword",
+  "@templatePuzzlesGameCrossword": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePuzzlesGameChess": "Chess",
+  "@templatePuzzlesGameChess": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePuzzlesGameJigsaw": "Jigsaw",
+  "@templatePuzzlesGameJigsaw": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePuzzlesGameWordGame": "Word game",
+  "@templatePuzzlesGameWordGame": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePuzzlesGameOther": "Other",
+  "@templatePuzzlesGameOther": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePuzzlesSolved": "Solved",
+  "@templatePuzzlesSolved": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePuzzlesScore": "Score",
+  "@templatePuzzlesScore": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateListeningToMusic": "Listening to music",
+  "@templateListeningToMusic": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateListeningToMusicArtistOrAlbum": "Artist or album",
+  "@templateListeningToMusicArtistOrAlbum": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateListeningToMusicEnjoyed": "Enjoyed",
+  "@templateListeningToMusicEnjoyed": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCategoryFriendsAndCommunity": "Friends & community",
+  "@templateCategoryFriendsAndCommunity": {
+    "description": "Template gallery: a category heading."
+  },
+  "templateTimeWithFriends": "Time with friends",
+  "@templateTimeWithFriends": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTimeWithFriendsWho": "Who",
+  "@templateTimeWithFriendsWho": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTimeWithFriendsWhatWeDid": "What we did",
+  "@templateTimeWithFriendsWhatWeDid": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTimeWithFriendsHowItFelt": "How it felt",
+  "@templateTimeWithFriendsHowItFelt": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePhoneCall": "Phone call",
+  "@templatePhoneCall": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePhoneCallWho": "Who",
+  "@templatePhoneCallWho": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePhoneCallTalkedAbout": "Talked about",
+  "@templatePhoneCallTalkedAbout": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePhoneCallFollowUpNeeded": "Follow up needed",
+  "@templatePhoneCallFollowUpNeeded": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDateNight": "Date night",
+  "@templateDateNight": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDateNightWhere": "Where",
+  "@templateDateNightWhere": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDateNightWhatWeDid": "What we did",
+  "@templateDateNightWhatWeDid": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDateNightRating": "Rating",
+  "@templateDateNightRating": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateEvent": "Event",
+  "@templateEvent": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateEventEvent": "Event",
+  "@templateEventEvent": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateEventWhere": "Where",
+  "@templateEventWhere": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateEventHowItWas": "How it was",
+  "@templateEventHowItWas": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateVolunteering": "Volunteering",
+  "@templateVolunteering": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateVolunteeringOrganization": "Organization",
+  "@templateVolunteeringOrganization": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateVolunteeringWhatIDid": "What I did",
+  "@templateVolunteeringWhatIDid": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateVolunteeringPeopleHelped": "People helped",
+  "@templateVolunteeringPeopleHelped": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePrayerAndWorship": "Prayer & worship",
+  "@templatePrayerAndWorship": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePrayerAndWorshipPracticeOrPlace": "Practice or place",
+  "@templatePrayerAndWorshipPracticeOrPlace": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePrayerAndWorshipReflection": "Reflection",
+  "@templatePrayerAndWorshipReflection": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDonation": "Donation",
+  "@templateDonation": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDonationCause": "Cause",
+  "@templateDonationCause": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDonationAmount": "Amount",
+  "@templateDonationAmount": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateCategoryTravelAndErrands": "Travel & errands",
+  "@templateCategoryTravelAndErrands": {
+    "description": "Template gallery: a category heading."
+  },
+  "templateErrands": "Errands",
+  "@templateErrands": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateErrandsErrands": "Errands",
+  "@templateErrandsErrands": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateErrandsErrandsItem": "Errand",
+  "@templateErrandsErrandsItem": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateErrandsErrandsErrand": "Errand",
+  "@templateErrandsErrandsErrand": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateErrandsErrandsDone": "Done",
+  "@templateErrandsErrandsDone": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateAppointment": "Appointment",
+  "@templateAppointment": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateAppointmentWith": "With",
+  "@templateAppointmentWith": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateAppointmentPurpose": "Purpose",
+  "@templateAppointmentPurpose": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateAppointmentNextAppointment": "Next appointment",
+  "@templateAppointmentNextAppointment": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDriving": "Driving",
+  "@templateDriving": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDrivingDistance": "Distance",
+  "@templateDrivingDistance": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDrivingFuel": "Fuel",
+  "@templateDrivingFuel": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateDrivingPurpose": "Purpose",
+  "@templateDrivingPurpose": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTrip": "Trip",
+  "@templateTrip": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTripDestination": "Destination",
+  "@templateTripDestination": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTripTravelBy": "Travel by",
+  "@templateTripTravelBy": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTripTravelByPlane": "Plane",
+  "@templateTripTravelByPlane": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTripTravelByTrain": "Train",
+  "@templateTripTravelByTrain": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTripTravelByCar": "Car",
+  "@templateTripTravelByCar": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTripTravelByBus": "Bus",
+  "@templateTripTravelByBus": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTripTravelByBoat": "Boat",
+  "@templateTripTravelByBoat": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templateTripHighlights": "Highlights",
+  "@templateTripHighlights": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePacking": "Packing",
+  "@templatePacking": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePackingPackingList": "Packing list",
+  "@templatePackingPackingList": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePackingPackingListItem": "Item",
+  "@templatePackingPackingListItem": {
+    "description": "Starter template content (becomes editable user data once added)."
+  },
+  "templatePackingPackingListDone": "Done",
+  "@templatePackingPackingListDone": {
+    "description": "Starter template content (becomes editable user data once added)."
   }
 }
