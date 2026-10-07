@@ -9,6 +9,8 @@ import 'package:daylog/features/activity_types/data/db_activity_type_repository.
 import 'package:daylog/features/activity_types/domain/activity_ids.dart';
 import 'package:daylog/features/activity_types/domain/activity_type_definition.dart';
 import 'package:daylog/features/activity_types/domain/activity_type_use_cases.dart';
+import 'package:daylog/features/activity_types/domain/field_config.dart';
+import 'package:daylog/features/activity_types/domain/field_type.dart';
 import 'package:daylog/features/insights/presentation/activity_insights_screen.dart';
 import 'package:daylog/features/measurements/data/db_measurement_repository.dart';
 import 'package:daylog/features/plans/data/db_plan_repository.dart';
@@ -59,6 +61,14 @@ Future<void> openTab(WidgetTester tester, String label) async {
   await tester.pumpAndSettle();
 }
 
+/// Scrolls the Insights tab down to its list of activities.
+Future<void> scrollToActivities(WidgetTester tester) =>
+    tester.scrollUntilVisible(
+      find.text('Activities'),
+      200,
+      scrollable: find.byType(Scrollable).hitTestable().first,
+    );
+
 void main() {
   testAppWidgets('an empty Insights tab invites building a chart', (
     tester,
@@ -81,12 +91,13 @@ void main() {
     await scrollAndTap(tester, find.widgetWithText(FilledButton, 'Save'));
 
     await tester.scrollUntilVisible(
-      find.text('84.2 kg'),
+      find.byType(LineChart),
       200,
       scrollable: find.byType(Scrollable).hitTestable().first,
     );
     expect(find.text('Weight'), findsWidgets);
-    expect(find.text('84.2 kg'), findsOneWidget);
+    // The headline (the axis now fits 84–85 kg and may repeat it, D1).
+    expect(find.text('84.2 kg'), findsWidgets);
     expect(find.byType(LineChart), findsOneWidget);
   });
 
@@ -150,8 +161,10 @@ void main() {
     );
     await openTab(tester, 'Insights');
 
-    expect(find.textContaining('1 day'), findsOneWidget);
-    await tester.tap(find.text('Gym'));
+    // The activities come after the period's overview.
+    await scrollToActivities(tester);
+    expect(find.textContaining('1 day ·'), findsOneWidget);
+    await tester.tap(find.widgetWithText(ListTile, 'Gym'));
     await tester.pumpAndSettle();
 
     expect(find.byType(ActivityInsightsScreen), findsOneWidget);
@@ -217,6 +230,8 @@ void main() {
         ActivityLogDraft(
           startedAt: clock.nowUtc(),
           durationMs: durationMs,
+          // Something in it, so it counts as done (A8).
+          notes: 'A chapter',
           values: const {},
         ),
       );
@@ -232,6 +247,7 @@ void main() {
         seed: (db, clock) async => reading = await logReading(db, clock),
       );
       await openTab(tester, 'Insights');
+      await scrollToActivities(tester);
       expect(find.textContaining('1 day · once'), findsOneWidget);
 
       await tester.runAsync(
@@ -257,6 +273,7 @@ void main() {
         },
       );
       await openTab(tester, 'Insights');
+      await scrollToActivities(tester);
 
       expect(
         find.textContaining('Another activity has this name'),
@@ -272,12 +289,173 @@ void main() {
         seed: (db, clock) => logReading(db, clock),
       );
       await openTab(tester, 'Insights');
-      await tester.tap(find.text('Reading'));
+      await scrollToActivities(tester);
+      await tester.tap(find.widgetWithText(ListTile, 'Reading'));
       await tester.pumpAndSettle();
 
       expect(find.text('Times done'), findsOneWidget);
       expect(find.text('Time'), findsNothing, reason: 'never timed');
       expect(find.text('No data in this period yet.'), findsNothing);
     });
+  });
+
+  testAppWidgets('the Insights home shows the period at a glance, the '
+      'calendar, and activities not done this period stay reachable (H1, '
+      'H5, B6)', (tester) async {
+    await pumpTestApp(
+      tester,
+      preferences: _onboarded,
+      seed: (db, clock) async {
+        final ids = SequentialIdGenerator();
+        final types = DbActivityTypeRepository(db, clock);
+        final logs = DbActivityLogRepository(db, clock, const AppLogger());
+        final log = LogActivity(
+          types,
+          logs,
+          DbPlanRepository(db, clock),
+          ids,
+          clock,
+        );
+        Future<ActivityTypeId> make(String name) => types
+            .create(
+              ActivityTypeId(ids.newId()),
+              ActivityTypeDefinition(
+                name: name,
+                iconId: 'book-open',
+                colorKey: 'sky',
+                fields: const [],
+              ),
+            )
+            .then((_) async => (await types.getActiveTypes()).last.id);
+        final recent = await make('Journal');
+        final old = await make('Painting');
+        await log(
+          recent,
+          ActivityLogDraft(
+            startedAt: clock.nowUtc(),
+            durationMs: 1800000,
+            notes: 'Good day',
+            values: const {},
+          ),
+        );
+        await log(
+          old,
+          ActivityLogDraft(
+            startedAt: DateTime.utc(2026, 3, 1, 10),
+            notes: 'Sky study',
+            values: const {},
+          ),
+        );
+      },
+    );
+    await openTab(tester, 'Insights');
+
+    expect(find.text('At a glance'), findsOneWidget);
+    expect(find.text('Days active'), findsOneWidget);
+    expect(find.text('Consistency'), findsOneWidget);
+    expect(find.text('1 of 30 days'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Not done this period'),
+      200,
+      scrollable: find.byType(Scrollable).hitTestable().first,
+    );
+    expect(find.widgetWithText(ListTile, 'Painting'), findsOneWidget);
+    expect(find.textContaining('Best run 1 week'), findsOneWidget);
+    await scrollAndTap(tester, find.widgetWithText(ListTile, 'Painting'));
+    expect(find.byType(ActivityInsightsScreen), findsOneWidget);
+    expect(
+      find.textContaining('Pick a longer period above'),
+      findsOneWidget,
+      reason: 'C4',
+    );
+  });
+
+  testAppWidgets('an activity\'s page charts yes/no as a share, choices as '
+      'how often each, and when in the day it\'s done (B2, B3)', (
+    tester,
+  ) async {
+    await pumpTestApp(
+      tester,
+      preferences: _onboarded,
+      seed: (db, clock) async {
+        final ids = SequentialIdGenerator();
+        final types = DbActivityTypeRepository(db, clock);
+        final logs = DbActivityLogRepository(db, clock, const AppLogger());
+        final id = await CreateActivityType(types, ids)(
+          const ActivityTypeDefinition(
+            name: 'Meds',
+            iconId: 'pill',
+            colorKey: 'rose',
+            fields: [
+              FieldDefinition(
+                name: 'Taken',
+                type: FieldType.boolean,
+                config: BooleanFieldConfig(),
+              ),
+              FieldDefinition(
+                name: 'Dose time',
+                type: FieldType.singleSelect,
+                config: SelectFieldConfig(
+                  options: [
+                    SelectOption(
+                      id: SelectOptionId('am'),
+                      label: 'With breakfast',
+                    ),
+                    SelectOption(
+                      id: SelectOptionId('pm'),
+                      label: 'With dinner',
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+        final type = (await types.getType(id))!;
+        ActivityFieldId f(String name) =>
+            type.fields.firstWhere((x) => x.name == name).id;
+        final pm =
+            (type.fields.firstWhere((x) => x.name == 'Dose time').config
+                    as SelectFieldConfig)
+                .options[1]
+                .id;
+        await LogActivity(types, logs, DbPlanRepository(db, clock), ids, clock)(
+          id,
+          ActivityLogDraft(
+            // 08:00 local: the test clock's morning.
+            startedAt: clock.nowUtc(),
+            values: {
+              f('Taken'): const BooleanValue(true),
+              f('Dose time'): SingleSelectValue(pm),
+            },
+          ),
+        );
+      },
+    );
+    await openTab(tester, 'Insights');
+    await scrollToActivities(tester);
+    await scrollAndTap(tester, find.widgetWithText(ListTile, 'Meds'));
+
+    final page = find
+        .descendant(
+          of: find.byType(ActivityInsightsScreen),
+          matching: find.byType(Scrollable),
+        )
+        .first;
+    expect(find.text('When you do it'), findsOneWidget);
+    expect(find.text('Morning'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Taken · how often yes'),
+      200,
+      scrollable: page,
+    );
+    expect(find.text('100 %'), findsWidgets);
+    await tester.scrollUntilVisible(
+      find.text('How often each'),
+      200,
+      scrollable: page,
+    );
+    expect(find.text('With dinner'), findsOneWidget);
+    expect(find.text('With breakfast'), findsNothing, reason: 'never picked');
   });
 }

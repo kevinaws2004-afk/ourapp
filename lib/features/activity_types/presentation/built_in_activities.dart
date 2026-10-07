@@ -91,7 +91,11 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
           l10n.builtInGroomingWhatNails,
           l10n.builtInGroomingWhatHairWash,
         ]),
-        _number(l10n.builtInGroomingCost, decimals: 2),
+        _number(
+          l10n.builtInGroomingCost,
+          decimals: 2,
+          better: BetterDirection.neither,
+        ),
       ]),
       _activity(l10n.builtInAyurvedicMorning, 'leaf', 'teal', [
         _yesNo(l10n.builtInAyurvedicMorningUpBeforeSunrise),
@@ -117,7 +121,11 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
           l10n.builtInMassageAndSpaKindSelfMassage,
         ]),
         _rating(l10n.builtInMassageAndSpaFeltAfter),
-        _number(l10n.builtInMassageAndSpaCost, decimals: 2),
+        _number(
+          l10n.builtInMassageAndSpaCost,
+          decimals: 2,
+          better: BetterDirection.neither,
+        ),
       ]),
       _activity(l10n.builtInSaunaAndColdPlunge, 'drop', 'sky', timer: true, [
         _choice(l10n.builtInSaunaAndColdPlungeKind, [
@@ -131,6 +139,8 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
           l10n.builtInSaunaAndColdPlungeTemperature,
           dimension: Dimension.temperature,
           unit: 'celsius',
+          summary: NumberSummary.average,
+          better: BetterDirection.neither,
         ),
       ]),
     ]),
@@ -175,12 +185,29 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
         _text(l10n.builtInSymptomsNotes, multiline: true),
       ]),
       _activity(l10n.builtInBloodPressure, 'heart', 'rose', [
-        _number(l10n.builtInBloodPressureSystolic),
-        _number(l10n.builtInBloodPressureDiastolic),
-        _number(l10n.builtInBloodPressurePulse),
+        _number(
+          l10n.builtInBloodPressureSystolic,
+          summary: NumberSummary.average,
+          better: BetterDirection.lower,
+        ),
+        _number(
+          l10n.builtInBloodPressureDiastolic,
+          summary: NumberSummary.average,
+          better: BetterDirection.lower,
+        ),
+        _number(
+          l10n.builtInBloodPressurePulse,
+          summary: NumberSummary.average,
+          better: BetterDirection.lower,
+        ),
       ]),
       _activity(l10n.builtInBloodSugar, 'drop', 'coral', [
-        _number(l10n.builtInBloodSugarReading, decimals: 1),
+        _number(
+          l10n.builtInBloodSugarReading,
+          decimals: 1,
+          summary: NumberSummary.average,
+          better: BetterDirection.lower,
+        ),
         _choice(l10n.builtInBloodSugarWhen, [
           l10n.builtInBloodSugarWhenFasting,
           l10n.builtInBloodSugarWhenBeforeAMeal,
@@ -194,6 +221,8 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
           dimension: Dimension.temperature,
           unit: 'celsius',
           decimals: 1,
+          summary: NumberSummary.average,
+          better: BetterDirection.neither,
         ),
       ]),
       _activity(l10n.builtInPeriod, 'heart', 'rose', [
@@ -264,6 +293,7 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
           l10n.builtInMealCalories,
           dimension: Dimension.energy,
           unit: 'kcal',
+          better: BetterDirection.neither,
         ),
         _rating(l10n.builtInMealHowHealthy),
         _yesNo(l10n.builtInMealAteOut),
@@ -277,7 +307,7 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
           l10n.builtInCoffeeAndTeaDrinkGreenTea,
           l10n.builtInCoffeeAndTeaDrinkHerbalTea,
         ]),
-        _number(l10n.builtInCoffeeAndTeaCups),
+        _number(l10n.builtInCoffeeAndTeaCups, better: BetterDirection.neither),
       ]),
       starter(l10n.builtInCooking),
       _activity(l10n.builtInFasting, 'timer', 'teal', timer: true, [
@@ -292,7 +322,7 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
         _rating(l10n.builtInFastingHowItFelt),
       ]),
       _activity(l10n.builtInAlcohol, 'drop', 'lilac', [
-        _number(l10n.builtInAlcoholDrinks),
+        _number(l10n.builtInAlcoholDrinks, better: BetterDirection.lower),
         _multiChoice(l10n.builtInAlcoholKind, [
           l10n.builtInAlcoholKindBeer,
           l10n.builtInAlcoholKindWine,
@@ -376,7 +406,11 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
             _yesNo(l10n.builtInGroceriesShoppingListGotIt),
           ],
         ),
-        _number(l10n.builtInGroceriesSpent, decimals: 2),
+        _number(
+          l10n.builtInGroceriesSpent,
+          decimals: 2,
+          better: BetterDirection.neither,
+        ),
       ]),
       _activity(l10n.builtInGardening, 'plant', 'teal', timer: true, [
         _multiChoice(l10n.builtInGardeningTasks, [
@@ -403,7 +437,11 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
       _activity(l10n.builtInHomeRepair, 'wrench', 'slate', timer: true, [
         _text(l10n.builtInHomeRepairProject, suggest: true),
         _text(l10n.builtInHomeRepairWhatWasDone, multiline: true),
-        _number(l10n.builtInHomeRepairCost, decimals: 2),
+        _number(
+          l10n.builtInHomeRepairCost,
+          decimals: 2,
+          better: BetterDirection.neither,
+        ),
       ]),
       _activity(l10n.builtInDeclutter, 'broom', 'lilac', [
         _text(l10n.builtInDeclutterArea),
@@ -426,7 +464,11 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
           l10n.builtInHouseHelpTasksCooking,
           l10n.builtInHouseHelpTasksDusting,
         ]),
-        _number(l10n.builtInHouseHelpPaid, decimals: 2),
+        _number(
+          l10n.builtInHouseHelpPaid,
+          decimals: 2,
+          better: BetterDirection.neither,
+        ),
       ]),
       _activity(l10n.builtInCarCare, 'car', 'slate', [
         _multiChoice(l10n.builtInCarCareWhat, [
@@ -441,20 +483,34 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
           l10n.builtInCarCareOdometer,
           dimension: Dimension.distance,
           unit: 'km',
+          summary: NumberSummary.latest,
+          better: BetterDirection.neither,
         ),
-        _number(l10n.builtInCarCareCost, decimals: 2),
+        _number(
+          l10n.builtInCarCareCost,
+          decimals: 2,
+          better: BetterDirection.neither,
+        ),
       ]),
     ]),
     ActivityCategory(l10n.builtInCategoryMoney, [
       _activity(l10n.builtInBills, 'wallet', 'slate', [
         _list(l10n.builtInBillsBills, l10n.builtInBillsBillsItem, [
           _text(l10n.builtInBillsBillsBill, required: true, suggest: true),
-          _number(l10n.builtInBillsBillsAmount, decimals: 2),
+          _number(
+            l10n.builtInBillsBillsAmount,
+            decimals: 2,
+            better: BetterDirection.neither,
+          ),
           _yesNo(l10n.builtInBillsBillsPaid),
         ]),
       ]),
       _activity(l10n.builtInExpense, 'wallet', 'coral', [
-        _number(l10n.builtInExpenseAmount, decimals: 2),
+        _number(
+          l10n.builtInExpenseAmount,
+          decimals: 2,
+          better: BetterDirection.neither,
+        ),
         _choice(l10n.builtInExpenseCategory, [
           l10n.builtInExpenseCategoryFood,
           l10n.builtInExpenseCategoryTransport,
@@ -468,8 +524,17 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
         _text(l10n.builtInExpenseWhatFor),
       ]),
       _activity(l10n.builtInBudgetReview, 'wallet', 'teal', [
-        _number(l10n.builtInBudgetReviewSpentThisWeek, decimals: 2),
-        _number(l10n.builtInBudgetReviewSaved, decimals: 2),
+        _number(
+          l10n.builtInBudgetReviewSpentThisWeek,
+          decimals: 2,
+          summary: NumberSummary.latest,
+          better: BetterDirection.neither,
+        ),
+        _number(
+          l10n.builtInBudgetReviewSaved,
+          decimals: 2,
+          summary: NumberSummary.latest,
+        ),
         _rating(l10n.builtInBudgetReviewOnTrack),
       ]),
       _activity(l10n.builtInInvesting, 'wallet', 'sky', [
@@ -481,12 +546,20 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
           l10n.builtInInvestingKindDeposit,
           l10n.builtInInvestingKindDividend,
         ]),
-        _number(l10n.builtInInvestingAmount, decimals: 2),
+        _number(
+          l10n.builtInInvestingAmount,
+          decimals: 2,
+          better: BetterDirection.neither,
+        ),
       ]),
       _activity(l10n.builtInSavings, 'wallet', 'teal', [
         _text(l10n.builtInSavingsGoal, suggest: true),
         _number(l10n.builtInSavingsAdded, decimals: 2),
-        _number(l10n.builtInSavingsTotalSoFar, decimals: 2),
+        _number(
+          l10n.builtInSavingsTotalSoFar,
+          decimals: 2,
+          summary: NumberSummary.latest,
+        ),
       ]),
       _activity(l10n.builtInDonation, 'wallet', 'teal', [
         _text(l10n.builtInDonationCause, suggest: true),
@@ -748,12 +821,20 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
       _activity(l10n.builtInTuition, 'graduation-cap', 'sky', timer: true, [
         _text(l10n.builtInTuitionSubject, suggest: true),
         _text(l10n.builtInTuitionTopic),
-        _number(l10n.builtInTuitionTestScore, decimals: 1),
+        _number(
+          l10n.builtInTuitionTestScore,
+          decimals: 1,
+          summary: NumberSummary.average,
+        ),
       ]),
       _activity(l10n.builtInExamPrep, 'notebook', 'coral', timer: true, [
         _text(l10n.builtInExamPrepExam, suggest: true),
         _text(l10n.builtInExamPrepTopicsCovered, multiline: true),
-        _number(l10n.builtInExamPrepMockTestScore, decimals: 1),
+        _number(
+          l10n.builtInExamPrepMockTestScore,
+          decimals: 1,
+          summary: NumberSummary.average,
+        ),
         _rating(l10n.builtInExamPrepConfidence),
       ]),
       _activity(l10n.builtInFlashcards, 'brain', 'lilac', [
@@ -763,6 +844,7 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
           l10n.builtInFlashcardsCorrect,
           dimension: Dimension.percentage,
           unit: 'percent',
+          summary: NumberSummary.average,
         ),
       ]),
       _activity(
@@ -927,7 +1009,11 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
           l10n.builtInGolfHoles9,
           l10n.builtInGolfHoles18,
         ]),
-        _number(l10n.builtInGolfScore),
+        _number(
+          l10n.builtInGolfScore,
+          summary: NumberSummary.average,
+          better: BetterDirection.lower,
+        ),
       ]),
       _activity(l10n.builtInWinterSports, 'mountains', 'sky', timer: true, [
         _choice(l10n.builtInWinterSportsKind, [
@@ -971,13 +1057,13 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
       ]),
       _activity(l10n.builtInScreenTime, 'phone', 'slate', [
         _duration(l10n.builtInScreenTimeTotal),
-        _number(l10n.builtInScreenTimePickups),
+        _number(l10n.builtInScreenTimePickups, better: BetterDirection.lower),
         _text(l10n.builtInScreenTimeMostUsedApp, suggest: true),
       ]),
       _activity(l10n.builtInHabitToBreak, 'target', 'coral', [
         _text(l10n.builtInHabitToBreakHabit, suggest: true),
         _yesNo(l10n.builtInHabitToBreakKeptClearToday),
-        _number(l10n.builtInHabitToBreakUrges),
+        _number(l10n.builtInHabitToBreakUrges, better: BetterDirection.lower),
         _text(l10n.builtInHabitToBreakNotes, multiline: true),
       ]),
       _activity(l10n.builtInDigitalDetox, 'leaf', 'teal', timer: true, [
@@ -1160,7 +1246,7 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
           l10n.builtInPuzzlesGameOther,
         ]),
         _yesNo(l10n.builtInPuzzlesSolved),
-        _number(l10n.builtInPuzzlesScore),
+        _number(l10n.builtInPuzzlesScore, summary: NumberSummary.average),
       ]),
       _activity(l10n.builtInListeningToMusic, 'music-notes', 'sky', [
         _text(l10n.builtInListeningToMusicArtistOrAlbum, suggest: true),
@@ -1258,6 +1344,7 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
           dimension: Dimension.volume,
           unit: 'l',
           decimals: 2,
+          better: BetterDirection.neither,
         ),
         _text(l10n.builtInDrivingPurpose),
       ]),
@@ -1317,6 +1404,8 @@ FieldDefinition _number(
   Dimension? dimension,
   String? unit,
   int decimals = 0,
+  NumberSummary summary = NumberSummary.total,
+  BetterDirection better = BetterDirection.higher,
 }) => FieldDefinition(
   name: name,
   type: FieldType.number,
@@ -1325,6 +1414,8 @@ FieldDefinition _number(
     decimals: decimals,
     min: dimension == Dimension.temperature ? null : 0,
     defaultUnitCode: unit,
+    summary: summary,
+    better: better,
   ),
   measurable: true,
 );

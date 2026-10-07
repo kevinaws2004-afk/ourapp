@@ -55,12 +55,24 @@ final class TextFieldConfig extends FieldConfig {
   int get hashCode => Object.hash(multiline, suggestFromHistory);
 }
 
+/// How a Number field is summed up over time in Insights (ADR-043): an
+/// amount adds up (pages, kilometres), a reading is averaged (blood
+/// pressure, score), a level shows its latest value (odometer, balance).
+enum NumberSummary { total, average, latest }
+
+/// Which way is better for a Number field (ADR-043): it decides what
+/// "best" means in Insights. [neither] shows no best at all (e.g. money
+/// spent or a temperature).
+enum BetterDirection { higher, lower, neither }
+
 final class NumberFieldConfig extends FieldConfig {
   const NumberFieldConfig({
     this.decimals = 0,
     this.min,
     this.max,
     this.defaultUnitCode,
+    this.summary = NumberSummary.total,
+    this.better = BetterDirection.higher,
   });
 
   static const maxDecimals = 3;
@@ -72,11 +84,19 @@ final class NumberFieldConfig extends FieldConfig {
   /// Display/entry default within the field's dimension; null when unitless.
   final String? defaultUnitCode;
 
+  /// How Insights sums it up over a period (ADR-043).
+  final NumberSummary summary;
+
+  /// Which way is better, for "best" in Insights (ADR-043).
+  final BetterDirection better;
+
   NumberFieldConfig copyWith({
     int? decimals,
     double? Function()? min,
     double? Function()? max,
     String? Function()? defaultUnitCode,
+    NumberSummary? summary,
+    BetterDirection? better,
   }) => NumberFieldConfig(
     decimals: decimals ?? this.decimals,
     min: min != null ? min() : this.min,
@@ -84,6 +104,8 @@ final class NumberFieldConfig extends FieldConfig {
     defaultUnitCode: defaultUnitCode != null
         ? defaultUnitCode()
         : this.defaultUnitCode,
+    summary: summary ?? this.summary,
+    better: better ?? this.better,
   );
 
   @override
@@ -92,10 +114,13 @@ final class NumberFieldConfig extends FieldConfig {
       other.decimals == decimals &&
       other.min == min &&
       other.max == max &&
-      other.defaultUnitCode == defaultUnitCode;
+      other.defaultUnitCode == defaultUnitCode &&
+      other.summary == summary &&
+      other.better == better;
 
   @override
-  int get hashCode => Object.hash(decimals, min, max, defaultUnitCode);
+  int get hashCode =>
+      Object.hash(decimals, min, max, defaultUnitCode, summary, better);
 }
 
 final class BooleanFieldConfig extends FieldConfig {

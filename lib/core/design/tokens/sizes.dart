@@ -31,4 +31,11 @@ abstract final class AppSizes {
   static const double chartHeight = 180;
   static const double chartLine = 2.5;
   static const double chartDot = 3;
+
+  /// Thickness of a breakdown bar ("how often each option").
+  static const double breakdownBar = 10;
+
+  /// A day square of the consistency calendar, and the gap between them.
+  static const double dayGridCell = 14;
+  static const double dayGridGap = 3;
 }

@@ -12,13 +12,16 @@ import '../../measurements/presentation/measurement_copy.dart';
 import '../domain/insight.dart';
 
 /// How a source's canonical values are shown: converted to the user's unit
-/// (ADR-020) and formatted. Durations are stored in ms and shown as time.
+/// (ADR-020) and formatted by what they are. Durations are stored in ms and
+/// shown as time; yes/no as the share of "yes"; times of day as clock
+/// times; ratings on their own scale (D5).
 class InsightDisplay {
   const InsightDisplay._(
     this._convert,
     this._format, {
     this.isDuration = false,
     this.wholeNumbers = false,
+    this.fixedMax,
   });
 
   final double Function(double canonical) _convert;
@@ -28,6 +31,9 @@ class InsightDisplay {
   /// Shown without decimals (counts, minutes, whole units): chart axes use
   /// whole steps so labels never repeat (A22).
   final bool wholeNumbers;
+
+  /// A fixed top for the chart's axis (a rating's scale, 100 %).
+  final double? fixedMax;
 
   double convert(double canonical) => _convert(canonical);
 
@@ -39,9 +45,10 @@ class InsightDisplay {
   static InsightDisplay of(
     AppLocalizations l10n,
     InsightSource source,
-    ActivityType? type,
-  ) {
-    InsightDisplay unit(String? code, {int decimals = 1}) {
+    ActivityType? type, {
+    MaterialLocalizations? material,
+  }) {
+    InsightDisplay unit(String? code, {int decimals = 1, double? fixedMax}) {
       final u = code == null ? null : UnitRegistry.byCode(code);
       return InsightDisplay._(
         (v) => u?.fromCanonical(v) ?? v,
@@ -50,35 +57,56 @@ class InsightDisplay {
           if (u != null) u.symbol,
         ].join(u?.symbol == '%' ? '' : ' '),
         wholeNumbers: decimals == 0,
+        fixedMax: fixedMax,
       );
     }
 
-    String? fieldUnit(ActivityFieldId id) => switch (type?.fieldById(id)) {
-      ActivityField(config: NumberFieldConfig(:final defaultUnitCode)) =>
-        defaultUnitCode,
-      _ => null,
-    };
+    final time = InsightDisplay._(
+      (ms) => ms / Duration.millisecondsPerMinute,
+      (minutes) => formatDuration(
+        l10n,
+        (minutes * Duration.millisecondsPerMinute).round(),
+      ),
+      isDuration: true,
+      wholeNumbers: true,
+    );
+
+    InsightDisplay field(ActivityFieldId id) {
+      final field = type?.fieldById(id);
+      return switch (field?.config) {
+        NumberFieldConfig(:final defaultUnitCode) => unit(defaultUnitCode),
+        RatingFieldConfig(:final max) => unit(null, fixedMax: max.toDouble()),
+        DurationFieldConfig() => time,
+        BooleanFieldConfig() => InsightDisplay._(
+          (share) => share * 100,
+          (percent) => l10n.insightPercent(formatNumber(percent, 0)),
+          wholeNumbers: true,
+          fixedMax: 100,
+        ),
+        TimeFieldConfig() => InsightDisplay._((minutes) => minutes, (minutes) {
+          final m = minutes.round() % (24 * 60);
+          final timeOfDay = TimeOfDay(hour: m ~/ 60, minute: m % 60);
+          return material?.formatTimeOfDay(timeOfDay) ??
+              '${timeOfDay.hour}:${'${timeOfDay.minute}'.padLeft(2, '0')}';
+        }, wholeNumbers: true),
+        _ => unit(null),
+      };
+    }
 
     return switch (source) {
-      ActivityDurationSource() || PlannedVsActualSource() => InsightDisplay._(
-        (ms) => ms / Duration.millisecondsPerMinute,
-        (minutes) => formatDuration(
-          l10n,
-          (minutes * Duration.millisecondsPerMinute).round(),
-        ),
-        isDuration: true,
-        wholeNumbers: true,
-      ),
+      ActivityDurationSource() || PlannedVsActualSource() => time,
       ActivityCountSource() => InsightDisplay._(
         (v) => v,
         (v) => formatNumber(v, 0),
         wholeNumbers: true,
       ),
-      FieldValueSource(:final fieldId) => unit(fieldUnit(fieldId)),
-      VolumeSource(:final amountFieldId) => unit(
-        fieldUnit(amountFieldId),
-        decimals: 0,
-      ),
+      FieldValueSource(:final fieldId) => field(fieldId),
+      VolumeSource(:final amountFieldId, :final formula) => unit(switch (type
+          ?.fieldById(amountFieldId)
+          ?.config) {
+        NumberFieldConfig(:final defaultUnitCode) => defaultUnitCode,
+        _ => null,
+      }, decimals: formula == VolumeFormula.product ? 0 : 1),
       MeasurementSource(:final type) => unit(type.defaultUnitCode),
     };
   }
@@ -134,6 +162,9 @@ String bucketName(AppLocalizations l10n, Bucket b) => switch (b) {
   Bucket.week => l10n.insightBucketWeek,
   Bucket.month => l10n.insightBucketMonth,
 };
+
+/// "+5" / "−3" (neutral; no judgement).
+String formatSignedNumber(int value) => value >= 0 ? '+$value' : '−${-value}';
 
 /// "+12 %" / "−8 %" (neutral; no judgement).
 String formatChange(double change) {

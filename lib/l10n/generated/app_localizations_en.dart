@@ -1362,7 +1362,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String insightActivityEmpty(String name) {
-    return 'Log $name a few times and its progress shows here.';
+    return 'Nothing logged for $name in this period. Pick a longer period above to see its progress.';
   }
 
   @override
@@ -4412,4 +4412,151 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get activitiesYours => 'Yours';
+
+  @override
+  String get numberSummaryLabel => 'In insights, show it as';
+
+  @override
+  String get numberSummaryTotal => 'Total';
+
+  @override
+  String get numberSummaryAverage => 'Average';
+
+  @override
+  String get numberSummaryLatest => 'Latest';
+
+  @override
+  String get betterDirectionLabel => 'Better is';
+
+  @override
+  String get betterHigher => 'Higher';
+
+  @override
+  String get betterLower => 'Lower';
+
+  @override
+  String get betterNeither => 'Neither';
+
+  @override
+  String insightPercent(String value) {
+    return '$value %';
+  }
+
+  @override
+  String insightAutoRowValue(String row, String field) {
+    return '$row · $field';
+  }
+
+  @override
+  String get insightAutoEstimatedMax => 'Estimated 1-rep max';
+
+  @override
+  String insightAutoRowEstimatedMax(String row) {
+    return '$row · estimated 1-rep max';
+  }
+
+  @override
+  String insightAutoRowTotal(String row, String field) {
+    return '$row · total $field';
+  }
+
+  @override
+  String insightAutoTotal(String field) {
+    return 'Total $field';
+  }
+
+  @override
+  String insightAutoYesShare(String field) {
+    return '$field · how often yes';
+  }
+
+  @override
+  String insightStreak(int current, int longest) {
+    String _temp0 = intl.Intl.pluralLogic(
+      current,
+      locale: localeName,
+      other: '$current weeks in a row',
+      one: '1 week in a row',
+    );
+    return '$_temp0 · best $longest';
+  }
+
+  @override
+  String insightStreakEnded(int longest) {
+    String _temp0 = intl.Intl.pluralLogic(
+      longest,
+      locale: localeName,
+      other: '$longest weeks',
+      one: '1 week',
+    );
+    return 'Best run $_temp0';
+  }
+
+  @override
+  String get insightConsistencySection => 'Consistency';
+
+  @override
+  String insightDaysOfPeriod(int days, int total) {
+    return '$days of $total days';
+  }
+
+  @override
+  String get insightWhenSection => 'When you do it';
+
+  @override
+  String get insightMorning => 'Morning';
+
+  @override
+  String get insightAfternoon => 'Afternoon';
+
+  @override
+  String get insightEvening => 'Evening';
+
+  @override
+  String get insightNight => 'Night';
+
+  @override
+  String get insightShowAllRows => 'Show every row';
+
+  @override
+  String get insightChoiceTimes => 'How often each';
+
+  @override
+  String get insightSummarySection => 'At a glance';
+
+  @override
+  String get insightDaysActive => 'Days active';
+
+  @override
+  String get insightTimeRecorded => 'Time';
+
+  @override
+  String get insightThingsDone => 'Things done';
+
+  @override
+  String get insightTimeByActivitySection => 'Where your time went';
+
+  @override
+  String get insightPlanSection => 'Plan vs reality';
+
+  @override
+  String insightPlanDone(int done, int planned) {
+    return '$done of $planned planned items done';
+  }
+
+  @override
+  String get insightPlanEmpty => 'Nothing was planned in this period.';
+
+  @override
+  String get insightNotThisPeriod => 'Not done this period';
+
+  @override
+  String insightActivityLegendMore(int count) {
+    return '+$count more';
+  }
+
+  @override
+  String insightPoints(String change) {
+    return '$change pts';
+  }
 }

@@ -115,7 +115,9 @@ Each type has defined value semantics, validation, storage mapping, rendering an
 | FR-AN-06 | Comparisons (this week vs last week, this month vs last month). | V1 (ADR-034) | §25 lists; §41 omits |
 | FR-AN-07 | Chart configuration: activity, field, metric, time range, aggregation, chart type. | V1 | §26 |
 | FR-AN-08 | Gym-derived metrics: max weight, max reps, total sets, volume, exercise frequency, progression, PRs. | V1 (ADR-034: generic best/volume/count over any activity) | §13 vs §44 |
-| FR-AN-09 | Planned vs actual analytics. | V1 (ADR-034) | §20, §43 vs §44 |
+| FR-AN-09 | Planned vs actual analytics. | V1 (ADR-034; skipped plans and today's open ones excluded, ADR-043) | §20, §43 vs §44 |
+| FR-AN-10 | Every field kind can be charted: numbers by their own summary (total / average / latest), ratings, durations, yes/no as a share, times of day, and choices as how often each; "best" follows the field's "better is". | V1 (ADR-043) | §24–26 |
+| FR-AN-11 | Insights overview: the period at a glance vs the previous one, a consistency calendar, time per activity, plan vs reality (share of planned items done), week streaks, and activities with history but nothing in the period. | V1 (ADR-043) | §25, §20 |
 | FR-AN-10 | Basic history list. | V1 | §41 |
 
 ### 1.8 Body Measurements

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -14,11 +16,13 @@ class ChartSeries {
   final Color color;
 }
 
-enum AppChartKind { line, bar }
+enum AppChartKind { line, bar, stacked }
 
 /// The app's chart (ADR-033): fl_chart behind one shared component, styled
 /// only with design tokens (no default chart look). Line charts leave gaps
-/// for empty buckets; bar charts group several series per bucket.
+/// for empty buckets and fit their axis to the values (D1); bar charts
+/// group several series per bucket; stacked bars pile them up. Touching a
+/// point or bar shows its bucket and value (D2).
 class AppChart extends StatelessWidget {
   const AppChart({
     super.key,
@@ -27,8 +31,12 @@ class AppChart extends StatelessWidget {
     required this.labels,
     required this.formatValue,
     this.wholeNumbers = false,
+    this.fixedMax,
     this.height = AppSizes.chartHeight,
   });
+
+  /// A fixed top for an axis from 0 (a rating's scale, 100 %; D5).
+  final double? fixedMax;
 
   /// Values are counts: the axis uses whole steps (A22).
   final bool wholeNumbers;
@@ -42,14 +50,40 @@ class AppChart extends StatelessWidget {
   final double height;
 
   ChartAxis get _axis {
-    var max = 0.0;
+    if (fixedMax case final top?) {
+      final fitted = ChartAxis.fit(top, wholeNumbers: wholeNumbers);
+      return ChartAxis(interval: fitted.interval, max: top);
+    }
+    double? min;
+    double? max;
+    if (kind == AppChartKind.stacked) {
+      for (var i = 0; i < labels.length; i++) {
+        final total = series.fold<double>(0, (t, s) => t + (s.values[i] ?? 0));
+        if (max == null || total > max) max = total;
+      }
+      return ChartAxis.fit(max ?? 0, wholeNumbers: wholeNumbers);
+    }
     for (final s in series) {
       for (final v in s.values) {
-        if (v != null && v > max) max = v;
+        if (v == null) continue;
+        if (min == null || v < min) min = v;
+        if (max == null || v > max) max = v;
       }
     }
-    return ChartAxis.fit(max, wholeNumbers: wholeNumbers);
+    if (kind == AppChartKind.line && min != null && max != null) {
+      return ChartAxis.fitRange(min, max, wholeNumbers: wholeNumbers);
+    }
+    return ChartAxis.fitRange(
+      math.min(0, min ?? 0),
+      max ?? 0,
+      wholeNumbers: wholeNumbers,
+    );
   }
+
+  String _tooltip(int index, double value) =>
+      index >= 0 && index < labels.length
+      ? '${labels[index]}\n${formatValue(value)}'
+      : formatValue(value);
 
   @override
   Widget build(BuildContext context) {
@@ -102,10 +136,11 @@ class AppChart extends StatelessWidget {
       child: switch (kind) {
         AppChartKind.line => LineChart(
           LineChartData(
-            minY: 0,
+            minY: axis.min,
             maxY: axis.max,
-            minX: 0,
-            maxX: (labels.length - 1).clamp(0, double.infinity).toDouble(),
+            // Half a bucket either side, so a lone point still shows (D4).
+            minX: -0.5,
+            maxX: labels.length - 0.5,
             gridData: grid,
             borderData: border,
             titlesData: titles,
@@ -115,7 +150,7 @@ class AppChart extends StatelessWidget {
                 getTooltipItems: (spots) => [
                   for (final s in spots)
                     LineTooltipItem(
-                      formatValue(s.y),
+                      _tooltip(s.x.round(), s.y),
                       context.textStyles.labelMedium!.copyWith(
                         color: colors.textPrimary,
                       ),
@@ -148,9 +183,9 @@ class AppChart extends StatelessWidget {
             ],
           ),
         ),
-        AppChartKind.bar => BarChart(
+        AppChartKind.bar || AppChartKind.stacked => BarChart(
           BarChartData(
-            minY: 0,
+            minY: axis.min,
             maxY: axis.max,
             gridData: grid,
             borderData: border,
@@ -159,7 +194,7 @@ class AppChart extends StatelessWidget {
               touchTooltipData: BarTouchTooltipData(
                 getTooltipColor: (_) => colors.surfaceRaised,
                 getTooltipItem: (group, _, rod, _) => BarTooltipItem(
-                  formatValue(rod.toY),
+                  _tooltip(group.x, rod.toY),
                   context.textStyles.labelMedium!.copyWith(
                     color: colors.textPrimary,
                   ),
@@ -171,24 +206,48 @@ class AppChart extends StatelessWidget {
                 BarChartGroupData(
                   x: i,
                   barsSpace: AppSpacing.xxs,
-                  barRods: [
-                    for (final s in series)
-                      BarChartRodData(
-                        toY: s.values[i] ?? 0,
-                        color: s.color,
-                        width: series.length == 1
-                            ? AppSpacing.md
-                            : AppSpacing.sm,
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(AppSpacing.xs),
-                        ),
-                      ),
-                  ],
+                  barRods: kind == AppChartKind.stacked
+                      ? [_stack(i)]
+                      : [
+                          for (final s in series)
+                            BarChartRodData(
+                              toY: s.values[i] ?? 0,
+                              color: s.color,
+                              width: series.length == 1
+                                  ? AppSpacing.md
+                                  : AppSpacing.sm,
+                              borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(AppSpacing.xs),
+                              ),
+                            ),
+                        ],
                 ),
             ],
           ),
         ),
       },
+    );
+  }
+
+  /// One bar with every series piled up, in order, for bucket [i].
+  BarChartRodData _stack(int i) {
+    final items = <BarChartRodStackItem>[];
+    var top = 0.0;
+    for (final s in series) {
+      final v = s.values[i] ?? 0;
+      if (v <= 0) continue;
+      items.add(BarChartRodStackItem(top, top + v, s.color));
+      top += v;
+    }
+    return BarChartRodData(
+      toY: top,
+      // Covered by the stack items; the last series colours any gap.
+      color: series.isEmpty ? null : series.last.color,
+      rodStackItems: items,
+      width: AppSpacing.md,
+      borderRadius: const BorderRadius.vertical(
+        top: Radius.circular(AppSpacing.xs),
+      ),
     );
   }
 }

@@ -110,7 +110,7 @@ CREATE INDEX idx_activity_fields_type_position ON activity_fields (activity_type
 ```
 - `dimension` is relational because it is semantic: it decides how `normalized_value` is computed. It is locked once values exist. The default display unit is configuration (`config_json`).
 - `parent_field_id` (v3) points a Repeating Group's sub-fields at their group (ADR-027, §3.10). `position` is per parent scope.
-- `config_json` keys: text `multiline`, `suggest` (offer previous values); group `itemLabel`.
+- `config_json` keys: text `multiline`, `suggest` (offer previous values); group `itemLabel`; number `decimals`, `min`, `max`, `defaultUnit`, `summary` (`average` / `latest`; absent = total) and `better` (`lower` / `neither`; absent = higher) (ADR-043).
 - `position` is dense among active fields and rewritten in the same transaction on reorder. It's not UNIQUE, because a reorder would collide mid-transaction and deleted fields keep stale positions.
 
 ### 3.4 `activity_logs` (v2, implemented)
@@ -330,7 +330,7 @@ CREATE TABLE insight_charts (
   internal_id INTEGER NOT NULL PRIMARY KEY,
   public_id   TEXT NOT NULL UNIQUE CHECK (length(public_id) = 36),
   position    INTEGER NOT NULL DEFAULT 0 CHECK (position >= 0),
-  config_json TEXT NOT NULL CHECK (json_valid(config_json)),  -- {"v":1, title, source, aggregation, bucket, kind}
+  config_json TEXT NOT NULL CHECK (json_valid(config_json)),  -- {"v":1, title, source, aggregation, bucket, kind}; a volume source may carry "formula" (ADR-043)
   created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL, deleted_at INTEGER
 ) STRICT;
 ```

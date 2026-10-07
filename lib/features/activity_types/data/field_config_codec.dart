@@ -19,12 +19,17 @@ abstract final class FieldConfigCodec {
       :final min,
       :final max,
       :final defaultUnitCode,
+      :final summary,
+      :final better,
     ) =>
       {
         'decimals': decimals,
         'min': ?min,
         'max': ?max,
         'defaultUnit': ?defaultUnitCode,
+        // Defaults are left out, so older configs and new ones read alike.
+        if (summary != NumberSummary.total) 'summary': summary.name,
+        if (better != BetterDirection.higher) 'better': better.name,
       },
     SelectFieldConfig(:final options) => {
       'options': [
@@ -61,6 +66,12 @@ abstract final class FieldConfigCodec {
         defaultUnitCode: map['defaultUnit'] is String
             ? map['defaultUnit']! as String
             : null,
+        summary:
+            NumberSummary.values.asNameMap()[map['summary']] ??
+            NumberSummary.total,
+        better:
+            BetterDirection.values.asNameMap()[map['better']] ??
+            BetterDirection.higher,
       ),
       FieldType.singleSelect || FieldType.multiSelect => SelectFieldConfig(
         options: [

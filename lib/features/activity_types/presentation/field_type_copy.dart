@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import '../../../core/design/app_icons.dart';
 import '../../../core/units/unit_registry.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import '../domain/field_config.dart';
 import '../domain/field_type.dart';
 
 /// Localized names, descriptions and icons for field types and dimensions.
@@ -58,3 +59,19 @@ extension DimensionCopy on Dimension {
     Dimension.duration => l10n.durationLabel,
   };
 }
+
+/// "Add it up" / "Average it" / "Latest value" (ADR-043).
+String numberSummaryLabel(AppLocalizations l10n, NumberSummary summary) =>
+    switch (summary) {
+      NumberSummary.total => l10n.numberSummaryTotal,
+      NumberSummary.average => l10n.numberSummaryAverage,
+      NumberSummary.latest => l10n.numberSummaryLatest,
+    };
+
+/// "Higher" / "Lower" / "Neither" (ADR-043).
+String betterDirectionLabel(AppLocalizations l10n, BetterDirection better) =>
+    switch (better) {
+      BetterDirection.higher => l10n.betterHigher,
+      BetterDirection.lower => l10n.betterLower,
+      BetterDirection.neither => l10n.betterNeither,
+    };
