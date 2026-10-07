@@ -23,7 +23,8 @@ import '../../../support/test_app.dart';
 import '../../activity_types/presentation/activities_flow_test.dart'
     show enterField, scrollAndTap;
 import 'plan_screen_test.dart' show openPlan;
-import 'plans_flow_test.dart' show closeItem, openItem, waitForSave;
+import 'plans_flow_test.dart'
+    show closeItem, itemRow, openItem, saveOwnActivity, waitForSave;
 
 const _onboarded = PreferencesSnapshot(
   themePreference: ThemePreference.light,
@@ -163,12 +164,13 @@ void main() {
     await pumpTestApp(tester, preferences: _onboarded);
     await openPlan(tester);
     await tester.enterText(
-      find.widgetWithText(TextField, 'Add something to this day'),
+      find.widgetWithText(TextField, 'Add an activity to this day'),
       'Lunch',
     );
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
-    await openItem(tester, find.text('Lunch'));
+    await saveOwnActivity(tester, 'Lunch');
+    await openItem(tester, itemRow('Lunch'));
 
     await scrollAndTap(tester, find.widgetWithText(ActionChip, 'How it went'));
     expect(find.text('How it went'), findsOneWidget, reason: 'added at once');

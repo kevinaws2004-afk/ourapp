@@ -1387,8 +1387,32 @@ abstract class AppLocalizations {
   /// Plan tab quick add: hint in the title field.
   ///
   /// In en, this message translates to:
-  /// **'Add something to this day'**
+  /// **'Add an activity to this day'**
   String get planQuickAddHint;
+
+  /// Quick add / plan sheet: opens the template gallery to plan one.
+  ///
+  /// In en, this message translates to:
+  /// **'Templates'**
+  String get planBrowseTemplates;
+
+  /// Quick add / plan sheet: opens the builder to define a new activity (what to log) and plan it.
+  ///
+  /// In en, this message translates to:
+  /// **'Make your own'**
+  String get planMakeOwn;
+
+  /// Quick add suggestion for a name no activity or template has yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Make “{name}” your own'**
+  String planMakeOwnNamed(String name);
+
+  /// Quick add suggestion subtitle under planMakeOwnNamed.
+  ///
+  /// In en, this message translates to:
+  /// **'New activity · choose what to log'**
+  String get planMakeOwnHint;
 
   /// Plan sheet: shown when the plan has no start time.
   ///

@@ -712,7 +712,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planAddTime => 'Set a time';
 
   @override
-  String get planQuickAddHint => 'Add something to this day';
+  String get planQuickAddHint => 'Add an activity to this day';
+
+  @override
+  String get planBrowseTemplates => 'Templates';
+
+  @override
+  String get planMakeOwn => 'Make your own';
+
+  @override
+  String planMakeOwnNamed(String name) {
+    return 'Make “$name” your own';
+  }
+
+  @override
+  String get planMakeOwnHint => 'New activity · choose what to log';
 
   @override
   String get planAnyTime => 'Any time';

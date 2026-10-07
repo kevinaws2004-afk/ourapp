@@ -10,6 +10,7 @@ import '../../../activity_logs/domain/activity_log.dart';
 import '../../../activity_logs/presentation/value_formatting.dart';
 import '../../domain/plan.dart';
 import '../../domain/watch_day_overview.dart';
+import '../activity_chooser.dart';
 import '../plan_providers.dart';
 import 'plan_quick_add.dart';
 import 'planned_list.dart';
@@ -24,6 +25,7 @@ class DayItems extends ConsumerWidget {
     required this.emptyMessage,
     required this.onOpenItem,
     required this.onOpenRecord,
+    required this.chooser,
     this.onStartNow,
   });
 
@@ -38,6 +40,9 @@ class DayItems extends ConsumerWidget {
   /// Opens a record made without a plan.
   final ValueChanged<ActivityLog> onOpenRecord;
 
+  /// Picks a template or makes a new activity for quick add.
+  final ActivityChooser chooser;
+
   /// Offers "Start now" in quick add (today only).
   final ValueChanged<PlanId>? onStartNow;
 
@@ -46,7 +51,12 @@ class DayItems extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        PlanQuickAdd(key: ValueKey(date), date: date, onStartNow: onStartNow),
+        PlanQuickAdd(
+          key: ValueKey(date),
+          date: date,
+          chooser: chooser,
+          onStartNow: onStartNow,
+        ),
         const SizedBox(height: AppSpacing.lg),
         AsyncValueView<DayOverview>(
           value: ref.watch(dayOverviewProvider(date)),

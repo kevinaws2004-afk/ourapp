@@ -13,6 +13,7 @@ import '../features/activity_types/presentation/template_picker_screen.dart';
 import '../features/insights/presentation/activity_insights_screen.dart';
 import '../features/insights/presentation/insights_screen.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
+import '../features/plans/presentation/activity_chooser.dart';
 import '../features/plans/domain/plan.dart';
 import '../core/time/clock_provider.dart';
 import '../features/plans/presentation/day_screen.dart';
@@ -170,6 +171,14 @@ final routerProvider = Provider<GoRouter>((ref) {
     }
   }
 
+  /// Where a new item on a day gets an activity that isn't one of yours
+  /// yet: the template gallery, or the builder to make your own.
+  ActivityChooser chooser(BuildContext context) => ActivityChooser(
+    pickTemplate: () => context.push<ActivityTypeId>(AppRoutes.templates),
+    makeOwn: (name) =>
+        context.push<ActivityTypeId>(AppRoutes.newActivityNamed(name)),
+  );
+
   Future<void> openTemplates(BuildContext context) async {
     final id = await context.push<ActivityTypeId>(AppRoutes.templates);
     if (id != null && context.mounted) {
@@ -205,6 +214,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                       unawaited(context.push(AppRoutes.item(id))),
                   onOpenRecord: (log) => openLog(context, log),
                   onOpenFocus: () => openFocus(context),
+                  chooser: chooser(context),
                 ),
               ),
             ],
@@ -218,6 +228,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                       unawaited(context.push(AppRoutes.item(id))),
                   onOpenRecord: (log) => openLog(context, log),
                   onOpenDay: () => unawaited(context.push(AppRoutes.planDay)),
+                  chooser: chooser(context),
                 ),
                 routes: [
                   GoRoute(
@@ -226,6 +237,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                       onOpenItem: (id) =>
                           unawaited(context.push(AppRoutes.item(id))),
                       onOpenRecord: (log) => openLog(context, log),
+                      chooser: chooser(context),
                     ),
                   ),
                 ],

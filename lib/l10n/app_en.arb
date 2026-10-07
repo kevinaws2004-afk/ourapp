@@ -914,9 +914,30 @@
   "@planAddTime": {
     "description": "Quick add: opens the sheet choosing when it happens."
   },
-  "planQuickAddHint": "Add something to this day",
+  "planQuickAddHint": "Add an activity to this day",
   "@planQuickAddHint": {
     "description": "Plan tab quick add: hint in the title field."
+  },
+  "planBrowseTemplates": "Templates",
+  "@planBrowseTemplates": {
+    "description": "Quick add / plan sheet: opens the template gallery to plan one."
+  },
+  "planMakeOwn": "Make your own",
+  "@planMakeOwn": {
+    "description": "Quick add / plan sheet: opens the builder to define a new activity (what to log) and plan it."
+  },
+  "planMakeOwnNamed": "Make “{name}” your own",
+  "@planMakeOwnNamed": {
+    "description": "Quick add suggestion for a name no activity or template has yet.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "planMakeOwnHint": "New activity · choose what to log",
+  "@planMakeOwnHint": {
+    "description": "Quick add suggestion subtitle under planMakeOwnNamed."
   },
   "planAnyTime": "Any time",
   "@planAnyTime": {

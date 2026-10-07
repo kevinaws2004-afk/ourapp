@@ -16,6 +16,7 @@ import '../../activity_types/domain/activity_type.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
 import '../domain/plan.dart';
 import '../domain/watch_day_overview.dart';
+import 'activity_chooser.dart';
 import 'plan_providers.dart';
 import '../../../shared/widgets/discard_guard.dart';
 
@@ -39,17 +40,22 @@ Future<PlanSheetAction?> showPlanEditor(
   BuildContext context, {
   required LocalDate date,
   PlannedItem? item,
+  ActivityChooser? chooser,
 }) => showModalBottomSheet<PlanSheetAction>(
   context: context,
   isScrollControlled: true,
-  builder: (_) => _PlanEditorSheet(date: date, item: item),
+  builder: (_) => _PlanEditorSheet(date: date, item: item, chooser: chooser),
 );
 
 class _PlanEditorSheet extends ConsumerStatefulWidget {
-  const _PlanEditorSheet({required this.date, this.item});
+  const _PlanEditorSheet({required this.date, this.item, this.chooser});
 
   final LocalDate date;
   final PlannedItem? item;
+
+  /// Offers Templates and Make your own. A new plan without an activity
+  /// is made your own on saving: every new item comes from an activity.
+  final ActivityChooser? chooser;
 
   @override
   ConsumerState<_PlanEditorSheet> createState() => _PlanEditorSheetState();
@@ -91,9 +97,20 @@ class _PlanEditorSheetState extends ConsumerState<_PlanEditorSheet> {
 
   Future<void> _save() async {
     final l10n = AppLocalizations.of(context);
+    var title = _title.text;
+    if (_plan == null && _typeId == null) {
+      final chooser = widget.chooser;
+      if (chooser != null) {
+        // A new name: make it your own first, choosing what to log.
+        final id = await chooser.makeOwn(title.trim());
+        if (id == null || !mounted) return;
+        setState(() => _typeId = id);
+        title = ''; // the activity's name, even if renamed in the builder
+      }
+    }
     final draft = PlanDraft(
       planDate: _date,
-      title: _title.text,
+      title: title,
       activityTypeId: _typeId,
       notes: _notes.text,
       plannedStartAt: _instant(_start),
@@ -118,6 +135,13 @@ class _PlanEditorSheetState extends ConsumerState<_PlanEditorSheet> {
     } finally {
       if (mounted) setState(() => _saving = false);
     }
+  }
+
+  /// Chooses the activity from [pick] (a template, or a new one of your
+  /// own).
+  Future<void> _choose(Future<ActivityTypeId?> Function() pick) async {
+    final id = await pick();
+    if (id != null && mounted) setState(() => _typeId = id);
   }
 
   Future<void> _pickTime({required bool end}) async {
@@ -217,17 +241,32 @@ class _PlanEditorSheetState extends ConsumerState<_PlanEditorSheet> {
                   spacing: AppSpacing.sm,
                   runSpacing: AppSpacing.sm,
                   children: [
-                    ChoiceChip(
-                      label: Text(l10n.planTaskChoice),
-                      selected: _typeId == null,
-                      onSelected: (_) => setState(() => _typeId = null),
-                    ),
+                    // Only an existing plan can stay without an activity.
+                    if (_plan != null && _plan!.activityTypeId == null)
+                      ChoiceChip(
+                        label: Text(l10n.planTaskChoice),
+                        selected: _typeId == null,
+                        onSelected: (_) => setState(() => _typeId = null),
+                      ),
                     for (final type in choices)
                       ChoiceChip(
                         label: Text(type.name),
                         selected: _typeId == type.id,
                         onSelected: (_) => setState(() => _typeId = type.id),
                       ),
+                    if (widget.chooser case final chooser?) ...[
+                      ActionChip(
+                        avatar: const Icon(AppIcons.template),
+                        label: Text(l10n.planBrowseTemplates),
+                        onPressed: () => _choose(chooser.pickTemplate),
+                      ),
+                      ActionChip(
+                        avatar: const Icon(AppIcons.add),
+                        label: Text(l10n.planMakeOwn),
+                        onPressed: () =>
+                            _choose(() => chooser.makeOwn(_title.text.trim())),
+                      ),
+                    ],
                   ],
                 ),
               ),

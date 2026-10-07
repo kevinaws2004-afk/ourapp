@@ -10,6 +10,7 @@ import '../../../core/time/local_date.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../activity_logs/domain/activity_log.dart';
 import '../domain/plan.dart';
+import 'activity_chooser.dart';
 import 'plan_date_notifier.dart';
 import 'widgets/day_items.dart';
 
@@ -20,6 +21,7 @@ class DayScreen extends ConsumerWidget {
     super.key,
     required this.onOpenItem,
     required this.onOpenRecord,
+    required this.chooser,
   });
 
   /// Opens a plan's item screen.
@@ -27,6 +29,9 @@ class DayScreen extends ConsumerWidget {
 
   /// Opens a record made without a plan.
   final ValueChanged<ActivityLog> onOpenRecord;
+
+  /// Picks a template or makes a new activity for what's added to a day.
+  final ActivityChooser chooser;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -57,6 +62,7 @@ class DayScreen extends ConsumerWidget {
                   emptyMessage: l10n.planPlannedEmpty,
                   onOpenItem: onOpenItem,
                   onOpenRecord: onOpenRecord,
+                  chooser: chooser,
                   onStartNow: selected == today ? onOpenItem : null,
                 ),
               ],
