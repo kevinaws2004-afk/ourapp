@@ -29,7 +29,7 @@ List<ValidationCode> codes(
 ).issues.map((i) => i.code).toList();
 
 void main() {
-  test('the reference templates are valid', () {
+  test('the reference activities are valid', () {
     expect(codes(readingDefinition()), isEmpty);
     expect(codes(languageDefinition()), isEmpty);
     expect(codes(walkingDefinition()), isEmpty);
@@ -92,7 +92,7 @@ void main() {
       subFields: subFields,
     );
 
-    test('the gym template (a group inside a group) is valid', () {
+    test('the Gym activity (a group inside a group) is valid', () {
       expect(codes(gymDefinition()), isEmpty);
     });
 

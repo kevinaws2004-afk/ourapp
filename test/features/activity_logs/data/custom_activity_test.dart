@@ -18,10 +18,10 @@ import '../../../support/fake_clock.dart';
 import '../../../support/fixtures.dart';
 import '../../../support/test_app.dart';
 
-/// The product rule (ADR-042): built-in templates are only starting points;
+/// The product rule (ADR-042): built-in activities are only starting points;
 /// any activity a user makes up is data, with the fields they choose. These
 /// are the owner's examples, built only from generic field types, with no
-/// template and no activity-specific code.
+/// built-in activity and no activity-specific code.
 void main() {
   late AppDatabase db;
   late DbActivityTypeRepository types;

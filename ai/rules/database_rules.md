@@ -12,7 +12,7 @@
 8. JSON payloads carry `"v"`, use stable IDs (never display names), and decoders accept all past versions.
 9. **Units (ADR-020):** store the user's `unit_code` and the as-entered number, and compute `normalized_value` (canonical unit) **at write time**. Unit codes are permanent.
 10. Durations are `duration_ms` INTEGER. The activity's actual elapsed time is `activity_logs.duration_ms`; planned duration lives only on plans: the time range or `planned_duration_ms`, never both (ADR-018/021). Any plan can store `completed` (schema v8, ADR-040); without it, a record with `plan_id` makes an activity plan in progress on its day and done after it (`Plan.effectiveStatus`).
-11. Multi-row writes are transactions (type + fields, log + values, template install).
+11. Multi-row writes are transactions (type + fields, log + values, using a built-in activity).
 12. Wrap every public repository method in `guardStorage` so raw drift/SQLite errors become `AppException`s (ADR-025).
 13. Live queries use `reactiveQuery(db.tableUpdates(TableUpdateQuery.onAllTables([...])), load)`. Never watch a constant trigger query (drift won't re-emit unchanged results). Load lists plus children in two queries (no N+1).
 14. Field type and dimension are immutable once values exist, and fields can't change owner. This is enforced by the domain **and** DB triggers; don't bypass or drop them. Removed fields/options are soft-deleted/archived, never erased.

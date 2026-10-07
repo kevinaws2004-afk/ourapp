@@ -195,8 +195,8 @@ void main() {
     );
   });
 
-  test('installing a template assigns fresh option IDs', () async {
-    final installer = InstallActivityTemplate(create, ids);
+  test('using a built-in activity assigns fresh option IDs', () async {
+    final installer = AddBuiltInActivity(create, ids);
     final first = await installer(languageDefinition());
     // Names are unique among active activities: archive before reinstalling.
     await DeleteActivityType(repository)(first);
@@ -212,7 +212,7 @@ void main() {
     expect(
       a.options.first.id.value,
       isNot('opt-es'),
-      reason: 'template placeholders replaced',
+      reason: 'placeholder option IDs replaced',
     );
   });
 

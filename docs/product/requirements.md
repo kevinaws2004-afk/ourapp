@@ -26,8 +26,8 @@ Activity Types are created and configured under **Me → Activities** (ADR-028).
 | FR-AT-10 | User can remove (archive) an Activity Type; its historical logs remain in history and analytics. | V1 | implied |
 | FR-AT-11 | Creating a new Activity Type requires no schema migration and no developer code. | V1 | §5, §31, §32, §46 |
 | FR-AT-12 | First-run onboarding can create starter Activity Types based on what the user wants to track. | V1 | §33.4 |
-| FR-AT-13 | A template gallery offers ready-made Activity Types for common everyday activities, grouped by life area and searchable. Templates are starting points: optional, editable once added, and not meant to cover every activity. | V1 | §2.1, §33, ADR-042 |
-| FR-AT-14 | Wherever something is added to a day, the user can **make their own** activity: name it, choose what to record with the generic field types, and have it saved and reused. Custom activities are kept separate from built-in templates. | V1 | §2.1 (7), §5, ADR-042 |
+| FR-AT-13 | Built-in Activity Types cover common everyday activities, grouped by life area and searchable, in the same list as the user's own (one concept: activity). They are starting points: optional, editable once used, and not meant to cover every activity. | V1 | §2.1, §33, ADR-042 |
+| FR-AT-14 | Wherever something is added to a day, the user can **make their own** activity: name it, choose what to record with the generic field types, and have it saved and reused. It then appears under "Yours" in the same list. | V1 | §2.1 (7), §5, ADR-042 |
 
 ### 1.2 Field types (§9; resolved by OQ-01)
 
@@ -71,7 +71,7 @@ Each type has defined value semantics, validation, storage mapping, rendering an
 |---|---|---|---|
 | FR-PL-01 | User can create a Plan for today, tomorrow or a future date. | V1 | §19 |
 | FR-PL-02 | A Plan has a title, optional description, optional scheduled start/end. | V1 | §28 |
-| FR-PL-03 | A Plan can optionally link to an Activity Type. *New items added in the app always link to one (yours, a template, or made your own); unlinked plans remain valid for older data (ADR-042).* | V1 | §19 |
+| FR-PL-03 | A Plan can optionally link to an Activity Type. *New items added in the app always link to one (yours, built in, or made your own); unlinked plans remain valid for older data (ADR-042).* | V1 | §19 |
 | FR-PL-04 | A Plan has a status: planned, skipped, cancelled or completed. Any item can be marked done (Mark done, the row's check, or finishing its timer). Logging into an activity item makes it **in progress** until it's marked done, or until its day has passed (ADR-040). | V1 | §28, ADR-018, ADR-040 |
 | FR-PL-05 | Opening a plan opens it as an item to log into; the first thing logged creates its linked Log, saved as the user types (ADR-035). | V1 | §19, §36, ADR-030, ADR-035 |
 | FR-PL-06 | Plan and Log are preserved independently to allow planned-vs-actual comparison. | V1 | §20, §43 |
@@ -189,7 +189,7 @@ Product ambiguities found in the spec. **Each needs an owner decision.** Until d
 | OQ-07 | ~~How is "planned duration" expressed when a plan has no times?~~ | §20, §28; ADR-018 | **Resolved 2026-10-04 (owner):** `plans.planned_duration_ms`, exclusive with `planned_end_at` (ADR-018). Implemented in Phase 4. |
 | OQ-08 | History filters by Tag, Person, Project: no Tag or Project concept exists anywhere else; Person is only a field type. | §38 | V1 filters: Activity, Date, free-text. Person filter = match on Person/Multi-person field values. Tags/Projects deferred until defined. |
 | OQ-09 | Which body measurement types exist, and can users add custom ones? | §23, §29 | Fixed V1 set: weight, height, body_fat, chest, waist, arms, legs. Custom types deferred. |
-| OQ-10 | ~~Log notes/duration vs "Notes"/"Duration" fields~~ | **Resolved by ADR-021:** the activity's actual elapsed duration is `activity_logs.duration_ms`, and notes are a built-in log property. Duration fields are only for additional durations. Templates don't add Notes/Duration fields for these. | — |
+| OQ-10 | ~~Log notes/duration vs "Notes"/"Duration" fields~~ | **Resolved by ADR-021:** the activity's actual elapsed duration is `activity_logs.duration_ms`, and notes are a built-in log property. Duration fields are only for additional durations. Built-in activities don't add Notes/Duration fields for these. | — |
 | OQ-11 | Can more than one Focus Session run at once? | §16, §17 | No: one active session at a time. |
 | OQ-12 | Is any crash reporting/diagnostics allowed (would send data off-device)? | §39 | No: local logging only. |
 | OQ-13 | Is an ongoing notification for a running focus timer desired? (Requires notification permission on Android 13+.) | §17 | Not in V1 unless approved; timer correctness does not depend on it. |
@@ -197,6 +197,6 @@ Product ambiguities found in the spec. **Each needs an owner decision.** Until d
 | OQ-15 | Exercise identity: is "Chest Press" free text (autocomplete) or a managed entity? Analytics group by it. | §12, §13 | Free text with autocomplete from history; analytics group by normalized (trimmed, case-folded) text. |
 | OQ-16 | ~~Units: kg/lb, km/mi?~~ | **Resolved by ADR-020:** values keep the user's unit (`unit_code`) plus a write-time `normalized_value` in the dimension's canonical unit. The unit registry is in code. | — |
 | OQ-17 | §43 shows "Walk 31m" under Actual but the narrative never logs the walk. | §43 | Treated as an editorial omission: the walk is logged retroactively (manual log). Confirms manual/retroactive logging is required. |
-| OQ-18 | Do starter templates (Gym, Reading, …) ship pre-installed, or only via onboarding choice? | §33.4 | Offered during onboarding and from "Start from a template" in Me → Activities; nothing forced. |
+| OQ-18 | Do the built-in activities (Gym, Reading, …) ship pre-installed, or only via onboarding choice? | §33.4 | Listed with the user's own in Me → Activities and Browse activities, and saved as theirs when first used (ADR-042); onboarding may offer some; nothing forced. |
 | OQ-19 | "Lunch" appears on the Today timeline (§18) with no duration: is it a log, a plan, or a task? | §18 | A Log of a user-created type with no duration fields (instant log). |
 | OQ-20 | Flowfy reference screenshots are referenced but not present in the repository. | setup §8 | Design docs rely on the principles written in §33.1. Add screenshots to `docs/ui/reference/` if visual review is wanted (for principles only). |

@@ -5,7 +5,7 @@
 **Stack:** Flutter + Dart 3 · SQLite (local, source of truth) · Riverpod · go_router · native animations · fl_chart charts behind `AppChart` (ADR-033) · drift for SQLite (ADR-011) · gen-l10n (ADR-015). Hand-written Riverpod providers, no riverpod_generator/freezed (ADR-014). **No backend.**
 
 **Status:**
-- Phases 1–6 are implemented (incl. focus timer, insights and body measurements): scaffold, preferences, design tokens/theme, adaptive shell, go_router, gen-l10n, the **generic activity engine** (activity types, fields, logs, typed values, builder, templates, generic form renderer), relational Repeating Groups, and **plans + Today** (plan → record, planned vs actual).
+- Phases 1–6 are implemented (incl. focus timer, insights and body measurements): scaffold, preferences, design tokens/theme, adaptive shell, go_router, gen-l10n, the **generic activity engine** (activity types, fields, logs, typed values, builder, built-in activities, generic form renderer), relational Repeating Groups, and **plans + Today** (plan → record, planned vs actual).
 - Navigation (ADR-028): **Today | Plan | Insights | Me** (no floating Record button). Everything on a day is an item you open to log into, saved as you type (ADR-035). Plan is date-based: Week | Month plus a day screen sharing Today's `DayItems` (ADR-039), with repeating plans generated as ordinary plans for the dates viewed (schema v7, ADR-036). Insights builds per-activity charts from fields (ADR-037). Activities (setup) live under Me → Activities.
 - All four tabs are implemented (Insights in Phase 6).
 - See [application_architecture.md](../../docs/architecture/application_architecture.md) for the implemented-vs-planned map.

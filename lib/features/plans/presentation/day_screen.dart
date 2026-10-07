@@ -30,7 +30,7 @@ class DayScreen extends ConsumerWidget {
   /// Opens a record made without a plan.
   final ValueChanged<ActivityLog> onOpenRecord;
 
-  /// Picks a template or makes a new activity for what's added to a day.
+  /// Picks an activity from the list, or makes a new one, for the day.
   final ActivityChooser chooser;
 
   @override

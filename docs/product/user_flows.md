@@ -12,15 +12,15 @@ Narrative arc (§33.4): **understand → one question → personalize → show v
 1. **Welcome:** a single, warm statement of what the product helps with (plan your day, see what actually happened, understand your progress) and the privacy promise ("Your data stays on this device. No account needed.", §39). One primary action.
 2. **One meaningful question:** "What would you like to understand about your days?" Multi-select of outcome-phrased intents (e.g. train consistently, read more, focus deeper, stay on top of tasks, track my body). Optional; skippable.
 3. **Personalize:** suggested starter activities based on the answer, shown as selectable previews (icon, color, the fields they include). User toggles which to add. Nothing is pre-selected without a visible reason.
-4. **Optional quick preference:** units (kg/lb, km/mi) only if a selected template uses them.
+4. **Optional quick preference:** units (kg/lb, km/mi) only if a selected activity uses them.
 5. **Show what you'll get:** a preview of *their* Today with their chosen activities, illustrating plan vs actual.
 6. **Begin:** primary "Plan tomorrow" or "Log something now", secondary "Explore". Lands on Today.
 
-Constraints: ≤ 5 screens; every step skippable; back navigation allowed; progress indicator; no account; no forms with more than one decision per screen. Completion sets `onboarding_completed`. Killing the app mid-onboarding restarts onboarding (nothing partially installed: templates install in one transaction at the end).
+Constraints: ≤ 5 screens; every step skippable; back navigation allowed; progress indicator; no account; no forms with more than one decision per screen. Completion sets `onboarding_completed`. Killing the app mid-onboarding restarts onboarding (nothing partially saved: chosen activities are saved in one transaction at the end).
 
 ## F2. Build a custom activity (FR-AT-01…08, FR-AT-11)
 
-1. Me → Activities → "New activity" (or "Start from a template").
+1. Me → Activities → "New activity" (or tap a built-in activity in the same list and **Use** it, then change it).
 2. Name → icon → color (picked from the curated activity palette).
 3. Add fields: the field-type picker lists the ten generic types (OQ-01), each with a one-line plain-language description. Domain-specific needs are compositions (e.g. Number + "Measured in: Weight"). Repeating Group shows "Coming soon" until Phase 3.
 4. Configure each field in a sheet (name, required, type-specific options; "measurable" defaulted sensibly per type).
@@ -35,7 +35,7 @@ Edge cases: unsaved-changes guard; duplicate name warning; editing a type with e
 
 1. Plan tab → **Week** (default) or **Month**; tap a day to open it (ADR-039). The day screen steps a day at a time and has a calendar button for any date. Common picks: "Tomorrow" in the evening (§43).
 2. The day shows exactly like Today: **one list of items** (ADR-035), its plans and anything done without a plan, in time order, then untimed plans.
-3. Quick add: type what you'll do. Suggestions show your matching activities and ready-made templates; tap one to use it. **Set a time** opens one sheet: pick a suggested start (or any time) and a length. Typing an activity's name ("Gym") plans that activity, and its chip lights up. A template's name installs that template first, unless an activity already has the name (names are unique). Any other name ("Bath", "Build my company") offers **Make “…” your own**: the builder opens with the name, the user picks what to record, and the new activity is added (ADR-042). With nothing typed, **Templates** opens the gallery and **Make your own** the builder; either way the chosen activity is selected, ready to add. Every item comes from an activity. On today, **Start now** adds it at the current time and opens it (F8). The **Recent** chips (most used first) pick an activity in one tap.
+3. Quick add: type what you'll do. Suggestions show matching activities (yours, then built-in ones); tap one to use it. **Set a time** opens one sheet: pick a suggested start (or any time) and a length. Typing an activity's name ("Gym") plans that activity, and its chip lights up. A built-in activity's name saves it as yours first, unless one of yours already has the name (names are unique). Any other name ("Bath", "Build my company") offers **Make “…” your own**: the builder opens with the name, the user picks what to record, and the new activity is added (ADR-042). With nothing typed, **Browse activities** opens the one list of activities and **Make your own** the builder; either way the chosen activity is added to the day at once (no extra "+"). Every item comes from an activity. On today, **Start now** adds it at the current time and opens it (F8). The **Recent** chips (most used first) pick an activity in one tap.
 4. Repeat rapidly; keyboard stays open.
 5. Reorder untimed items by drag; timed items sort by time.
 6. **Week | Month** (ADR-036, ADR-039): Week shows the seven days with their items (tap a day's heading to open it, "+" to plan on it); Month shows a calendar with a dot per item (tap a day to open it).

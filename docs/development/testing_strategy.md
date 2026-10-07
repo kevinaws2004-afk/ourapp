@@ -91,7 +91,7 @@ Current suites (269 tests):
 - **activity_types:**
   - validator rules (incl. groups: sub-fields required, item label, nesting limit, per-group name uniqueness, sub-field issue keys)
   - config codec round-trips (incl. `suggest`, `itemLabel`)
-  - repository/use cases: create, ordered fields, update with reorder/rename/add/remove, soft delete/restore, template install with fresh option IDs, live stream
+  - repository/use cases: create, ordered fields, update with reorder/rename/add/remove, soft delete/restore, using a built-in activity gives fresh option IDs, live stream
 - **plans:**
   - repeating plans (ADR-036): weekdays, every-other-week and end date rules; Mon/Wed/Fri occurrences at 18:00 local, generated once; a deleted occurrence isn't regenerated; changing the rule from a date keeps logged occurrences; stop repeating; invalid rules rejected; moving an occurrence moves a copy; Plan next copies title, activity and length
   - widgets: Repeat… → Mon + Sat → "Repeats Mon, Sat" → both show in the next week; Month → tap a day → Day; Plan next from an item → "Planned for Sat, Oct 10" → it's there next week
@@ -119,26 +119,26 @@ Current suites (269 tests):
 - **widgets:**
   - app shell/theme/showcase/l10n/200% text scale
   - Activities (Me → Activities) empty state
-  - template install
+  - using a built-in activity
   - builder create + inline validation
   - Record on an activity's page opens an item for now; what's logged shows in its history summary
   - deleting an item (plan + log) + Undo
   - navigation (ADR-028): four tabs, no floating Record button (compact or rail), Me → Activities
   - Plan tab: opens on today with one list of items (unplanned records included), week navigation, a record without a plan opens as an item, calendar picker
   - renderer: every editor in order, archived options hidden, typed emission and clearing, invalid numbers
-  - Quick add and planner (ADR-039): Start now / Set a time appear once typing; Recent label; template and own-activity suggestions; one time sheet sets start + length; Plan opens on Week, a tapped day opens the day screen, which steps days and has a date picker; a taken template name isn't installed twice. Domain: unique activity names, `PlanTimeSuggestions`, `suggestByName`, `rankByUse`.
-  - Phase B (ADR-041): `copyValues` gives fresh row IDs; `findLastRow` newest first, any depth, case-insensitive; `LastLogOfType` skips the item's own and empty logs; `DuplicatePlan`; every template valid with a unique name; widget flows for Use last time, row memory + Use, rest timer (start, +15 s, stop), long-press Duplicate with Undo, quick "How it went" chip, field sheet Advanced, template preview + Add.
+  - Quick add and planner (ADR-039): Start now / Set a time appear once typing; Recent label; suggestions (yours, then built-in, unlabeled); one time sheet sets start + length; Plan opens on Week, a tapped day opens the day screen, which steps days and has a date picker; a built-in name you already have isn't installed twice. Domain: unique activity names, `PlanTimeSuggestions`, `suggestByName`, `rankByUse`.
+  - Phase B (ADR-041): `copyValues` gives fresh row IDs; `findLastRow` newest first, any depth, case-insensitive; `LastLogOfType` skips the item's own and empty logs; `DuplicatePlan`; every built-in activity valid with a unique name; widget flows for Use last time, row memory + Use, rest timer (start, +15 s, stop), long-press Duplicate with Undo, quick "How it went" chip, field sheet Advanced, built-in activity preview + Use.
   - Insights clarity (A20–A27): `ChartAxis` steps (no repeated labels); the activity list updates live after a new log; dates of the period shown; "best this period", "All-time best", "Best day" and "Best Set" labels; empty automatic charts hidden; duplicate names marked; builder order, 12 icons + More, icon names for screen readers; picker theme from tokens.
-  - Done state and rows (ADR-040, A9–A19): logging makes an item in progress, Mark done (bottom of the item) or the row check makes it done, Undo removes a log that marking created; past-day logs count as done; finishing a timer finishes the item and fills the duration boxes; folded summaries ("60 kg × 8 (×2)"); "Anytime" heading; discard question on a half-filled sheet; list ⋯ menu adds a detail; no pop-up after adding a template. Migration v7→v8 keeps plans, logs, series links and triggers.
+  - Done state and rows (ADR-040, A9–A19): logging makes an item in progress, Mark done (bottom of the item) or the row check makes it done, Undo removes a log that marking created; past-day logs count as done; finishing a timer finishes the item and fills the duration boxes; folded summaries ("60 kg × 8 (×2)"); "Anytime" heading; discard question on a half-filled sheet; list ⋯ menu adds a detail; no pop-up after using a built-in activity. Migration v7→v8 keeps plans, logs, series links and triggers.
   - Items (ADR-035): quick-add task + complete; opening a planned activity → typing saves ("Saved", no Save button) → ✓ with summary → reopening shows it; leaving right after typing still saves; plan options (no "Record it") → move to tomorrow with Undo; a task opens and is marked done; notes on a new name save it with an activity of its own; Today "Start now" opens a new item; empty Today invitation; Add to log → Sets & reps → log a set ✓; Add to log → Number "Calories" → 650 in the summary; Checklist → Add detail "Dose" appears in each row; "Mark done" on 21:10–21:55 → "Done · 45 min of 45 min"
   - planned Gym → open → one exercise, three sets (auto-saved) → leave → back → a fourth set → stored as one linked record with five group items
-  - quick add: typing "reading" links the Reading activity (its item has its fields); typing "Gym" installs the template and plans it
+  - quick add: typing "reading" links the Reading activity (its item has its fields); typing "Gym" saves the built-in Gym activity and plans it
   - Repeating Groups: recording the §43 workout from an activity's page (sets prefilled from the previous set, reopened intact), an exercise without a name is still saved (partial), exercise autocomplete; builder creates a group with a sub-field in a nested sheet
 - **integration (device):**
   - `app_launch_test` (real bootstrap/DB)
-  - `activity_engine_flow_test` (Me → Activities → template → record → history on native SQLite, in-memory DB)
-  - `repeating_group_flow_test` (Gym template → exercise with three sets → reopen, on native SQLite; Phase 3)
-  - `plan_flow_test` (template → quick-add activity plan → tap it → record → Today shows ✓; Phase 4, ADR-030)
+  - `activity_engine_flow_test` (Me → Activities → built-in Walking → record → history on native SQLite, in-memory DB)
+  - `repeating_group_flow_test` (built-in Gym → exercise with three sets → reopen, on native SQLite; Phase 3)
+  - `plan_flow_test` (built-in Reading → quick-add activity plan → tap it → record → Today shows ✓; Phase 4, ADR-030)
 
   The first two pass on the Android API 37 emulator and the iOS 27 simulator. `repeating_group_flow_test` (Phase 3) and `plan_flow_test` (Phase 4) are written but **not yet run on a device** (owner asked to skip device runs while coding).
 

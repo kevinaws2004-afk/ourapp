@@ -250,18 +250,6 @@ abstract class AppLocalizations {
   /// **'New activity'**
   String get newActivity;
 
-  /// Button: create an activity type from a starter template.
-  ///
-  /// In en, this message translates to:
-  /// **'Start from a template'**
-  String get fromTemplate;
-
-  /// Number of fields on an activity type.
-  ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =0{No extra fields} =1{1 field} other{{count} fields}}'**
-  String activityFieldCount(int count);
-
   /// Snackbar after deleting an activity type.
   ///
   /// In en, this message translates to:
@@ -694,149 +682,149 @@ abstract class AppLocalizations {
   /// **'No'**
   String get booleanNo;
 
-  /// Template picker title.
+  /// Activity list opened from a day: title.
   ///
   /// In en, this message translates to:
-  /// **'Start from a template'**
-  String get templatesTitle;
+  /// **'Choose an activity'**
+  String get activitiesBrowseTitle;
 
-  /// Template picker subtitle.
+  /// Activity list: subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Templates are just a starting point. You can change everything afterwards.'**
-  String get templatesSubtitle;
+  /// **'Use any of these as it is, change it later, or make your own.'**
+  String get activitiesBrowseSubtitle;
 
-  /// Template picker: hint in the search field (matches names, categories and what they log).
+  /// Activity list: hint in the search field (matches names, categories and what they log).
   ///
   /// In en, this message translates to:
-  /// **'Search templates'**
-  String get templatesSearchHint;
+  /// **'Search activities'**
+  String get activitiesSearchHint;
 
-  /// Template picker: shown when the search matches nothing.
+  /// Activity list: shown when the search matches nothing.
   ///
   /// In en, this message translates to:
-  /// **'No template matches. Go back and make your own instead.'**
-  String get templatesNoMatch;
+  /// **'No activity matches. Make your own instead.'**
+  String get activitiesNoMatch;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Reading'**
-  String get templateReading;
+  String get builtInReading;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Book'**
-  String get templateReadingBook;
+  String get builtInReadingBook;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Pages'**
-  String get templateReadingPages;
+  String get builtInReadingPages;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Rating'**
-  String get templateReadingRating;
+  String get builtInReadingRating;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Focused work'**
-  String get templateFocusedWork;
+  String get builtInFocusedWork;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Project'**
-  String get templateFocusedWorkProject;
+  String get builtInFocusedWorkProject;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Walking'**
-  String get templateWalking;
+  String get builtInWalking;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Distance'**
-  String get templateWalkingDistance;
+  String get builtInWalkingDistance;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Steps'**
-  String get templateWalkingSteps;
+  String get builtInWalkingSteps;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Calories'**
-  String get templateWalkingCalories;
+  String get builtInWalkingCalories;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Location'**
-  String get templateWalkingLocation;
+  String get builtInWalkingLocation;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Language learning'**
-  String get templateLanguage;
+  String get builtInLanguage;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Language'**
-  String get templateLanguageLanguage;
+  String get builtInLanguageLanguage;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Words learned'**
-  String get templateLanguageWords;
+  String get builtInLanguageWords;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Lesson'**
-  String get templateLanguageLesson;
+  String get builtInLanguageLesson;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Difficulty'**
-  String get templateLanguageDifficulty;
+  String get builtInLanguageDifficulty;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Spanish'**
-  String get templateLanguageSpanish;
+  String get builtInLanguageSpanish;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'French'**
-  String get templateLanguageFrench;
+  String get builtInLanguageFrench;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'German'**
-  String get templateLanguageGerman;
+  String get builtInLanguageGerman;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Japanese'**
-  String get templateLanguageJapanese;
+  String get builtInLanguageJapanese;
 
   /// Generic error message.
   ///
@@ -1075,20 +1063,8 @@ abstract class AppLocalizations {
   /// Subtitle of the Activities screen.
   ///
   /// In en, this message translates to:
-  /// **'The reusable activities you plan and record.'**
+  /// **'Everything you can plan and record. Use any of them as it is, change it, or make your own.'**
   String get activitiesSubtitle;
-
-  /// Empty state title on the Activities screen.
-  ///
-  /// In en, this message translates to:
-  /// **'No activities yet'**
-  String get activitiesEmptyTitle;
-
-  /// Empty state message on the Activities screen.
-  ///
-  /// In en, this message translates to:
-  /// **'Build an activity that records exactly what matters to you, or start from a template.'**
-  String get activitiesEmptyMessage;
 
   /// Subtitle of the Activities entry on the Me tab.
   ///
@@ -1222,155 +1198,155 @@ abstract class AppLocalizations {
   /// **'Give each item a name, like “Set”.'**
   String get validationItemLabelRequired;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Gym'**
-  String get templateGym;
+  String get builtInGym;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Exercises'**
-  String get templateGymExercises;
+  String get builtInGymExercises;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Exercise'**
-  String get templateGymExerciseItem;
+  String get builtInGymExerciseItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Exercise'**
-  String get templateGymExercise;
+  String get builtInGymExercise;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Sets'**
-  String get templateGymSets;
+  String get builtInGymSets;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Set'**
-  String get templateGymSetItem;
+  String get builtInGymSetItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Weight'**
-  String get templateGymWeight;
+  String get builtInGymWeight;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Reps'**
-  String get templateGymReps;
+  String get builtInGymReps;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Meeting'**
-  String get templateMeeting;
+  String get builtInMeeting;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'People'**
-  String get templateMeetingPeople;
+  String get builtInMeetingPeople;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Topics'**
-  String get templateMeetingTopics;
+  String get builtInMeetingTopics;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Decisions'**
-  String get templateMeetingDecisions;
+  String get builtInMeetingDecisions;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Action items'**
-  String get templateMeetingActionItems;
+  String get builtInMeetingActionItems;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Action item'**
-  String get templateMeetingActionItem;
+  String get builtInMeetingActionItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Item'**
-  String get templateMeetingActionItemText;
+  String get builtInMeetingActionItemText;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Done'**
-  String get templateMeetingActionItemDone;
+  String get builtInMeetingActionItemDone;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cooking'**
-  String get templateCooking;
+  String get builtInCooking;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Recipe'**
-  String get templateCookingRecipe;
+  String get builtInCookingRecipe;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Servings'**
-  String get templateCookingServings;
+  String get builtInCookingServings;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Calories'**
-  String get templateCookingCalories;
+  String get builtInCookingCalories;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Rating'**
-  String get templateCookingRating;
+  String get builtInCookingRating;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Ingredients'**
-  String get templateCookingIngredients;
+  String get builtInCookingIngredients;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Ingredient'**
-  String get templateCookingIngredientItem;
+  String get builtInCookingIngredientItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Ingredient'**
-  String get templateCookingIngredient;
+  String get builtInCookingIngredient;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Have it'**
-  String get templateCookingHaveIt;
+  String get builtInCookingHaveIt;
 
   /// Plan sheet: which activity the plan is for (or a task).
   ///
@@ -1402,11 +1378,11 @@ abstract class AppLocalizations {
   /// **'Add an activity to this day'**
   String get planQuickAddHint;
 
-  /// Quick add / plan sheet: opens the template gallery to plan one.
+  /// Quick add / plan sheet: opens the list of activities to pick one.
   ///
   /// In en, this message translates to:
-  /// **'Templates'**
-  String get planBrowseTemplates;
+  /// **'Browse activities'**
+  String get planBrowseActivities;
 
   /// Quick add / plan sheet: opens the builder to define a new activity (what to log) and plan it.
   ///
@@ -1414,7 +1390,7 @@ abstract class AppLocalizations {
   /// **'Make your own'**
   String get planMakeOwn;
 
-  /// Quick add suggestion for a name no activity or template has yet.
+  /// Quick add suggestion for a name no activity has yet.
   ///
   /// In en, this message translates to:
   /// **'Make “{name}” your own'**
@@ -1660,53 +1636,53 @@ abstract class AppLocalizations {
   /// **'To (optional)'**
   String get planPickEnd;
 
-  /// Starter template content (becomes editable user data once added). What a gym session trained, e.g. Chest.
+  /// Built-in activity content (becomes the user's own editable activity once used). What a gym session trained, e.g. Chest.
   ///
   /// In en, this message translates to:
   /// **'Workout'**
-  String get templateGymFocus;
+  String get builtInGymFocus;
 
-  /// Gym template: an option of the Workout choice (becomes editable user data once added).
+  /// Built-in Gym activity: an option of the Workout choice (becomes the user's own editable data once used).
   ///
   /// In en, this message translates to:
   /// **'Push'**
-  String get templateGymPush;
+  String get builtInGymPush;
 
-  /// Gym template: an option of the Workout choice (becomes editable user data once added).
+  /// Built-in Gym activity: an option of the Workout choice (becomes the user's own editable data once used).
   ///
   /// In en, this message translates to:
   /// **'Pull'**
-  String get templateGymPull;
+  String get builtInGymPull;
 
-  /// Gym template: an option of the Workout choice (becomes editable user data once added).
+  /// Built-in Gym activity: an option of the Workout choice (becomes the user's own editable data once used).
   ///
   /// In en, this message translates to:
   /// **'Legs'**
-  String get templateGymLegs;
+  String get builtInGymLegs;
 
-  /// Gym template: an option of the Workout choice (becomes editable user data once added).
+  /// Built-in Gym activity: an option of the Workout choice (becomes the user's own editable data once used).
   ///
   /// In en, this message translates to:
   /// **'Upper body'**
-  String get templateGymUpperBody;
+  String get builtInGymUpperBody;
 
-  /// Gym template: an option of the Workout choice (becomes editable user data once added).
+  /// Built-in Gym activity: an option of the Workout choice (becomes the user's own editable data once used).
   ///
   /// In en, this message translates to:
   /// **'Lower body'**
-  String get templateGymLowerBody;
+  String get builtInGymLowerBody;
 
-  /// Gym template: an option of the Workout choice (becomes editable user data once added).
+  /// Built-in Gym activity: an option of the Workout choice (becomes the user's own editable data once used).
   ///
   /// In en, this message translates to:
   /// **'Full body'**
-  String get templateGymFullBody;
+  String get builtInGymFullBody;
 
-  /// Gym template: an option of the Workout choice (becomes editable user data once added).
+  /// Built-in Gym activity: an option of the Workout choice (becomes the user's own editable data once used).
   ///
   /// In en, this message translates to:
   /// **'Cardio'**
-  String get templateGymCardio;
+  String get builtInGymCardio;
 
   /// Starts a focus timer for the activity.
   ///
@@ -2590,18 +2566,6 @@ abstract class AppLocalizations {
   /// **'Recent'**
   String get planRecent;
 
-  /// Quick add suggestion subtitle for an existing activity.
-  ///
-  /// In en, this message translates to:
-  /// **'Your activity'**
-  String get planSuggestionYours;
-
-  /// Quick add suggestion subtitle for a template, with its field names.
-  ///
-  /// In en, this message translates to:
-  /// **'Ready-made · {fields}'**
-  String planSuggestionReadyMade(String fields);
-
   /// Title of the time sheet when planning.
   ///
   /// In en, this message translates to:
@@ -3286,5339 +3250,5339 @@ abstract class AppLocalizations {
   /// **'show quick actions'**
   String get planQuickActionsHint;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Running'**
-  String get templateRunning;
+  String get builtInRunning;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Distance'**
-  String get templateRunningDistance;
+  String get builtInRunningDistance;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Route'**
-  String get templateRunningRoute;
+  String get builtInRunningRoute;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'How it felt'**
-  String get templateRunningFelt;
+  String get builtInRunningFelt;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Study'**
-  String get templateStudy;
+  String get builtInStudy;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Subject'**
-  String get templateStudySubject;
+  String get builtInStudySubject;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'What I covered'**
-  String get templateStudyCovered;
+  String get builtInStudyCovered;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Focus'**
-  String get templateStudyFocus;
+  String get builtInStudyFocus;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Meditation'**
-  String get templateMeditation;
+  String get builtInMeditation;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Kind'**
-  String get templateMeditationKind;
+  String get builtInMeditationKind;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Breathing'**
-  String get templateMeditationBreathing;
+  String get builtInMeditationBreathing;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Body scan'**
-  String get templateMeditationBodyScan;
+  String get builtInMeditationBodyScan;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Guided'**
-  String get templateMeditationGuided;
+  String get builtInMeditationGuided;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Silent'**
-  String get templateMeditationSilent;
+  String get builtInMeditationSilent;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Calm afterwards'**
-  String get templateMeditationCalm;
+  String get builtInMeditationCalm;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Water'**
-  String get templateWater;
+  String get builtInWater;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Glasses'**
-  String get templateWaterGlasses;
+  String get builtInWaterGlasses;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Sleep'**
-  String get templateSleep;
+  String get builtInSleep;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Quality'**
-  String get templateSleepQuality;
+  String get builtInSleepQuality;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Woke up in the night'**
-  String get templateSleepWokeUp;
+  String get builtInSleepWokeUp;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Mood'**
-  String get templateMood;
+  String get builtInMood;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Mood'**
-  String get templateMoodRating;
+  String get builtInMoodRating;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Feelings'**
-  String get templateMoodFeelings;
+  String get builtInMoodFeelings;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Calm'**
-  String get templateMoodCalm;
+  String get builtInMoodCalm;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Happy'**
-  String get templateMoodHappy;
+  String get builtInMoodHappy;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Energetic'**
-  String get templateMoodEnergetic;
+  String get builtInMoodEnergetic;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Tired'**
-  String get templateMoodTired;
+  String get builtInMoodTired;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Stressed'**
-  String get templateMoodStressed;
+  String get builtInMoodStressed;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Anxious'**
-  String get templateMoodAnxious;
+  String get builtInMoodAnxious;
 
-  /// Template preview: adds the template as an activity.
+  /// Built-in activity preview: uses it (it becomes one of the user's activities).
   ///
   /// In en, this message translates to:
-  /// **'Add {name}'**
-  String templatePreviewAdd(String name);
+  /// **'Use {name}'**
+  String activityPreviewUse(String name);
 
-  /// Template preview: heading above the form preview.
+  /// Activity preview: heading above the form preview.
   ///
   /// In en, this message translates to:
   /// **'What you\'ll log'**
-  String get templatesYoullLog;
+  String get activityPreviewYoullLog;
 
-  /// Template gallery: a template whose name an activity already uses.
-  ///
-  /// In en, this message translates to:
-  /// **'Already in your activities'**
-  String get templatesAlreadyAdded;
-
-  /// Template gallery: a category heading.
+  /// Activity list: a category heading for built-in activities.
   ///
   /// In en, this message translates to:
   /// **'Sleep & self-care'**
-  String get templateCategorySleepAndSelfCare;
+  String get builtInCategorySleepAndSelfCare;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Nap'**
-  String get templateNap;
+  String get builtInNap;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Felt after'**
-  String get templateNapFeltAfter;
+  String get builtInNapFeltAfter;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Morning routine'**
-  String get templateMorningRoutine;
+  String get builtInMorningRoutine;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Woke up at'**
-  String get templateMorningRoutineWokeUpAt;
+  String get builtInMorningRoutineWokeUpAt;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Steps'**
-  String get templateMorningRoutineSteps;
+  String get builtInMorningRoutineSteps;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Step'**
-  String get templateMorningRoutineStepsItem;
+  String get builtInMorningRoutineStepsItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Step'**
-  String get templateMorningRoutineStepsStep;
+  String get builtInMorningRoutineStepsStep;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Done'**
-  String get templateMorningRoutineStepsDone;
+  String get builtInMorningRoutineStepsDone;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Energy'**
-  String get templateMorningRoutineEnergy;
+  String get builtInMorningRoutineEnergy;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Evening routine'**
-  String get templateEveningRoutine;
+  String get builtInEveningRoutine;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Lights out at'**
-  String get templateEveningRoutineLightsOutAt;
+  String get builtInEveningRoutineLightsOutAt;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Steps'**
-  String get templateEveningRoutineSteps;
+  String get builtInEveningRoutineSteps;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Step'**
-  String get templateEveningRoutineStepsItem;
+  String get builtInEveningRoutineStepsItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Step'**
-  String get templateEveningRoutineStepsStep;
+  String get builtInEveningRoutineStepsStep;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Done'**
-  String get templateEveningRoutineStepsDone;
+  String get builtInEveningRoutineStepsDone;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Screens off an hour before'**
-  String get templateEveningRoutineScreensOffAnHourBefore;
+  String get builtInEveningRoutineScreensOffAnHourBefore;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Shower'**
-  String get templateShower;
+  String get builtInShower;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Kind'**
-  String get templateShowerKind;
+  String get builtInShowerKind;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Shower'**
-  String get templateShowerKindShower;
+  String get builtInShowerKindShower;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bath'**
-  String get templateShowerKindBath;
+  String get builtInShowerKindBath;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cold shower'**
-  String get templateShowerKindColdShower;
+  String get builtInShowerKindColdShower;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Felt after'**
-  String get templateShowerFeltAfter;
+  String get builtInShowerFeltAfter;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Skincare'**
-  String get templateSkincare;
+  String get builtInSkincare;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Products'**
-  String get templateSkincareProducts;
+  String get builtInSkincareProducts;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cleanser'**
-  String get templateSkincareProductsCleanser;
+  String get builtInSkincareProductsCleanser;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Toner'**
-  String get templateSkincareProductsToner;
+  String get builtInSkincareProductsToner;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Serum'**
-  String get templateSkincareProductsSerum;
+  String get builtInSkincareProductsSerum;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Moisturizer'**
-  String get templateSkincareProductsMoisturizer;
+  String get builtInSkincareProductsMoisturizer;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Sunscreen'**
-  String get templateSkincareProductsSunscreen;
+  String get builtInSkincareProductsSunscreen;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Mask'**
-  String get templateSkincareProductsMask;
+  String get builtInSkincareProductsMask;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Skin today'**
-  String get templateSkincareSkinToday;
+  String get builtInSkincareSkinToday;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Oral care'**
-  String get templateOralCare;
+  String get builtInOralCare;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Brushed'**
-  String get templateOralCareBrushed;
+  String get builtInOralCareBrushed;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Flossed'**
-  String get templateOralCareFlossed;
+  String get builtInOralCareFlossed;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Mouthwash'**
-  String get templateOralCareMouthwash;
+  String get builtInOralCareMouthwash;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Grooming'**
-  String get templateGrooming;
+  String get builtInGrooming;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'What'**
-  String get templateGroomingWhat;
+  String get builtInGroomingWhat;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Haircut'**
-  String get templateGroomingWhatHaircut;
+  String get builtInGroomingWhatHaircut;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Shave'**
-  String get templateGroomingWhatShave;
+  String get builtInGroomingWhatShave;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Beard trim'**
-  String get templateGroomingWhatBeardTrim;
+  String get builtInGroomingWhatBeardTrim;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Nails'**
-  String get templateGroomingWhatNails;
+  String get builtInGroomingWhatNails;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Hair wash'**
-  String get templateGroomingWhatHairWash;
+  String get builtInGroomingWhatHairWash;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cost'**
-  String get templateGroomingCost;
+  String get builtInGroomingCost;
 
-  /// Template gallery: a category heading.
+  /// Activity list: a category heading for built-in activities.
   ///
   /// In en, this message translates to:
   /// **'Health'**
-  String get templateCategoryHealth;
+  String get builtInCategoryHealth;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Medication'**
-  String get templateMedication;
+  String get builtInMedication;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Medicine'**
-  String get templateMedicationMedicine;
+  String get builtInMedicationMedicine;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Dose'**
-  String get templateMedicationDose;
+  String get builtInMedicationDose;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Taken'**
-  String get templateMedicationTaken;
+  String get builtInMedicationTaken;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Side effects'**
-  String get templateMedicationSideEffects;
+  String get builtInMedicationSideEffects;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Vitamins & supplements'**
-  String get templateVitaminsAndSupplements;
+  String get builtInVitaminsAndSupplements;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Supplements'**
-  String get templateVitaminsAndSupplementsSupplements;
+  String get builtInVitaminsAndSupplementsSupplements;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Supplement'**
-  String get templateVitaminsAndSupplementsSupplementsItem;
+  String get builtInVitaminsAndSupplementsSupplementsItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Supplement'**
-  String get templateVitaminsAndSupplementsSupplementsSupplement;
+  String get builtInVitaminsAndSupplementsSupplementsSupplement;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Taken'**
-  String get templateVitaminsAndSupplementsSupplementsTaken;
+  String get builtInVitaminsAndSupplementsSupplementsTaken;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Doctor visit'**
-  String get templateDoctorVisit;
+  String get builtInDoctorVisit;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Doctor or clinic'**
-  String get templateDoctorVisitDoctorOrClinic;
+  String get builtInDoctorVisitDoctorOrClinic;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Reason'**
-  String get templateDoctorVisitReason;
+  String get builtInDoctorVisitReason;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'What they said'**
-  String get templateDoctorVisitWhatTheySaid;
+  String get builtInDoctorVisitWhatTheySaid;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Next visit'**
-  String get templateDoctorVisitNextVisit;
+  String get builtInDoctorVisitNextVisit;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Symptoms'**
-  String get templateSymptoms;
+  String get builtInSymptoms;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Symptoms'**
-  String get templateSymptomsSymptoms;
+  String get builtInSymptomsSymptoms;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Headache'**
-  String get templateSymptomsSymptomsHeadache;
+  String get builtInSymptomsSymptomsHeadache;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Fever'**
-  String get templateSymptomsSymptomsFever;
+  String get builtInSymptomsSymptomsFever;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cough'**
-  String get templateSymptomsSymptomsCough;
+  String get builtInSymptomsSymptomsCough;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Sore throat'**
-  String get templateSymptomsSymptomsSoreThroat;
+  String get builtInSymptomsSymptomsSoreThroat;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Fatigue'**
-  String get templateSymptomsSymptomsFatigue;
+  String get builtInSymptomsSymptomsFatigue;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Nausea'**
-  String get templateSymptomsSymptomsNausea;
+  String get builtInSymptomsSymptomsNausea;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Pain'**
-  String get templateSymptomsSymptomsPain;
+  String get builtInSymptomsSymptomsPain;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Severity'**
-  String get templateSymptomsSeverity;
+  String get builtInSymptomsSeverity;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Notes'**
-  String get templateSymptomsNotes;
+  String get builtInSymptomsNotes;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Blood pressure'**
-  String get templateBloodPressure;
+  String get builtInBloodPressure;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Systolic'**
-  String get templateBloodPressureSystolic;
+  String get builtInBloodPressureSystolic;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Diastolic'**
-  String get templateBloodPressureDiastolic;
+  String get builtInBloodPressureDiastolic;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Pulse'**
-  String get templateBloodPressurePulse;
+  String get builtInBloodPressurePulse;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Blood sugar'**
-  String get templateBloodSugar;
+  String get builtInBloodSugar;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Reading'**
-  String get templateBloodSugarReading;
+  String get builtInBloodSugarReading;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'When'**
-  String get templateBloodSugarWhen;
+  String get builtInBloodSugarWhen;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Fasting'**
-  String get templateBloodSugarWhenFasting;
+  String get builtInBloodSugarWhenFasting;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Before a meal'**
-  String get templateBloodSugarWhenBeforeAMeal;
+  String get builtInBloodSugarWhenBeforeAMeal;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'After a meal'**
-  String get templateBloodSugarWhenAfterAMeal;
+  String get builtInBloodSugarWhenAfterAMeal;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bedtime'**
-  String get templateBloodSugarWhenBedtime;
+  String get builtInBloodSugarWhenBedtime;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Body temperature'**
-  String get templateBodyTemperature;
+  String get builtInBodyTemperature;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Temperature'**
-  String get templateBodyTemperatureTemperature;
+  String get builtInBodyTemperatureTemperature;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Period'**
-  String get templatePeriod;
+  String get builtInPeriod;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Flow'**
-  String get templatePeriodFlow;
+  String get builtInPeriodFlow;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Spotting'**
-  String get templatePeriodFlowSpotting;
+  String get builtInPeriodFlowSpotting;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Light'**
-  String get templatePeriodFlowLight;
+  String get builtInPeriodFlowLight;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Medium'**
-  String get templatePeriodFlowMedium;
+  String get builtInPeriodFlowMedium;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Heavy'**
-  String get templatePeriodFlowHeavy;
+  String get builtInPeriodFlowHeavy;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Symptoms'**
-  String get templatePeriodSymptoms;
+  String get builtInPeriodSymptoms;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cramps'**
-  String get templatePeriodSymptomsCramps;
+  String get builtInPeriodSymptomsCramps;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bloating'**
-  String get templatePeriodSymptomsBloating;
+  String get builtInPeriodSymptomsBloating;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Headache'**
-  String get templatePeriodSymptomsHeadache;
+  String get builtInPeriodSymptomsHeadache;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Mood swings'**
-  String get templatePeriodSymptomsMoodSwings;
+  String get builtInPeriodSymptomsMoodSwings;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Fatigue'**
-  String get templatePeriodSymptomsFatigue;
+  String get builtInPeriodSymptomsFatigue;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cravings'**
-  String get templatePeriodSymptomsCravings;
+  String get builtInPeriodSymptomsCravings;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Notes'**
-  String get templatePeriodNotes;
+  String get builtInPeriodNotes;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Physiotherapy'**
-  String get templatePhysiotherapy;
+  String get builtInPhysiotherapy;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Exercises'**
-  String get templatePhysiotherapyExercises;
+  String get builtInPhysiotherapyExercises;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Exercise'**
-  String get templatePhysiotherapyExercisesItem;
+  String get builtInPhysiotherapyExercisesItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Exercise'**
-  String get templatePhysiotherapyExercisesExercise;
+  String get builtInPhysiotherapyExercisesExercise;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Done'**
-  String get templatePhysiotherapyExercisesDone;
+  String get builtInPhysiotherapyExercisesDone;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Pain level'**
-  String get templatePhysiotherapyPainLevel;
+  String get builtInPhysiotherapyPainLevel;
 
-  /// Template gallery: a category heading.
+  /// Activity list: a category heading for built-in activities.
   ///
   /// In en, this message translates to:
   /// **'Food & drink'**
-  String get templateCategoryFoodAndDrink;
+  String get builtInCategoryFoodAndDrink;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Meal'**
-  String get templateMeal;
+  String get builtInMeal;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Meal'**
-  String get templateMealMeal;
+  String get builtInMealMeal;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Breakfast'**
-  String get templateMealMealBreakfast;
+  String get builtInMealMealBreakfast;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Lunch'**
-  String get templateMealMealLunch;
+  String get builtInMealMealLunch;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Dinner'**
-  String get templateMealMealDinner;
+  String get builtInMealMealDinner;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Snack'**
-  String get templateMealMealSnack;
+  String get builtInMealMealSnack;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'What I ate'**
-  String get templateMealWhatIAte;
+  String get builtInMealWhatIAte;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Calories'**
-  String get templateMealCalories;
+  String get builtInMealCalories;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'How healthy'**
-  String get templateMealHowHealthy;
+  String get builtInMealHowHealthy;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Ate out'**
-  String get templateMealAteOut;
+  String get builtInMealAteOut;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Coffee & tea'**
-  String get templateCoffeeAndTea;
+  String get builtInCoffeeAndTea;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Drink'**
-  String get templateCoffeeAndTeaDrink;
+  String get builtInCoffeeAndTeaDrink;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Coffee'**
-  String get templateCoffeeAndTeaDrinkCoffee;
+  String get builtInCoffeeAndTeaDrinkCoffee;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Espresso'**
-  String get templateCoffeeAndTeaDrinkEspresso;
+  String get builtInCoffeeAndTeaDrinkEspresso;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Tea'**
-  String get templateCoffeeAndTeaDrinkTea;
+  String get builtInCoffeeAndTeaDrinkTea;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Green tea'**
-  String get templateCoffeeAndTeaDrinkGreenTea;
+  String get builtInCoffeeAndTeaDrinkGreenTea;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Herbal tea'**
-  String get templateCoffeeAndTeaDrinkHerbalTea;
+  String get builtInCoffeeAndTeaDrinkHerbalTea;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cups'**
-  String get templateCoffeeAndTeaCups;
+  String get builtInCoffeeAndTeaCups;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Fasting'**
-  String get templateFasting;
+  String get builtInFasting;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Plan'**
-  String get templateFastingPlan;
+  String get builtInFastingPlan;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'12:12'**
-  String get templateFastingPlan1212;
+  String get builtInFastingPlan1212;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'16:8'**
-  String get templateFastingPlan168;
+  String get builtInFastingPlan168;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'18:6'**
-  String get templateFastingPlan186;
+  String get builtInFastingPlan186;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'20:4'**
-  String get templateFastingPlan204;
+  String get builtInFastingPlan204;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'24 hours'**
-  String get templateFastingPlan24Hours;
+  String get builtInFastingPlan24Hours;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Broke the fast at'**
-  String get templateFastingBrokeTheFastAt;
+  String get builtInFastingBrokeTheFastAt;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'How it felt'**
-  String get templateFastingHowItFelt;
+  String get builtInFastingHowItFelt;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Alcohol'**
-  String get templateAlcohol;
+  String get builtInAlcohol;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Drinks'**
-  String get templateAlcoholDrinks;
+  String get builtInAlcoholDrinks;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Kind'**
-  String get templateAlcoholKind;
+  String get builtInAlcoholKind;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Beer'**
-  String get templateAlcoholKindBeer;
+  String get builtInAlcoholKindBeer;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Wine'**
-  String get templateAlcoholKindWine;
+  String get builtInAlcoholKindWine;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Spirits'**
-  String get templateAlcoholKindSpirits;
+  String get builtInAlcoholKindSpirits;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cocktail'**
-  String get templateAlcoholKindCocktail;
+  String get builtInAlcoholKindCocktail;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cider'**
-  String get templateAlcoholKindCider;
+  String get builtInAlcoholKindCider;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Meal prep'**
-  String get templateMealPrep;
+  String get builtInMealPrep;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Dishes'**
-  String get templateMealPrepDishes;
+  String get builtInMealPrepDishes;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Dish'**
-  String get templateMealPrepDishesItem;
+  String get builtInMealPrepDishesItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Dish'**
-  String get templateMealPrepDishesDish;
+  String get builtInMealPrepDishesDish;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Portions'**
-  String get templateMealPrepDishesPortions;
+  String get builtInMealPrepDishesPortions;
 
-  /// Template gallery: a category heading.
+  /// Activity list: a category heading for built-in activities.
   ///
   /// In en, this message translates to:
   /// **'Home & chores'**
-  String get templateCategoryHomeAndChores;
+  String get builtInCategoryHomeAndChores;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cleaning'**
-  String get templateCleaning;
+  String get builtInCleaning;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Rooms'**
-  String get templateCleaningRooms;
+  String get builtInCleaningRooms;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Kitchen'**
-  String get templateCleaningRoomsKitchen;
+  String get builtInCleaningRoomsKitchen;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bathroom'**
-  String get templateCleaningRoomsBathroom;
+  String get builtInCleaningRoomsBathroom;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bedroom'**
-  String get templateCleaningRoomsBedroom;
+  String get builtInCleaningRoomsBedroom;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Living room'**
-  String get templateCleaningRoomsLivingRoom;
+  String get builtInCleaningRoomsLivingRoom;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Whole home'**
-  String get templateCleaningRoomsWholeHome;
+  String get builtInCleaningRoomsWholeHome;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Tasks'**
-  String get templateCleaningTasks;
+  String get builtInCleaningTasks;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Task'**
-  String get templateCleaningTasksItem;
+  String get builtInCleaningTasksItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Task'**
-  String get templateCleaningTasksTask;
+  String get builtInCleaningTasksTask;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Done'**
-  String get templateCleaningTasksDone;
+  String get builtInCleaningTasksDone;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Laundry'**
-  String get templateLaundry;
+  String get builtInLaundry;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Loads'**
-  String get templateLaundryLoads;
+  String get builtInLaundryLoads;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Steps'**
-  String get templateLaundrySteps;
+  String get builtInLaundrySteps;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Washed'**
-  String get templateLaundryStepsWashed;
+  String get builtInLaundryStepsWashed;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Dried'**
-  String get templateLaundryStepsDried;
+  String get builtInLaundryStepsDried;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Folded'**
-  String get templateLaundryStepsFolded;
+  String get builtInLaundryStepsFolded;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Ironed'**
-  String get templateLaundryStepsIroned;
+  String get builtInLaundryStepsIroned;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Put away'**
-  String get templateLaundryStepsPutAway;
+  String get builtInLaundryStepsPutAway;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Dishes'**
-  String get templateDishes;
+  String get builtInDishes;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'How'**
-  String get templateDishesHow;
+  String get builtInDishesHow;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'By hand'**
-  String get templateDishesHowByHand;
+  String get builtInDishesHowByHand;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Dishwasher'**
-  String get templateDishesHowDishwasher;
+  String get builtInDishesHowDishwasher;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Kitchen wiped'**
-  String get templateDishesKitchenWiped;
+  String get builtInDishesKitchenWiped;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Groceries'**
-  String get templateGroceries;
+  String get builtInGroceries;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Store'**
-  String get templateGroceriesStore;
+  String get builtInGroceriesStore;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Shopping list'**
-  String get templateGroceriesShoppingList;
+  String get builtInGroceriesShoppingList;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Item'**
-  String get templateGroceriesShoppingListItem;
+  String get builtInGroceriesShoppingListItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Got it'**
-  String get templateGroceriesShoppingListGotIt;
+  String get builtInGroceriesShoppingListGotIt;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Spent'**
-  String get templateGroceriesSpent;
+  String get builtInGroceriesSpent;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Gardening'**
-  String get templateGardening;
+  String get builtInGardening;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Tasks'**
-  String get templateGardeningTasks;
+  String get builtInGardeningTasks;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Watering'**
-  String get templateGardeningTasksWatering;
+  String get builtInGardeningTasksWatering;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Planting'**
-  String get templateGardeningTasksPlanting;
+  String get builtInGardeningTasksPlanting;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Weeding'**
-  String get templateGardeningTasksWeeding;
+  String get builtInGardeningTasksWeeding;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Pruning'**
-  String get templateGardeningTasksPruning;
+  String get builtInGardeningTasksPruning;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Mowing'**
-  String get templateGardeningTasksMowing;
+  String get builtInGardeningTasksMowing;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Harvesting'**
-  String get templateGardeningTasksHarvesting;
+  String get builtInGardeningTasksHarvesting;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Plants'**
-  String get templateGardeningPlants;
+  String get builtInGardeningPlants;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Plant care'**
-  String get templatePlantCare;
+  String get builtInPlantCare;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Plants'**
-  String get templatePlantCarePlants;
+  String get builtInPlantCarePlants;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Plant'**
-  String get templatePlantCarePlantsItem;
+  String get builtInPlantCarePlantsItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Plant'**
-  String get templatePlantCarePlantsPlant;
+  String get builtInPlantCarePlantsPlant;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Watered'**
-  String get templatePlantCarePlantsWatered;
+  String get builtInPlantCarePlantsWatered;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Fed'**
-  String get templatePlantCarePlantsFed;
+  String get builtInPlantCarePlantsFed;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Home repair'**
-  String get templateHomeRepair;
+  String get builtInHomeRepair;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Project'**
-  String get templateHomeRepairProject;
+  String get builtInHomeRepairProject;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'What was done'**
-  String get templateHomeRepairWhatWasDone;
+  String get builtInHomeRepairWhatWasDone;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cost'**
-  String get templateHomeRepairCost;
+  String get builtInHomeRepairCost;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Declutter'**
-  String get templateDeclutter;
+  String get builtInDeclutter;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Area'**
-  String get templateDeclutterArea;
+  String get builtInDeclutterArea;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Items removed'**
-  String get templateDeclutterItemsRemoved;
+  String get builtInDeclutterItemsRemoved;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Where they went'**
-  String get templateDeclutterWhereTheyWent;
+  String get builtInDeclutterWhereTheyWent;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Donated'**
-  String get templateDeclutterWhereTheyWentDonated;
+  String get builtInDeclutterWhereTheyWentDonated;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Sold'**
-  String get templateDeclutterWhereTheyWentSold;
+  String get builtInDeclutterWhereTheyWentSold;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Recycled'**
-  String get templateDeclutterWhereTheyWentRecycled;
+  String get builtInDeclutterWhereTheyWentRecycled;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Thrown away'**
-  String get templateDeclutterWhereTheyWentThrownAway;
+  String get builtInDeclutterWhereTheyWentThrownAway;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bills'**
-  String get templateBills;
+  String get builtInBills;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bills'**
-  String get templateBillsBills;
+  String get builtInBillsBills;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bill'**
-  String get templateBillsBillsItem;
+  String get builtInBillsBillsItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bill'**
-  String get templateBillsBillsBill;
+  String get builtInBillsBillsBill;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Amount'**
-  String get templateBillsBillsAmount;
+  String get builtInBillsBillsAmount;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Paid'**
-  String get templateBillsBillsPaid;
+  String get builtInBillsBillsPaid;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Expense'**
-  String get templateExpense;
+  String get builtInExpense;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Amount'**
-  String get templateExpenseAmount;
+  String get builtInExpenseAmount;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Category'**
-  String get templateExpenseCategory;
+  String get builtInExpenseCategory;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Food'**
-  String get templateExpenseCategoryFood;
+  String get builtInExpenseCategoryFood;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Transport'**
-  String get templateExpenseCategoryTransport;
+  String get builtInExpenseCategoryTransport;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Home'**
-  String get templateExpenseCategoryHome;
+  String get builtInExpenseCategoryHome;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Health'**
-  String get templateExpenseCategoryHealth;
+  String get builtInExpenseCategoryHealth;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Fun'**
-  String get templateExpenseCategoryFun;
+  String get builtInExpenseCategoryFun;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Shopping'**
-  String get templateExpenseCategoryShopping;
+  String get builtInExpenseCategoryShopping;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bills'**
-  String get templateExpenseCategoryBills;
+  String get builtInExpenseCategoryBills;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Other'**
-  String get templateExpenseCategoryOther;
+  String get builtInExpenseCategoryOther;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'What for'**
-  String get templateExpenseWhatFor;
+  String get builtInExpenseWhatFor;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Budget review'**
-  String get templateBudgetReview;
+  String get builtInBudgetReview;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Spent this week'**
-  String get templateBudgetReviewSpentThisWeek;
+  String get builtInBudgetReviewSpentThisWeek;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Saved'**
-  String get templateBudgetReviewSaved;
+  String get builtInBudgetReviewSaved;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'On track'**
-  String get templateBudgetReviewOnTrack;
+  String get builtInBudgetReviewOnTrack;
 
-  /// Template gallery: a category heading.
+  /// Activity list: a category heading for built-in activities.
   ///
   /// In en, this message translates to:
   /// **'Family & care'**
-  String get templateCategoryFamilyAndCare;
+  String get builtInCategoryFamilyAndCare;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Childcare'**
-  String get templateChildcare;
+  String get builtInChildcare;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Child'**
-  String get templateChildcareChild;
+  String get builtInChildcareChild;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'What we did'**
-  String get templateChildcareWhatWeDid;
+  String get builtInChildcareWhatWeDid;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Meals'**
-  String get templateChildcareWhatWeDidMeals;
+  String get builtInChildcareWhatWeDidMeals;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'School run'**
-  String get templateChildcareWhatWeDidSchoolRun;
+  String get builtInChildcareWhatWeDidSchoolRun;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Homework'**
-  String get templateChildcareWhatWeDidHomework;
+  String get builtInChildcareWhatWeDidHomework;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Playtime'**
-  String get templateChildcareWhatWeDidPlaytime;
+  String get builtInChildcareWhatWeDidPlaytime;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bath'**
-  String get templateChildcareWhatWeDidBath;
+  String get builtInChildcareWhatWeDidBath;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bedtime'**
-  String get templateChildcareWhatWeDidBedtime;
+  String get builtInChildcareWhatWeDidBedtime;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Notes'**
-  String get templateChildcareNotes;
+  String get builtInChildcareNotes;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Baby feeding'**
-  String get templateBabyFeeding;
+  String get builtInBabyFeeding;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Kind'**
-  String get templateBabyFeedingKind;
+  String get builtInBabyFeedingKind;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Breast (left)'**
-  String get templateBabyFeedingKindBreastLeft;
+  String get builtInBabyFeedingKindBreastLeft;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Breast (right)'**
-  String get templateBabyFeedingKindBreastRight;
+  String get builtInBabyFeedingKindBreastRight;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bottle'**
-  String get templateBabyFeedingKindBottle;
+  String get builtInBabyFeedingKindBottle;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Solids'**
-  String get templateBabyFeedingKindSolids;
+  String get builtInBabyFeedingKindSolids;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Amount'**
-  String get templateBabyFeedingAmount;
+  String get builtInBabyFeedingAmount;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Notes'**
-  String get templateBabyFeedingNotes;
+  String get builtInBabyFeedingNotes;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Diaper change'**
-  String get templateDiaperChange;
+  String get builtInDiaperChange;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Kind'**
-  String get templateDiaperChangeKind;
+  String get builtInDiaperChangeKind;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Wet'**
-  String get templateDiaperChangeKindWet;
+  String get builtInDiaperChangeKindWet;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Dirty'**
-  String get templateDiaperChangeKindDirty;
+  String get builtInDiaperChangeKindDirty;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Both'**
-  String get templateDiaperChangeKindBoth;
+  String get builtInDiaperChangeKindBoth;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Pet care'**
-  String get templatePetCare;
+  String get builtInPetCare;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Pet'**
-  String get templatePetCarePet;
+  String get builtInPetCarePet;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Care'**
-  String get templatePetCareCare;
+  String get builtInPetCareCare;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Fed'**
-  String get templatePetCareCareFed;
+  String get builtInPetCareCareFed;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Walked'**
-  String get templatePetCareCareWalked;
+  String get builtInPetCareCareWalked;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Groomed'**
-  String get templatePetCareCareGroomed;
+  String get builtInPetCareCareGroomed;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Played'**
-  String get templatePetCareCarePlayed;
+  String get builtInPetCareCarePlayed;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Medicine'**
-  String get templatePetCareCareMedicine;
+  String get builtInPetCareCareMedicine;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Vet visit'**
-  String get templatePetCareCareVetVisit;
+  String get builtInPetCareCareVetVisit;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Notes'**
-  String get templatePetCareNotes;
+  String get builtInPetCareNotes;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Dog walk'**
-  String get templateDogWalk;
+  String get builtInDogWalk;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Dog'**
-  String get templateDogWalkDog;
+  String get builtInDogWalkDog;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Distance'**
-  String get templateDogWalkDistance;
+  String get builtInDogWalkDistance;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Family time'**
-  String get templateFamilyTime;
+  String get builtInFamilyTime;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Who'**
-  String get templateFamilyTimeWho;
+  String get builtInFamilyTimeWho;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'What we did'**
-  String get templateFamilyTimeWhatWeDid;
+  String get builtInFamilyTimeWhatWeDid;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'How it felt'**
-  String get templateFamilyTimeHowItFelt;
+  String get builtInFamilyTimeHowItFelt;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Caring for someone'**
-  String get templateCaringForSomeone;
+  String get builtInCaringForSomeone;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Who'**
-  String get templateCaringForSomeoneWho;
+  String get builtInCaringForSomeoneWho;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Help given'**
-  String get templateCaringForSomeoneHelpGiven;
+  String get builtInCaringForSomeoneHelpGiven;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Company'**
-  String get templateCaringForSomeoneHelpGivenCompany;
+  String get builtInCaringForSomeoneHelpGivenCompany;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Meals'**
-  String get templateCaringForSomeoneHelpGivenMeals;
+  String get builtInCaringForSomeoneHelpGivenMeals;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Errands'**
-  String get templateCaringForSomeoneHelpGivenErrands;
+  String get builtInCaringForSomeoneHelpGivenErrands;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Medicine'**
-  String get templateCaringForSomeoneHelpGivenMedicine;
+  String get builtInCaringForSomeoneHelpGivenMedicine;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Appointments'**
-  String get templateCaringForSomeoneHelpGivenAppointments;
+  String get builtInCaringForSomeoneHelpGivenAppointments;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Notes'**
-  String get templateCaringForSomeoneNotes;
+  String get builtInCaringForSomeoneNotes;
 
-  /// Template gallery: a category heading.
+  /// Activity list: a category heading for built-in activities.
   ///
   /// In en, this message translates to:
   /// **'Work'**
-  String get templateCategoryWork;
+  String get builtInCategoryWork;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Daily planning'**
-  String get templateDailyPlanning;
+  String get builtInDailyPlanning;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Top priorities'**
-  String get templateDailyPlanningTopPriorities;
+  String get builtInDailyPlanningTopPriorities;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Priority'**
-  String get templateDailyPlanningTopPrioritiesItem;
+  String get builtInDailyPlanningTopPrioritiesItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Priority'**
-  String get templateDailyPlanningTopPrioritiesPriority;
+  String get builtInDailyPlanningTopPrioritiesPriority;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Done'**
-  String get templateDailyPlanningTopPrioritiesDone;
+  String get builtInDailyPlanningTopPrioritiesDone;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Notes'**
-  String get templateDailyPlanningNotes;
+  String get builtInDailyPlanningNotes;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Commute'**
-  String get templateCommute;
+  String get builtInCommute;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'How'**
-  String get templateCommuteHow;
+  String get builtInCommuteHow;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Car'**
-  String get templateCommuteHowCar;
+  String get builtInCommuteHowCar;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bus'**
-  String get templateCommuteHowBus;
+  String get builtInCommuteHowBus;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Train'**
-  String get templateCommuteHowTrain;
+  String get builtInCommuteHowTrain;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bike'**
-  String get templateCommuteHowBike;
+  String get builtInCommuteHowBike;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Walk'**
-  String get templateCommuteHowWalk;
+  String get builtInCommuteHowWalk;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Other'**
-  String get templateCommuteHowOther;
+  String get builtInCommuteHowOther;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Distance'**
-  String get templateCommuteDistance;
+  String get builtInCommuteDistance;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'How it went'**
-  String get templateCommuteHowItWent;
+  String get builtInCommuteHowItWent;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Email & admin'**
-  String get templateEmailAndAdmin;
+  String get builtInEmailAndAdmin;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Emails handled'**
-  String get templateEmailAndAdminEmailsHandled;
+  String get builtInEmailAndAdminEmailsHandled;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Inbox zero'**
-  String get templateEmailAndAdminInboxZero;
+  String get builtInEmailAndAdminInboxZero;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Coding'**
-  String get templateCoding;
+  String get builtInCoding;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Project'**
-  String get templateCodingProject;
+  String get builtInCodingProject;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'What I built'**
-  String get templateCodingWhatIBuilt;
+  String get builtInCodingWhatIBuilt;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Commits'**
-  String get templateCodingCommits;
+  String get builtInCodingCommits;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Side project'**
-  String get templateSideProject;
+  String get builtInSideProject;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Project'**
-  String get templateSideProjectProject;
+  String get builtInSideProjectProject;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Progress'**
-  String get templateSideProjectProgress;
+  String get builtInSideProjectProgress;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Momentum'**
-  String get templateSideProjectMomentum;
+  String get builtInSideProjectMomentum;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Job search'**
-  String get templateJobSearch;
+  String get builtInJobSearch;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Company'**
-  String get templateJobSearchCompany;
+  String get builtInJobSearchCompany;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Role'**
-  String get templateJobSearchRole;
+  String get builtInJobSearchRole;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Stage'**
-  String get templateJobSearchStage;
+  String get builtInJobSearchStage;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Applied'**
-  String get templateJobSearchStageApplied;
+  String get builtInJobSearchStageApplied;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Interview'**
-  String get templateJobSearchStageInterview;
+  String get builtInJobSearchStageInterview;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Offer'**
-  String get templateJobSearchStageOffer;
+  String get builtInJobSearchStageOffer;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Rejected'**
-  String get templateJobSearchStageRejected;
+  String get builtInJobSearchStageRejected;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Following up'**
-  String get templateJobSearchStageFollowingUp;
+  String get builtInJobSearchStageFollowingUp;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Notes'**
-  String get templateJobSearchNotes;
+  String get builtInJobSearchNotes;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Presentation'**
-  String get templatePresentation;
+  String get builtInPresentation;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Topic'**
-  String get templatePresentationTopic;
+  String get builtInPresentationTopic;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Audience'**
-  String get templatePresentationAudience;
+  String get builtInPresentationAudience;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'How it went'**
-  String get templatePresentationHowItWent;
+  String get builtInPresentationHowItWent;
 
-  /// Template gallery: a category heading.
+  /// Activity list: a category heading for built-in activities.
   ///
   /// In en, this message translates to:
   /// **'Learning'**
-  String get templateCategoryLearning;
+  String get builtInCategoryLearning;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Class'**
-  String get templateClass;
+  String get builtInClass;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Course'**
-  String get templateClassCourse;
+  String get builtInClassCourse;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Topic'**
-  String get templateClassTopic;
+  String get builtInClassTopic;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Notes'**
-  String get templateClassNotes;
+  String get builtInClassNotes;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Understood'**
-  String get templateClassUnderstood;
+  String get builtInClassUnderstood;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Homework'**
-  String get templateHomework;
+  String get builtInHomework;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Subject'**
-  String get templateHomeworkSubject;
+  String get builtInHomeworkSubject;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Task'**
-  String get templateHomeworkTask;
+  String get builtInHomeworkTask;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Finished'**
-  String get templateHomeworkFinished;
+  String get builtInHomeworkFinished;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Online course'**
-  String get templateOnlineCourse;
+  String get builtInOnlineCourse;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Course'**
-  String get templateOnlineCourseCourse;
+  String get builtInOnlineCourseCourse;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Lessons done'**
-  String get templateOnlineCourseLessonsDone;
+  String get builtInOnlineCourseLessonsDone;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Takeaways'**
-  String get templateOnlineCourseTakeaways;
+  String get builtInOnlineCourseTakeaways;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Music practice'**
-  String get templateMusicPractice;
+  String get builtInMusicPractice;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Instrument'**
-  String get templateMusicPracticeInstrument;
+  String get builtInMusicPracticeInstrument;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Guitar'**
-  String get templateMusicPracticeInstrumentGuitar;
+  String get builtInMusicPracticeInstrumentGuitar;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Piano'**
-  String get templateMusicPracticeInstrumentPiano;
+  String get builtInMusicPracticeInstrumentPiano;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Drums'**
-  String get templateMusicPracticeInstrumentDrums;
+  String get builtInMusicPracticeInstrumentDrums;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Violin'**
-  String get templateMusicPracticeInstrumentViolin;
+  String get builtInMusicPracticeInstrumentViolin;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Voice'**
-  String get templateMusicPracticeInstrumentVoice;
+  String get builtInMusicPracticeInstrumentVoice;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Other'**
-  String get templateMusicPracticeInstrumentOther;
+  String get builtInMusicPracticeInstrumentOther;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Pieces'**
-  String get templateMusicPracticePieces;
+  String get builtInMusicPracticePieces;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Piece'**
-  String get templateMusicPracticePiecesItem;
+  String get builtInMusicPracticePiecesItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Piece'**
-  String get templateMusicPracticePiecesPiece;
+  String get builtInMusicPracticePiecesPiece;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Tempo (bpm)'**
-  String get templateMusicPracticePiecesTempoBpm;
+  String get builtInMusicPracticePiecesTempoBpm;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'How it went'**
-  String get templateMusicPracticeHowItWent;
+  String get builtInMusicPracticeHowItWent;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Skill practice'**
-  String get templateSkillPractice;
+  String get builtInSkillPractice;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Skill'**
-  String get templateSkillPracticeSkill;
+  String get builtInSkillPracticeSkill;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'What I practised'**
-  String get templateSkillPracticeWhatIPractised;
+  String get builtInSkillPracticeWhatIPractised;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Progress'**
-  String get templateSkillPracticeProgress;
+  String get builtInSkillPracticeProgress;
 
-  /// Template gallery: a category heading.
+  /// Activity list: a category heading for built-in activities.
   ///
   /// In en, this message translates to:
   /// **'Exercise & sport'**
-  String get templateCategoryExerciseAndSport;
+  String get builtInCategoryExerciseAndSport;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cycling'**
-  String get templateCycling;
+  String get builtInCycling;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Distance'**
-  String get templateCyclingDistance;
+  String get builtInCyclingDistance;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Route'**
-  String get templateCyclingRoute;
+  String get builtInCyclingRoute;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Felt'**
-  String get templateCyclingFelt;
+  String get builtInCyclingFelt;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Swimming'**
-  String get templateSwimming;
+  String get builtInSwimming;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Distance'**
-  String get templateSwimmingDistance;
+  String get builtInSwimmingDistance;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Laps'**
-  String get templateSwimmingLaps;
+  String get builtInSwimmingLaps;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Strokes'**
-  String get templateSwimmingStrokes;
+  String get builtInSwimmingStrokes;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Freestyle'**
-  String get templateSwimmingStrokesFreestyle;
+  String get builtInSwimmingStrokesFreestyle;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Breaststroke'**
-  String get templateSwimmingStrokesBreaststroke;
+  String get builtInSwimmingStrokesBreaststroke;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Backstroke'**
-  String get templateSwimmingStrokesBackstroke;
+  String get builtInSwimmingStrokesBackstroke;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Butterfly'**
-  String get templateSwimmingStrokesButterfly;
+  String get builtInSwimmingStrokesButterfly;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Yoga'**
-  String get templateYoga;
+  String get builtInYoga;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Style'**
-  String get templateYogaStyle;
+  String get builtInYogaStyle;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Hatha'**
-  String get templateYogaStyleHatha;
+  String get builtInYogaStyleHatha;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Vinyasa'**
-  String get templateYogaStyleVinyasa;
+  String get builtInYogaStyleVinyasa;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Yin'**
-  String get templateYogaStyleYin;
+  String get builtInYogaStyleYin;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Power'**
-  String get templateYogaStylePower;
+  String get builtInYogaStylePower;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Restorative'**
-  String get templateYogaStyleRestorative;
+  String get builtInYogaStyleRestorative;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Felt after'**
-  String get templateYogaFeltAfter;
+  String get builtInYogaFeltAfter;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Stretching'**
-  String get templateStretching;
+  String get builtInStretching;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Areas'**
-  String get templateStretchingAreas;
+  String get builtInStretchingAreas;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Neck'**
-  String get templateStretchingAreasNeck;
+  String get builtInStretchingAreasNeck;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Shoulders'**
-  String get templateStretchingAreasShoulders;
+  String get builtInStretchingAreasShoulders;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Back'**
-  String get templateStretchingAreasBack;
+  String get builtInStretchingAreasBack;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Hips'**
-  String get templateStretchingAreasHips;
+  String get builtInStretchingAreasHips;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Legs'**
-  String get templateStretchingAreasLegs;
+  String get builtInStretchingAreasLegs;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Full body'**
-  String get templateStretchingAreasFullBody;
+  String get builtInStretchingAreasFullBody;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Home workout'**
-  String get templateHomeWorkout;
+  String get builtInHomeWorkout;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Exercises'**
-  String get templateHomeWorkoutExercises;
+  String get builtInHomeWorkoutExercises;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Exercise'**
-  String get templateHomeWorkoutExercisesItem;
+  String get builtInHomeWorkoutExercisesItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Exercise'**
-  String get templateHomeWorkoutExercisesExercise;
+  String get builtInHomeWorkoutExercisesExercise;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Reps'**
-  String get templateHomeWorkoutExercisesReps;
+  String get builtInHomeWorkoutExercisesReps;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Rounds'**
-  String get templateHomeWorkoutExercisesRounds;
+  String get builtInHomeWorkoutExercisesRounds;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Effort'**
-  String get templateHomeWorkoutEffort;
+  String get builtInHomeWorkoutEffort;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Hiking'**
-  String get templateHiking;
+  String get builtInHiking;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Trail'**
-  String get templateHikingTrail;
+  String get builtInHikingTrail;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Distance'**
-  String get templateHikingDistance;
+  String get builtInHikingDistance;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Elevation gain'**
-  String get templateHikingElevationGain;
+  String get builtInHikingElevationGain;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Felt'**
-  String get templateHikingFelt;
+  String get builtInHikingFelt;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Team sport'**
-  String get templateTeamSport;
+  String get builtInTeamSport;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Sport'**
-  String get templateTeamSportSport;
+  String get builtInTeamSportSport;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Football'**
-  String get templateTeamSportSportFootball;
+  String get builtInTeamSportSportFootball;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Basketball'**
-  String get templateTeamSportSportBasketball;
+  String get builtInTeamSportSportBasketball;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cricket'**
-  String get templateTeamSportSportCricket;
+  String get builtInTeamSportSportCricket;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Volleyball'**
-  String get templateTeamSportSportVolleyball;
+  String get builtInTeamSportSportVolleyball;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Hockey'**
-  String get templateTeamSportSportHockey;
+  String get builtInTeamSportSportHockey;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Other'**
-  String get templateTeamSportSportOther;
+  String get builtInTeamSportSportOther;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Result'**
-  String get templateTeamSportResult;
+  String get builtInTeamSportResult;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Won'**
-  String get templateTeamSportResultWon;
+  String get builtInTeamSportResultWon;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Lost'**
-  String get templateTeamSportResultLost;
+  String get builtInTeamSportResultLost;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Draw'**
-  String get templateTeamSportResultDraw;
+  String get builtInTeamSportResultDraw;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Just played'**
-  String get templateTeamSportResultJustPlayed;
+  String get builtInTeamSportResultJustPlayed;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'How I played'**
-  String get templateTeamSportHowIPlayed;
+  String get builtInTeamSportHowIPlayed;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Racket sport'**
-  String get templateRacketSport;
+  String get builtInRacketSport;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Sport'**
-  String get templateRacketSportSport;
+  String get builtInRacketSportSport;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Tennis'**
-  String get templateRacketSportSportTennis;
+  String get builtInRacketSportSportTennis;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Badminton'**
-  String get templateRacketSportSportBadminton;
+  String get builtInRacketSportSportBadminton;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Squash'**
-  String get templateRacketSportSportSquash;
+  String get builtInRacketSportSportSquash;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Table tennis'**
-  String get templateRacketSportSportTableTennis;
+  String get builtInRacketSportSportTableTennis;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Padel'**
-  String get templateRacketSportSportPadel;
+  String get builtInRacketSportSportPadel;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Opponent'**
-  String get templateRacketSportOpponent;
+  String get builtInRacketSportOpponent;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Result'**
-  String get templateRacketSportResult;
+  String get builtInRacketSportResult;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Won'**
-  String get templateRacketSportResultWon;
+  String get builtInRacketSportResultWon;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Lost'**
-  String get templateRacketSportResultLost;
+  String get builtInRacketSportResultLost;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Just played'**
-  String get templateRacketSportResultJustPlayed;
+  String get builtInRacketSportResultJustPlayed;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Dance'**
-  String get templateDance;
+  String get builtInDance;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Style'**
-  String get templateDanceStyle;
+  String get builtInDanceStyle;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Fun'**
-  String get templateDanceFun;
+  String get builtInDanceFun;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Daily steps'**
-  String get templateDailySteps;
+  String get builtInDailySteps;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Steps'**
-  String get templateDailyStepsSteps;
+  String get builtInDailyStepsSteps;
 
-  /// Template gallery: a category heading.
+  /// Activity list: a category heading for built-in activities.
   ///
   /// In en, this message translates to:
   /// **'Mind & wellbeing'**
-  String get templateCategoryMindAndWellbeing;
+  String get builtInCategoryMindAndWellbeing;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Journal'**
-  String get templateJournal;
+  String get builtInJournal;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Entry'**
-  String get templateJournalEntry;
+  String get builtInJournalEntry;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'How the day was'**
-  String get templateJournalHowTheDayWas;
+  String get builtInJournalHowTheDayWas;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Gratitude'**
-  String get templateGratitude;
+  String get builtInGratitude;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Grateful for'**
-  String get templateGratitudeGratefulFor;
+  String get builtInGratitudeGratefulFor;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Thing'**
-  String get templateGratitudeGratefulForItem;
+  String get builtInGratitudeGratefulForItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Thing'**
-  String get templateGratitudeGratefulForThing;
+  String get builtInGratitudeGratefulForThing;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Breathing'**
-  String get templateBreathing;
+  String get builtInBreathing;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Technique'**
-  String get templateBreathingTechnique;
+  String get builtInBreathingTechnique;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Box breathing'**
-  String get templateBreathingTechniqueBoxBreathing;
+  String get builtInBreathingTechniqueBoxBreathing;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'4-7-8'**
-  String get templateBreathingTechnique478;
+  String get builtInBreathingTechnique478;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Deep belly'**
-  String get templateBreathingTechniqueDeepBelly;
+  String get builtInBreathingTechniqueDeepBelly;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Alternate nostril'**
-  String get templateBreathingTechniqueAlternateNostril;
+  String get builtInBreathingTechniqueAlternateNostril;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Rounds'**
-  String get templateBreathingRounds;
+  String get builtInBreathingRounds;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Therapy session'**
-  String get templateTherapySession;
+  String get builtInTherapySession;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'With'**
-  String get templateTherapySessionWith;
+  String get builtInTherapySessionWith;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Talked about'**
-  String get templateTherapySessionTalkedAbout;
+  String get builtInTherapySessionTalkedAbout;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Takeaways'**
-  String get templateTherapySessionTakeaways;
+  String get builtInTherapySessionTakeaways;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Felt after'**
-  String get templateTherapySessionFeltAfter;
+  String get builtInTherapySessionFeltAfter;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Screen time'**
-  String get templateScreenTime;
+  String get builtInScreenTime;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Total'**
-  String get templateScreenTimeTotal;
+  String get builtInScreenTimeTotal;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Pickups'**
-  String get templateScreenTimePickups;
+  String get builtInScreenTimePickups;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Most used app'**
-  String get templateScreenTimeMostUsedApp;
+  String get builtInScreenTimeMostUsedApp;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Habit to break'**
-  String get templateHabitToBreak;
+  String get builtInHabitToBreak;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Habit'**
-  String get templateHabitToBreakHabit;
+  String get builtInHabitToBreakHabit;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Kept clear today'**
-  String get templateHabitToBreakKeptClearToday;
+  String get builtInHabitToBreakKeptClearToday;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Urges'**
-  String get templateHabitToBreakUrges;
+  String get builtInHabitToBreakUrges;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Notes'**
-  String get templateHabitToBreakNotes;
+  String get builtInHabitToBreakNotes;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Digital detox'**
-  String get templateDigitalDetox;
+  String get builtInDigitalDetox;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Phone away'**
-  String get templateDigitalDetoxPhoneAway;
+  String get builtInDigitalDetoxPhoneAway;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'How it felt'**
-  String get templateDigitalDetoxHowItFelt;
+  String get builtInDigitalDetoxHowItFelt;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Affirmations'**
-  String get templateAffirmations;
+  String get builtInAffirmations;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Today\'s affirmation'**
-  String get templateAffirmationsTodaySAffirmation;
+  String get builtInAffirmationsTodaySAffirmation;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Said out loud'**
-  String get templateAffirmationsSaidOutLoud;
+  String get builtInAffirmationsSaidOutLoud;
 
-  /// Template gallery: a category heading.
+  /// Activity list: a category heading for built-in activities.
   ///
   /// In en, this message translates to:
   /// **'Hobbies & fun'**
-  String get templateCategoryHobbiesAndFun;
+  String get builtInCategoryHobbiesAndFun;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'TV & movies'**
-  String get templateTVAndMovies;
+  String get builtInTVAndMovies;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Title'**
-  String get templateTVAndMoviesTitle;
+  String get builtInTVAndMoviesTitle;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Kind'**
-  String get templateTVAndMoviesKind;
+  String get builtInTVAndMoviesKind;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Movie'**
-  String get templateTVAndMoviesKindMovie;
+  String get builtInTVAndMoviesKindMovie;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Series'**
-  String get templateTVAndMoviesKindSeries;
+  String get builtInTVAndMoviesKindSeries;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Documentary'**
-  String get templateTVAndMoviesKindDocumentary;
+  String get builtInTVAndMoviesKindDocumentary;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Show'**
-  String get templateTVAndMoviesKindShow;
+  String get builtInTVAndMoviesKindShow;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Episodes'**
-  String get templateTVAndMoviesEpisodes;
+  String get builtInTVAndMoviesEpisodes;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Rating'**
-  String get templateTVAndMoviesRating;
+  String get builtInTVAndMoviesRating;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Gaming'**
-  String get templateGaming;
+  String get builtInGaming;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Game'**
-  String get templateGamingGame;
+  String get builtInGamingGame;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Platform'**
-  String get templateGamingPlatform;
+  String get builtInGamingPlatform;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'PC'**
-  String get templateGamingPlatformPC;
+  String get builtInGamingPlatformPC;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Console'**
-  String get templateGamingPlatformConsole;
+  String get builtInGamingPlatformConsole;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Mobile'**
-  String get templateGamingPlatformMobile;
+  String get builtInGamingPlatformMobile;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Board game'**
-  String get templateGamingPlatformBoardGame;
+  String get builtInGamingPlatformBoardGame;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cards'**
-  String get templateGamingPlatformCards;
+  String get builtInGamingPlatformCards;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Fun'**
-  String get templateGamingFun;
+  String get builtInGamingFun;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Podcast'**
-  String get templatePodcast;
+  String get builtInPodcast;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Show'**
-  String get templatePodcastShow;
+  String get builtInPodcastShow;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Episode'**
-  String get templatePodcastEpisode;
+  String get builtInPodcastEpisode;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Takeaways'**
-  String get templatePodcastTakeaways;
+  String get builtInPodcastTakeaways;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Drawing & painting'**
-  String get templateDrawingAndPainting;
+  String get builtInDrawingAndPainting;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Medium'**
-  String get templateDrawingAndPaintingMedium;
+  String get builtInDrawingAndPaintingMedium;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Pencil'**
-  String get templateDrawingAndPaintingMediumPencil;
+  String get builtInDrawingAndPaintingMediumPencil;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Ink'**
-  String get templateDrawingAndPaintingMediumInk;
+  String get builtInDrawingAndPaintingMediumInk;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Watercolor'**
-  String get templateDrawingAndPaintingMediumWatercolor;
+  String get builtInDrawingAndPaintingMediumWatercolor;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Acrylic'**
-  String get templateDrawingAndPaintingMediumAcrylic;
+  String get builtInDrawingAndPaintingMediumAcrylic;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Oil'**
-  String get templateDrawingAndPaintingMediumOil;
+  String get builtInDrawingAndPaintingMediumOil;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Digital'**
-  String get templateDrawingAndPaintingMediumDigital;
+  String get builtInDrawingAndPaintingMediumDigital;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Piece'**
-  String get templateDrawingAndPaintingPiece;
+  String get builtInDrawingAndPaintingPiece;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Happy with it'**
-  String get templateDrawingAndPaintingHappyWithIt;
+  String get builtInDrawingAndPaintingHappyWithIt;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Photography'**
-  String get templatePhotography;
+  String get builtInPhotography;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Subject'**
-  String get templatePhotographySubject;
+  String get builtInPhotographySubject;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Photos taken'**
-  String get templatePhotographyPhotosTaken;
+  String get builtInPhotographyPhotosTaken;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Keepers'**
-  String get templatePhotographyKeepers;
+  String get builtInPhotographyKeepers;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Writing'**
-  String get templateWriting;
+  String get builtInWriting;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Project'**
-  String get templateWritingProject;
+  String get builtInWritingProject;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Words'**
-  String get templateWritingWords;
+  String get builtInWritingWords;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Notes'**
-  String get templateWritingNotes;
+  String get builtInWritingNotes;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Crafts'**
-  String get templateCrafts;
+  String get builtInCrafts;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Craft'**
-  String get templateCraftsCraft;
+  String get builtInCraftsCraft;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Knitting'**
-  String get templateCraftsCraftKnitting;
+  String get builtInCraftsCraftKnitting;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Crochet'**
-  String get templateCraftsCraftCrochet;
+  String get builtInCraftsCraftCrochet;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Sewing'**
-  String get templateCraftsCraftSewing;
+  String get builtInCraftsCraftSewing;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Woodwork'**
-  String get templateCraftsCraftWoodwork;
+  String get builtInCraftsCraftWoodwork;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Pottery'**
-  String get templateCraftsCraftPottery;
+  String get builtInCraftsCraftPottery;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Other'**
-  String get templateCraftsCraftOther;
+  String get builtInCraftsCraftOther;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Project'**
-  String get templateCraftsProject;
+  String get builtInCraftsProject;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Progress'**
-  String get templateCraftsProgress;
+  String get builtInCraftsProgress;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Puzzles'**
-  String get templatePuzzles;
+  String get builtInPuzzles;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Game'**
-  String get templatePuzzlesGame;
+  String get builtInPuzzlesGame;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Sudoku'**
-  String get templatePuzzlesGameSudoku;
+  String get builtInPuzzlesGameSudoku;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Crossword'**
-  String get templatePuzzlesGameCrossword;
+  String get builtInPuzzlesGameCrossword;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Chess'**
-  String get templatePuzzlesGameChess;
+  String get builtInPuzzlesGameChess;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Jigsaw'**
-  String get templatePuzzlesGameJigsaw;
+  String get builtInPuzzlesGameJigsaw;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Word game'**
-  String get templatePuzzlesGameWordGame;
+  String get builtInPuzzlesGameWordGame;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Other'**
-  String get templatePuzzlesGameOther;
+  String get builtInPuzzlesGameOther;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Solved'**
-  String get templatePuzzlesSolved;
+  String get builtInPuzzlesSolved;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Score'**
-  String get templatePuzzlesScore;
+  String get builtInPuzzlesScore;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Listening to music'**
-  String get templateListeningToMusic;
+  String get builtInListeningToMusic;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Artist or album'**
-  String get templateListeningToMusicArtistOrAlbum;
+  String get builtInListeningToMusicArtistOrAlbum;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Enjoyed'**
-  String get templateListeningToMusicEnjoyed;
+  String get builtInListeningToMusicEnjoyed;
 
-  /// Template gallery: a category heading.
+  /// Activity list: a category heading for built-in activities.
   ///
   /// In en, this message translates to:
   /// **'Friends & community'**
-  String get templateCategoryFriendsAndCommunity;
+  String get builtInCategoryFriendsAndCommunity;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Time with friends'**
-  String get templateTimeWithFriends;
+  String get builtInTimeWithFriends;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Who'**
-  String get templateTimeWithFriendsWho;
+  String get builtInTimeWithFriendsWho;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'What we did'**
-  String get templateTimeWithFriendsWhatWeDid;
+  String get builtInTimeWithFriendsWhatWeDid;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'How it felt'**
-  String get templateTimeWithFriendsHowItFelt;
+  String get builtInTimeWithFriendsHowItFelt;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Phone call'**
-  String get templatePhoneCall;
+  String get builtInPhoneCall;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Who'**
-  String get templatePhoneCallWho;
+  String get builtInPhoneCallWho;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Talked about'**
-  String get templatePhoneCallTalkedAbout;
+  String get builtInPhoneCallTalkedAbout;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Follow up needed'**
-  String get templatePhoneCallFollowUpNeeded;
+  String get builtInPhoneCallFollowUpNeeded;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Date night'**
-  String get templateDateNight;
+  String get builtInDateNight;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Where'**
-  String get templateDateNightWhere;
+  String get builtInDateNightWhere;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'What we did'**
-  String get templateDateNightWhatWeDid;
+  String get builtInDateNightWhatWeDid;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Rating'**
-  String get templateDateNightRating;
+  String get builtInDateNightRating;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Event'**
-  String get templateEvent;
+  String get builtInEvent;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Event'**
-  String get templateEventEvent;
+  String get builtInEventEvent;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Where'**
-  String get templateEventWhere;
+  String get builtInEventWhere;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'How it was'**
-  String get templateEventHowItWas;
+  String get builtInEventHowItWas;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Volunteering'**
-  String get templateVolunteering;
+  String get builtInVolunteering;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Organization'**
-  String get templateVolunteeringOrganization;
+  String get builtInVolunteeringOrganization;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'What I did'**
-  String get templateVolunteeringWhatIDid;
+  String get builtInVolunteeringWhatIDid;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'People helped'**
-  String get templateVolunteeringPeopleHelped;
+  String get builtInVolunteeringPeopleHelped;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Prayer & worship'**
-  String get templatePrayerAndWorship;
+  String get builtInPrayerAndWorship;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Practice or place'**
-  String get templatePrayerAndWorshipPracticeOrPlace;
+  String get builtInPrayerAndWorshipPracticeOrPlace;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Reflection'**
-  String get templatePrayerAndWorshipReflection;
+  String get builtInPrayerAndWorshipReflection;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Donation'**
-  String get templateDonation;
+  String get builtInDonation;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cause'**
-  String get templateDonationCause;
+  String get builtInDonationCause;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Amount'**
-  String get templateDonationAmount;
+  String get builtInDonationAmount;
 
-  /// Template gallery: a category heading.
+  /// Activity list: a category heading for built-in activities.
   ///
   /// In en, this message translates to:
   /// **'Travel & errands'**
-  String get templateCategoryTravelAndErrands;
+  String get builtInCategoryTravelAndErrands;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Errands'**
-  String get templateErrands;
+  String get builtInErrands;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Errands'**
-  String get templateErrandsErrands;
+  String get builtInErrandsErrands;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Errand'**
-  String get templateErrandsErrandsItem;
+  String get builtInErrandsErrandsItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Errand'**
-  String get templateErrandsErrandsErrand;
+  String get builtInErrandsErrandsErrand;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Done'**
-  String get templateErrandsErrandsDone;
+  String get builtInErrandsErrandsDone;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Appointment'**
-  String get templateAppointment;
+  String get builtInAppointment;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'With'**
-  String get templateAppointmentWith;
+  String get builtInAppointmentWith;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Purpose'**
-  String get templateAppointmentPurpose;
+  String get builtInAppointmentPurpose;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Next appointment'**
-  String get templateAppointmentNextAppointment;
+  String get builtInAppointmentNextAppointment;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Driving'**
-  String get templateDriving;
+  String get builtInDriving;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Distance'**
-  String get templateDrivingDistance;
+  String get builtInDrivingDistance;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Fuel'**
-  String get templateDrivingFuel;
+  String get builtInDrivingFuel;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Purpose'**
-  String get templateDrivingPurpose;
+  String get builtInDrivingPurpose;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Trip'**
-  String get templateTrip;
+  String get builtInTrip;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Destination'**
-  String get templateTripDestination;
+  String get builtInTripDestination;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Travel by'**
-  String get templateTripTravelBy;
+  String get builtInTripTravelBy;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Plane'**
-  String get templateTripTravelByPlane;
+  String get builtInTripTravelByPlane;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Train'**
-  String get templateTripTravelByTrain;
+  String get builtInTripTravelByTrain;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Car'**
-  String get templateTripTravelByCar;
+  String get builtInTripTravelByCar;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bus'**
-  String get templateTripTravelByBus;
+  String get builtInTripTravelByBus;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Boat'**
-  String get templateTripTravelByBoat;
+  String get builtInTripTravelByBoat;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Highlights'**
-  String get templateTripHighlights;
+  String get builtInTripHighlights;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Packing'**
-  String get templatePacking;
+  String get builtInPacking;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Packing list'**
-  String get templatePackingPackingList;
+  String get builtInPackingPackingList;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Item'**
-  String get templatePackingPackingListItem;
+  String get builtInPackingPackingListItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Done'**
-  String get templatePackingPackingListDone;
+  String get builtInPackingPackingListDone;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Ayurvedic morning'**
-  String get templateAyurvedicMorning;
+  String get builtInAyurvedicMorning;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Up before sunrise'**
-  String get templateAyurvedicMorningUpBeforeSunrise;
+  String get builtInAyurvedicMorningUpBeforeSunrise;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Practices'**
-  String get templateAyurvedicMorningPractices;
+  String get builtInAyurvedicMorningPractices;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Tongue scraping'**
-  String get templateAyurvedicMorningPracticesTongueScraping;
+  String get builtInAyurvedicMorningPracticesTongueScraping;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Oil pulling'**
-  String get templateAyurvedicMorningPracticesOilPulling;
+  String get builtInAyurvedicMorningPracticesOilPulling;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Abhyanga'**
-  String get templateAyurvedicMorningPracticesAbhyanga;
+  String get builtInAyurvedicMorningPracticesAbhyanga;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Warm water'**
-  String get templateAyurvedicMorningPracticesWarmWater;
+  String get builtInAyurvedicMorningPracticesWarmWater;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Neti'**
-  String get templateAyurvedicMorningPracticesNeti;
+  String get builtInAyurvedicMorningPracticesNeti;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Felt after'**
-  String get templateAyurvedicMorningFeltAfter;
+  String get builtInAyurvedicMorningFeltAfter;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Hair oiling'**
-  String get templateHairOiling;
+  String get builtInHairOiling;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Oil'**
-  String get templateHairOilingOil;
+  String get builtInHairOilingOil;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Left on overnight'**
-  String get templateHairOilingLeftOnOvernight;
+  String get builtInHairOilingLeftOnOvernight;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Massage & spa'**
-  String get templateMassageAndSpa;
+  String get builtInMassageAndSpa;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Kind'**
-  String get templateMassageAndSpaKind;
+  String get builtInMassageAndSpaKind;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Massage'**
-  String get templateMassageAndSpaKindMassage;
+  String get builtInMassageAndSpaKindMassage;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Spa'**
-  String get templateMassageAndSpaKindSpa;
+  String get builtInMassageAndSpaKindSpa;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Facial'**
-  String get templateMassageAndSpaKindFacial;
+  String get builtInMassageAndSpaKindFacial;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Foot massage'**
-  String get templateMassageAndSpaKindFootMassage;
+  String get builtInMassageAndSpaKindFootMassage;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Self-massage'**
-  String get templateMassageAndSpaKindSelfMassage;
+  String get builtInMassageAndSpaKindSelfMassage;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Felt after'**
-  String get templateMassageAndSpaFeltAfter;
+  String get builtInMassageAndSpaFeltAfter;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cost'**
-  String get templateMassageAndSpaCost;
+  String get builtInMassageAndSpaCost;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Sauna & cold plunge'**
-  String get templateSaunaAndColdPlunge;
+  String get builtInSaunaAndColdPlunge;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Kind'**
-  String get templateSaunaAndColdPlungeKind;
+  String get builtInSaunaAndColdPlungeKind;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Sauna'**
-  String get templateSaunaAndColdPlungeKindSauna;
+  String get builtInSaunaAndColdPlungeKindSauna;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cold plunge'**
-  String get templateSaunaAndColdPlungeKindColdPlunge;
+  String get builtInSaunaAndColdPlungeKindColdPlunge;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Steam room'**
-  String get templateSaunaAndColdPlungeKindSteamRoom;
+  String get builtInSaunaAndColdPlungeKindSteamRoom;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Contrast'**
-  String get templateSaunaAndColdPlungeKindContrast;
+  String get builtInSaunaAndColdPlungeKindContrast;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Rounds'**
-  String get templateSaunaAndColdPlungeRounds;
+  String get builtInSaunaAndColdPlungeRounds;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Temperature'**
-  String get templateSaunaAndColdPlungeTemperature;
+  String get builtInSaunaAndColdPlungeTemperature;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Pain'**
-  String get templatePain;
+  String get builtInPain;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Where'**
-  String get templatePainWhere;
+  String get builtInPainWhere;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Head'**
-  String get templatePainWhereHead;
+  String get builtInPainWhereHead;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Neck'**
-  String get templatePainWhereNeck;
+  String get builtInPainWhereNeck;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Back'**
-  String get templatePainWhereBack;
+  String get builtInPainWhereBack;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Joints'**
-  String get templatePainWhereJoints;
+  String get builtInPainWhereJoints;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Stomach'**
-  String get templatePainWhereStomach;
+  String get builtInPainWhereStomach;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Muscles'**
-  String get templatePainWhereMuscles;
+  String get builtInPainWhereMuscles;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Level'**
-  String get templatePainLevel;
+  String get builtInPainLevel;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Possible trigger'**
-  String get templatePainPossibleTrigger;
+  String get builtInPainPossibleTrigger;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Digestion'**
-  String get templateDigestion;
+  String get builtInDigestion;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Type'**
-  String get templateDigestionType;
+  String get builtInDigestionType;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Hard'**
-  String get templateDigestionTypeHard;
+  String get builtInDigestionTypeHard;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Normal'**
-  String get templateDigestionTypeNormal;
+  String get builtInDigestionTypeNormal;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Soft'**
-  String get templateDigestionTypeSoft;
+  String get builtInDigestionTypeSoft;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Loose'**
-  String get templateDigestionTypeLoose;
+  String get builtInDigestionTypeLoose;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bloating'**
-  String get templateDigestionBloating;
+  String get builtInDigestionBloating;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Notes'**
-  String get templateDigestionNotes;
+  String get builtInDigestionNotes;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Energy check'**
-  String get templateEnergyCheck;
+  String get builtInEnergyCheck;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Energy'**
-  String get templateEnergyCheckEnergy;
+  String get builtInEnergyCheckEnergy;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Focus'**
-  String get templateEnergyCheckFocus;
+  String get builtInEnergyCheckFocus;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Protein'**
-  String get templateProtein;
+  String get builtInProtein;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Protein'**
-  String get templateProteinProtein;
+  String get builtInProteinProtein;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Fruit & veg'**
-  String get templateFruitAndVeg;
+  String get builtInFruitAndVeg;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Portions'**
-  String get templateFruitAndVegPortions;
+  String get builtInFruitAndVegPortions;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Colours eaten'**
-  String get templateFruitAndVegColoursEaten;
+  String get builtInFruitAndVegColoursEaten;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Green'**
-  String get templateFruitAndVegColoursEatenGreen;
+  String get builtInFruitAndVegColoursEatenGreen;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Red'**
-  String get templateFruitAndVegColoursEatenRed;
+  String get builtInFruitAndVegColoursEatenRed;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Orange'**
-  String get templateFruitAndVegColoursEatenOrange;
+  String get builtInFruitAndVegColoursEatenOrange;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Yellow'**
-  String get templateFruitAndVegColoursEatenYellow;
+  String get builtInFruitAndVegColoursEatenYellow;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Purple'**
-  String get templateFruitAndVegColoursEatenPurple;
+  String get builtInFruitAndVegColoursEatenPurple;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'White'**
-  String get templateFruitAndVegColoursEatenWhite;
+  String get builtInFruitAndVegColoursEatenWhite;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Packed lunch'**
-  String get templatePackedLunch;
+  String get builtInPackedLunch;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'For'**
-  String get templatePackedLunchFor;
+  String get builtInPackedLunchFor;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'What went in'**
-  String get templatePackedLunchWhatWentIn;
+  String get builtInPackedLunchWhatWentIn;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Eaten'**
-  String get templatePackedLunchEaten;
+  String get builtInPackedLunchEaten;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'House help'**
-  String get templateHouseHelp;
+  String get builtInHouseHelp;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Who'**
-  String get templateHouseHelpWho;
+  String get builtInHouseHelpWho;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Came today'**
-  String get templateHouseHelpCameToday;
+  String get builtInHouseHelpCameToday;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Tasks'**
-  String get templateHouseHelpTasks;
+  String get builtInHouseHelpTasks;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Sweeping'**
-  String get templateHouseHelpTasksSweeping;
+  String get builtInHouseHelpTasksSweeping;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Mopping'**
-  String get templateHouseHelpTasksMopping;
+  String get builtInHouseHelpTasksMopping;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Dishes'**
-  String get templateHouseHelpTasksDishes;
+  String get builtInHouseHelpTasksDishes;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Laundry'**
-  String get templateHouseHelpTasksLaundry;
+  String get builtInHouseHelpTasksLaundry;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cooking'**
-  String get templateHouseHelpTasksCooking;
+  String get builtInHouseHelpTasksCooking;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Dusting'**
-  String get templateHouseHelpTasksDusting;
+  String get builtInHouseHelpTasksDusting;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Paid'**
-  String get templateHouseHelpPaid;
+  String get builtInHouseHelpPaid;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Car care'**
-  String get templateCarCare;
+  String get builtInCarCare;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'What'**
-  String get templateCarCareWhat;
+  String get builtInCarCareWhat;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Fuel'**
-  String get templateCarCareWhatFuel;
+  String get builtInCarCareWhatFuel;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Wash'**
-  String get templateCarCareWhatWash;
+  String get builtInCarCareWhatWash;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Service'**
-  String get templateCarCareWhatService;
+  String get builtInCarCareWhatService;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Tyres'**
-  String get templateCarCareWhatTyres;
+  String get builtInCarCareWhatTyres;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Oil change'**
-  String get templateCarCareWhatOilChange;
+  String get builtInCarCareWhatOilChange;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Repair'**
-  String get templateCarCareWhatRepair;
+  String get builtInCarCareWhatRepair;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Odometer'**
-  String get templateCarCareOdometer;
+  String get builtInCarCareOdometer;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cost'**
-  String get templateCarCareCost;
+  String get builtInCarCareCost;
 
-  /// Template gallery: a category heading.
+  /// Activity list: a category heading for built-in activities.
   ///
   /// In en, this message translates to:
   /// **'Money'**
-  String get templateCategoryMoney;
+  String get builtInCategoryMoney;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Investing'**
-  String get templateInvesting;
+  String get builtInInvesting;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Fund or asset'**
-  String get templateInvestingFundOrAsset;
+  String get builtInInvestingFundOrAsset;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Kind'**
-  String get templateInvestingKind;
+  String get builtInInvestingKind;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Buy'**
-  String get templateInvestingKindBuy;
+  String get builtInInvestingKindBuy;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Sell'**
-  String get templateInvestingKindSell;
+  String get builtInInvestingKindSell;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'SIP'**
-  String get templateInvestingKindSIP;
+  String get builtInInvestingKindSIP;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Deposit'**
-  String get templateInvestingKindDeposit;
+  String get builtInInvestingKindDeposit;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Dividend'**
-  String get templateInvestingKindDividend;
+  String get builtInInvestingKindDividend;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Amount'**
-  String get templateInvestingAmount;
+  String get builtInInvestingAmount;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Savings'**
-  String get templateSavings;
+  String get builtInSavings;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Goal'**
-  String get templateSavingsGoal;
+  String get builtInSavingsGoal;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Added'**
-  String get templateSavingsAdded;
+  String get builtInSavingsAdded;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Total so far'**
-  String get templateSavingsTotalSoFar;
+  String get builtInSavingsTotalSoFar;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'School run'**
-  String get templateSchoolRun;
+  String get builtInSchoolRun;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Child'**
-  String get templateSchoolRunChild;
+  String get builtInSchoolRunChild;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'How'**
-  String get templateSchoolRunHow;
+  String get builtInSchoolRunHow;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Car'**
-  String get templateSchoolRunHowCar;
+  String get builtInSchoolRunHowCar;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Walk'**
-  String get templateSchoolRunHowWalk;
+  String get builtInSchoolRunHowWalk;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bus'**
-  String get templateSchoolRunHowBus;
+  String get builtInSchoolRunHowBus;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bike'**
-  String get templateSchoolRunHowBike;
+  String get builtInSchoolRunHowBike;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Auto'**
-  String get templateSchoolRunHowAuto;
+  String get builtInSchoolRunHowAuto;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'School van'**
-  String get templateSchoolRunHowSchoolVan;
+  String get builtInSchoolRunHowSchoolVan;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'On time'**
-  String get templateSchoolRunOnTime;
+  String get builtInSchoolRunOnTime;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Client work'**
-  String get templateClientWork;
+  String get builtInClientWork;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Client'**
-  String get templateClientWorkClient;
+  String get builtInClientWorkClient;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Task'**
-  String get templateClientWorkTask;
+  String get builtInClientWorkTask;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Billable'**
-  String get templateClientWorkBillable;
+  String get builtInClientWorkBillable;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Shift'**
-  String get templateShift;
+  String get builtInShift;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Shift'**
-  String get templateShiftShift;
+  String get builtInShiftShift;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Morning'**
-  String get templateShiftShiftMorning;
+  String get builtInShiftShiftMorning;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Day'**
-  String get templateShiftShiftDay;
+  String get builtInShiftShiftDay;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Evening'**
-  String get templateShiftShiftEvening;
+  String get builtInShiftShiftEvening;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Night'**
-  String get templateShiftShiftNight;
+  String get builtInShiftShiftNight;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Split'**
-  String get templateShiftShiftSplit;
+  String get builtInShiftShiftSplit;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Took a break'**
-  String get templateShiftTookABreak;
+  String get builtInShiftTookABreak;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Earned'**
-  String get templateShiftEarned;
+  String get builtInShiftEarned;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Gig work'**
-  String get templateGigWork;
+  String get builtInGigWork;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Platform'**
-  String get templateGigWorkPlatform;
+  String get builtInGigWorkPlatform;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Trips or orders'**
-  String get templateGigWorkTripsOrOrders;
+  String get builtInGigWorkTripsOrOrders;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Earned'**
-  String get templateGigWorkEarned;
+  String get builtInGigWorkEarned;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Distance'**
-  String get templateGigWorkDistance;
+  String get builtInGigWorkDistance;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Networking'**
-  String get templateNetworking;
+  String get builtInNetworking;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Person'**
-  String get templateNetworkingPerson;
+  String get builtInNetworkingPerson;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Where we met'**
-  String get templateNetworkingWhereWeMet;
+  String get builtInNetworkingWhereWeMet;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Follow up on'**
-  String get templateNetworkingFollowUpOn;
+  String get builtInNetworkingFollowUpOn;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Weekly review'**
-  String get templateWeeklyReview;
+  String get builtInWeeklyReview;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Wins'**
-  String get templateWeeklyReviewWins;
+  String get builtInWeeklyReviewWins;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Lessons'**
-  String get templateWeeklyReviewLessons;
+  String get builtInWeeklyReviewLessons;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Next week'**
-  String get templateWeeklyReviewNextWeek;
+  String get builtInWeeklyReviewNextWeek;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Priority'**
-  String get templateWeeklyReviewNextWeekItem;
+  String get builtInWeeklyReviewNextWeekItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Priority'**
-  String get templateWeeklyReviewNextWeekPriority;
+  String get builtInWeeklyReviewNextWeekPriority;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Done'**
-  String get templateWeeklyReviewNextWeekDone;
+  String get builtInWeeklyReviewNextWeekDone;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Goal check-in'**
-  String get templateGoalCheckIn;
+  String get builtInGoalCheckIn;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Goal'**
-  String get templateGoalCheckInGoal;
+  String get builtInGoalCheckInGoal;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Progress'**
-  String get templateGoalCheckInProgress;
+  String get builtInGoalCheckInProgress;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Next step'**
-  String get templateGoalCheckInNextStep;
+  String get builtInGoalCheckInNextStep;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Tuition'**
-  String get templateTuition;
+  String get builtInTuition;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Subject'**
-  String get templateTuitionSubject;
+  String get builtInTuitionSubject;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Topic'**
-  String get templateTuitionTopic;
+  String get builtInTuitionTopic;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Test score'**
-  String get templateTuitionTestScore;
+  String get builtInTuitionTestScore;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Exam prep'**
-  String get templateExamPrep;
+  String get builtInExamPrep;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Exam'**
-  String get templateExamPrepExam;
+  String get builtInExamPrepExam;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Topics covered'**
-  String get templateExamPrepTopicsCovered;
+  String get builtInExamPrepTopicsCovered;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Mock test score'**
-  String get templateExamPrepMockTestScore;
+  String get builtInExamPrepMockTestScore;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Confidence'**
-  String get templateExamPrepConfidence;
+  String get builtInExamPrepConfidence;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Flashcards'**
-  String get templateFlashcards;
+  String get builtInFlashcards;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Deck'**
-  String get templateFlashcardsDeck;
+  String get builtInFlashcardsDeck;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Cards reviewed'**
-  String get templateFlashcardsCardsReviewed;
+  String get builtInFlashcardsCardsReviewed;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Correct'**
-  String get templateFlashcardsCorrect;
+  String get builtInFlashcardsCorrect;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Teaching'**
-  String get templateTeaching;
+  String get builtInTeaching;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Topic'**
-  String get templateTeachingTopic;
+  String get builtInTeachingTopic;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Students'**
-  String get templateTeachingStudents;
+  String get builtInTeachingStudents;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'How it went'**
-  String get templateTeachingHowItWent;
+  String get builtInTeachingHowItWent;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Surya namaskar'**
-  String get templateSuryaNamaskar;
+  String get builtInSuryaNamaskar;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Rounds'**
-  String get templateSuryaNamaskarRounds;
+  String get builtInSuryaNamaskarRounds;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Felt after'**
-  String get templateSuryaNamaskarFeltAfter;
+  String get builtInSuryaNamaskarFeltAfter;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Pilates'**
-  String get templatePilates;
+  String get builtInPilates;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Kind'**
-  String get templatePilatesKind;
+  String get builtInPilatesKind;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Mat'**
-  String get templatePilatesKindMat;
+  String get builtInPilatesKindMat;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Reformer'**
-  String get templatePilatesKindReformer;
+  String get builtInPilatesKindReformer;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Felt after'**
-  String get templatePilatesFeltAfter;
+  String get builtInPilatesFeltAfter;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Climbing'**
-  String get templateClimbing;
+  String get builtInClimbing;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Kind'**
-  String get templateClimbingKind;
+  String get builtInClimbingKind;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bouldering'**
-  String get templateClimbingKindBouldering;
+  String get builtInClimbingKindBouldering;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Top rope'**
-  String get templateClimbingKindTopRope;
+  String get builtInClimbingKindTopRope;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Lead'**
-  String get templateClimbingKindLead;
+  String get builtInClimbingKindLead;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Outdoor'**
-  String get templateClimbingKindOutdoor;
+  String get builtInClimbingKindOutdoor;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Routes'**
-  String get templateClimbingRoutes;
+  String get builtInClimbingRoutes;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Hardest grade'**
-  String get templateClimbingHardestGrade;
+  String get builtInClimbingHardestGrade;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Martial arts'**
-  String get templateMartialArts;
+  String get builtInMartialArts;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Style'**
-  String get templateMartialArtsStyle;
+  String get builtInMartialArtsStyle;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Techniques'**
-  String get templateMartialArtsTechniques;
+  String get builtInMartialArtsTechniques;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Sparring rounds'**
-  String get templateMartialArtsSparringRounds;
+  String get builtInMartialArtsSparringRounds;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Golf'**
-  String get templateGolf;
+  String get builtInGolf;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Course'**
-  String get templateGolfCourse;
+  String get builtInGolfCourse;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Holes'**
-  String get templateGolfHoles;
+  String get builtInGolfHoles;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'9'**
-  String get templateGolfHoles9;
+  String get builtInGolfHoles9;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'18'**
-  String get templateGolfHoles18;
+  String get builtInGolfHoles18;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Score'**
-  String get templateGolfScore;
+  String get builtInGolfScore;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Winter sports'**
-  String get templateWinterSports;
+  String get builtInWinterSports;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Kind'**
-  String get templateWinterSportsKind;
+  String get builtInWinterSportsKind;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Skiing'**
-  String get templateWinterSportsKindSkiing;
+  String get builtInWinterSportsKindSkiing;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Snowboarding'**
-  String get templateWinterSportsKindSnowboarding;
+  String get builtInWinterSportsKindSnowboarding;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Ice skating'**
-  String get templateWinterSportsKindIceSkating;
+  String get builtInWinterSportsKindIceSkating;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Sledging'**
-  String get templateWinterSportsKindSledging;
+  String get builtInWinterSportsKindSledging;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Runs'**
-  String get templateWinterSportsRuns;
+  String get builtInWinterSportsRuns;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Where'**
-  String get templateWinterSportsWhere;
+  String get builtInWinterSportsWhere;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Pranayama'**
-  String get templatePranayama;
+  String get builtInPranayama;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Technique'**
-  String get templatePranayamaTechnique;
+  String get builtInPranayamaTechnique;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Anulom vilom'**
-  String get templatePranayamaTechniqueAnulomVilom;
+  String get builtInPranayamaTechniqueAnulomVilom;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Kapalbhati'**
-  String get templatePranayamaTechniqueKapalbhati;
+  String get builtInPranayamaTechniqueKapalbhati;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bhramari'**
-  String get templatePranayamaTechniqueBhramari;
+  String get builtInPranayamaTechniqueBhramari;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Bhastrika'**
-  String get templatePranayamaTechniqueBhastrika;
+  String get builtInPranayamaTechniqueBhastrika;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Ujjayi'**
-  String get templatePranayamaTechniqueUjjayi;
+  String get builtInPranayamaTechniqueUjjayi;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Rounds'**
-  String get templatePranayamaRounds;
+  String get builtInPranayamaRounds;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Time outdoors'**
-  String get templateTimeOutdoors;
+  String get builtInTimeOutdoors;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Where'**
-  String get templateTimeOutdoorsWhere;
+  String get builtInTimeOutdoorsWhere;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Morning sunlight'**
-  String get templateTimeOutdoorsMorningSunlight;
+  String get builtInTimeOutdoorsMorningSunlight;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Felt after'**
-  String get templateTimeOutdoorsFeltAfter;
+  String get builtInTimeOutdoorsFeltAfter;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Social media'**
-  String get templateSocialMedia;
+  String get builtInSocialMedia;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Apps'**
-  String get templateSocialMediaApps;
+  String get builtInSocialMediaApps;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Instagram'**
-  String get templateSocialMediaAppsInstagram;
+  String get builtInSocialMediaAppsInstagram;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'YouTube'**
-  String get templateSocialMediaAppsYouTube;
+  String get builtInSocialMediaAppsYouTube;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'TikTok'**
-  String get templateSocialMediaAppsTikTok;
+  String get builtInSocialMediaAppsTikTok;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'WhatsApp'**
-  String get templateSocialMediaAppsWhatsApp;
+  String get builtInSocialMediaAppsWhatsApp;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Facebook'**
-  String get templateSocialMediaAppsFacebook;
+  String get builtInSocialMediaAppsFacebook;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'X'**
-  String get templateSocialMediaAppsX;
+  String get builtInSocialMediaAppsX;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Reddit'**
-  String get templateSocialMediaAppsReddit;
+  String get builtInSocialMediaAppsReddit;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Snapchat'**
-  String get templateSocialMediaAppsSnapchat;
+  String get builtInSocialMediaAppsSnapchat;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Time spent'**
-  String get templateSocialMediaTimeSpent;
+  String get builtInSocialMediaTimeSpent;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Felt after'**
-  String get templateSocialMediaFeltAfter;
+  String get builtInSocialMediaFeltAfter;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'News'**
-  String get templateNews;
+  String get builtInNews;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Source'**
-  String get templateNewsSource;
+  String get builtInNewsSource;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'What stood out'**
-  String get templateNewsWhatStoodOut;
+  String get builtInNewsWhatStoodOut;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Kind act'**
-  String get templateKindAct;
+  String get builtInKindAct;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'What I did'**
-  String get templateKindActWhatIDid;
+  String get builtInKindActWhatIDid;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'For whom'**
-  String get templateKindActForWhom;
+  String get builtInKindActForWhom;
 
-  /// Template gallery: a category heading.
+  /// Activity list: a category heading for built-in activities.
   ///
   /// In en, this message translates to:
   /// **'Faith & spirituality'**
-  String get templateCategoryFaithAndSpirituality;
+  String get builtInCategoryFaithAndSpirituality;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Puja'**
-  String get templatePuja;
+  String get builtInPuja;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Deity or occasion'**
-  String get templatePujaDeityOrOccasion;
+  String get builtInPujaDeityOrOccasion;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Offerings'**
-  String get templatePujaOfferings;
+  String get builtInPujaOfferings;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Flowers'**
-  String get templatePujaOfferingsFlowers;
+  String get builtInPujaOfferingsFlowers;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Diya'**
-  String get templatePujaOfferingsDiya;
+  String get builtInPujaOfferingsDiya;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Incense'**
-  String get templatePujaOfferingsIncense;
+  String get builtInPujaOfferingsIncense;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Prasad'**
-  String get templatePujaOfferingsPrasad;
+  String get builtInPujaOfferingsPrasad;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Aarti'**
-  String get templatePujaOfferingsAarti;
+  String get builtInPujaOfferingsAarti;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'With family'**
-  String get templatePujaWithFamily;
+  String get builtInPujaWithFamily;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Salah'**
-  String get templateSalah;
+  String get builtInSalah;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Prayers'**
-  String get templateSalahPrayers;
+  String get builtInSalahPrayers;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Fajr'**
-  String get templateSalahPrayersFajr;
+  String get builtInSalahPrayersFajr;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Dhuhr'**
-  String get templateSalahPrayersDhuhr;
+  String get builtInSalahPrayersDhuhr;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Asr'**
-  String get templateSalahPrayersAsr;
+  String get builtInSalahPrayersAsr;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Maghrib'**
-  String get templateSalahPrayersMaghrib;
+  String get builtInSalahPrayersMaghrib;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Isha'**
-  String get templateSalahPrayersIsha;
+  String get builtInSalahPrayersIsha;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'On time'**
-  String get templateSalahOnTime;
+  String get builtInSalahOnTime;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'At the mosque'**
-  String get templateSalahAtTheMosque;
+  String get builtInSalahAtTheMosque;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Scripture reading'**
-  String get templateScriptureReading;
+  String get builtInScriptureReading;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Text'**
-  String get templateScriptureReadingText;
+  String get builtInScriptureReadingText;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Passage'**
-  String get templateScriptureReadingPassage;
+  String get builtInScriptureReadingPassage;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Reflection'**
-  String get templateScriptureReadingReflection;
+  String get builtInScriptureReadingReflection;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Chanting'**
-  String get templateChanting;
+  String get builtInChanting;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Mantra'**
-  String get templateChantingMantra;
+  String get builtInChantingMantra;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Malas'**
-  String get templateChantingMalas;
+  String get builtInChantingMalas;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Count'**
-  String get templateChantingCount;
+  String get builtInChantingCount;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Religious fast'**
-  String get templateReligiousFast;
+  String get builtInReligiousFast;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Occasion'**
-  String get templateReligiousFastOccasion;
+  String get builtInReligiousFastOccasion;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Kind'**
-  String get templateReligiousFastKind;
+  String get builtInReligiousFastKind;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Sunrise to sunset'**
-  String get templateReligiousFastKindSunriseToSunset;
+  String get builtInReligiousFastKindSunriseToSunset;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Water only'**
-  String get templateReligiousFastKindWaterOnly;
+  String get builtInReligiousFastKindWaterOnly;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Fruit and milk'**
-  String get templateReligiousFastKindFruitAndMilk;
+  String get builtInReligiousFastKindFruitAndMilk;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'One meal'**
-  String get templateReligiousFastKindOneMeal;
+  String get builtInReligiousFastKindOneMeal;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'No water'**
-  String get templateReligiousFastKindNoWater;
+  String get builtInReligiousFastKindNoWater;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Broke the fast at'**
-  String get templateReligiousFastBrokeTheFastAt;
+  String get builtInReligiousFastBrokeTheFastAt;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Watching sport'**
-  String get templateWatchingSport;
+  String get builtInWatchingSport;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Match'**
-  String get templateWatchingSportMatch;
+  String get builtInWatchingSportMatch;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Team'**
-  String get templateWatchingSportTeam;
+  String get builtInWatchingSportTeam;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Result'**
-  String get templateWatchingSportResult;
+  String get builtInWatchingSportResult;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Won'**
-  String get templateWatchingSportResultWon;
+  String get builtInWatchingSportResultWon;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Lost'**
-  String get templateWatchingSportResultLost;
+  String get builtInWatchingSportResultLost;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Draw'**
-  String get templateWatchingSportResultDraw;
+  String get builtInWatchingSportResultDraw;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'No result'**
-  String get templateWatchingSportResultNoResult;
+  String get builtInWatchingSportResultNoResult;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Fishing'**
-  String get templateFishing;
+  String get builtInFishing;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Spot'**
-  String get templateFishingSpot;
+  String get builtInFishingSpot;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Catch'**
-  String get templateFishingCatch;
+  String get builtInFishingCatch;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Fish'**
-  String get templateFishingCatchItem;
+  String get builtInFishingCatchItem;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Fish'**
-  String get templateFishingCatchFish;
+  String get builtInFishingCatchFish;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Weight'**
-  String get templateFishingCatchWeight;
+  String get builtInFishingCatchWeight;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Content creation'**
-  String get templateContentCreation;
+  String get builtInContentCreation;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Platform'**
-  String get templateContentCreationPlatform;
+  String get builtInContentCreationPlatform;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'YouTube'**
-  String get templateContentCreationPlatformYouTube;
+  String get builtInContentCreationPlatformYouTube;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Instagram'**
-  String get templateContentCreationPlatformInstagram;
+  String get builtInContentCreationPlatformInstagram;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'TikTok'**
-  String get templateContentCreationPlatformTikTok;
+  String get builtInContentCreationPlatformTikTok;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Blog'**
-  String get templateContentCreationPlatformBlog;
+  String get builtInContentCreationPlatformBlog;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Podcast'**
-  String get templateContentCreationPlatformPodcast;
+  String get builtInContentCreationPlatformPodcast;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Other'**
-  String get templateContentCreationPlatformOther;
+  String get builtInContentCreationPlatformOther;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Piece'**
-  String get templateContentCreationPiece;
+  String get builtInContentCreationPiece;
 
-  /// Starter template content (becomes editable user data once added).
+  /// Built-in activity content (becomes the user's own editable activity once used).
   ///
   /// In en, this message translates to:
   /// **'Views'**
-  String get templateContentCreationViews;
+  String get builtInContentCreationViews;
+
+  /// Activity list: heading above the user's own activities (built-in ones follow under their categories).
+  ///
+  /// In en, this message translates to:
+  /// **'Yours'**
+  String get activitiesYours;
 }
 
 class _AppLocalizationsDelegate

@@ -5,7 +5,7 @@
 1. Use the spec's vocabulary: ActivityType, ActivityField, ActivityLog, LogValue, Plan, Measurement, FocusSession. No synonyms.
 2. Domain code imports no `package:flutter/*` and no DB library.
 3. No business logic in widgets; no SQL/DB classes outside `data/`.
-4. Never branch on activity identity (`name == 'Gym'`, template keys). Branch only on field types (registry) or config/roles.
+4. Never branch on activity identity (`name == 'Gym'`, built-in activity keys). Branch only on field types (registry) or config/roles.
 5. Never call `DateTime.now()`; use the injected `Clock`. Never generate IDs except via the ID generator.
 6. No `dynamic` outside JSON boundary code; decode to typed objects immediately.
 7. Use `sealed` classes + exhaustive `switch` for closed sets (field types, metric sources, failures, states).

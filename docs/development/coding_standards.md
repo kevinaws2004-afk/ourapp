@@ -26,7 +26,7 @@
 | Repositories | interface `XRepository`, impl `DbXRepository` | |
 | Use cases | Verb + domain object, one `call()` method (ADR-023) | `CreateActivityType`, `LogActivity` |
 
-Use the **spec's vocabulary** (Activity Type, Activity Log, Plan, Measurement, Field). Do not invent synonyms (`Entry`, `Record`, `Template`, `Session` for logs, etc.).
+Use the **spec's vocabulary** (Activity Type, Activity Log, Plan, Measurement, Field). Do not invent synonyms (`Entry`, `Record`, `Session` for logs, etc.), and don't call activities "templates" (ADR-042).
 
 ## 3. Dart
 

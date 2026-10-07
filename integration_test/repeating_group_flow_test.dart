@@ -13,7 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-/// Repeating Groups on a real device (ADR-027): install the Gym template,
+/// Repeating Groups on a real device (ADR-027): use the built-in Gym activity,
 /// record an exercise with sets, and reopen it. In-memory database, so the
 /// device's real app data is untouched.
 void main() {
@@ -62,16 +62,21 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Activities'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Start from a template'));
+    // One list of activities: search it, then tap the built-in one (ADR-042).
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Search activities'),
+      'Gym',
+    );
     await tester.pumpAndSettle();
-    await scrollAndTap(tester, find.text('Gym'));
-    // The gallery previews a template; Add installs it (B8).
+    await tester.tap(find.text('Gym'));
+    await tester.pumpAndSettle();
+    // Its preview shows the form; Use saves it as one of yours (B8).
     await tester.scrollUntilVisible(
-      find.text('Add Gym'),
+      find.text('Use Gym'),
       200,
       scrollable: find.byType(Scrollable).last,
     );
-    await tester.tap(find.text('Add Gym'));
+    await tester.tap(find.text('Use Gym'));
     await tester.pumpAndSettle();
     expect(find.byType(ActivityTypeScreen), findsOneWidget);
 

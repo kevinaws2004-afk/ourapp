@@ -30,16 +30,15 @@ Future<void> openActivities(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-/// Scrolls the lazily built form until [text] exists, then taps it.
-/// Finds a template in the gallery by searching for [query], then opens
-/// [name]'s preview.
-Future<void> findTemplate(
+/// Finds an activity in the list of activities by searching for [query],
+/// then taps [name] (a built-in one opens its preview).
+Future<void> findActivity(
   WidgetTester tester,
   String query,
   String name,
 ) async {
   await tester.enterText(
-    find.widgetWithText(TextField, 'Search templates'),
+    find.widgetWithText(TextField, 'Search activities'),
     query,
   );
   await tester.pumpAndSettle();
@@ -83,28 +82,27 @@ Future<void> seedReading(AppDatabase db, FakeClock clock) async {
 }
 
 void main() {
-  testAppWidgets(
-    'an empty Activities screen offers to build or start from a template',
-    (tester) async {
-      await pumpTestApp(tester, preferences: _onboarded);
-      await openActivities(tester);
-
-      expect(find.text('No activities yet'), findsOneWidget);
-      expect(find.text('New activity'), findsOneWidget);
-      expect(find.text('Start from a template'), findsOneWidget);
-    },
-  );
-
-  testAppWidgets('the gallery is grouped by category and searchable by '
-      'name, category or what a template logs', (tester) async {
+  testAppWidgets('Activities is one list: New activity, then the built-in '
+      'activities by category (nothing of yours yet, so no "Yours")', (
+    tester,
+  ) async {
     await pumpTestApp(tester, preferences: _onboarded);
     await openActivities(tester);
-    await tester.tap(find.text('Start from a template'));
-    await tester.pumpAndSettle();
+
+    expect(find.text('New activity'), findsOneWidget);
     expect(find.text('Sleep & self-care'), findsOneWidget, reason: 'heading');
+    expect(find.text('Yours'), findsNothing);
+    expect(find.textContaining('emplate'), findsNothing, reason: 'one word');
+  });
+
+  testAppWidgets('the list is searchable by name, category or what an '
+      'activity logs', (tester) async {
+    await pumpTestApp(tester, preferences: _onboarded, seed: seedReading);
+    await openActivities(tester);
+    expect(find.text('Yours'), findsOneWidget);
 
     await tester.enterText(
-      find.widgetWithText(TextField, 'Search templates'),
+      find.widgetWithText(TextField, 'Search activities'),
       'systolic',
     );
     await tester.pumpAndSettle();
@@ -113,46 +111,50 @@ void main() {
     expect(find.text('Gym'), findsNothing);
 
     await tester.enterText(
-      find.widgetWithText(TextField, 'Search templates'),
+      find.widgetWithText(TextField, 'Search activities'),
+      'pages',
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Yours'), findsOneWidget, reason: 'your Reading logs it');
+    expect(find.text('Reading'), findsOneWidget, reason: 'listed once');
+
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Search activities'),
       'zzzz',
     );
     await tester.pumpAndSettle();
     expect(
-      find.text('No template matches. Go back and make your own instead.'),
+      find.text('No activity matches. Make your own instead.'),
       findsOneWidget,
     );
   });
 
-  testAppWidgets(
-    'installing a template opens the new activity, which then appears in Activities',
-    (tester) async {
-      await pumpTestApp(tester, preferences: _onboarded);
-      await openActivities(tester);
+  testAppWidgets('using a built-in activity opens it; it then sits under '
+      '"Yours" like any other', (tester) async {
+    await pumpTestApp(tester, preferences: _onboarded);
+    await openActivities(tester);
 
-      await tester.tap(find.text('Start from a template'));
-      await tester.pumpAndSettle();
-      await findTemplate(tester, 'walk', 'Walking');
-      // The preview shows the real form before adding it (B8).
-      expect(find.text("What you'll log"), findsOneWidget);
-      expect(find.text('Distance'), findsOneWidget);
-      await scrollAndTap(tester, find.text('Add Walking'));
+    await findActivity(tester, 'walk', 'Walking');
+    // The preview shows the real form before using it (B8).
+    expect(find.text("What you'll log"), findsOneWidget);
+    expect(find.text('Distance'), findsOneWidget);
+    await scrollAndTap(tester, find.text('Use Walking'));
 
-      expect(find.byType(ActivityTypeScreen), findsOneWidget);
-      expect(
-        find.text('Nothing recorded yet. Record it to start this history.'),
-        findsOneWidget,
-      );
+    expect(find.byType(ActivityTypeScreen), findsOneWidget);
+    expect(
+      find.text('Nothing recorded yet. Record it to start this history.'),
+      findsOneWidget,
+    );
 
-      await tester.pageBack();
-      await tester.pumpAndSettle();
-      expect(find.text('Walking'), findsOneWidget);
-      expect(find.text('4 fields'), findsOneWidget);
-    },
-  );
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    expect(find.text('Yours'), findsOneWidget);
+    expect(find.text('Walking'), findsOneWidget, reason: 'listed once');
+    expect(find.text('Record'), findsOneWidget);
+  });
 
-  testAppWidgets('a template whose name is taken is not installed twice (A8)', (
-    tester,
-  ) async {
+  testAppWidgets('an activity of yours replaces the built-in one with its '
+      'name, so each name appears once (A8)', (tester) async {
     await pumpTestApp(
       tester,
       preferences: _onboarded,
@@ -163,23 +165,15 @@ void main() {
     );
     await openActivities(tester);
 
-    await tester.tap(find.text('Start from a template'));
-    await tester.pumpAndSettle();
     await tester.enterText(
-      find.widgetWithText(TextField, 'Search templates'),
+      find.widgetWithText(TextField, 'Search activities'),
       'walk',
     );
     await tester.pumpAndSettle();
-    expect(find.text('Already in your activities'), findsOneWidget);
+    expect(find.text('Walking'), findsOneWidget);
     await tester.tap(find.text('Walking'));
     await tester.pumpAndSettle();
-    await scrollAndTap(tester, find.text('Add Walking'));
-
-    expect(
-      find.text('You already have an activity with this name.'),
-      findsOneWidget,
-    );
-    expect(find.byType(ActivityTypeScreen), findsNothing);
+    expect(find.byType(ActivityTypeScreen), findsOneWidget, reason: 'yours');
   });
 
   testAppWidgets('building an activity with a field saves it and opens it', (

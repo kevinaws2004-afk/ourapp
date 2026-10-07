@@ -8,7 +8,7 @@
 >   - the `core/` folders marked *implemented* below
 >   - `l10n/`
 >   - `settings` (preferences)
->   - `activity_types`: domain, data and presentation (Me → Activities, activity detail, builder, templates)
+>   - `activity_types`: domain, data and presentation (Me → Activities and Browse activities = one list, activity detail, builder, built-in activities)
 >   - `activity_logs`: domain, data and presentation (the generic form renderer and the day's record tile)
 >   - `plans`: domain, data and presentation (plans and tasks, `WatchDayOverview` + `DayOverview.entries`, the item screen where you log into an item (`presentation/item/`, ADR-035), the date-based Plan tab with quick add, reorder and the plan sheet)
 >   - `today` (presentation): greeting, quick add with Now, today's items as one list (tap to open the item, task check; ADR-035), planned vs actual
@@ -81,7 +81,7 @@ Reusable, feature-agnostic UI built from design tokens.
 
 | Feature | Owns | Layers |
 |---|---|---|
-| `activity_types` | Activity Type + Field definitions, **field type catalog** (domain), builder screens, field config editors, starter templates | data, domain, presentation |
+| `activity_types` | Activity Type + Field definitions, **field type catalog** (domain), builder screens, field config editors, built-in activities | data, domain, presentation |
 | `activity_logs` | Logs + values, value encoding/decoding, **generic form renderer**, field value editors (incl. Set Table, Repeating Group), log detail | data, domain, presentation |
 | `plans` | Plans and Tasks, status transitions, plan-to-log start flow | data, domain, presentation |
 | `focus` | Focus sessions, timer state machine, full-screen focus UI | data, domain, presentation |
@@ -89,7 +89,7 @@ Reusable, feature-agnostic UI built from design tokens.
 | `insights` | Analytics engine (metric sources, extraction, aggregation), chart configuration UI | domain, presentation (reads via other features' repositories) |
 | `measurements` | Body measurements | data, domain, presentation |
 | `history` | Search and filtered history | presentation (+ domain query objects; queries implemented in `activity_logs` data layer) |
-| `onboarding` | First-run narrative, template selection, initial preferences | presentation (+ uses `activity_types` and `settings`) |
+| `onboarding` | First-run narrative, choosing starter activities, initial preferences | presentation (+ uses `activity_types` and `settings`) |
 | `settings` | "Me" tab: preferences (theme, units), export | data, domain, presentation |
 
 Tab ↔ feature mapping (ADR-028): Today → `today`; Plan → `plans` (+ records for the date from `activity_logs`); Insights → `insights`; Me → `settings` + `measurements` + **Activities** (`activity_types`). Quick Record (global) → `activity_logs`.
@@ -133,7 +133,7 @@ Pure Dart, immutable, value equality. Examples: `ActivityType`, `ActivityField`,
 
 ### 3.2 Use cases (ADR-023)
 
-- **Naming:** verb + domain object/capability, e.g. `CreateActivityType`, `UpdateActivityType`, `DeleteActivityType`, `RestoreActivityType`, `InstallActivityTemplate`, `LogActivity`, `UpdateActivityLog`, `DeleteActivityLog`, `RestoreActivityLog`. No `Manager`/`Handler`/`Processor`/`Service`.
+- **Naming:** verb + domain object/capability, e.g. `CreateActivityType`, `UpdateActivityType`, `DeleteActivityType`, `RestoreActivityType`, `AddBuiltInActivity`, `LogActivity`, `UpdateActivityLog`, `DeleteActivityLog`, `RestoreActivityLog`. No `Manager`/`Handler`/`Processor`/`Service`.
 - **Shape:** a small class with a single `call(...)` method; dependencies are injected through the constructor.
 - **When:** **every write** goes through a use case, because use cases validate domain rules and assign UUIDv7 IDs. Composite reads (e.g. a future `WatchToday`) are use cases too. Simple single-repository reads are watched directly through repository providers.
 - **Implemented (Phase 2):** `features/activity_types/domain/activity_type_use_cases.dart`, `features/activity_logs/domain/activity_log_use_cases.dart`.
@@ -204,7 +204,7 @@ Implemented:
 - Phase 1: `/onboarding`, `/today`, `/plan`, `/insights`, `/me`, debug-only `/dev/tokens` (`/track` was removed by ADR-028).
 - Phase 2:
   - Inside the Me tab: `/me/activities` (Activities) and `/me/activities/:typeId` (activity detail).
-  - Full-screen on the root navigator: `/activities/new`, `/activities/templates`, `/activities/:typeId/edit`. (`/logs/…` were replaced by `/item/…`, ADR-035.)
+  - Full-screen on the root navigator: `/activities/new`, `/activities/browse`, `/activities/:typeId/edit`. (`/logs/…` were replaced by `/item/…`, ADR-035.)
 
 Route parameters are public IDs (ADR-017). Indicative full route map (paths will be reconciled with the implemented ones as features land):
 
@@ -214,7 +214,7 @@ Route parameters are public IDs (ADR-017). Indicative full route map (paths will
 /plan/day                        (implemented: the selected date as a day; ADR-039)
 /me/activities                   (implemented)
 /me/activities/:typeId           (implemented)
-/activities/new, /activities/templates, /activities/:typeId/edit   (implemented)
+/activities/new, /activities/browse, /activities/:typeId/edit   (implemented)
 /item/:planId                    (implemented: an item, where you log into it; ADR-035)
 /item/log/:logId                 (implemented: a record without a plan, as an item)
 /focus                           (implemented: the active session, full screen)

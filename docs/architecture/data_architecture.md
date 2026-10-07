@@ -71,7 +71,7 @@ Lifecycle rules (FR-AT-09; historical data safety, enforced by domain **and** DB
 `id, activityTypeId, startedAt, endedAt?, durationMs?, tzOffsetMinutes, localDate, notes?, values, createdAt, updatedAt, deletedAt?` + `planId?` (the plan it fulfils; set on create, kept on edit)
 
 - **Actual** elapsed duration is the log's `durationMs` (ADR-021). Manual entry: `startedAt` + `durationMs`. Timed (Phase 5): `startedAt`, `endedAt`, `durationMs` (active time; pauses excluded).
-- Notes are a **built-in** log property. Templates add neither a Notes field nor a Duration field for the activity's own time (OQ-10).
+- Notes are a **built-in** log property. Built-in activities add neither a Notes field nor a Duration field for the activity's own time (OQ-10).
 - `localDate` is computed at write time from `startedAt` and the device offset (§7).
 - `values`: `Map<ActivityFieldId, FieldValue>`. Absent = no value.
 
@@ -97,7 +97,7 @@ Exactly one typed representation per row, chosen by the field type (§4, [databa
 - **Day overview** (`WatchDayOverview`): a date's plans, each with the records fulfilling it (from any day) and its effective status, plus the date's records and the subset not fulfilling one of its plans. `entries` merges them into one list of items (ADR-035): plans and unplanned records in time order (a plan's time is its planned start, else its first record), then untimed plans in manual order. Records of a deleted plan count as unplanned.
 - **Use cases:** `CreatePlan`, `UpdatePlan`, `SetPlanStatus` (complete/reopen tasks; skip; cancel; activity plans can't be stored completed), `MovePlan` (wall-clock shift, reopen, append), `ReorderPlans`, `DeletePlan`/`RestorePlan`. Items (ADR-035): `EnsureItemActivity` (the first thing logged into an item without an activity links it to the active activity with its name, or creates one with no fields), `MarkItemDone` (a task is completed; an activity item gets a log at its planned time and length), `DeleteItem`/`RestoreItem` (the plan and its log together). `LogActivity` accepts a `planId` and rejects a plan of another activity (`planRecordMismatch`).
 - **Repeating plans (ADR-036):** a `PlanSeries` (title, activity, local start minute, length, `RepeatRule`: weekdays, every N weeks from the start week, optional last date) generates ordinary plans as occurrences for the dates being viewed (`EnsureSeriesOccurrences`, idempotent; a deleted occurrence stays deleted). `RepeatPlan` (start a series from a plan; from an occurrence it ends the old series the day before and removes its later open occurrences), `StopRepeating`, `PlanNext` (same title, activity and length on another date). `MovePlan` moves an occurrence as a one-off copy.
-- **Item → log (ADR-035):** an item has at most one live log (`ActivityLogRepository.getLogForPlan`: the plan's earliest active log; older data with several shows the others as separate items). It's created by the first change, with start = planned start (else now for today's plan, or that date at the current local time; `recordStartFor`), and saved as the user types: `LogActivity` / `UpdateActivityLog` with `partial: true`, where missing required values are allowed and all other checks apply. Quick add links a typed activity name (`matchByName`) or installs the matching starter template. One session with many sets is one record.
+- **Item → log (ADR-035):** an item has at most one live log (`ActivityLogRepository.getLogForPlan`: the plan's earliest active log; older data with several shows the others as separate items). It's created by the first change, with start = planned start (else now for today's plan, or that date at the current local time; `recordStartFor`), and saved as the user types: `LogActivity` / `UpdateActivityLog` with `partial: true`, where missing required values are allowed and all other checks apply. Quick add links a typed activity name (`matchByName`) or saves the matching built-in activity as the user's. One session with many sets is one record.
 
 ### 3.6 Measurement (implemented in Phase 6, ADR-034)
 `id, type, value, unitCode, normalizedValue, recordedAt, tzOffsetMinutes, localDate, notes?, createdAt, updatedAt`.
@@ -237,11 +237,11 @@ InsightSeries (buckets + total, count, average, best, latest) ──▶ AppChart
 
 Queries are relational, with no JSON on these paths ([database.md §6](database.md#6-indexes-and-query-plans)). No task-completion source yet.
 
-## 9. Starter templates
+## 9. Built-in activities
 
-Templates are **plain data** (`features/activity_types/presentation/activity_templates.dart` for the starters below, `everyday_templates.dart` for the gallery; they live in presentation only because their names are localized, and become the user's own editable content once installed). Installing one copies it into normal rows with fresh UUIDv7 IDs; afterwards a template-derived type is indistinguishable from a user-built one. No code may check "is this the X template". Templates:
+One concept, the activity (ADR-042): a **built-in activity** is just an activity the app ships with. They are **plain data** (`features/activity_types/presentation/starter_activities.dart` for the first ones below, `built_in_activities.dart` for all of them; in presentation only because their names are localized). Using one (`AddBuiltInActivity`) copies it into normal rows with fresh UUIDv7 IDs; afterwards it is indistinguishable from one the user built. No code may check "is this the built-in X". The first ones:
 
-| Template | Fields (built-in: start, duration, notes) | Timer |
+| Activity | Fields (always there: start, duration, notes) | Timer |
 |---|---|---|
 | Reading | Book (text), Pages (number, decimals 0), Rating (rating /5) | yes |
 | Focused Work | Project (text) | yes |
@@ -254,9 +254,9 @@ Templates are **plain data** (`features/activity_types/presentation/activity_tem
 
 Meeting "People" is Text, not Multi Select: the spec allows either (§22), and a fixed option list for people would need maintenance.
 
-**Gallery (ADR-042):** `templateCategories(l10n)` groups the starters above with the everyday templates into 14 life areas (Sleep & self-care, Health, Food & drink, Home & chores, Money, Family & care, Work, Learning, Exercise & sport, Mind & wellbeing, Faith & spirituality, Hobbies & fun, Friends & community, Travel & errands; 147 templates). The areas follow the time-use surveys of the US (ATUS), UK (ONS) and India (TUS) plus commonly tracked habits; the list covers common activities across cultures and is not meant to be complete. `activityTemplates(l10n)` is the flat list (quick add suggestions). Each is built from small helpers over the generic field types (`_text`, `_number`, `_rating`, `_yesNo`, `_choice`, `_multiChoice`, `_duration`, `_time`, `_date`, `_list`); all strings are in the ARB. `activity_templates_test.dart` checks every template passes `ActivityTypeValidator`, names are unique, and each starter appears once.
+**All of them (ADR-042):** `activityCategories(l10n)` groups the first ones above with the everyday ones into 14 life areas (Sleep & self-care, Health, Food & drink, Home & chores, Money, Family & care, Work, Learning, Exercise & sport, Mind & wellbeing, Faith & spirituality, Hobbies & fun, Friends & community, Travel & errands; 147 activities). The areas follow the time-use surveys of the US (ATUS), UK (ONS) and India (TUS) plus commonly tracked habits; the list covers common activities across cultures and is not meant to be complete. `builtInActivities(l10n)` is the flat list (quick add suggestions). The one list of activities (`ActivityCatalog`) shows the user's own first, then these by category, hiding any whose name one of the user's already has. Each is built from small helpers over the generic field types (`_activity`, `_text`, `_number`, `_rating`, `_yesNo`, `_choice`, `_multiChoice`, `_duration`, `_time`, `_date`, `_list`); all strings are in the ARB. `built_in_activities_test.dart` checks every one passes `ActivityTypeValidator`, names are unique, and each starter appears once.
 
-**Anything else is the user's own activity**, built in the builder from the same field types and stored exactly like an installed template; `custom_activity_test.dart` covers the owner's examples ("Build my company", "Car maintenance", "Study").
+**Anything else is the user's own activity**, built in the builder from the same field types and stored exactly like a built-in one once used; `custom_activity_test.dart` covers the owner's examples ("Build my company", "Car maintenance", "Study").
 
 ## 10. Data lifecycle
 

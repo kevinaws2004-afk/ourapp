@@ -33,7 +33,7 @@ class PlanScreen extends ConsumerWidget {
   /// Opens the selected date's day screen.
   final VoidCallback onOpenDay;
 
-  /// Picks a template or makes a new activity for what's added to a day.
+  /// Picks an activity from the list, or makes a new one, for the day.
   final ActivityChooser chooser;
 
   @override
