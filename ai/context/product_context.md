@@ -13,14 +13,15 @@
 - **Activity Field**: a configurable input of an Activity Type (field type + config).
 - **Activity Log**: what actually happened (times, notes, field values). Reality.
 - **Plan**: what the user intends (date, optional time/duration, optional Activity Type, status). Intention.
-- **Task**: a lightweight plan item with no detailed logging (e.g. "Buy milk"). It is a Plan with no Activity Type (ADR-018).
-- **An item on your day is where you log (ADR-035):** opening a plan opens the item; what you log saves as you type, and the first thing logged makes it done. Leave and come back to add more. Any name can take notes immediately (it gets an activity of its own). "Mark done" logs the planned time. One session = one record (sets are rows inside it).
+- **Task**: a lightweight plan item with no detailed logging (e.g. "Buy milk"). It is a Plan with no Activity Type (ADR-018). *New items always come from an activity (ADR-042); plans without one remain only in older data.*
+- **An item on your day is where you log (ADR-035):** opening a plan opens the item; what you log saves as you type, and the first thing logged makes it done. Leave and come back to add more. Older items without an activity get one when first logged into. "Mark done" logs the planned time. One session = one record (sets are rows inside it).
 - **Measurement**: a value analyzable over time; also **Body Measurements** (weight, height, body fat, chest, waist, arms, legs), stored separately.
 - **Focus Session**: full-screen timer whose active duration lands in a Log.
 - **Repeating Group**: the structured field type (exercise list; sets = a nested Repeating Group of Numbers). "Set Table" from the spec is a composition, not a type (OQ-01).
 
 **Planner (ADR-036, ADR-039):** Plan is Week | Month, and a tapped day opens like Today; plans can repeat (weekdays, every N weeks; occurrences are ordinary items); any item offers Plan next.
 **Insights (ADR-037):** each activity opens an automatic progress page built from its fields (per exercise best weight and volume, etc.).
+**Activities (ADR-042), the product rule:** built-in templates = convenient starting points (gallery by life area, searchable; common activities across cultures, never "every activity"); custom activities = unlimited flexibility (**Make your own** is first-class: name it, choose what to record, saved and reused); generic fields = the user decides what matters; Activity Log = what actually happened. Templates and "Your activity" stay separate. Every item added to a day comes from one of these.
 **Navigation (ADR-028):** Today · Plan · Insights · Me. Add to a day from the quick add (suggestions while typing, **Start now**, one time sheet, Recent chips; ADR-039); no global record action (ADR-035). Activity names are unique. Logging helpers (ADR-041): Use last time, row memory, quick choices, rest timer, long-press quick actions, template gallery with preview. Logging into an item makes it in progress; Mark done / the row check / finishing the timer makes it done (ADR-040).
 - **Plan:** the date-based planning system: pick any date, see its plans and what was recorded.
 - **Today:** today's plan plus today's reality.

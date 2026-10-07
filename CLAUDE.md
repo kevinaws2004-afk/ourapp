@@ -10,7 +10,7 @@ Core loop: **Plan → Do → Log → Measure → Understand.** Gym, Reading, Wor
 
 **Current phase:** see [`ai/tasks/current_task.md`](ai/tasks/current_task.md). Only work on the phase the owner has approved there.
 
-**Navigation & terminology (ADR-028, ADR-035):** Today | Plan | Insights | Me. No floating Record button. Everything on a day is an **item**: you add it (quick add, or **Start now** for what you're doing), then open it to log into it; it saves as you type. Plan is date-based: Week | Month, and a tapped day opens like Today (ADR-039). Reusable activities are configured under Me → Activities but never required before logging. Activity Log is the internal/domain name; the UI talks about items being done.
+**Navigation & terminology (ADR-028, ADR-035):** Today | Plan | Insights | Me. No floating Record button. Everything on a day is an **item**: you add it (quick add, or **Start now** for what you're doing), then open it to log into it; it saves as you type. Plan is date-based: Week | Month, and a tapped day opens like Today (ADR-039). Every item comes from an activity: one of yours, a built-in template, or one you **make your own** right there (name it, choose what to record; ADR-042). Templates are starting points, never required, never complete; custom activities are unlimited. Activities are also managed under Me → Activities but never need setting up there first. Activity Log is the internal/domain name; the UI talks about items being done.
 
 **Naming rule (ADR-010):** the product name is **undecided**.
 - `daylog` / `com.ourapp.daylog` are internal technical identifiers only (Dart package, app/bundle ID). Never present "Daylog" as the product name in UI, copy, docs prose or marketing.

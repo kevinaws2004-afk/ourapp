@@ -457,7 +457,7 @@
   - **Opening an item is where you log into it** (`/item/:planId`). The same screen serves planned, in-progress and done items. Records made without a plan (older data, or from an activity's page) open the same way (`/item/log/:logId`).
   - **Saved as you type.** There is no Save button and nothing to discard. The first change creates the log (start = the planned start, or now); later changes update it. You can leave mid-session and come back to add more (e.g. another set).
   - **Required is a hint while logging.** Auto-saved logs are *partial*: `LogValidator.validate(partial: true)` skips missing required values; type, range and unit checks still apply. The `*` on the label marks what's expected.
-  - **Anything can be logged without setup.** The first thing logged into an item with no activity (a task or a new name like "Doctor call") gives it an activity named after it (an existing one with that name, or a new one with no fields), so later items with that name share it.
+  - *(Amended by ADR-042: new items come from an activity, a template or one you make your own; this still applies to older items without one.)* **Anything can be logged without setup.** The first thing logged into an item with no activity (a task or a new name like "Doctor call") gives it an activity named after it (an existing one with that name, or a new one with no fields), so later items with that name share it.
   - **Add to log, right in the item.** Every item has **Add to log**: ready-made shapes in one tap (*Sets & reps* = Exercises → Sets → Weight kg × Reps; *Checklist* = Item + Done) or one thing of any field type (Text, Number with unit, Yes/No, choices, Date, Time, Duration, Rating, **List**), named and configured in the field sheet. Lists offer **Add detail** in place. What's added goes onto the item's activity (`AddItemField`, created for it first if needed), so the next item with that name has it. The pencil in the item opens the builder to rename, reorder or remove.
   - *(Amended by ADR-040: logging makes an item in progress; Mark done or finishing the timer makes it done.)* **Done** = something was logged, or **Mark done** (an activity item gets a log at its planned time and length; a task is ticked off). A running timer shows the item as **In progress** even if something is logged.
   - **The timer lives in the item.** Start timer / Pause / Finish sit at the top of the item, and you keep logging while it runs; the full-screen timer is optional. Finishing writes the timed span into the item's log in one transaction (a second session on the same item adds its time).
@@ -560,6 +560,27 @@
   - **Template gallery (B8):** cards per template (badge, name, fields, or "Already in your activities"); tapping previews the real form (`previewType`, shared with the builder) with **Add {name}**. New templates: Running, Study, Meditation, Water, Sleep, Mood. Body weight stays in Me → Body measurements.
 - **Context:** The evaluation found logging asked people to design forms and start from blank every time (backlog Phase B).
 - **Consequences:** No schema change; templates and quick choices are plain data and nothing treats them specially. A one-time read was added to the log repository. The rest timer's haptic needs no permission.
+
+### ADR-042: Every item comes from an activity: a template or one you make your own
+- **Status:** Accepted 2026-10-07 (owner). **Implemented 2026-10-07.** Amends ADR-035 ("Anything can be logged without setup") and ADR-039 (quick add). No schema change.
+- **Product rule (owner):**
+  - **Built-in templates = convenient starting points.** The gallery covers common everyday activities across life areas and cultures, so most people find a fast start. It is never meant to be complete, and no activity is forced into one.
+  - **Custom activities = unlimited flexibility.** **Make your own** is a first-class choice wherever something is added to a day. The user names the activity and decides what to record with the generic field types; it is saved as one of their activities and reused from then on.
+  - **Generic fields = the user decides what matters.** Text, Number (with optional unit dimension), Yes/No, choices, Date, Time, Duration, Rating and Repeating Group (lists, nested lists) express anything ("Build my company": Hours, Task, Progress, Notes, Money spent; "Car maintenance": Kilometres, Fuel, Cost, Issue, Notes). No new template, field type or code is needed for a new kind of activity.
+  - **Activity Log = what actually happened**, as before.
+  - Templates and the user's own activities stay **clearly separated**: suggestions say "Your activity" or "Ready-made"; the gallery shows only built-in templates; the user's activities live in Me → Activities and the quick add's Recent chips.
+- **Decision:**
+  - Quick add (Today, a day) and the plan sheet ("+" in Week) add only activities: one of yours (typed name or chip), a template (typed name, or **Templates** → gallery), or **Make your own**. A new name offers "Make “{name}” your own"; enter does the same: the builder opens with the name filled in, and on save the new activity is added to the day. Backing out adds nothing.
+  - The plan sheet no longer offers "Just a task" for new plans. Existing plans without an activity still open, edit and log (`EnsureItemActivity` stays for them).
+  - Navigation stays in the router: the day screens receive an `ActivityChooser` (pick a template, make your own) that opens the gallery and the builder and returns the activity's ID.
+  - The gallery groups templates by life area (`templateCategories`, `everyday_templates.dart`, see data_architecture.md §9) and has a search field (name, category or what a template logs).
+  - The gallery isn't extended to "every activity"; new templates are added only for common activities.
+- **Context:** The owner wants the product to eventually manage a person's whole life. That only scales if any activity a person invents is data with fields they choose, not something we anticipated.
+- **Consequences:**
+  - Plain one-off tasks ("Buy milk") are now small activities with no fields; the domain still accepts plans without an activity (enforced in the UI only), so older data keeps working.
+  - Verified by `test/features/activity_logs/data/custom_activity_test.dart`: the owner's three examples are created and logged with generic fields only.
+  - Not in scope (future directions, not started): expense management, budgets, goals and other life-management modules. The Money templates are ordinary activities, nothing more.
+  - Later (not yet built): showing "My activities" as its own section next to Templates in one picker.
 
 ## Pending decisions
 

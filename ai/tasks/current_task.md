@@ -41,6 +41,10 @@ Owner decisions this round: the item model (one concept, recording happens insid
 
 **Backlog Phase B, B1–B8 (owner-approved 2026-10-05, ADR-041): done, not committed.** Use last time (empty item → copy the previous log, fresh row IDs); row memory ("Last time: Chest Press 60 kg × 8 (×2)" + Use); quick choices for an item with nothing to log (How it went / An amount / Sets & reps / More…) and a Quick-first Add to log sheet; plain field type names and an Advanced section in the field sheet; rest timer for number lists (memory only); long-press quick actions incl. Duplicate; template gallery with live form preview and six new templates. B6 = the A17 row check. Verified: format clean, analyze clean, `flutter test` 365 pass. **Not run:** device integration tests (updated for the template preview). Next: Phase C (first run and retention) when the owner picks it.
 
+*(The rework and backlog phases A and B above are committed: `0f8ed62`…`b11a3f2`.)*
+
+**Activities and templates (owner, 2026-10-07, ADR-042): done, on branch `claude/lucid-goldberg-rd8cr9`.** Every item added to a day comes from an activity: one of yours, a built-in template (**Templates** → gallery), or **Make your own** (builder opens with the typed name; you choose what to record; saved and reused). The plan sheet drops "Just a task" for new plans. Gallery: 147 templates in 14 life areas (US/UK/India time-use surveys, common habits, Ayurvedic and faith routines), category headings and search. Verified the generic engine covers the owner's custom examples with no template (`custom_activity_test.dart`). Verified: format clean, analyze clean, `flutter test` 374 pass. **Not run:** device integration tests. **Product rule:** templates are starting points and are not extended to "every activity"; add new ones only for common activities. Later (not started): "My activities" as its own section beside Templates in one picker.
+
 ## Standing rule (all phases)
 
 Docs stay synchronized with the code in the same task as every change: [development_guide.md §4.1](../../docs/development/development_guide.md#41-documentation-maintenance-binding). Update this file when the phase or the next task changes.
@@ -49,6 +53,8 @@ Docs stay synchronized with the code in the same task as every change: [developm
 
 - Any Phase 7+ feature until the owner approves it.
 - Any backend, auth, sync, AI, subscriptions, telemetry/analytics/crash-reporting SDKs, social or other V1-excluded work.
+- Expense management, budgets, goals or other life-management modules (future directions; the Money templates are plain activities only).
+- Growing the template gallery to cover "every activity" (ADR-042).
 - Redesigning the visual identity (ADR-016 values remain provisional pending the owner's review).
 
 ## Owner decisions needed

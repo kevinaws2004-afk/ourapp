@@ -239,7 +239,7 @@ Queries are relational, with no JSON on these paths ([database.md §6](database.
 
 ## 9. Starter templates
 
-Templates are **plain data** (`features/activity_types/presentation/activity_templates.dart`; they live in presentation only because their names are localized, and become the user's own editable content once installed). Installing one copies it into normal rows with fresh UUIDv7 IDs; afterwards a template-derived type is indistinguishable from a user-built one. No code may check "is this the X template". Templates:
+Templates are **plain data** (`features/activity_types/presentation/activity_templates.dart` for the starters below, `everyday_templates.dart` for the gallery; they live in presentation only because their names are localized, and become the user's own editable content once installed). Installing one copies it into normal rows with fresh UUIDv7 IDs; afterwards a template-derived type is indistinguishable from a user-built one. No code may check "is this the X template". Templates:
 
 | Template | Fields (built-in: start, duration, notes) | Timer |
 |---|---|---|
@@ -253,6 +253,10 @@ Templates are **plain data** (`features/activity_types/presentation/activity_tem
 | Cooking (Phase 3) | Recipe (text, suggest), Servings (number), Calories (number, energy, kcal), Rating (rating /5), Ingredients (group, item "Ingredient") { Ingredient (text, required, suggest), Have it (boolean) } | yes |
 
 Meeting "People" is Text, not Multi Select: the spec allows either (§22), and a fixed option list for people would need maintenance.
+
+**Gallery (ADR-042):** `templateCategories(l10n)` groups the starters above with the everyday templates into 14 life areas (Sleep & self-care, Health, Food & drink, Home & chores, Money, Family & care, Work, Learning, Exercise & sport, Mind & wellbeing, Faith & spirituality, Hobbies & fun, Friends & community, Travel & errands; 147 templates). The areas follow the time-use surveys of the US (ATUS), UK (ONS) and India (TUS) plus commonly tracked habits; the list covers common activities across cultures and is not meant to be complete. `activityTemplates(l10n)` is the flat list (quick add suggestions). Each is built from small helpers over the generic field types (`_text`, `_number`, `_rating`, `_yesNo`, `_choice`, `_multiChoice`, `_duration`, `_time`, `_date`, `_list`); all strings are in the ARB. `activity_templates_test.dart` checks every template passes `ActivityTypeValidator`, names are unique, and each starter appears once.
+
+**Anything else is the user's own activity**, built in the builder from the same field types and stored exactly like an installed template; `custom_activity_test.dart` covers the owner's examples ("Build my company", "Car maintenance", "Study").
 
 ## 10. Data lifecycle
 
