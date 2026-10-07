@@ -8,6 +8,7 @@ import '../../../core/time/local_date.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../activity_logs/domain/activity_log.dart';
 import '../domain/plan.dart';
+import 'activity_chooser.dart';
 import 'plan_date_notifier.dart';
 import 'plan_views.dart';
 
@@ -20,6 +21,7 @@ class PlanScreen extends ConsumerWidget {
     required this.onOpenItem,
     required this.onOpenRecord,
     required this.onOpenDay,
+    required this.chooser,
   });
 
   /// Opens a plan's item screen.
@@ -30,6 +32,9 @@ class PlanScreen extends ConsumerWidget {
 
   /// Opens the selected date's day screen.
   final VoidCallback onOpenDay;
+
+  /// Picks a template or makes a new activity for what's added to a day.
+  final ActivityChooser chooser;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -62,6 +67,7 @@ class PlanScreen extends ConsumerWidget {
                   onOpenItem: onOpenItem,
                   onOpenRecord: onOpenRecord,
                   onOpenDay: openDay,
+                  chooser: chooser,
                 ),
                 PlanView.month => PlanMonthView(onOpenDay: openDay),
               },

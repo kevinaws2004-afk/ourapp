@@ -26,6 +26,8 @@ Activity Types are created and configured under **Me → Activities** (ADR-028).
 | FR-AT-10 | User can remove (archive) an Activity Type; its historical logs remain in history and analytics. | V1 | implied |
 | FR-AT-11 | Creating a new Activity Type requires no schema migration and no developer code. | V1 | §5, §31, §32, §46 |
 | FR-AT-12 | First-run onboarding can create starter Activity Types based on what the user wants to track. | V1 | §33.4 |
+| FR-AT-13 | A template gallery offers ready-made Activity Types for common everyday activities, grouped by life area and searchable. Templates are starting points: optional, editable once added, and not meant to cover every activity. | V1 | §2.1, §33, ADR-042 |
+| FR-AT-14 | Wherever something is added to a day, the user can **make their own** activity: name it, choose what to record with the generic field types, and have it saved and reused. Custom activities are kept separate from built-in templates. | V1 | §2.1 (7), §5, ADR-042 |
 
 ### 1.2 Field types (§9; resolved by OQ-01)
 
@@ -69,7 +71,7 @@ Each type has defined value semantics, validation, storage mapping, rendering an
 |---|---|---|---|
 | FR-PL-01 | User can create a Plan for today, tomorrow or a future date. | V1 | §19 |
 | FR-PL-02 | A Plan has a title, optional description, optional scheduled start/end. | V1 | §28 |
-| FR-PL-03 | A Plan can optionally link to an Activity Type. | V1 | §19 |
+| FR-PL-03 | A Plan can optionally link to an Activity Type. *New items added in the app always link to one (yours, a template, or made your own); unlinked plans remain valid for older data (ADR-042).* | V1 | §19 |
 | FR-PL-04 | A Plan has a status: planned, skipped, cancelled or completed. Any item can be marked done (Mark done, the row's check, or finishing its timer). Logging into an activity item makes it **in progress** until it's marked done, or until its day has passed (ADR-040). | V1 | §28, ADR-018, ADR-040 |
 | FR-PL-05 | Opening a plan opens it as an item to log into; the first thing logged creates its linked Log, saved as the user types (ADR-035). | V1 | §19, §36, ADR-030, ADR-035 |
 | FR-PL-06 | Plan and Log are preserved independently to allow planned-vs-actual comparison. | V1 | §20, §43 |

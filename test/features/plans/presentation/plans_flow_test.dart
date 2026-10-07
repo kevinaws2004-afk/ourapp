@@ -19,7 +19,7 @@ import '../../../support/fake_clock.dart';
 import '../../../support/fixtures.dart';
 import '../../../support/test_app.dart';
 import '../../activity_types/presentation/activities_flow_test.dart'
-    show enterField, scrollAndTap;
+    show enterField, findTemplate, scrollAndTap;
 import 'plan_screen_test.dart' show openPlan, openPlanTab;
 
 const _onboarded = PreferencesSnapshot(
@@ -58,6 +58,18 @@ Future<void> waitForSave(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
+/// An item's row on the day (its name is also a "Recent" chip).
+Finder itemRow(String name) =>
+    find.descendant(of: find.byType(PlanItemTile), matching: find.text(name));
+
+/// Saves the builder a new name opens in quick add: the name is filled in
+/// and the user chooses what to log (here: nothing yet).
+Future<void> saveOwnActivity(WidgetTester tester, String name) async {
+  expect(find.text('New activity'), findsOneWidget);
+  expect(find.widgetWithText(TextField, name), findsOneWidget);
+  await scrollAndTap(tester, find.text('Save'));
+}
+
 /// Leaves an item, back to the day.
 Future<void> closeItem(WidgetTester tester) async {
   await tester.pageBack();
@@ -65,19 +77,19 @@ Future<void> closeItem(WidgetTester tester) async {
 }
 
 void main() {
-  testAppWidgets('quick add creates a task, which completes with a tap', (
-    tester,
-  ) async {
+  testAppWidgets('a new name in quick add is made your own (the builder '
+      'opens with it), then planned; it completes with a tap', (tester) async {
     await pumpTestApp(tester, preferences: _onboarded);
     await openPlan(tester);
 
     await tester.enterText(
-      find.widgetWithText(TextField, 'Add something to this day'),
+      find.widgetWithText(TextField, 'Add an activity to this day'),
       'Buy groceries',
     );
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
-    expect(find.text('Buy groceries'), findsOneWidget);
+    await saveOwnActivity(tester, 'Buy groceries');
+    expect(itemRow('Buy groceries'), findsOneWidget);
 
     await tester.tap(find.byTooltip('Mark as done'));
     await tester.pumpAndSettle();
@@ -147,39 +159,42 @@ void main() {
     expect(find.text('Read'), findsOneWidget);
   });
 
-  testAppWidgets('a task opens like any item and can be marked done there', (
-    tester,
-  ) async {
-    await pumpTestApp(tester, preferences: _onboarded);
-    await openPlan(tester);
-    await tester.enterText(
-      find.widgetWithText(TextField, 'Add something to this day'),
-      'Call mum',
-    );
-    await tester.testTextInput.receiveAction(TextInputAction.done);
-    await tester.pumpAndSettle();
+  testAppWidgets(
+    'an item of your own opens like any item and can be marked done there',
+    (tester) async {
+      await pumpTestApp(tester, preferences: _onboarded);
+      await openPlan(tester);
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Add an activity to this day'),
+        'Call mum',
+      );
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      await saveOwnActivity(tester, 'Call mum');
 
-    await openItem(tester, find.text('Call mum'));
-    await tester.tap(find.text('Mark done'));
-    await tester.pumpAndSettle();
-    expect(find.text('Done'), findsOneWidget);
+      await openItem(tester, itemRow('Call mum'));
+      await tester.tap(find.text('Mark done'));
+      await tester.pumpAndSettle();
+      expect(find.text('Done'), findsOneWidget);
 
-    await closeItem(tester);
-    expect(find.byTooltip('Mark as not done'), findsOneWidget);
-  });
+      await closeItem(tester);
+      expect(find.byTooltip('Mark as not done'), findsOneWidget);
+    },
+  );
 
   testAppWidgets('anything can be logged: notes on a new name save it as '
       'done, with an activity of its own', (tester) async {
     await pumpTestApp(tester, preferences: _onboarded);
     await openPlan(tester);
     await tester.enterText(
-      find.widgetWithText(TextField, 'Add something to this day'),
+      find.widgetWithText(TextField, 'Add an activity to this day'),
       'Doctor call',
     );
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
+    await saveOwnActivity(tester, 'Doctor call');
 
-    await openItem(tester, find.text('Doctor call'));
+    await openItem(tester, itemRow('Doctor call'));
     await enterField(tester, 'Notes', 'Take vitamin D; check again in May');
     await waitForSave(tester);
     expect(find.text('Saved'), findsOneWidget);
@@ -203,7 +218,7 @@ void main() {
 
     expect(find.text('Good morning'), findsOneWidget);
     await tester.enterText(
-      find.widgetWithText(TextField, 'Add something to this day'),
+      find.widgetWithText(TextField, 'Add an activity to this day'),
       'Reading',
     );
     await tester.pump();
@@ -227,7 +242,7 @@ void main() {
       ),
       findsOneWidget,
     );
-    expect(find.text('Add something to this day'), findsOneWidget);
+    expect(find.text('Add an activity to this day'), findsOneWidget);
   });
 
   group('quick add (A4–A8)', () {
@@ -247,7 +262,7 @@ void main() {
       expect(find.widgetWithText(ChoiceChip, 'Reading'), findsOneWidget);
 
       await tester.enterText(
-        find.widgetWithText(TextField, 'Add something to this day'),
+        find.widgetWithText(TextField, 'Add an activity to this day'),
         'Bath',
       );
       await tester.pump();
@@ -255,12 +270,43 @@ void main() {
       expect(find.text('Set a time'), findsOneWidget);
     });
 
+    testAppWidgets('"Templates" plans one from the gallery; a new name is '
+        'offered as your own, and backing out of the builder adds nothing', (
+      tester,
+    ) async {
+      await pumpTestApp(tester, preferences: _onboarded);
+
+      await tester.tap(find.text('Templates'));
+      await tester.pumpAndSettle();
+      await findTemplate(tester, 'walk', 'Walking');
+      await scrollAndTap(tester, find.text('Add Walking'));
+      // Back on the day, the new activity is chosen, ready to add.
+      expect(find.widgetWithText(ChoiceChip, 'Walking'), findsOneWidget);
+      expect(find.text('Set a time'), findsOneWidget);
+      await tester.tap(find.byTooltip('Add plan'));
+      await tester.pumpAndSettle();
+      expect(itemRow('Walking'), findsOneWidget);
+
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Add an activity to this day'),
+        'Piano',
+      );
+      await tester.pump();
+      expect(find.text('Make “Piano” your own'), findsOneWidget);
+      await tester.tap(find.text('Make “Piano” your own'));
+      await tester.pumpAndSettle();
+      expect(find.text('New activity'), findsOneWidget);
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      expect(itemRow('Piano'), findsNothing, reason: 'nothing without one');
+    });
+
     testAppWidgets('typing suggests ready-made templates; tapping one fills '
         'the name', (tester) async {
       await pumpTestApp(tester, preferences: _onboarded);
 
       await tester.enterText(
-        find.widgetWithText(TextField, 'Add something to this day'),
+        find.widgetWithText(TextField, 'Add an activity to this day'),
         'gy',
       );
       await tester.pump();
@@ -276,12 +322,13 @@ void main() {
       await pumpTestApp(tester, preferences: _onboarded, seed: seedReading);
 
       await tester.enterText(
-        find.widgetWithText(TextField, 'Add something to this day'),
+        find.widgetWithText(TextField, 'Add an activity to this day'),
         'Rea',
       );
       await tester.pump();
       expect(find.text('Your activity'), findsOneWidget);
-      expect(find.textContaining('Ready-made'), findsNothing);
+      // Other templates containing "rea" (Breathing…) may show; Reading's not.
+      expect(find.text('Ready-made · Book · Pages · Rating'), findsNothing);
     });
 
     testAppWidgets('one sheet sets the time: a suggested start and a length', (
@@ -290,7 +337,7 @@ void main() {
       await pumpTestApp(tester, preferences: _onboarded);
 
       await tester.enterText(
-        find.widgetWithText(TextField, 'Add something to this day'),
+        find.widgetWithText(TextField, 'Add an activity to this day'),
         'Bath',
       );
       await tester.pump();
@@ -307,7 +354,8 @@ void main() {
 
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
-      expect(find.text('Bath'), findsOneWidget);
+      await saveOwnActivity(tester, 'Bath');
+      expect(itemRow('Bath'), findsOneWidget);
       expect(find.textContaining('9:00 AM–9:30 AM'), findsOneWidget);
     });
   });
@@ -325,7 +373,7 @@ void main() {
     await openPlan(tester);
 
     await tester.enterText(
-      find.widgetWithText(TextField, 'Add something to this day'),
+      find.widgetWithText(TextField, 'Add an activity to this day'),
       'reading',
     );
     await tester.pumpAndSettle();
@@ -350,7 +398,7 @@ void main() {
     await openPlan(tester);
 
     await tester.enterText(
-      find.widgetWithText(TextField, 'Add something to this day'),
+      find.widgetWithText(TextField, 'Add an activity to this day'),
       'Gym',
     );
     await tester.testTextInput.receiveAction(TextInputAction.done);
@@ -410,12 +458,13 @@ void main() {
       await pumpTestApp(tester, preferences: _onboarded);
       await openPlan(tester);
       await tester.enterText(
-        find.widgetWithText(TextField, 'Add something to this day'),
+        find.widgetWithText(TextField, 'Add an activity to this day'),
         name,
       );
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
-      await openItem(tester, find.text(name));
+      await saveOwnActivity(tester, name);
+      await openItem(tester, itemRow(name));
     }
 
     testAppWidgets('Sets & reps in one tap, then log a set', (tester) async {
@@ -462,7 +511,7 @@ void main() {
     });
 
     testAppWidgets('a list can get another detail where it is', (tester) async {
-      await openNewItem(tester, 'Doctor visit');
+      await openNewItem(tester, 'Clinic follow-up');
 
       await scrollAndTap(tester, find.widgetWithText(ActionChip, 'More…'));
       await tester.tap(find.text('Checklist'));
@@ -577,6 +626,24 @@ void main() {
   });
 
   group('planner: week, month, repeat, plan next (ADR-036)', () {
+    testAppWidgets('the week\'s "+" plans an activity: no plain tasks; a '
+        'new title is made your own on saving', (tester) async {
+      await pumpTestApp(tester, preferences: _onboarded);
+      await openPlanTab(tester);
+
+      await tester.tap(find.byTooltip('New plan').first);
+      await tester.pumpAndSettle();
+      expect(find.text('Just a task'), findsNothing);
+      expect(find.widgetWithText(ActionChip, 'Templates'), findsOneWidget);
+      expect(find.widgetWithText(ActionChip, 'Make your own'), findsOneWidget);
+
+      await tester.enterText(find.widgetWithText(TextField, 'Title'), 'Swim');
+      await scrollAndTap(tester, find.text('Save'));
+      await saveOwnActivity(tester, 'Swim');
+      expect(find.text('Swim'), findsWidgets);
+      expect(find.text('New plan'), findsNothing, reason: 'sheet closed');
+    });
+
     testAppWidgets('repeat a plan on chosen days; the week shows each one', (
       tester,
     ) async {

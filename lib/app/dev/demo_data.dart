@@ -13,7 +13,7 @@ import '../../features/activity_types/domain/activity_ids.dart';
 import '../../features/activity_types/domain/activity_type.dart';
 import '../../features/activity_types/domain/activity_type_use_cases.dart';
 import '../../features/activity_types/domain/field_config.dart';
-import '../../features/activity_types/presentation/activity_templates.dart';
+import '../../features/activity_types/presentation/everyday_templates.dart';
 import '../../features/activity_types/presentation/activity_type_providers.dart';
 import '../../features/insights/domain/insight.dart';
 import '../../features/insights/presentation/insight_providers.dart';

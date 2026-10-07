@@ -18,6 +18,7 @@ import '../../activity_types/domain/activity_type.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
 import '../domain/plan.dart';
 import '../domain/watch_day_overview.dart';
+import 'activity_chooser.dart';
 import 'plan_date_notifier.dart';
 import 'plan_editor_sheet.dart';
 import 'plan_providers.dart';
@@ -120,11 +121,13 @@ class PlanWeekView extends ConsumerWidget {
     required this.onOpenItem,
     required this.onOpenRecord,
     required this.onOpenDay,
+    required this.chooser,
   });
 
   final ValueChanged<PlanId> onOpenItem;
   final ValueChanged<ActivityLog> onOpenRecord;
   final ValueChanged<LocalDate> onOpenDay;
+  final ActivityChooser chooser;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -159,6 +162,7 @@ class PlanWeekView extends ConsumerWidget {
             onOpenItem: onOpenItem,
             onOpenRecord: onOpenRecord,
             onOpenDay: onOpenDay,
+            chooser: chooser,
           ),
       ],
     );
@@ -172,6 +176,7 @@ class _WeekDay extends ConsumerWidget {
     required this.onOpenItem,
     required this.onOpenRecord,
     required this.onOpenDay,
+    required this.chooser,
   });
 
   final LocalDate date;
@@ -179,6 +184,7 @@ class _WeekDay extends ConsumerWidget {
   final ValueChanged<PlanId> onOpenItem;
   final ValueChanged<ActivityLog> onOpenRecord;
   final ValueChanged<LocalDate> onOpenDay;
+  final ActivityChooser chooser;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -214,7 +220,9 @@ class _WeekDay extends ConsumerWidget {
               IconButton(
                 tooltip: l10n.planNewTitle,
                 icon: const Icon(AppIcons.add),
-                onPressed: () => unawaited(showPlanEditor(context, date: date)),
+                onPressed: () => unawaited(
+                  showPlanEditor(context, date: date, chooser: chooser),
+                ),
               ),
             ],
           ),

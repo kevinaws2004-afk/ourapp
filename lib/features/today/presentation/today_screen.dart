@@ -10,6 +10,7 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../activity_logs/domain/activity_log.dart';
 import '../../focus/presentation/focus_banner.dart';
 import '../../plans/domain/plan.dart';
+import '../../plans/presentation/activity_chooser.dart';
 import '../../plans/presentation/plan_date_notifier.dart';
 import '../../plans/presentation/widgets/day_items.dart';
 
@@ -22,6 +23,7 @@ class TodayScreen extends ConsumerWidget {
     required this.onOpenItem,
     required this.onOpenRecord,
     required this.onOpenFocus,
+    required this.chooser,
   });
 
   /// Opens a plan's item screen.
@@ -32,6 +34,9 @@ class TodayScreen extends ConsumerWidget {
 
   /// Returns to the running timer's item.
   final VoidCallback onOpenFocus;
+
+  /// Picks a template or makes a new activity for what's added to a day.
+  final ActivityChooser chooser;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -72,6 +77,7 @@ class TodayScreen extends ConsumerWidget {
                 emptyMessage: l10n.todayEmptyMessageItems,
                 onOpenItem: onOpenItem,
                 onOpenRecord: onOpenRecord,
+                chooser: chooser,
                 onStartNow: onOpenItem,
               ),
             ],

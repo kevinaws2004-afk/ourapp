@@ -12,30 +12,58 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/errors/error_copy.dart';
 import '../../../shared/widgets/activity_badge.dart';
 import '../../../shared/widgets/app_button.dart';
+import '../../../shared/widgets/section_header.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../../activity_logs/domain/field_value.dart';
 import '../../activity_logs/presentation/form/activity_log_form.dart';
 import '../domain/activity_ids.dart';
 import '../domain/activity_type_definition.dart';
 import '../domain/activity_type_use_cases.dart';
-import 'activity_templates.dart';
+import 'everyday_templates.dart';
 import 'activity_type_providers.dart';
 import 'preview_type.dart';
 
 /// The template gallery (B8): every starter template as a card; tapping one
 /// previews the real form it gives, with **Add**. Installing creates an
 /// ordinary, editable activity. Pops with the new activity's ID.
-class TemplatePickerScreen extends ConsumerWidget {
+class TemplatePickerScreen extends ConsumerStatefulWidget {
   const TemplatePickerScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TemplatePickerScreen> createState() =>
+      _TemplatePickerScreenState();
+}
+
+class _TemplatePickerScreenState extends ConsumerState<TemplatePickerScreen> {
+  String _query = '';
+
+  /// Matches a template by its name, its category or what it logs.
+  bool _matches(TemplateCategory category, ActivityTypeDefinition template) {
+    final query = _query.trim().toLowerCase();
+    if (query.isEmpty) return true;
+    bool has(String text) => text.toLowerCase().contains(query);
+    return has(template.name) ||
+        has(category.name) ||
+        template.fields.any((f) => has(f.name));
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final margin = WindowSizeClass.of(context).screenMargin;
-    final templates = activityTemplates(l10n);
     final active = ref.watch(activeActivityTypesProvider).value ?? const [];
     bool taken(ActivityTypeDefinition t) =>
         active.any((a) => sameActivityName(a.name, t.name));
+    final categories = [
+      for (final category in templateCategories(l10n))
+        (
+          category.name,
+          [
+            for (final t in category.templates)
+              if (_matches(category, t)) t,
+          ],
+        ),
+    ].where((c) => c.$2.isNotEmpty).toList();
     return Scaffold(
       appBar: AppBar(title: Text(l10n.templatesTitle)),
       body: Align(
@@ -57,18 +85,35 @@ class TemplatePickerScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
-              for (final template in templates)
-                _TemplateCard(
-                  template: template,
-                  taken: taken(template),
-                  onTap: () async {
-                    final id = await _showPreview(context, template);
-                    if (id != null && context.mounted) {
-                      // Opening the new activity is the confirmation.
-                      Navigator.of(context).pop(id);
-                    }
-                  },
+              TextField(
+                decoration: InputDecoration(hintText: l10n.templatesSearchHint),
+                onChanged: (text) => setState(() => _query = text),
+              ),
+              if (categories.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.xl),
+                  child: Text(
+                    l10n.templatesNoMatch,
+                    style: context.textStyles.bodyMedium?.copyWith(
+                      color: context.colors.textSecondary,
+                    ),
+                  ),
                 ),
+              for (final (name, templates) in categories) ...[
+                SectionHeader(title: name),
+                for (final template in templates)
+                  _TemplateCard(
+                    template: template,
+                    taken: taken(template),
+                    onTap: () async {
+                      final id = await _showPreview(context, template);
+                      if (id != null && context.mounted) {
+                        // Opening the new activity is the confirmation.
+                        Navigator.of(context).pop(id);
+                      }
+                    },
+                  ),
+              ],
             ],
           ),
         ),
