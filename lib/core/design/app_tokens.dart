@@ -1,56 +1,67 @@
 import 'package:flutter/material.dart';
 
+import 'themes/app_theme_id.dart';
+import 'themes/lavender_theme.dart';
+import 'themes/papaya_theme.dart';
+import 'themes/rose_theme.dart';
 import 'tokens/activity_palette.dart';
 import 'tokens/color_tokens.dart';
 import 'tokens/elevation.dart';
+import 'tokens/treatments.dart';
 
-/// Theme-dependent tokens that Material's [ThemeData] doesn't model:
-/// the full color role set, shadows and the activity palette.
+/// One theme's tokens that Material's [ThemeData] doesn't model: the full
+/// color role set, shadows, treatments and the activity palette (ADR-045).
+/// All three themes are light.
 @immutable
 class AppTokens extends ThemeExtension<AppTokens> {
   const AppTokens({
-    required this.brightness,
+    required this.id,
     required this.colors,
     required this.shadows,
+    required this.treatments,
+    required this.palette,
   });
 
-  static const light = AppTokens(
-    brightness: Brightness.light,
-    colors: AppColors.light,
-    shadows: AppShadows.light,
-  );
+  static AppTokens of(AppThemeId id) => switch (id) {
+    AppThemeId.rose => roseTokens,
+    AppThemeId.lavender => lavenderTokens,
+    AppThemeId.papaya => papayaTokens,
+  };
 
-  static const dark = AppTokens(
-    brightness: Brightness.dark,
-    colors: AppColors.dark,
-    shadows: AppShadows.dark,
-  );
-
-  final Brightness brightness;
+  final AppThemeId id;
   final AppColors colors;
   final AppShadows shadows;
+  final AppTreatments treatments;
+  final ActivityPalette palette;
 
-  ActivityColors activity(ActivityColorKey key) =>
-      ActivityPalette.resolve(key, brightness);
+  ActivityColors activity(ActivityColorKey key) => palette.resolve(key);
 
   @override
   AppTokens copyWith({
-    Brightness? brightness,
+    AppThemeId? id,
     AppColors? colors,
     AppShadows? shadows,
+    AppTreatments? treatments,
+    ActivityPalette? palette,
   }) => AppTokens(
-    brightness: brightness ?? this.brightness,
+    id: id ?? this.id,
     colors: colors ?? this.colors,
     shadows: shadows ?? this.shadows,
+    treatments: treatments ?? this.treatments,
+    palette: palette ?? this.palette,
   );
 
+  /// Colors cross-fade when the theme changes; the rest switches halfway.
   @override
   AppTokens lerp(covariant AppTokens? other, double t) {
     if (other == null) return this;
+    final half = t < 0.5 ? this : other;
     return AppTokens(
-      brightness: t < 0.5 ? brightness : other.brightness,
+      id: half.id,
       colors: AppColors.lerp(colors, other.colors, t),
-      shadows: t < 0.5 ? shadows : other.shadows,
+      shadows: half.shadows,
+      treatments: half.treatments,
+      palette: half.palette,
     );
   }
 }

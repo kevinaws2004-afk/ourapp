@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/design/context_ext.dart';
 import '../../core/design/tokens/spacing.dart';
 import '../../core/design/window_size_class.dart';
-import '../../features/settings/domain/theme_preference.dart';
+import '../../core/design/themes/app_theme_id.dart';
 import '../../features/settings/presentation/preferences_providers.dart';
 import 'showcase_sections.dart';
 
@@ -40,25 +40,14 @@ class TokenShowcaseScreen extends ConsumerWidget {
               children: [
                 ShowcaseSection(
                   title: 'Theme',
-                  child: SegmentedButton<ThemePreference>(
-                    segments: const [
-                      ButtonSegment(
-                        value: ThemePreference.system,
-                        label: Text('System'),
-                      ),
-                      ButtonSegment(
-                        value: ThemePreference.light,
-                        label: Text('Light'),
-                      ),
-                      ButtonSegment(
-                        value: ThemePreference.dark,
-                        label: Text('Dark'),
-                      ),
+                  child: SegmentedButton<AppThemeId>(
+                    segments: [
+                      for (final id in AppThemeId.values)
+                        ButtonSegment(value: id, label: Text(id.name)),
                     ],
-                    selected: {ref.watch(effectiveThemePreferenceProvider)},
-                    onSelectionChanged: (selection) => unawaited(
-                      preferences.setThemePreference(selection.single),
-                    ),
+                    selected: {ref.watch(effectiveThemeProvider)},
+                    onSelectionChanged: (selection) =>
+                        unawaited(preferences.setTheme(selection.single)),
                   ),
                 ),
                 const ShowcaseSection(

@@ -32,20 +32,22 @@ flutter:
   uses-material-design: true
   generate: true
 
-  # Bundled OFL fonts (ADR-016). Never fetched at runtime.
+  # Bundled OFL font (ADR-045). Never fetched at runtime. Plus Jakarta Sans
+  # 2.071 (Google Fonts build), static weights; its tabular figures serve
+  # numbers and timers.
   fonts:
-    - family: Fraunces
+    - family: PlusJakartaSans
       fonts:
-        - asset: assets/fonts/fraunces/Fraunces-Variable.ttf
-    - family: DMSans
-      fonts:
-        - asset: assets/fonts/dm_sans/DMSans-Variable.ttf
-    # DM Mono (OFL) for numeric tokens only: tabular digits (ADR-032).
-    - family: DMMono
-      fonts:
-        - asset: assets/fonts/dm_mono/DMMono-Regular.ttf
-        - asset: assets/fonts/dm_mono/DMMono-Medium.ttf
+        - asset: assets/fonts/plus_jakarta_sans/PlusJakartaSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/plus_jakarta_sans/PlusJakartaSans-Medium.ttf
           weight: 500
+        - asset: assets/fonts/plus_jakarta_sans/PlusJakartaSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/plus_jakarta_sans/PlusJakartaSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/plus_jakarta_sans/PlusJakartaSans-ExtraBold.ttf
+          weight: 800
     # Official Phosphor icon fonts (MIT, @phosphor-icons/web 2.1.2; ADR-024).
     - family: Phosphor
       fonts:

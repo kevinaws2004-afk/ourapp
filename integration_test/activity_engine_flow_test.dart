@@ -7,7 +7,7 @@ import 'package:daylog/features/settings/data/db_app_preferences_repository.dart
 import 'package:daylog/core/logging/app_logger.dart';
 import 'package:daylog/core/time/clock.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
-import 'package:daylog/features/settings/domain/theme_preference.dart';
+import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:daylog/features/settings/presentation/preferences_providers.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +36,7 @@ void main() {
             appDatabaseProvider.overrideWithValue(db),
             initialPreferencesProvider.overrideWithValue(
               const PreferencesSnapshot(
-                themePreference: ThemePreference.system,
+                theme: AppThemeId.lavender,
                 onboardingCompleted: true,
               ),
             ),

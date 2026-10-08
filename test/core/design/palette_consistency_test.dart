@@ -1,37 +1,53 @@
+import 'package:daylog/core/design/app_tokens.dart';
+import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:daylog/core/design/tokens/activity_palette.dart';
-import 'package:daylog/core/design/tokens/color_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// ADR-029/ADR-038: apart from neutrals (white and slate shades), every color
-/// in the app is one of the six activity-palette colors.
+/// ADR-045: three light themes; stored activity color keys stay the same six
+/// and resolve in each.
 void main() {
-  for (final (name, c, brightness) in [
-    ('light', AppColors.light, Brightness.light),
-    ('dark', AppColors.dark, Brightness.dark),
-  ]) {
-    ActivityColors palette(ActivityColorKey key) =>
-        ActivityPalette.resolve(key, brightness);
+  test('there are three themes and unknown names fall back', () {
+    expect(AppThemeId.values.map((t) => t.name), [
+      'rose',
+      'lavender',
+      'papaya',
+    ]);
+    expect(AppThemeId.fromName('dark'), AppThemeId.fallback);
+    expect(AppThemeId.fromName(null), AppThemeId.fallback);
+    for (final id in AppThemeId.values) {
+      expect(AppThemeId.fromName(id.name), id);
+      expect(AppTokens.of(id).id, id);
+    }
+  });
 
-    test(
-      '$name: brand is teal, accent coral, success teal, warning coral, danger rose',
-      () {
-        expect(c.brandPrimary, palette(ActivityColorKey.teal).solid);
-        expect(c.brandPrimarySoft, palette(ActivityColorKey.teal).soft);
-        expect(c.accentDawn, palette(ActivityColorKey.coral).solid);
-        expect(c.success, palette(ActivityColorKey.teal).solid);
-        expect(c.successContainer, palette(ActivityColorKey.teal).soft);
-        expect(c.warning, palette(ActivityColorKey.coral).solid);
-        expect(c.warningContainer, palette(ActivityColorKey.coral).soft);
-        expect(c.danger, palette(ActivityColorKey.rose).solid);
-        expect(c.dangerContainer, palette(ActivityColorKey.rose).soft);
-      },
-    );
-  }
+  test('the themes are meaningfully different, not one accent swapped', () {
+    final themes = AppThemeId.values.map(AppTokens.of).toList();
+    Set<Object> distinct(Object Function(AppTokens t) of) =>
+        themes.map(of).toSet();
+    expect(distinct((t) => t.colors.surfaceCanvas), hasLength(3));
+    expect(distinct((t) => t.colors.brandPrimary), hasLength(3));
+    expect(distinct((t) => t.colors.action), hasLength(3));
+    expect(distinct((t) => t.treatments.cardEdge), hasLength(3));
+  });
 
-  test('sand is not part of the palette', () {
-    expect(ActivityColorKey.values.map((k) => k.name), isNot(contains('sand')));
+  test('success, warning and danger containers are soft (light) tints', () {
+    for (final id in AppThemeId.values) {
+      final c = AppTokens.of(id).colors;
+      for (final soft in [
+        c.successContainer,
+        c.warningContainer,
+        c.dangerContainer,
+        c.brandPrimarySoft,
+      ]) {
+        expect(soft.computeLuminance(), greaterThan(0.7));
+      }
+    }
+  });
+
+  test('there are six activity colors', () {
     expect(ActivityColorKey.values, hasLength(6));
+    expect(ActivityColorKey.values.map((k) => k.name), isNot(contains('sand')));
   });
 
   test('removed keys resolve to their replacement', () {
@@ -41,11 +57,11 @@ void main() {
     expect(ActivityColorKey.fromName('sand'), isNull);
   });
 
-  test('mist #DDF0EF is the light sunken surface and teal soft', () {
-    expect(AppColors.light.surfaceSunken, const Color(0xFFDDF0EF));
-    expect(
-      ActivityPalette.resolve(ActivityColorKey.teal, Brightness.light).soft,
-      const Color(0xFFDDF0EF),
-    );
+  test('the light canvas is never pure white, so white cards stand out', () {
+    for (final id in AppThemeId.values) {
+      final c = AppTokens.of(id).colors;
+      expect(c.surfaceCanvas, isNot(const Color(0xFFFFFFFF)));
+      expect(c.surfaceBase, const Color(0xFFFFFFFF));
+    }
   });
 }

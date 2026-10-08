@@ -1,6 +1,6 @@
 import 'package:daylog/features/activity_types/presentation/activity_type_screen.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
-import 'package:daylog/features/settings/domain/theme_preference.dart';
+import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -8,7 +8,7 @@ import '../../../support/test_app.dart';
 import 'activities_flow_test.dart' show openActivities, scrollAndTap;
 
 const _onboarded = PreferencesSnapshot(
-  themePreference: ThemePreference.light,
+  theme: AppThemeId.lavender,
   onboardingCompleted: true,
 );
 

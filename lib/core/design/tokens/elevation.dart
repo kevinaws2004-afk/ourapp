@@ -1,32 +1,37 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 
-/// Three elevation levels (design_system.md §7). Dark mode shows depth with
-/// lighter surface tones instead of shadows at the raised level.
+/// Shadows of one theme (ADR-045): soft ambient glows tinted with the
+/// theme's own color plus a faint contact shadow, never hard grey drops.
 @immutable
 class AppShadows {
-  const AppShadows({required this.raised, required this.overlay});
+  const AppShadows({
+    required this.card,
+    required this.floating,
+    required this.glowAlpha,
+  });
 
-  static const light = AppShadows(
-    raised: [
-      BoxShadow(color: Color(0x0F1F1D2B), offset: Offset(0, 1), blurRadius: 2),
-      BoxShadow(color: Color(0x0F1F1D2B), offset: Offset(0, 4), blurRadius: 12),
-    ],
-    overlay: [
-      BoxShadow(color: Color(0x1F1F1D2B), offset: Offset(0, 8), blurRadius: 24),
-    ],
-  );
+  /// Cards resting on the canvas.
+  final List<BoxShadow> card;
 
-  static const dark = AppShadows(
-    raised: [],
-    overlay: [
-      BoxShadow(color: Color(0x80000000), offset: Offset(0, 8), blurRadius: 24),
-    ],
-  );
+  /// The floating navigation bar, menus, popovers.
+  final List<BoxShadow> floating;
 
-  /// `flat` is the default and has no shadow (use a hairline border).
+  /// Strength of a colored glow under a big action (0–1).
+  final double glowAlpha;
+
+  /// Menus and suggestion lists.
+  List<BoxShadow> get overlay => floating;
+
+  /// The glow under a big pill action of [color].
+  List<BoxShadow> glow(Color color) => [
+    BoxShadow(
+      color: color.withValues(alpha: glowAlpha),
+      offset: const Offset(0, 10),
+      blurRadius: 24,
+      spreadRadius: -6,
+    ),
+  ];
+
   static const List<BoxShadow> flat = [];
-
-  final List<BoxShadow> raised;
-  final List<BoxShadow> overlay;
 }

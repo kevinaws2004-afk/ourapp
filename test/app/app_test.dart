@@ -1,10 +1,11 @@
 import 'package:daylog/app/dev/token_showcase_screen.dart';
+import 'package:daylog/core/design/app_tokens.dart';
+import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:daylog/core/logging/app_logger.dart';
 import 'package:daylog/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:daylog/features/plans/presentation/plan_screen.dart';
 import 'package:daylog/features/settings/data/db_app_preferences_repository.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
-import 'package:daylog/features/settings/domain/theme_preference.dart';
 import 'package:daylog/features/today/presentation/today_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,7 +14,7 @@ import '../support/fake_clock.dart';
 import '../support/test_app.dart';
 
 const _onboarded = PreferencesSnapshot(
-  themePreference: ThemePreference.system,
+  theme: AppThemeId.lavender,
   onboardingCompleted: true,
 );
 
@@ -96,25 +97,28 @@ void main() {
   });
 
   group('theme', () {
+    AppThemeId themeOf(WidgetTester tester, Type screen) =>
+        Theme.of(tester.element(find.byType(screen)))
+            .extension<AppTokens>()!
+            .id;
+
     testAppWidgets(
-      'a saved dark preference switches the app to the dark theme',
+      'a saved theme switches the whole app, and it stays light (ADR-045)',
       (tester) async {
         final db = await pumpTestApp(tester, preferences: _onboarded);
-        expect(
-          Theme.of(tester.element(find.byType(TodayScreen))).brightness,
-          Brightness.light,
-        );
+        expect(themeOf(tester, TodayScreen), AppThemeId.lavender);
 
         await DbAppPreferencesRepository(
           db,
           FakeClock(DateTime.utc(2026, 10, 3)),
           const AppLogger(),
-        ).setThemePreference(ThemePreference.dark);
+        ).setTheme(AppThemeId.papaya);
         await tester.pumpAndSettle();
 
+        expect(themeOf(tester, TodayScreen), AppThemeId.papaya);
         expect(
           Theme.of(tester.element(find.byType(TodayScreen))).brightness,
-          Brightness.dark,
+          Brightness.light,
         );
       },
     );
@@ -138,23 +142,25 @@ void main() {
 
       expect(find.byType(TokenShowcaseScreen), findsOneWidget);
 
-      await tester.tap(find.text('Dark'));
+      await tester.tap(find.text('papaya'));
       await tester.pumpAndSettle();
 
       expect(
-        Theme.of(tester.element(find.byType(TokenShowcaseScreen))).brightness,
-        Brightness.dark,
+        Theme.of(tester.element(find.byType(TokenShowcaseScreen)))
+            .extension<AppTokens>()!
+            .id,
+        AppThemeId.papaya,
       );
     });
 
-    for (final preference in [ThemePreference.light, ThemePreference.dark]) {
+    for (final theme in AppThemeId.values) {
       testAppWidgets(
-        'renders every section without layout errors (${preference.name})',
+        'renders every section without layout errors (${theme.name})',
         (tester) async {
           await pumpTestApp(
             tester,
             preferences: PreferencesSnapshot(
-              themePreference: preference,
+              theme: theme,
               onboardingCompleted: true,
             ),
           );

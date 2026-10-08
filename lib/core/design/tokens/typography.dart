@@ -1,78 +1,122 @@
 import 'package:flutter/material.dart';
 
-/// Type scale (design_system.md §3). Styles carry no color; the theme or the
-/// caller applies a text color role.
-///
-/// Both fonts are bundled variable fonts, so weight and optical size are set
-/// through [FontVariation]s as well as [FontWeight] (the fallback).
+/// Type scale (design_system.md §3, ADR-045). One family, Plus Jakarta Sans,
+/// for every theme: headlines are heavy with tight tracking, labels bold with
+/// open tracking, body regular. Numbers use its tabular figures, so a running
+/// timer doesn't jitter. Styles carry no color; the theme or the caller
+/// applies a text color role.
 abstract final class AppTypography {
-  static const displayFamily = 'Fraunces';
-  static const uiFamily = 'DMSans';
-  static const numericFamily = 'DMMono';
+  static const family = 'PlusJakartaSans';
 
-  static final displayLarge = _display(
-    size: 40,
-    lineHeight: 46,
-    tracking: -0.5,
-  );
-  static final displayMedium = _display(
-    size: 32,
-    lineHeight: 38,
-    tracking: -0.4,
-  );
-  static final headlineLarge = _display(
-    size: 26,
-    lineHeight: 32,
-    tracking: -0.2,
-  );
-  static final headlineSmall = _display(size: 21, lineHeight: 27, tracking: 0);
+  static const _tabular = [FontFeature.tabularFigures()];
 
-  static final titleLarge = _ui(size: 18, lineHeight: 24, weight: 600);
-  static final titleMedium = _ui(size: 16, lineHeight: 22, weight: 600);
-  static final bodyLarge = _ui(size: 16, lineHeight: 24, weight: 400);
-  static final bodyMedium = _ui(
-    size: 14,
-    lineHeight: 20,
-    weight: 400,
-    tracking: 0.1,
+  static const displayLarge = TextStyle(
+    fontFamily: family,
+    fontSize: 36,
+    height: 44 / 36,
+    letterSpacing: -0.9,
+    fontWeight: FontWeight.w800,
   );
-  static final labelLarge = _ui(
-    size: 15,
-    lineHeight: 20,
-    weight: 600,
-    tracking: 0.1,
+  static const displayMedium = TextStyle(
+    fontFamily: family,
+    fontSize: 30,
+    height: 38 / 30,
+    letterSpacing: -0.6,
+    fontWeight: FontWeight.w800,
   );
-  static final labelMedium = _ui(
-    size: 13,
-    lineHeight: 18,
-    weight: 600,
-    tracking: 0.2,
+  static const headlineLarge = TextStyle(
+    fontFamily: family,
+    fontSize: 26,
+    height: 34 / 26,
+    letterSpacing: -0.4,
+    fontWeight: FontWeight.w700,
   );
-  static final labelSmall = _ui(
-    size: 11,
-    lineHeight: 14,
-    weight: 600,
-    tracking: 0.5,
+  static const headlineSmall = TextStyle(
+    fontFamily: family,
+    fontSize: 22,
+    height: 28 / 22,
+    letterSpacing: -0.2,
+    fontWeight: FontWeight.w700,
   );
 
-  // Numeric styles use DM Mono (ADR-032): every digit has the same width, so
-  // a running timer doesn't jitter. Its static weights are Regular and Medium.
-  static final numericHero = _numeric(
-    size: 72,
-    lineHeight: 76,
-    weight: FontWeight.w400,
-    tracking: -2,
+  static const titleLarge = TextStyle(
+    fontFamily: family,
+    fontSize: 18,
+    height: 24 / 18,
+    letterSpacing: -0.1,
+    fontWeight: FontWeight.w700,
   );
-  static final numericLarge = _numeric(
-    size: 34,
-    lineHeight: 40,
-    weight: FontWeight.w500,
-    tracking: -0.5,
+  static const titleMedium = TextStyle(
+    fontFamily: family,
+    fontSize: 16,
+    height: 22 / 16,
+    fontWeight: FontWeight.w600,
   );
-  static final numericMedium = _numeric(
-    size: 20,
-    lineHeight: 24,
-    weight: FontWeight.w500,
+  static const bodyLarge = TextStyle(
+    fontFamily: family,
+    fontSize: 16,
+    height: 24 / 16,
+    fontWeight: FontWeight.w400,
+  );
+  static const bodyMedium = TextStyle(
+    fontFamily: family,
+    fontSize: 14,
+    height: 20 / 14,
+    fontWeight: FontWeight.w400,
+  );
+  static const bodySmall = TextStyle(
+    fontFamily: family,
+    fontSize: 12,
+    height: 16 / 12,
+    fontWeight: FontWeight.w500,
+  );
+  static const labelLarge = TextStyle(
+    fontFamily: family,
+    fontSize: 15,
+    height: 20 / 15,
+    letterSpacing: 0.1,
+    fontWeight: FontWeight.w700,
+  );
+  static const labelMedium = TextStyle(
+    fontFamily: family,
+    fontSize: 13,
+    height: 18 / 13,
+    letterSpacing: 0.2,
+    fontWeight: FontWeight.w600,
+  );
+
+  /// Chips and small caps-style labels ("UP NEXT").
+  static const labelSmall = TextStyle(
+    fontFamily: family,
+    fontSize: 11,
+    height: 14 / 11,
+    letterSpacing: 0.5,
+    fontWeight: FontWeight.w700,
+  );
+
+  static const numericHero = TextStyle(
+    fontFamily: family,
+    fontSize: 56,
+    height: 64 / 56,
+    letterSpacing: -1.5,
+    fontWeight: FontWeight.w800,
+    fontFeatures: _tabular,
+  );
+  static const numericLarge = TextStyle(
+    fontFamily: family,
+    fontSize: 32,
+    height: 40 / 32,
+    letterSpacing: -0.6,
+    fontWeight: FontWeight.w800,
+    fontFeatures: _tabular,
+  );
+  static const numericMedium = TextStyle(
+    fontFamily: family,
+    fontSize: 20,
+    height: 26 / 20,
+    letterSpacing: -0.2,
+    fontWeight: FontWeight.w700,
+    fontFeatures: _tabular,
   );
 
   /// Material [TextTheme] from the scale. Slots the scale doesn't define map
@@ -91,60 +135,10 @@ abstract final class AppTypography {
       titleSmall: c(labelLarge),
       bodyLarge: c(bodyLarge),
       bodyMedium: c(bodyMedium),
-      bodySmall: c(bodyMedium),
+      bodySmall: c(bodySmall),
       labelLarge: c(labelLarge),
       labelMedium: c(labelMedium),
       labelSmall: c(labelSmall),
     );
   }
-
-  static TextStyle _display({
-    required double size,
-    required double lineHeight,
-    required double tracking,
-  }) => TextStyle(
-    fontFamily: displayFamily,
-    fontSize: size,
-    height: lineHeight / size,
-    letterSpacing: tracking,
-    fontWeight: FontWeight.w600,
-    fontVariations: [
-      const FontVariation.weight(560),
-      FontVariation.opticalSize(size),
-      // Soft, low-contrast settings for a warm, calm voice.
-      const FontVariation('SOFT', 50),
-      const FontVariation('WONK', 0),
-    ],
-  );
-
-  static TextStyle _numeric({
-    required double size,
-    required double lineHeight,
-    required FontWeight weight,
-    double tracking = 0,
-  }) => TextStyle(
-    fontFamily: numericFamily,
-    fontSize: size,
-    height: lineHeight / size,
-    letterSpacing: tracking,
-    fontWeight: weight,
-  );
-
-  static TextStyle _ui({
-    required double size,
-    required double lineHeight,
-    required int weight,
-    double tracking = 0,
-  }) => TextStyle(
-    fontFamily: uiFamily,
-    fontSize: size,
-    height: lineHeight / size,
-    letterSpacing: tracking,
-    fontWeight: FontWeight.values.firstWhere((w) => w.value >= weight),
-    fontVariations: [
-      FontVariation.weight(weight.toDouble()),
-      // DM Sans' optical-size axis spans 9–40.
-      FontVariation.opticalSize(size.clamp(9, 40).toDouble()),
-    ],
-  );
 }

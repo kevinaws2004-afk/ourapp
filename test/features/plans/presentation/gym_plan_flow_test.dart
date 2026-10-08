@@ -8,7 +8,7 @@ import 'package:daylog/features/plans/domain/plan.dart';
 import 'package:daylog/features/plans/domain/plan_use_cases.dart';
 import 'package:daylog/features/plans/presentation/widgets/plan_item_tile.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
-import 'package:daylog/features/settings/domain/theme_preference.dart';
+import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -20,7 +20,7 @@ import '../../activity_types/presentation/activities_flow_test.dart'
 import 'plans_flow_test.dart' show closeItem, openItem, waitForSave;
 
 const _onboarded = PreferencesSnapshot(
-  themePreference: ThemePreference.light,
+  theme: AppThemeId.lavender,
   onboardingCompleted: true,
 );
 

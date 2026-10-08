@@ -1,37 +1,41 @@
 import 'package:flutter/material.dart';
 
 import 'app_tokens.dart';
+import 'themes/app_theme_id.dart';
 import 'tokens/color_tokens.dart';
 import 'tokens/radius.dart';
 import 'tokens/spacing.dart';
 import 'tokens/typography.dart';
 
-/// Builds the light and dark [ThemeData] entirely from design tokens, so any
+/// Builds each theme's [ThemeData] entirely from its design tokens, so any
 /// remaining Material widget inherits the product identity
-/// (design_system.md §15).
+/// (design_system.md §15). All themes are light (ADR-045).
 abstract final class AppTheme {
-  static final ThemeData light = _build(AppTokens.light);
-  static final ThemeData dark = _build(AppTokens.dark);
+  static final Map<AppThemeId, ThemeData> _cache = {};
+
+  static ThemeData of(AppThemeId id) =>
+      _cache.putIfAbsent(id, () => _build(AppTokens.of(id)));
 
   static ThemeData _build(AppTokens tokens) {
     final c = tokens.colors;
-    final isLight = tokens.brightness == Brightness.light;
     final textTheme = AppTypography.textTheme(c.textPrimary);
 
     final scheme = ColorScheme(
-      brightness: tokens.brightness,
+      brightness: Brightness.light,
       primary: c.brandPrimary,
       onPrimary: c.onBrandPrimary,
       primaryContainer: c.brandPrimarySoft,
       onPrimaryContainer: c.onBrandPrimarySoft,
-      secondary: c.brandPrimary,
-      onSecondary: c.onBrandPrimary,
-      secondaryContainer: c.brandPrimarySoft,
-      onSecondaryContainer: c.onBrandPrimarySoft,
-      tertiary: c.accentDawn,
-      onTertiary: c.textPrimary,
+      secondary: c.action,
+      onSecondary: c.onAction,
+      secondaryContainer: c.actionSoft,
+      onSecondaryContainer: c.onActionSoft,
+      tertiary: c.accent,
+      onTertiary: c.surfaceBase,
+      tertiaryContainer: c.accentSoft,
+      onTertiaryContainer: c.onAccentSoft,
       error: c.danger,
-      onError: isLight ? c.surfaceRaised : c.surfaceCanvas,
+      onError: c.surfaceRaised,
       errorContainer: c.dangerContainer,
       onErrorContainer: c.textPrimary,
       surface: c.surfaceBase,
@@ -46,25 +50,19 @@ abstract final class AppTheme {
       outlineVariant: c.borderSubtle,
       shadow: c.scrim.withValues(alpha: 1),
       scrim: c.scrim,
-      inverseSurface: isLight
-          ? AppColors.dark.surfaceBase
-          : AppColors.light.surfaceBase,
-      onInverseSurface: isLight
-          ? AppColors.dark.textPrimary
-          : AppColors.light.textPrimary,
-      inversePrimary: isLight
-          ? AppColors.dark.brandPrimary
-          : AppColors.light.brandPrimary,
+      inverseSurface: c.textPrimary,
+      onInverseSurface: c.surfaceBase,
+      inversePrimary: c.brandPrimarySoft,
       surfaceTint: Colors.transparent,
     );
 
     return ThemeData(
       useMaterial3: true,
-      brightness: tokens.brightness,
+      brightness: Brightness.light,
       colorScheme: scheme,
       scaffoldBackgroundColor: c.surfaceCanvas,
       canvasColor: c.surfaceCanvas,
-      fontFamily: AppTypography.uiFamily,
+      fontFamily: AppTypography.family,
       textTheme: textTheme,
       extensions: [tokens],
       splashFactory: InkRipple.splashFactory,
@@ -84,24 +82,24 @@ abstract final class AppTheme {
         titleTextStyle: AppTypography.titleLarge.copyWith(color: c.textPrimary),
       ),
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: c.surfaceBase,
+        backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        height: 72,
+        height: 68,
         indicatorColor: c.brandPrimarySoft,
         indicatorShape: const StadiumBorder(),
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         labelTextStyle: WidgetStateProperty.resolveWith(
           (states) => AppTypography.labelMedium.copyWith(
             color: states.contains(WidgetState.selected)
-                ? c.textPrimary
+                ? c.onBrandPrimarySoft
                 : c.textSecondary,
           ),
         ),
         iconTheme: WidgetStateProperty.resolveWith(
           (states) => IconThemeData(
             color: states.contains(WidgetState.selected)
-                ? c.onBrandPrimarySoft
+                ? c.brandPrimary
                 : c.textSecondary,
           ),
         ),
@@ -124,8 +122,8 @@ abstract final class AppTheme {
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: c.brandPrimary,
         foregroundColor: c.onBrandPrimary,
-        elevation: 2,
-        highlightElevation: 2,
+        elevation: 0,
+        highlightElevation: 0,
         shape: const StadiumBorder(),
         extendedTextStyle: AppTypography.labelLarge,
       ),
@@ -142,8 +140,9 @@ abstract final class AppTheme {
           minimumSize: const Size(64, 52),
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
           shape: const StadiumBorder(),
-          side: BorderSide(color: c.borderStrong),
+          side: BorderSide(color: c.borderSubtle, width: 1.5),
           foregroundColor: c.textPrimary,
+          backgroundColor: c.surfaceBase,
           textStyle: AppTypography.labelLarge,
         ),
       ),
@@ -159,10 +158,10 @@ abstract final class AppTheme {
       segmentedButtonTheme: SegmentedButtonThemeData(
         style: SegmentedButton.styleFrom(
           backgroundColor: c.surfaceSunken,
-          selectedBackgroundColor: c.brandPrimarySoft,
-          selectedForegroundColor: c.onBrandPrimarySoft,
+          selectedBackgroundColor: c.surfaceBase,
+          selectedForegroundColor: c.brandPrimary,
           foregroundColor: c.textSecondary,
-          side: BorderSide(color: c.borderSubtle),
+          side: BorderSide(color: c.surfaceSunken),
           textStyle: AppTypography.labelMedium,
           minimumSize: const Size(48, 48),
         ),
@@ -181,15 +180,67 @@ abstract final class AppTheme {
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: isLight
-            ? AppColors.dark.surfaceRaised
-            : AppColors.light.surfaceRaised,
+        backgroundColor: c.textPrimary,
         contentTextStyle: AppTypography.bodyMedium.copyWith(
-          color: isLight
-              ? AppColors.dark.textPrimary
-              : AppColors.light.textPrimary,
+          color: c.surfaceBase,
         ),
-        shape: const RoundedRectangleBorder(borderRadius: AppRadius.mdAll),
+        actionTextColor: c.brandPrimarySoft,
+        shape: const RoundedRectangleBorder(borderRadius: AppRadius.lgAll),
+      ),
+      // Inputs are soft pill wells; focus draws the theme's color (ADR-045).
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: c.surfaceSunken,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.xl,
+          vertical: AppSpacing.lg,
+        ),
+        hintStyle: AppTypography.bodyLarge.copyWith(color: c.textTertiary),
+        labelStyle: AppTypography.bodyMedium.copyWith(color: c.textSecondary),
+        floatingLabelStyle: AppTypography.labelMedium.copyWith(
+          color: c.brandPrimary,
+        ),
+        border: const OutlineInputBorder(
+          borderRadius: AppRadius.lgAll,
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: const OutlineInputBorder(
+          borderRadius: AppRadius.lgAll,
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: AppRadius.lgAll,
+          borderSide: BorderSide(color: c.brandPrimary, width: 2),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: AppRadius.lgAll,
+          borderSide: BorderSide(color: c.danger, width: 1.5),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: AppRadius.lgAll,
+          borderSide: BorderSide(color: c.danger, width: 2),
+        ),
+      ),
+      chipTheme: ChipThemeData(
+        backgroundColor: c.surfaceBase,
+        selectedColor: c.brandPrimarySoft,
+        side: BorderSide(color: c.borderSubtle),
+        shape: const StadiumBorder(),
+        labelStyle: AppTypography.labelMedium.copyWith(color: c.textPrimary),
+        secondaryLabelStyle: AppTypography.labelMedium.copyWith(
+          color: c.onBrandPrimarySoft,
+        ),
+        iconTheme: IconThemeData(color: c.brandPrimary, size: 18),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: AppSpacing.sm,
+        ),
+      ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: c.surfaceRaised,
+        surfaceTintColor: Colors.transparent,
+        shape: const RoundedRectangleBorder(borderRadius: AppRadius.lgAll),
+        textStyle: AppTypography.bodyLarge.copyWith(color: c.textPrimary),
       ),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: c.surfaceBase,
@@ -197,12 +248,12 @@ abstract final class AppTheme {
         modalBarrierColor: c.scrim,
         shape: const RoundedRectangleBorder(borderRadius: AppRadius.sheetTop),
         showDragHandle: true,
-        dragHandleColor: c.borderStrong,
+        dragHandleColor: c.borderSubtle,
       ),
       dialogTheme: DialogThemeData(
         backgroundColor: c.surfaceRaised,
         surfaceTintColor: Colors.transparent,
-        shape: const RoundedRectangleBorder(borderRadius: AppRadius.lgAll),
+        shape: const RoundedRectangleBorder(borderRadius: AppRadius.cardAll),
         titleTextStyle: AppTypography.headlineSmall.copyWith(
           color: c.textPrimary,
         ),

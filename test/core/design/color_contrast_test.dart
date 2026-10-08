@@ -1,9 +1,11 @@
+import 'package:daylog/core/design/app_tokens.dart';
+import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:daylog/core/design/tokens/activity_palette.dart';
-import 'package:daylog/core/design/tokens/color_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Guards the WCAG contrast promises in design_system.md §2 and §14.
+/// Guards the WCAG contrast promises in design_system.md §2 and §14 for
+/// every theme (ADR-045).
 double contrast(Color a, Color b) {
   final la = a.computeLuminance();
   final lb = b.computeLuminance();
@@ -13,85 +15,74 @@ double contrast(Color a, Color b) {
 }
 
 void main() {
-  for (final (name, c, brightness) in [
-    ('light', AppColors.light, Brightness.light),
-    ('dark', AppColors.dark, Brightness.dark),
-  ]) {
-    group('$name theme', () {
-      test('text roles meet 4.5:1 on the canvas', () {
-        expect(
-          contrast(c.textPrimary, c.surfaceCanvas),
-          greaterThanOrEqualTo(4.5),
-        );
-        expect(
-          contrast(c.textSecondary, c.surfaceCanvas),
-          greaterThanOrEqualTo(4.5),
-        );
-        expect(
-          contrast(c.textSecondary, c.surfaceSunken),
-          greaterThanOrEqualTo(4.5),
-        );
-      });
-
-      test('brand colors meet 4.5:1 where they carry text', () {
-        expect(
-          contrast(c.onBrandPrimary, c.brandPrimary),
-          greaterThanOrEqualTo(4.5),
-        );
-        expect(
-          contrast(c.onBrandPrimarySoft, c.brandPrimarySoft),
-          greaterThanOrEqualTo(4.5),
-        );
-      });
-
-      test(
-        'brand, accent and status colors meet 3:1 as graphics on the canvas',
-        () {
-          for (final color in [
-            c.brandPrimary,
-            c.accentDawn,
-            c.success,
-            c.warning,
-            c.danger,
-          ]) {
-            expect(contrast(color, c.surfaceCanvas), greaterThanOrEqualTo(3));
-          }
-        },
-      );
-
-      test(
-        'danger (rose) may be used as text: 4.5:1 on canvas and base surfaces',
-        () {
-          expect(
-            contrast(c.danger, c.surfaceCanvas),
-            greaterThanOrEqualTo(4.5),
-          );
-          expect(contrast(c.danger, c.surfaceBase), greaterThanOrEqualTo(4.5));
-        },
-      );
-
-      test('text stays readable on status containers', () {
-        for (final container in [
+  for (final id in AppThemeId.values) {
+    final tokens = AppTokens.of(id);
+    final c = tokens.colors;
+    group('${id.name} theme', () {
+      test('text roles meet 4.5:1 on every surface and soft container', () {
+        for (final surface in [
+          c.surfaceCanvas,
+          c.surfaceBase,
+          c.surfaceSunken,
+          c.brandPrimarySoft,
+          c.actionSoft,
+          c.accentSoft,
           c.successContainer,
           c.warningContainer,
           c.dangerContainer,
         ]) {
-          expect(contrast(c.textPrimary, container), greaterThanOrEqualTo(4.5));
+          for (final text in [c.textPrimary, c.textSecondary]) {
+            expect(
+              contrast(text, surface),
+              greaterThanOrEqualTo(4.5),
+              reason: '$text on $surface',
+            );
+          }
         }
       });
 
-      test('strong borders meet 3:1 on the canvas', () {
-        expect(
-          contrast(c.borderStrong, c.surfaceCanvas),
-          greaterThanOrEqualTo(3),
-        );
+      test('every filled role carries its text at 4.5:1', () {
+        for (final (on, fill) in [
+          (c.onBrandPrimary, c.brandPrimary),
+          (c.onBrandPrimarySoft, c.brandPrimarySoft),
+          (c.onAction, c.action),
+          (c.onActionSoft, c.actionSoft),
+          (c.onAccentSoft, c.accentSoft),
+          // Snack bars: inverse.
+          (c.surfaceBase, c.textPrimary),
+          (c.brandPrimarySoft, c.textPrimary),
+        ]) {
+          expect(contrast(on, fill), greaterThanOrEqualTo(4.5));
+        }
       });
 
-      test('activity solids meet 3:1 as graphics on the canvas and their soft tint', () {
+      test('graphic roles meet 3:1 on the canvas and on cards', () {
+        for (final color in [
+          c.brandPrimary,
+          c.accent,
+          c.success,
+          c.warning,
+          c.danger,
+          c.borderStrong,
+        ]) {
+          expect(contrast(color, c.surfaceCanvas), greaterThanOrEqualTo(3));
+          expect(contrast(color, c.surfaceBase), greaterThanOrEqualTo(3));
+        }
+      });
+
+      test('brand and danger may be used as text on canvas and cards', () {
+        for (final color in [c.brandPrimary, c.danger]) {
+          expect(contrast(color, c.surfaceCanvas), greaterThanOrEqualTo(4.5));
+          expect(contrast(color, c.surfaceBase), greaterThanOrEqualTo(4.5));
+        }
+      });
+
+      test('activity solids meet 3:1 on cards and their soft tint; text on '
+          'the tint 4.5:1', () {
         for (final key in ActivityColorKey.values) {
-          final colors = ActivityPalette.resolve(key, brightness);
+          final colors = tokens.activity(key);
           expect(
-            contrast(colors.solid, c.surfaceCanvas),
+            contrast(colors.solid, c.surfaceBase),
             greaterThanOrEqualTo(3),
             reason: key.name,
           );

@@ -10,7 +10,7 @@ import 'package:daylog/features/plans/presentation/day_screen.dart';
 import 'package:daylog/features/plans/presentation/item/item_screen.dart';
 import 'package:daylog/features/activity_types/domain/activity_type_use_cases.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
-import 'package:daylog/features/settings/domain/theme_preference.dart';
+import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -19,7 +19,7 @@ import '../../../support/fixtures.dart';
 import '../../../support/test_app.dart';
 
 const _onboarded = PreferencesSnapshot(
-  themePreference: ThemePreference.light,
+  theme: AppThemeId.lavender,
   onboardingCompleted: true,
 );
 
