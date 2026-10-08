@@ -130,18 +130,6 @@ abstract class AppLocalizations {
   /// **'Me'**
   String get navMe;
 
-  /// Placeholder message on the Track tab until the feature is built.
-  ///
-  /// In en, this message translates to:
-  /// **'The activities you track will appear here.'**
-  String get trackPlaceholder;
-
-  /// Placeholder message on the Insights tab until the feature is built.
-  ///
-  /// In en, this message translates to:
-  /// **'Your progress over time will appear here.'**
-  String get insightsPlaceholder;
-
   /// Title of the first-run screen (placeholder for the full onboarding).
   ///
   /// In en, this message translates to:
@@ -183,12 +171,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get actionSave;
-
-  /// Button: cancel and close.
-  ///
-  /// In en, this message translates to:
-  /// **'Cancel'**
-  String get actionCancel;
 
   /// Snackbar action that reverses the last change.
   ///
@@ -1096,12 +1078,6 @@ abstract class AppLocalizations {
   /// **'Yesterday'**
   String get planYesterday;
 
-  /// Tooltip for the calendar button on the Plan tab.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose a date'**
-  String get planChooseDate;
-
   /// Tooltip for the previous-week button.
   ///
   /// In en, this message translates to:
@@ -1366,24 +1342,6 @@ abstract class AppLocalizations {
   /// **'Just a task'**
   String get planTaskChoice;
 
-  /// Plan tab quick add: button adding the typed plan.
-  ///
-  /// In en, this message translates to:
-  /// **'Add plan'**
-  String get planAddAction;
-
-  /// Quick add: opens the sheet choosing when it happens.
-  ///
-  /// In en, this message translates to:
-  /// **'Set a time'**
-  String get planAddTime;
-
-  /// Plan tab quick add: hint in the title field.
-  ///
-  /// In en, this message translates to:
-  /// **'Add an activity to this day'**
-  String get planQuickAddHint;
-
   /// Quick add / plan sheet: opens the list of activities to pick one.
   ///
   /// In en, this message translates to:
@@ -1516,12 +1474,6 @@ abstract class AppLocalizations {
   /// **'Skipped'**
   String get planSkippedMessage;
 
-  /// Snackbar after completing a task (with Undo).
-  ///
-  /// In en, this message translates to:
-  /// **'Done'**
-  String get planTaskDoneMessage;
-
   /// Accessibility label of a plan's drag handle.
   ///
   /// In en, this message translates to:
@@ -1533,12 +1485,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Done'**
   String get planStatusDone;
-
-  /// Status of an activity plan with a record but no duration.
-  ///
-  /// In en, this message translates to:
-  /// **'Done'**
-  String get planStatusRecorded;
 
   /// Status of a skipped plan. Neutral.
   ///
@@ -1785,12 +1731,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This focus session has already ended.'**
   String get validationFocusNotActive;
-
-  /// Feedback after finishing a focus session (FR-FO-05).
-  ///
-  /// In en, this message translates to:
-  /// **'{activity} session complete · {duration}'**
-  String focusComplete(String activity, String duration);
 
   /// Unit dimension: a share, e.g. body fat %.
   ///
@@ -2254,12 +2194,6 @@ abstract class AppLocalizations {
   /// **'Done'**
   String get itemDone;
 
-  /// Button in an item: time the activity while logging it.
-  ///
-  /// In en, this message translates to:
-  /// **'Start timer'**
-  String get itemStartTimer;
-
   /// Opens the running timer full screen.
   ///
   /// In en, this message translates to:
@@ -2289,12 +2223,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'What do you want to keep track of? Pick one, or just write notes.'**
   String get itemNothingToLogHint;
-
-  /// Shown in an item when a timer runs for a different item.
-  ///
-  /// In en, this message translates to:
-  /// **'Another timer is running'**
-  String get itemTimerOtherRunning;
 
   /// Today's summary: how many items were done, and their total time.
   ///
@@ -2440,12 +2368,6 @@ abstract class AppLocalizations {
   /// **'Won\'t repeat after this'**
   String get planRepeatStopped;
 
-  /// Short label on a repeating plan.
-  ///
-  /// In en, this message translates to:
-  /// **'Repeats'**
-  String get planRepeating;
-
   /// Button in an item: plan the same thing on another date (next appointment, next session).
   ///
   /// In en, this message translates to:
@@ -2475,12 +2397,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Month'**
   String get planViewMonth;
-
-  /// A day with no items in the week view.
-  ///
-  /// In en, this message translates to:
-  /// **'Nothing planned'**
-  String get planWeekEmptyDay;
 
   /// Automatic chart: time spent per week.
   ///
@@ -2536,23 +2452,11 @@ abstract class AppLocalizations {
   /// **'Nothing logged for {name} in this period. Pick a longer period above to see its progress.'**
   String insightActivityEmpty(String name);
 
-  /// Tap hint on an activity row in Insights.
-  ///
-  /// In en, this message translates to:
-  /// **'see its progress'**
-  String get insightOpenActivityHint;
-
   /// Generic confirm button that closes a sheet.
   ///
   /// In en, this message translates to:
   /// **'Done'**
   String get actionDone;
-
-  /// Quick add (today): adds what's typed at the current time and opens it to log it.
-  ///
-  /// In en, this message translates to:
-  /// **'Start now'**
-  String get planStartNow;
 
   /// Quick add: label above the most-used activities.
   ///
@@ -2619,18 +2523,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No time'**
   String get planTimeRemove;
-
-  /// Day screen: goes to the day before.
-  ///
-  /// In en, this message translates to:
-  /// **'Previous day'**
-  String get dayPreviousDay;
-
-  /// Day screen: goes to the day after.
-  ///
-  /// In en, this message translates to:
-  /// **'Next day'**
-  String get dayNextDay;
 
   /// Me tab: section with Activities and Body measurements.
   ///
@@ -9100,53 +8992,17 @@ abstract class AppLocalizations {
   /// **'done'**
   String get todayRingCenter;
 
-  /// Today's hero line when nothing is on the day.
-  ///
-  /// In en, this message translates to:
-  /// **'A fresh day. Add what you\'d like to do.'**
-  String get todayHeroEmpty;
-
-  /// Today's hero line when every item is done.
-  ///
-  /// In en, this message translates to:
-  /// **'Everything\'s done. Nicely done.'**
-  String get todayHeroAllDone;
-
-  /// Label of the Up next card on Today.
-  ///
-  /// In en, this message translates to:
-  /// **'Up next'**
-  String get todayUpNext;
-
-  /// Label of the Up next card when the item is in progress.
-  ///
-  /// In en, this message translates to:
-  /// **'Now'**
-  String get todayDoingNow;
-
   /// How soon the next item starts, e.g. 'in 25 min'.
   ///
   /// In en, this message translates to:
   /// **'in {duration}'**
   String todayUpNextIn(String duration);
 
-  /// Up next card: the item has no time.
-  ///
-  /// In en, this message translates to:
-  /// **'Anytime today'**
-  String get todayUpNextAnytime;
-
   /// Up next card: start recording the item.
   ///
   /// In en, this message translates to:
   /// **'Start'**
   String get todayUpNextStart;
-
-  /// Up next card: open the item that's in progress.
-  ///
-  /// In en, this message translates to:
-  /// **'Continue'**
-  String get todayUpNextContinue;
 
   /// Label of the time fact on the Up next card.
   ///
@@ -9363,12 +9219,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{done} of {total} done today'**
   String itemDayLine(int done, int total);
-
-  /// Link to add details to a done thing.
-  ///
-  /// In en, this message translates to:
-  /// **'Add details'**
-  String get itemAddDetails;
 
   /// Title of the add sheet.
   ///
@@ -9615,6 +9465,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Undo skip'**
   String get itemUndoSkip;
+
+  /// Plan, an empty day (P4).
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing planned for {weekday}.'**
+  String noPlanDayTitle(String weekday);
+
+  /// Plan, an empty day: open the add sheet (P4).
+  ///
+  /// In en, this message translates to:
+  /// **'Add something'**
+  String get noPlanAddSomething;
+
+  /// Snackbar after a usual activity chip adds it to a day other than today.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} added'**
+  String addedToDay(String title);
+
+  /// Plan week strip, screen reader label of a past day or today.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}: {done} of {total} done'**
+  String weekStripDayDone(String date, int done, int total);
+
+  /// Plan week strip, screen reader label of a future day.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}: {count, plural, =0{nothing planned} =1{1 planned} other{{count} planned}}'**
+  String weekStripDayPlanned(String date, int count);
+
+  /// Plan, the selected day's heading, e.g. 'Tomorrow · Friday, Oct 9'.
+  ///
+  /// In en, this message translates to:
+  /// **'{relative} · {date}'**
+  String planDayRelative(String relative, String date);
+
+  /// Row options: move to another day (P7).
+  ///
+  /// In en, this message translates to:
+  /// **'Move to…'**
+  String get planMoveTo;
+
+  /// Snackbar after Move to….
+  ///
+  /// In en, this message translates to:
+  /// **'Moved to {date}'**
+  String planMovedTo(String date);
+
+  /// Plan: the + button, adds to the selected day.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to this day'**
+  String get planAddToDay;
 }
 
 class _AppLocalizationsDelegate

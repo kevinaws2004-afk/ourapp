@@ -26,6 +26,18 @@ final activityTypeProvider = StreamProvider.autoDispose
       (ref, id) => ref.watch(activityTypeRepositoryProvider).watchType(id),
     );
 
+/// Reads an activity type once, keeping its (auto-dispose) stream alive
+/// until the first value arrives.
+Future<ActivityType?> readActivityType(WidgetRef ref, ActivityTypeId id) async {
+  final provider = activityTypeProvider(id);
+  final keepAlive = ref.listenManual(provider, (_, _) {});
+  try {
+    return await ref.read(provider.future);
+  } finally {
+    keepAlive.close();
+  }
+}
+
 final createActivityTypeProvider = Provider(
   (ref) => CreateActivityType(
     ref.watch(activityTypeRepositoryProvider),

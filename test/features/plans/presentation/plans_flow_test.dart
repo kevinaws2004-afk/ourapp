@@ -5,7 +5,7 @@ import 'package:daylog/features/activity_types/domain/activity_type_use_cases.da
 import 'package:daylog/features/plans/data/db_plan_repository.dart';
 import 'package:daylog/features/plans/domain/plan.dart';
 import 'package:daylog/features/plans/domain/plan_use_cases.dart';
-import 'package:daylog/features/plans/presentation/day_screen.dart';
+import 'package:daylog/features/plans/presentation/plan_views.dart';
 import 'package:daylog/features/plans/presentation/item/item_notifier.dart';
 import 'package:daylog/features/plans/presentation/item/item_screen.dart';
 import 'package:daylog/features/plans/presentation/widgets/plan_item_tile.dart';
@@ -22,7 +22,7 @@ import '../../../support/fixtures.dart';
 import '../../../support/test_app.dart';
 import '../../activity_types/presentation/activities_flow_test.dart'
     show enterField, findActivity, scrollAndTap;
-import 'plan_screen_test.dart' show openPlan, openPlanTab;
+import 'plan_screen_test.dart' show openPlan, openPlanTab, selectDay;
 
 const _onboarded = PreferencesSnapshot(
   theme: AppThemeId.lavender,
@@ -69,12 +69,37 @@ Future<void> waitForSave(WidgetTester tester) async {
 Finder itemRow(String name) =>
     find.descendant(of: find.byType(PlanItemTile), matching: find.text(name));
 
-/// Saves the builder a new name opens in quick add: the name is filled in
-/// and the user chooses what to log (here: nothing yet).
-Future<void> saveOwnActivity(WidgetTester tester, String name) async {
-  expect(find.text('New activity'), findsOneWidget);
-  expect(find.widgetWithText(TextField, name), findsOneWidget);
-  await scrollAndTap(tester, find.text('Save'));
+/// Opens the + sheet for the day on screen (Today or Plan's selected day).
+Future<void> openAddSheet(WidgetTester tester) async {
+  final plan = find.byTooltip('Add to this day');
+  await tester.tap(
+    plan.evaluate().isNotEmpty ? plan : find.byTooltip('Add to today'),
+  );
+  await tester.pumpAndSettle();
+}
+
+/// The + sheet's name field.
+final addField = find.widgetWithText(TextField, 'What are you doing?');
+
+/// Adds a new name from the + sheet: it becomes an activity of yours with
+/// nothing to set up (AD3).
+Future<void> addNew(WidgetTester tester, String name) async {
+  await openAddSheet(tester);
+  await tester.enterText(addField, name);
+  await tester.pump();
+  await tester.tap(find.text('Make “$name” yours'));
+  await tester.pump();
+  await tester.tap(find.widgetWithText(AppButton, 'Add'));
+  await tester.pumpAndSettle();
+}
+
+/// Adds [text] from the + sheet as typed (an activity's name).
+Future<void> addTyped(WidgetTester tester, String text) async {
+  await openAddSheet(tester);
+  await tester.enterText(addField, text);
+  await tester.pump();
+  await tester.tap(find.widgetWithText(AppButton, 'Add'));
+  await tester.pumpAndSettle();
 }
 
 /// Long-presses a row for its options (B7).
@@ -100,18 +125,12 @@ Future<void> closeItem(WidgetTester tester) async {
 }
 
 void main() {
-  testAppWidgets('a new name in quick add is made your own (the builder '
-      'opens with it), then planned; it completes with a tap', (tester) async {
+  testAppWidgets('a new name in the + sheet becomes yours with nothing to '
+      'set up (AD3), then planned; it completes with a tap', (tester) async {
     await pumpTestApp(tester, preferences: _onboarded);
     await openPlan(tester);
 
-    await tester.enterText(
-      find.widgetWithText(TextField, 'Add an activity to this day'),
-      'Buy groceries',
-    );
-    await tester.testTextInput.receiveAction(TextInputAction.done);
-    await tester.pumpAndSettle();
-    await saveOwnActivity(tester, 'Buy groceries');
+    await addNew(tester, 'Buy groceries');
     expect(itemRow('Buy groceries'), findsOneWidget);
 
     await tester.tap(find.byTooltip('Mark as done'));
@@ -180,7 +199,7 @@ void main() {
     await tester.tap(find.text('Move to tomorrow'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Nothing planned for this day.'), findsOneWidget);
+    expect(find.text('Nothing planned today.'), findsOneWidget);
     expect(find.text('Moved to tomorrow'), findsOneWidget);
 
     await tester.tap(find.text('Undo'));
@@ -211,13 +230,7 @@ void main() {
     (tester) async {
       await pumpTestApp(tester, preferences: _onboarded);
       await openPlan(tester);
-      await tester.enterText(
-        find.widgetWithText(TextField, 'Add an activity to this day'),
-        'Call mum',
-      );
-      await tester.testTextInput.receiveAction(TextInputAction.done);
-      await tester.pumpAndSettle();
-      await saveOwnActivity(tester, 'Call mum');
+      await addNew(tester, 'Call mum');
 
       await openItem(tester, itemRow('Call mum'));
       await scrollAndTap(tester, _doneButton);
@@ -231,13 +244,7 @@ void main() {
       'done, with an activity of its own', (tester) async {
     await pumpTestApp(tester, preferences: _onboarded);
     await openPlan(tester);
-    await tester.enterText(
-      find.widgetWithText(TextField, 'Add an activity to this day'),
-      'Doctor call',
-    );
-    await tester.testTextInput.receiveAction(TextInputAction.done);
-    await tester.pumpAndSettle();
-    await saveOwnActivity(tester, 'Doctor call');
+    await addNew(tester, 'Doctor call');
 
     await openItem(tester, itemRow('Doctor call'));
     await enterField(tester, 'Notes', 'Take vitamin D; check again in May');
@@ -289,91 +296,71 @@ void main() {
     expect(find.byTooltip('Add to today'), findsOneWidget, reason: 'the +');
   });
 
-  group('quick add (A4–A8)', () {
+  group('the + sheet (AD1–AD6)', () {
     Future<void> seedReading(AppDatabase db, FakeClock clock) =>
         CreateActivityType(
           DbActivityTypeRepository(db, clock),
           SequentialIdGenerator(),
         )(readingDefinition());
 
-    testAppWidgets('"Start now" and the time only appear once something is '
-        'typed; "Recent" labels the activity chips', (tester) async {
+    testAppWidgets('Add waits for something; "Recent" labels the activity '
+        'chips; When offers Anytime and a time', (tester) async {
       await pumpTestApp(tester, preferences: _onboarded, seed: seedReading);
       await openPlan(tester);
+      await openAddSheet(tester);
 
-      expect(find.text('Start now'), findsNothing);
-      expect(find.text('Set a time'), findsNothing);
+      expect(find.text('Add to today'), findsOneWidget, reason: 'its title');
       expect(find.text('Recent'), findsOneWidget);
       expect(find.widgetWithText(ChoiceChip, 'Reading'), findsOneWidget);
-
-      await tester.enterText(
-        find.widgetWithText(TextField, 'Add an activity to this day'),
-        'Bath',
+      expect(find.widgetWithText(ChoiceChip, 'Anytime'), findsOneWidget);
+      expect(find.widgetWithText(ChoiceChip, 'Time…'), findsOneWidget);
+      expect(
+        tester
+            .widget<AppButton>(find.widgetWithText(AppButton, 'Add'))
+            .onPressed,
+        isNull,
       );
+
+      await tester.enterText(addField, 'Bath');
       await tester.pump();
-      expect(find.text('Start now'), findsOneWidget);
-      expect(find.text('Set a time'), findsOneWidget);
+      expect(
+        tester
+            .widget<AppButton>(find.widgetWithText(AppButton, 'Add'))
+            .onPressed,
+        isNotNull,
+      );
     });
 
-    testAppWidgets('"Browse activities" plans one from the list; a new name '
-        'is offered as your own, and backing out of the builder adds nothing', (
+    testAppWidgets('"Browse all activities" chooses one from the list', (
       tester,
     ) async {
       await pumpTestApp(tester, preferences: _onboarded);
       await openPlan(tester);
+      await openAddSheet(tester);
 
-      await tester.tap(find.text('Browse activities'));
+      await tester.tap(find.text('Browse all activities'));
       await tester.pumpAndSettle();
       expect(find.text('Choose an activity'), findsOneWidget);
       await findActivity(tester, 'walk', 'Walking');
       await scrollAndTap(tester, find.text('Use Walking'));
-      // Back on the day, it's already added: no extra "+" (owner, bug fix).
+      expect(find.widgetWithText(TextField, 'Walking'), findsOneWidget);
+      await tester.tap(find.widgetWithText(AppButton, 'Add'));
+      await tester.pumpAndSettle();
       expect(itemRow('Walking'), findsOneWidget);
-      expect(find.text('Set a time'), findsNothing, reason: 'input cleared');
-
-      await tester.enterText(
-        find.widgetWithText(TextField, 'Add an activity to this day'),
-        'Piano',
-      );
-      await tester.pump();
-      expect(find.text('Make “Piano” your own'), findsOneWidget);
-      await tester.tap(find.text('Make “Piano” your own'));
-      await tester.pumpAndSettle();
-      expect(find.text('New activity'), findsOneWidget);
-      await tester.pageBack();
-      await tester.pumpAndSettle();
-      expect(itemRow('Piano'), findsNothing, reason: 'nothing without one');
-    });
-
-    testAppWidgets('"Make your own" adds the new activity to the day as '
-        'soon as it is saved', (tester) async {
-      await pumpTestApp(tester, preferences: _onboarded);
-      await openPlan(tester);
-
-      await tester.tap(find.text('Make your own'));
-      await tester.pumpAndSettle();
-      expect(find.text('New activity'), findsOneWidget);
-      await tester.enterText(find.byType(TextField).first, 'Piano');
-      await tester.pumpAndSettle();
-      await saveOwnActivity(tester, 'Piano');
-
-      expect(itemRow('Piano'), findsOneWidget);
     });
 
     testAppWidgets('typing suggests built-in activities with what they log; '
         'tapping one fills the name', (tester) async {
       await pumpTestApp(tester, preferences: _onboarded);
       await openPlan(tester);
+      await openAddSheet(tester);
 
-      await tester.enterText(
-        find.widgetWithText(TextField, 'Add an activity to this day'),
-        'gy',
-      );
+      await tester.enterText(addField, 'gy');
       await tester.pump();
       expect(find.textContaining('Workout · Exercises'), findsOneWidget);
       expect(find.textContaining('Ready-made'), findsNothing, reason: 'one');
 
-      await tester.tap(find.text('Gym'));
+      await tester.tap(find.widgetWithText(ListTile, 'Gym'));
       await tester.pump();
       expect(find.widgetWithText(TextField, 'Gym'), findsOneWidget);
     });
@@ -384,29 +371,21 @@ void main() {
     ) async {
       await pumpTestApp(tester, preferences: _onboarded, seed: seedReading);
       await openPlan(tester);
+      await openAddSheet(tester);
 
-      await tester.enterText(
-        find.widgetWithText(TextField, 'Add an activity to this day'),
-        'Rea',
-      );
+      await tester.enterText(addField, 'Rea');
       await tester.pump();
       // Others containing "rea" (Breathing…) may show; Reading only once.
       expect(find.widgetWithText(ListTile, 'Reading'), findsOneWidget);
       expect(find.text('Your activity'), findsNothing, reason: 'no labels');
     });
 
-    testAppWidgets('one sheet sets the time: a suggested start and a length', (
-      tester,
-    ) async {
+    testAppWidgets('Time… sets a suggested start and a length', (tester) async {
       await pumpTestApp(tester, preferences: _onboarded);
       await openPlan(tester);
+      await openAddSheet(tester);
 
-      await tester.enterText(
-        find.widgetWithText(TextField, 'Add an activity to this day'),
-        'Bath',
-      );
-      await tester.pump();
-      await tester.tap(find.text('Set a time'));
+      await tester.tap(find.widgetWithText(ChoiceChip, 'Time…'));
       await tester.pumpAndSettle();
       // The test clock is 08:00: the next half hours are suggested.
       expect(find.text('When?'), findsOneWidget);
@@ -415,11 +394,17 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Done'));
       await tester.pumpAndSettle();
-      expect(find.text('9:00 AM–9:30 AM'), findsOneWidget, reason: 'button');
+      expect(
+        find.widgetWithText(ChoiceChip, '9:00 AM–9:30 AM'),
+        findsOneWidget,
+      );
 
-      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.enterText(addField, 'Bath');
+      await tester.pump();
+      await tester.tap(find.text('Make “Bath” yours'));
+      await tester.pump();
+      await tester.tap(find.widgetWithText(AppButton, 'Add'));
       await tester.pumpAndSettle();
-      await saveOwnActivity(tester, 'Bath');
       expect(itemRow('Bath'), findsOneWidget);
       expect(
         find.descendant(
@@ -443,10 +428,8 @@ void main() {
     );
     await openPlan(tester);
 
-    await tester.enterText(
-      find.widgetWithText(TextField, 'Add an activity to this day'),
-      'reading',
-    );
+    await openAddSheet(tester);
+    await tester.enterText(addField, 'reading');
     await tester.pumpAndSettle();
     expect(
       tester
@@ -455,10 +438,10 @@ void main() {
       isTrue,
       reason: 'the typed name selects the activity',
     );
-    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.tap(find.widgetWithText(AppButton, 'Add'));
     await tester.pumpAndSettle();
 
-    await openItem(tester, find.text('reading'));
+    await openItem(tester, itemRow('Reading'));
     expect(find.text('Book *'), findsOneWidget, reason: 'not a task');
   });
 
@@ -468,14 +451,9 @@ void main() {
     await pumpTestApp(tester, preferences: _onboarded);
     await openPlan(tester);
 
-    await tester.enterText(
-      find.widgetWithText(TextField, 'Add an activity to this day'),
-      'Gym',
-    );
-    await tester.testTextInput.receiveAction(TextInputAction.done);
-    await tester.pumpAndSettle();
+    await addTyped(tester, 'Gym');
 
-    expect(find.widgetWithText(ChoiceChip, 'Gym'), findsOneWidget);
+    expect(itemRow('Gym'), findsOneWidget);
     expect(find.byType(SnackBar), findsNothing, reason: 'no pop-up (A9)');
     await openItem(tester, find.byType(PlanItemTile));
     await tester.scrollUntilVisible(
@@ -527,13 +505,7 @@ void main() {
     Future<void> openNewItem(WidgetTester tester, String name) async {
       await pumpTestApp(tester, preferences: _onboarded);
       await openPlan(tester);
-      await tester.enterText(
-        find.widgetWithText(TextField, 'Add an activity to this day'),
-        name,
-      );
-      await tester.testTextInput.receiveAction(TextInputAction.done);
-      await tester.pumpAndSettle();
-      await saveOwnActivity(tester, name);
+      await addNew(tester, name);
       await openItem(tester, itemRow(name));
     }
 
@@ -709,27 +681,6 @@ void main() {
   });
 
   group('planner: week, month, repeat, plan next (ADR-036)', () {
-    testAppWidgets('the week\'s "+" plans an activity: no plain tasks; a '
-        'new title is made your own on saving', (tester) async {
-      await pumpTestApp(tester, preferences: _onboarded);
-      await openPlanTab(tester);
-
-      await tester.tap(find.byTooltip('New plan').first);
-      await tester.pumpAndSettle();
-      expect(find.text('Just a task'), findsNothing);
-      expect(
-        find.widgetWithText(ActionChip, 'Browse activities'),
-        findsOneWidget,
-      );
-      expect(find.widgetWithText(ActionChip, 'Make your own'), findsOneWidget);
-
-      await tester.enterText(find.widgetWithText(TextField, 'Title'), 'Swim');
-      await scrollAndTap(tester, find.text('Save'));
-      await saveOwnActivity(tester, 'Swim');
-      expect(find.text('Swim'), findsWidgets);
-      expect(find.text('New plan'), findsNothing, reason: 'sheet closed');
-    });
-
     testAppWidgets('repeat a plan on chosen days; the week shows each one', (
       tester,
     ) async {
@@ -746,19 +697,18 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.textContaining('Repeats Mon, Sat'), findsOneWidget);
 
-      await tester.pageBack(); // back from the day to the week
-      await tester.pumpAndSettle();
-      // Week of Sat 3 Oct (locale weeks start on Sunday): Sat 3 only;
-      // next week: Mon 5 and Sat 10.
+      expect(find.byIcon(AppIcons.repeat), findsOneWidget, reason: 'on row');
+      // Next week (locale weeks start on Sunday): Mon 5 and Sat 10.
       await tester.tap(find.byTooltip('Next week'));
       await tester.pumpAndSettle();
-      expect(find.text('Read'), findsNWidgets(2));
-      expect(find.byIcon(AppIcons.repeat), findsNWidgets(2));
+      expect(itemRow('Read'), findsOneWidget, reason: 'Sat 10');
+      await selectDay(tester, 'Monday, October 5, 2026');
+      expect(itemRow('Read'), findsOneWidget);
+      expect(find.byIcon(AppIcons.repeat), findsOneWidget);
     });
 
-    testAppWidgets('month shows the calendar; tapping a day opens it', (
-      tester,
-    ) async {
+    testAppWidgets('month shows the calendar; tapping a day selects it in '
+        'the week', (tester) async {
       await pumpTestApp(tester, preferences: _onboarded, seed: seedReadingPlan);
       await openPlanTab(tester);
 
@@ -768,8 +718,8 @@ void main() {
 
       await tester.tap(find.bySemanticsLabel('Saturday, October 3, 2026'));
       await tester.pumpAndSettle();
-      expect(find.byType(DayScreen), findsOneWidget);
-      expect(find.text('Read'), findsOneWidget);
+      expect(find.byType(PlanWeekView), findsOneWidget);
+      expect(itemRow('Read'), findsOneWidget);
     });
 
     testAppWidgets('plan next from inside an item', (tester) async {
@@ -784,11 +734,9 @@ void main() {
 
       expect(find.textContaining('Planned for Sat, Oct 10'), findsOneWidget);
       await closeItem(tester);
-      await tester.pageBack(); // back from the day to the week
-      await tester.pumpAndSettle();
       await tester.tap(find.byTooltip('Next week'));
       await tester.pumpAndSettle();
-      expect(find.text('Read'), findsOneWidget);
+      expect(itemRow('Read'), findsOneWidget, reason: 'Sat 10');
     });
   });
 }

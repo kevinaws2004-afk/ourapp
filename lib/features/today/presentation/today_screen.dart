@@ -28,6 +28,7 @@ import '../../plans/presentation/widgets/day_items.dart';
 import '../../../shared/widgets/section_header.dart';
 import '../../../core/time/local_date.dart';
 import '../../plans/domain/day_edges.dart';
+import '../../plans/presentation/widgets/no_plan_card.dart';
 import 'day_edges_sections.dart';
 import 'day_hero.dart';
 import 'now_next_card.dart';
@@ -105,6 +106,8 @@ class TodayScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: Colors.transparent,
       floatingActionButton: FloatingActionButton(
+        // Today and Plan both keep a + alive in the tab shell.
+        heroTag: 'today-add',
         tooltip: l10n.todayAdd,
         onPressed: add,
         child: const Icon(AppIcons.add),
@@ -150,7 +153,11 @@ class TodayScreen extends ConsumerWidget {
                 ],
                 if (empty) ...[
                   const SizedBox(height: AppSpacing.lg),
-                  NoPlanCard(onAdd: add, onStartNow: () => add(now: true)),
+                  NoPlanCard(
+                    date: today,
+                    onAdd: add,
+                    onStartNow: () => add(now: true),
+                  ),
                 ] else ...[
                   SectionHeader(title: l10n.todayYourDay),
                   DayItems(
@@ -158,7 +165,6 @@ class TodayScreen extends ConsumerWidget {
                     emptyTitle: l10n.todayEmptyTitle,
                     emptyMessage: l10n.todayEmptyMessageItems,
                     showSummary: false,
-                    showQuickAdd: false,
                     timeline: true,
                     onOpenItem: onOpenItem,
                     onOpenRecord: onOpenRecord,

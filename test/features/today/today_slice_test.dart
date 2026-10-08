@@ -7,6 +7,7 @@ import 'package:daylog/features/activity_types/domain/activity_type_use_cases.da
 import 'package:daylog/features/plans/data/db_plan_repository.dart';
 import 'package:daylog/features/plans/domain/plan.dart';
 import 'package:daylog/features/plans/domain/plan_use_cases.dart';
+
 import 'package:daylog/features/plans/presentation/item/item_screen.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/features/settings/presentation/appearance_screen.dart';
@@ -147,6 +148,51 @@ void main() {
     expect(find.byType(ItemScreen), findsOneWidget);
     expect(find.text('Not done'), findsOneWidget, reason: 'A7');
     expect(find.text('1 of 1 done today'), findsOneWidget);
+  });
+
+  testAppWidgets('one timer at a time: starting another asks to finish the '
+      'running one first (R2)', (tester) async {
+    await pumpTestApp(
+      tester,
+      preferences: _onboarded,
+      seed: (db, clock) async {
+        await seedReadingAtNine(db, clock);
+        final ids = SequentialIdGenerator();
+        for (var i = 0; i < 50; i++) {
+          ids.newId(); // past the ids the first seed used
+        }
+        final types = DbActivityTypeRepository(db, clock);
+        final reading = (await types.getActiveTypes()).single.id;
+        await CreatePlan(DbPlanRepository(db, clock), types, ids, clock)(
+          PlanDraft(
+            planDate: LocalDate(2026, 10, 3),
+            title: 'Read more',
+            activityTypeId: reading,
+          ),
+        );
+      },
+    );
+    await scrollAndTap(
+      tester,
+      find.descendant(
+        of: find.byType(NowNextCard),
+        matching: find.text('Start'),
+      ),
+    );
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    await scrollAndTap(tester, find.text('Read more').last);
+    await tester.tap(find.text('Start'));
+    await tester.pumpAndSettle();
+    expect(find.text('Finish Reading and start Read more?'), findsOneWidget);
+    await tester.tap(find.text('Finish and start'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Skip')); // How did it go? for the first
+    await tester.pumpAndSettle();
+
+    expect(find.text('LIVE'), findsOneWidget, reason: 'the second runs');
+    expect(find.text('Read more'), findsWidgets);
   });
 
   for (final id in AppThemeId.values) {

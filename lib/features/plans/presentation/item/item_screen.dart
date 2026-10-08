@@ -610,9 +610,7 @@ class _ItemActions extends ConsumerWidget {
     FocusSession other,
   ) async {
     final l10n = AppLocalizations.of(context);
-    final otherType = await ref.read(
-      activityTypeProvider(other.activityTypeId).future,
-    );
+    final otherType = await readActivityType(ref, other.activityTypeId);
     if (!context.mounted) return;
     final confirmed = await showDialog<bool>(
       context: context,

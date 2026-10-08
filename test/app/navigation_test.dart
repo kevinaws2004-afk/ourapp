@@ -21,8 +21,8 @@ Future<void> seedReading(AppDatabase db, FakeClock clock) => CreateActivityType(
 )(readingDefinition());
 
 void main() {
-  testAppWidgets('no tab has a floating Record button; Today adds behind + '
-      '(ADR-046)', (tester) async {
+  testAppWidgets('no tab has a floating Record button; Today and Plan add '
+      'behind + (ADR-046)', (tester) async {
     await pumpTestApp(tester, preferences: _onboarded, seed: seedReading);
     for (final tab in ['Today', 'Plan', 'Challenges', 'Insights', 'Me']) {
       await tester.tap(
@@ -34,11 +34,14 @@ void main() {
       await tester.pumpAndSettle();
       expect(
         find.byType(FloatingActionButton),
-        tab == 'Today' ? findsOneWidget : findsNothing,
+        tab == 'Today' || tab == 'Plan' ? findsOneWidget : findsNothing,
         reason: tab,
       );
       if (tab == 'Today') {
         expect(find.byTooltip('Add to today'), findsOneWidget);
+      }
+      if (tab == 'Plan') {
+        expect(find.byTooltip('Add to this day'), findsOneWidget);
       }
     }
   });

@@ -13,6 +13,9 @@ abstract final class AppSizes {
   /// Day cell height in the Plan week strip.
   static const double dayCell = 56;
 
+  /// The ring or count under a day in Plan's week strip.
+  static const double dayMark = 20;
+
   /// One planned item on a month-calendar day.
   static const double monthDot = 6;
 

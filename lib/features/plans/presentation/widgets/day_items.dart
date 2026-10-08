@@ -14,12 +14,11 @@ import '../../domain/plan.dart';
 import '../../domain/watch_day_overview.dart';
 import '../activity_chooser.dart';
 import '../plan_providers.dart';
-import 'plan_quick_add.dart';
 import 'planned_list.dart';
 
-/// One day: quick add, how much is done, and the day's items (A1). Today
-/// and the day screen show exactly this, so a day looks the same wherever
-/// it's opened.
+/// One day's items (A1): Today and Plan's selected day show exactly this,
+/// so a day looks the same wherever it's seen. Adding is the + sheet
+/// (ADR-046).
 class DayItems extends ConsumerWidget {
   const DayItems({
     super.key,
@@ -28,10 +27,8 @@ class DayItems extends ConsumerWidget {
     required this.onOpenItem,
     required this.onOpenRecord,
     required this.chooser,
-    this.onStartNow,
     this.emptyTitle,
     this.showSummary = true,
-    this.showQuickAdd = true,
     this.timeline = false,
   });
 
@@ -46,9 +43,6 @@ class DayItems extends ConsumerWidget {
   /// "3 done · 1 h 20 min" above the items; Today shows it in its hero.
   final bool showSummary;
 
-  /// The inline quick add; Today has it in the + sheet instead (ADR-046).
-  final bool showQuickAdd;
-
   /// Today's timeline (ADR-046): a now line, no dragging.
   final bool timeline;
 
@@ -61,23 +55,11 @@ class DayItems extends ConsumerWidget {
   /// Picks an activity from the list, or makes a new one, for quick add.
   final ActivityChooser chooser;
 
-  /// Offers "Start now" in quick add (today only).
-  final ValueChanged<PlanId>? onStartNow;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (showQuickAdd) ...[
-          PlanQuickAdd(
-            key: ValueKey(date),
-            date: date,
-            chooser: chooser,
-            onStartNow: onStartNow,
-          ),
-          const SizedBox(height: AppSpacing.lg),
-        ],
         AsyncValueView<DayOverview>(
           value: ref.watch(dayOverviewProvider(date)),
           onRetry: () => ref.invalidate(dayOverviewProvider(date)),

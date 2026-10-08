@@ -167,7 +167,31 @@ class PlanActions {
   Future<void> reopen(PlannedItem item) =>
       _run(() => _setStatus(item.plan.id, PlanStatus.planned));
 
-  Future<void> moveToTomorrow(PlannedItem item) {
+  Future<void> moveToTomorrow(PlannedItem item) =>
+      _moveTo(item, item.plan.planDate.addDays(1), _l10n.planMovedMessage);
+
+  /// Move to… (P7): a date picker, then the same move, with Undo.
+  Future<void> moveTo(PlannedItem item) async {
+    final from = item.plan.planDate;
+    final picked = await showDatePicker(
+      context: _context,
+      initialDate: DateTime(from.year, from.month, from.day + 1),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2200),
+    );
+    if (picked == null || !_context.mounted) return;
+    final to = LocalDate(picked.year, picked.month, picked.day);
+    if (to == from) return;
+    await _moveTo(
+      item,
+      to,
+      _l10n.planMovedTo(
+        MaterialLocalizations.of(_context).formatMediumDate(picked),
+      ),
+    );
+  }
+
+  Future<void> _moveTo(PlannedItem item, LocalDate to, String message) {
     final id = item.plan.id;
     final from = item.plan.planDate;
     final move = _ref.read(movePlanProvider);
@@ -175,8 +199,8 @@ class PlanActions {
     final delete = _ref.read(deleteItemProvider);
     var moved = id;
     return _run(
-      () async => moved = await move(id, from.addDays(1)),
-      message: _l10n.planMovedMessage,
+      () async => moved = await move(id, to),
+      message: message,
       // A repeating occurrence moved as a copy: drop the copy, bring it back.
       undo: () async {
         if (moved == id) return move(id, from).then((_) {});
@@ -259,6 +283,8 @@ class PlanActions {
     final isOpen = item.isOpen;
     final action = await showModalBottomSheet<_QuickAction>(
       context: _context,
+      isScrollControlled: true,
+      useSafeArea: true,
       builder: (context) {
         ListTile tile(IconData icon, String label, _QuickAction value) =>
             ListTile(
@@ -266,7 +292,7 @@ class PlanActions {
               title: Text(label),
               onTap: () => Navigator.of(context).pop(value),
             );
-        return SafeArea(
+        return SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -282,6 +308,8 @@ class PlanActions {
                   l10n.planMoveToTomorrow,
                   _QuickAction.moveToTomorrow,
                 ),
+              if (isOpen)
+                tile(AppIcons.date, l10n.planMoveTo, _QuickAction.moveTo),
               tile(AppIcons.edit, l10n.planEditAction, _QuickAction.edit),
               tile(
                 AppIcons.duplicate,
@@ -309,6 +337,8 @@ class PlanActions {
         await toggleDone(item);
       case _QuickAction.moveToTomorrow:
         await moveToTomorrow(item);
+      case _QuickAction.moveTo:
+        await moveTo(item);
       case _QuickAction.edit:
         await open(item);
       case _QuickAction.duplicate:
@@ -388,6 +418,7 @@ class PlanActions {
 enum _QuickAction {
   toggleDone,
   moveToTomorrow,
+  moveTo,
   edit,
   duplicate,
   repeat,

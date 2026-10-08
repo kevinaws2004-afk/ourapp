@@ -25,7 +25,7 @@ import '../../domain/plan_title_match.dart';
 import '../activity_chooser.dart';
 import '../plan_date_notifier.dart';
 import '../plan_providers.dart';
-import 'plan_quick_add.dart';
+import 'activity_suggestions.dart';
 import 'plan_time_sheet.dart';
 import 'repeat_sheet.dart';
 
@@ -274,8 +274,7 @@ class _AddToDayState extends ConsumerState<AddToDay> {
   Future<void> _browse() async {
     final id = await widget.chooser.browse();
     if (id == null || !mounted) return;
-    final types = await ref.read(activeActivityTypesProvider.future);
-    final type = types.where((t) => t.id == id).firstOrNull;
+    final type = await readActivityType(ref, id);
     if (type != null && mounted) _select(type);
   }
 

@@ -201,18 +201,16 @@ final recentActivityTypesProvider = Provider.autoDispose<List<ActivityType>>((
   return rankByUse(types, plans, (t) => t.id);
 });
 
-/// What you usually do on today's weekday (T10, ADR-046), from the last
-/// four weeks of plans.
-final usualActivitiesProvider = Provider.autoDispose<List<UsualActivity>>((
-  ref,
-) {
-  final clock = ref.watch(clockProvider);
-  final today = currentLocalDate(clock);
-  final plans = ref.watch(_recentPlansProvider(today)).value ?? const [];
-  return usualForWeekday(plans, today, (plan) {
-    final start = plan.plannedStartAt;
-    if (start == null) return null;
-    final local = start.add(clock.offsetAt(start));
-    return local.hour * 60 + local.minute;
-  });
-});
+/// What you usually do on [date]'s weekday (T10, P4, ADR-046), from the
+/// four weeks before it.
+final usualActivitiesProvider = Provider.autoDispose
+    .family<List<UsualActivity>, LocalDate>((ref, date) {
+      final clock = ref.watch(clockProvider);
+      final plans = ref.watch(_recentPlansProvider(date)).value ?? const [];
+      return usualForWeekday(plans, date, (plan) {
+        final start = plan.plannedStartAt;
+        if (start == null) return null;
+        final local = start.add(clock.offsetAt(start));
+        return local.hour * 60 + local.minute;
+      });
+    });

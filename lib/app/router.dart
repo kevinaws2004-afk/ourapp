@@ -16,7 +16,6 @@ import '../features/onboarding/presentation/onboarding_screen.dart';
 import '../features/plans/presentation/activity_chooser.dart';
 import '../features/plans/domain/plan.dart';
 import '../core/time/clock_provider.dart';
-import '../features/plans/presentation/day_screen.dart';
 import '../features/plans/presentation/item/item_notifier.dart';
 import '../features/plans/presentation/item/item_screen.dart';
 import '../features/plans/presentation/plan_date_notifier.dart';
@@ -50,7 +49,6 @@ abstract final class AppRoutes {
   static const plan = '/plan';
 
   /// The Plan tab's selected date as one day (A1).
-  static const planDay = '/plan/day';
   static const insights = '/insights';
 
   /// An activity's automatic progress (ADR-037), inside the Insights tab.
@@ -241,20 +239,8 @@ final routerProvider = Provider<GoRouter>((ref) {
                   onOpenItem: (id) =>
                       unawaited(context.push(AppRoutes.item(id))),
                   onOpenRecord: (log) => openLog(context, log),
-                  onOpenDay: () => unawaited(context.push(AppRoutes.planDay)),
                   chooser: chooser(context),
                 ),
-                routes: [
-                  GoRoute(
-                    path: 'day',
-                    builder: (context, state) => DayScreen(
-                      onOpenItem: (id) =>
-                          unawaited(context.push(AppRoutes.item(id))),
-                      onOpenRecord: (log) => openLog(context, log),
-                      chooser: chooser(context),
-                    ),
-                  ),
-                ],
               ),
             ],
           ),

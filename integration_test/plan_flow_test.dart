@@ -15,7 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:intl/intl.dart';
 
 /// Plans on a real device (ADR-018, ADR-035): install Reading, plan it for
 /// today from the Plan tab's week (today's day screen), open it and log into it (saved as you type), and
@@ -74,14 +73,10 @@ void main() {
     await tester.pumpAndSettle();
 
     await tapTab('Plan');
-    // The week opens; tapping today's heading opens the day (A1).
-    await tester.tap(
-      find.text(DateFormat.yMMMMEEEEd('en_US').format(DateTime.now())),
-    );
+    // The week opens on today; + adds to it, a Recent activity in one tap.
+    await tester.tap(find.byTooltip('Add to this day'));
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(ChoiceChip, 'Reading'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Add plan'));
     await tester.pumpAndSettle();
     // Opening the planned activity is where you log into it (ADR-035).
     await tester.tap(find.byType(PlanItemTile));

@@ -24,14 +24,6 @@
   "@navMe": {
     "description": "Primary navigation tab: body measurements, preferences, settings."
   },
-  "trackPlaceholder": "The activities you track will appear here.",
-  "@trackPlaceholder": {
-    "description": "Placeholder message on the Track tab until the feature is built."
-  },
-  "insightsPlaceholder": "Your progress over time will appear here.",
-  "@insightsPlaceholder": {
-    "description": "Placeholder message on the Insights tab until the feature is built."
-  },
   "onboardingTitle": "Welcome",
   "@onboardingTitle": {
     "description": "Title of the first-run screen (placeholder for the full onboarding)."
@@ -59,10 +51,6 @@
   "actionSave": "Save",
   "@actionSave": {
     "description": "Button: save the current form."
-  },
-  "actionCancel": "Cancel",
-  "@actionCancel": {
-    "description": "Button: cancel and close."
   },
   "actionUndo": "Undo",
   "@actionUndo": {
@@ -691,10 +679,6 @@
   "@planYesterday": {
     "description": "Relative date label."
   },
-  "planChooseDate": "Choose a date",
-  "@planChooseDate": {
-    "description": "Tooltip for the calendar button on the Plan tab."
-  },
   "planPreviousWeek": "Previous week",
   "@planPreviousWeek": {
     "description": "Tooltip for the previous-week button."
@@ -897,18 +881,6 @@
   "@planTaskChoice": {
     "description": "Plan sheet chip: a plan without an activity (a Task)."
   },
-  "planAddAction": "Add plan",
-  "@planAddAction": {
-    "description": "Plan tab quick add: button adding the typed plan."
-  },
-  "planAddTime": "Set a time",
-  "@planAddTime": {
-    "description": "Quick add: opens the sheet choosing when it happens."
-  },
-  "planQuickAddHint": "Add an activity to this day",
-  "@planQuickAddHint": {
-    "description": "Plan tab quick add: hint in the title field."
-  },
   "planBrowseActivities": "Browse activities",
   "@planBrowseActivities": {
     "description": "Quick add / plan sheet: opens the list of activities to pick one."
@@ -1002,10 +974,6 @@
   "@planSkippedMessage": {
     "description": "Snackbar after skipping a plan (with Undo)."
   },
-  "planTaskDoneMessage": "Done",
-  "@planTaskDoneMessage": {
-    "description": "Snackbar after completing a task (with Undo)."
-  },
   "planReorderHandle": "Reorder",
   "@planReorderHandle": {
     "description": "Accessibility label of a plan's drag handle."
@@ -1013,10 +981,6 @@
   "planStatusDone": "Done",
   "@planStatusDone": {
     "description": "Status of a completed task."
-  },
-  "planStatusRecorded": "Done",
-  "@planStatusRecorded": {
-    "description": "Status of an activity plan with a record but no duration."
   },
   "planStatusSkipped": "Skipped",
   "@planStatusSkipped": {
@@ -1207,18 +1171,6 @@
   "validationFocusNotActive": "This focus session has already ended.",
   "@validationFocusNotActive": {
     "description": "Validation message."
-  },
-  "focusComplete": "{activity} session complete · {duration}",
-  "@focusComplete": {
-    "description": "Feedback after finishing a focus session (FR-FO-05).",
-    "placeholders": {
-      "activity": {
-        "type": "String"
-      },
-      "duration": {
-        "type": "String"
-      }
-    }
   },
   "dimensionPercentage": "Percentage",
   "@dimensionPercentage": {
@@ -1569,10 +1521,6 @@
   "@itemDone": {
     "description": "Status of an item that has been done or logged."
   },
-  "itemStartTimer": "Start timer",
-  "@itemStartTimer": {
-    "description": "Button in an item: time the activity while logging it."
-  },
   "itemTimerFullScreen": "Full screen timer",
   "@itemTimerFullScreen": {
     "description": "Opens the running timer full screen."
@@ -1592,10 +1540,6 @@
   "itemNothingToLogHint": "What do you want to keep track of? Pick one, or just write notes.",
   "@itemNothingToLogHint": {
     "description": "Shown in an item whose activity has no fields yet."
-  },
-  "itemTimerOtherRunning": "Another timer is running",
-  "@itemTimerOtherRunning": {
-    "description": "Shown in an item when a timer runs for a different item."
   },
   "todayDoneSummary": "{count} done · {duration}",
   "@todayDoneSummary": {
@@ -1726,10 +1670,6 @@
   "@planRepeatStopped": {
     "description": "Snackbar after stopping a repeat."
   },
-  "planRepeating": "Repeats",
-  "@planRepeating": {
-    "description": "Short label on a repeating plan."
-  },
   "planNextAction": "Plan next…",
   "@planNextAction": {
     "description": "Button in an item: plan the same thing on another date (next appointment, next session)."
@@ -1754,10 +1694,6 @@
   "planViewMonth": "Month",
   "@planViewMonth": {
     "description": "Plan tab view switch."
-  },
-  "planWeekEmptyDay": "Nothing planned",
-  "@planWeekEmptyDay": {
-    "description": "A day with no items in the week view."
   },
   "insightAutoTime": "Time",
   "@insightAutoTime": {
@@ -1823,17 +1759,9 @@
       }
     }
   },
-  "insightOpenActivityHint": "see its progress",
-  "@insightOpenActivityHint": {
-    "description": "Tap hint on an activity row in Insights."
-  },
   "actionDone": "Done",
   "@actionDone": {
     "description": "Generic confirm button that closes a sheet."
-  },
-  "planStartNow": "Start now",
-  "@planStartNow": {
-    "description": "Quick add (today): adds what's typed at the current time and opens it to log it."
   },
   "planRecent": "Recent",
   "@planRecent": {
@@ -1893,14 +1821,6 @@
   "planTimeRemove": "No time",
   "@planTimeRemove": {
     "description": "Time sheet: removes the chosen time."
-  },
-  "dayPreviousDay": "Previous day",
-  "@dayPreviousDay": {
-    "description": "Day screen: goes to the day before."
-  },
-  "dayNextDay": "Next day",
-  "@dayNextDay": {
-    "description": "Day screen: goes to the day after."
   },
   "meSectionSetup": "Your setup",
   "@meSectionSetup": {
@@ -6383,22 +6303,6 @@
   "@todayRingCenter": {
     "description": "Small word under the count in Today's ring."
   },
-  "todayHeroEmpty": "A fresh day. Add what you'd like to do.",
-  "@todayHeroEmpty": {
-    "description": "Today's hero line when nothing is on the day."
-  },
-  "todayHeroAllDone": "Everything's done. Nicely done.",
-  "@todayHeroAllDone": {
-    "description": "Today's hero line when every item is done."
-  },
-  "todayUpNext": "Up next",
-  "@todayUpNext": {
-    "description": "Label of the Up next card on Today."
-  },
-  "todayDoingNow": "Now",
-  "@todayDoingNow": {
-    "description": "Label of the Up next card when the item is in progress."
-  },
   "todayUpNextIn": "in {duration}",
   "@todayUpNextIn": {
     "description": "How soon the next item starts, e.g. 'in 25 min'.",
@@ -6408,17 +6312,9 @@
       }
     }
   },
-  "todayUpNextAnytime": "Anytime today",
-  "@todayUpNextAnytime": {
-    "description": "Up next card: the item has no time."
-  },
   "todayUpNextStart": "Start",
   "@todayUpNextStart": {
     "description": "Up next card: start recording the item."
-  },
-  "todayUpNextContinue": "Continue",
-  "@todayUpNextContinue": {
-    "description": "Up next card: open the item that's in progress."
   },
   "todayFactTime": "Time",
   "@todayFactTime": {
@@ -6684,10 +6580,6 @@
       }
     }
   },
-  "itemAddDetails": "Add details",
-  "@itemAddDetails": {
-    "description": "Link to add details to a done thing."
-  },
   "addSheetTitle": "Add to {day}",
   "@addSheetTitle": {
     "description": "Title of the add sheet.",
@@ -6934,5 +6826,83 @@
   "itemUndoSkip": "Undo skip",
   "@itemUndoSkip": {
     "description": "A skipped thing (A9): put it back as planned."
+  },
+  "noPlanDayTitle": "Nothing planned for {weekday}.",
+  "@noPlanDayTitle": {
+    "description": "Plan, an empty day (P4).",
+    "placeholders": {
+      "weekday": {
+        "type": "String"
+      }
+    }
+  },
+  "noPlanAddSomething": "Add something",
+  "@noPlanAddSomething": {
+    "description": "Plan, an empty day: open the add sheet (P4)."
+  },
+  "addedToDay": "{title} added",
+  "@addedToDay": {
+    "description": "Snackbar after a usual activity chip adds it to a day other than today.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "weekStripDayDone": "{date}: {done} of {total} done",
+  "@weekStripDayDone": {
+    "description": "Plan week strip, screen reader label of a past day or today.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "weekStripDayPlanned": "{date}: {count, plural, =0{nothing planned} =1{1 planned} other{{count} planned}}",
+  "@weekStripDayPlanned": {
+    "description": "Plan week strip, screen reader label of a future day.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planDayRelative": "{relative} · {date}",
+  "@planDayRelative": {
+    "description": "Plan, the selected day's heading, e.g. 'Tomorrow · Friday, Oct 9'.",
+    "placeholders": {
+      "relative": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "planMoveTo": "Move to…",
+  "@planMoveTo": {
+    "description": "Row options: move to another day (P7)."
+  },
+  "planMovedTo": "Moved to {date}",
+  "@planMovedTo": {
+    "description": "Snackbar after Move to….",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "planAddToDay": "Add to this day",
+  "@planAddToDay": {
+    "description": "Plan: the + button, adds to the selected day."
   }
 }

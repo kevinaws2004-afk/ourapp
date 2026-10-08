@@ -28,12 +28,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navMe => 'Me';
 
   @override
-  String get trackPlaceholder => 'The activities you track will appear here.';
-
-  @override
-  String get insightsPlaceholder => 'Your progress over time will appear here.';
-
-  @override
   String get onboardingTitle => 'Welcome';
 
   @override
@@ -55,9 +49,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get actionSave => 'Save';
-
-  @override
-  String get actionCancel => 'Cancel';
 
   @override
   String get actionUndo => 'Undo';
@@ -545,9 +536,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planYesterday => 'Yesterday';
 
   @override
-  String get planChooseDate => 'Choose a date';
-
-  @override
   String get planPreviousWeek => 'Previous week';
 
   @override
@@ -693,15 +681,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planTaskChoice => 'Just a task';
 
   @override
-  String get planAddAction => 'Add plan';
-
-  @override
-  String get planAddTime => 'Set a time';
-
-  @override
-  String get planQuickAddHint => 'Add an activity to this day';
-
-  @override
   String get planBrowseActivities => 'Browse activities';
 
   @override
@@ -771,16 +750,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planSkippedMessage => 'Skipped';
 
   @override
-  String get planTaskDoneMessage => 'Done';
-
-  @override
   String get planReorderHandle => 'Reorder';
 
   @override
   String get planStatusDone => 'Done';
-
-  @override
-  String get planStatusRecorded => 'Done';
 
   @override
   String get planStatusSkipped => 'Skipped';
@@ -919,11 +892,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get validationFocusNotActive =>
       'This focus session has already ended.';
-
-  @override
-  String focusComplete(String activity, String duration) {
-    return '$activity session complete · $duration';
-  }
 
   @override
   String get dimensionPercentage => 'Percentage';
@@ -1181,9 +1149,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get itemDone => 'Done';
 
   @override
-  String get itemStartTimer => 'Start timer';
-
-  @override
   String get itemTimerFullScreen => 'Full screen timer';
 
   @override
@@ -1198,9 +1163,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get itemNothingToLogHint =>
       'What do you want to keep track of? Pick one, or just write notes.';
-
-  @override
-  String get itemTimerOtherRunning => 'Another timer is running';
 
   @override
   String todayDoneSummary(int count, String duration) {
@@ -1297,9 +1259,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planRepeatStopped => 'Won\'t repeat after this';
 
   @override
-  String get planRepeating => 'Repeats';
-
-  @override
   String get planNextAction => 'Plan next…';
 
   @override
@@ -1315,9 +1274,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get planViewMonth => 'Month';
-
-  @override
-  String get planWeekEmptyDay => 'Nothing planned';
 
   @override
   String get insightAutoTime => 'Time';
@@ -1363,13 +1319,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get insightOpenActivityHint => 'see its progress';
-
-  @override
   String get actionDone => 'Done';
-
-  @override
-  String get planStartNow => 'Start now';
 
   @override
   String get planRecent => 'Recent';
@@ -1409,12 +1359,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get planTimeRemove => 'No time';
-
-  @override
-  String get dayPreviousDay => 'Previous day';
-
-  @override
-  String get dayNextDay => 'Next day';
 
   @override
   String get meSectionSetup => 'Your setup';
@@ -4737,30 +4681,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get todayRingCenter => 'done';
 
   @override
-  String get todayHeroEmpty => 'A fresh day. Add what you\'d like to do.';
-
-  @override
-  String get todayHeroAllDone => 'Everything\'s done. Nicely done.';
-
-  @override
-  String get todayUpNext => 'Up next';
-
-  @override
-  String get todayDoingNow => 'Now';
-
-  @override
   String todayUpNextIn(String duration) {
     return 'in $duration';
   }
 
   @override
-  String get todayUpNextAnytime => 'Anytime today';
-
-  @override
   String get todayUpNextStart => 'Start';
-
-  @override
-  String get todayUpNextContinue => 'Continue';
 
   @override
   String get todayFactTime => 'Time';
@@ -4923,9 +4849,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String itemDayLine(int done, int total) {
     return '$done of $total done today';
   }
-
-  @override
-  String get itemAddDetails => 'Add details';
 
   @override
   String addSheetTitle(String day) {
@@ -5093,4 +5016,50 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get itemUndoSkip => 'Undo skip';
+
+  @override
+  String noPlanDayTitle(String weekday) {
+    return 'Nothing planned for $weekday.';
+  }
+
+  @override
+  String get noPlanAddSomething => 'Add something';
+
+  @override
+  String addedToDay(String title) {
+    return '$title added';
+  }
+
+  @override
+  String weekStripDayDone(String date, int done, int total) {
+    return '$date: $done of $total done';
+  }
+
+  @override
+  String weekStripDayPlanned(String date, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count planned',
+      one: '1 planned',
+      zero: 'nothing planned',
+    );
+    return '$date: $_temp0';
+  }
+
+  @override
+  String planDayRelative(String relative, String date) {
+    return '$relative · $date';
+  }
+
+  @override
+  String get planMoveTo => 'Move to…';
+
+  @override
+  String planMovedTo(String date) {
+    return 'Moved to $date';
+  }
+
+  @override
+  String get planAddToDay => 'Add to this day';
 }
