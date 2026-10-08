@@ -107,6 +107,7 @@ abstract final class PhosphorGlyphs {
 
 /// Filled variants for selected states.
 abstract final class PhosphorFillGlyphs {
+  static const fire = IconData(0xe242, fontFamily: 'PhosphorFill');
   static const sun = IconData(0xe472, fontFamily: 'PhosphorFill');
   static const calendarDots = IconData(0xe7b4, fontFamily: 'PhosphorFill');
   static const squaresFour = IconData(0xe464, fontFamily: 'PhosphorFill');

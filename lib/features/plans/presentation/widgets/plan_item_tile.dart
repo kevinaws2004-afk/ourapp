@@ -1,54 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/design/app_icons.dart';
-import '../../../../core/design/tokens/sizes.dart';
 import '../../../../core/design/context_ext.dart';
 import '../../../../core/design/keys/activity_icon_ids.dart';
 import '../../../../core/design/tokens/activity_palette.dart';
+import '../../../../core/time/clock_provider.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../shared/widgets/activity_badge.dart';
 import '../../../../shared/widgets/done_check.dart';
 import '../../../../shared/widgets/item_card.dart';
-import '../../../../shared/widgets/status_chip.dart';
+import '../../../activity_logs/presentation/value_formatting.dart';
+import '../../../challenges/presentation/challenge_providers.dart';
+import '../../../focus/presentation/focus_providers.dart';
+import '../../../focus/presentation/focus_screen.dart';
 import '../../domain/plan.dart';
 import '../../domain/watch_day_overview.dart';
-import '../../../activity_logs/presentation/value_formatting.dart';
 import '../plan_formatting.dart';
 
-/// A plan as an item card (ADR-045) in the Plan vs Reality grammar
-/// (design_system.md §1.2): the status chip says planned, in progress or
-/// done, the check on the right fills when done, and skipped or cancelled
-/// items fade (never red). The same for tasks and activities.
+/// One thing on a day as a timeline row (ADR-046), the same on Today and in
+/// Plan. Its sub-line says what matters now:
+/// - open: what's logged so far, else its planned length
+/// - running: "Running · 12:04" (live)
+/// - done: its result ("32 pages", "45 min", "Done")
+/// - skipped / cancelled: says so, the row faded (never red)
 ///
-/// The check marks it done or not done ([onToggleDone], A17);
-/// it's inactive when there's nothing to toggle. Tapping the row opens the
-/// item to log into it ([onTap], ADR-035); [onMore] opens the plan options.
-class PlanItemTile extends StatelessWidget {
+/// A 🔥 shows the streak of a running challenge on its activity. The circle
+/// marks it done or not done ([onToggleDone], A17); tapping the row opens it
+/// ([onTap], ADR-035); long-press for options ([onLongPress]).
+class PlanItemTile extends ConsumerWidget {
   const PlanItemTile({
     super.key,
     required this.item,
     required this.onTap,
-    required this.onMore,
     required this.onToggleDone,
     this.onLongPress,
     this.dragHandle,
   });
 
-  /// Quick actions (B7).
-  final VoidCallback? onLongPress;
-
   final PlannedItem item;
   final VoidCallback onTap;
-  final VoidCallback onMore;
 
-  /// Null when the check can't toggle (e.g. skipped, or done by itself).
+  /// Null when the circle can't toggle (e.g. skipped, or done by itself).
   final VoidCallback? onToggleDone;
 
-  /// A drag handle for manual reordering, when the list allows it.
+  /// Options (B7).
+  final VoidCallback? onLongPress;
+
+  /// A drag handle for manual reordering, when the list allows it (Plan).
   final Widget? dragHandle;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final colors = context.colors;
     final plan = item.plan;
@@ -60,40 +62,52 @@ class PlanItemTile extends StatelessWidget {
           );
     final status = item.status;
     final done = status == EffectivePlanStatus.completed;
+    final running = status == EffectivePlanStatus.inProgress;
     final inactive =
         status == EffectivePlanStatus.skipped ||
         status == EffectivePlanStatus.cancelled;
-    final chip = switch (status) {
-      EffectivePlanStatus.planned => StatusChip(
-        label: l10n.planStatusPlanned,
-        tone: StatusTone.scheduled,
+    final streak = type == null
+        ? null
+        : ref.watch(activityStreaksProvider)[type.id];
+    final now = ref.watch(clockProvider).nowUtc();
+
+    String? subline;
+    if (running) {
+      ref.watch(focusTickProvider);
+      final session = ref.watch(activeFocusSessionProvider).value;
+      subline = session == null
+          ? l10n.planStatusInProgress
+          : l10n.itemRunning(formatTimer(session.elapsedMs(now)));
+    } else if (done) {
+      subline = formatItemResult(context, item);
+    } else if (status == EffectivePlanStatus.skipped) {
+      subline = l10n.planStatusSkipped;
+    } else if (status == EffectivePlanStatus.cancelled) {
+      subline = l10n.planStatusCancelled;
+    } else if ((type, item.records.firstOrNull) case (final type?, final log?)
+        when summarizeLog(context, type, log).isNotEmpty) {
+      // Logged into but not done yet: what's in it so far.
+      subline = summarizeLog(context, type, log);
+    } else if (plan.plannedEndAt == null) {
+      if (plan.plannedLengthMs case final length?) {
+        subline = formatDuration(l10n, length);
+      }
+    }
+
+    // Its time window contains now (or it started in the last 15 minutes).
+    final start = plan.plannedStartAt;
+    final end = start?.add(
+      Duration(
+        milliseconds:
+            plan.plannedLengthMs ?? const Duration(minutes: 15).inMilliseconds,
       ),
-      EffectivePlanStatus.inProgress => StatusChip(
-        label: l10n.planStatusInProgress,
-        tone: StatusTone.active,
-      ),
-      EffectivePlanStatus.completed => StatusChip(
-        label: l10n.planStatusDone,
-        tone: StatusTone.done,
-        icon: AppIcons.check,
-      ),
-      EffectivePlanStatus.skipped => StatusChip(
-        label: l10n.planStatusSkipped,
-        tone: StatusTone.neutral,
-      ),
-      EffectivePlanStatus.cancelled => StatusChip(
-        label: l10n.planStatusCancelled,
-        tone: StatusTone.neutral,
-      ),
-    };
-    // What was logged into it ("Bench press 60 kg × 8 (×2)", A18), or how
-    // long it took against the plan once done.
-    final logged = switch ((type, item.records.firstOrNull)) {
-      (final type?, final log?) => summarizeLog(context, type, log),
-      _ => '',
-    };
-    final outcome = done ? formatPlanOutcome(context, item) : null;
-    final summary = [?outcome, if (logged.isNotEmpty) logged].join(' · ');
+    );
+    final isNow =
+        item.isOpen &&
+        !running &&
+        start != null &&
+        !start.isAfter(now) &&
+        end!.isAfter(now);
 
     // Say what a tap does (ADR-030).
     final tapHint = plan.isTask
@@ -103,10 +117,13 @@ class PlanItemTile extends StatelessWidget {
         : l10n.planRecordHint(plan.title);
     return ItemCard(
       title: plan.title,
-      time: formatPlanTime(context, plan),
-      chip: chip,
-      summary: summary,
+      startTime: formatPlanStart(context, plan),
+      endTime: formatPlanEnd(context, plan),
+      subline: subline,
+      streak: streak?.days,
+      repeats: plan.isRepeating,
       faded: inactive,
+      emphasized: isNow,
       onTap: onTap,
       onLongPress: onLongPress,
       tapHint: tapHint,
@@ -120,25 +137,12 @@ class PlanItemTile extends StatelessWidget {
               colorKey: type?.colorKey ?? ActivityColorKey.slate.name,
             ),
       trailing: [
-        if (plan.isRepeating)
-          Icon(
-            AppIcons.repeat,
-            size: AppSizes.iconSmall,
-            color: colors.textSecondary,
-            semanticLabel: l10n.planRepeating,
-          ),
         DoneCheck(
           done: done,
           color: inactive
               ? colors.textTertiary
               : activity?.solid ?? colors.textSecondary,
           onPressed: onToggleDone,
-        ),
-        IconButton(
-          tooltip: l10n.planOptions,
-          icon: const Icon(AppIcons.more),
-          color: colors.textSecondary,
-          onPressed: onMore,
         ),
         ?dragHandle,
       ],

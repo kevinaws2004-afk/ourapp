@@ -9225,6 +9225,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'More {field}'**
   String stepperIncrease(String field);
+
+  /// Screen-reader label of the 🔥 badge.
+  ///
+  /// In en, this message translates to:
+  /// **'{days}-day streak'**
+  String streakBadgeLabel(int days);
+
+  /// Sub-line of a thing whose timer runs.
+  ///
+  /// In en, this message translates to:
+  /// **'Running · {time}'**
+  String itemRunning(String time);
+
+  /// Snackbar after finishing something.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} done'**
+  String itemDoneMessage(String title);
+
+  /// Snackbar after finishing something that keeps a streak.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} done · 🔥 {days}'**
+  String itemDoneStreakMessage(String title, int days);
+
+  /// Title of the sheet asking for details after finishing.
+  ///
+  /// In en, this message translates to:
+  /// **'How did it go?'**
+  String get howDidItGoTitle;
+
+  /// Save button of How did it go?
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get howDidItGoSave;
+
+  /// Skip button of How did it go?
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get howDidItGoSkip;
+
+  /// Today's status line in the morning.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 thing today} other{{count} things today}} · first at {time}'**
+  String todayStatusPlanned(int count, String time);
+
+  /// Today's status line when nothing has a time.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 thing today} other{{count} things today}}'**
+  String todayStatusPlannedAnytime(int count);
+
+  /// Today's status line during the day.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} done'**
+  String todayStatusProgress(int done, int total);
+
+  /// Today's status line during the day with time recorded.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} done · {duration} so far'**
+  String todayStatusProgressTime(int done, int total, String duration);
+
+  /// Today's status line while a timer runs.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} running · {done} of {total} done'**
+  String todayStatusRunning(String title, int done, int total);
+
+  /// Today's status line when everything is done.
+  ///
+  /// In en, this message translates to:
+  /// **'All {total} done'**
+  String todayStatusAllDone(int total);
+
+  /// Today's status line when everything is done, with time.
+  ///
+  /// In en, this message translates to:
+  /// **'All {total} done · {duration}'**
+  String todayStatusAllDoneTime(int total, String duration);
+
+  /// Today's status line on an empty day.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing planned yet'**
+  String get todayStatusEmpty;
+
+  /// Label of the Now/Next card while a timer runs.
+  ///
+  /// In en, this message translates to:
+  /// **'Running'**
+  String get nowNextRunning;
+
+  /// Label of the Now/Next card when a thing's time has come.
+  ///
+  /// In en, this message translates to:
+  /// **'Now'**
+  String get nowNextNow;
+
+  /// Label of the Now/Next card for a later thing.
+  ///
+  /// In en, this message translates to:
+  /// **'Next · {time}'**
+  String nowNextNext(String time);
+
+  /// Label of the Now/Next card for a thing without a time.
+  ///
+  /// In en, this message translates to:
+  /// **'Anytime'**
+  String get nowNextAnytime;
+
+  /// The line on Today's timeline at the current time.
+  ///
+  /// In en, this message translates to:
+  /// **'Now · {time}'**
+  String nowLine(String time);
+
+  /// Dialog when starting something while another timer runs.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish {running} and start {next}?'**
+  String oneTimerTitle(String running, String next);
+
+  /// Confirm button of the one-timer dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish and start'**
+  String get oneTimerConfirm;
+
+  /// Reopen a done thing.
+  ///
+  /// In en, this message translates to:
+  /// **'Not done'**
+  String get itemNotDone;
+
+  /// Start another timed session on a done thing.
+  ///
+  /// In en, this message translates to:
+  /// **'Time again'**
+  String get itemTimeAgain;
+
+  /// Streak line on a done thing.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{1 day in a row} other{{days} days in a row}}'**
+  String itemStreakLine(int days);
+
+  /// Day progress line on a done thing.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} done today'**
+  String itemDayLine(int done, int total);
+
+  /// Link to add details to a done thing.
+  ///
+  /// In en, this message translates to:
+  /// **'Add details'**
+  String get itemAddDetails;
+
+  /// Title of the add sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to {day}'**
+  String addSheetTitle(String day);
+
+  /// Day name in the add sheet title for today.
+  ///
+  /// In en, this message translates to:
+  /// **'today'**
+  String get addToday;
+
+  /// Quick action opening a thing's plan sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Change time and details'**
+  String get planEditAction;
+
+  /// Tooltip of Today's + button.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to today'**
+  String get todayAdd;
 }
 
 class _AppLocalizationsDelegate

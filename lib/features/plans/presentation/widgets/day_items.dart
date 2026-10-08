@@ -31,6 +31,8 @@ class DayItems extends ConsumerWidget {
     this.onStartNow,
     this.emptyTitle,
     this.showSummary = true,
+    this.showQuickAdd = true,
+    this.timeline = false,
   });
 
   final LocalDate date;
@@ -43,6 +45,12 @@ class DayItems extends ConsumerWidget {
 
   /// "3 done · 1 h 20 min" above the items; Today shows it in its hero.
   final bool showSummary;
+
+  /// The inline quick add; Today has it in the + sheet instead (ADR-046).
+  final bool showQuickAdd;
+
+  /// Today's timeline (ADR-046): a now line, no dragging.
+  final bool timeline;
 
   /// Opens a plan's item screen.
   final ValueChanged<PlanId> onOpenItem;
@@ -61,13 +69,15 @@ class DayItems extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        PlanQuickAdd(
-          key: ValueKey(date),
-          date: date,
-          chooser: chooser,
-          onStartNow: onStartNow,
-        ),
-        const SizedBox(height: AppSpacing.lg),
+        if (showQuickAdd) ...[
+          PlanQuickAdd(
+            key: ValueKey(date),
+            date: date,
+            chooser: chooser,
+            onStartNow: onStartNow,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+        ],
         AsyncValueView<DayOverview>(
           value: ref.watch(dayOverviewProvider(date)),
           onRetry: () => ref.invalidate(dayOverviewProvider(date)),
@@ -76,6 +86,7 @@ class DayItems extends ConsumerWidget {
             emptyMessage: emptyMessage,
             emptyTitle: emptyTitle,
             showSummary: showSummary,
+            timeline: timeline,
             onOpenItem: onOpenItem,
             onOpenRecord: onOpenRecord,
           ),
@@ -91,6 +102,7 @@ class _Entries extends StatelessWidget {
     required this.emptyMessage,
     required this.emptyTitle,
     required this.showSummary,
+    required this.timeline,
     required this.onOpenItem,
     required this.onOpenRecord,
   });
@@ -99,6 +111,7 @@ class _Entries extends StatelessWidget {
   final String emptyMessage;
   final String? emptyTitle;
   final bool showSummary;
+  final bool timeline;
   final ValueChanged<PlanId> onOpenItem;
   final ValueChanged<ActivityLog> onOpenRecord;
 
@@ -151,7 +164,8 @@ class _Entries extends StatelessWidget {
           entries: entries,
           onOpenItem: (item) => onOpenItem(item.plan.id),
           onOpenRecord: onOpenRecord,
-          reorderable: true,
+          reorderable: !timeline,
+          nowLine: timeline,
         ),
       ],
     );

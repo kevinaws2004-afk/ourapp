@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -9,9 +11,15 @@ import '../../../core/time/clock_provider.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../activity_logs/domain/activity_log.dart';
 import '../../challenges/domain/challenge.dart';
-import '../../challenges/presentation/today_challenges.dart';
 import '../../focus/presentation/focus_banner.dart';
+import '../../../core/design/app_icons.dart';
+import '../../../shared/errors/error_copy.dart';
+import '../../../shared/widgets/state_views.dart';
+import '../../activity_types/domain/activity_ids.dart';
+import '../../focus/presentation/focus_providers.dart';
 import '../../plans/domain/plan.dart';
+import '../../plans/domain/watch_day_overview.dart';
+import '../../plans/presentation/widgets/add_sheet.dart';
 import '../../plans/presentation/activity_chooser.dart';
 import '../../plans/presentation/plan_date_notifier.dart';
 import '../../plans/domain/day_progress.dart';
@@ -19,13 +27,13 @@ import '../../plans/presentation/plan_providers.dart';
 import '../../plans/presentation/widgets/day_items.dart';
 import '../../../shared/widgets/section_header.dart';
 import 'day_hero.dart';
-import 'up_next_card.dart';
+import 'now_next_card.dart';
+import 'today_status.dart';
 
-/// Today tab (ADR-035, ADR-045): a hero with the date, a greeting and how
-/// much of the day is done; **Up next** with one action to start it; then the
-/// day as [DayItems]: a quick way to add to the day (planned, or "Start now"
-/// to log it straight away) and the day's items in time order. Opening an
-/// item is where you log into it.
+/// Today, "my day" (ADR-046): the date, a greeting and one status line;
+/// the **Now/Next** card with one action (Start, Done or Finish); then the
+/// day as a timeline with a now line. Doing something changes the row (✓,
+/// result, 🔥) and the status line right here. Adding lives behind **+**.
 class TodayScreen extends ConsumerWidget {
   const TodayScreen({
     super.key,
@@ -59,50 +67,103 @@ class TodayScreen extends ConsumerWidget {
     final today = currentLocalDate(clock);
     final overview = ref.watch(dayOverviewProvider(today)).value;
     final next = overview == null ? null : upNext(overview, clock.nowUtc());
-    return SafeArea(
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: AppContentWidth.list),
-          child: ListView(
-            padding: EdgeInsets.fromLTRB(
-              margin,
-              AppSpacing.lg,
-              margin,
-              AppSpacing.giant,
-            ),
-            children: [
-              DayHero(
-                // "Saturday, Oct 3", in the device's language.
-                date: DateFormat.MMMEd(
-                  Localizations.localeOf(context).toString(),
-                ).format(DateTime(today.year, today.month, today.day)),
-                greeting: _greeting(l10n, clock),
-                progress: overview == null ? null : DayProgress.of(overview),
+    final running = next?.status == EffectivePlanStatus.inProgress
+        ? next
+        : null;
+    final progress = overview == null ? null : DayProgress.of(overview);
+    Future<void> start(PlannedItem item) => _startAndOpen(context, ref, item);
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      floatingActionButton: FloatingActionButton(
+        tooltip: l10n.todayAdd,
+        onPressed: () => unawaited(
+          showAddSheet(
+            context,
+            date: today,
+            dayName: l10n.addToday,
+            chooser: chooser,
+            onStartNow: (id) =>
+                unawaited(_startPlanAndOpen(context, ref, id, null)),
+          ),
+        ),
+        child: const Icon(AppIcons.add),
+      ),
+      body: SafeArea(
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: AppContentWidth.list),
+            child: ListView(
+              padding: EdgeInsets.fromLTRB(
+                margin,
+                AppSpacing.lg,
+                margin,
+                AppSpacing.giant + AppSpacing.huge,
               ),
-              FocusBanner(onOpen: onOpenFocus),
-              if (next != null) ...[
-                const SizedBox(height: AppSpacing.lg),
-                UpNextCard(item: next, onOpenItem: onOpenItem),
+              children: [
+                DayHero(
+                  // "Saturday, Oct 3", in the device's language.
+                  date: DateFormat.MMMEd(
+                    Localizations.localeOf(context).toString(),
+                  ).format(DateTime(today.year, today.month, today.day)),
+                  greeting: _greeting(l10n, clock),
+                  statusLine: todayStatusLine(context, progress, running),
+                  progress: progress,
+                ),
+                // A timer on something that isn't today's (e.g. another day).
+                if (running == null) FocusBanner(onOpen: onOpenFocus),
+                if (next != null) ...[
+                  const SizedBox(height: AppSpacing.lg),
+                  NowNextCard(
+                    item: next,
+                    onOpenItem: onOpenItem,
+                    onStart: (item) => unawaited(start(item)),
+                  ),
+                ],
+                SectionHeader(title: l10n.todayYourDay),
+                DayItems(
+                  date: today,
+                  emptyTitle: l10n.todayEmptyTitle,
+                  emptyMessage: l10n.todayEmptyMessageItems,
+                  showSummary: false,
+                  showQuickAdd: false,
+                  timeline: true,
+                  onOpenItem: onOpenItem,
+                  onOpenRecord: onOpenRecord,
+                  chooser: chooser,
+                ),
               ],
-              SectionHeader(title: l10n.todayYourDay),
-              DayItems(
-                date: today,
-                emptyTitle: l10n.todayEmptyTitle,
-                emptyMessage: l10n.todayEmptyMessageItems,
-                showSummary: false,
-                onOpenItem: onOpenItem,
-                onOpenRecord: onOpenRecord,
-                chooser: chooser,
-                onStartNow: onOpenItem,
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              TodayChallenges(onOpenChallenge: onOpenChallenge),
-            ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  /// Starts [item]'s timer, then opens it running (ADR-046).
+  Future<void> _startAndOpen(
+    BuildContext context,
+    WidgetRef ref,
+    PlannedItem item,
+  ) => _startPlanAndOpen(context, ref, item.plan.id, item.type?.id);
+
+  Future<void> _startPlanAndOpen(
+    BuildContext context,
+    WidgetRef ref,
+    PlanId planId,
+    ActivityTypeId? typeId,
+  ) async {
+    final l10n = AppLocalizations.of(context);
+    try {
+      final type = typeId ?? await ref.read(ensureItemActivityProvider)(planId);
+      await ref.read(startFocusSessionProvider)(type, planId: planId);
+    } catch (error) {
+      if (context.mounted) {
+        showMessageSnackBar(context, errorMessage(l10n, error));
+      }
+      return;
+    }
+    onOpenItem(planId);
   }
 
   static String _greeting(AppLocalizations l10n, Clock clock) {

@@ -25,7 +25,8 @@ enum PlanStatus {
 
 /// The status the user sees: reality (a linked record) wins over a stored
 /// `skipped` or `cancelled` (ADR-018); an active focus session on the plan
-/// makes it `inProgress` (ADR-031).
+/// makes it `inProgress` (ADR-031); that's the only way to be in progress
+/// (ADR-046).
 enum EffectivePlanStatus { planned, inProgress, completed, skipped, cancelled }
 
 /// An intention for a date (§3.2): an activity plan, or a Task when it has no
@@ -85,25 +86,26 @@ class Plan {
       ? plannedEndAt!.difference(plannedStartAt!).inMilliseconds
       : plannedDurationMs;
 
-  /// The effective status (ADR-040), given whether a non-deleted record
-  /// fulfils it, whether a focus session is running on it, and [today].
+  /// The effective status (ADR-040, ADR-046), given whether a non-deleted
+  /// record fulfils it, whether a focus session is running on it, and
+  /// [today].
   ///
-  /// Logging into an activity item doesn't finish it: it's in progress until
-  /// it's marked done, unless its day has passed (then what was logged counts
-  /// as done, so nothing stays in progress forever).
+  /// One Done (ADR-046): a thing is running ([EffectivePlanStatus.inProgress])
+  /// only while its timer runs; recording details doesn't finish it, Done
+  /// does. Once its day has passed, what was recorded counts as done, so
+  /// nothing stays open forever.
   EffectivePlanStatus effectiveStatus({
     required bool hasRecord,
     required LocalDate today,
     bool inFocus = false,
   }) {
-    // A running timer wins: you're still logging into it (ADR-035).
+    // A running timer wins: you're still doing it (ADR-035).
     if (inFocus) return EffectivePlanStatus.inProgress;
     if (status == PlanStatus.completed) return EffectivePlanStatus.completed;
-    // Something logged wins over planned, skipped or cancelled.
-    if (!isTask && hasRecord) {
-      return planDate.compareTo(today) < 0
-          ? EffectivePlanStatus.completed
-          : EffectivePlanStatus.inProgress;
+    // Something recorded on a past day counts as done, over planned,
+    // skipped or cancelled.
+    if (!isTask && hasRecord && planDate.compareTo(today) < 0) {
+      return EffectivePlanStatus.completed;
     }
     return switch (status) {
       PlanStatus.planned => EffectivePlanStatus.planned,

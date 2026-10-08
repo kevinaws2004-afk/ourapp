@@ -9,19 +9,24 @@ import '../../../shared/widgets/app_card.dart';
 import '../../../shared/widgets/progress_ring.dart';
 import '../../plans/domain/day_progress.dart';
 
-/// The top of Today (ADR-045): the date, a greeting, one line about the day
+/// The top of Today (ADR-045, ADR-046): the date, a greeting, the status
+/// line about the day
 /// and a ring of how much of it is done.
 class DayHero extends StatelessWidget {
   const DayHero({
     super.key,
     required this.date,
     required this.greeting,
+    required this.statusLine,
     required this.progress,
   });
 
   /// Already formatted ("Saturday, October 3").
   final String date;
   final String greeting;
+
+  /// One sentence about the day (ADR-046): "2 of 5 done · 1 h so far".
+  final String statusLine;
 
   /// Null while the day is loading.
   final DayProgress? progress;
@@ -31,12 +36,7 @@ class DayHero extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final c = context.colors;
     final progress = this.progress;
-    final line = switch (progress) {
-      null => '',
-      DayProgress(isEmpty: true) => l10n.todayHeroEmpty,
-      DayProgress(allDone: true) => l10n.todayHeroAllDone,
-      final p => l10n.todayProgress(p.done, p.total),
-    };
+    final line = statusLine;
     final ring = progress == null || progress.isEmpty
         ? null
         : ProgressRing(

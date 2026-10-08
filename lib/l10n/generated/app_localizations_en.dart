@@ -4805,4 +4805,149 @@ class AppLocalizationsEn extends AppLocalizations {
   String stepperIncrease(String field) {
     return 'More $field';
   }
+
+  @override
+  String streakBadgeLabel(int days) {
+    return '$days-day streak';
+  }
+
+  @override
+  String itemRunning(String time) {
+    return 'Running · $time';
+  }
+
+  @override
+  String itemDoneMessage(String title) {
+    return '$title done';
+  }
+
+  @override
+  String itemDoneStreakMessage(String title, int days) {
+    return '$title done · 🔥 $days';
+  }
+
+  @override
+  String get howDidItGoTitle => 'How did it go?';
+
+  @override
+  String get howDidItGoSave => 'Save';
+
+  @override
+  String get howDidItGoSkip => 'Skip';
+
+  @override
+  String todayStatusPlanned(int count, String time) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count things today',
+      one: '1 thing today',
+    );
+    return '$_temp0 · first at $time';
+  }
+
+  @override
+  String todayStatusPlannedAnytime(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count things today',
+      one: '1 thing today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String todayStatusProgress(int done, int total) {
+    return '$done of $total done';
+  }
+
+  @override
+  String todayStatusProgressTime(int done, int total, String duration) {
+    return '$done of $total done · $duration so far';
+  }
+
+  @override
+  String todayStatusRunning(String title, int done, int total) {
+    return '$title running · $done of $total done';
+  }
+
+  @override
+  String todayStatusAllDone(int total) {
+    return 'All $total done';
+  }
+
+  @override
+  String todayStatusAllDoneTime(int total, String duration) {
+    return 'All $total done · $duration';
+  }
+
+  @override
+  String get todayStatusEmpty => 'Nothing planned yet';
+
+  @override
+  String get nowNextRunning => 'Running';
+
+  @override
+  String get nowNextNow => 'Now';
+
+  @override
+  String nowNextNext(String time) {
+    return 'Next · $time';
+  }
+
+  @override
+  String get nowNextAnytime => 'Anytime';
+
+  @override
+  String nowLine(String time) {
+    return 'Now · $time';
+  }
+
+  @override
+  String oneTimerTitle(String running, String next) {
+    return 'Finish $running and start $next?';
+  }
+
+  @override
+  String get oneTimerConfirm => 'Finish and start';
+
+  @override
+  String get itemNotDone => 'Not done';
+
+  @override
+  String get itemTimeAgain => 'Time again';
+
+  @override
+  String itemStreakLine(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days in a row',
+      one: '1 day in a row',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String itemDayLine(int done, int total) {
+    return '$done of $total done today';
+  }
+
+  @override
+  String get itemAddDetails => 'Add details';
+
+  @override
+  String addSheetTitle(String day) {
+    return 'Add to $day';
+  }
+
+  @override
+  String get addToday => 'today';
+
+  @override
+  String get planEditAction => 'Change time and details';
+
+  @override
+  String get todayAdd => 'Add to today';
 }

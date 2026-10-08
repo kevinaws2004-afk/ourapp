@@ -17,6 +17,10 @@ import '../../../../shared/widgets/activity_badge.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_card.dart';
 import '../../../../shared/widgets/status_chip.dart';
+import '../../../../shared/widgets/streak_badge.dart';
+import '../../../activity_types/presentation/activity_type_providers.dart';
+import '../../../challenges/presentation/challenge_providers.dart';
+import '../../domain/day_progress.dart';
 import '../../../../shared/widgets/state_views.dart';
 import '../../../activity_logs/presentation/activity_log_providers.dart';
 import '../../../activity_logs/presentation/form/activity_log_form.dart';
@@ -29,7 +33,6 @@ import '../../../activity_logs/presentation/value_formatting.dart';
 import '../../../activity_types/domain/activity_ids.dart';
 import '../../../activity_types/domain/activity_type.dart';
 import '../../../focus/domain/focus_session.dart';
-import '../../../focus/domain/focus_use_cases.dart';
 import '../../../focus/presentation/focus_providers.dart';
 import '../../../focus/presentation/focus_screen.dart';
 import '../../domain/plan.dart';
@@ -395,7 +398,6 @@ class _ItemBody extends ConsumerWidget {
                 ],
               ),
             ),
-            if (plan != null) _MarkDone(args: args, state: state),
             // Plan ahead from here: next appointment, next session (ADR-036).
             if (plan != null)
               Align(
@@ -414,9 +416,17 @@ class _ItemBody extends ConsumerWidget {
   }
 }
 
-/// The top of an item (ADR-045): its status and planned time, then the live
-/// timer with Pause and Finish while it runs, or a big Start; a done item
-/// can be reopened.
+/// The top of a thing (ADR-046): what state it's in and the one action that
+/// moves it on.
+/// - **Ready:** its time and "Planned"; **Start** (a timed activity) with
+///   **Done** under it, or **Done** alone.
+/// - **Running:** the live timer, Pause and **Finish**.
+/// - **Done** (the inspect view, A7): the result, the streak it keeps, the
+///   day's progress; **Not done** and **Time again**.
+///
+/// Finishing (Done or Finish) closes the thing and returns to where it was
+/// opened, after "How did it go?" when the activity has meaningful details;
+/// the row there shows the result.
 class _ItemActions extends ConsumerWidget {
   const _ItemActions({
     required this.args,
@@ -433,110 +443,95 @@ class _ItemActions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final c = context.colors;
     final plan = state.plan;
+    final type = state.type;
     final session = ref.watch(activeFocusSessionProvider).value;
     final timerHere =
         session != null && plan != null && session.planId == plan.id;
-    final canTime =
-        plan != null && (state.type == null || state.type!.supportsTimer);
+    final canTime = plan != null && (type == null || type.supportsTimer);
+    final today = currentLocalDate(ref.watch(clockProvider));
+    final done = state.isDoneOn(today);
 
-    final done = state.isDoneOn(currentLocalDate(ref.watch(clockProvider)));
-    final chip = switch ((timerHere, done, state.hasLog)) {
-      (true, _, _) => StatusChip(
-        label: l10n.itemLive.toUpperCase(),
-        tone: StatusTone.active,
-        filled: true,
-      ),
-      (_, true, _) => StatusChip(
-        label: l10n.itemDone,
-        tone: StatusTone.done,
-        icon: AppIcons.check,
-      ),
-      (_, _, true) => StatusChip(
-        label: l10n.planStatusInProgress,
-        tone: StatusTone.active,
-      ),
-      _ when plan != null => StatusChip(
-        label: l10n.planStatusPlanned,
-        tone: StatusTone.scheduled,
-      ),
-      _ => null,
-    };
-    // "Mark done" sits at the bottom of the item (A10): logging doesn't
-    // finish it.
+    if (timerHere) {
+      return AppCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _Meta(
+              chip: StatusChip(
+                label: l10n.itemLive.toUpperCase(),
+                tone: StatusTone.active,
+                filled: true,
+              ),
+              planTime: planTime,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            _ItemTimer(
+              session: session,
+              onFinish: () => _finish(context, ref, session),
+              onOpenTimer: onOpenTimer,
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (done) return _DoneHeader(args: args, state: state);
+
+    final otherRunning = session != null && !timerHere;
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Wrap(
-            spacing: AppSpacing.sm,
-            runSpacing: AppSpacing.xs,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              ?chip,
-              if (planTime != null)
-                Text(
-                  planTime!,
-                  style: context.textStyles.labelMedium?.copyWith(
-                    color: context.colors.textSecondary,
+          _Meta(
+            chip: plan == null
+                ? null
+                : StatusChip(
+                    label: l10n.planStatusPlanned,
+                    tone: StatusTone.scheduled,
                   ),
-                ),
-            ],
+            planTime: planTime,
           ),
-          if (timerHere) ...[
-            const SizedBox(height: AppSpacing.lg),
-            _ItemTimer(
-              session: session,
-              onFinish: () => _finishTimer(context, ref, session),
-              onOpenTimer: onOpenTimer,
-            ),
-          ] else if (canTime && session == null && !done) ...[
-            const SizedBox(height: AppSpacing.lg),
-            AppButton(
-              label: l10n.itemStartTimer,
-              icon: AppIcons.start,
-              variant: AppButtonVariant.action,
-              expand: true,
-              onPressed: () => _startTimer(context, ref, plan),
-            ),
-          ] else if (canTime && session != null && !timerHere) ...[
+          if (plan?.notes case final notes? when notes.trim().isNotEmpty) ...[
             const SizedBox(height: AppSpacing.sm),
             Text(
-              l10n.itemTimerOtherRunning,
-              style: context.textStyles.bodyMedium?.copyWith(
-                color: context.colors.textSecondary,
+              notes.trim().split('\n').first,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: context.textStyles.bodyLarge?.copyWith(
+                color: c.textSecondary,
               ),
             ),
           ],
-          // Anything marked done can be reopened (ADR-040).
-          if (plan != null &&
-              plan.status == PlanStatus.completed &&
-              !timerHere) ...[
-            const SizedBox(height: AppSpacing.sm),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: TextButton(
-                onPressed: () => _run(context, ref, () async {
-                  await ref.read(setPlanStatusProvider)(
-                    plan.id,
-                    PlanStatus.planned,
-                  );
-                }),
-                child: Text(l10n.planReopenTask),
-              ),
-            ),
-          ],
-          if (canTime && session == null && done) ...[
-            const SizedBox(height: AppSpacing.sm),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: AppButton(
-                label: l10n.itemStartTimer,
+          if (plan != null) ...[
+            const SizedBox(height: AppSpacing.lg),
+            if (canTime) ...[
+              AppButton(
+                label: l10n.todayUpNextStart,
                 icon: AppIcons.start,
-                variant: AppButtonVariant.secondary,
-                onPressed: () => _startTimer(context, ref, plan),
+                variant: AppButtonVariant.action,
+                expand: true,
+                onPressed: () => otherRunning
+                    ? _startAfterOther(context, ref, plan, session)
+                    : _startTimer(context, ref, plan),
               ),
-            ),
+              const SizedBox(height: AppSpacing.xs),
+              AppButton(
+                label: l10n.itemDone,
+                icon: AppIcons.check,
+                variant: AppButtonVariant.tertiary,
+                expand: true,
+                onPressed: () => _done(context, ref),
+              ),
+            ] else
+              AppButton(
+                label: l10n.itemDone,
+                icon: AppIcons.check,
+                variant: AppButtonVariant.action,
+                expand: true,
+                onPressed: () => _done(context, ref),
+              ),
           ],
         ],
       ),
@@ -570,33 +565,106 @@ class _ItemActions extends ConsumerWidget {
         await ref.read(startFocusSessionProvider)(typeId, planId: plan.id);
       });
 
-  Future<void> _finishTimer(
+  /// One timer at a time (R2): finish the other one first, then start.
+  Future<void> _startAfterOther(
+    BuildContext context,
+    WidgetRef ref,
+    Plan plan,
+    FocusSession other,
+  ) async {
+    final l10n = AppLocalizations.of(context);
+    final otherType = await ref.read(
+      activityTypeProvider(other.activityTypeId).future,
+    );
+    if (!context.mounted) return;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.oneTimerTitle(otherType?.name ?? '', state.title)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(l10n.oneTimerConfirm),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+    await PlanActions(
+      context,
+      ref,
+    ).finish(other, title: otherType?.name ?? '', type: otherType);
+    if (context.mounted) await _startTimer(context, ref, plan);
+  }
+
+  /// Done (ADR-046): marks it done ("How did it go?" first when it applies)
+  /// and returns to where it was opened.
+  Future<void> _done(BuildContext context, WidgetRef ref) async {
+    final plan = state.plan!;
+    final notifier = ref.read(itemProvider(args).notifier);
+    await notifier.flush();
+    if (!context.mounted) return;
+    await PlanActions(context, ref).complete(
+      PlannedItem(
+        plan: plan,
+        type: state.type,
+        records: const [],
+        status: EffectivePlanStatus.planned,
+      ),
+    );
+    if (context.mounted) Navigator.of(context).maybePop();
+  }
+
+  /// Finish (ADR-046): stops the timer (done, with its time), "How did it
+  /// go?" when it applies, then back to where it was opened.
+  Future<void> _finish(
     BuildContext context,
     WidgetRef ref,
     FocusSession session,
   ) async {
-    final l10n = AppLocalizations.of(context);
-    final (_, elapsed) = FinishFocusSession.endOf(
-      session,
-      ref.read(clockProvider).nowUtc(),
-    );
-    await _run(context, ref, () async {
-      await ref.read(finishFocusSessionProvider)(session.id);
-    });
-    if (context.mounted) {
-      showMessageSnackBar(
-        context,
-        l10n.focusComplete(state.title, formatDuration(l10n, elapsed)),
-      );
-    }
+    await ref.read(itemProvider(args).notifier).flush();
+    if (!context.mounted) return;
+    await PlanActions(
+      context,
+      ref,
+    ).finish(session, title: state.title, type: state.type);
+    if (context.mounted) Navigator.of(context).maybePop();
   }
 }
 
-/// "Mark done" at the end of an item (A10, ADR-040): logging into an item
-/// doesn't finish it; this does. Hidden once done or while its timer runs
-/// (finishing the timer finishes the item).
-class _MarkDone extends ConsumerWidget {
-  const _MarkDone({required this.args, required this.state});
+/// The status chip and planned time at the top of a thing.
+class _Meta extends StatelessWidget {
+  const _Meta({required this.chip, required this.planTime});
+
+  final Widget? chip;
+  final String? planTime;
+
+  @override
+  Widget build(BuildContext context) => Wrap(
+    spacing: AppSpacing.sm,
+    runSpacing: AppSpacing.xs,
+    crossAxisAlignment: WrapCrossAlignment.center,
+    children: [
+      ?chip,
+      if (planTime case final time?)
+        Text(
+          time,
+          style: context.textStyles.labelMedium?.copyWith(
+            color: context.colors.textSecondary,
+          ),
+        ),
+    ],
+  );
+}
+
+/// A done thing's header (A7, ADR-046): "Done ✓", its result big, the streak
+/// it kept and the day's progress, with **Not done** and **Time again**.
+class _DoneHeader extends ConsumerWidget {
+  const _DoneHeader({required this.args, required this.state});
 
   final ItemArgs args;
   final ItemState state;
@@ -604,47 +672,125 @@ class _MarkDone extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final plan = state.plan!;
-    final session = ref.watch(activeFocusSessionProvider).value;
+    final c = context.colors;
+    final plan = state.plan;
+    final type = state.type;
     final today = currentLocalDate(ref.watch(clockProvider));
-    if (state.isDoneOn(today) || session?.planId == plan.id) {
-      return const SizedBox.shrink();
-    }
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+    final overview = plan == null
+        ? null
+        : ref.watch(dayOverviewProvider(plan.planDate)).value;
+    final item = overview?.planned
+        .where((i) => i.plan.id == plan!.id)
+        .firstOrNull;
+    final result = item == null
+        ? (state.durationMs == null
+              ? l10n.planStatusDone
+              : formatDuration(l10n, state.durationMs!))
+        : formatItemResult(context, item);
+    final streak = type == null
+        ? null
+        : ref.watch(activityStreaksProvider)[type.id];
+    final progress = overview != null && plan!.planDate == today
+        ? DayProgress.of(overview)
+        : null;
+    final session = ref.watch(activeFocusSessionProvider).value;
+    final canTime =
+        plan != null && session == null && (type == null || type.supportsTimer);
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (state.hasLog) ...[
+          Row(
+            children: [
+              StatusChip(
+                label: l10n.itemDone,
+                tone: StatusTone.done,
+                icon: AppIcons.check,
+              ),
+              const Spacer(),
+              // Anything marked done can be reopened (ADR-040).
+              if (plan != null && plan.status == PlanStatus.completed)
+                TextButton(
+                  onPressed: () => _reopen(context, ref, plan),
+                  child: Text(l10n.itemNotDone),
+                ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Text(result, style: context.textStyles.headlineSmall),
+          if (streak != null) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Row(
+              children: [
+                StreakBadge(days: streak.days),
+                const SizedBox(width: AppSpacing.sm),
+                Text(
+                  l10n.itemStreakLine(streak.days),
+                  style: context.textStyles.bodyMedium?.copyWith(
+                    color: c.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ],
+          if (progress != null && !progress.isEmpty) ...[
+            const SizedBox(height: AppSpacing.xs),
             Text(
-              l10n.itemMarkDoneHint,
+              l10n.itemDayLine(progress.done, progress.total),
               style: context.textStyles.bodyMedium?.copyWith(
-                color: context.colors.textSecondary,
+                color: c.textSecondary,
               ),
             ),
-            const SizedBox(height: AppSpacing.sm),
           ],
-          AppButton(
-            label: l10n.itemMarkDone,
-            icon: AppIcons.taskDone,
-            variant: AppButtonVariant.action,
-            expand: true,
-            onPressed: () async {
-              final notifier = ref.read(itemProvider(args).notifier);
-              try {
-                await notifier.flush();
-                await ref.read(markItemDoneProvider)(plan.id);
-                await notifier.reload();
-              } catch (error) {
-                if (context.mounted) {
-                  showMessageSnackBar(context, errorMessage(l10n, error));
-                }
-              }
-            },
-          ),
+          if (canTime) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: AppButton(
+                label: l10n.itemTimeAgain,
+                icon: AppIcons.start,
+                variant: AppButtonVariant.secondary,
+                onPressed: () => _timeAgain(context, ref, plan),
+              ),
+            ),
+          ],
         ],
       ),
     );
+  }
+
+  Future<void> _reopen(BuildContext context, WidgetRef ref, Plan plan) async {
+    final l10n = AppLocalizations.of(context);
+    final notifier = ref.read(itemProvider(args).notifier);
+    try {
+      await notifier.flush();
+      await ref.read(setPlanStatusProvider)(plan.id, PlanStatus.planned);
+      await notifier.reload();
+    } catch (error) {
+      if (context.mounted) {
+        showMessageSnackBar(context, errorMessage(l10n, error));
+      }
+    }
+  }
+
+  Future<void> _timeAgain(
+    BuildContext context,
+    WidgetRef ref,
+    Plan plan,
+  ) async {
+    final l10n = AppLocalizations.of(context);
+    final notifier = ref.read(itemProvider(args).notifier);
+    try {
+      await notifier.flush();
+      final typeId =
+          state.type?.id ?? await ref.read(ensureItemActivityProvider)(plan.id);
+      await ref.read(startFocusSessionProvider)(typeId, planId: plan.id);
+      await notifier.reload();
+    } catch (error) {
+      if (context.mounted) {
+        showMessageSnackBar(context, errorMessage(l10n, error));
+      }
+    }
   }
 }
 

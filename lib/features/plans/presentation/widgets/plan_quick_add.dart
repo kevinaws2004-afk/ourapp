@@ -45,6 +45,8 @@ class PlanQuickAdd extends ConsumerStatefulWidget {
     required this.date,
     required this.chooser,
     this.onStartNow,
+    this.onAdded,
+    this.autofocus = false,
   });
 
   /// How many "Recent" chips to show (A7).
@@ -59,6 +61,13 @@ class PlanQuickAdd extends ConsumerStatefulWidget {
   /// Offers "Start now" (today only): the item starts now and opens right
   /// away, to log what you're doing (ADR-035).
   final ValueChanged<PlanId>? onStartNow;
+
+  /// Called after something is added (not started); in the add sheet this
+  /// closes the sheet (ADR-046).
+  final ValueChanged<PlanId>? onAdded;
+
+  /// Focus the field at once (the add sheet).
+  final bool autofocus;
 
   @override
   ConsumerState<PlanQuickAdd> createState() => _PlanQuickAddState();
@@ -174,6 +183,8 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
       });
       if (now) {
         widget.onStartNow?.call(id);
+      } else if (widget.onAdded case final added?) {
+        added(id);
       } else {
         _focus.requestFocus();
       }
@@ -245,6 +256,7 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
               child: TextField(
                 controller: _title,
                 focusNode: _focus,
+                autofocus: widget.autofocus,
                 textCapitalization: TextCapitalization.sentences,
                 textInputAction: TextInputAction.done,
                 decoration: InputDecoration(hintText: l10n.planQuickAddHint),

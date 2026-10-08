@@ -5,9 +5,20 @@ import 'watch_day_overview.dart';
 /// the items that count. Skipped and cancelled plans don't count; a record
 /// made without a plan counts as one done item.
 class DayProgress {
-  const DayProgress({required this.done, required this.total});
+  const DayProgress({
+    required this.done,
+    required this.total,
+    this.recordedMs = 0,
+    this.firstStart,
+  });
 
   factory DayProgress.of(DayOverview overview) {
+    DateTime? first;
+    for (final item in overview.planned) {
+      final start = item.plan.plannedStartAt;
+      if (start == null) continue;
+      if (first == null || start.isBefore(first)) first = start;
+    }
     var done = overview.unplanned.length;
     var total = overview.unplanned.length;
     for (final item in overview.planned) {
@@ -21,11 +32,22 @@ class DayProgress {
           total++;
       }
     }
-    return DayProgress(done: done, total: total);
+    return DayProgress(
+      done: done,
+      total: total,
+      recordedMs: overview.recordedMs,
+      firstStart: first,
+    );
   }
 
   final int done;
   final int total;
+
+  /// Time recorded on the day, in ms.
+  final int recordedMs;
+
+  /// When the day's first timed thing starts (Today's morning line).
+  final DateTime? firstStart;
 
   double get fraction => total == 0 ? 0 : done / total;
 
@@ -64,4 +86,26 @@ PlannedItem? upNext(DayOverview overview, DateTime nowUtc) {
     if (item.plan.plannedStartAt == null) return item;
   }
   return null;
+}
+
+/// What Today's Now/Next card says about [item] at [nowUtc] (ADR-046).
+enum NowNextKind {
+  /// Its timer is running: **Finish**.
+  running,
+
+  /// Its time has come: **Start** / **Done**.
+  now,
+
+  /// Later today: "NEXT · 9:30", "in 20 min".
+  next,
+
+  /// No time: "ANYTIME".
+  anytime;
+
+  static NowNextKind of(PlannedItem item, DateTime nowUtc) {
+    if (item.status == EffectivePlanStatus.inProgress) return running;
+    final start = item.plan.plannedStartAt;
+    if (start == null) return anytime;
+    return start.isAfter(nowUtc) ? next : now;
+  }
 }

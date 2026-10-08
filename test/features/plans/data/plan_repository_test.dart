@@ -98,8 +98,8 @@ void main() {
     );
   });
 
-  test('recording from a plan links it; it is in progress that day and done '
-      'once the day has passed (ADR-040)', () async {
+  test('recording from a plan links it; it stays open that day (one Done, '
+      'ADR-046) and is done once the day has passed (ADR-040)', () async {
     final type = await reading();
     final planId = await createPlan(
       PlanDraft(
@@ -116,7 +116,7 @@ void main() {
     expect((await logs.getLog(logId))!.planId, planId);
     final day = await overview(today);
     final item = day.planned.single;
-    expect(item.status, EffectivePlanStatus.inProgress);
+    expect(item.status, EffectivePlanStatus.planned);
     expect(item.actualDurationMs, 2700000);
     expect(day.unplanned, isEmpty, reason: 'the record fulfils the plan');
     expect(await plans.hasRecords(planId), isTrue);

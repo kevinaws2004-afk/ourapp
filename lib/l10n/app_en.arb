@@ -1087,10 +1087,6 @@
       }
     }
   },
-  "planOptions": "Plan options",
-  "@planOptions": {
-    "description": "Tooltip of a plan's More button: edit, skip, move, delete."
-  },
   "planOpenRecordHint": "open it",
   "@planOpenRecordHint": {
     "description": "Screen reader hint for tapping a recorded plan."
@@ -1569,10 +1565,6 @@
   "@itemSaveFailed": {
     "description": "Shown in an item when a value can't be saved."
   },
-  "itemMarkDone": "Mark done",
-  "@itemMarkDone": {
-    "description": "Button in an item: done, without logging details."
-  },
   "itemDone": "Done",
   "@itemDone": {
     "description": "Status of an item that has been done or logged."
@@ -1921,10 +1913,6 @@
   "durationMinutesLabel": "Minutes",
   "@durationMinutesLabel": {
     "description": "Label of the minutes box in a duration input."
-  },
-  "itemMarkDoneHint": "Logged so far. Mark it done when you’ve finished.",
-  "@itemMarkDoneHint": {
-    "description": "Item screen: line above Mark done when something is logged but the item is not finished yet."
   },
   "planAnytime": "Anytime",
   "@planAnytime": {
@@ -6481,5 +6469,244 @@
         "type": "String"
       }
     }
+  },
+  "streakBadgeLabel": "{days}-day streak",
+  "@streakBadgeLabel": {
+    "description": "Screen-reader label of the 🔥 badge.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "itemRunning": "Running · {time}",
+  "@itemRunning": {
+    "description": "Sub-line of a thing whose timer runs.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "itemDoneMessage": "{title} done",
+  "@itemDoneMessage": {
+    "description": "Snackbar after finishing something.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "itemDoneStreakMessage": "{title} done · 🔥 {days}",
+  "@itemDoneStreakMessage": {
+    "description": "Snackbar after finishing something that keeps a streak.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "howDidItGoTitle": "How did it go?",
+  "@howDidItGoTitle": {
+    "description": "Title of the sheet asking for details after finishing."
+  },
+  "howDidItGoSave": "Save",
+  "@howDidItGoSave": {
+    "description": "Save button of How did it go?"
+  },
+  "howDidItGoSkip": "Skip",
+  "@howDidItGoSkip": {
+    "description": "Skip button of How did it go?"
+  },
+  "todayStatusPlanned": "{count, plural, =1{1 thing today} other{{count} things today}} · first at {time}",
+  "@todayStatusPlanned": {
+    "description": "Today's status line in the morning.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "todayStatusPlannedAnytime": "{count, plural, =1{1 thing today} other{{count} things today}}",
+  "@todayStatusPlannedAnytime": {
+    "description": "Today's status line when nothing has a time.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayStatusProgress": "{done} of {total} done",
+  "@todayStatusProgress": {
+    "description": "Today's status line during the day.",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "todayStatusProgressTime": "{done} of {total} done · {duration} so far",
+  "@todayStatusProgressTime": {
+    "description": "Today's status line during the day with time recorded.",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "todayStatusRunning": "{title} running · {done} of {total} done",
+  "@todayStatusRunning": {
+    "description": "Today's status line while a timer runs.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "todayStatusAllDone": "All {total} done",
+  "@todayStatusAllDone": {
+    "description": "Today's status line when everything is done.",
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "todayStatusAllDoneTime": "All {total} done · {duration}",
+  "@todayStatusAllDoneTime": {
+    "description": "Today's status line when everything is done, with time.",
+    "placeholders": {
+      "total": {
+        "type": "int"
+      },
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "todayStatusEmpty": "Nothing planned yet",
+  "@todayStatusEmpty": {
+    "description": "Today's status line on an empty day."
+  },
+  "nowNextRunning": "Running",
+  "@nowNextRunning": {
+    "description": "Label of the Now/Next card while a timer runs."
+  },
+  "nowNextNow": "Now",
+  "@nowNextNow": {
+    "description": "Label of the Now/Next card when a thing's time has come."
+  },
+  "nowNextNext": "Next · {time}",
+  "@nowNextNext": {
+    "description": "Label of the Now/Next card for a later thing.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "nowNextAnytime": "Anytime",
+  "@nowNextAnytime": {
+    "description": "Label of the Now/Next card for a thing without a time."
+  },
+  "nowLine": "Now · {time}",
+  "@nowLine": {
+    "description": "The line on Today's timeline at the current time.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "oneTimerTitle": "Finish {running} and start {next}?",
+  "@oneTimerTitle": {
+    "description": "Dialog when starting something while another timer runs.",
+    "placeholders": {
+      "running": {
+        "type": "String"
+      },
+      "next": {
+        "type": "String"
+      }
+    }
+  },
+  "oneTimerConfirm": "Finish and start",
+  "@oneTimerConfirm": {
+    "description": "Confirm button of the one-timer dialog."
+  },
+  "itemNotDone": "Not done",
+  "@itemNotDone": {
+    "description": "Reopen a done thing."
+  },
+  "itemTimeAgain": "Time again",
+  "@itemTimeAgain": {
+    "description": "Start another timed session on a done thing."
+  },
+  "itemStreakLine": "{days, plural, =1{1 day in a row} other{{days} days in a row}}",
+  "@itemStreakLine": {
+    "description": "Streak line on a done thing.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "itemDayLine": "{done} of {total} done today",
+  "@itemDayLine": {
+    "description": "Day progress line on a done thing.",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "itemAddDetails": "Add details",
+  "@itemAddDetails": {
+    "description": "Link to add details to a done thing."
+  },
+  "addSheetTitle": "Add to {day}",
+  "@addSheetTitle": {
+    "description": "Title of the add sheet.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "addToday": "today",
+  "@addToday": {
+    "description": "Day name in the add sheet title for today."
+  },
+  "planEditAction": "Change time and details",
+  "@planEditAction": {
+    "description": "Quick action opening a thing's plan sheet."
+  },
+  "todayAdd": "Add to today",
+  "@todayAdd": {
+    "description": "Tooltip of Today's + button."
   }
 }

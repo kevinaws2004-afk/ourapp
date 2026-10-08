@@ -7,8 +7,14 @@ import '../../../shared/errors/error_copy.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../../activity_logs/domain/activity_log.dart';
 import '../../activity_logs/presentation/activity_log_providers.dart';
+import '../../activity_types/domain/activity_type.dart';
+import '../../challenges/presentation/challenge_providers.dart';
+import '../../focus/domain/focus_session.dart';
+import '../../focus/presentation/focus_providers.dart';
 import '../domain/plan.dart';
 import '../domain/watch_day_overview.dart';
+import 'item/how_did_it_go_sheet.dart';
+import 'item/item_notifier.dart';
 import 'plan_editor_sheet.dart';
 import 'plan_providers.dart';
 import 'widgets/repeat_sheet.dart';
@@ -67,25 +73,89 @@ class PlanActions {
   static bool canToggleDone(PlannedItem item) =>
       item.isOpen || item.plan.status == PlanStatus.completed;
 
-  /// Marks any item done (with Undo) or reopens one marked done (F10, A17).
-  /// Undo also removes a log that marking done created.
+  /// Done (with Undo, then "How did it go?" when it applies; [complete]) or
+  /// Not done for one marked done (F10, A17).
   Future<void> toggleDone(PlannedItem item) {
     final id = item.plan.id;
     if (!item.isOpen) {
       return _run(() => _setStatus(id, PlanStatus.planned));
     }
+    return complete(item);
+  }
+
+  /// Done (ADR-046): marks [item] done with a snackbar that shows the
+  /// streak it keeps ("Meditation done · 🔥 13", Undo), then, if its activity
+  /// has meaningful details, asks "How did it go?". Stays on the current
+  /// screen: the row shows the result.
+  Future<void> complete(PlannedItem item) async {
+    final id = item.plan.id;
+    final type = item.type;
+    final streak = type == null
+        ? null
+        : _ref.read(activityStreaksProvider)[type.id];
     final markDone = _ref.read(markItemDoneProvider);
     final deleteLog = _ref.read(deleteActivityLogProvider);
     ActivityLogId? created;
-    return _run(
-      () async => created = await markDone(id),
-      message: _l10n.planTaskDoneMessage,
+    var ok = false;
+    await _run(
+      () async {
+        created = await markDone(id);
+        ok = true;
+      },
+      message: doneMessage(_l10n, item.plan.title, streak),
       undo: () async {
         await _setStatus(id, PlanStatus.planned);
         if (created case final log?) await deleteLog(log);
       },
     );
+    if (ok && (type?.hasMeaningfulDetails ?? false) && _context.mounted) {
+      await _howDidItGo(id);
+    }
   }
+
+  /// Finish (ADR-046): stops [session]'s timer, which marks its thing done
+  /// with the timed length, with the same snackbar and "How did it go?" as
+  /// [complete].
+  Future<void> finish(
+    FocusSession session, {
+    required String title,
+    ActivityType? type,
+  }) async {
+    final streak = type == null
+        ? null
+        : _ref.read(activityStreaksProvider)[type.id];
+    var ok = false;
+    await _run(() async {
+      await _ref.read(finishFocusSessionProvider)(session.id);
+      ok = true;
+    }, message: doneMessage(_l10n, title, streak));
+    final planId = session.planId;
+    if (ok &&
+        planId != null &&
+        (type?.hasMeaningfulDetails ?? false) &&
+        _context.mounted) {
+      await _howDidItGo(planId);
+    }
+  }
+
+  /// "How did it go?" for a just-done plan. An open item (the one it was
+  /// finished from) reloads first, so the sheet has its timed length.
+  Future<void> _howDidItGo(PlanId id) async {
+    final args = ItemArgs.plan(id);
+    if (_ref.exists(itemProvider(args))) {
+      await _ref.read(itemProvider(args).notifier).reload();
+    }
+    if (_context.mounted) await showHowDidItGo(_context, args);
+  }
+
+  /// "Meditation done", or "Meditation done · 🔥 13" when it keeps a streak.
+  static String doneMessage(
+    AppLocalizations l10n,
+    String title,
+    ActivityStreak? streak,
+  ) => streak == null
+      ? l10n.itemDoneMessage(title)
+      : l10n.itemDoneStreakMessage(title, streak.afterToday);
 
   Future<void> skip(PlannedItem item) => _run(
     () => _setStatus(item.plan.id, PlanStatus.skipped),
@@ -129,11 +199,12 @@ class PlanActions {
     );
   }
 
-  /// The quick actions on a long-press (B7): done / not done, move to
-  /// tomorrow, duplicate, skip, delete. Each acts at once, with Undo.
+  /// The options on a long-press (B7, R1): done / not done, move to
+  /// tomorrow, change time and details, duplicate, skip, delete. Each acts
+  /// at once, with Undo.
   Future<void> quickActions(PlannedItem item) async {
     final l10n = _l10n;
-    final open = item.isOpen;
+    final isOpen = item.isOpen;
     final action = await showModalBottomSheet<_QuickAction>(
       context: _context,
       builder: (context) {
@@ -150,21 +221,30 @@ class PlanActions {
               if (canToggleDone(item))
                 tile(
                   AppIcons.taskDone,
-                  open ? l10n.planCompleteTask : l10n.planReopenTask,
+                  isOpen ? l10n.planCompleteTask : l10n.planReopenTask,
                   _QuickAction.toggleDone,
                 ),
-              if (open)
+              if (isOpen)
                 tile(
                   AppIcons.moveToTomorrow,
                   l10n.planMoveToTomorrow,
                   _QuickAction.moveToTomorrow,
                 ),
+              tile(AppIcons.edit, l10n.planEditAction, _QuickAction.edit),
               tile(
                 AppIcons.duplicate,
                 l10n.planDuplicate,
                 _QuickAction.duplicate,
               ),
-              if (open) tile(AppIcons.skip, l10n.planSkip, _QuickAction.skip),
+              if (item.plan.isRepeating)
+                tile(
+                  AppIcons.repeat,
+                  l10n.planStopRepeating,
+                  _QuickAction.stopRepeating,
+                )
+              else
+                tile(AppIcons.repeat, l10n.planRepeat, _QuickAction.repeat),
+              if (isOpen) tile(AppIcons.skip, l10n.planSkip, _QuickAction.skip),
               tile(AppIcons.delete, l10n.planDelete, _QuickAction.delete),
             ],
           ),
@@ -177,8 +257,14 @@ class PlanActions {
         await toggleDone(item);
       case _QuickAction.moveToTomorrow:
         await moveToTomorrow(item);
+      case _QuickAction.edit:
+        await open(item);
       case _QuickAction.duplicate:
         await duplicate(item);
+      case _QuickAction.repeat:
+        await repeat(item);
+      case _QuickAction.stopRepeating:
+        await stopRepeating(item);
       case _QuickAction.skip:
         await skip(item);
       case _QuickAction.delete:
@@ -247,4 +333,13 @@ class PlanActions {
   }
 }
 
-enum _QuickAction { toggleDone, moveToTomorrow, duplicate, skip, delete }
+enum _QuickAction {
+  toggleDone,
+  moveToTomorrow,
+  edit,
+  duplicate,
+  repeat,
+  stopRepeating,
+  skip,
+  delete,
+}

@@ -69,19 +69,22 @@ void main() {
     final today = _date;
     final tomorrow = _date.addDays(1);
 
-    test(
-      'logging into an activity item today makes it in progress, not done',
-      () {
-        expect(
-          plan(typeId: reading).effectiveStatus(hasRecord: true, today: today),
-          EffectivePlanStatus.inProgress,
-        );
-        expect(
-          plan(typeId: reading).effectiveStatus(hasRecord: false, today: today),
-          EffectivePlanStatus.planned,
-        );
-      },
-    );
+    test('logging into an activity item today leaves it open: one Done '
+        '(ADR-046); only a running timer makes it in progress', () {
+      expect(
+        plan(typeId: reading).effectiveStatus(hasRecord: true, today: today),
+        EffectivePlanStatus.planned,
+      );
+      expect(
+        plan(typeId: reading)
+            .effectiveStatus(hasRecord: true, today: today, inFocus: true),
+        EffectivePlanStatus.inProgress,
+      );
+      expect(
+        plan(typeId: reading).effectiveStatus(hasRecord: false, today: today),
+        EffectivePlanStatus.planned,
+      );
+    });
 
     test('once its day has passed, what was logged counts as done', () {
       expect(

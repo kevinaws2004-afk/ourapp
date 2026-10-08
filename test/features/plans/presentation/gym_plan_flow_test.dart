@@ -80,9 +80,9 @@ void main() {
     await waitForSave(tester);
     await closeItem(tester);
     expect(
-      find.textContaining('In progress'),
+      find.byTooltip('Mark as done'),
       findsOneWidget,
-      reason: 'logging sets doesn\'t finish the session (A10)',
+      reason: 'logging sets doesn\'t finish the session (ADR-046)',
     );
 
     // Back at the gym: the sets are there; one more.

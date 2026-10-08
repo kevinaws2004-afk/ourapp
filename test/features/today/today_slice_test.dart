@@ -11,7 +11,7 @@ import 'package:daylog/features/plans/presentation/item/item_screen.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/features/settings/presentation/appearance_screen.dart';
 import 'package:daylog/features/today/presentation/today_screen.dart';
-import 'package:daylog/features/today/presentation/up_next_card.dart';
+import 'package:daylog/features/today/presentation/now_next_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -81,28 +81,72 @@ void main() {
   testAppWidgets('an empty day says so and offers a way in', (tester) async {
     await pumpTestApp(tester, preferences: _onboarded);
     expect(find.text('Nothing on today yet'), findsOneWidget);
-    expect(find.byType(UpNextCard), findsNothing);
+    expect(find.byType(NowNextCard), findsNothing);
   });
 
-  testAppWidgets('Up next shows the next item; Start times it and opens it '
-      'to record into', (tester) async {
+  testAppWidgets('Next shows the next thing; Start times it and opens it', (
+    tester,
+  ) async {
     await pumpTestApp(tester, preferences: _onboarded, seed: seedReadingAtNine);
 
-    final upNext = find.byType(UpNextCard);
-    expect(upNext, findsOneWidget);
+    final next = find.byType(NowNextCard);
+    expect(next, findsOneWidget);
     expect(
-      find.descendant(of: upNext, matching: find.text('in 1h 0m')),
+      find.descendant(of: next, matching: find.text('in 1h 0m')),
       findsOneWidget,
     );
-    expect(find.text('0/1'), findsOneWidget, reason: 'the day ring');
 
     await scrollAndTap(
       tester,
-      find.descendant(of: upNext, matching: find.text('Start')),
+      find.descendant(of: next, matching: find.text('Start')),
     );
     expect(find.byType(ItemScreen), findsOneWidget);
     expect(find.text('LIVE'), findsOneWidget);
     expect(find.text('Finish'), findsOneWidget);
+  });
+
+  testAppWidgets('Start → Finish → How did it go? → back on Today with the '
+      'result on the row (ADR-046)', (tester) async {
+    await pumpTestApp(tester, preferences: _onboarded, seed: seedReadingAtNine);
+    await scrollAndTap(
+      tester,
+      find.descendant(
+        of: find.byType(NowNextCard),
+        matching: find.text('Start'),
+      ),
+    );
+    expect(find.byType(ItemScreen), findsOneWidget);
+
+    await scrollAndTap(tester, find.text('Finish'));
+    expect(
+      find.text('How did it go?'),
+      findsOneWidget,
+      reason: 'Reading has meaningful details (pages)',
+    );
+    await tester.tap(find.text('Skip'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ItemScreen), findsNothing, reason: 'not A7');
+    expect(find.byType(TodayScreen), findsOneWidget);
+    expect(find.text('All 1 done'), findsOneWidget, reason: 'the status');
+  });
+
+  testAppWidgets('Done on an open thing returns to Today; tapping the done '
+      'row opens it to inspect (A7)', (tester) async {
+    await pumpTestApp(tester, preferences: _onboarded, seed: seedReadingAtNine);
+    await scrollAndTap(tester, find.text('Read').last);
+    expect(find.byType(ItemScreen), findsOneWidget);
+    expect(find.text('Planned'), findsOneWidget);
+
+    await scrollAndTap(tester, find.text('Done').first);
+    await tester.tap(find.text('Skip'));
+    await tester.pumpAndSettle();
+    expect(find.byType(ItemScreen), findsNothing);
+
+    await scrollAndTap(tester, find.text('Read').last);
+    expect(find.byType(ItemScreen), findsOneWidget);
+    expect(find.text('Not done'), findsOneWidget, reason: 'A7');
+    expect(find.text('1 of 1 done today'), findsOneWidget);
   });
 
   for (final id in AppThemeId.values) {
@@ -122,7 +166,7 @@ void main() {
       await scrollAndTap(
         tester,
         find.descendant(
-          of: find.byType(UpNextCard),
+          of: find.byType(NowNextCard),
           matching: find.text('Start'),
         ),
       );

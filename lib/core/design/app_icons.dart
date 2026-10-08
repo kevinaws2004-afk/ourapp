@@ -45,6 +45,7 @@ abstract final class AppIcons {
   static const browse = PhosphorGlyphs.listChecks;
   static const developer = PhosphorGlyphs.wrench;
   static const appearance = PhosphorGlyphs.palette;
+  static const streak = PhosphorFillGlyphs.fire;
   static const ratingEmpty = PhosphorGlyphs.star;
   static const ratingFull = PhosphorFillGlyphs.star;
 

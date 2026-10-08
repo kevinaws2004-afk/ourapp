@@ -33,6 +33,7 @@ class AppTreatments {
     required this.progressGradient,
     required this.heroWash,
     required this.factsAsChips,
+    required this.timeColumn,
   });
 
   final CardEdge cardEdge;
@@ -46,4 +47,8 @@ class AppTreatments {
 
   /// Small facts (a duration, a count) as chips rather than tiles.
   final bool factsAsChips;
+
+  /// Day rows lead with the time in a column (else with the activity's
+  /// icon, the time in the row's text).
+  final bool timeColumn;
 }
