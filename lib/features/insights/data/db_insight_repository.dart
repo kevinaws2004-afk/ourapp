@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:drift/drift.dart';
 
 import '../../../core/database/app_database.dart';
+import '../../../core/database/done_records.dart';
 import '../../../core/database/reactive_query.dart';
 import '../../../core/database/soft_delete.dart';
 import '../../../core/database/storage_guard.dart';
@@ -61,11 +62,7 @@ class DbInsightRepository implements InsightRepository {
   }
 
   /// A record that counts as done: something is in it (A8).
-  static String _counts(String log) =>
-      '($log.duration_ms IS NOT NULL OR $log.notes IS NOT NULL '
-      'OR EXISTS (SELECT 1 FROM log_values x WHERE x.log_id = $log.internal_id) '
-      'OR EXISTS (SELECT 1 FROM plans cp WHERE cp.internal_id = $log.plan_id '
-      "AND cp.status = 'completed'))";
+  static String _counts(String log) => doneRecordSql(log);
 
   /// Keeps rows whose item ([itemColumn]), parent item, or record has the
   /// filter's text value.

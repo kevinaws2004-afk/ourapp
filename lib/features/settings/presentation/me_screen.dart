@@ -7,8 +7,7 @@ import '../../../core/design/window_size_class.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/widgets/section_header.dart';
 
-/// Me tab: your setup (reusable activities, ADR-028, and body
-/// measurements). Debug builds add a separate Developer section with the
+/// Me tab: your setup (reusable activities, ADR-028, and body measurements). Debug builds add a separate Developer section with the
 /// token showcase and a demo data loader; release builds never show it.
 class MeScreen extends StatelessWidget {
   const MeScreen({

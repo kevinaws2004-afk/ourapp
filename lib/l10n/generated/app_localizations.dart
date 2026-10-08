@@ -112,6 +112,12 @@ abstract class AppLocalizations {
   /// **'Plan'**
   String get navPlan;
 
+  /// Primary navigation: Challenges tab (ADR-044).
+  ///
+  /// In en, this message translates to:
+  /// **'Challenges'**
+  String get navChallenges;
+
   /// Primary navigation tab: graphs and history.
   ///
   /// In en, this message translates to:
@@ -8805,6 +8811,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{change} pts'**
   String insightPoints(String change);
+
+  /// Validation: a challenge lasts 1 to 1000 days.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose between 1 and 1000 days.'**
+  String get validationInvalidChallengeTarget;
+
+  /// Validation: a challenge's first day can't be after today.
+  ///
+  /// In en, this message translates to:
+  /// **'A challenge can\'t start in the future.'**
+  String get validationChallengeStartInFuture;
+
+  /// Title of the challenges list under Me and the section on Today (ADR-044).
+  ///
+  /// In en, this message translates to:
+  /// **'Challenges'**
+  String get challengesTitle;
+
+  /// Challenges screen subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Do an activity every day and keep your streak going.'**
+  String get challengesSubtitle;
+
+  /// Challenges empty state title.
+  ///
+  /// In en, this message translates to:
+  /// **'No challenges yet'**
+  String get challengesEmptyTitle;
+
+  /// Challenges empty state message.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick an activity and a number of days, like 75 days of Meditation. Recording it each day keeps your streak going.'**
+  String get challengesEmptyMessage;
+
+  /// Button: start a new challenge.
+  ///
+  /// In en, this message translates to:
+  /// **'New challenge'**
+  String get newChallenge;
+
+  /// Challenge sheet title when creating.
+  ///
+  /// In en, this message translates to:
+  /// **'New challenge'**
+  String get challengeNewTitle;
+
+  /// Challenge sheet title when editing.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit challenge'**
+  String get challengeEditTitle;
+
+  /// Challenge sheet: the activity done every day.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity'**
+  String get challengeActivityLabel;
+
+  /// Challenge sheet: how a day counts.
+  ///
+  /// In en, this message translates to:
+  /// **'Recording it each day counts the day.'**
+  String get challengeActivityHelper;
+
+  /// Challenge sheet: how many successful days complete it.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of days'**
+  String get challengeDaysLabel;
+
+  /// Challenge sheet: the rule of a daily challenge.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete the activity once every day.'**
+  String get challengeDaysHelper;
+
+  /// Challenge sheet: the first day that counts.
+  ///
+  /// In en, this message translates to:
+  /// **'First day'**
+  String get challengeStartLabel;
+
+  /// Challenge sheet: the challenge name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get challengeNameLabel;
+
+  /// Challenge sheet: create button.
+  ///
+  /// In en, this message translates to:
+  /// **'Start challenge'**
+  String get challengeStartAction;
+
+  /// Default challenge name, e.g. "75 days of Meditation".
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{1 day of {activity}} other{{days} days of {activity}}}'**
+  String challengeAutoTitle(int days, String activity);
+
+  /// Challenge progress: successful days out of the target.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} / {target} days'**
+  String challengeProgressDays(int done, int target);
+
+  /// Challenge card: the current streak.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1-day streak} other{{count}-day streak}}'**
+  String challengeStreakDays(int count);
+
+  /// Challenge state: today's activity is recorded.
+  ///
+  /// In en, this message translates to:
+  /// **'Done today'**
+  String get challengeTodayDone;
+
+  /// Challenge state: a streak is running and today isn't recorded yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet today — streak at risk'**
+  String get challengeTodayAtRisk;
+
+  /// Challenge state: nothing recorded today and no streak running.
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet today'**
+  String get challengeTodayNotYet;
+
+  /// Challenge state: the target is reached.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get challengeCompleted;
+
+  /// Challenge detail: the day the target was reached.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed {date}'**
+  String challengeCompletedOn(String date);
+
+  /// Challenge detail stat.
+  ///
+  /// In en, this message translates to:
+  /// **'Current streak'**
+  String get challengeCurrentStreak;
+
+  /// Challenge detail stat.
+  ///
+  /// In en, this message translates to:
+  /// **'Best streak'**
+  String get challengeBestStreak;
+
+  /// Challenge detail stat: total successful days.
+  ///
+  /// In en, this message translates to:
+  /// **'Days done'**
+  String get challengeDaysDone;
+
+  /// Challenge detail stat: days to the target.
+  ///
+  /// In en, this message translates to:
+  /// **'Days left'**
+  String get challengeDaysLeft;
+
+  /// Challenge detail: heading above the calendar of days done.
+  ///
+  /// In en, this message translates to:
+  /// **'Your days'**
+  String get challengeCalendarSection;
+
+  /// Challenge detail: count again from today.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart from today'**
+  String get challengeRestart;
+
+  /// Snackbar after restarting a challenge.
+  ///
+  /// In en, this message translates to:
+  /// **'Counting from today'**
+  String get challengeRestarted;
+
+  /// Challenge detail: end it (its records stay).
+  ///
+  /// In en, this message translates to:
+  /// **'End challenge'**
+  String get challengeEnd;
+
+  /// Snackbar after ending a challenge.
+  ///
+  /// In en, this message translates to:
+  /// **'Challenge ended'**
+  String get challengeEnded;
+
+  /// Challenge detail: the challenge no longer exists.
+  ///
+  /// In en, this message translates to:
+  /// **'This challenge has ended.'**
+  String get challengeNotFound;
+
+  /// Challenge detail: the first day that counts.
+  ///
+  /// In en, this message translates to:
+  /// **'Since {date}'**
+  String challengeStartsOn(String date);
+
+  /// Tooltip of the challenge screen's menu button.
+  ///
+  /// In en, this message translates to:
+  /// **'Challenge options'**
+  String get challengeOptions;
 }
 
 class _AppLocalizationsDelegate

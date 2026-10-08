@@ -44,6 +44,7 @@ Use these terms exactly in code, UI discussions and docs.
 | **Plan** | An intended activity or task for a specific date (past, present or future). May optionally link to an Activity Type. Represents **intention**. | §3.2, §19, ADR-028 |
 | **Task** | A lightweight plan item with no detailed logging (e.g. "Pay bill"). | §21 |
 | **Measurement** | A tracked value that can be analyzed over time. Used in two senses: (a) any measurable value derived from logs; (b) **Body Measurements**, a conceptually separate record type (weight, height, body fat…). | §3.4, §23 |
+| **Challenge** | "Complete this activity every day for X days" on one Activity Type. Recording the activity counts the day. Has **progress** (total successful days), a **current streak** and a **best streak**; a missed day resets only the current streak. Daily only; not a goal system. | ADR-044 |
 | **Focus Session / Focus Mode** | A full-screen timer for any timer-capable activity whose duration is automatically stored in the resulting Log. | §16, §17 |
 | **Repeating Group** | A structured field whose value is a list of items, each with its own sub-values (e.g. a list of exercises). | §9, §12 |
 | **Set Table** | A structured field whose value is a table of rows (sets) with numeric columns (e.g. weight × reps). | §9, §12 |
@@ -64,7 +65,7 @@ The analytics engine does not know what an activity *means*. It only understands
 
 ## 6. Product areas (primary navigation, ADR-028)
 
-**Today | Plan | Insights | Me.** This is the owner's decision (ADR-028), and it supersedes the spec's suggested Today/Plan/Track/Insights/Me (§34).
+**Today | Plan | Challenges | Insights | Me** (Challenges added by ADR-044). This is the owner's decision (ADR-028), and it supersedes the spec's suggested Today/Plan/Track/Insights/Me (§34).
 
 | Tab | Purpose |
 |---|---|

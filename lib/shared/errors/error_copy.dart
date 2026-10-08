@@ -60,6 +60,10 @@ String validationMessage(
   ValidationCode.focusAlreadyActive => l10n.validationFocusAlreadyActive,
   ValidationCode.activityHasNoTimer => l10n.validationActivityHasNoTimer,
   ValidationCode.focusNotActive => l10n.validationFocusNotActive,
+  ValidationCode.invalidChallengeTarget =>
+    l10n.validationInvalidChallengeTarget,
+  ValidationCode.challengeStartInFuture =>
+    l10n.validationChallengeStartInFuture,
 };
 
 /// The first message for [target] in [issues], if any.

@@ -15,6 +15,10 @@ abstract final class AppIcons {
     PhosphorGlyphs.chartLineUp,
     PhosphorFillGlyphs.chartLineUp,
   );
+  static const challenges = AppIconPair(
+    PhosphorGlyphs.target,
+    PhosphorFillGlyphs.target,
+  );
   static const me = AppIconPair(PhosphorGlyphs.user, PhosphorFillGlyphs.user);
 
   static const add = PhosphorGlyphs.plus;

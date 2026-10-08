@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test(
-    'a fresh database is created at schema v7 with the activity engine',
+    'a fresh database is created at schema v9 with the activity engine',
     () async {
       final db = AppDatabase(NativeDatabase.memory());
       addTearDown(db.close);
@@ -23,12 +23,13 @@ void main() {
             .add(row.read<String>('name'));
       }
 
-      expect(version.read<int>('user_version'), 8);
+      expect(version.read<int>('user_version'), 9);
       expect(byType['table'], [
         'activity_fields',
         'activity_logs',
         'activity_types',
         'app_preferences',
+        'challenges',
         'focus_sessions',
         'insight_charts',
         'log_group_items',
@@ -43,6 +44,7 @@ void main() {
         'idx_activity_logs_day',
         'idx_activity_logs_plan',
         'idx_activity_logs_type_day',
+        'idx_challenges_type',
         'idx_focus_sessions_plan',
         'idx_log_group_items_log',
         'idx_log_values_field_normalized',
@@ -55,7 +57,7 @@ void main() {
         'ux_log_values_top_level',
         'ux_plans_series_date',
       ]);
-      expect(byType['trigger'], hasLength(20));
+      expect(byType['trigger'], hasLength(21));
     },
   );
 
@@ -78,6 +80,7 @@ void main() {
       'focus_sessions',
       'measurements',
       'insight_charts',
+      'challenges',
     ]) {
       expect(strict[table], isTrue, reason: table);
     }
@@ -100,7 +103,7 @@ void main() {
     () async {
       final db = AppDatabase(
         NativeDatabase.memory(
-          setup: (raw) => raw.execute('PRAGMA user_version = 9'),
+          setup: (raw) => raw.execute('PRAGMA user_version = 10'),
         ),
       );
       addTearDown(db.close);

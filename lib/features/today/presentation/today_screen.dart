@@ -8,6 +8,8 @@ import '../../../core/time/clock.dart';
 import '../../../core/time/clock_provider.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../activity_logs/domain/activity_log.dart';
+import '../../challenges/domain/challenge.dart';
+import '../../challenges/presentation/today_challenges.dart';
 import '../../focus/presentation/focus_banner.dart';
 import '../../plans/domain/plan.dart';
 import '../../plans/presentation/activity_chooser.dart';
@@ -23,6 +25,7 @@ class TodayScreen extends ConsumerWidget {
     required this.onOpenItem,
     required this.onOpenRecord,
     required this.onOpenFocus,
+    required this.onOpenChallenge,
     required this.chooser,
   });
 
@@ -34,6 +37,9 @@ class TodayScreen extends ConsumerWidget {
 
   /// Returns to the running timer's item.
   final VoidCallback onOpenFocus;
+
+  /// Opens a challenge (ADR-044).
+  final ValueChanged<ChallengeId> onOpenChallenge;
 
   /// Picks an activity from the list, or makes a new one, for the day.
   final ActivityChooser chooser;
@@ -80,6 +86,8 @@ class TodayScreen extends ConsumerWidget {
                 chooser: chooser,
                 onStartNow: onOpenItem,
               ),
+              const SizedBox(height: AppSpacing.lg),
+              TodayChallenges(onOpenChallenge: onOpenChallenge),
             ],
           ),
         ),

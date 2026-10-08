@@ -22,12 +22,12 @@ class AppDatabase extends _$AppDatabase {
   /// v3: relational Repeating Groups (ADR-027). v4: plans (ADR-018).
   /// v5: focus sessions (ADR-031). v6: measurements, insight charts
   /// (ADR-034). v7: repeating plans (ADR-036). v8: any plan can be stored
-  /// as completed (ADR-040).
+  /// as completed (ADR-040). v9: daily challenges (ADR-044).
   /// Every schema change bumps this, adds a step below, regenerates the step
   /// helpers with `dart run drift_dev make-migrations`, and adds migration
   /// tests (docs/architecture/database.md §7).
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 9;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -181,6 +181,11 @@ class AppDatabase extends _$AppDatabase {
       ]) {
         await m.create(trigger);
       }
+    },
+    from8To9: (m, schema) async {
+      await m.createTable(schema.challenges);
+      await m.create(schema.idxChallengesType);
+      await m.create(schema.trgChallengesPublicIdImmutable);
     },
   );
 }

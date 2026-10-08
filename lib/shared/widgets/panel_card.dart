@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/design/context_ext.dart';
-import '../../../core/design/tokens/radius.dart';
-import '../../../core/design/tokens/spacing.dart';
+import '../../core/design/context_ext.dart';
+import '../../core/design/tokens/radius.dart';
+import '../../core/design/tokens/spacing.dart';
 
-/// The card every Insights block sits in, like a chart card: a title, an
+/// The card a block of a screen sits in (Insights, a challenge): a title, an
 /// optional quiet subtitle, then [child].
-class InsightPanel extends StatelessWidget {
-  const InsightPanel({
+class PanelCard extends StatelessWidget {
+  const PanelCard({
     super.key,
     required this.title,
     required this.child,

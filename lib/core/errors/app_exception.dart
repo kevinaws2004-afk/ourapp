@@ -126,6 +126,8 @@ enum ValidationCode {
   focusAlreadyActive,
   activityHasNoTimer,
   focusNotActive,
+  invalidChallengeTarget,
+  challengeStartInFuture,
 }
 
 /// The result of pure domain validation: empty means valid.

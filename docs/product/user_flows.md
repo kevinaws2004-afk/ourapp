@@ -119,6 +119,15 @@ Implemented in Phase 6. Me → **Body measurements** → the seven types with th
 
 History (from an activity's page under Me → Activities, or from Plan by date) → chronological list grouped by day → filter by activity and date range → text search across notes and text values. Tap → log detail → edit/delete (with undo).
 
+## F17. Daily challenge (FR-CH-01…05, ADR-044)
+
+1. **Challenges** tab → **New challenge**. Choose the **activity** (Browse activities, or Make your own), the **number of days** (7, 21, 30, 75, 100 or any 1 to 1000), the first day (default today) and optionally a name (default "75 days of Meditation"). **Start challenge**.
+2. Nothing else to do: **recording that activity counts the day** (finish its item, log something in it, or mark it done).
+3. **Today** shows a "Challenges" section below the day's items: "12 / 75 days · 12-day streak" and either "Done today" or, while a streak is running and today isn't recorded, "Not yet today — streak at risk".
+4. Miss a day and the **current streak** goes back to 0 but **progress and the best streak stay** (20 days, a miss, then one day: 21 / 75, streak 1, best 20). Recording a forgotten day heals the streak.
+5. Tap a challenge: progress, current and best streak, days done and left, a calendar of the days done. ⋯ → **Edit** (name, days), **Restart from today** (Undo), **End challenge** (Undo; the records stay).
+6. At the target the challenge is **Completed**; it leaves Today and stays in the Challenges tab.
+
 ## F15. Edit / delete (FR-LG-04)
 
 Log detail → Edit (same generic form) → save. Delete → immediate soft delete with an **Undo** snackbar (no blocking confirm dialog for reversible actions). Destructive *irreversible* actions (none in V1 except discarding an unsaved draft or focus session) use a confirm.

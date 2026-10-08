@@ -12,6 +12,10 @@
   "@navPlan": {
     "description": "Primary navigation tab: planning for future days."
   },
+  "navChallenges": "Challenges",
+  "@navChallenges": {
+    "description": "Primary navigation: Challenges tab (ADR-044)."
+  },
   "navInsights": "Insights",
   "@navInsights": {
     "description": "Primary navigation tab: graphs and history."
@@ -6147,5 +6151,180 @@
         "type": "String"
       }
     }
+  },
+  "validationInvalidChallengeTarget": "Choose between 1 and 1000 days.",
+  "@validationInvalidChallengeTarget": {
+    "description": "Validation: a challenge lasts 1 to 1000 days."
+  },
+  "validationChallengeStartInFuture": "A challenge can't start in the future.",
+  "@validationChallengeStartInFuture": {
+    "description": "Validation: a challenge's first day can't be after today."
+  },
+  "challengesTitle": "Challenges",
+  "@challengesTitle": {
+    "description": "Title of the challenges list under Me and the section on Today (ADR-044)."
+  },
+  "challengesSubtitle": "Do an activity every day and keep your streak going.",
+  "@challengesSubtitle": {
+    "description": "Challenges screen subtitle."
+  },
+  "challengesEmptyTitle": "No challenges yet",
+  "@challengesEmptyTitle": {
+    "description": "Challenges empty state title."
+  },
+  "challengesEmptyMessage": "Pick an activity and a number of days, like 75 days of Meditation. Recording it each day keeps your streak going.",
+  "@challengesEmptyMessage": {
+    "description": "Challenges empty state message."
+  },
+  "newChallenge": "New challenge",
+  "@newChallenge": {
+    "description": "Button: start a new challenge."
+  },
+  "challengeNewTitle": "New challenge",
+  "@challengeNewTitle": {
+    "description": "Challenge sheet title when creating."
+  },
+  "challengeEditTitle": "Edit challenge",
+  "@challengeEditTitle": {
+    "description": "Challenge sheet title when editing."
+  },
+  "challengeActivityLabel": "Activity",
+  "@challengeActivityLabel": {
+    "description": "Challenge sheet: the activity done every day."
+  },
+  "challengeActivityHelper": "Recording it each day counts the day.",
+  "@challengeActivityHelper": {
+    "description": "Challenge sheet: how a day counts."
+  },
+  "challengeDaysLabel": "Number of days",
+  "@challengeDaysLabel": {
+    "description": "Challenge sheet: how many successful days complete it."
+  },
+  "challengeDaysHelper": "Complete the activity once every day.",
+  "@challengeDaysHelper": {
+    "description": "Challenge sheet: the rule of a daily challenge."
+  },
+  "challengeStartLabel": "First day",
+  "@challengeStartLabel": {
+    "description": "Challenge sheet: the first day that counts."
+  },
+  "challengeNameLabel": "Name",
+  "@challengeNameLabel": {
+    "description": "Challenge sheet: the challenge name."
+  },
+  "challengeStartAction": "Start challenge",
+  "@challengeStartAction": {
+    "description": "Challenge sheet: create button."
+  },
+  "challengeAutoTitle": "{days, plural, =1{1 day of {activity}} other{{days} days of {activity}}}",
+  "@challengeAutoTitle": {
+    "description": "Default challenge name, e.g. \"75 days of Meditation\".",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "activity": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeProgressDays": "{done} / {target} days",
+  "@challengeProgressDays": {
+    "description": "Challenge progress: successful days out of the target.",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeStreakDays": "{count, plural, =1{1-day streak} other{{count}-day streak}}",
+  "@challengeStreakDays": {
+    "description": "Challenge card: the current streak.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeTodayDone": "Done today",
+  "@challengeTodayDone": {
+    "description": "Challenge state: today's activity is recorded."
+  },
+  "challengeTodayAtRisk": "Not yet today — streak at risk",
+  "@challengeTodayAtRisk": {
+    "description": "Challenge state: a streak is running and today isn't recorded yet."
+  },
+  "challengeTodayNotYet": "Not yet today",
+  "@challengeTodayNotYet": {
+    "description": "Challenge state: nothing recorded today and no streak running."
+  },
+  "challengeCompleted": "Completed",
+  "@challengeCompleted": {
+    "description": "Challenge state: the target is reached."
+  },
+  "challengeCompletedOn": "Completed {date}",
+  "@challengeCompletedOn": {
+    "description": "Challenge detail: the day the target was reached.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeCurrentStreak": "Current streak",
+  "@challengeCurrentStreak": {
+    "description": "Challenge detail stat."
+  },
+  "challengeBestStreak": "Best streak",
+  "@challengeBestStreak": {
+    "description": "Challenge detail stat."
+  },
+  "challengeDaysDone": "Days done",
+  "@challengeDaysDone": {
+    "description": "Challenge detail stat: total successful days."
+  },
+  "challengeDaysLeft": "Days left",
+  "@challengeDaysLeft": {
+    "description": "Challenge detail stat: days to the target."
+  },
+  "challengeCalendarSection": "Your days",
+  "@challengeCalendarSection": {
+    "description": "Challenge detail: heading above the calendar of days done."
+  },
+  "challengeRestart": "Restart from today",
+  "@challengeRestart": {
+    "description": "Challenge detail: count again from today."
+  },
+  "challengeRestarted": "Counting from today",
+  "@challengeRestarted": {
+    "description": "Snackbar after restarting a challenge."
+  },
+  "challengeEnd": "End challenge",
+  "@challengeEnd": {
+    "description": "Challenge detail: end it (its records stay)."
+  },
+  "challengeEnded": "Challenge ended",
+  "@challengeEnded": {
+    "description": "Snackbar after ending a challenge."
+  },
+  "challengeNotFound": "This challenge has ended.",
+  "@challengeNotFound": {
+    "description": "Challenge detail: the challenge no longer exists."
+  },
+  "challengeStartsOn": "Since {date}",
+  "@challengeStartsOn": {
+    "description": "Challenge detail: the first day that counts.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeOptions": "Challenge options",
+  "@challengeOptions": {
+    "description": "Tooltip of the challenge screen's menu button."
   }
 }

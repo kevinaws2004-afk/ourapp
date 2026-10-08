@@ -14,6 +14,7 @@
 >   - `today` (presentation): greeting, quick add with Now, today's items as one list (tap to open the item, task check; ADR-035), planned vs actual
 >   - `focus` (Phase 5, ADR-031): domain/data/presentation (session model and use cases, `DbFocusSessionRepository`, full-screen `FocusScreen`, `FocusBanner`; the timer also runs inside the item); `core/transactions/UnitOfWork` + `core/database/DbUnitOfWork`
 >   - `measurements` (Phase 6): domain/data/presentation (Me → Body measurements, per-type history + chart, add/edit sheet)
+>   - `challenges` (ADR-044): `Challenge`, `ChallengeProgress` (pure progress and streak maths), `WatchChallenges`, `DbChallengeRepository`, Today's section, the Challenges tab, the sheet and the challenge screen
 >   - `insights` (Phase 6, ADR-034): the generic engine (`insight.dart`, `WatchInsight`), `DbInsightRepository`, the Insights tab, chart cards and the chart builder; shared `AppChart` (fl_chart, ADR-033)
 > - Everything else here is target design.
 
@@ -86,13 +87,14 @@ Reusable, feature-agnostic UI built from design tokens.
 | `plans` | Plans and Tasks, status transitions, plan-to-log start flow | data, domain, presentation |
 | `focus` | Focus sessions, timer state machine, full-screen focus UI | data, domain, presentation |
 | `today` | Composes plans + logs into the current-date view and planned-vs-actual | domain (timeline merge), presentation |
+| `challenges` | Daily challenges: definition, progress and streaks derived from an activity's logs, Today section, Me list, sheet, detail | domain, data, presentation (reads logs through its own query; activity types through their repository) |
 | `insights` | Analytics engine (metric sources, extraction, aggregation), chart configuration UI | domain, presentation (reads via other features' repositories) |
 | `measurements` | Body measurements | data, domain, presentation |
 | `history` | Search and filtered history | presentation (+ domain query objects; queries implemented in `activity_logs` data layer) |
 | `onboarding` | First-run narrative, choosing starter activities, initial preferences | presentation (+ uses `activity_types` and `settings`) |
 | `settings` | "Me" tab: preferences (theme, units), export | data, domain, presentation |
 
-Tab ↔ feature mapping (ADR-028): Today → `today`; Plan → `plans` (+ records for the date from `activity_logs`); Insights → `insights`; Me → `settings` + `measurements` + **Activities** (`activity_types`). Quick Record (global) → `activity_logs`.
+Tab ↔ feature mapping (ADR-028): Today → `today`; Plan → `plans` (+ records for the date from `activity_logs`); Challenges → `challenges`; Insights → `insights`; Me → `settings` + `measurements` + **Activities** (`activity_types`). Quick Record (global) → `activity_logs`.
 
 ## 2. Dependency rules
 
@@ -193,7 +195,7 @@ Rules:
 
 ## 6. Navigation
 
-- `go_router` with a `StatefulShellRoute` for the four tabs (Today, Plan, Insights, Me; ADR-028) preserving each tab's stack. The shell has no Record action (owner, 2026-10-04); items are added from the quick add (ADR-035).
+- `go_router` with a `StatefulShellRoute` for the five tabs (Today, Plan, Challenges, Insights, Me; ADR-028, ADR-044) preserving each tab's stack. The shell has no Record action (owner, 2026-10-04); items are added from the quick add (ADR-035).
 - Full-screen routes outside the shell: Item, Focus Mode, Activity Builder, Onboarding.
 - Modal bottom sheets for the plan sheet and pickers. Sheets are not routes unless deep-linking is needed.
 - Onboarding gate (implemented): the router's `redirect` calls `onboardingRedirect()` with the current `onboarding_completed` preference. A `ValueNotifier` fed by the preference stream is the router's `refreshListenable`; the startup snapshot gives the correct first route with no flash.
@@ -201,9 +203,9 @@ Rules:
 - Route arguments are IDs (strings), never entity objects, so routes survive restoration.
 
 Implemented:
-- Phase 1: `/onboarding`, `/today`, `/plan`, `/insights`, `/me`, debug-only `/dev/tokens` (`/track` was removed by ADR-028).
+- Phase 1: `/onboarding`, `/today`, `/plan`, `/insights`, `/me` (and `/challenges` from ADR-044), debug-only `/dev/tokens` (`/track` was removed by ADR-028).
 - Phase 2:
-  - Inside the Me tab: `/me/activities` (Activities) and `/me/activities/:typeId` (activity detail).
+  - Inside the Me tab: `/me/activities` (Activities) and `/me/activities/:typeId` (activity detail). The Challenges tab is `/challenges` (ADR-044); a challenge opens full screen at `/challenge/:id` on the root navigator, from Today or the tab.
   - Full-screen on the root navigator: `/activities/new`, `/activities/browse`, `/activities/:typeId/edit`. (`/logs/…` were replaced by `/item/…`, ADR-035.)
 
 Route parameters are public IDs (ADR-017). Indicative full route map (paths will be reconciled with the implemented ones as features land):
@@ -214,6 +216,8 @@ Route parameters are public IDs (ADR-017). Indicative full route map (paths will
 /plan/day                        (implemented: the selected date as a day; ADR-039)
 /me/activities                   (implemented)
 /me/activities/:typeId           (implemented)
+/challenges                      (implemented: the Challenges tab, ADR-044)
+/challenge/:id                   (implemented, ADR-044)
 /activities/new, /activities/browse, /activities/:typeId/edit   (implemented)
 /item/:planId                    (implemented: an item, where you log into it; ADR-035)
 /item/log/:logId                 (implemented: a record without a plan, as an item)

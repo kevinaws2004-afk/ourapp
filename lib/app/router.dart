@@ -29,6 +29,9 @@ import '../l10n/generated/app_localizations.dart';
 import '../shared/errors/error_copy.dart';
 import '../shared/widgets/state_views.dart';
 import '../core/errors/app_exception.dart';
+import '../features/challenges/domain/challenge.dart';
+import '../features/challenges/presentation/challenge_screen.dart';
+import '../features/challenges/presentation/challenges_screen.dart';
 import '../features/focus/presentation/focus_providers.dart';
 import '../features/focus/presentation/focus_screen.dart';
 import '../features/measurements/domain/measurement.dart';
@@ -57,6 +60,9 @@ abstract final class AppRoutes {
   /// Reusable activity setup, under Me (ADR-028).
   static const activities = '/me/activities';
 
+  /// The Challenges tab (ADR-044).
+  static const challenges = '/challenges';
+
   /// Body measurements, under Me (Phase 6).
   static const measurements = '/me/measurements';
   static String measurementType(MeasurementType type) =>
@@ -72,6 +78,9 @@ abstract final class AppRoutes {
 
   /// Choosing an activity for a day (ADR-042).
   static const browseActivities = '/activities/browse';
+
+  /// A challenge: progress, streaks and its days (ADR-044).
+  static String challenge(ChallengeId id) => '/challenge/${id.value}';
   static String editActivity(ActivityTypeId id) =>
       '/activities/${id.value}/edit';
 
@@ -209,6 +218,8 @@ final routerProvider = Provider<GoRouter>((ref) {
                       unawaited(context.push(AppRoutes.item(id))),
                   onOpenRecord: (log) => openLog(context, log),
                   onOpenFocus: () => openFocus(context),
+                  onOpenChallenge: (id) =>
+                      unawaited(context.push(AppRoutes.challenge(id))),
                   chooser: chooser(context),
                 ),
               ),
@@ -236,6 +247,18 @@ final routerProvider = Provider<GoRouter>((ref) {
                     ),
                   ),
                 ],
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.challenges,
+                builder: (context, state) => ChallengesScreen(
+                  onOpenChallenge: (id) =>
+                      unawaited(context.push(AppRoutes.challenge(id))),
+                  chooser: chooser(context),
+                ),
               ),
             ],
           ),
@@ -332,6 +355,13 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
         ],
+      ),
+      GoRoute(
+        parentNavigatorKey: rootNavigatorKey,
+        path: '/challenge/:id',
+        builder: (context, state) => ChallengeScreen(
+          challengeId: ChallengeId(state.pathParameters['id']!),
+        ),
       ),
       GoRoute(
         parentNavigatorKey: rootNavigatorKey,
