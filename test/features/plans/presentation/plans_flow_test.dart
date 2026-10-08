@@ -10,9 +10,10 @@ import 'package:daylog/features/plans/presentation/item/item_notifier.dart';
 import 'package:daylog/features/plans/presentation/item/item_screen.dart';
 import 'package:daylog/features/plans/presentation/widgets/plan_item_tile.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
-import 'package:daylog/features/settings/domain/theme_preference.dart';
+import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:daylog/core/design/app_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:daylog/shared/widgets/item_card.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../support/fake_clock.dart';
@@ -23,7 +24,7 @@ import '../../activity_types/presentation/activities_flow_test.dart'
 import 'plan_screen_test.dart' show openPlan, openPlanTab;
 
 const _onboarded = PreferencesSnapshot(
-  themePreference: ThemePreference.light,
+  theme: AppThemeId.lavender,
   onboardingCompleted: true,
 );
 
@@ -45,9 +46,14 @@ Future<void> seedReadingPlan(AppDatabase db, FakeClock clock) async {
   );
 }
 
-/// Opens an item by tapping it on a day's list.
+/// Opens an item by tapping it on a day's list (its name can also show on
+/// Today's "Up next" card; the list's row is the one tapped).
 Future<void> openItem(WidgetTester tester, Finder item) async {
-  await tester.tap(item);
+  final inList = find.descendant(of: find.byType(ItemCard), matching: item);
+  final target = inList.evaluate().isNotEmpty ? inList.first : item;
+  await tester.ensureVisible(target);
+  await tester.pumpAndSettle();
+  await tester.tap(target);
   await tester.pumpAndSettle();
   expect(find.byType(ItemScreen), findsOneWidget);
 }
@@ -371,7 +377,13 @@ void main() {
       await tester.pumpAndSettle();
       await saveOwnActivity(tester, 'Bath');
       expect(itemRow('Bath'), findsOneWidget);
-      expect(find.textContaining('9:00 AM–9:30 AM'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(PlanItemTile),
+          matching: find.textContaining('9:00 AM–9:30 AM'),
+        ),
+        findsOneWidget,
+      );
     });
   });
 
@@ -592,7 +604,7 @@ void main() {
 
       expect(find.text('Anytime'), findsOneWidget);
       expect(
-        tester.getTopLeft(find.text('Standup')).dy,
+        tester.getTopLeft(itemRow('Standup')).dy,
         lessThan(tester.getTopLeft(find.text('Anytime')).dy),
       );
       expect(

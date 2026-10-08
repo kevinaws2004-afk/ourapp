@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/design/app_theme.dart';
+import '../core/design/themes/app_theme_id.dart';
 import '../core/design/context_ext.dart';
 import '../core/design/tokens/spacing.dart';
 import '../l10n/generated/app_localizations.dart';
@@ -18,8 +19,7 @@ class StartupFailureApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
+      theme: AppTheme.of(AppThemeId.fallback),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: _StartupFailureScreen(onRetry: onRetry),

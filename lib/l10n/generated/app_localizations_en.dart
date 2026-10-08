@@ -4696,4 +4696,113 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get challengeOptions => 'Challenge options';
+
+  @override
+  String get appearanceTitle => 'Appearance';
+
+  @override
+  String get appearanceIntro =>
+      'Pick the look you like. It changes the whole app; your days stay the same.';
+
+  @override
+  String get appearanceInUse => 'In use';
+
+  @override
+  String get themeNameRose => 'Rose';
+
+  @override
+  String get themeNameLavender => 'Lavender';
+
+  @override
+  String get themeNamePapaya => 'Papaya';
+
+  @override
+  String get themeDescriptionRose => 'Soft blush and rose, with calm teal.';
+
+  @override
+  String get themeDescriptionLavender =>
+      'Porcelain and lavender, with fresh mint.';
+
+  @override
+  String get themeDescriptionPapaya => 'Warm papaya, with aqua mint.';
+
+  @override
+  String get appearancePreviewTitle => 'Morning walk';
+
+  @override
+  String get appearancePreviewDetail => '7:30 · 30 min';
+
+  @override
+  String get appearancePreviewAction => 'Start';
+
+  @override
+  String get planStatusPlanned => 'Planned';
+
+  @override
+  String todayProgress(int done, int total) {
+    return '$done of $total done';
+  }
+
+  @override
+  String get todayRingCenter => 'done';
+
+  @override
+  String get todayHeroEmpty => 'A fresh day. Add what you\'d like to do.';
+
+  @override
+  String get todayHeroAllDone => 'Everything\'s done. Nicely done.';
+
+  @override
+  String get todayUpNext => 'Up next';
+
+  @override
+  String get todayDoingNow => 'Now';
+
+  @override
+  String todayUpNextIn(String duration) {
+    return 'in $duration';
+  }
+
+  @override
+  String get todayUpNextAnytime => 'Anytime today';
+
+  @override
+  String get todayUpNextStart => 'Start';
+
+  @override
+  String get todayUpNextContinue => 'Continue';
+
+  @override
+  String get todayFactTime => 'Time';
+
+  @override
+  String get todayFactLength => 'Planned';
+
+  @override
+  String get todayYourDay => 'Your day';
+
+  @override
+  String get todayEmptyTitle => 'Nothing on today yet';
+
+  @override
+  String get itemLive => 'Live';
+
+  @override
+  String get itemTimeSoFar => 'Time so far';
+
+  @override
+  String get itemDetailsSection => 'Details';
+
+  @override
+  String get groupRowNow => 'Now';
+
+  @override
+  String stepperDecrease(String field) {
+    return 'Less $field';
+  }
+
+  @override
+  String stepperIncrease(String field) {
+    return 'More $field';
+  }
 }

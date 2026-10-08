@@ -5,7 +5,7 @@ import '../../core/design/tokens/radius.dart';
 import '../../core/design/tokens/spacing.dart';
 import '../../core/design/tokens/typography.dart';
 
-/// A small card with a label, a big number and an optional change ("+12 %").
+/// A small well with a label, a big number and an optional change ("+12 %").
 class StatTile extends StatelessWidget {
   const StatTile({
     super.key,
@@ -27,12 +27,11 @@ class StatTile extends StatelessWidget {
     );
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: context.colors.surfaceBase,
+        color: context.colors.surfaceSunken,
         borderRadius: AppRadius.lgAll,
-        border: Border.all(color: context.colors.borderSubtle),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

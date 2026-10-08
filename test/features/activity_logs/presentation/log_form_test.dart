@@ -1,4 +1,5 @@
 import 'package:daylog/core/design/app_theme.dart';
+import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:daylog/core/units/unit_registry.dart';
 import 'package:daylog/features/activity_logs/domain/field_value.dart';
 import 'package:daylog/features/activity_logs/presentation/form/activity_log_form.dart';
@@ -52,7 +53,7 @@ Future<Map<ActivityFieldId, FieldValue?>> pumpForm(
   await tester.pumpWidget(
     ProviderScope(
       child: MaterialApp(
-        theme: AppTheme.light,
+        theme: AppTheme.of(AppThemeId.lavender),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(

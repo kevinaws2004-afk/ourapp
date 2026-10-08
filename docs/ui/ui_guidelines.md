@@ -26,14 +26,15 @@
 
 Each component consumes tokens only and implements all states from [design_system.md §11](design_system.md#11-component-states).
 
-**Status (Phase 4):**
+**Status (ADR-045, first redesign slice):**
 - **Implemented:**
-  - `AppButton`: four variants and the large 52dp size. The medium size and loading state aren't built yet.
-  - `ActivityBadge`, `SectionHeader`.
+  - `AppButton`: primary (brand), **action** (the theme's "go" color: Start, Mark done), secondary (soft), tertiary, destructive; pill shaped; `expand` = full width with a glow in its own color. The loading state isn't built yet.
+  - `AppCard` / `cardDecoration` (the theme's card: white on the tinted canvas, soft glow, edge per theme), `PanelCard` (titled card), `ItemCard` (one day item: badge · time · status chip · title · summary · check), `StatusChip` (done / active / scheduled / warning / neutral; text always says the state), `ProgressRing` and `AppProgressBar` (theme progress fill), `FactPill` (a fact as a tile or a chip, per theme), `EmptyStateCard` (orb, title, one sentence, one-tap actions), `StatTile`, `DoneCheck` (open ring in the activity color, filled check circle when done).
+  - `ActivityBadge` (icon on a soft circle), `SectionHeader`.
   - State views: `AsyncValueView`, `DelayedLoadingPlaceholder` (blank for ~150 ms, then quiet skeleton bars), `AppEmptyState`, `AppErrorState`.
   - Snackbar helpers: `showUndoSnackBar`, `showMessageSnackBar`.
   - `CenteredScrollBody`.
-  - The adaptive shell: Material `NavigationBar`/`NavigationRail` themed from tokens.
+  - The adaptive shell: Material `NavigationBar`/`NavigationRail` themed from tokens; on phones the bar is full width or a floating rounded bar, per theme.
   - The generic form renderer, `FieldEditorShell` and one editor per field type (`features/activity_logs/presentation/form/`).
   - `DurationInput`.
 - **All other rows are planned.**
@@ -74,13 +75,17 @@ Do not use raw Material `Card`, `ElevatedButton`, `AlertDialog` etc. in features
 ## 4. Core screens
 
 ### 4.1 Today (most important screen, §18, §35)
-- **Header:** time-of-day greeting in display type ("Good morning, …" if a name is known; otherwise without name) + date + Day Arc showing the day so far with logged segments.
+- **Header:** a hero card with the date, a time-of-day greeting and a ring of how much of the day is done (ADR-045; it replaced the planned Day Arc).
 - **Morning state:** today's items as outline (planned) items with time, activity badge and title. **Tapping an item opens it to log into it** (ADR-035); tasks also have a check control.
 - **During the day:** items with something logged become filled (done) items with a summary; a running timer appears as a live banner at the top ("Reading · 23:14 · Return") and its item shows "In progress".
 - **Evening state:** the same list reads as planned vs what happened: done items with actual duration vs planned, unplanned items in time order, open items still tappable to log, with Skip / Move to tomorrow in their More options. Concise day summary line without scores or grades.
 - **Long-press a row** for quick actions (mark done / not done, move to tomorrow, duplicate, skip, delete; each with Undo, B7).
 - Items show: the check, start time, activity, duration, and a summary with the numbers (e.g. "Bench press 60 kg × 8 (×2), 65 kg × 6", "Fooled by Randomness"; generic `formatGroupSummary`, A18). Untimed items sit under an **Anytime** heading below the timed ones (A19). Adding something from quick add shows no pop-up (A9).
-- **Implemented (ADR-035, ADR-039):** greeting by local hour, date, then the shared `DayItems` (also used by the planner's day screen): quick add, day summary ("3 done · 2 h 10 min"), and one list of items (shared `PlannedList`: plans and unplanned records in time order, then untimed plans), with task checks, ✓, planned-vs-actual outcomes and summaries. Empty Today: a one-line invitation under the quick add. Skip, Move to tomorrow and Delete are in each item's More options. **Not built yet:** the Day Arc header and a distinct evening layout.
+- **Implemented (ADR-035, ADR-039, ADR-045):**
+  - **Hero card:** the date as a chip ("SAT, OCT 3"), the greeting by local hour (no name), one line ("2 of 5 done", "A fresh day…" when empty, "Everything's done…" when all done) and a **day ring** (done / items that count; skipped and cancelled don't count; `DayProgress`). The card has the theme's corner wash.
+  - The running-timer banner, then **Up next** (`upNext`): the item in progress ("NOW"), else the earliest timed item that hasn't ended ("UP NEXT · 6:00 PM" + "in 25 min"), else the first untimed one. It shows the activity's name when the title differs, the plan's notes, Time and Planned-length facts, and one full-width action: **Start** (starts its timer and opens it; only for an activity with a timer and when no other timer runs) or **Continue** (opens it). Hidden when nothing is open.
+  - **Your day:** the shared `DayItems` (also the planner's day screen) without its summary line (the hero says it): quick add, then the items as item cards (shared `PlannedList`). Empty: an `EmptyStateCard` ("Nothing on today yet"). Then running challenges.
+  - Skip, Move to tomorrow and Delete are in each item's More options. **Not built:** a distinct evening layout, a name in the greeting.
 
 ### 4.2 Plan (date-based; implemented)
 - **Week | Month** switch at the top (ADR-036, ADR-039); the tab opens on Week. There is no separate Day view: it duplicated Today. Week: a period header (‹ Oct 4–10 › and Today), then each day's heading (today in brand color; tap → that day) with "+" (full plan sheet) and its items, or "Nothing planned". Month: ‹ October 2026 ›, narrow weekday labels, a 7-column grid of day cells (`AppSizes.dayCell`) with up to four activity-colored dots (`AppSizes.monthDot`); tap → that day.
@@ -98,12 +103,13 @@ The reusable Activity Types, managed under Me rather than in a primary tab (ADR-
 
 ### 4.4 Item (where you log; ADR-035, replaces the log editor)
 - App bar: activity badge + title, a quiet "Saving…" / "Saved" status, and ⋯ (plan options) or Delete for a record without a plan.
-- Top: planned time; ✓ Done with "Mark as not done" once marked done; **Start timer**, which becomes the live timer (DM Mono) with Pause/Resume, Finish and full screen while it runs (finishing marks the item done, ADR-040).
-- The activity's fields, rendered by the shared form renderer in configured order with consistent field shells. Structured fields (Repeating Group, incl. sets as a nested group) expand inline; "Add {item}" sits at the end of each group; a new all-number row starts from the previous row; text fields can offer previously recorded values as suggestions.
+- **Header card (ADR-045):** a status chip (Planned / In progress / Done / **LIVE** while its timer runs) and the planned time. Not done: a full-width **Start timer** (action color); while it runs: "TIME SO FAR", the big tabular timer, Pause/Resume, **Finish** (dark pill) and full screen (finishing marks the item done, ADR-040). Done: **Mark as not done** (marked done) and a small Start timer to add time.
+- The activity's fields, rendered by the shared form renderer in configured order, **each in its own card** (`boxed`). Structured fields (Repeating Group, incl. sets as a nested group) expand inline; "Add {item}" sits at the end of each group; text fields can offer previously recorded values as suggestions.
+- **Lists of numbers (sets):** the row being filled in is a card ("Set 3 · Now") with a **− / +** stepper per number (one step: 1, or 0.5 with decimals; never below the minimum or 0; the value can still be typed; steppers stack on narrow screens). Earlier rows fold into one line ("2 · 61.25 kg × 8 ✓"); tapping one opens it to change. A new row starts from the previous one and becomes the open one. A row with a problem stays open. Generic: any list whose details are all numbers gets this; nothing knows it's a set.
 - **Last time (B1, ADR-041):** an empty item of an activity with history shows a brand-soft card "Last time · Fri, Oct 2", the summary and **Use last time**.
 - An item with no fields shows one line ("What do you want to keep track of?…") and chips: **How it went**, **An amount**, **Sets & reps**, **More…** (B3). **Add to log** (after the fields, once there are some) opens "What do you want to log?": **Quick** (How it went, An amount, Sets & reps, Checklist) and a collapsed **More kinds of detail** with every field type in plain words ("Words", "An amount", "A list"…) → the field sheet to name it; its rare settings sit under **Advanced** (B4). A list's ⋯ menu ("{Item} list options") offers "Add a detail to each {item}" (A13), so "Add {item}" stands alone. A named row with nothing else filled shows "Last time: … · **Use**" (B2). Lists of numbers show **Rest** next to "Add {item}": a bar pinned to the bottom of the item counts down ("Rest 01:30", −15 s / +15 s, Stop; "Rest over" with a light buzz) (B5). Adding a row scrolls it into view above the keyboard (A14). A pencil in the app bar opens the builder for the item's activity.
-- Notes, then **When** (start date/time) and duration (labeled **Hours** / **Minutes** boxes; a finished timer fills them, A11).
-- Bottom: **Mark done** (primary, full width) until it's done; once something is logged a line says "Logged so far. Mark it done when you've finished." (A10, ADR-040). Then **Plan next…** (date picker, then a time for timed items; snackbar with Open).
+- A **Details** card: notes, then **When** (start date/time) and duration (labeled **Hours** / **Minutes** boxes; a finished timer fills them, A11).
+- Bottom: **Mark done** (action color, full width) until it's done; once something is logged a line says "Logged so far. Mark it done when you've finished." (A10, ADR-040). Then **Plan next…** (date picker, then a time for timed items; snackbar with Open).
 - Sheets with typed input (field sheet, plan sheet) ask "Discard your changes?" before back or a tap outside closes them (shared `DiscardGuard`, A15).
 - **No Save button:** changes save shortly after typing stops, and on leaving. Values that can't be saved show their issue inline with "Not saved yet: check the highlighted fields". Required fields (`*`) are a hint, not a blocker.
 
@@ -114,16 +120,16 @@ Tapping a built-in activity (in Me → Activities or Browse activities) opens a 
 Steps on one screen with progressive sections: Name (and description) → Fields, "what you record" (list, add, reorder, configure in sheets) → Icon (12 suggested plus the chosen one; "More icons" shows all) → Color → Behavior (timer, plannable) → live Preview (rendered with the real form renderer) (A27). Icons and colors are read to screen readers by name ("Walking", "Sky"; `activity_appearance_copy.dart`, A25). Field type picker groups types like §9 with plain-language descriptions and an example for each.
 
 ### 4.6 Focus Mode
-Full-screen, minimal chrome, activity soft color wash on canvas (dark-leaning in dark theme). Activity name + context (e.g. book), `numericHero` elapsed time, slow arc progress, two controls (Pause/Resume, Finish) as large pill buttons. Discard behind an overflow. Screen stays awake while visible (wakelock is a platform service; decide implementation at Phase 5). Completion: celebration motion + "Reading session complete · 42 minutes" → optional notes and remaining fields.
+Full-screen, minimal chrome, activity soft color wash on canvas. Activity name + context (e.g. book), `numericHero` elapsed time, slow arc progress, two controls (Pause/Resume, Finish) as large pill buttons. Discard behind an overflow. Screen stays awake while visible (wakelock is a platform service; decide implementation at Phase 5). Completion: celebration motion + "Reading session complete · 42 minutes" → optional notes and remaining fields.
 - **Implemented (Phase 5):**
-  - activity badge and name, `numericHero` timer (DM Mono, `m:ss` / `h:mm:ss`), Focusing/Paused label
+  - activity badge and name, `numericHero` timer (tabular figures, `m:ss` / `h:mm:ss`), Focusing/Paused label
   - Pause/Resume as the primary pill, Finish (secondary), Discard (tertiary, confirmed)
   - Finish (here or in the item) writes the timed span into the item and shows "Reading session complete · 42 min" (ADR-035)
   - `FocusBanner` on Today returns to the session's item
 - **Not built yet:** the soft color wash, arc progress, keep-awake (no wakelock dependency) and completion motion.
 
 ### 4.6a Date and time pickers
-The stock Material pickers are themed from tokens in `AppTheme` (A26): raised surface, large radius, brand selection (days, years, hour/minute boxes, AM/PM, dial hand), `numericLarge` (DM Mono) for the time, no coral accent. Planning a time uses the app's own time sheet (§4.2).
+The stock Material pickers are themed from tokens in `AppTheme` (A26): raised surface, large radius, brand selection (days, years, hour/minute boxes, AM/PM, dial hand), `numericLarge` (tabular) for the time, no coral accent. Planning a time uses the app's own time sheet (§4.2).
 
 ### 4.7 Insights
 Default cards generated from the user's data (stat tiles with deltas and sparklines; one featured chart). Chart detail: metric selector (e.g. Weight / Reps / Volume / Frequency for an exercise), range segmented control, aggregation, accessible summary text. Comparisons phrased plainly ("+38 min vs last week"). No decoration; data first.
@@ -151,7 +157,10 @@ Default cards generated from the user's data (stat tiles with deltas and sparkli
 - No reminders yet (step 2).
 
 ### 4.8 Me
-**Activities** (implemented, §4.3), **Challenges** (§4.7a), **Body measurements** (implemented in Phase 6: latest values, per-type history with a line chart, add/edit/delete with Undo), preferences (theme, units), data (export if approved), about/privacy statement. A calm settings list built from shared list items, not default settings screens.
+**Activities** (implemented, §4.3), **Body measurements** (implemented in Phase 6: latest values, per-type history with a line chart, add/edit/delete with Undo), **Appearance** (implemented, ADR-045; the row shows the theme in use), units, data (export if approved), about/privacy statement. A calm settings list built from shared list items, not default settings screens. (Challenges moved to their own tab, ADR-044.) Me's own Stitch-based screen pass comes after the first slice is reviewed.
+
+### 4.8a Me → Appearance (ADR-045)
+"Pick the look you like. It changes the whole app; your days stay the same." Then the three themes (Rose, Lavender, Papaya), each a preview drawn in its own theme: its canvas, name and description, a sample item card with a status chip, and a sample action button. The one in use has a ring in the current brand color and an "In use" chip. Tapping a preview applies it immediately (the app cross-fades) and saves it; each preview is one button for screen readers ("Papaya. Warm papaya, with aqua mint.", selected).
 
 ## 5. States
 
@@ -170,7 +179,7 @@ Every data-bearing view handles all states with shared components. A screen is n
 
 Narrative arc (§33.4): **understand → one meaningful question → personalize → show what you'll get → begin**. Detailed steps in [user_flows.md F1](../product/user_flows.md#f1-first-run-onboarding-fr-ux-01-fr-ux-02-fr-at-12).
 - One idea per screen; display-type statement + short supporting line + one primary action.
-- The Day Arc rises across steps as the progress indicator.
+- A progress bar or ring shows the steps (theme progress fill).
 - Choices are outcome-phrased cards with icons ("Read more", "Train consistently", "Focus deeper"), not technical options.
 - The personalization result is visible: chosen activities appear in their colors on a preview of Today.
 - Privacy promise is stated once, warmly, early.
@@ -188,7 +197,7 @@ Narrative arc (§33.4): **understand → one meaningful question → personalize
 - Every save gives feedback (success state, snackbar, or visible list change with animation). Silence is never success.
 
 ### 7.3 Micro-interactions
-Purposeful only: task check fill; set row add (slides in, focus moves to weight); reorder lift; timer pause morph; chart range morph; Day Arc segment grows when a log is saved; stepper digits roll on change. Each must be short (see motion tokens) and skippable under reduced motion.
+Purposeful only: task check fill; set row add (slides in, focus moves to weight); reorder lift; timer pause morph; chart range morph; the day ring fills when an item is done; stepper digits roll on change. Each must be short (see motion tokens) and skippable under reduced motion.
 
 ### 7.4 Transitions between major screens
 Tabs: quick fade-through. List → detail: container transform from the tapped item when it aids orientation, otherwise shared-axis horizontal. Into Focus Mode: the activity badge/arc expands into the full-screen focus surface. Sheets: slide up with `standard`; scrim fades.

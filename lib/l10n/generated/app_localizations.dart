@@ -9027,6 +9027,204 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Challenge options'**
   String get challengeOptions;
+
+  /// Title of Me → Appearance and its row on Me.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearanceTitle;
+
+  /// Intro on the Appearance screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the look you like. It changes the whole app; your days stay the same.'**
+  String get appearanceIntro;
+
+  /// Chip on the theme that's currently applied.
+  ///
+  /// In en, this message translates to:
+  /// **'In use'**
+  String get appearanceInUse;
+
+  /// Name of the rose theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Rose'**
+  String get themeNameRose;
+
+  /// Name of the lavender theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Lavender'**
+  String get themeNameLavender;
+
+  /// Name of the papaya theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Papaya'**
+  String get themeNamePapaya;
+
+  /// Description of the rose theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Soft blush and rose, with calm teal.'**
+  String get themeDescriptionRose;
+
+  /// Description of the lavender theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Porcelain and lavender, with fresh mint.'**
+  String get themeDescriptionLavender;
+
+  /// Description of the papaya theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm papaya, with aqua mint.'**
+  String get themeDescriptionPapaya;
+
+  /// Sample item title in a theme preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning walk'**
+  String get appearancePreviewTitle;
+
+  /// Sample item time in a theme preview.
+  ///
+  /// In en, this message translates to:
+  /// **'7:30 · 30 min'**
+  String get appearancePreviewDetail;
+
+  /// Sample button in a theme preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get appearancePreviewAction;
+
+  /// Status chip of an open plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Planned'**
+  String get planStatusPlanned;
+
+  /// Today's hero: how many of today's items are done.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} done'**
+  String todayProgress(int done, int total);
+
+  /// Small word under the count in Today's ring.
+  ///
+  /// In en, this message translates to:
+  /// **'done'**
+  String get todayRingCenter;
+
+  /// Today's hero line when nothing is on the day.
+  ///
+  /// In en, this message translates to:
+  /// **'A fresh day. Add what you\'d like to do.'**
+  String get todayHeroEmpty;
+
+  /// Today's hero line when every item is done.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything\'s done. Nicely done.'**
+  String get todayHeroAllDone;
+
+  /// Label of the Up next card on Today.
+  ///
+  /// In en, this message translates to:
+  /// **'Up next'**
+  String get todayUpNext;
+
+  /// Label of the Up next card when the item is in progress.
+  ///
+  /// In en, this message translates to:
+  /// **'Now'**
+  String get todayDoingNow;
+
+  /// How soon the next item starts, e.g. 'in 25 min'.
+  ///
+  /// In en, this message translates to:
+  /// **'in {duration}'**
+  String todayUpNextIn(String duration);
+
+  /// Up next card: the item has no time.
+  ///
+  /// In en, this message translates to:
+  /// **'Anytime today'**
+  String get todayUpNextAnytime;
+
+  /// Up next card: start recording the item.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get todayUpNextStart;
+
+  /// Up next card: open the item that's in progress.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get todayUpNextContinue;
+
+  /// Label of the time fact on the Up next card.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get todayFactTime;
+
+  /// Label of the planned length fact on the Up next card.
+  ///
+  /// In en, this message translates to:
+  /// **'Planned'**
+  String get todayFactLength;
+
+  /// Heading above today's items.
+  ///
+  /// In en, this message translates to:
+  /// **'Your day'**
+  String get todayYourDay;
+
+  /// Title of Today's empty state.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing on today yet'**
+  String get todayEmptyTitle;
+
+  /// Chip on an item whose timer is running.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get itemLive;
+
+  /// Label above a running item's timer.
+  ///
+  /// In en, this message translates to:
+  /// **'Time so far'**
+  String get itemTimeSoFar;
+
+  /// Card title for an item's notes, time and duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get itemDetailsSection;
+
+  /// Chip on the list row being filled in.
+  ///
+  /// In en, this message translates to:
+  /// **'Now'**
+  String get groupRowNow;
+
+  /// Button lowering a number by one step.
+  ///
+  /// In en, this message translates to:
+  /// **'Less {field}'**
+  String stepperDecrease(String field);
+
+  /// Button raising a number by one step.
+  ///
+  /// In en, this message translates to:
+  /// **'More {field}'**
+  String stepperIncrease(String field);
 }
 
 class _AppLocalizationsDelegate

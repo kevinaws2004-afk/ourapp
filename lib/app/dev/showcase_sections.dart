@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../core/design/context_ext.dart';
 import '../../core/design/tokens/activity_palette.dart';
-import '../../core/design/tokens/color_tokens.dart';
 import '../../core/design/tokens/radius.dart';
 import '../../core/design/tokens/spacing.dart';
 import '../../core/design/tokens/typography.dart';
@@ -154,7 +153,7 @@ class BrandSwatches extends StatelessWidget {
           color: c.accentDawn,
           // Decorative color, never a text background; dark ink keeps the
           // label readable in both themes.
-          foreground: AppColors.light.textPrimary,
+          foreground: c.textPrimary,
         ),
         _Swatch(
           name: 'success (teal)',
@@ -330,13 +329,13 @@ class RadiusAndElevation extends StatelessWidget {
       spacing: AppSpacing.md,
       runSpacing: AppSpacing.md,
       children: [
-        box('xs 6', AppRadius.xsAll, const []),
-        box('sm 10', AppRadius.smAll, const []),
+        box('xs 8', AppRadius.xsAll, const []),
+        box('sm 12', AppRadius.smAll, const []),
         box('md 16', AppRadius.mdAll, const []),
         box('lg 24', AppRadius.lgAll, const []),
-        box('xl 32', AppRadius.xlAll, const []),
-        box('raised', AppRadius.mdAll, shadows.raised),
-        box('overlay', AppRadius.mdAll, shadows.overlay),
+        box('card 28', AppRadius.cardAll, const []),
+        box('card', AppRadius.cardAll, shadows.card),
+        box('floating', AppRadius.cardAll, shadows.floating),
       ],
     );
   }

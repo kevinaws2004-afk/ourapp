@@ -94,7 +94,7 @@ Every log already has a built-in start time, actual **duration** (ADR-021) and *
 
 ## 8. V1 scope summary
 
-In V1 (§41): local SQLite; Activity Types; custom fields; Activity Logs; Plans; basic Tasks; Daily Timeline; Timer and Focus sessions; number/duration/text/rating/checklist/set-table fields; Gym (exercises, sets, reps, weight, workout duration); Reading (book, duration, pages, notes); basic history, line graphs, totals, counts, time-based measurements; body weight, height and basic body measurements; premium distinct visual design, centralized design system, light/dark themes, smooth navigation, short onboarding, complete state coverage, micro-interactions, responsive phone/tablet layouts, fast logging.
+In V1 (§41): local SQLite; Activity Types; custom fields; Activity Logs; Plans; basic Tasks; Daily Timeline; Timer and Focus sessions; number/duration/text/rating/checklist/set-table fields; Gym (exercises, sets, reps, weight, workout duration); Reading (book, duration, pages, notes); basic history, line graphs, totals, counts, time-based measurements; body weight, height and basic body measurements; premium distinct visual design, centralized design system, light/dark themes (owner change, ADR-045: three selectable light themes, dark later), smooth navigation, short onboarding, complete state coverage, micro-interactions, responsive phone/tablet layouts, fast logging.
 
 Explicitly **out of V1** (§42): user accounts, cloud sync, social network, public profiles, leaderboards, multiplayer, AI assistant/coaching, subscriptions, complex recommendations, web app, desktop app, cross-device sync, advanced app blocking, wearable integrations, complex automation engine.
 

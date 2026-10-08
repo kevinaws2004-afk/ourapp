@@ -1,7 +1,8 @@
 import 'package:daylog/core/design/icons/activity_icon_registry.dart';
 import 'package:daylog/core/design/keys/activity_icon_ids.dart';
 import 'package:daylog/core/design/tokens/activity_palette.dart';
-import 'package:flutter/material.dart';
+import 'package:daylog/core/design/app_tokens.dart';
+import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -20,10 +21,10 @@ void main() {
     );
   });
 
-  test('every color key resolves in both themes', () {
+  test('every color key resolves in every theme', () {
     for (final key in ActivityColorKey.values) {
-      for (final brightness in Brightness.values) {
-        expect(() => ActivityPalette.resolve(key, brightness), returnsNormally);
+      for (final id in AppThemeId.values) {
+        expect(() => AppTokens.of(id).activity(key), returnsNormally);
       }
       expect(ActivityColorKey.fromName(key.name), key);
     }

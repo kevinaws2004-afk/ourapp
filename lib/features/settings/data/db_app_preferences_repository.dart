@@ -5,14 +5,16 @@ import '../../../core/logging/app_logger.dart';
 import '../../../core/time/clock.dart';
 import '../domain/app_preferences_repository.dart';
 import '../domain/preferences_snapshot.dart';
-import '../domain/theme_preference.dart';
+import '../../../core/design/themes/app_theme_id.dart';
 
 /// Stores preferences as JSON values keyed by name in `app_preferences`
 /// (ADR-012). Unreadable values fall back to the default instead of failing.
+/// The old `theme_mode` (system/light/dark) value is ignored since the app
+/// became light-only with three themes (ADR-045).
 class DbAppPreferencesRepository implements AppPreferencesRepository {
   DbAppPreferencesRepository(this._db, this._clock, this._logger);
 
-  static const themeModeKey = 'theme_mode';
+  static const themeKey = 'theme';
   static const onboardingCompletedKey = 'onboarding_completed';
 
   final AppDatabase _db;
@@ -24,7 +26,7 @@ class DbAppPreferencesRepository implements AppPreferencesRepository {
     final rows = await _db.select(_db.appPreferences).get();
     final byKey = {for (final row in rows) row.key: row.valueJson};
     return PreferencesSnapshot(
-      themePreference: _decodeTheme(byKey[themeModeKey]),
+      theme: _decodeTheme(byKey[themeKey]),
       onboardingCompleted: _decodeBool(
         byKey[onboardingCompletedKey],
         key: onboardingCompletedKey,
@@ -33,12 +35,11 @@ class DbAppPreferencesRepository implements AppPreferencesRepository {
   }
 
   @override
-  Stream<ThemePreference> watchThemePreference() =>
-      _watchRaw(themeModeKey).map(_decodeTheme).distinct();
+  Stream<AppThemeId> watchTheme() =>
+      _watchRaw(themeKey).map(_decodeTheme).distinct();
 
   @override
-  Future<void> setThemePreference(ThemePreference value) =>
-      _write(themeModeKey, value.name);
+  Future<void> setTheme(AppThemeId value) => _write(themeKey, value.name);
 
   @override
   Stream<bool> watchOnboardingCompleted() =>
@@ -65,16 +66,14 @@ class DbAppPreferencesRepository implements AppPreferencesRepository {
         ),
       );
 
-  ThemePreference _decodeTheme(String? raw) {
-    final decoded = _decode(raw, key: themeModeKey);
-    if (decoded == null) return PreferencesSnapshot.defaults.themePreference;
-    for (final value in ThemePreference.values) {
+  AppThemeId _decodeTheme(String? raw) {
+    final decoded = _decode(raw, key: themeKey);
+    if (decoded == null) return PreferencesSnapshot.defaults.theme;
+    for (final value in AppThemeId.values) {
       if (value.name == decoded) return value;
     }
-    _logger.warning(
-      'Unknown value for preference "$themeModeKey"; using default.',
-    );
-    return PreferencesSnapshot.defaults.themePreference;
+    _logger.warning('Unknown value for preference "$themeKey"; using default.');
+    return PreferencesSnapshot.defaults.theme;
   }
 
   bool _decodeBool(String? raw, {required String key}) {

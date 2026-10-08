@@ -4,10 +4,9 @@ import '../../core/design/context_ext.dart';
 import '../../core/design/tokens/sizes.dart';
 import '../../core/design/icons/activity_icon_registry.dart';
 import '../../core/design/tokens/activity_palette.dart';
-import '../../core/design/tokens/radius.dart';
 
 /// An activity's identity everywhere (design_system.md §8): its icon in the
-/// palette `solid` color on a `soft` squircle.
+/// palette `solid` color on a `soft` circle.
 class ActivityBadge extends StatelessWidget {
   const ActivityBadge({
     super.key,
@@ -28,15 +27,12 @@ class ActivityBadge extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        color: colors.soft,
-        borderRadius: AppRadius.mdAll,
-      ),
+      decoration: BoxDecoration(color: colors.soft, shape: BoxShape.circle),
       alignment: Alignment.center,
       child: Icon(
         ActivityIconRegistry.resolve(iconId),
         color: colors.solid,
-        size: size * 0.55,
+        size: size * 0.5,
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 /// Phosphor glyphs (regular and fill fonts share codepoints).
 abstract final class PhosphorGlyphs {
   static const plus = IconData(0xe3d4, fontFamily: 'Phosphor');
+  static const minus = IconData(0xe32a, fontFamily: 'Phosphor');
   static const trash = IconData(0xe4a6, fontFamily: 'Phosphor');
   static const pencilSimple = IconData(0xe3b4, fontFamily: 'Phosphor');
   static const check = IconData(0xe182, fontFamily: 'Phosphor');

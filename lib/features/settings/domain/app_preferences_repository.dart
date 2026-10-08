@@ -1,13 +1,14 @@
+import '../../../core/design/themes/app_theme_id.dart';
 import 'preferences_snapshot.dart';
-import 'theme_preference.dart';
 
 /// App-wide preferences. A missing value means "use the default".
 abstract interface class AppPreferencesRepository {
   Future<PreferencesSnapshot> load();
 
-  Stream<ThemePreference> watchThemePreference();
+  /// The chosen theme (ADR-045).
+  Stream<AppThemeId> watchTheme();
 
-  Future<void> setThemePreference(ThemePreference value);
+  Future<void> setTheme(AppThemeId value);
 
   Stream<bool> watchOnboardingCompleted();
 

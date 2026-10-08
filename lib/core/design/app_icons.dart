@@ -22,6 +22,7 @@ abstract final class AppIcons {
   static const me = AppIconPair(PhosphorGlyphs.user, PhosphorFillGlyphs.user);
 
   static const add = PhosphorGlyphs.plus;
+  static const minus = PhosphorGlyphs.minus;
   static const delete = PhosphorGlyphs.trash;
   static const edit = PhosphorGlyphs.pencilSimple;
   static const check = PhosphorGlyphs.check;
@@ -42,7 +43,8 @@ abstract final class AppIcons {
   static const info = PhosphorGlyphs.info;
   static const timer = PhosphorGlyphs.timer;
   static const browse = PhosphorGlyphs.listChecks;
-  static const developer = PhosphorGlyphs.palette;
+  static const developer = PhosphorGlyphs.wrench;
+  static const appearance = PhosphorGlyphs.palette;
   static const ratingEmpty = PhosphorGlyphs.star;
   static const ratingFull = PhosphorFillGlyphs.star;
 

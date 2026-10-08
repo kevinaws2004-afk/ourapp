@@ -6,7 +6,7 @@ import '../../../core/time/clock_provider.dart';
 import '../data/db_app_preferences_repository.dart';
 import '../domain/app_preferences_repository.dart';
 import '../domain/preferences_snapshot.dart';
-import '../domain/theme_preference.dart';
+import '../../../core/design/themes/app_theme_id.dart';
 
 final appPreferencesRepositoryProvider = Provider<AppPreferencesRepository>(
   (ref) => DbAppPreferencesRepository(
@@ -22,8 +22,8 @@ final initialPreferencesProvider = Provider<PreferencesSnapshot>(
   (ref) => PreferencesSnapshot.defaults,
 );
 
-final themePreferenceProvider = StreamProvider<ThemePreference>(
-  (ref) => ref.watch(appPreferencesRepositoryProvider).watchThemePreference(),
+final themeProvider = StreamProvider<AppThemeId>(
+  (ref) => ref.watch(appPreferencesRepositoryProvider).watchTheme(),
 );
 
 final onboardingCompletedProvider = StreamProvider<bool>(
@@ -31,12 +31,12 @@ final onboardingCompletedProvider = StreamProvider<bool>(
       ref.watch(appPreferencesRepositoryProvider).watchOnboardingCompleted(),
 );
 
-/// Current theme preference, falling back to the startup snapshot while the
-/// stream hasn't emitted yet.
-final effectiveThemePreferenceProvider = Provider<ThemePreference>(
+/// The current theme, falling back to the startup snapshot while the stream
+/// hasn't emitted yet.
+final effectiveThemeProvider = Provider<AppThemeId>(
   (ref) =>
-      ref.watch(themePreferenceProvider).value ??
-      ref.watch(initialPreferencesProvider).themePreference,
+      ref.watch(themeProvider).value ??
+      ref.watch(initialPreferencesProvider).theme,
 );
 
 final preferencesNotifierProvider = NotifierProvider<PreferencesNotifier, void>(
@@ -52,8 +52,7 @@ class PreferencesNotifier extends Notifier<void> {
   AppPreferencesRepository get _repository =>
       ref.read(appPreferencesRepositoryProvider);
 
-  Future<void> setThemePreference(ThemePreference value) =>
-      _repository.setThemePreference(value);
+  Future<void> setTheme(AppThemeId value) => _repository.setTheme(value);
 
   Future<void> completeOnboarding() =>
       _repository.setOnboardingCompleted(completed: true);

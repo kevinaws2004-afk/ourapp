@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/design/app_icons.dart';
+import '../core/design/tokens/radius.dart';
 import '../core/design/tokens/sizes.dart';
+import '../core/design/tokens/spacing.dart';
+import '../core/design/tokens/treatments.dart';
 import '../core/design/context_ext.dart';
 import '../core/design/window_size_class.dart';
 import '../l10n/generated/app_localizations.dart';
@@ -29,25 +32,49 @@ class AppShell extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final destinations = _destinations(l10n);
     if (!WindowSizeClass.of(context).usesNavigationRail) {
+      final bar = NavigationBar(
+        selectedIndex: navigationShell.currentIndex,
+        onDestinationSelected: _onSelect,
+        destinations: [
+          for (final d in destinations)
+            NavigationDestination(
+              icon: Icon(d.icon.outline),
+              selectedIcon: Icon(d.icon.filled),
+              label: d.label,
+            ),
+        ],
+      );
+      final tokens = context.tokens;
       return Scaffold(
         body: navigationShell,
-        bottomNavigationBar: DecoratedBox(
-          decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: context.colors.borderSubtle)),
+        bottomNavigationBar: switch (tokens.treatments.navStyle) {
+          NavStyle.bar => DecoratedBox(
+            decoration: BoxDecoration(
+              color: tokens.colors.surfaceBase,
+              border: Border(
+                top: BorderSide(color: tokens.colors.borderSubtle),
+              ),
+            ),
+            child: bar,
           ),
-          child: NavigationBar(
-            selectedIndex: navigationShell.currentIndex,
-            onDestinationSelected: _onSelect,
-            destinations: [
-              for (final d in destinations)
-                NavigationDestination(
-                  icon: Icon(d.icon.outline),
-                  selectedIcon: Icon(d.icon.filled),
-                  label: d.label,
-                ),
-            ],
+          // A rounded bar floating above the bottom edge (ADR-045).
+          NavStyle.floating => SafeArea(
+            minimum: const EdgeInsets.fromLTRB(
+              AppSpacing.md,
+              0,
+              AppSpacing.md,
+              AppSpacing.md,
+            ),
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: tokens.colors.surfaceBase,
+                borderRadius: AppRadius.xlAll,
+                boxShadow: tokens.shadows.floating,
+              ),
+              child: ClipRRect(borderRadius: AppRadius.xlAll, child: bar),
+            ),
           ),
-        ),
+        },
       );
     }
     return Scaffold(

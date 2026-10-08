@@ -142,7 +142,7 @@
 - **Consequences:** User-visible strings are never inlined in widgets. The visible product name comes from the `appTitle` ARB entry.
 
 ### ADR-016: "Daylight" visual identity as provisional v0
-- **Status:** Accepted as **provisional** 2026-10-03 (owner gate, B7; resolves ADR-P12)
+- **Status:** Accepted as **provisional** 2026-10-03 (owner gate, B7; resolves ADR-P12). *Its values are replaced by ADR-045 (three themes, Plus Jakarta Sans); the token structure stays.*
 - **Decision:** Implement the tokens in [design_system.md](../ui/design_system.md): palette, Fraunces (display) + DM Sans (UI) bundled as OFL font assets, Day Arc motif, Plan-vs-Reality grammar.
 - **Context:** Phase 1 builds the token system and the light/dark themes.
 - **Reason:** The structure must exist before screens. Values are centralized, so they're cheap to change.
@@ -353,7 +353,7 @@
   - Code keeps the domain names (`ActivityLog`, `LogActivity`). Only user-facing copy says "Record".
 
 ### ADR-029: The app's colors come only from the activity palette
-- **Status:** Accepted 2026-10-04 (owner decision; partly resolves ADR-016's provisional values).
+- **Status:** Accepted 2026-10-04 (owner decision; partly resolves ADR-016's provisional values). *Amended by ADR-045: each theme has its own roles (brand, action, accent) and its own values for the six activity keys.*
 - **Decision:**
   - Apart from neutrals (canvas/surfaces, text, borders, scrims), every color in the app is one of the activity-palette colors (design_system.md §2.4).
   - **Amendment (same day, owner):** `sand` is removed from the palette everywhere, leaving **nine** colors. Warning moves to apricot.
@@ -417,7 +417,7 @@
   - No ongoing notification (OQ-13 stays "not in V1"). The timer's correctness doesn't depend on one.
 
 ### ADR-032: DM Mono for numeric tokens
-- **Status:** Accepted 2026-10-04 (owner chose "Bundle DM Mono"; resolves ADR-P21). **Implemented 2026-10-04.**
+- **Status:** Accepted 2026-10-04 (owner chose "Bundle DM Mono"; resolves ADR-P21). **Implemented 2026-10-04.** *Superseded by ADR-045: Plus Jakarta Sans has tabular figures; DM Mono is removed.*
 - **Decision:** `numericHero`, `numericLarge` and `numericMedium` use the bundled **DM Mono** (OFL, Regular + Medium; `assets/fonts/dm_mono/`). Every digit has the same width, so a running timer doesn't jitter. All other text keeps DM Sans and Fraunces.
 - **Context:** Neither bundled variable font has `tnum` (Phase 1 finding).
 - **Consequences:** Adds about 100 KB of font assets. The design-system numeric rows refer to DM Mono.
@@ -504,7 +504,7 @@
 - **Consequences:** `ActivityTotals.days` (distinct `local_date`s); `InsightChartConfig` has value equality (so generated charts are stable provider keys); route `/insights/activity/:typeId`.
 
 ### ADR-038: Six colors, white shades and mist
-- **Status:** Accepted 2026-10-04 (owner decision; amends ADR-029, resolves ADR-016's provisional neutrals).
+- **Status:** Accepted 2026-10-04 (owner decision; amends ADR-029, resolves ADR-016's provisional neutrals). *Superseded by ADR-045 (three light themes). The six stored color keys remain.*
 - **Decision:**
   - The whole app uses only white shades, mist `#DDF0EF` and the activity-palette colors **sky, lilac, teal, rose, slate, coral**.
   - `sage`, `apricot` and `moss` are removed from the palette. Accent and warning move to **coral**, success to **teal**.
@@ -615,6 +615,24 @@
   - The "counts as done" SQL moved to one place so Insights and challenges agree.
   - Shared widgets `PanelCard`, `StatTile` and `AppProgressBar` (the first two were Insights-only).
   - Limits: a record counts even if a yes/no field in it says "no" (for "7 Days No Sugar", record only the days it was kept); "Gym 30 days" means every single day; today's state doesn't roll over at midnight while a screen stays open until the next data change.
+
+### ADR-045: Three light themes on one token system; Stitch as the visual reference
+- **Status:** Accepted 2026-10-08 (owner approved the redesign plan in [visual_redesign_plan.md](../ui/visual_redesign_plan.md) and asked for the first vertical slice). **Implemented 2026-10-08: foundation, Me → Appearance, Today and the item screen.** Supersedes ADR-038 (colors) and ADR-032 (DM Mono); settles ADR-016's provisional values; amends ADR-029.
+- **Decision:**
+  - **Three selectable light themes, one product.** Working names Rose, Lavender (default) and Papaya, after the owner's three Stitch directions. Me → Appearance switches them; the choice is saved locally (`app_preferences` key `theme`) and applies to the whole app at once. Everything else (screens, flows, data, components, behavior) is identical. No dark mode for now; the app is always light (the old system/light/dark setting is ignored).
+  - **Themes are values, not screens.** Each theme is one `AppTokens` value: color roles (adds `action`, `accent` and their soft/on pairs), tinted shadows, the six activity colors re-tuned, and a few **treatments** (card edge, floating or full-width nav, solid or gradient progress, hero wash, facts as chips). Only shared components read treatments; feature screens never branch on the theme.
+  - **The rose theme is our own.** The Stitch pastel export is built from Flowfy's pink/teal; ours uses the app's own rose and teal. Nothing in the product is named after Flowfy.
+  - **Typography: Plus Jakarta Sans** for everything (bundled OFL static weights 400–800). Chosen deliberately: it carries the Stitch hierarchy (heavy, tight headlines), has tabular figures (so numbers no longer need DM Mono), covers the needed symbols, and one family replaces three. Fraunces, DM Sans and DM Mono are removed.
+  - **Stitch is the reference for tokens and screen composition**, but its example content never sets the data model: the item screen's set steppers are the generic Number field in a list (any list of numbers gets them), not a gym feature. Out-of-scope Stitch concepts (energy scores, calibration, sensors, AI, budgets, routines, XP) are not built.
+  - **No floating Quick Log button** (ADR-028 stands); Stitch's 4 tabs become our 5 (ADR-044).
+  - **First slice (built):** shared components (`AppCard`, `ItemCard`, `StatusChip`, `ProgressRing`, `FactPill`, `EmptyStateCard`, restyled buttons, badges, checks, bars, nav); Today = hero (date, greeting, "2 of 5 done", day ring), **Up next** (the item in progress, else the next timed item that hasn't ended, else the first untimed one; **Start** starts its timer and opens it; pure `upNext`/`DayProgress` in the plans domain), item cards with status chips, an empty-state card; the item screen = status/time header with a big live timer (Pause, Finish) or **Start timer**, each field in its own card, list rows of numbers as one-line folded rows plus the row being filled in with − / + steppers, a Details card, full-width **Mark done**.
+  - **Next (after the owner reviews the slice on the phone):** an explicit Stitch-based screen pass for Plan, Challenges, Insights and Me. Tokens alone don't count as their redesign.
+- **Context:** The owner wants to take the functional prototype to a real consumer product, using their Stitch work as the visual/UX reference, with three looks to choose from.
+- **Consequences:**
+  - No schema change (the theme is a preference row).
+  - Contrast is tested for every theme; Stitch's bright fills (mint, papaya) carry dark text or use a deeper tone.
+  - Tests that found items by text scope to the day list (the Up next card repeats the next item's title); set-row tests fill in the active row and tap a folded row to change it.
+  - About 470 KB of font files (five weights) instead of about 700 KB for the three families.
 
 ## Pending decisions
 

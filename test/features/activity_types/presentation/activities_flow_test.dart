@@ -5,7 +5,7 @@ import 'package:daylog/features/activity_logs/presentation/form/field_editor_she
 import 'package:daylog/features/activity_types/presentation/activity_type_screen.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/features/plans/presentation/item/item_screen.dart';
-import 'package:daylog/features/settings/domain/theme_preference.dart';
+import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -16,7 +16,7 @@ import '../../plans/presentation/plans_flow_test.dart'
     show closeItem, waitForSave;
 
 const _onboarded = PreferencesSnapshot(
-  themePreference: ThemePreference.light,
+  theme: AppThemeId.lavender,
   onboardingCompleted: true,
 );
 

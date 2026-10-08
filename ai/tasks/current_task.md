@@ -49,6 +49,8 @@ Owner decisions this round: the item model (one concept, recording happens insid
 
 **Challenges, step 1 (owner, 2026-10-08, ADR-044): done, on branch `claude/lucid-goldberg-rd8cr9`.** Daily challenges ("complete this activity every day for X days"): schema v9 (`challenges`), progress (total successful days) and current/best streak kept separate and derived from the activity's logs (recording the activity counts the day; a missed day resets only the current streak), a "Challenges" section below Today's items with the "Not yet today — streak at risk" state, a **Challenges tab** (fifth tab between Plan and Insights), a creation/edit sheet and a challenge screen (stats, calendar, Restart, End; Undo). Verified: format clean, analyze clean, `flutter test` 440 pass. **Not run:** device integration tests and a manual look at the new screens. **Next (not started, needs owner approval of a new package and a permission): step 2, reminders**: a local-notification package (decision record), a notification scheduler behind a domain interface, `reminder_minute` on `challenges` (schema v10), a reminder time in the sheet, calm wording ("Keep your 12-day meditation streak alive."). Not in scope: weekly challenges ("Gym 4x/week"), rest days, quantities, milestones.
 
+**Visual redesign, first vertical slice (owner, 2026-10-08, ADR-045): done, on branch `claude/lucid-goldberg-rd8cr9`. Waiting for the owner's review on the phone.** The owner's Stitch project is the visual/UX reference ([visual_redesign_plan.md](../../docs/ui/visual_redesign_plan.md)). Built: three light themes (Rose, Lavender default, Papaya) as token values + treatments, Plus Jakarta Sans (Fraunces/DM Sans/DM Mono removed), shared components (`AppCard`, `ItemCard`, `StatusChip`, `ProgressRing`, `FactPill`, `EmptyStateCard`, restyled buttons/badges/checks/bars/nav), **Me → Appearance** (saved locally; light only; the old system/light/dark setting is ignored), **Today** (hero with day ring, Up next with Start, item cards with status chips, empty-state card) and the **item screen** (status/time header, big live timer or Start, field cards, folded set rows + steppers for the row being filled in, Details card, Mark done). No schema change. Verified: format clean, analyze clean, `flutter test` 458 pass (incl. contrast in every theme and the slice in every theme at 200% text). Screens rendered in all three themes in the test harness. **Not run:** device integration tests and an on-device look (owner to review). **Next, only after the review:** an explicit Stitch-based screen pass for Plan (week strip + inline day, plan-vs-actual), Challenges, Insights, then Me and the remaining screens; tokens alone don't count as their redesign.
+
 ## Standing rule (all phases)
 
 Docs stay synchronized with the code in the same task as every change: [development_guide.md §4.1](../../docs/development/development_guide.md#41-documentation-maintenance-binding). Update this file when the phase or the next task changes.
@@ -60,13 +62,16 @@ Docs stay synchronized with the code in the same task as every change: [developm
 - Expense management, budgets, goals or other life-management modules (future directions; the Money activities are plain activities only).
 - Growing the built-in activities to cover "every activity" (ADR-042).
 - Notifications or any notification package until the owner approves step 2 of challenges (ADR-044); weekly or other challenge types, rest days, quantities or milestones.
-- Redesigning the visual identity (ADR-016 values remain provisional pending the owner's review).
+- Starting the Plan/Challenges/Insights/Me screen passes before the owner has reviewed the first slice on the phone (owner, 2026-10-08).
+- Building Stitch concepts outside the agreed scope (energy scores, calibration, sensors/health, AI, budgets, routines, XP, photos, a floating Quick Log button), or naming anything after Flowfy or "LifeOS".
+- Dark mode (later, for all three themes).
 
 ## Owner decisions needed
 
 | Item | Needed before | Recommendation |
 |---|---|---|
-| Visual identity review of the remaining provisional values (fonts; ADR-016; colors settled by ADR-038) | Before screens multiply | Owner's on-device showcase review |
+| Review of the first redesign slice on the phone (three themes, Today, item screen, Appearance) | Before the Plan/Challenges/Insights/Me passes | Owner tries Today → open → record → done in each theme |
+| Final theme names (Rose, Lavender, Papaya are working names) | Before release | Keep, or rename in Me → Appearance copy only (stored IDs don't change) |
 | Splash screen polish | Later | Deferred by the owner |
 
 Other pending ADRs (P15, P17; P18 resolved by ADR-035) and the remaining open questions belong to later phases.
@@ -75,4 +80,4 @@ Other pending ADRs (P15, P17; P18 resolved by ADR-035) and the remaining open qu
 
 See [development_guide.md §6](../../docs/development/development_guide.md#6-proposed-implementation-phases). Starts only after the owner's approval. Open first: OQ-14 confirmation and running the device integration tests for Phases 3–6.
 
-**Planned after core functionality (owner direction, 2026-10-04):** one dedicated visual/product-design pass across the whole app (brief at the top of design_system.md). Until then: no visual redesign, no architecture changes for looks, no features from that direction. Keep UI token-driven and in shared components.
+**Visual pass (owner direction 2026-10-04, started 2026-10-08 as ADR-045):** done screen by screen from the Stitch reference, slice first. Keep UI token-driven and in shared components; screens never branch on the theme.

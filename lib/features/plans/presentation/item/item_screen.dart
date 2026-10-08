@@ -15,6 +15,8 @@ import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../shared/errors/error_copy.dart';
 import '../../../../shared/widgets/activity_badge.dart';
 import '../../../../shared/widgets/app_button.dart';
+import '../../../../shared/widgets/app_card.dart';
+import '../../../../shared/widgets/status_chip.dart';
 import '../../../../shared/widgets/state_views.dart';
 import '../../../activity_logs/presentation/activity_log_providers.dart';
 import '../../../activity_logs/presentation/form/activity_log_form.dart';
@@ -274,7 +276,12 @@ class _ItemBody extends ConsumerWidget {
             AppSpacing.huge,
           ),
           children: [
-            if (planTime != null) Text(planTime, style: quiet),
+            _ItemActions(
+              args: args,
+              state: state,
+              planTime: planTime,
+              onOpenTimer: onOpenTimer,
+            ),
             if (state.saveStatus == SaveStatus.failed) ...[
               const SizedBox(height: AppSpacing.sm),
               Text(
@@ -284,8 +291,6 @@ class _ItemBody extends ConsumerWidget {
                 ),
               ),
             ],
-            const SizedBox(height: AppSpacing.md),
-            _ItemActions(args: args, state: state, onOpenTimer: onOpenTimer),
             const SizedBox(height: AppSpacing.lg),
             LastTimeCard(args: args, state: state),
             if (type != null && fields.isNotEmpty)
@@ -297,6 +302,7 @@ class _ItemBody extends ConsumerWidget {
                   child: RestTimerScope(
                     onRest: ref.read(restTimerProvider.notifier).start,
                     child: ActivityLogFormFields(
+                      boxed: true,
                       type: type,
                       fields: fields,
                       values: state.values,
@@ -350,30 +356,43 @@ class _ItemBody extends ConsumerWidget {
                 ),
               ),
             const SizedBox(height: AppSpacing.lg),
-            FieldEditorShell(
-              label: l10n.notesLabel,
-              error: firstIssueMessage(l10n, state.issues, 'notes'),
-              child: TextFormField(
-                initialValue: state.notes,
-                minLines: 3,
-                maxLines: 12,
-                textCapitalization: TextCapitalization.sentences,
-                onChanged: notifier.setNotes,
-              ),
-            ),
-            FieldEditorShell(
-              label: l10n.itemWhenSection,
-              child: _StartedAtPicker(
-                value: state.startedAt,
-                onChanged: notifier.setStartedAt,
-              ),
-            ),
-            FieldEditorShell(
-              label: l10n.durationLabel,
-              error: firstIssueMessage(l10n, state.issues, 'duration'),
-              child: DurationInput(
-                milliseconds: state.durationMs,
-                onChanged: notifier.setDuration,
+            // Notes, when and how long: one card of details (ADR-045).
+            AppCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    l10n.itemDetailsSection,
+                    style: context.textStyles.titleMedium,
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  FieldEditorShell(
+                    label: l10n.notesLabel,
+                    error: firstIssueMessage(l10n, state.issues, 'notes'),
+                    child: TextFormField(
+                      initialValue: state.notes,
+                      minLines: 3,
+                      maxLines: 12,
+                      textCapitalization: TextCapitalization.sentences,
+                      onChanged: notifier.setNotes,
+                    ),
+                  ),
+                  FieldEditorShell(
+                    label: l10n.itemWhenSection,
+                    child: _StartedAtPicker(
+                      value: state.startedAt,
+                      onChanged: notifier.setStartedAt,
+                    ),
+                  ),
+                  FieldEditorShell(
+                    label: l10n.durationLabel,
+                    error: firstIssueMessage(l10n, state.issues, 'duration'),
+                    child: DurationInput(
+                      milliseconds: state.durationMs,
+                      onChanged: notifier.setDuration,
+                    ),
+                  ),
+                ],
               ),
             ),
             if (plan != null) _MarkDone(args: args, state: state),
@@ -395,16 +414,20 @@ class _ItemBody extends ConsumerWidget {
   }
 }
 
-/// Done / timer controls at the top of an item.
+/// The top of an item (ADR-045): its status and planned time, then the live
+/// timer with Pause and Finish while it runs, or a big Start; a done item
+/// can be reopened.
 class _ItemActions extends ConsumerWidget {
   const _ItemActions({
     required this.args,
     required this.state,
+    required this.planTime,
     required this.onOpenTimer,
   });
 
   final ItemArgs args;
   final ItemState state;
+  final String? planTime;
   final VoidCallback onOpenTimer;
 
   @override
@@ -418,49 +441,105 @@ class _ItemActions extends ConsumerWidget {
         plan != null && (state.type == null || state.type!.supportsTimer);
 
     final done = state.isDoneOn(currentLocalDate(ref.watch(clockProvider)));
+    final chip = switch ((timerHere, done, state.hasLog)) {
+      (true, _, _) => StatusChip(
+        label: l10n.itemLive.toUpperCase(),
+        tone: StatusTone.active,
+        filled: true,
+      ),
+      (_, true, _) => StatusChip(
+        label: l10n.itemDone,
+        tone: StatusTone.done,
+        icon: AppIcons.check,
+      ),
+      (_, _, true) => StatusChip(
+        label: l10n.planStatusInProgress,
+        tone: StatusTone.active,
+      ),
+      _ when plan != null => StatusChip(
+        label: l10n.planStatusPlanned,
+        tone: StatusTone.scheduled,
+      ),
+      _ => null,
+    };
     // "Mark done" sits at the bottom of the item (A10): logging doesn't
     // finish it.
-    final children = <Widget>[
-      if (done && !timerHere) _DoneChip(label: l10n.itemDone),
-      // Anything marked done can be reopened (ADR-040).
-      if (plan != null && plan.status == PlanStatus.completed && !timerHere)
-        TextButton(
-          onPressed: () => _run(context, ref, () async {
-            await ref.read(setPlanStatusProvider)(plan.id, PlanStatus.planned);
-          }),
-          child: Text(l10n.planReopenTask),
-        ),
-      if (canTime && session == null)
-        AppButton(
-          label: l10n.itemStartTimer,
-          icon: AppIcons.start,
-          variant: AppButtonVariant.secondary,
-          onPressed: () => _startTimer(context, ref, plan),
-        ),
-      if (canTime && session != null && !timerHere)
-        Text(
-          l10n.itemTimerOtherRunning,
-          style: context.textStyles.bodyMedium?.copyWith(
-            color: context.colors.textSecondary,
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Wrap(
+            spacing: AppSpacing.sm,
+            runSpacing: AppSpacing.xs,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              ?chip,
+              if (planTime != null)
+                Text(
+                  planTime!,
+                  style: context.textStyles.labelMedium?.copyWith(
+                    color: context.colors.textSecondary,
+                  ),
+                ),
+            ],
           ),
-        ),
-    ];
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (timerHere)
-          _ItemTimer(
-            session: session,
-            onFinish: () => _finishTimer(context, ref, session),
-            onOpenTimer: onOpenTimer,
-          ),
-        Wrap(
-          spacing: AppSpacing.sm,
-          runSpacing: AppSpacing.sm,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: children,
-        ),
-      ],
+          if (timerHere) ...[
+            const SizedBox(height: AppSpacing.lg),
+            _ItemTimer(
+              session: session,
+              onFinish: () => _finishTimer(context, ref, session),
+              onOpenTimer: onOpenTimer,
+            ),
+          ] else if (canTime && session == null && !done) ...[
+            const SizedBox(height: AppSpacing.lg),
+            AppButton(
+              label: l10n.itemStartTimer,
+              icon: AppIcons.start,
+              variant: AppButtonVariant.action,
+              expand: true,
+              onPressed: () => _startTimer(context, ref, plan),
+            ),
+          ] else if (canTime && session != null && !timerHere) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              l10n.itemTimerOtherRunning,
+              style: context.textStyles.bodyMedium?.copyWith(
+                color: context.colors.textSecondary,
+              ),
+            ),
+          ],
+          // Anything marked done can be reopened (ADR-040).
+          if (plan != null &&
+              plan.status == PlanStatus.completed &&
+              !timerHere) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton(
+                onPressed: () => _run(context, ref, () async {
+                  await ref.read(setPlanStatusProvider)(
+                    plan.id,
+                    PlanStatus.planned,
+                  );
+                }),
+                child: Text(l10n.planReopenTask),
+              ),
+            ),
+          ],
+          if (canTime && session == null && done) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: AppButton(
+                label: l10n.itemStartTimer,
+                icon: AppIcons.start,
+                variant: AppButtonVariant.secondary,
+                onPressed: () => _startTimer(context, ref, plan),
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 
@@ -548,6 +627,8 @@ class _MarkDone extends ConsumerWidget {
           AppButton(
             label: l10n.itemMarkDone,
             icon: AppIcons.taskDone,
+            variant: AppButtonVariant.action,
+            expand: true,
             onPressed: () async {
               final notifier = ref.read(itemProvider(args).notifier);
               try {
@@ -567,23 +648,8 @@ class _MarkDone extends ConsumerWidget {
   }
 }
 
-class _DoneChip extends StatelessWidget {
-  const _DoneChip({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) => Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Icon(AppIcons.taskDone, color: context.colors.success),
-      const SizedBox(width: AppSpacing.xs),
-      Text(label, style: context.textStyles.titleMedium),
-    ],
-  );
-}
-
-/// The running timer inside its item: you keep logging while it runs.
+/// The running timer inside its item: you keep logging while it runs. Big
+/// time, then Pause or Resume, Finish, and full screen.
 class _ItemTimer extends ConsumerWidget {
   const _ItemTimer({
     required this.session,
@@ -599,42 +665,67 @@ class _ItemTimer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(focusTickProvider);
     final l10n = AppLocalizations.of(context);
+    final c = context.colors;
     final now = ref.watch(clockProvider).nowUtc();
     final paused = session.state == FocusState.paused;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.md),
-      child: Row(
-        children: [
-          Expanded(
-            child: Semantics(
-              label: paused ? l10n.focusPaused : l10n.focusRunning,
-              child: Text(
-                formatTimer(session.elapsedMs(now)),
-                style: AppTypography.numericMedium.copyWith(
-                  color: paused
-                      ? context.colors.textSecondary
-                      : context.colors.textPrimary,
-                ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          (paused ? l10n.focusPaused : l10n.itemTimeSoFar).toUpperCase(),
+          style: context.textStyles.labelSmall?.copyWith(
+            color: c.textSecondary,
+          ),
+        ),
+        Semantics(
+          label: paused ? l10n.focusPaused : l10n.focusRunning,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              formatTimer(session.elapsedMs(now)),
+              style: AppTypography.numericHero.copyWith(
+                color: paused ? c.textSecondary : c.textPrimary,
               ),
             ),
           ),
-          IconButton(
-            tooltip: paused ? l10n.focusResume : l10n.focusPause,
-            icon: Icon(paused ? AppIcons.start : AppIcons.pause),
-            onPressed: () => unawaited(
-              paused
-                  ? ref.read(resumeFocusSessionProvider)(session.id)
-                  : ref.read(pauseFocusSessionProvider)(session.id),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        Row(
+          children: [
+            IconButton.filledTonal(
+              style: IconButton.styleFrom(
+                backgroundColor: c.brandPrimarySoft,
+                foregroundColor: c.onBrandPrimarySoft,
+              ),
+              tooltip: paused ? l10n.focusResume : l10n.focusPause,
+              icon: Icon(paused ? AppIcons.start : AppIcons.pause),
+              onPressed: () => unawaited(
+                paused
+                    ? ref.read(resumeFocusSessionProvider)(session.id)
+                    : ref.read(pauseFocusSessionProvider)(session.id),
+              ),
             ),
-          ),
-          TextButton(onPressed: onFinish, child: Text(l10n.focusFinish)),
-          IconButton(
-            tooltip: l10n.itemTimerFullScreen,
-            icon: const Icon(AppIcons.timer),
-            onPressed: onOpenTimer,
-          ),
-        ],
-      ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  backgroundColor: c.textPrimary,
+                  foregroundColor: c.surfaceBase,
+                ),
+                icon: const Icon(AppIcons.check),
+                label: Text(l10n.focusFinish),
+                onPressed: onFinish,
+              ),
+            ),
+            IconButton(
+              tooltip: l10n.itemTimerFullScreen,
+              icon: const Icon(AppIcons.timer),
+              onPressed: onOpenTimer,
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

@@ -1,15 +1,16 @@
 import 'package:daylog/core/design/app_theme.dart';
-import 'package:daylog/core/design/tokens/color_tokens.dart';
+import 'package:daylog/core/design/app_tokens.dart';
+import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// The date and time pickers are themed from tokens, not stock Material
 /// (A26): brand selection, never the coral accent for AM/PM.
 void main() {
-  for (final (name, theme, c) in [
-    ('light', AppTheme.light, AppColors.light),
-    ('dark', AppTheme.dark, AppColors.dark),
-  ]) {
+  for (final id in AppThemeId.values) {
+    final name = id.name;
+    final theme = AppTheme.of(id);
+    final c = AppTokens.of(id).colors;
     test('$name: time picker selection is brand soft', () {
       final time = theme.timePickerTheme;
       Color? resolve(Color? color, Set<WidgetState> states) =>

@@ -59,7 +59,7 @@ Connection setup:
 ### 3.1 `app_preferences` (v1, implemented)
 ```sql
 CREATE TABLE app_preferences (
-  key        TEXT PRIMARY KEY NOT NULL,   -- 'theme_mode', 'onboarding_completed'
+  key        TEXT PRIMARY KEY NOT NULL,   -- 'theme' (rose|lavender|papaya, ADR-045), 'onboarding_completed'; an old 'theme_mode' row is ignored
   value_json TEXT NOT NULL,
   updated_at INTEGER NOT NULL
 );

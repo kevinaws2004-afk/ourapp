@@ -1,4 +1,5 @@
 import 'package:daylog/core/design/app_theme.dart';
+import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:daylog/core/time/local_date.dart';
 import 'package:daylog/features/activity_types/domain/activity_ids.dart';
 import 'package:daylog/features/plans/domain/plan.dart';
@@ -27,7 +28,7 @@ void main() {
     );
     await tester.pumpWidget(
       MaterialApp(
-        theme: AppTheme.light,
+        theme: AppTheme.of(AppThemeId.lavender),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(

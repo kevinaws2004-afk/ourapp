@@ -42,7 +42,7 @@ lib/
 
 | File | Purpose |
 |---|---|
-| `app.dart` | `MaterialApp.router`: light/dark themes, theme mode from preferences, localization delegates |
+| `app.dart` | `MaterialApp.router`: the chosen theme (`AppTheme.of(effectiveThemeProvider)`, always light, ADR-045), localization delegates |
 | `router.dart` | `GoRouter` provider, `AppRoutes` path constants, `onboardingRedirect()` |
 | `app_shell.dart` | Adaptive navigation scaffold (bottom bar on compact, rail on medium/expanded) |
 | `bootstrap.dart` | Error handlers → open + migrate DB → read preferences snapshot → `runApp` |

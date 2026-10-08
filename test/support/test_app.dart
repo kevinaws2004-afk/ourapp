@@ -59,7 +59,7 @@ Future<AppDatabase> pumpTestApp(
   _openDatabases.add(db);
   await tester.runAsync(() async {
     final repository = DbAppPreferencesRepository(db, clock, const AppLogger());
-    await repository.setThemePreference(preferences.themePreference);
+    await repository.setTheme(preferences.theme);
     await repository.setOnboardingCompleted(
       completed: preferences.onboardingCompleted,
     );

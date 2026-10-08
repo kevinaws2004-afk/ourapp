@@ -15,7 +15,7 @@ import 'package:daylog/features/challenges/presentation/challenge_screen.dart';
 import 'package:daylog/features/challenges/presentation/today_challenges.dart';
 import 'package:daylog/features/plans/data/db_plan_repository.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
-import 'package:daylog/features/settings/domain/theme_preference.dart';
+import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -26,7 +26,7 @@ import '../activity_types/presentation/activities_flow_test.dart'
     show scrollAndTap;
 
 const _onboarded = PreferencesSnapshot(
-  themePreference: ThemePreference.light,
+  theme: AppThemeId.lavender,
   onboardingCompleted: true,
 );
 
