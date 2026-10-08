@@ -10,7 +10,9 @@ import 'package:daylog/features/activity_types/domain/activity_type_use_cases.da
 import 'package:daylog/features/challenges/data/db_challenge_repository.dart';
 import 'package:daylog/features/challenges/domain/challenge.dart';
 import 'package:daylog/features/challenges/domain/challenge_use_cases.dart';
+import 'package:daylog/features/challenges/presentation/challenge_card.dart';
 import 'package:daylog/features/challenges/presentation/challenge_screen.dart';
+import 'package:daylog/features/challenges/presentation/today_challenges.dart';
 import 'package:daylog/features/plans/data/db_plan_repository.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/features/settings/domain/theme_preference.dart';
@@ -81,11 +83,8 @@ Future<void> openTab(WidgetTester tester, String label) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> openChallenges(WidgetTester tester) async {
-  await openTab(tester, 'Me');
-  await tester.tap(find.text('Challenges'));
-  await tester.pumpAndSettle();
-}
+Future<void> openChallenges(WidgetTester tester) =>
+    openTab(tester, 'Challenges');
 
 /// Records Meditation today, straight through the repositories (the way an
 /// item would), then lets the app notice.
@@ -113,10 +112,12 @@ Future<void> recordToday(WidgetTester tester, AppDatabase db) async {
 }
 
 void main() {
-  testAppWidgets('with no challenge, Today shows no section and Me → '
-      'Challenges invites starting one', (tester) async {
+  testAppWidgets('with no challenge, Today shows no section and the '
+      'Challenges tab invites starting one', (tester) async {
     await pumpTestApp(tester, preferences: _onboarded);
-    expect(find.text('Challenges'), findsNothing);
+    expect(find.byType(TodayChallenges), findsOneWidget);
+    expect(find.text('Not yet today'), findsNothing);
+    expect(find.byType(ChallengeCard), findsNothing);
 
     await openChallenges(tester);
 
@@ -136,7 +137,7 @@ void main() {
     );
 
     await tester.scrollUntilVisible(
-      find.text('Challenges'),
+      find.byType(ChallengeCard),
       200,
       scrollable: find.byType(Scrollable).hitTestable().first,
     );
@@ -163,7 +164,7 @@ void main() {
     );
 
     await tester.scrollUntilVisible(
-      find.text('Challenges'),
+      find.byType(ChallengeCard),
       200,
       scrollable: find.byType(Scrollable).hitTestable().first,
     );
@@ -328,7 +329,7 @@ void main() {
         target: 3,
       ),
     );
-    expect(find.text('Challenges'), findsNothing, reason: 'nothing running');
+    expect(find.byType(ChallengeCard), findsNothing, reason: 'nothing running');
 
     await openChallenges(tester);
 

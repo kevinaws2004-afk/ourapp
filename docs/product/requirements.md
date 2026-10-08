@@ -127,7 +127,7 @@ Each type has defined value semantics, validation, storage mapping, rendering an
 | FR-CH-01 | User can start a **daily challenge** on any Activity Type: "complete this activity every day for X days" (1 to 1000), from a chosen first day (default today), with an automatic or custom name. Daily only. | V1 (ADR-044) | owner |
 | FR-CH-02 | Recording the linked activity counts that day automatically (a record with a time, notes or a value, or its item marked done); there is no separate completion action. | V1 (ADR-044) | owner |
 | FR-CH-03 | **Progress** is the total of successful days toward the target; **current streak** is consecutive successful days ending today or yesterday; **best streak** is the longest run. A missed day resets only the current streak, never progress. | V1 (ADR-044) | owner |
-| FR-CH-04 | Today shows each running challenge with progress, streak and whether today is done or the streak is at risk; Me → Challenges lists all; a challenge screen shows streaks, days done and left, and a calendar. | V1 (ADR-044) | owner |
+| FR-CH-04 | Today shows each running challenge with progress, streak and whether today is done or the streak is at risk; the Challenges tab lists all; a challenge screen shows streaks, days done and left, and a calendar. | V1 (ADR-044) | owner |
 | FR-CH-05 | A challenge can be renamed, have its number of days changed, restarted from today, or ended, each undoable where it changes data. | V1 (ADR-044) | owner |
 | FR-CH-06 | If today's activity isn't done by a chosen time, a calm reminder is sent. | Later (step 2: needs a notification package, ADR pending) | owner |
 

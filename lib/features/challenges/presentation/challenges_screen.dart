@@ -14,7 +14,7 @@ import 'challenge_card.dart';
 import 'challenge_providers.dart';
 import 'challenge_sheet.dart';
 
-/// Me → Challenges (ADR-044): every challenge, running ones first, and
+/// The Challenges tab (ADR-044): every challenge, running ones first, and
 /// **New challenge**. Tapping one opens it ([onOpenChallenge]).
 class ChallengesScreen extends ConsumerWidget {
   const ChallengesScreen({
@@ -32,9 +32,8 @@ class ChallengesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final margin = WindowSizeClass.of(context).screenMargin;
-    return Scaffold(
-      appBar: AppBar(),
-      body: Align(
+    return SafeArea(
+      child: Align(
         alignment: Alignment.topLeft,
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: AppContentWidth.list),
@@ -43,7 +42,7 @@ class ChallengesScreen extends ConsumerWidget {
               margin,
               AppSpacing.huge,
               margin,
-              AppSpacing.xxxl,
+              AppSpacing.giant,
             ),
             children: [
               Text(
@@ -74,7 +73,7 @@ class ChallengesScreen extends ConsumerWidget {
                 onRetry: () => ref.invalidate(challengesProvider),
                 data: (views) => views.isEmpty
                     ? AppEmptyState(
-                        icon: AppIcons.challenge,
+                        icon: AppIcons.challenges.outline,
                         title: l10n.challengesEmptyTitle,
                         message: l10n.challengesEmptyMessage,
                       )

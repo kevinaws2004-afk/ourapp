@@ -57,7 +57,7 @@ void main() {
           ),
           findsNothing,
         );
-        for (final label in ['Today', 'Plan', 'Insights', 'Me']) {
+        for (final label in ['Today', 'Plan', 'Challenges', 'Insights', 'Me']) {
           expect(
             find.descendant(
               of: find.byType(NavigationBar),

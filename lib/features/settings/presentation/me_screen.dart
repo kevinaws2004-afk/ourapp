@@ -7,14 +7,12 @@ import '../../../core/design/window_size_class.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/widgets/section_header.dart';
 
-/// Me tab: your setup (reusable activities, ADR-028, challenges, ADR-044, and
-/// body measurements). Debug builds add a separate Developer section with the
+/// Me tab: your setup (reusable activities, ADR-028, and body measurements). Debug builds add a separate Developer section with the
 /// token showcase and a demo data loader; release builds never show it.
 class MeScreen extends StatelessWidget {
   const MeScreen({
     super.key,
     required this.onOpenActivities,
-    required this.onOpenChallenges,
     required this.onOpenMeasurements,
     this.onOpenTokenShowcase,
     this.onLoadDemoData,
@@ -22,7 +20,6 @@ class MeScreen extends StatelessWidget {
   });
 
   final VoidCallback onOpenActivities;
-  final VoidCallback onOpenChallenges;
   final VoidCallback onOpenMeasurements;
 
   /// Debug-only entry point; ignored in release builds.
@@ -59,13 +56,6 @@ class MeScreen extends StatelessWidget {
                 subtitle: Text(l10n.meActivitiesSubtitle),
                 trailing: const Icon(AppIcons.chevron),
                 onTap: onOpenActivities,
-              ),
-              ListTile(
-                leading: const Icon(AppIcons.challenge),
-                title: Text(l10n.challengesTitle),
-                subtitle: Text(l10n.meChallengesSubtitle),
-                trailing: const Icon(AppIcons.chevron),
-                onTap: onOpenChallenges,
               ),
               ListTile(
                 leading: const Icon(AppIcons.measurements),

@@ -112,6 +112,12 @@ abstract class AppLocalizations {
   /// **'Plan'**
   String get navPlan;
 
+  /// Primary navigation: Challenges tab (ADR-044).
+  ///
+  /// In en, this message translates to:
+  /// **'Challenges'**
+  String get navChallenges;
+
   /// Primary navigation tab: graphs and history.
   ///
   /// In en, this message translates to:
@@ -8817,12 +8823,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A challenge can\'t start in the future.'**
   String get validationChallengeStartInFuture;
-
-  /// Me: subtitle of the Challenges row (ADR-044).
-  ///
-  /// In en, this message translates to:
-  /// **'Streaks for things you do every day'**
-  String get meChallengesSubtitle;
 
   /// Title of the challenges list under Me and the section on Today (ADR-044).
   ///

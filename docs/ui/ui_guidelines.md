@@ -16,7 +16,7 @@
 
 ## 2. Navigation & screen anatomy
 
-- **Primary navigation:** Today · Plan · Insights · Me (ADR-028; supersedes §34). Bottom navigation bar on compact, navigation rail on medium/expanded. Selected item: filled icon + label + soft brand pill. Unselected: regular icon + label. Labels are always visible.
+- **Primary navigation:** Today · Plan · Challenges · Insights · Me (ADR-028, amended by ADR-044; supersedes §34). Bottom navigation bar on compact, navigation rail on medium/expanded. Selected item: filled icon + label + soft brand pill. Unselected: regular icon + label. Labels are always visible.
 - **Adding to the day** (ADR-035, ADR-039): the quick add on Today and on a planner day. Once something is typed it offers **Start now** (today only: adds the item at the current time and opens it) and **Set a time** (one time sheet). There is no floating action button, no rail action and no Quick Record sheet.
 - **Screen header:** large display-type title that collapses to a compact title on scroll (large-title pattern). Contextual actions as at most 1–2 icon buttons in the header.
 - **Sheets over pages** for short tasks (quick log, add plan, pick value, field config). Full screens for long tasks (log editor with structured data, builder, focus).
@@ -145,7 +145,7 @@ Default cards generated from the user's data (stat tiles with deltas and sparkli
 ### 4.7a Challenges (ADR-044)
 - **Card (`ChallengeCard`)**: an activity-soft surface like the activity list, the activity's badge, the name, a thin `AppProgressBar` in the activity color, "12 / 75 days · 12-day streak", and today's state line (`ChallengeStateLine`: an icon, the text in normal text colors). States: "Done today" (✓), "Not yet today — streak at risk" (clock in the warning color), "Not yet today", "Completed" (✓).
 - **Today**: a "Challenges" section below the day's items, one card per running challenge; nothing at all when none runs. Completed challenges leave Today.
-- **Me → Challenges**: title, subtitle, **New challenge**, then all cards (running first, completed last); empty state explains.
+- **Challenges tab** (target icon, filled when selected; between Plan and Insights): title, subtitle, **New challenge**, then all cards (running first, completed last); empty state explains. It is a tab body like Insights (no app bar).
 - **New / edit sheet**: Activity (Browse activities / Make your own; once chosen a tile, tappable to change), Number of days (digits plus 7 · 21 · 30 · 75 · 100 chips, "Complete the activity once every day."), First day (create only; date picker up to today), Name (hint is the default name). Edit shows the activity read-only and changes name and days only. Unsaved changes ask before closing (`DiscardGuard`).
 - **Challenge screen**: badge and name, "Since Sep 1", a big "21 / 75" (`numericHero`) with the progress bar, the state line (and "Completed Oct 3" once reached), four `StatTile`s (Current streak, Best streak, Days done, Days left), and "Your days" (`DayGrid` from the first day to today). App bar ⋯: Edit, Restart from today, End challenge; restart and end show an Undo snackbar.
 - No reminders yet (step 2).

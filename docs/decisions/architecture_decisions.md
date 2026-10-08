@@ -334,7 +334,7 @@
 ### ADR-028: Primary navigation, date-based Plan, Activities under Me, "Record" terminology
 - **Status:** Accepted 2026-10-04 (owner product decision; supersedes the spec's recommended navigation in §34 and the Track entry points in §36).
 - **Decision:**
-  - **Primary navigation: Today | Plan | Insights | Me.** Track is removed.
+  - **Primary navigation: Today | Plan | Insights | Me.** Track is removed. *Amended by ADR-044: a fifth tab, Challenges, sits between Plan and Insights (owner, 2026-10-08).*
   - **Plan** is the date-based planning system. A calendar/date selector navigates to any past, present or future date and shows that date's plans alongside what was actually recorded.
   - **Today** is the specialized view of the current date: today's plan, today's reality, and their relationship.
   - **Me → Activities** is where reusable Activity Types are created and configured (builder, templates). It's for setup, not daily recording.
@@ -607,7 +607,7 @@
     - Example: 20 days done, one missed, the next day done: progress 21 / 75, current streak 1, best streak 20.
   - **Today's state:** done, **at risk** ("Not yet today — streak at risk": a streak is running and today isn't recorded), not yet (no streak running), or completed.
   - **Nothing derived is stored.** One table, `challenges` (`public_id`, `activity_type_id`, `title`, `start_date`, `target_days`, timestamps, soft delete). Progress, streaks and states are computed from `activity_logs` whenever shown, so editing, deleting or restoring a record, or adding one for a forgotten day, just changes them. Ending a challenge soft-deletes it (ADR-022); the records are untouched. **Restart** moves the start to today (earlier days stop counting; Undo restores the start). Editing changes only the name and the number of days.
-  - **UI:** a "Challenges" section below Today's items for running challenges (completed ones leave it); **Me → Challenges** (list, **New challenge**); a challenge screen (progress, current and best streak, days done and left, calendar of days done, Edit / Restart from today / End challenge).
+  - **UI:** a "Challenges" section below Today's items for running challenges (completed ones leave it); the **Challenges tab** (a fifth primary tab between Plan and Insights, owner's choice 2026-10-08; list, **New challenge**); a challenge screen (progress, current and best streak, days done and left, calendar of days done, Edit / Restart from today / End challenge).
 - **Reminders are not part of this step.** The next step needs a local-notification package, which needs its own decision (new dependency, permission). Plan: schedule the next days' reminders at the chosen time when the app opens or records change, and cancel today's when the activity is recorded (calm wording, e.g. "Keep your 12-day meditation streak alive."). A `reminder_minute` column will be added then (schema v10) rather than carried unused now.
 - **Context:** The owner wants simple streak maintenance, not a goal/OKR system: Challenge → do the Activity → streak increases → (later) a reminder protects the streak.
 - **Consequences:**

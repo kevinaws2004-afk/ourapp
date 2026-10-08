@@ -25,7 +25,7 @@ void main() {
     tester,
   ) async {
     await pumpTestApp(tester, preferences: _onboarded, seed: seedReading);
-    for (final tab in ['Today', 'Plan', 'Insights', 'Me']) {
+    for (final tab in ['Today', 'Plan', 'Challenges', 'Insights', 'Me']) {
       await tester.tap(
         find.descendant(
           of: find.byType(NavigationBar),

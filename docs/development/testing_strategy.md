@@ -125,7 +125,7 @@ Current suites (269 tests):
   - builder create + inline validation
   - Record on an activity's page opens an item for now; what's logged shows in its history summary
   - deleting an item (plan + log) + Undo
-  - navigation (ADR-028): four tabs, no floating Record button (compact or rail), Me → Activities
+  - navigation (ADR-028, ADR-044): five tabs (Today, Plan, Challenges, Insights, Me), no floating Record button (compact or rail), Me → Activities
   - Plan tab: opens on today with one list of items (unplanned records included), week navigation, a record without a plan opens as an item, calendar picker
   - renderer: every editor in order, archived options hidden, typed emission and clearing, invalid numbers
   - Quick add and planner (ADR-039): Start now / Set a time appear once typing; Recent label; suggestions (yours, then built-in, unlabeled); one time sheet sets start + length; Plan opens on Week, a tapped day opens the day screen, which steps days and has a date picker; a built-in name you already have isn't installed twice. Domain: unique activity names, `PlanTimeSuggestions`, `suggestByName`, `rankByUse`.

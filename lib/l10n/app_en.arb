@@ -12,6 +12,10 @@
   "@navPlan": {
     "description": "Primary navigation tab: planning for future days."
   },
+  "navChallenges": "Challenges",
+  "@navChallenges": {
+    "description": "Primary navigation: Challenges tab (ADR-044)."
+  },
   "navInsights": "Insights",
   "@navInsights": {
     "description": "Primary navigation tab: graphs and history."
@@ -6155,10 +6159,6 @@
   "validationChallengeStartInFuture": "A challenge can't start in the future.",
   "@validationChallengeStartInFuture": {
     "description": "Validation: a challenge's first day can't be after today."
-  },
-  "meChallengesSubtitle": "Streaks for things you do every day",
-  "@meChallengesSubtitle": {
-    "description": "Me: subtitle of the Challenges row (ADR-044)."
   },
   "challengesTitle": "Challenges",
   "@challengesTitle": {

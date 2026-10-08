@@ -65,7 +65,7 @@ The analytics engine does not know what an activity *means*. It only understands
 
 ## 6. Product areas (primary navigation, ADR-028)
 
-**Today | Plan | Insights | Me.** This is the owner's decision (ADR-028), and it supersedes the spec's suggested Today/Plan/Track/Insights/Me (§34).
+**Today | Plan | Challenges | Insights | Me** (Challenges added by ADR-044). This is the owner's decision (ADR-028), and it supersedes the spec's suggested Today/Plan/Track/Insights/Me (§34).
 
 | Tab | Purpose |
 |---|---|

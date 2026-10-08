@@ -59,7 +59,9 @@ abstract final class AppRoutes {
 
   /// Reusable activity setup, under Me (ADR-028).
   static const activities = '/me/activities';
-  static const challenges = '/me/challenges';
+
+  /// The Challenges tab (ADR-044).
+  static const challenges = '/challenges';
 
   /// Body measurements, under Me (Phase 6).
   static const measurements = '/me/measurements';
@@ -251,6 +253,18 @@ final routerProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
+                path: AppRoutes.challenges,
+                builder: (context, state) => ChallengesScreen(
+                  onOpenChallenge: (id) =>
+                      unawaited(context.push(AppRoutes.challenge(id))),
+                  chooser: chooser(context),
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
                 path: AppRoutes.insights,
                 builder: (context, state) => InsightsScreen(
                   onOpenActivity: (id) =>
@@ -273,7 +287,6 @@ final routerProvider = Provider<GoRouter>((ref) {
                 path: AppRoutes.me,
                 builder: (context, state) => MeScreen(
                   onOpenActivities: () => context.go(AppRoutes.activities),
-                  onOpenChallenges: () => context.go(AppRoutes.challenges),
                   onOpenMeasurements: () => context.go(AppRoutes.measurements),
                   onOpenTokenShowcase: devToolsEnabled
                       ? () => context.push(AppRoutes.tokenShowcase)
@@ -305,14 +318,6 @@ final routerProvider = Provider<GoRouter>((ref) {
                         ),
                       ),
                     ],
-                  ),
-                  GoRoute(
-                    path: 'challenges',
-                    builder: (context, state) => ChallengesScreen(
-                      onOpenChallenge: (id) =>
-                          unawaited(context.push(AppRoutes.challenge(id))),
-                      chooser: chooser(context),
-                    ),
                   ),
                   GoRoute(
                     path: 'activities',

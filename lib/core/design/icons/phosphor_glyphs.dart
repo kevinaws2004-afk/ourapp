@@ -113,4 +113,5 @@ abstract final class PhosphorFillGlyphs {
   static const user = IconData(0xe4c2, fontFamily: 'PhosphorFill');
   static const star = IconData(0xe46a, fontFamily: 'PhosphorFill');
   static const checkCircle = IconData(0xe184, fontFamily: 'PhosphorFill');
+  static const target = IconData(0xe47c, fontFamily: 'PhosphorFill');
 }

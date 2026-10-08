@@ -6,8 +6,8 @@
 
 **Status:**
 - Phases 1–6 are implemented (incl. focus timer, insights and body measurements): scaffold, preferences, design tokens/theme, adaptive shell, go_router, gen-l10n, the **generic activity engine** (activity types, fields, logs, typed values, builder, built-in activities, generic form renderer), relational Repeating Groups, and **plans + Today** (plan → record, planned vs actual).
-- Navigation (ADR-028): **Today | Plan | Insights | Me** (no floating Record button). Everything on a day is an item you open to log into, saved as you type (ADR-035). Plan is date-based: Week | Month plus a day screen sharing Today's `DayItems` (ADR-039), with repeating plans generated as ordinary plans for the dates viewed (schema v7, ADR-036). Insights builds per-activity charts from fields by type and number config (ADR-037, ADR-043); challenges (ADR-044, schema v9) are one table, with progress and streaks computed from logs; chart reads are limited to the period, with the all-time best as its own query. Activities (setup) live under Me → Activities.
-- All four tabs are implemented (Insights in Phase 6).
+- Navigation (ADR-028, ADR-044): **Today | Plan | Challenges | Insights | Me** (no floating Record button). Everything on a day is an item you open to log into, saved as you type (ADR-035). Plan is date-based: Week | Month plus a day screen sharing Today's `DayItems` (ADR-039), with repeating plans generated as ordinary plans for the dates viewed (schema v7, ADR-036). Insights builds per-activity charts from fields by type and number config (ADR-037, ADR-043); challenges (ADR-044, schema v9) are one table, with progress and streaks computed from logs; chart reads are limited to the period, with the all-time best as its own query. Activities (setup) live under Me → Activities.
+- All five tabs are implemented (Insights in Phase 6, Challenges in ADR-044).
 - See [application_architecture.md](../../docs/architecture/application_architecture.md) for the implemented-vs-planned map.
 
 **Structure:**

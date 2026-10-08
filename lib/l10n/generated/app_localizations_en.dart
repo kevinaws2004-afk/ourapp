@@ -19,6 +19,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navPlan => 'Plan';
 
   @override
+  String get navChallenges => 'Challenges';
+
+  @override
   String get navInsights => 'Insights';
 
   @override
@@ -4567,9 +4570,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get validationChallengeStartInFuture =>
       'A challenge can\'t start in the future.';
-
-  @override
-  String get meChallengesSubtitle => 'Streaks for things you do every day';
 
   @override
   String get challengesTitle => 'Challenges';
