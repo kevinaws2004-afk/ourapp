@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "primary": "#48C9B0",
+          "primary-hover": "#3DB59D",
+          "candy-pink": "#FF5D9E",
+          "candy-bg": "#FFF0F4",
+          "card-border": "#FFE2EC",
+          "accent-mint": "#DDF7EA",
+          "accent-mint-text": "#1B8756",
+          "accent-yellow": "#FEF9C3",
+          "accent-peach": "#FFE7D4",
+          "accent-bubblegum": "#FFD6E7",
+          "accent-teal": "#48C9B0",
+          "text-main": "#1F2432",
+          "text-sub": "#767F94",
+          "text-muted": "#9BA3B5",
+          "border-subtle": "#F6E3E9"
+        },
+        "borderRadius": {
+          "DEFAULT": "1rem",
+          "2xl": "1.25rem",
+          "3xl": "1.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "margin-mobile": "1rem",
+          "space-xs": "0.25rem",
+          "space-sm": "0.5rem",
+          "space-md": "1rem",
+          "space-lg": "1.5rem"
+        },
+        "fontFamily": {
+          "body": ["Plus Jakarta Sans", "sans-serif"],
+          "headline": ["Plus Jakarta Sans", "sans-serif"]
+        }
+      }
+    }
+  }
+</script><style>
+  @layer base {
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #FFF0F4;
+      color: #1F2432;
+      overscroll-behavior-y: none;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+    .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+    main > :first-child { margin-top: 0 !important; }
+    main > :last-child { margin-bottom: 0 !important; }
+  }
+  ::-webkit-scrollbar { display: none; }
+  * { -ms-overflow-style: none; scrollbar-width: none; }
+  body {
+    min-height: max(884px, 100dvh);
+  }
+</style></head><body class="bg-[#FFF0F4] font-body text-[#1F2432] min-h-screen flex flex-col antialiased selection:bg-[#FFD6E7] selection:text-[#FF5D9E]"><header class="fixed top-0 w-full z-50 pt-safe bg-[#FFF0F4]/90 backdrop-blur-xl border-b border-[#FFE2EC]"><div class="h-16 px-margin-mobile flex items-center justify-between gap-2"><div class="flex items-center gap-1.5"><button class="w-10 h-10 flex items-center justify-center text-[#1F2432] hover:bg-white rounded-full transition-colors active:scale-95" onclick="history.back()"><span class="material-symbols-outlined text-[22px]">arrow_back</span></button><img alt="LifeOS Emblem" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvTajDRgTzlaGKiyjsm-Z4rbvBpXcMoVwX7kd60hzKfVRIGTyc6IoZcSWCfdPVHmNhwxvJqkzIM23GqjFBOSWTItt80JqtQiACKYaiM8XVN2pVCqUubRc5MtRb0hlrDXMlQAgdxNmapjLjjSBNpLCuaXQNMEDtoLfzZHKQi-PihhcEmZcpkNsILfPTpZS8DChaKKSHiAR2QwtwnmtiSMxau5OrMT38RFWCpK0KGaHJ"/><h1 class="text-[17px] text-[#1F2432] truncate ml-1 font-bold tracking-tight">Activity Session</h1></div><div class="flex items-center"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-[#FFD6E7]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQD7Wljh84UkxNqhlBY5yd0Hv1SETFoLXcp0nzsD3Xw5ak03uM6e6_NIIgkgLg8bBcZ5efwVRVpLY_kRDVkrpaRKOKEjBn9S2N3L-JUvi2jWVupUVV2HwTz1UYzuOfyEmF49z9nMR7ZRkHRrfFM8Jgp9YGLMbdY3-xAHf7MPoS10duHAeAcFMdW0t2ojUd2hwyVVZlc_jrvH1zLGAxXBoz9WdxYr609FGYpeXROl0f"/></div></div></header><main class="flex-1 w-full bg-[#FFF0F4] pt-16 pb-safe"><div class="flex flex-col w-full pb-10 space-y-3.5">
+<!-- Live Telemetry & Control Bar -->
+<div class="px-margin-mobile pt-2">
+<div class="bg-white rounded-3xl p-4 border border-[#FFE2EC] shadow-[0_4px_24px_rgba(255,93,158,0.06)] flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FCE4EC] text-[#FF5D9E] text-[11px] uppercase tracking-wider font-extrabold border border-[#FFD0DE]">
+<span class="w-2 h-2 rounded-full bg-[#FF5D9E] animate-ping"></span>
+            Live Gym Session
+          </span>
+<span class="text-[13px] text-[#767F94] flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[16px] text-[#48C9B0]">fitness_center</span>
+            Chest &amp; Shoulders
+          </span>
+</div>
+<!-- Actions: Pause & Finish -->
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 rounded-full bg-[#FFE6EE] flex items-center justify-center text-[#FF5D9E] hover:bg-[#FFD6E7] transition-transform active:scale-95" id="pause-btn">
+<span class="material-symbols-outlined text-[20px]" id="pause-icon">pause</span>
+</button>
+<button class="h-10 px-4 rounded-full bg-[#1F2432] text-white text-[13px] font-bold flex items-center gap-1.5 shadow-sm active:scale-95 transition-transform hover:opacity-90">
+<span>Finish</span>
+<span class="material-symbols-outlined text-[17px]">flag</span>
+</button>
+</div>
+</div>
+<!-- Main Live Timer & Metabolic Snapshot -->
+<div class="flex items-end justify-between border-t border-[#F8E7ED] pt-3">
+<div>
+<span class="text-[11px] uppercase tracking-wider text-[#9BA3B5] font-bold">Active Duration</span>
+<div class="flex items-baseline gap-2 mt-0.5">
+<h2 class="text-[32px] leading-8 text-[#1F2432] font-black tracking-tight" id="session-timer">00:34:21</h2>
+<span class="w-2.5 h-2.5 rounded-full bg-[#48C9B0] shadow-[0_0_10px_rgba(72,201,176,0.6)] animate-pulse"></span>
+</div>
+</div>
+<div class="flex items-center gap-4 text-right">
+<div>
+<span class="text-[11px] uppercase tracking-wider text-[#9BA3B5] font-bold">Est. Burn</span>
+<p class="text-[20px] leading-6 text-[#1F2432] font-extrabold">318 <span class="text-[12px] text-[#9BA3B5] font-medium">kcal</span></p>
+</div>
+<div class="h-7 w-px bg-[#F8E7ED]"></div>
+<div>
+<span class="text-[11px] uppercase tracking-wider text-[#9BA3B5] font-bold">Volume</span>
+<p class="text-[20px] leading-6 text-[#1F2432] font-extrabold">2,480 <span class="text-[12px] text-[#9BA3B5] font-medium">kg</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Routine Timeline Cards Container -->
+<div class="px-margin-mobile space-y-3">
+<!-- EXERCISE 1: Completed State -->
+<div class="bg-white rounded-3xl p-3.5 border border-[#FFE2EC] shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-[#DDF7EA] flex items-center justify-center text-[#1B8756]">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<h3 class="text-[15px] text-[#1F2432] truncate font-bold">Incline Dumbbell Press</h3>
+<span class="px-2.5 py-0.5 rounded-full bg-[#DDF7EA] text-[#1B8756] text-[10px] font-bold">3 Sets Done</span>
+</div>
+<p class="text-[12px] text-[#767F94] truncate mt-0.5 font-medium">
+            30kg × 10 • 32kg × 8 • 32kg × 8
+          </p>
+</div>
+</div>
+<button class="w-9 h-9 rounded-full flex items-center justify-center text-[#9BA3B5] hover:bg-[#FFE6EE] active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[20px]">expand_more</span>
+</button>
+</div>
+<!-- EXERCISE 2: Active Recording Card (Flowfy Pastel Highlight Card) -->
+<div class="bg-white rounded-3xl p-4 border border-[#FFD3E2] shadow-[0_8px_32px_rgba(255,93,158,0.08)] space-y-4 relative overflow-hidden">
+<!-- Flowfy candy top accent bar -->
+<div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#FF5D9E] via-[#FF8BA7] to-[#48C9B0]"></div>
+<!-- Exercise Header -->
+<div class="flex items-start justify-between pt-1">
+<div>
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-0.5 rounded-full bg-[#FCE4EC] text-[#FF5D9E] text-[10px] uppercase font-extrabold border border-[#FFD0DE]">Now Active</span>
+<span class="text-[11px] text-[#9BA3B5] font-bold">Set 3 of 4</span>
+</div>
+<h2 class="text-[22px] leading-7 text-[#1F2432] font-black mt-1 tracking-tight">Barbell Flat Bench Press</h2>
+<div class="flex items-center gap-1.5 mt-0.5 text-[#48C9B0] text-[13px] font-bold">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span>Target: 70kg progressive overload</span>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full bg-[#EBF6FD] flex items-center justify-center text-[#0284C7] hover:bg-[#DDF0FC] transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[20px]">videocam</span>
+</button>
+</div>
+<!-- Logged Sets Mini-Table -->
+<div class="space-y-2">
+<!-- Set 1 (Completed) -->
+<div class="flex items-center justify-between p-2.5 rounded-2xl bg-[#FFF7FA] border border-[#FFE7EE]">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 rounded-full bg-white text-[#767F94] shadow-xs flex items-center justify-center text-[11px] font-extrabold">1</span>
+<div class="text-[13px] text-[#1F2432]">
+<span class="font-extrabold text-[#1F2432]">60</span> kg × <span class="font-extrabold text-[#1F2432]">10</span> reps
+            </div>
+</div>
+<div class="flex items-center gap-1 text-[#1B8756] text-[11px] font-bold">
+<span class="material-symbols-outlined text-[17px]">check</span>
+<span class="text-[#767F94]">RPE 7.5</span>
+</div>
+</div>
+<!-- Set 2 (Completed) -->
+<div class="flex items-center justify-between p-2.5 rounded-2xl bg-[#FFF7FA] border border-[#FFE7EE]">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 rounded-full bg-white text-[#767F94] shadow-xs flex items-center justify-center text-[11px] font-extrabold">2</span>
+<div class="text-[13px] text-[#1F2432]">
+<span class="font-extrabold text-[#1F2432]">65</span> kg × <span class="font-extrabold text-[#1F2432]">8</span> reps
+            </div>
+</div>
+<div class="flex items-center gap-1 text-[#1B8756] text-[11px] font-bold">
+<span class="material-symbols-outlined text-[17px]">check</span>
+<span class="text-[#767F94]">RPE 8.0</span>
+</div>
+</div>
+</div>
+<!-- Tactile Input Deck for Active Set 3 (Styled like Flowfy highlighted pastel card) -->
+<div class="bg-[#FFF0F5] rounded-3xl p-3.5 space-y-3 border border-[#FFD3E2]">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-[#1F2432] text-white flex items-center justify-center text-[11px] font-bold">3</span>
+<span class="text-[13px] font-bold text-[#1F2432]">Enter Target Data</span>
+</div>
+<span class="text-[10px] text-[#FF5D9E] font-extrabold uppercase tracking-wider">Working Set</span>
+</div>
+<!-- Touch Ergonomics: Big Numeric Steppers with Flowfy circular soft pink buttons -->
+<div class="grid grid-cols-2 gap-2.5">
+<!-- Weight Control -->
+<div class="bg-white rounded-2xl p-2.5 flex flex-col items-center justify-between shadow-[0_2px_8px_rgba(255,93,158,0.04)] border border-[#FFE2EC]">
+<span class="text-[10px] uppercase text-[#9BA3B5] font-extrabold tracking-wider">Weight (kg)</span>
+<div class="flex items-center justify-between w-full my-1">
+<button class="w-10 h-10 rounded-full bg-[#FFE6EE] hover:bg-[#FFD6E7] text-[#FF5D9E] flex items-center justify-center active:scale-90 transition-transform font-bold" onclick="adjustVal('weight-val', -2.5)">
+<span class="material-symbols-outlined text-[20px]">remove</span>
+</button>
+<div class="text-center">
+<span class="text-[28px] leading-8 text-[#1F2432] font-black tracking-tight" id="weight-val">70</span>
+</div>
+<button class="w-10 h-10 rounded-full bg-[#FFE6EE] hover:bg-[#FFD6E7] text-[#FF5D9E] flex items-center justify-center active:scale-90 transition-transform font-bold" onclick="adjustVal('weight-val', 2.5)">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div class="flex gap-1.5 w-full justify-center">
+<button class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#FFF0F5] text-[#767F94] hover:text-[#1F2432] border border-[#FFE2EC]" onclick="quickSetWeight(67.5)">-2.5</button>
+<button class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#FFF0F5] text-[#767F94] hover:text-[#1F2432] border border-[#FFE2EC]" onclick="quickSetWeight(72.5)">+2.5</button>
+</div>
+</div>
+<!-- Reps Control -->
+<div class="bg-white rounded-2xl p-2.5 flex flex-col items-center justify-between shadow-[0_2px_8px_rgba(255,93,158,0.04)] border border-[#FFE2EC]">
+<span class="text-[10px] uppercase text-[#9BA3B5] font-extrabold tracking-wider">Reps Target</span>
+<div class="flex items-center justify-between w-full my-1">
+<button class="w-10 h-10 rounded-full bg-[#FFE6EE] hover:bg-[#FFD6E7] text-[#FF5D9E] flex items-center justify-center active:scale-90 transition-transform font-bold" onclick="adjustVal('reps-val', -1)">
+<span class="material-symbols-outlined text-[20px]">remove</span>
+</button>
+<div class="text-center">
+<span class="text-[28px] leading-8 text-[#1F2432] font-black tracking-tight" id="reps-val">8</span>
+</div>
+<button class="w-10 h-10 rounded-full bg-[#FFE6EE] hover:bg-[#FFD6E7] text-[#FF5D9E] flex items-center justify-center active:scale-90 transition-transform font-bold" onclick="adjustVal('reps-val', 1)">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div class="flex gap-1 w-full justify-center">
+<button class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#FFF0F5] text-[#767F94] hover:text-[#1F2432] border border-[#FFE2EC]" onclick="quickSetReps(6)">6</button>
+<button class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#FFF0F5] text-[#767F94] hover:text-[#1F2432] border border-[#FFE2EC]" onclick="quickSetReps(10)">10</button>
+<button class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#FFF0F5] text-[#767F94] hover:text-[#1F2432] border border-[#FFE2EC]" onclick="quickSetReps(12)">12</button>
+</div>
+</div>
+</div>
+<!-- Flowfy Candy Turquoise/Seafoam CTA Button -->
+<button class="w-full h-12 py-3 rounded-2xl bg-[#48C9B0] hover:bg-[#3DB59D] text-white font-bold text-[15px] shadow-[0_6px_20px_rgba(72,201,176,0.35)] flex items-center justify-center gap-2 active:scale-98 transition-all" id="log-set-btn" onclick="triggerLogFeedback()">
+<span class="material-symbols-outlined text-[22px]">check_circle</span>
+<span>Log Set 3 &amp; Start Rest</span>
+</button>
+</div>
+<!-- Action Row: Add Set & Active Rest Timer Widget -->
+<div class="flex items-center justify-between pt-1">
+<button class="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[#FFF0F5] text-[#1F2432] text-[13px] font-bold hover:bg-[#FFE6EE] transition-colors active:scale-95 border border-[#FFE2EC]">
+<span class="material-symbols-outlined text-[18px] text-[#48C9B0]">add</span>
+<span>Add Set</span>
+</button>
+<!-- Inline Floating Rest Timer Indicator: Flowfy Pastel Pill -->
+<div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FCE4EC] text-[#FF5D9E] border border-[#FFD0DE] shadow-xs">
+<span class="material-symbols-outlined text-[17px] text-[#FF5D9E] animate-spin">timelapse</span>
+<div class="text-[13px] font-bold flex items-center gap-1 text-[#1F2432]">
+<span class="text-[#767F94] font-medium">Rest:</span>
+<span class="font-extrabold text-[#FF5D9E]" id="rest-timer-display">01:12</span>
+</div>
+<button class="px-2 py-0.5 rounded-full bg-white text-[#1F2432] text-[10px] hover:bg-[#FFE6EE] font-bold shadow-xs active:scale-90 transition-transform" onclick="addRestTime(30)">
+            +30s
+          </button>
+</div>
+</div>
+</div>
+<!-- EXERCISE 3: Next Up (Preview / Staged) -->
+<div class="bg-white rounded-3xl p-3.5 border border-[#FFE2EC] shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex items-center justify-between opacity-85 hover:opacity-100 transition-opacity">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-[#FFF0F4] border border-[#FFE2EC] flex items-center justify-center text-[#9BA3B5]">
+<span class="text-[12px] font-bold">3</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<h3 class="text-[15px] text-[#1F2432] truncate font-bold">Standing Cable Lateral Raises</h3>
+<span class="px-2.5 py-0.5 rounded-full bg-[#FFF0F4] text-[#767F94] text-[10px] font-bold border border-[#FFE2EC]">Next</span>
+</div>
+<p class="text-[12px] text-[#767F94] mt-0.5 font-medium">
+            3 sets planned • 12.5kg × 12-15 reps
+          </p>
+</div>
+</div>
+<button class="w-9 h-9 rounded-full flex items-center justify-center text-[#9BA3B5] hover:bg-[#FFE6EE] active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[20px]">swap_vert</span>
+</button>
+</div>
+</div>
+<!-- Session Context, Bio-State & Dynamic Perceived Exertion -->
+<div class="px-margin-mobile pt-1">
+<div class="bg-white rounded-3xl p-4 border border-[#FFE2EC] shadow-[0_4px_24px_rgba(255,93,158,0.05)] space-y-4">
+<div class="flex items-center justify-between">
+<span class="text-[15px] text-[#1F2432] font-bold">Effort &amp; Physiological Load</span>
+<div class="flex items-center gap-1.5 text-[#FF5D9E]">
+<span class="material-symbols-outlined text-[18px]">favorite</span>
+<span class="text-[13px] font-bold">142 bpm</span>
+</div>
+</div>
+<!-- RPE Rating Selector: Flowfy Candy Pastel Spectrum -->
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="text-[10px] uppercase text-[#9BA3B5] font-extrabold tracking-wider">Rate of Perceived Exertion (RPE)</span>
+<span class="text-[13px] text-[#FF5D9E] font-extrabold" id="rpe-label">8 / 10 • Intense</span>
+</div>
+<div class="grid grid-cols-5 gap-2">
+<!-- 6: Soft Mint -->
+<button class="rpe-btn py-2.5 rounded-2xl bg-[#DDF7EA] text-[#1B8756] border border-[#C2EED7] flex flex-col items-center gap-0.5 active:scale-95 transition-all" onclick="selectRpe(6, 'Moderate', this)">
+<span class="font-extrabold text-[15px]">6</span>
+<span class="text-[10px] text-[#1B8756]/80 font-semibold">Easy</span>
+</button>
+<!-- 7: Butter Yellow -->
+<button class="rpe-btn py-2.5 rounded-2xl bg-[#FEF9C3] text-[#854D0E] border border-[#FDE68A] flex flex-col items-center gap-0.5 active:scale-95 transition-all" onclick="selectRpe(7, 'Moderate+', this)">
+<span class="font-extrabold text-[15px]">7</span>
+<span class="text-[10px] text-[#854D0E]/80 font-semibold">Good</span>
+</button>
+<!-- 8: Candy Pink (Active by default) -->
+<button class="rpe-btn py-2.5 rounded-2xl bg-[#FF5D9E] text-white flex flex-col items-center gap-0.5 active:scale-95 transition-all shadow-[0_4px_14px_rgba(255,93,158,0.4)] ring-2 ring-[#FF5D9E] ring-offset-2 ring-offset-white" onclick="selectRpe(8, 'Intense', this)">
+<span class="font-extrabold text-[15px]">8</span>
+<span class="text-[10px] text-white/95 font-semibold">Hard</span>
+</button>
+<!-- 9: Soft Peach -->
+<button class="rpe-btn py-2.5 rounded-2xl bg-[#FFE7D4] text-[#C2410C] border border-[#FED7AA] flex flex-col items-center gap-0.5 active:scale-95 transition-all" onclick="selectRpe(9, 'Near Max', this)">
+<span class="font-extrabold text-[15px]">9</span>
+<span class="text-[10px] text-[#C2410C]/80 font-semibold">Heavy</span>
+</button>
+<!-- 10: Bubblegum Pink -->
+<button class="rpe-btn py-2.5 rounded-2xl bg-[#FFD6E7] text-[#BE185D] border border-[#FBCFE8] flex flex-col items-center gap-0.5 active:scale-95 transition-all" onclick="selectRpe(10, 'Max Effort', this)">
+<span class="font-extrabold text-[15px]">10</span>
+<span class="text-[10px] text-[#BE185D]/80 font-semibold">Failure</span>
+</button>
+</div>
+</div>
+<!-- Quick Speech / Text Context Note: Flowfy clean card with turquoise send button -->
+<div class="relative">
+<div class="flex items-center gap-2.5 p-2.5 px-3 rounded-2xl bg-[#FFF7FA] border border-[#FFE2EC] focus-within:border-[#48C9B0] transition-colors">
+<span class="material-symbols-outlined text-[20px] text-[#FF5D9E]">mic</span>
+<input class="bg-transparent text-[13px] text-[#1F2432] placeholder:text-[#9BA3B5] outline-none w-full font-medium" type="text" value="Felt strong on set 2, slight shoulder stiffness warm-up."/>
+<button class="w-8 h-8 rounded-xl bg-[#48C9B0] hover:bg-[#3DB59D] shadow-xs flex items-center justify-center text-white active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[17px]">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Timer Simulation
+  let totalSeconds = 2061; // 00:34:21
+  let restSeconds = 72; // 01:12
+  let timerActive = true;
+
+  setInterval(() => {
+    if (!timerActive) return;
+    totalSeconds++;
+    const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+    const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+    const secs = String(totalSeconds % 60).padStart(2, '0');
+    const timerEl = document.getElementById('session-timer');
+    if (timerEl) {
+      timerEl.textContent = `${hrs}:${mins}:${secs}`;
+    }
+
+    if (restSeconds > 0) {
+      restSeconds--;
+      const rMins = String(Math.floor(restSeconds / 60)).padStart(2, '0');
+      const rSecs = String(restSeconds % 60).padStart(2, '0');
+      const restEl = document.getElementById('rest-timer-display');
+      if (restEl) restEl.textContent = `${rMins}:${rSecs}`;
+    }
+  }, 1000);
+
+  // Pause / Resume Toggle
+  const pauseBtn = document.getElementById('pause-btn');
+  const pauseIcon = document.getElementById('pause-icon');
+  if (pauseBtn && pauseIcon) {
+    pauseBtn.addEventListener('click', () => {
+      timerActive = !timerActive;
+      pauseIcon.textContent = timerActive ? 'pause' : 'play_arrow';
+      pauseBtn.classList.toggle('bg-[#DDF7EA]');
+      pauseBtn.classList.toggle('text-[#1B8756]');
+    });
+  }
+
+  // Adjust numeric stepper
+  function adjustVal(elementId, delta) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    let current = parseFloat(el.textContent) || 0;
+    current = Math.max(0, current + delta);
+    el.textContent = Number.isInteger(current) ? current : current.toFixed(1);
+  }
+
+  function quickSetWeight(val) {
+    const el = document.getElementById('weight-val');
+    if (el) el.textContent = val;
+  }
+
+  function quickSetReps(val) {
+    const el = document.getElementById('reps-val');
+    if (el) el.textContent = val;
+  }
+
+  function addRestTime(seconds) {
+    restSeconds += seconds;
+    const rMins = String(Math.floor(restSeconds / 60)).padStart(2, '0');
+    const rSecs = String(restSeconds % 60).padStart(2, '0');
+    const restEl = document.getElementById('rest-timer-display');
+    if (restEl) restEl.textContent = `${rMins}:${rSecs}`;
+  }
+
+  // Micro-interaction Feedback when logging a set (Turquoise to Mint to Turquoise)
+  function triggerLogFeedback() {
+    const btn = document.getElementById('log-set-btn');
+    if (!btn) return;
+    const originalContent = btn.innerHTML;
+    btn.classList.remove('bg-[#48C9B0]');
+    btn.classList.add('bg-[#1B8756]');
+    btn.innerHTML = `<span class="material-symbols-outlined text-[22px]">check</span><span>Set 3 Logged!</span>`;
+    
+    // reset rest timer to 90s
+    restSeconds = 90;
+
+    setTimeout(() => {
+      btn.classList.remove('bg-[#1B8756]');
+      btn.classList.add('bg-[#48C9B0]');
+      btn.innerHTML = originalContent;
+    }, 1400);
+  }
+
+  // Flowfy RPE Selector logic with candy pastel styling
+  const rpeStyles = {
+    6: 'bg-[#DDF7EA] text-[#1B8756] border border-[#C2EED7]',
+    7: 'bg-[#FEF9C3] text-[#854D0E] border border-[#FDE68A]',
+    8: 'bg-[#FCE4EC] text-[#FF5D9E] border border-[#FFD0DE]',
+    9: 'bg-[#FFE7D4] text-[#C2410C] border border-[#FED7AA]',
+    10: 'bg-[#FFD6E7] text-[#BE185D] border border-[#FBCFE8]'
+  };
+
+  const rpeSubStyles = {
+    6: 'text-[10px] text-[#1B8756]/80 font-semibold',
+    7: 'text-[10px] text-[#854D0E]/80 font-semibold',
+    8: 'text-[10px] text-[#FF5D9E]/80 font-semibold',
+    9: 'text-[10px] text-[#C2410C]/80 font-semibold',
+    10: 'text-[10px] text-[#BE185D]/80 font-semibold'
+  };
+
+  function selectRpe(score, label, targetBtn) {
+    const btns = document.querySelectorAll('.rpe-btn');
+    btns.forEach(b => {
+      const val = parseInt(b.querySelector('span').textContent);
+      b.className = `rpe-btn py-2.5 rounded-2xl ${rpeStyles[val] || 'bg-[#FFF7FA] text-[#1F2432]'} flex flex-col items-center gap-0.5 active:scale-95 transition-all`;
+      const subtitle = b.querySelectorAll('span')[1];
+      if (subtitle) {
+        subtitle.className = rpeSubStyles[val] || 'text-[10px] text-[#767F94] font-semibold';
+      }
+    });
+    
+    // Highlight active with candy pink pill
+    targetBtn.className = 'rpe-btn py-2.5 rounded-2xl bg-[#FF5D9E] text-white flex flex-col items-center gap-0.5 active:scale-95 transition-all shadow-[0_4px_14px_rgba(255,93,158,0.4)] ring-2 ring-[#FF5D9E] ring-offset-2 ring-offset-white';
+    const activeSub = targetBtn.querySelectorAll('span')[1];
+    if (activeSub) {
+      activeSub.className = 'text-[10px] text-white/95 font-semibold';
+    }
+
+    const labelEl = document.getElementById('rpe-label');
+    if (labelEl) {
+      labelEl.textContent = `${score} / 10 • ${label}`;
+    }
+  }
+</script></main></body></html>

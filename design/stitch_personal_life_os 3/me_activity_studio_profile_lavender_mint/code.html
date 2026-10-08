@@ -1,0 +1,361 @@
+<!DOCTYPE html><html class="h-full" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "primary": "#FF5D9E",
+          "primary-hover": "#F0488D",
+          "flowfy-pink": "#FF5D9E",
+          "flowfy-pink-bg": "#FDE2EB",
+          "flowfy-teal": "#3DC4BA",
+          "flowfy-teal-dark": "#2EAAA1",
+          "flowfy-card": "#FFFFFF",
+          "border-flowfy": "#FFE1EB",
+          "pastel-mint": "#E2F7EE",
+          "mint-text": "#1E9E68",
+          "pastel-blush": "#FDE2EB",
+          "blush-text": "#D93278",
+          "pastel-sky": "#E3F2FD",
+          "sky-text": "#0284C7",
+          "pastel-lavender": "#F3E8FF",
+          "lavender-text": "#8B5CF6",
+          "pastel-peach": "#FFE8D6",
+          "peach-text": "#E06D37",
+          "pastel-butter": "#FEF9C3",
+          "butter-text": "#CA8A04",
+          "text-primary": "#222533",
+          "text-secondary": "#6A6F84",
+          "text-muted": "#9EA4BC"
+        },
+        "borderRadius": {
+          "DEFAULT": "1rem",
+          "xl": "1.25rem",
+          "2xl": "1.75rem",
+          "3xl": "2.25rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "margin-mobile": "1rem",
+          "space-xs": "0.25rem",
+          "space-sm": "0.5rem",
+          "space-md": "1rem",
+          "space-lg": "1.5rem",
+          "space-xl": "2rem"
+        },
+        "fontFamily": {
+          "body": ["Plus Jakarta Sans", "sans-serif"],
+          "headline": ["Plus Jakarta Sans", "sans-serif"]
+        }
+      },
+    },
+  }
+</script><style>@layer base{body{margin:0;padding:0;background-color:#FDF2F5;color:#222533;overscroll-behavior-y:none;font-family:'Plus Jakarta Sans',sans-serif;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}*{-ms-overflow-style:none;scrollbar-width:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-[#F8F9FE] font-body text-[#181445] min-h-screen flex flex-col antialiased selection:bg-[#EDE9FE] selection:text-[#7C5CFC]"><header class="fixed top-0 w-full z-50 pt-safe bg-[#F8F9FE]/90 backdrop-blur-xl border-b border-[#EDE9FE]"><div class="h-16 px-margin-mobile flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="LifeOS Emblem" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvTajDRgTzlaGKiyjsm-Z4rbvBpXcMoVwX7kd60hzKfVRIGTyc6IoZcSWCfdPVHmNhwxvJqkzIM23GqjFBOSWTItt80JqtQiACKYaiM8XVN2pVCqUubRc5MtRb0hlrDXMlQAgdxNmapjLjjSBNpLCuaXQNMEDtoLfzZHKQi-PihhcEmZcpkNsILfPTpZS8DChaKKSHiAR2QwtwnmtiSMxau5OrMT38RFWCpK0KGaHJ"><div class="flex flex-col"><span class="text-[11px] font-bold uppercase tracking-wider text-[#9EA4BC]">LifeOS</span><span class="text-[15px] font-extrabold text-[#222533] leading-tight">Today</span></div></div><div class="flex items-center gap-space-sm"><div class="relative flex items-center justify-center"><a class="relative flex items-center justify-center p-0.5 rounded-full hover:opacity-90 transition-opacity" data-path="me" href="#"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-[#7C5CFC]/30" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQD7Wljh84UkxNqhlBY5yd0Hv1SETFoLXcp0nzsD3Xw5ak03uM6e6_NIIgkgLg8bBcZ5efwVRVpLY_kRDVkrpaRKOKEjBn9S2N3L-JUvi2jWVupUVV2HwTz1UYzuOfyEmF49z9nMR7ZRkHRrfFM8Jgp9YGLMbdY3-xAHf7MPoS10duHAeAcFMdW0t2ojUd2hwyVVZlc_jrvH1zLGAxXBoz9WdxYr609FGYpeXROl0f"><span class="absolute top-0 right-0 w-2.5 h-2.5 bg-[#4EDEA3] rounded-full ring-2 ring-white"></span></a></div></div></div></header><main class="flex-1 w-full bg-[#F8F9FE] pt-16 pb-28"><div class="flex flex-col w-full px-margin pb-space-xl">
+<!-- Profile & Identity Top Card -->
+<section class="relative mt-space-md mb-space-lg rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm overflow-hidden">
+<!-- Subtle pastel ambient gradient aura -->
+<div class="absolute -top-12 -right-12 w-48 h-48 bg-primary/10 rounded-full blur-2xl pointer-events-none"></div>
+<div class="absolute -bottom-10 -left-10 w-44 h-44 bg-secondary-fixed/30 rounded-full blur-2xl pointer-events-none"></div>
+<div class="relative flex items-start justify-between gap-space-sm mb-space-md">
+<div class="flex items-center gap-space-md">
+<div class="relative">
+<img class="w-16 h-16 rounded-full object-cover shadow-md" data-alt="Close-up serene photographic portrait of Elena Rostova, a mindful tech professional with gentle smiling expression, soft sunlight, pastel lavender and clean mint aesthetic backdrop, studio lighting, hyper realistic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3NvrgdOi1a9vS0Y4v6T8gMW718JFqQKab9bsfzNui_k8Rik9hOLbZTrECGV2jcpphTXja7JHjvMG9--ND43JJg-LKuG276d8HbYgpc0WH2pUkX6EMy0PyVdkB_GJ9uPOAIXj-aY_oweuidIao6ieMOmklTNmY1-75IkYgVwga1ejYnGGkupJZTQVyUkmHTZAzswuUJ7g3NYCWBL_SHMvnfTL2rybASRlFqbZEfgmq">
+<div class="absolute -bottom-1 -right-1 bg-secondary text-on-secondary w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shadow-sm">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</div>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Elena Rostova</h2>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm">Lvl 14</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Morning Dynamo • Circadian Rhythm</p>
+</div>
+</div>
+<button aria-label="Settings and Preferences" class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+</button>
+</div>
+<!-- Vitality Badges Carousel -->
+<div class="relative flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FFF1E6] text-[#EA580C] whitespace-nowrap shadow-sm">
+<span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<span class="font-label-sm text-label-sm">28-Day Streak</span>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary-container/40 text-on-secondary-container whitespace-nowrap shadow-sm">
+<span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-sm text-label-sm">89% Fidelity</span>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-high text-primary whitespace-nowrap shadow-sm">
+<span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">bedtime</span>
+<span class="font-label-sm text-label-sm">Circadian Aligned</span>
+</div>
+</div>
+</section>
+<!-- Section 2: Intent Studio / Weekly Targets -->
+<section class="mb-space-lg flex flex-col gap-space-sm">
+<div class="flex items-center justify-between px-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">architecture</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Weekly Target Engine</h3>
+</div>
+<span class="font-label-sm text-label-sm px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant">Week 42</span>
+</div>
+<div class="rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col gap-space-md">
+<!-- Cognitive Focus -->
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between items-center text-on-surface">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-label-lg text-label-lg">Deep Cognitive Focus</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-medium">12h / 15h</span>
+</div>
+<div class="w-full h-2.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full transition-all duration-500" style="width: 80%;"></div>
+</div>
+</div>
+<!-- Physical Training -->
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between items-center text-on-surface">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-lg text-label-lg">Physical Training</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-secondary-container font-semibold px-2 py-0.5 rounded-full bg-secondary-container/40">3 of 4 Sessions</span>
+</div>
+<div class="w-full h-2.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary rounded-full transition-all duration-500" style="width: 75%;"></div>
+</div>
+</div>
+<!-- Circadian Recovery & Sleep Target -->
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between items-center text-on-surface">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="font-label-lg text-label-lg">Circadian Sleep Mean</span>
+</div>
+<span class="font-body-sm text-body-sm text-tertiary font-medium px-2 py-0.5 rounded-full bg-tertiary-fixed/60">7.8h / 8.0h Target</span>
+</div>
+<div class="w-full h-2.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-tertiary rounded-full transition-all duration-500" style="width: 97%;"></div>
+</div>
+</div>
+<!-- Living Stewardship Budget -->
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between items-center text-on-surface">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#EA580C]"></span>
+<span class="font-label-lg text-label-lg">Lifestyle Stewardship</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-medium">₹29,400 / ₹35,000</span>
+</div>
+<div class="w-full h-2.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-[#EA580C] rounded-full transition-all duration-500" style="width: 84%;"></div>
+</div>
+</div>
+<button class="mt-space-xs w-full py-2.5 px-4 rounded-full bg-surface-container text-primary font-label-md text-label-md hover:bg-surface-container-high transition-all flex items-center justify-center gap-1.5">
+<span>Adjust Life Horizon Targets</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</section>
+<!-- Section 3: Activity & Routine Blueprints -->
+<section class="mb-space-lg flex flex-col gap-space-sm">
+<div class="flex items-center justify-between px-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[22px]">fitness_center</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Routine Studio</h3>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">3 Blueprints</span>
+</div>
+<!-- Blueprints List -->
+<div class="flex flex-col gap-3">
+<!-- Routine 1 -->
+<div class="p-space-md rounded-2xl bg-surface-container-lowest shadow-sm flex items-center justify-between gap-space-sm">
+<div class="flex items-start gap-3 min-w-0">
+<div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[24px]">sports_gymnastics</span>
+</div>
+<div class="flex flex-col min-w-0">
+<h4 class="font-label-lg text-label-lg text-on-surface truncate">Hypertrophy Push Block A</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">4 exercises • 45m • 380 kcal</p>
+</div>
+</div>
+<button class="px-3.5 py-1.5 rounded-full bg-secondary text-on-secondary font-label-sm text-label-sm shrink-0 hover:opacity-95 transition-transform active:scale-95 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">play_arrow</span>
+<span>Launch</span>
+</button>
+</div>
+<!-- Routine 2 -->
+<div class="p-space-md rounded-2xl bg-surface-container-lowest shadow-sm flex items-center justify-between gap-space-sm">
+<div class="flex items-start gap-3 min-w-0">
+<div class="w-11 h-11 rounded-xl bg-primary-fixed flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[24px]">timer</span>
+</div>
+<div class="flex flex-col min-w-0">
+<h4 class="font-label-lg text-label-lg text-on-surface truncate">Deep Work 90m Sprint</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Binaural flow • Shield active</p>
+</div>
+</div>
+<button class="px-3.5 py-1.5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm shrink-0 hover:opacity-95 transition-transform active:scale-95 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">bolt</span>
+<span>Sprint</span>
+</button>
+</div>
+<!-- Routine 3 -->
+<div class="p-space-md rounded-2xl bg-surface-container-lowest shadow-sm flex items-center justify-between gap-space-sm">
+<div class="flex items-start gap-3 min-w-0">
+<div class="w-11 h-11 rounded-xl bg-tertiary-fixed flex items-center justify-center text-tertiary shrink-0">
+<span class="material-symbols-outlined text-[24px]">sunny</span>
+</div>
+<div class="flex flex-col min-w-0">
+<h4 class="font-label-lg text-label-lg text-on-surface truncate">Circadian Reset Walk</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Outdoor photic soak • 20m</p>
+</div>
+</div>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm shrink-0 hover:bg-surface-container-high transition-colors">
+<span>Edit</span>
+</button>
+</div>
+<!-- Create New Blueprint Action Card -->
+<button class="w-full py-4 px-4 rounded-2xl bg-surface-container-low text-primary hover:bg-surface-container transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+<span class="font-label-lg text-label-lg">+ Create New Routine Blueprint</span>
+</button>
+</div>
+</section>
+<!-- Section 4: Sensor & Sync Ecosystem -->
+<section class="mb-space-lg flex flex-col gap-space-sm">
+<div class="flex items-center justify-between px-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">sensors</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Sensor Ecosystem</h3>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-secondary font-bold">Stream Active</span>
+</div>
+</div>
+<div class="rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col gap-space-md">
+<!-- Device status banner -->
+<div class="flex items-center justify-between p-3 rounded-xl bg-surface-container-low">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-lowest flex items-center justify-center text-on-surface shadow-xs">
+<span class="material-symbols-outlined text-[20px]">watch</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface">Oura Ring Gen 3 &amp; Watch</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Battery 92% • Synced 2m ago</span>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-secondary-container/40 text-on-secondary-container font-label-sm text-label-sm font-semibold">Live</span>
+</div>
+<!-- Sensor Toggles -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between py-1">
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface">Apple HealthKit Continuous Sync</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">HRV, resting pulse, and SpO2</span>
+</div>
+<button class="w-12 h-7 bg-primary rounded-full p-1 relative transition-colors focus:outline-none" id="toggle-health" onclick="this.classList.toggle('bg-primary'); this.classList.toggle('bg-surface-container-high'); this.querySelector('div').classList.toggle('translate-x-5');" type="button">
+<div class="w-5 h-5 bg-on-primary rounded-full shadow-sm transform translate-x-5 transition-transform duration-200"></div>
+</button>
+</div>
+<div class="flex items-center justify-between py-1">
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface">Calendar Schedule Auto-Ingest</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Adaptive task slots between meetings</span>
+</div>
+<button class="w-12 h-7 bg-primary rounded-full p-1 relative transition-colors focus:outline-none" id="toggle-calendar" onclick="this.classList.toggle('bg-primary'); this.classList.toggle('bg-surface-container-high'); this.querySelector('div').classList.toggle('translate-x-5');" type="button">
+<div class="w-5 h-5 bg-on-primary rounded-full shadow-sm transform translate-x-5 transition-transform duration-200"></div>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 5: Analytics & Preferences -->
+<section class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between px-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">analytics</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Analytics &amp; Data</h3>
+</div>
+</div>
+<!-- Export Card -->
+<div class="rounded-2xl bg-surface-container-lowest p-space-md shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface">Weekly Fidelity Report</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Formatted for PDF &amp; Notion</span>
+</div>
+</div>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container text-primary font-label-sm text-label-sm hover:bg-surface-container-high transition-colors">
+        Export
+      </button>
+</div>
+<!-- App Preferences List -->
+<div class="rounded-2xl bg-surface-container-lowest p-space-md shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between py-1 text-on-surface">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">vibration</span>
+<span class="font-label-lg text-label-lg">Haptic Dynamics</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Crisp Tactile</span>
+</div>
+<div class="flex items-center justify-between py-1 text-on-surface">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">notifications</span>
+<span class="font-label-lg text-label-lg">Notifications</span>
+</div>
+<span class="font-body-sm text-body-sm text-secondary font-medium">Smart Nudges Only</span>
+</div>
+<div class="flex items-center justify-between py-1 text-on-surface">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">palette</span>
+<span class="font-label-lg text-label-lg">Theme System</span>
+</div>
+<span class="font-body-sm text-body-sm text-primary font-semibold">Pastel Lavender</span>
+</div>
+</div>
+</section>
+</div>
+<script>
+  // Ensure the 4th tab 'Me' is highlighted in the bottom navigation shell
+  (function initMeNavTab() {
+    const navItems = document.querySelectorAll('nav a[data-path]');
+    navItems.forEach(item => {
+      const isMe = item.getAttribute('data-path') === 'me';
+      if (isMe) {
+        item.classList.remove('text-[#797587]');
+        item.classList.add('text-[#7C5CFC]');
+        const label = item.querySelector('span:nth-child(2)');
+        if (label) label.className = 'text-[11px] font-extrabold';
+        const icon = item.querySelector('span.material-symbols-outlined');
+        if (icon) icon.style.fontVariationSettings = "'FILL' 1";
+      } else {
+        item.classList.remove('text-[#7C5CFC]');
+        item.classList.add('text-[#797587]');
+        const label = item.querySelector('span:nth-child(2)');
+        if (label) label.className = 'text-[11px] font-semibold';
+        const icon = item.querySelector('span.material-symbols-outlined');
+        if (icon) icon.style.fontVariationSettings = "'FILL' 0";
+      }
+    });
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-white/95 backdrop-blur-xl border-t border-[#EDE9FE] shadow-[0_-4px_20px_rgba(124,92,252,0.05)]" data-active-classes="text-[#7C5CFC] font-bold"><div class="h-16 px-space-md flex items-center justify-around"><a class="min-w-[48px] min-h-[48px] px-space-xs flex flex-col items-center justify-center gap-0.5 text-[#797587] hover:text-[#181445] transition-colors" data-path="today" href="#"><span class="material-symbols-outlined text-[24px]">wb_sunny</span><span class="text-[11px] font-extrabold">Today</span></a><a class="min-w-[48px] min-h-[48px] px-space-xs flex flex-col items-center justify-center gap-0.5 text-[#797587] hover:text-[#181445] transition-colors" data-path="plan" href="#"><span class="material-symbols-outlined text-[24px]">date_range</span><span class="text-[11px] font-semibold">Plan</span></a><a class="min-w-[48px] min-h-[48px] px-space-xs flex flex-col items-center justify-center gap-0.5 text-[#797587] hover:text-[#181445] transition-colors" data-path="insights" href="#"><span class="material-symbols-outlined text-[24px]">insights</span><span class="text-[11px] font-semibold">Insights</span></a><a class="min-w-[48px] min-h-[48px] px-space-xs flex flex-col items-center justify-center gap-0.5 text-[#797587] hover:text-[#181445] transition-colors" data-path="me" href="#"><span class="material-symbols-outlined text-[24px]">person</span><span class="text-[11px] font-semibold">Me</span></a></div></nav></body></html>

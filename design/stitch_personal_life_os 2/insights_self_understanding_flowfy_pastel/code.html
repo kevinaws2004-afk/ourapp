@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "primary": "#FF5D9E",
+          "candy-pink": "#FF5D9E",
+          "candy-teal": "#3DC4BA",
+          "candy-mint": "#DDF7EA",
+          "candy-lavender": "#EDE7F6",
+          "candy-blue": "#E3F2FD",
+          "candy-blush": "#FFF0F4",
+          "candy-peach": "#FFE7DF",
+          "candy-card-pink": "#FFF5F8",
+          "charcoal-dark": "#1F2432",
+          "text-secondary": "#6A6F82",
+          "surface-white": "#FFFFFF",
+          "border-candy": "rgba(255, 93, 158, 0.12)"
+        },
+        "borderRadius": {
+          "DEFAULT": "1.25rem",
+          "lg": "1.75rem",
+          "xl": "2.25rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-xs": "0.25rem",
+          "margin-mobile": "1rem",
+          "gutter": "1rem",
+          "margin": "1.25rem",
+          "space-xl": "2rem",
+          "space-sm": "0.5rem",
+          "space-md": "1rem",
+          "space-lg": "1.5rem"
+        },
+        "fontFamily": {
+          "headline-xl": ["Plus Jakarta Sans"],
+          "headline-lg": ["Plus Jakarta Sans"],
+          "headline-lg-mobile": ["Plus Jakarta Sans"],
+          "headline-md": ["Plus Jakarta Sans"],
+          "headline-sm": ["Plus Jakarta Sans"],
+          "body-lg": ["Plus Jakarta Sans"],
+          "body-md": ["Plus Jakarta Sans"],
+          "body-strong": ["Plus Jakarta Sans"],
+          "label-lg": ["Plus Jakarta Sans"],
+          "label-md": ["Plus Jakarta Sans"],
+          "label-caps": ["Plus Jakarta Sans"]
+        },
+        "fontSize": {
+          "headline-xl": ["36px", { lineHeight: "44px", fontWeight: "800" }],
+          "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "700" }],
+          "headline-md": ["20px", { lineHeight: "28px", fontWeight: "700" }],
+          "headline-sm": ["17px", { lineHeight: "24px", fontWeight: "700" }],
+          "body-strong": ["14px", { lineHeight: "20px", fontWeight: "700" }],
+          "body-lg": ["16px", { lineHeight: "24px", fontWeight: "500" }],
+          "body-md": ["14px", { lineHeight: "20px", fontWeight: "500" }],
+          "label-lg": ["14px", { lineHeight: "18px", fontWeight: "700" }],
+          "label-md": ["12px", { lineHeight: "16px", fontWeight: "600" }],
+          "label-caps": ["11px", { lineHeight: "14px", letterSpacing: "0.06em", fontWeight: "700" }]
+        }
+      }
+    }
+  }
+</script><style>@layer base{body{margin:0;padding:0;background-color:#FDF2F5;color:#1F2432;overscroll-behavior-y:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}*{-ms-overflow-style:none;scrollbar-width:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head><body class="bg-[#FDF2F5] font-body-md text-[#1F2432] min-h-screen flex flex-col antialiased selection:bg-[#FFE0EB] selection:text-[#FF5D9E]"><header class="fixed top-0 w-full z-50 pt-safe bg-[#FDF2F5]/90 backdrop-blur-xl border-b border-[#FF5D9E]/10"><div class="h-16 px-margin-mobile flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-full bg-gradient-to-tr from-[#FF5D9E] to-[#3DC4BA] p-0.5 shadow-sm flex items-center justify-center"><div class="w-full h-full bg-white rounded-full flex items-center justify-center"><span class="material-symbols-outlined text-[#FF5D9E] text-[18px]">bubble_chart</span></div></div><div class="flex flex-col"><span class="font-label-caps text-[10px] uppercase tracking-wider text-[#FF5D9E]">LifeOS</span><span class="font-body-strong text-body-strong text-[#1F2432] leading-tight">Insights</span></div></div><div class="flex items-center gap-space-sm"><div class="relative flex items-center justify-center"><a class="relative flex items-center justify-center p-0.5 rounded-full hover:opacity-90 transition-opacity ring-2 ring-[#FF5D9E]/30" data-path="me" href="#"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQD7Wljh84UkxNqhlBY5yd0Hv1SETFoLXcp0nzsD3Xw5ak03uM6e6_NIIgkgLg8bBcZ5efwVRVpLY_kRDVkrpaRKOKEjBn9S2N3L-JUvi2jWVupUVV2HwTz1UYzuOfyEmF49z9nMR7ZRkHRrfFM8Jgp9YGLMbdY3-xAHf7MPoS10duHAeAcFMdW0t2ojUd2hwyVVZlc_jrvH1zLGAxXBoz9WdxYr609FGYpeXROl0f"/><span class="absolute top-0 right-0 w-2.5 h-2.5 bg-[#FF5D9E] rounded-full ring-2 ring-white"></span></a></div></div></div></header><main class="flex-1 w-full bg-[#FDF2F5] pt-16 pb-28"><div class="flex flex-col w-full px-margin-mobile pb-space-xl gap-space-md">
+<div class="flex items-center justify-between pt-space-xs">
+<div class="flex items-center gap-space-xs bg-white/90 border border-[#FF5D9E]/20 px-3 py-1.5 rounded-full shadow-sm">
+<span class="w-2 h-2 rounded-full bg-[#FF5D9E] animate-pulse"></span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-[#1F2432]">Self-Understanding Engine</span>
+</div>
+<div class="flex items-center gap-1.5 bg-white border border-[#FF5D9E]/15 px-3 py-1.5 rounded-full text-[#6A6F82] font-label-md text-label-md shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-[#FF5D9E]">calendar_today</span>
+<span class="font-bold text-[#1F2432]">Last 30 Days</span>
+</div>
+</div>
+<!-- Consistency Loop Hero Card: Flowfy crisp candy card with bubblegum pink highlights -->
+<section class="relative overflow-hidden rounded-lg bg-white p-space-md border border-[#FF5D9E]/15 shadow-[0_8px_25px_-6px_rgba(255,93,158,0.12)] transition-all">
+<div class="absolute -right-8 -top-8 w-44 h-44 rounded-full bg-[#FFDCE6]/50 blur-2xl pointer-events-none"></div>
+<div class="absolute -left-8 -bottom-8 w-40 h-40 rounded-full bg-[#DDF7EA]/60 blur-2xl pointer-events-none"></div>
+<div class="flex items-start justify-between gap-space-sm mb-space-sm relative z-10">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFF0F4] border border-[#FF5D9E]/20 text-[#FF5D9E] shadow-xs">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider font-bold">The Consistency Loop</span>
+</div>
+<button aria-label="Insight details" class="w-8 h-8 rounded-full bg-[#FFF0F4] border border-[#FF5D9E]/20 flex items-center justify-center text-[#FF5D9E] hover:bg-[#FFE0EB] transition-all shadow-xs">
+<span class="material-symbols-outlined text-[18px]">share</span>
+</button>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-[#1F2432] tracking-tight mb-space-xs relative z-10 leading-snug">
+      You complete <span class="text-[#FF5D9E] font-extrabold underline decoration-[#FF5D9E]/30 decoration-2 underline-offset-4">85%</span> of workouts when scheduled before 7:00 PM.
+    </h2>
+<p class="font-body-md text-body-md text-[#6A6F82] leading-relaxed mb-space-md relative z-10 font-normal">
+      Evening workouts planned after 8:30 PM drop to <strong class="font-body-strong text-body-strong text-[#1F2432] font-bold">42% completion</strong> due to accumulated cognitive fatigue from deep work.
+    </p>
+<!-- Flowfy Pastel Bubble / Bar Indicators -->
+<div class="bg-[#FFF5F8] border border-[#FF5D9E]/15 rounded-DEFAULT p-space-sm relative z-10 shadow-xs">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-caps text-label-caps uppercase text-[#6A6F82] tracking-wide">Completion Rate by Start Slot</span>
+<span class="font-label-md text-label-md text-[#FF5D9E] font-bold bg-white px-2.5 py-0.5 rounded-full border border-[#FF5D9E]/20 shadow-xs">Peak: 6:00 – 7:00 PM</span>
+</div>
+<div class="h-28 w-full flex items-end justify-between gap-2 pt-2 px-1">
+<!-- 7 AM Mint -->
+<div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end group">
+<span class="font-label-md text-label-md text-[#6A6F82] font-semibold">78%</span>
+<div class="w-full bg-[#DDF7EA] border border-[#BCEFD5] rounded-full h-[62%] transition-all"></div>
+<span class="font-label-caps text-label-caps text-[#6A6F82]">7 AM</span>
+</div>
+<!-- 12 PM Lavender -->
+<div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end group">
+<span class="font-label-md text-label-md text-[#6A6F82] font-semibold">74%</span>
+<div class="w-full bg-[#EDE7F6] border border-[#D7C9EB] rounded-full h-[58%] transition-all"></div>
+<span class="font-label-caps text-label-caps text-[#6A6F82]">12 PM</span>
+</div>
+<!-- 6 PM Bubblegum Pink Active -->
+<div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end group">
+<span class="font-label-md text-label-md text-[#FF5D9E] font-extrabold">85%</span>
+<div class="w-full bg-gradient-to-t from-[#FF5D9E] to-[#FF84BA] rounded-full h-[88%] shadow-[0_6px_16px_rgba(255,93,158,0.35)] transition-all"></div>
+<span class="font-label-caps text-label-caps font-bold text-[#FF5D9E]">6 PM</span>
+</div>
+<!-- 7:30 PM Baby Blue -->
+<div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end group">
+<span class="font-label-md text-label-md text-[#6A6F82] font-semibold">61%</span>
+<div class="w-full bg-[#E3F2FD] border border-[#C5E1F9] rounded-full h-[48%] transition-all"></div>
+<span class="font-label-caps text-label-caps text-[#6A6F82]">7:30 PM</span>
+</div>
+<!-- 8:30 PM+ Soft Pastel Pink -->
+<div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end group">
+<span class="font-label-md text-label-md text-[#FF5D9E] font-bold">42%</span>
+<div class="w-full bg-[#FFDCE6] border border-[#FF5D9E]/30 rounded-full h-[32%] transition-all"></div>
+<span class="font-label-caps text-label-caps text-[#FF5D9E] font-bold">8:30 PM+</span>
+</div>
+</div>
+</div>
+<div class="mt-space-sm pt-space-xs flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="flex h-2.5 w-2.5 rounded-full bg-[#FF5D9E] ring-4 ring-[#FF5D9E]/20"></span>
+<span class="font-label-md text-label-md text-[#1F2432] font-semibold">Auto-adjust calendar buffer?</span>
+</div>
+<button class="px-4 py-2 rounded-full bg-[#1F2432] text-white font-body-strong text-label-md shadow-md hover:bg-black active:scale-95 transition-all">
+        Lock Early Slots
+      </button>
+</div>
+</section>
+<!-- Intent vs Reality section: Flowfy dual-tone pastel pill progress bars -->
+<section class="rounded-lg bg-white p-space-md border border-[#FF5D9E]/15 shadow-[0_4px_24px_-4px_rgba(31,36,50,0.04)]">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[#FF5D9E] text-[22px]">donut_large</span>
+<h3 class="font-headline-sm text-headline-sm text-[#1F2432]">Intent vs. Reality</h3>
+</div>
+<span class="font-label-caps text-label-caps uppercase text-[#6A6F82] bg-[#FFF0F4] px-2.5 py-1 rounded-full border border-[#FF5D9E]/15 font-semibold">October Horizon</span>
+</div>
+<div class="space-y-space-md">
+<!-- Fitness: Flowfy Mint Green Dual-tone Bar -->
+<div class="p-space-sm rounded-DEFAULT bg-[#F3FAF6] border border-[#DDF7EA] transition-colors">
+<div class="flex items-start justify-between mb-2">
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-body-strong text-body-strong text-[#1F2432]">Physical Training</span>
+<span class="font-label-caps text-label-caps px-2 py-0.5 rounded-full bg-white text-[#229D6E] font-bold shadow-xs border border-[#DDF7EA]">Fitness</span>
+</div>
+<p class="font-body-md text-body-md text-[#6A6F82] mt-0.5">Planned: 18 sessions ➔ Logged: 15</p>
+</div>
+<div class="text-right">
+<span class="font-headline-lg-mobile text-[22px] leading-tight text-[#1F2432] font-extrabold">83%</span>
+<span class="block font-label-caps text-label-caps text-[#6A6F82]">Fidelity</span>
+</div>
+</div>
+<div class="w-full bg-[#DDF7EA] h-3 rounded-full overflow-hidden flex shadow-inner">
+<div class="bg-[#2EBD85] h-full rounded-full transition-all duration-700 shadow-sm" style="width: 83.3%;"></div>
+</div>
+</div>
+<!-- Deep Cognitive: Flowfy Bright Blue / Lavender Dual-tone Bar -->
+<div class="p-space-sm rounded-DEFAULT bg-[#F3F7FD] border border-[#E3F2FD] transition-colors">
+<div class="flex items-start justify-between mb-2">
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-body-strong text-body-strong text-[#1F2432]">Deep Cognitive Focus</span>
+<span class="font-label-caps text-label-caps px-2 py-0.5 rounded-full bg-white text-[#3B82F6] font-bold shadow-xs border border-[#E3F2FD]">Sprint</span>
+</div>
+<p class="font-body-md text-body-md text-[#6A6F82] mt-0.5">Planned: 65h ➔ Completed: 71h</p>
+</div>
+<div class="text-right">
+<span class="font-headline-lg-mobile text-[22px] leading-tight text-[#3B82F6] font-extrabold">109%</span>
+<span class="block font-label-caps text-label-caps text-[#3B82F6] font-bold">+6h Surplus</span>
+</div>
+</div>
+<div class="w-full bg-[#E3F2FD] h-3 rounded-full overflow-hidden relative shadow-inner">
+<div class="bg-[#3B82F6] h-full rounded-full transition-all duration-700 shadow-sm" style="width: 100%;"></div>
+</div>
+</div>
+<!-- Living Budget: Flowfy Warm Peach / Pink Bar -->
+<div class="p-space-sm rounded-DEFAULT bg-[#FFF7F4] border border-[#FFE7DF] transition-colors">
+<div class="flex items-start justify-between mb-2">
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-body-strong text-body-strong text-[#1F2432]">Living Budget Cap</span>
+<span class="font-label-caps text-label-caps px-2 py-0.5 rounded-full bg-white text-[#FF7043] font-bold shadow-xs border border-[#FFE7DF]">Stewardship</span>
+</div>
+<p class="font-body-md text-body-md text-[#6A6F82] mt-0.5">Budget: ₹35,000 ➔ Spent: ₹29,400</p>
+</div>
+<div class="text-right">
+<span class="font-headline-lg-mobile text-[22px] leading-tight text-[#1F2432] font-extrabold">₹5,600</span>
+<span class="block font-label-caps text-label-caps text-[#FF7043] font-bold">Surplus Saved</span>
+</div>
+</div>
+<div class="w-full bg-[#FFE7DF] h-3 rounded-full overflow-hidden shadow-inner">
+<div class="bg-[#FF7043] h-full rounded-full transition-all duration-700 shadow-sm" style="width: 84%;"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Progression Deep Dive Section: Flowfy candy turquoise/teal line (#3DC4BA) and soft pastel gradient -->
+<section class="rounded-lg bg-white p-space-md border border-[#FF5D9E]/15 shadow-[0_4px_24px_-4px_rgba(31,36,50,0.04)]">
+<div class="flex items-start justify-between gap-2 mb-space-sm">
+<div>
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#E8F8F7] text-[#009688] border border-[#3DC4BA]/30 mb-1">
+<span class="material-symbols-outlined text-[15px]">fitness_center</span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider font-bold">Progression Deep Dive</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-[#1F2432]">Barbell Flat Bench Press</h3>
+</div>
+<div class="text-right">
+<div class="flex items-baseline justify-end gap-1">
+<span class="font-headline-xl text-[32px] text-[#3DC4BA] leading-none font-extrabold">72.5</span>
+<span class="font-label-md text-label-md text-[#6A6F82] font-bold">kg e1RM</span>
+</div>
+<span class="block font-label-caps text-label-caps text-[#009688] font-bold mt-0.5">+20.8% (8 Wks)</span>
+</div>
+</div>
+<div class="relative w-full h-44 bg-gradient-to-b from-[#E8F8F7]/70 to-[#F4FBFA] rounded-DEFAULT p-3 mb-space-sm overflow-hidden flex flex-col justify-between border border-[#3DC4BA]/20">
+<div class="flex justify-between items-center text-[#6A6F82] font-label-caps text-label-caps">
+<span class="bg-white px-2.5 py-0.5 rounded-full border border-[#3DC4BA]/20 font-semibold shadow-xs">60.0 kg baseline</span>
+<span class="px-2.5 py-0.5 rounded-full bg-[#3DC4BA] text-white font-bold shadow-xs">Current: 72.5 kg</span>
+</div>
+<div class="relative w-full h-24 my-auto">
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 280 80">
+<defs>
+<lineargradient id="curveGlowTeal" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#3DC4BA" stop-opacity="0.35"></stop>
+<stop offset="70%" stop-color="#3DC4BA" stop-opacity="0.08"></stop>
+<stop offset="100%" stop-color="#3DC4BA" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<path d="M 0,65 Q 40,62 80,50 T 160,34 T 240,16 T 280,8 L 280,80 L 0,80 Z" fill="url(#curveGlowTeal)"></path>
+<path d="M 0,65 Q 40,62 80,50 T 160,34 T 240,16 T 280,8" fill="none" stroke="#3DC4BA" stroke-linecap="round" stroke-width="3.5"></path>
+<circle cx="0" cy="65" fill="#ffffff" r="4.5" stroke="#3DC4BA" stroke-width="2.5"></circle>
+<circle cx="80" cy="50" fill="#ffffff" r="4" stroke="#3DC4BA" stroke-width="2.5"></circle>
+<circle cx="160" cy="34" fill="#ffffff" r="4" stroke="#3DC4BA" stroke-width="2.5"></circle>
+<circle cx="240" cy="16" fill="#ffffff" r="4" stroke="#3DC4BA" stroke-width="2.5"></circle>
+<circle class="animate-pulse" cx="280" cy="8" fill="#3DC4BA" r="5.5" stroke="#ffffff" stroke-width="2.5"></circle>
+</svg>
+</div>
+<div class="flex justify-between text-[#6A6F82] font-label-caps text-label-caps pt-1 border-t border-[#3DC4BA]/15">
+<span>W1 (60kg)</span>
+<span>W3</span>
+<span>W5</span>
+<span>W7</span>
+<span class="text-[#009688] font-bold">W8 (72.5kg)</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-space-xs">
+<div class="p-2.5 rounded-DEFAULT bg-[#F3FAF6] border border-[#DDF7EA] flex items-center gap-2.5">
+<span class="w-8 h-8 rounded-full bg-white border border-[#DDF7EA] flex items-center justify-center text-[#2EBD85] shrink-0 shadow-xs">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</span>
+<div>
+<span class="block font-label-caps text-label-caps text-[#6A6F82]">Density</span>
+<span class="font-body-strong text-body-strong text-[#1F2432] font-bold">14 Sessions / 4 Wks</span>
+</div>
+</div>
+<div class="p-2.5 rounded-DEFAULT bg-[#E8F8F7] border border-[#3DC4BA]/25 flex items-center gap-2.5">
+<span class="w-8 h-8 rounded-full bg-white border border-[#3DC4BA]/30 flex items-center justify-center text-[#3DC4BA] shrink-0 shadow-xs">
+<span class="material-symbols-outlined text-[18px]">trending_up</span>
+</span>
+<div>
+<span class="block font-label-caps text-label-caps text-[#6A6F82]">Overload Rate</span>
+<span class="font-body-strong text-body-strong text-[#1F2432] font-bold">+1.5 kg / 10 days</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Cross-Dimension Discovery: Pastel tinted card -->
+<section class="rounded-lg bg-gradient-to-br from-[#EDE7F6]/60 via-white to-[#F4F1FA] p-space-md border border-[#EDE7F6] shadow-[0_4px_24px_-4px_rgba(108,99,255,0.06)]">
+<div class="flex items-center gap-space-xs mb-space-xs">
+<span class="material-symbols-outlined text-[20px] text-[#7C4DFF]">hub</span>
+<h3 class="font-headline-sm text-headline-sm text-[#1F2432]">Cross-Dimension Discovery</h3>
+</div>
+<div class="flex items-center gap-2 mb-space-sm flex-wrap">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-[#1F2432] font-label-caps text-label-caps border border-[#E3F2FD] shadow-xs">
+<span class="w-2 h-2 rounded-full bg-[#3B82F6]"></span>
+        Sleep Rhythm
+      </span>
+<span class="material-symbols-outlined text-[#6A6F82] text-[16px]">add</span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-[#7C4DFF] font-label-caps text-label-caps border border-[#EDE7F6] shadow-xs font-bold">
+<span class="w-2 h-2 rounded-full bg-[#7C4DFF]"></span>
+        Deep Work Quality
+      </span>
+</div>
+<div class="p-space-sm rounded-DEFAULT bg-white border border-[#EDE7F6] mb-space-sm shadow-xs">
+<p class="font-body-lg text-body-lg text-[#1F2432] leading-snug">
+        On nights with <strong class="font-body-strong text-body-strong font-bold text-[#1F2432]">7.5h+ sleep</strong>, your uninterrupted deep work spans expand by <span class="text-[#7C4DFF] font-body-strong font-bold bg-[#EDE7F6] px-1.5 py-0.5 rounded">+42 minutes</span> without a single afternoon slump logged.
+      </p>
+</div>
+<div class="flex items-center justify-between text-[#6A6F82] font-label-md text-label-md pt-1">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-[#7C4DFF]">psychology</span>
+<span class="font-medium text-[#6A6F82]">Confidence: <span class="text-[#1F2432] font-bold">High (94% r-factor)</span></span>
+</div>
+<a class="text-[#FF5D9E] font-body-strong font-bold inline-flex items-center gap-0.5 hover:underline" href="#">
+        Explore Matrix
+        <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</section>
+<!-- Actionable Takeaway: Soft Flowfy candy card (warm blush pink #FFE6EF) with Flowfy candy teal CTA button -->
+<section class="rounded-lg bg-[#FFE6EF] text-[#1F2432] p-space-md shadow-sm flex items-center justify-between border border-[#FF5D9E]/20">
+<div>
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-[#FF5D9E] font-bold">Actionable Takeaway</span>
+<h4 class="font-headline-sm text-headline-sm text-[#1F2432] mt-0.5 font-bold">Shift workout alarm to 5:45 PM</h4>
+<p class="font-body-md text-body-md text-[#6A6F82] mt-1">Protects your 85% completion window tomorrow.</p>
+</div>
+<button class="h-11 px-5 rounded-full bg-[#3DC4BA] hover:bg-[#34B3A9] text-white font-body-strong text-body-strong shrink-0 active:scale-95 transition-all shadow-[0_4px_14px_rgba(61,196,186,0.4)] ml-3" onclick="this.textContent = 'Scheduled ✓'; this.disabled = true; this.classList.remove('bg-[#3DC4BA]'); this.classList.add('bg-[#2EBD85]');">
+      Apply
+    </button>
+</section>
+</div>
+<script>
+  // Micro-interactions and spring effect triggers for touch targets
+  document.querySelectorAll('button, a').forEach(el => {
+    el.addEventListener('touchstart', () => {
+      el.style.transform = 'scale(0.98)';
+    });
+    el.addEventListener('touchend', () => {
+      el.style.transform = '';
+    });
+  });
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-[#FDF2F5]/90 backdrop-blur-xl border-t border-[#FF5D9E]/10 shadow-[0_-4px_20px_rgba(255,93,158,0.06)]" data-active-classes="text-[#FF5D9E] font-body-strong"><div class="h-16 px-space-md flex items-center justify-around"><a class="min-w-[48px] min-h-[48px] px-space-xs flex flex-col items-center justify-center gap-0.5 text-[#6A6F82] hover:text-[#1F2432] transition-colors" data-path="today" href="#"><span class="material-symbols-outlined text-[24px]">wb_sunny</span><span class="font-label-md text-label-md">Today</span></a><a class="min-w-[48px] min-h-[48px] px-space-xs flex flex-col items-center justify-center gap-0.5 text-[#6A6F82] hover:text-[#1F2432] transition-colors" data-path="plan" href="#"><span class="material-symbols-outlined text-[24px]">date_range</span><span class="font-label-md text-label-md">Plan</span></a><a aria-current="page" class="min-w-[48px] min-h-[48px] px-space-xs flex flex-col items-center justify-center gap-0.5 transition-colors text-[#FF5D9E] font-body-strong" data-path="insights" href="#"><span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">insights</span><span class="font-label-md text-label-md font-bold">Insights</span></a><a class="min-w-[48px] min-h-[48px] px-space-xs flex flex-col items-center justify-center gap-0.5 text-[#6A6F82] hover:text-[#1F2432] transition-colors" data-path="me" href="#"><span class="material-symbols-outlined text-[24px]">person</span><span class="font-label-md text-label-md">Me</span></a></div></nav></body></html>

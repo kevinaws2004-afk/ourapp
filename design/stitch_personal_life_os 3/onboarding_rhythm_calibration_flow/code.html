@@ -1,0 +1,338 @@
+<!DOCTYPE html><html class="h-full" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_stack" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "primary": "#48C9B0",
+          "primary-hover": "#3DB59D",
+          "candy-pink": "#FF5D9E",
+          "candy-bg": "#FFF0F4",
+          "card-border": "#FFE2EC",
+          "accent-mint": "#DDF7EA",
+          "accent-mint-text": "#1B8756",
+          "accent-yellow": "#FEF9C3",
+          "accent-peach": "#FFE7D4",
+          "accent-bubblegum": "#FFD6E7",
+          "accent-teal": "#48C9B0",
+          "text-main": "#1F2432",
+          "text-sub": "#767F94",
+          "text-muted": "#9BA3B5",
+          "border-subtle": "#F6E3E9"
+        },
+        "borderRadius": {
+          "DEFAULT": "1rem",
+          "2xl": "1.25rem",
+          "3xl": "1.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "margin-mobile": "1rem",
+          "space-xs": "0.25rem",
+          "space-sm": "0.5rem",
+          "space-md": "1rem",
+          "space-lg": "1.5rem"
+        },
+        "fontFamily": {
+          "body": ["Plus Jakarta Sans", "sans-serif"],
+          "headline": ["Plus Jakarta Sans", "sans-serif"]
+        }
+      }
+    }
+  }
+</script><style>
+  @layer base {
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #FFF0F4;
+      color: #1F2432;
+      overscroll-behavior-y: none;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+    .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+    main > :first-child { margin-top: 0 !important; }
+    main > :last-child { margin-bottom: 0 !important; }
+  }
+  ::-webkit-scrollbar { display: none; }
+  * { -ms-overflow-style: none; scrollbar-width: none; }
+  body {
+    min-height: max(884px, 100dvh);
+  }
+</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-[#F8F9FE] font-body text-[#1E1B4B] min-h-screen flex flex-col antialiased selection:bg-[#EDE9FE] selection:text-[#7C5CFC]"><header class="fixed top-0 w-full z-50 pt-safe bg-[#F8F9FE]/90 backdrop-blur-xl border-b border-[#EDE9FE]"><div class="h-16 px-margin-mobile flex items-center justify-between gap-2"><div class="flex items-center gap-1.5"><button class="w-10 h-10 flex items-center justify-center text-[#1F2432] hover:bg-white rounded-full transition-colors active:scale-95" onclick="history.back()"><span class="material-symbols-outlined text-[22px]">arrow_back</span></button><img alt="LifeOS Emblem" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvTajDRgTzlaGKiyjsm-Z4rbvBpXcMoVwX7kd60hzKfVRIGTyc6IoZcSWCfdPVHmNhwxvJqkzIM23GqjFBOSWTItt80JqtQiACKYaiM8XVN2pVCqUubRc5MtRb0hlrDXMlQAgdxNmapjLjjSBNpLCuaXQNMEDtoLfzZHKQi-PihhcEmZcpkNsILfPTpZS8DChaKKSHiAR2QwtwnmtiSMxau5OrMT38RFWCpK0KGaHJ"><h1 class="text-[17px] text-[#1F2432] truncate ml-1 font-bold tracking-tight">Activity Session</h1></div><div class="flex items-center"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-[#FFD6E7]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQD7Wljh84UkxNqhlBY5yd0Hv1SETFoLXcp0nzsD3Xw5ak03uM6e6_NIIgkgLg8bBcZ5efwVRVpLY_kRDVkrpaRKOKEjBn9S2N3L-JUvi2jWVupUVV2HwTz1UYzuOfyEmF49z9nMR7ZRkHRrfFM8Jgp9YGLMbdY3-xAHf7MPoS10duHAeAcFMdW0t2ojUd2hwyVVZlc_jrvH1zLGAxXBoz9WdxYr609FGYpeXROl0f"></div></div></header><main class="flex-1 w-full bg-[#F8F9FE] pt-16 pb-safe"><div class="flex flex-col w-full">
+<!-- Progress Header & Narrative -->
+<section class="px-margin pt-space-md pb-space-sm flex flex-col gap-space-sm">
+<!-- Step Badge & Mini Tracker -->
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-primary font-label-md text-label-md">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">tune</span>
+        Rhythm Diagnostic • 50% Complete
+      </span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">Step 2 of 4</span>
+</div>
+<!-- Dual Lavender & Mint Track -->
+<div class="w-full h-2 rounded-full bg-surface-container-high overflow-hidden flex shadow-sm">
+<div class="w-1/4 h-full bg-primary rounded-l-full"></div>
+<div class="w-1/4 h-full bg-secondary-fixed-dim rounded-r-full shadow-sm"></div>
+<div class="w-2/4 h-full bg-surface-container-high"></div>
+</div>
+<!-- Title & Narrative Lead -->
+<div class="flex flex-col gap-1 mt-space-xs">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">
+        When does your brain hit its natural peak flow?
+      </h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+        LifeOS doesn't force standard 9-to-5 schedules. We map workouts and deep focus around your biological chronotype.
+      </p>
+</div>
+</section>
+<!-- Interactive Chronotype Selector Cards -->
+<section class="px-margin py-space-sm flex flex-col gap-space-md" id="chronotype-group">
+<!-- Card 1: Selected (Early Lark) -->
+<div class="chronotype-card relative p-space-lg rounded-xl bg-surface-container-lowest shadow-md transition-all duration-200 cursor-pointer overflow-hidden ring-2 ring-primary/25" data-chronotype="lark" onclick="selectChronotype(this)">
+<!-- Ambient Glow Behind Selected -->
+<div class="absolute -right-10 -top-10 w-32 h-32 rounded-full bg-primary-fixed/40 blur-2xl pointer-events-none"></div>
+<div class="flex items-start justify-between relative z-10">
+<div class="flex items-center gap-space-sm">
+<div class="w-11 h-11 rounded-2xl bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed shadow-sm">
+<span class="material-symbols-outlined text-[24px]">wb_twilight</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Early Lark</h3>
+<span class="font-label-sm text-label-sm text-primary bg-surface-container-high px-2 py-0.5 rounded-full">Morning Dynamo</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Natural surge around daybreak</p>
+</div>
+</div>
+<!-- Selection Check Pill -->
+<div class="selection-indicator w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+</div>
+<!-- Detail Box -->
+<div class="mt-space-md pt-space-sm bg-surface-container-low p-space-sm rounded-lg flex flex-col gap-1.5 relative z-10">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-[18px] text-primary" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="font-label-md text-label-md">Peak alertness: 08:00 AM – 12:30 PM</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] text-secondary" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
+<span class="font-body-sm text-body-sm">Best workout: Late morning / 11:00 AM</span>
+</div>
+</div>
+<!-- Recommendation Micro-Tag -->
+<div class="mt-space-sm flex items-center gap-1.5 text-secondary font-label-sm text-label-sm bg-secondary-container/30 px-2.5 py-1 rounded-full w-fit">
+<span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span>Recommended for Elena based on wake time 06:30 AM</span>
+</div>
+</div>
+<!-- Card 2: Steady Bear -->
+<div class="chronotype-card relative p-space-lg rounded-xl bg-surface-container-lowest shadow-sm transition-all duration-200 cursor-pointer overflow-hidden" data-chronotype="bear" onclick="selectChronotype(this)">
+<div class="flex items-start justify-between relative z-10">
+<div class="flex items-center gap-space-sm">
+<div class="w-11 h-11 rounded-2xl bg-surface-container-high flex items-center justify-center text-primary shadow-sm">
+<span class="material-symbols-outlined text-[24px]">sunny</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Steady Bear</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full">Solar Synced</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Balanced cycle aligned with the sun</p>
+</div>
+</div>
+<div class="selection-indicator w-7 h-7 rounded-full bg-surface-container text-transparent flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm bg-surface-container-low p-space-sm rounded-lg flex flex-col gap-1.5 relative z-10">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-[18px] text-primary" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="font-label-md text-label-md">Peak alertness: 10:00 AM – 02:00 PM</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] text-secondary" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
+<span class="font-body-sm text-body-sm">Best workout: 05:30 PM – 07:00 PM</span>
+</div>
+</div>
+</div>
+<!-- Card 3: Night Owl -->
+<div class="chronotype-card relative p-space-lg rounded-xl bg-surface-container-lowest shadow-sm transition-all duration-200 cursor-pointer overflow-hidden" data-chronotype="owl" onclick="selectChronotype(this)">
+<div class="flex items-start justify-between relative z-10">
+<div class="flex items-center gap-space-sm">
+<div class="w-11 h-11 rounded-2xl bg-surface-container-high flex items-center justify-center text-primary shadow-sm">
+<span class="material-symbols-outlined text-[24px]">bedtime</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Night Owl</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full">Evening Innovator</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Deep focus unlocks after dusk</p>
+</div>
+</div>
+<div class="selection-indicator w-7 h-7 rounded-full bg-surface-container text-transparent flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm bg-surface-container-low p-space-sm rounded-lg flex flex-col gap-1.5 relative z-10">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-[18px] text-primary" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="font-label-md text-label-md">Peak alertness: 04:00 PM – 10:00 PM</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] text-secondary" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
+<span class="font-body-sm text-body-sm">Best workout: Night sessions</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Visual Chrono Map Pill Graphic -->
+<section class="px-margin py-space-sm">
+<div class="bg-surface-container-low p-space-md rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">spa</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Circadian Alignment Active</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Smart buffers will prevent cognitive burnout</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary text-[20px]">insights</span>
+</div>
+</section>
+<!-- Daily Rhythm Anchor Setup -->
+<section class="px-margin pt-space-md pb-space-sm flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Set your non-negotiable boundaries</h3>
+<span class="font-label-sm text-label-sm text-primary">Editable later</span>
+</div>
+<!-- Stepper Grid & Toggles -->
+<div class="flex flex-col gap-2.5">
+<!-- Target Deep Work Stepper -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">psychology</span>
+</div>
+<div>
+<span class="font-label-lg text-label-lg text-on-surface block">Target Deep Work</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Continuous flow blocks</span>
+</div>
+</div>
+<!-- Custom Stepper -->
+<div class="flex items-center bg-surface-container-low rounded-full p-1 gap-1">
+<button class="w-8 h-8 rounded-full bg-surface-container-lowest text-on-surface flex items-center justify-center shadow-sm active:scale-90 transition-transform" onclick="updateHours(-1)" type="button">
+<span class="material-symbols-outlined text-[16px]">remove</span>
+</button>
+<span class="font-label-md text-label-md text-on-surface px-2.5 min-w-[5.5rem] text-center" id="hours-display">
+            4 Hours / Day
+          </span>
+<button class="w-8 h-8 rounded-full bg-surface-container-lowest text-on-surface flex items-center justify-center shadow-sm active:scale-90 transition-transform" onclick="updateHours(1)" type="button">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</button>
+</div>
+</div>
+<!-- Target Movement -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed">
+<span class="material-symbols-outlined text-[20px]">directions_run</span>
+</div>
+<div>
+<span class="font-label-lg text-label-lg text-on-surface block">Target Movement</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Cardio, strength or stretch</span>
+</div>
+</div>
+<div class="flex items-center bg-surface-container-low rounded-full px-3 py-1.5">
+<span class="font-label-md text-label-md text-on-surface">1 Session / Day</span>
+</div>
+</div>
+<!-- Wind-down Bedtime Alert -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">nights_stay</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-label-lg text-label-lg text-on-surface">Wind-down bedtime</span>
+<span class="font-label-sm text-label-sm text-on-primary bg-primary px-2 py-0.5 rounded-full">10:30 PM</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Gentle screen dimmer &amp; audio chime</span>
+</div>
+</div>
+<!-- Pill Toggle Switch -->
+<button class="w-12 h-7 rounded-full bg-secondary p-1 flex items-center transition-colors relative cursor-pointer" id="toggle-winddown" onclick="toggleSwitch(this)" type="button">
+<div class="w-5 h-5 rounded-full bg-surface-container-lowest shadow-sm transform translate-x-5 transition-transform"></div>
+</button>
+</div>
+</div>
+</section>
+<!-- Bottom Action Section -->
+<section class="px-margin pt-space-lg pb-space-xl flex flex-col items-center gap-space-sm">
+<button class="w-full py-4 px-6 rounded-full bg-primary text-on-primary font-label-lg text-label-lg shadow-lg shadow-primary/25 hover:bg-primary/95 active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="button">
+<span>Continue to Vitality Baseline</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+<button class="py-2 px-4 rounded-full text-on-surface-variant font-label-md text-label-md hover:text-on-surface active:opacity-75 transition-opacity" type="button">
+      Skip calibration for now
+    </button>
+</section>
+</div>
+<script>
+  let currentHours = 4;
+
+  function updateHours(delta) {
+    currentHours = Math.max(1, Math.min(8, currentHours + delta));
+    const display = document.getElementById('hours-display');
+    if (display) {
+      display.textContent = `${currentHours} Hour${currentHours > 1 ? 's' : ''} / Day`;
+    }
+  }
+
+  function selectChronotype(targetCard) {
+    const cards = document.querySelectorAll('.chronotype-card');
+    cards.forEach(card => {
+      card.classList.remove('ring-2', 'ring-primary/25', 'shadow-md');
+      card.classList.add('shadow-sm');
+      const indicator = card.querySelector('.selection-indicator');
+      if (indicator) {
+        indicator.className = 'selection-indicator w-7 h-7 rounded-full bg-surface-container text-transparent flex items-center justify-center';
+      }
+    });
+
+    targetCard.classList.add('ring-2', 'ring-primary/25', 'shadow-md');
+    targetCard.classList.remove('shadow-sm');
+    const activeIndicator = targetCard.querySelector('.selection-indicator');
+    if (activeIndicator) {
+      activeIndicator.className = 'selection-indicator w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-md';
+    }
+  }
+
+  function toggleSwitch(btn) {
+    const circle = btn.querySelector('div');
+    const isActive = btn.classList.contains('bg-secondary');
+    
+    if (isActive) {
+      btn.classList.remove('bg-secondary');
+      btn.classList.add('bg-outline-variant');
+      circle.classList.remove('translate-x-5');
+      circle.classList.add('translate-x-0');
+    } else {
+      btn.classList.remove('bg-outline-variant');
+      btn.classList.add('bg-secondary');
+      circle.classList.remove('translate-x-0');
+      circle.classList.add('translate-x-5');
+    }
+  }
+</script></main></body></html>

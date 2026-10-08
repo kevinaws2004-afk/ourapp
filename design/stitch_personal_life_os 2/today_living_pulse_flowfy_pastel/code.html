@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "primary": "#FF5D9E",
+          "primary-hover": "#F0488D",
+          "flowfy-pink": "#FF5D9E",
+          "flowfy-pink-bg": "#FDE2EB",
+          "flowfy-teal": "#3DC4BA",
+          "flowfy-teal-dark": "#2EAAA1",
+          "flowfy-card": "#FFFFFF",
+          "border-flowfy": "#FFE1EB",
+          "pastel-mint": "#E2F7EE",
+          "mint-text": "#1E9E68",
+          "pastel-blush": "#FDE2EB",
+          "blush-text": "#D93278",
+          "pastel-sky": "#E3F2FD",
+          "sky-text": "#0284C7",
+          "pastel-lavender": "#F3E8FF",
+          "lavender-text": "#8B5CF6",
+          "pastel-peach": "#FFE8D6",
+          "peach-text": "#E06D37",
+          "pastel-butter": "#FEF9C3",
+          "butter-text": "#CA8A04",
+          "text-primary": "#222533",
+          "text-secondary": "#6A6F84",
+          "text-muted": "#9EA4BC"
+        },
+        "borderRadius": {
+          "DEFAULT": "1rem",
+          "xl": "1.25rem",
+          "2xl": "1.75rem",
+          "3xl": "2.25rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "margin-mobile": "1rem",
+          "space-xs": "0.25rem",
+          "space-sm": "0.5rem",
+          "space-md": "1rem",
+          "space-lg": "1.5rem",
+          "space-xl": "2rem"
+        },
+        "fontFamily": {
+          "body": ["Plus Jakarta Sans", "sans-serif"],
+          "headline": ["Plus Jakarta Sans", "sans-serif"]
+        }
+      },
+    },
+  }
+</script><style>@layer base{body{margin:0;padding:0;background-color:#FDF2F5;color:#222533;overscroll-behavior-y:none;font-family:'Plus Jakarta Sans',sans-serif;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}*{-ms-overflow-style:none;scrollbar-width:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head><body class="bg-[#FDF2F5] font-body text-[#222533] min-h-screen flex flex-col antialiased selection:bg-[#FDE2EB] selection:text-[#FF5D9E]"><header class="fixed top-0 w-full z-50 pt-safe bg-[#FDF2F5]/90 backdrop-blur-xl border-b border-[#FFE1EB]/80"><div class="h-16 px-margin-mobile flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="LifeOS Emblem" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvTajDRgTzlaGKiyjsm-Z4rbvBpXcMoVwX7kd60hzKfVRIGTyc6IoZcSWCfdPVHmNhwxvJqkzIM23GqjFBOSWTItt80JqtQiACKYaiM8XVN2pVCqUubRc5MtRb0hlrDXMlQAgdxNmapjLjjSBNpLCuaXQNMEDtoLfzZHKQi-PihhcEmZcpkNsILfPTpZS8DChaKKSHiAR2QwtwnmtiSMxau5OrMT38RFWCpK0KGaHJ"/><div class="flex flex-col"><span class="text-[11px] font-bold uppercase tracking-wider text-[#9EA4BC]">LifeOS</span><span class="text-[15px] font-extrabold text-[#222533] leading-tight">Today</span></div></div><div class="flex items-center gap-space-sm"><div class="relative flex items-center justify-center"><a class="relative flex items-center justify-center p-0.5 rounded-full hover:opacity-90 transition-opacity" data-path="me" href="#"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-[#FF5D9E]/30" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQD7Wljh84UkxNqhlBY5yd0Hv1SETFoLXcp0nzsD3Xw5ak03uM6e6_NIIgkgLg8bBcZ5efwVRVpLY_kRDVkrpaRKOKEjBn9S2N3L-JUvi2jWVupUVV2HwTz1UYzuOfyEmF49z9nMR7ZRkHRrfFM8Jgp9YGLMbdY3-xAHf7MPoS10duHAeAcFMdW0t2ojUd2hwyVVZlc_jrvH1zLGAxXBoz9WdxYr609FGYpeXROl0f"/><span class="absolute top-0 right-0 w-2.5 h-2.5 bg-[#FF5D9E] rounded-full ring-2 ring-white"></span></a></div></div></div></header><main class="flex-1 w-full bg-[#FDF2F5] pt-16 pb-28"><div class="flex flex-col w-full px-margin-mobile pb-space-xl">
+<!-- Top Greeting & Dynamic Vitality Card -->
+<section class="mt-space-sm mb-space-md bg-white rounded-3xl p-5 shadow-[0_4px_20px_rgba(255,93,158,0.06)] border border-[#FFE1EB] relative overflow-hidden">
+<div class="absolute -right-12 -top-12 w-36 h-36 bg-[#FDE2EB] rounded-full blur-2xl opacity-60 pointer-events-none"></div>
+<div class="relative z-10 flex items-center justify-between gap-space-sm">
+<div class="flex flex-col min-w-0">
+<div class="inline-flex items-center self-start px-3 py-1 rounded-full bg-[#FDE2EB] text-[#E83E8C] text-[11px] font-extrabold uppercase tracking-wider mb-2">
+  Thursday, Oct 24
+</div>
+<h1 class="text-[23px] font-extrabold text-[#222533] tracking-tight truncate leading-tight">Good morning, Elena</h1>
+<p class="text-[13px] text-[#6A6F84] mt-1.5 flex items-center gap-1.5 font-medium">
+<span class="inline-block w-2 h-2 rounded-full bg-[#FF5D9E] animate-ping"></span>
+<span>Your rhythm is peak for strength today.</span>
+</p>
+</div>
+<!-- Vitality Orbit Radial Gauge -->
+<div class="relative flex-shrink-0 w-20 h-20 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90" viewbox="0 0 72 72">
+<!-- Background track circle -->
+<circle cx="36" cy="36" fill="none" r="30" stroke="#FDE2EB" stroke-width="6.5"></circle>
+<!-- Animated Progress Arc (50%) -->
+<circle class="transition-all duration-700 ease-out" cx="36" cy="36" fill="none" id="orbit-ring" r="30" stroke="#FF5D9E" stroke-dasharray="188.5" stroke-dashoffset="94.25" stroke-linecap="round" stroke-width="6.5"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-[19px] font-extrabold text-[#222533] leading-none">3<span class="text-[#9EA4BC] text-[12px] font-semibold">/6</span></span>
+<span class="text-[10px] uppercase font-bold text-[#6A6F84] tracking-tight scale-90">Intentions</span>
+</div>
+</div>
+</div>
+<!-- Micro-vibe Pulse bar -->
+<div class="mt-4 pt-1 bg-[#FDF2F5] rounded-2xl px-4 py-2.5 flex items-center justify-between border border-[#FFE1EB]">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-[#FF5D9E]" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-[13px] font-bold text-[#222533]">Energy Reserve</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-[#FF5D9E]"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-[#FF5D9E]"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-[#FF5D9E]"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-[#FFE1EB] ring-1 ring-[#FF5D9E]/30"></span>
+<span class="text-[11px] uppercase text-[#FF5D9E] font-extrabold ml-1 tracking-wider">Optimal</span>
+</div>
+</div>
+</section>
+<!-- Live Highlight Hero Card: UP NEXT -->
+<section class="mb-space-lg relative overflow-hidden bg-white border border-[#FFE1EB] rounded-3xl shadow-[0_6px_24px_rgba(255,93,158,0.08)] p-5">
+<!-- Ambient glowing backdrop effect -->
+<div class="absolute -right-8 -top-8 w-44 h-44 bg-[#FDE2EB] rounded-full blur-3xl opacity-70 pointer-events-none"></div>
+<div class="absolute -left-8 -bottom-8 w-36 h-36 bg-[#E2F7EE] rounded-full blur-2xl opacity-60 pointer-events-none"></div>
+<div class="relative z-10 flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF5D9E] text-white text-[11px] font-bold shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+            UP NEXT • 6:00 PM
+          </span>
+<span class="text-[11px] font-bold text-[#6A6F84]">in 25 mins</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-[#FDE2EB] text-[#D93278] border border-[#FFE1EB] text-[11px] font-bold tracking-wide">
+          Movement
+        </span>
+</div>
+<div class="mt-1">
+<h2 class="text-[20px] font-extrabold text-[#222533] tracking-tight">Gym — Chest &amp; Shoulders</h2>
+<p class="text-[13px] text-[#6A6F84] mt-0.5 font-medium leading-relaxed">Hypertrophy block: Push emphasis with steady progressive overload.</p>
+</div>
+<!-- Quick targets preview -->
+<div class="grid grid-cols-2 gap-2.5 my-1.5">
+<div class="bg-[#FDF2F5] rounded-2xl p-3 flex items-center gap-2.5 border border-[#FFE1EB]">
+<div class="w-8 h-8 rounded-full bg-[#FDE2EB] flex items-center justify-center text-[#FF5D9E] shrink-0">
+<span class="material-symbols-outlined text-[18px]">fitness_center</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="text-[10px] uppercase font-bold text-[#9EA4BC] tracking-wider">Target</span>
+<span class="text-[13px] font-bold text-[#222533] truncate">4 Compound Lifts</span>
+</div>
+</div>
+<div class="bg-[#FDF2F5] rounded-2xl p-3 flex items-center gap-2.5 border border-[#FFE1EB]">
+<div class="w-8 h-8 rounded-full bg-[#E2F7EE] flex items-center justify-center text-[#1E9E68] shrink-0">
+<span class="material-symbols-outlined text-[18px]">timer</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="text-[10px] uppercase font-bold text-[#9EA4BC] tracking-wider">Duration</span>
+<span class="text-[13px] font-bold text-[#222533] truncate">45–60 Mins</span>
+</div>
+</div>
+</div>
+<!-- Primary Action CTA - Flowfy Candy Teal Button -->
+<button class="mt-2 w-full py-3.5 px-space-md rounded-2xl bg-[#3DC4BA] hover:bg-[#2EAAA1] text-white font-extrabold text-[15px] flex items-center justify-center gap-2 shadow-[0_4px_16px_rgba(61,196,186,0.35)] transition-all active:scale-[0.98]" id="cta-start-session">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+<span>Start &amp; Record Workout</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</section>
+<!-- Fluid Day Timeline Feed -->
+<section class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between mb-1 px-1">
+<div class="flex items-center gap-2">
+<span class="text-[17px] font-extrabold text-[#222533]">Living Stream</span>
+<span class="px-2.5 py-0.5 rounded-full bg-[#FDE2EB] text-[#E83E8C] font-extrabold text-[11px]">Today</span>
+</div>
+<button class="text-[12px] text-[#FF5D9E] hover:underline flex items-center gap-1 font-bold">
+<span>Timeline View</span>
+<span class="material-symbols-outlined text-[16px]">tune</span>
+</button>
+</div>
+<!-- Timeline Item 1: Walk (Recorded) -->
+<div class="relative bg-white rounded-3xl p-4 shadow-[0_2px_12px_rgba(255,93,158,0.04)] border border-[#FFE1EB] transition-all hover:shadow-md">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-start gap-3 min-w-0">
+<div class="w-10 h-10 rounded-2xl bg-[#E2F7EE] flex items-center justify-center text-[#1E9E68] flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[22px]">directions_walk</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-[11px] text-[#6A6F84] font-bold">07:30 AM</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#E2F7EE] text-[#1E9E68] text-[11px] font-bold">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                Recorded
+              </span>
+</div>
+<h3 class="text-[14px] font-bold text-[#222533] mt-1 truncate">Morning Sunlight Walk</h3>
+<p class="text-[12px] text-[#6A6F84] mt-0.5">24 min • 2.1 km • Circadian reset</p>
+</div>
+</div>
+<div class="w-12 h-12 rounded-2xl overflow-hidden flex-shrink-0 bg-[#FDF2F5] border border-[#FFE1EB]">
+<img class="w-full h-full object-cover" data-alt="Sunny neighborhood tree-lined street morning walk photography soft golden morning light calm lifestyle aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMLoRcaIsWGGFFOPlSLM2E3tumLV3H1ajEQXKZpffGv8hqV7D4cip7AEWO9AzB_a9vjXscaV_XPmhRFaE-qZtPJR_6UZHXZir7Sw0RkZav81gDOVfP3cdLntLjZKxzTeEF0y0VjbDSAvvVh1y5fhVLxHwXHYomuTOi2IH-52DJFUZbcU1QLDHguDtw_BwptF-IRxgDdgd5OMqmmzsAsLFRCcgw-VCCyN9S-M8dKyD2"/>
+</div>
+</div>
+</div>
+<!-- Timeline Item 2: Deep Focus Sprint (Recorded) -->
+<div class="relative bg-white rounded-3xl p-4 shadow-[0_2px_12px_rgba(255,93,158,0.04)] border border-[#FFE1EB] transition-all hover:shadow-md">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-start gap-3 min-w-0">
+<div class="w-10 h-10 rounded-2xl bg-[#F3E8FF] flex items-center justify-center text-[#8B5CF6] flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">psychology</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-[11px] text-[#6A6F84] font-bold">09:00 AM – 12:30 PM</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#F3E8FF] text-[#8B5CF6] text-[11px] font-bold">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                3h 15m
+              </span>
+</div>
+<h3 class="text-[14px] font-bold text-[#222533] mt-1 truncate">Deep Focus: System Design &amp; Specs</h3>
+<div class="flex items-center gap-2 mt-1">
+<div class="flex items-center text-[#F59E0B]">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-[#FEF9C3]">star</span>
+</div>
+<span class="text-[11px] font-medium text-[#6A6F84]">High Energy (4/5)</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-[#9EA4BC] text-[20px]">more_horiz</span>
+</div>
+</div>
+<!-- Timeline Item 3: Nutrition / Fuel (Recorded) -->
+<div class="relative bg-white rounded-3xl p-4 shadow-[0_2px_12px_rgba(255,93,158,0.04)] border border-[#FFE1EB] transition-all hover:shadow-md">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-start gap-3 min-w-0">
+<div class="w-10 h-10 rounded-2xl bg-[#FFE8D6] flex items-center justify-center text-[#E06D37] flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">restaurant</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-[11px] text-[#6A6F84] font-bold">01:15 PM</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#FEF9C3] text-[#CA8A04] text-[11px] font-bold">
+                Fuel Logged
+              </span>
+</div>
+<h3 class="text-[14px] font-bold text-[#222533] mt-1 truncate">Healthy Quinoa &amp; Grilled Salmon</h3>
+<p class="text-[12px] text-[#6A6F84] mt-0.5">620 kcal • 48g Protein • ₹450 logged</p>
+</div>
+</div>
+<div class="w-12 h-12 rounded-2xl overflow-hidden flex-shrink-0 bg-[#FDF2F5] border border-[#FFE1EB]">
+<img class="w-full h-full object-cover" data-alt="Top down overhead food photography of an appetizing wholesome salmon grain bowl fresh greens bright light aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3dRuyOPfktLP_v-2hEexILAO92_fDtVR_phlZBxQRHO3E7lDwNRPo406fwxkmKyo7Po7gZrZJrhb2EGnyeiqbw4y0TNyXZ0ilk1WWFcLt9UWYXLQgFKseXTamxdApndHjoEiNf2KOxzYp7zN_Oqfl1MQn9CQb3ud66QFAmr9wKm4SVwoqHvF02SSsSKqdPMuH-HDvQi3DeFr-gfAVp0RxO-NjKHq7wRxEXwHbeL1R"/>
+</div>
+</div>
+</div>
+<!-- Timeline Item 4: Evening Read (Planned) -->
+<div class="relative bg-white/80 backdrop-blur-xs rounded-3xl p-4 border border-[#FFE1EB] transition-all hover:bg-white shadow-[0_2px_10px_rgba(255,93,158,0.03)]">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-start gap-3 min-w-0">
+<div class="w-10 h-10 rounded-2xl bg-[#F3E8FF] flex items-center justify-center text-[#8B5CF6] flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-[11px] text-[#6A6F84] font-bold">08:30 PM</span>
+<span class="px-2.5 py-0.5 rounded-full bg-[#F3E8FF] text-[#8B5CF6] text-[11px] font-bold">
+                Scheduled
+              </span>
+</div>
+<h3 class="text-[14px] font-bold text-[#222533] mt-1 truncate">Read: Designing Data-Intensive Apps</h3>
+<p class="text-[12px] text-[#6A6F84] mt-0.5">Chapter 7: Transactions • 30 mins goal</p>
+</div>
+</div>
+<button class="w-9 h-9 rounded-full bg-[#F3E8FF] text-[#8B5CF6] hover:bg-[#E9D5FF] flex items-center justify-center transition-colors" title="Mark Done">
+<span class="material-symbols-outlined text-[18px]">done</span>
+</button>
+</div>
+</div>
+<!-- Timeline Item 5: Wind-Down Meditation (Planned) -->
+<div class="relative bg-white/80 backdrop-blur-xs rounded-3xl p-4 border border-[#FFE1EB] transition-all hover:bg-white shadow-[0_2px_10px_rgba(255,93,158,0.03)]">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-start gap-3 min-w-0">
+<div class="w-10 h-10 rounded-2xl bg-[#E3F2FD] flex items-center justify-center text-[#0284C7] flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">self_improvement</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-[11px] text-[#6A6F84] font-bold">10:30 PM</span>
+<span class="px-2.5 py-0.5 rounded-full bg-[#E3F2FD] text-[#0284C7] text-[11px] font-bold">
+                Ritual
+              </span>
+</div>
+<h3 class="text-[14px] font-bold text-[#222533] mt-1 truncate">Wind-Down Breathing &amp; Gratitude</h3>
+<p class="text-[12px] text-[#6A6F84] mt-0.5">15 min acoustic soundscape • Bedtime prep</p>
+</div>
+</div>
+<button class="w-9 h-9 rounded-full bg-[#E3F2FD] text-[#0284C7] hover:bg-[#BAE6FD] flex items-center justify-center transition-colors" title="Mark Done">
+<span class="material-symbols-outlined text-[18px]">done</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Spontaneous Spark Prompt: Delightful Micro-Moment -->
+<section class="mt-space-md mb-space-lg bg-white rounded-3xl p-4 shadow-[0_4px_18px_rgba(255,93,158,0.05)] border border-[#FFE1EB] flex items-center justify-between gap-space-sm">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-2xl bg-[#E3F2FD] flex items-center justify-center text-[#0284C7]">
+<span class="material-symbols-outlined text-[22px]">water_drop</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[14px] font-bold text-[#222533]">Hydration Milestone</span>
+<span class="text-[12px] text-[#6A6F84]">2.4L / 3.0L drunk today</span>
+</div>
+</div>
+<button class="px-3.5 py-1.5 rounded-full bg-[#E3F2FD] hover:bg-[#BAE6FD] text-[#0284C7] text-[11px] font-extrabold uppercase tracking-wide flex items-center gap-1 active:scale-95 transition-transform" id="add-water-btn">
+<span class="material-symbols-outlined text-[16px]">add</span>
+<span>250ml</span>
+</button>
+</section>
+<!-- Floating Quick Log Action Pill / Modal Trigger - Flowfy Hot Pink FAB style -->
+<aside class="sticky bottom-4 self-end z-30 mt-auto">
+<div class="hidden flex-col gap-2 mb-2 bg-white p-2.5 rounded-3xl shadow-xl border border-[#FFE1EB] animate-fade-in" id="quick-action-menu">
+<button class="flex items-center gap-2.5 px-3.5 py-2 rounded-2xl hover:bg-[#E3F2FD] text-left w-full text-[#222533]">
+<span class="material-symbols-outlined text-[#0284C7] text-[20px]">water_drop</span>
+<span class="text-[13px] font-bold">Hydration</span>
+</button>
+<button class="flex items-center gap-2.5 px-3.5 py-2 rounded-2xl hover:bg-[#F3E8FF] text-left w-full text-[#222533]">
+<span class="material-symbols-outlined text-[#8B5CF6] text-[20px]">note_alt</span>
+<span class="text-[13px] font-bold">Quick Thought</span>
+</button>
+<button class="flex items-center gap-2.5 px-3.5 py-2 rounded-2xl hover:bg-[#FEF9C3] text-left w-full text-[#222533]">
+<span class="material-symbols-outlined text-[#CA8A04] text-[20px]">payments</span>
+<span class="text-[13px] font-bold">Spontaneous Expense</span>
+</button>
+</div>
+<button class="h-12 px-4 rounded-full bg-[#FF5D9E] hover:bg-[#F0488D] text-white shadow-[0_6px_20px_rgba(255,93,158,0.4)] flex items-center gap-2 active:scale-95 transition-all font-bold" id="fab-quick-log">
+<span class="material-symbols-outlined text-[20px] transition-transform duration-300" id="fab-icon">add</span>
+<span class="text-[14px] pr-1">Quick Log</span>
+</button>
+</aside>
+</div>
+<script>
+  (function() {
+    const fabBtn = document.getElementById('fab-quick-log');
+    const fabIcon = document.getElementById('fab-icon');
+    const menu = document.getElementById('quick-action-menu');
+    const startSessionBtn = document.getElementById('cta-start-session');
+    const waterBtn = document.getElementById('add-water-btn');
+    const orbitRing = document.getElementById('orbit-ring');
+
+    if (fabBtn && menu && fabIcon) {
+      fabBtn.addEventListener('click', () => {
+        const isHidden = menu.classList.contains('hidden');
+        if (isHidden) {
+          menu.classList.remove('hidden');
+          menu.classList.add('flex');
+          fabIcon.classList.add('rotate-45');
+        } else {
+          menu.classList.add('hidden');
+          menu.classList.remove('flex');
+          fabIcon.classList.remove('rotate-45');
+        }
+      });
+    }
+
+    if (startSessionBtn) {
+      startSessionBtn.addEventListener('click', () => {
+        startSessionBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span><span>Preparing Session...</span>';
+        setTimeout(() => {
+          startSessionBtn.innerHTML = '<span class="material-symbols-outlined text-[20px]">check</span><span>Workout Active!</span>';
+        }, 600);
+      });
+    }
+
+    if (waterBtn && orbitRing) {
+      waterBtn.addEventListener('click', () => {
+        waterBtn.innerHTML = '<span class="material-symbols-outlined text-[16px] text-[#FF5D9E]">check</span><span>Logged!</span>';
+        orbitRing.setAttribute('stroke-dashoffset', '62.8'); // Move progress to ~66%
+        setTimeout(() => {
+          waterBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">add</span><span>250ml</span>';
+        }, 1500);
+      });
+    }
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-white/95 backdrop-blur-xl border-t border-[#FFE1EB] shadow-[0_-4px_20px_rgba(255,93,158,0.05)]" data-active-classes="text-[#FF5D9E] font-bold"><div class="h-16 px-space-md flex items-center justify-around"><a aria-current="page" class="min-w-[48px] min-h-[48px] px-3.5 py-1.5 rounded-2xl flex flex-col items-center justify-center gap-0.5 transition-colors text-[#FF5D9E] bg-[#FDE2EB] font-bold shadow-xs" data-path="today" href="#"><span class="material-symbols-outlined text-[24px]">wb_sunny</span><span class="text-[11px] font-extrabold">Today</span></a><a class="min-w-[48px] min-h-[48px] px-space-xs flex flex-col items-center justify-center gap-0.5 text-[#9EA4BC] hover:text-[#222533] transition-colors" data-path="plan" href="#"><span class="material-symbols-outlined text-[24px]">date_range</span><span class="text-[11px] font-semibold">Plan</span></a><a class="min-w-[48px] min-h-[48px] px-space-xs flex flex-col items-center justify-center gap-0.5 text-[#9EA4BC] hover:text-[#222533] transition-colors" data-path="insights" href="#"><span class="material-symbols-outlined text-[24px]">insights</span><span class="text-[11px] font-semibold">Insights</span></a><a class="min-w-[48px] min-h-[48px] px-space-xs flex flex-col items-center justify-center gap-0.5 text-[#9EA4BC] hover:text-[#222533] transition-colors" data-path="me" href="#"><span class="material-symbols-outlined text-[24px]">person</span><span class="text-[11px] font-semibold">Me</span></a></div></nav></body></html>

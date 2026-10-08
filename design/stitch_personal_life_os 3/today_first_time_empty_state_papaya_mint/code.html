@@ -1,0 +1,271 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{width:100vw;margin:0;padding:0;min-height:100%;}body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "tertiary-container": "#8691fd", "surface-bright": "#faf9ff", "tertiary-fixed": "#e0e0ff", "inverse-surface": "#2b303d", "on-tertiary": "#ffffff", "on-primary-container": "#661000", "tertiary": "#4953bc", "secondary": "#006b5f", "secondary-container": "#62fae3", "error": "#ba1a1a", "on-primary-fixed-variant": "#8c1900", "surface-container-high": "#e4e8f8", "background": "#faf9ff", "tertiary-fixed-dim": "#bdc2ff", "surface-dim": "#d5d9ea", "inverse-primary": "ffb4a3", "surface-container-lowest": "#ffffff", "on-secondary-fixed": "#00201c", "surface-container-low": "#f1f3ff", "inverse-on-surface": "#edf0ff", "primary-fixed-dim": "#ffb4a3", "secondary-fixed-dim": "#3cddc7", "error-container": "#ffdad6", "on-primary": "#ffffff", "primary": "#ae3115", "surface-container": "#e9edfe", "on-secondary-fixed-variant": "#005047", "surface-tint": "#ae3115", "on-tertiary-fixed": "#000767", "primary-container": "#ff6b4a", "on-surface": "#161b27", "surface": "#faf9ff", "outline-variant": "#e1bfb8", "on-primary-fixed": "#3d0600", "on-tertiary-fixed-variant": "#2f3aa3", "on-secondary-container": "#007165", "on-background": "#161b27", "on-secondary": "#ffffff", "on-surface-variant": "#59413c", "on-tertiary-container": "#16218e", "primary-fixed": "#ffdad2", "outline": "#8d716a", "surface-container-highest": "#dee2f3", "on-error-container": "#93000a", "secondary-fixed": "#62fae3", "on-error": "#ffffff", "surface-variant": "#dee2f3" }, borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, spacing: { "space-xs": "0.25rem", "margin-md": "2rem", "gutter-lg": "1.75rem", "space-lg": "1.5rem", "space-sm": "0.5rem", "gutter": "1.25rem", "space-xl": "2.25rem", "margin": "1rem", "space-md": "1rem", "margin-lg": "3rem" }, fontFamily: { "headline-md": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "display-lg": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "display-lg-mobile": ["Plus Jakarta Sans"] }, fontSize: { "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}], "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}], "headline-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}], "headline-xl-mobile": ["26px", {"lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700"}], "headline-sm": ["18px", {"lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "600"}], "body-md": ["14px", {"lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400"}], "body-sm": ["13px", {"lineHeight": "18px", "letterSpacing": "0.005em", "fontWeight": "400"}], "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.03em", "fontWeight": "800"}], "label-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700"}], "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "500"}], "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "700"}], "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "700"}], "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "800"}] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-gutter flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center shadow-[0_10px_24px_-4px_rgba(255,107,74,0.35)]"><span class="material-symbols-outlined text-white text-[20px]">vital_signs</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">LifeOS</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-none">Today</span></div></div><div class="flex items-center gap-space-xs"><button aria-label="Notifications" class="min-w-[44px] min-h-[44px] w-11 h-11 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors relative"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-primary-container ring-2 ring-surface"></span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-24 bg-surface flex-1"><div class="flex flex-col w-full px-gutter space-y-space-lg pb-10">
+<!-- Welcome / Calibration Banner Card -->
+<section class="relative overflow-hidden bg-surface-container-lowest rounded-lg p-space-lg shadow-sm">
+<!-- Ambient confection glow in the corner -->
+<div class="absolute -top-12 -right-12 w-44 h-44 rounded-full bg-primary-fixed/40 blur-2xl pointer-events-none"></div>
+<div class="absolute -bottom-10 -left-10 w-36 h-36 rounded-full bg-secondary-fixed/30 blur-2xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col space-y-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+          Baseline Initializing • Day 1
+        </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-secondary-container/40 text-on-secondary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">cloud_download</span>
+          Sync Ready
+        </span>
+</div>
+<h1 class="font-headline-xl-mobile text-headline-xl-mobile text-on-surface tracking-tight">
+        Welcome to LifeOS, Elena <span class="inline-block transform hover:rotate-12 transition-transform cursor-default">✨</span>
+</h1>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+        Today is a clean canvas. Your living rhythm starts with your first intentional step. We learn and adapt with every beat.
+      </p>
+<!-- Sparkline & Rhythm Pulse Micro-Visual -->
+<div class="pt-space-xs flex items-center justify-between bg-surface-container-low rounded-xl px-space-md py-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed">
+<span class="material-symbols-outlined text-[18px]">ecg_heart</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface font-semibold">Living Rhythm Calibration</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Listening for your daily signature</p>
+</div>
+</div>
+<svg class="w-24 h-6 text-secondary" fill="none" viewBox="0 0 100 24">
+<path d="M0,12 L20,12 L30,4 L40,20 L50,8 L60,16 L70,12 L100,12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</div>
+</div>
+</section>
+<!-- Daily Intentions Pill Ribbon -->
+<section class="bg-surface-container-lowest rounded-lg p-space-md shadow-sm">
+<div class="flex items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary-container text-[20px]">target</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-label-lg text-label-lg text-on-surface">Daily Intentions</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">0/3</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Craft today’s intentional focus triad</p>
+</div>
+</div>
+<button class="flex-shrink-0 min-h-[44px] px-space-md py-space-xs bg-primary-container hover:scale-[1.02] active:scale-[0.98] text-white font-label-lg text-label-lg rounded-full flex items-center gap-1.5 shadow-[0_10px_24px_-4px_rgba(255,107,74,0.35)] transition-all" id="setFocusBtn">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Set Focus</span>
+</button>
+</div>
+</section>
+<!-- Guided Calibration / Quick-Start Tracker -->
+<section class="bg-surface-container-lowest rounded-lg p-space-lg shadow-sm space-y-space-md">
+<div class="flex items-center justify-between">
+<div>
+<span class="font-label-sm text-label-sm font-semibold tracking-wider uppercase text-secondary">Step 2 of 3</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Calibrate your living rhythm</h2>
+</div>
+<span class="inline-flex items-center gap-1 px-3 py-1 bg-surface-container-low rounded-full font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">timer</span>
+        ~3 min
+      </span>
+</div>
+<!-- Multi-stage progress indicator bar -->
+<div class="w-full h-2 rounded-full bg-surface-container-low overflow-hidden flex">
+<div class="w-1/3 h-full bg-secondary-fixed-dim"></div>
+<div class="w-1/3 h-full bg-primary-container rounded-r-full"></div>
+<div class="w-1/3 h-full bg-transparent"></div>
+</div>
+<!-- Onboarding Step Cards -->
+<div class="space-y-space-sm pt-space-xs">
+<!-- Step 1: Completed -->
+<div class="flex items-start gap-space-sm p-space-sm rounded-xl bg-surface-container-low/70">
+<div class="w-7 h-7 rounded-full bg-secondary-container flex items-center justify-center flex-shrink-0 text-on-secondary-container mt-0.5">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-label-lg text-label-lg text-on-surface line-through opacity-70">Account &amp; profile calibrated</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant opacity-75">Baseline metrics &amp; diurnal sleep window initialized</p>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-medium px-2 py-0.5 rounded-full bg-secondary-fixed/50">Done</span>
+</div>
+<!-- Step 2: In Progress -->
+<div class="flex items-start gap-space-sm p-space-sm rounded-xl bg-primary-fixed/25">
+<div class="w-7 h-7 rounded-full bg-primary-container text-white flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+<span class="material-symbols-outlined text-[16px]">directions_run</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-1.5">
+<p class="font-label-lg text-label-lg text-on-surface font-bold">First block or workout today</p>
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Set an anchor workout or focus stretch to build your baseline</p>
+<div class="mt-space-xs">
+<button class="min-h-[44px] px-3.5 py-1.5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm flex items-center gap-1 hover:opacity-90 active:scale-95 transition-all">
+<span>Pick an Activity</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Step 3: Pending -->
+<div class="flex items-start gap-space-sm p-space-sm rounded-xl bg-surface-container-low/40 opacity-75">
+<div class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center flex-shrink-0 text-on-surface-variant mt-0.5">
+<span class="material-symbols-outlined text-[16px]">water_drop</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-label-lg text-label-lg text-on-surface">Hydration &amp; fuel check</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Track your first glass of water to unlock vitality curves</p>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant px-2 py-0.5 rounded-full bg-surface-container">Pending</span>
+</div>
+</div>
+</section>
+<!-- Living Stream: Interactive Zero State -->
+<section class="bg-surface-container-lowest rounded-lg p-space-lg shadow-sm flex flex-col items-center text-center relative overflow-hidden">
+<!-- Decorative candy orb graphics in background -->
+<div class="w-20 h-20 rounded-full bg-secondary-fixed/40 flex items-center justify-center mb-space-sm relative">
+<div class="w-14 h-14 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container shadow-inner">
+<span class="material-symbols-outlined text-[30px]" style="font-variation-settings: 'FILL' 1;">spa</span>
+</div>
+<div class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary-container text-white flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-[14px]">add</span>
+</div>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">No activities logged yet</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xs mt-space-xs leading-relaxed">
+      When you walk, focus, train, or eat, your timeline will organically track your rhythm and energy expenditure here.
+    </p>
+<!-- Quick Tap Pill Chips -->
+<div class="w-full mt-space-md pt-space-xs flex flex-col items-center">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-space-xs font-semibold">
+        Quick start with one tap
+      </span>
+<div class="flex flex-wrap items-center justify-center gap-space-xs w-full">
+<button class="quick-chip min-h-[44px] px-4 py-2 rounded-full bg-secondary-fixed/50 hover:bg-secondary-fixed text-on-secondary-fixed font-label-md text-label-md flex items-center gap-1.5 transition-all active:scale-95" data-quick="+ 20m Walk">
+<span class="material-symbols-outlined text-[16px]">directions_walk</span>
+<span>+ 20m Walk</span>
+</button>
+<button class="quick-chip min-h-[44px] px-4 py-2 rounded-full bg-tertiary-fixed/60 hover:bg-tertiary-fixed text-on-tertiary-fixed font-label-md text-label-md flex items-center gap-1.5 transition-all active:scale-95" data-quick="+ 45m Deep Work">
+<span class="material-symbols-outlined text-[16px]">psychology</span>
+<span>+ 45m Deep Work</span>
+</button>
+<button class="quick-chip min-h-[44px] px-4 py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-all active:scale-95" data-quick="+ 500ml Water">
+<span class="material-symbols-outlined text-[16px] text-secondary">water_full</span>
+<span>+ 500ml Water</span>
+</button>
+</div>
+</div>
+<!-- Interactive mini feedback toast placeholder -->
+<div class="opacity-0 pointer-events-none transition-opacity duration-300 mt-space-sm px-4 py-1.5 rounded-full bg-inverse-surface text-inverse-on-surface font-label-sm text-label-sm flex items-center gap-1.5 shadow-md" id="quickToast">
+<span class="material-symbols-outlined text-[16px] text-secondary-fixed">check_circle</span>
+<span id="quickToastText">Logged</span>
+</div>
+</section>
+<!-- Visual Delight & Mood Snapshot Section -->
+<section class="grid grid-cols-2 gap-space-sm">
+<div class="bg-surface-container-lowest rounded-lg p-space-md shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-bold uppercase tracking-wider">Mind Canvas</span>
+<span class="material-symbols-outlined text-primary text-[18px]">palette</span>
+</div>
+<div class="my-space-sm flex items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary-container font-headline-sm">
+          ☀️
+        </div>
+<div>
+<p class="font-label-md text-label-md text-on-surface font-bold">Unclouded</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Calm &amp; Focused</p>
+</div>
+</div>
+<button class="min-h-[44px] w-full text-center py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm transition-colors">
+        Log Feeling
+      </button>
+</div>
+<div class="bg-surface-container-lowest rounded-lg p-space-md shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-bold uppercase tracking-wider">Rhythm Battery</span>
+<span class="material-symbols-outlined text-secondary text-[18px]">battery_charging_80</span>
+</div>
+<div class="my-space-sm flex items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed">
+<span class="material-symbols-outlined text-[20px]">bolt</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface font-bold">100% Ready</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Full capacity</p>
+</div>
+</div>
+<button class="min-h-[44px] w-full text-center py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm transition-colors">
+        Read Forecast
+      </button>
+</div>
+</section>
+<!-- Sticky Floating Action Trigger Pill -->
+<div class="sticky bottom-4 z-30 flex justify-center w-full px-space-md">
+<button class="min-h-[48px] px-space-lg py-3 rounded-full bg-primary-container text-white font-label-lg text-label-lg flex items-center gap-2 shadow-[0_12px_28px_-4px_rgba(255,107,74,0.45)] hover:scale-105 active:scale-95 transition-all" id="logFirstBtn">
+<span class="material-symbols-outlined text-[20px]">edit_note</span>
+<span>+ Log First Moment</span>
+</button>
+</div>
+</div>
+<script>
+  // Simple delightful micro-interactions for rapid testing
+  document.querySelectorAll('.quick-chip').forEach(button => {
+    button.addEventListener('click', () => {
+      const text = button.getAttribute('data-quick');
+      const toast = document.getElementById('quickToast');
+      const toastText = document.getElementById('quickToastText');
+      if (toast && toastText) {
+        toastText.textContent = text.replace('+', 'Recorded') + ' ✨';
+        toast.classList.remove('opacity-0', 'pointer-events-none');
+        toast.classList.add('opacity-100');
+        setTimeout(() => {
+          toast.classList.add('opacity-0', 'pointer-events-none');
+          toast.classList.remove('opacity-100');
+        }, 2200);
+      }
+    });
+  });
+
+  const setFocus = document.getElementById('setFocusBtn');
+  if (setFocus) {
+    setFocus.addEventListener('click', () => {
+      const toast = document.getElementById('quickToast');
+      const toastText = document.getElementById('quickToastText');
+      if (toast && toastText) {
+        toastText.textContent = 'Intention Creator opening...';
+        toast.classList.remove('opacity-0', 'pointer-events-none');
+        toast.classList.add('opacity-100');
+        setTimeout(() => {
+          toast.classList.add('opacity-0', 'pointer-events-none');
+          toast.classList.remove('opacity-100');
+        }, 1800);
+      }
+    });
+  }
+
+  const logFirst = document.getElementById('logFirstBtn');
+  if (logFirst) {
+    logFirst.addEventListener('click', () => {
+      const toast = document.getElementById('quickToast');
+      const toastText = document.getElementById('quickToastText');
+      if (toast && toastText) {
+        toastText.textContent = 'Moment logger launched 🚀';
+        toast.classList.remove('opacity-0', 'pointer-events-none');
+        toast.classList.add('opacity-100');
+        setTimeout(() => {
+          toast.classList.add('opacity-0', 'pointer-events-none');
+          toast.classList.remove('opacity-100');
+        }, 1800);
+      }
+    });
+  }
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/85 backdrop-blur-xl shadow-[0_-4px_20px_rgba(0,0,0,0.03)]" data-active-classes="text-primary-container bg-primary-fixed/30 font-label-md"><div class="h-16 px-gutter flex items-center justify-around"><a aria-current="page" class="min-w-[44px] min-h-[44px] px-space-md py-space-xs rounded-full flex flex-col items-center justify-center gap-0.5 transition-all text-primary-container bg-primary-fixed/30 font-label-md" data-path="today" href="#"><span class="material-symbols-outlined text-[22px]">today</span><span class="font-label-sm text-label-sm">Today</span></a><a class="min-w-[44px] min-h-[44px] px-space-md py-space-xs rounded-full flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface transition-all" data-path="plan" href="#"><span class="material-symbols-outlined text-[22px]">calendar_month</span><span class="font-label-sm text-label-sm">Plan</span></a><a class="min-w-[44px] min-h-[44px] px-space-md py-space-xs rounded-full flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface transition-all" data-path="insights" href="#"><span class="material-symbols-outlined text-[22px]">insights</span><span class="font-label-sm text-label-sm">Insights</span></a><a class="min-w-[44px] min-h-[44px] px-space-md py-space-xs rounded-full flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface transition-all" data-path="me" href="#"><span class="material-symbols-outlined text-[22px]">face</span><span class="font-label-sm text-label-sm">Me</span></a></div></nav></body></html>
