@@ -265,7 +265,8 @@ A separate first-class tab (owner decision), but it doesn't dominate Today.
     built-in activities are offered when adding, not as a big catalog here.
   - **Body measurements** (record weight etc.).
   - **Appearance** (theme).
-  - Units, data (export later), about.
+  - (Units, data export and an About page are later launch work, not V1
+    experience.)
 - **Primary action:** open an activity to change it.
 - **Hidden:** nothing important; this is where infrastructure lives.
 - **Empty:** n/a (always has Appearance etc.); no activities: "Activities
