@@ -1,9 +1,9 @@
 # V1 Product Experience
 
-> **Status: PROPOSAL for owner review (2026-10-08).** Nothing here is built
-> yet. When approved, this becomes the product definition the screens are
-> redesigned around (Stitch redesign second, implementation third), and the
-> affected docs (user_flows, ui_guidelines, ADRs) are updated to match.
+> **Status: APPROVED by the owner 2026-10-08 (ADR-046), not built yet.** The
+> screen-by-screen UX specification, the Stitch redesign plan and the
+> implementation order are in [v1_ux_spec.md](v1_ux_spec.md) (awaiting
+> review). Implementation starts only after that is approved.
 >
 > It is a **re-arrangement of what already exists**, not new features. The
 > generic activity engine, the data model and the database stay as they are.
@@ -344,16 +344,17 @@ Every screen hands off to the next step: Today's evening review → Plan
 
 ---
 
-## 9. Owner decisions needed before the Stitch redesign
+## 9. Owner decisions (resolved 2026-10-08)
 
-| # | Question | Recommendation |
+| # | Question | Decision |
 |---|---|---|
-| 1 | When does the evening review appear? | After the last planned thing's time has passed or everything is done, and not before 17:00 |
-| 2 | "How did it go?" automatic or on demand? | Automatic only for activities whose details matter (required details or lists such as sets); otherwise a link on the done row |
-| 3 | Unfinished things the next morning (if the review wasn't done) | Shown at the top of Today as "From yesterday: Reading · Tomorrow / Let it go" |
-| 4 | Keep a full-screen timer? | Keep as an option from the running thing; not a separate place |
-| 5 | Plain "something to do" without an activity (old tasks) | Keep for old data; new things always come from an activity (ADR-042) |
-| 6 | Progress tab name | "Progress" |
+| 1 | When does the evening review appear? | After the last planned thing's time has passed or once everything is done, never before 17:00 |
+| 2 | "How did it go?" automatic or on demand? | Automatic only for activities with meaningful details (sets, pages…); simple activities finish in one tap, details reachable afterwards |
+| 3 | Yesterday's unfinished things | A "From yesterday" section at the top of Today (move to today / let it go) |
+| 4 | Full-screen timer | An optional focused mode inside a running activity, not a separate flow |
+| 5 | Plain "something to do" without an activity | Kept for old data; new things come from an activity (ADR-042) |
+| 6 | Progress tab name | "Progress" (user-facing name of Insights) |
+| — | Challenges | Stay a separate first-class tab; on Today only as a streak on the activity's row |
 
 ## 10. What changes vs today (for planning, not a feature list)
 

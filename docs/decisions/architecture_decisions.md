@@ -634,6 +634,18 @@
   - Tests that found items by text scope to the day list (the Up next card repeats the next item's title); set-row tests fill in the active row and tap a folded row to change it.
   - About 470 KB of font files (five weights) instead of about 700 KB for the three families.
 
+### ADR-046: V1 product experience: Today is "my day", one Done, Progress in sentences
+- **Status:** Accepted 2026-10-08 (owner approved [v1_experience.md](../product/v1_experience.md) with the §9 decisions). **Not implemented yet**; the UX specification, Stitch redesign plan and implementation order are in [v1_ux_spec.md](../product/v1_ux_spec.md), pending review. Will change ADR-040's UI rule (one Done) and ADR-044's Today section (badges instead) when built.
+- **Decision:**
+  - The product is the loop **Plan → Do → Record → Measure → Understand → Improve**, made visible on the screens rather than added as features.
+  - **Today = my day:** header + one status line, a Now/Next card with one action (Start / Done / Finish), a timeline with a "now" line whose done rows show their result and a 🔥 streak for activities in a running challenge, "From yesterday" in the morning, an evening review (≥ 17:00 and the last planned thing passed or all done) with Tomorrow / Let it go and Plan tomorrow. Adding lives behind one **+**.
+  - **One Done:** Finish, the row's circle and Done in the activity all finish it. "How did it go?" opens automatically only for activities with meaningful details (a list, or a number shown in Progress); simple activities finish in one tap.
+  - **Plan** shapes days (week strip, routines), **Challenges** stays a tab (Today shows only the streak badge), **Insights is renamed Progress** (sentences first, charts second), **Me** is setup.
+  - The user never sees internal words (item, log, record, field).
+  - No new features: no schema change is expected; everything is derived from existing data.
+- **Context:** The owner found the app read as a collection of features; the loop wasn't felt.
+- **Consequences:** Today's inline quick add, Browse, Make your own and Recent move into the add sheet; rows lose ⋮, drag handles and per-row chips; the Challenges section leaves Today.
+
 ## Pending decisions
 
 Each needs owner approval. **Recommendation** is what the docs currently assume. Resolved entries are struck through and point to their accepted ADR.
