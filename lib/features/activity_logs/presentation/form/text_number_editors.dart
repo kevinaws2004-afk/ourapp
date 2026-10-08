@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/design/app_icons.dart';
 import '../../../../core/design/context_ext.dart';
 import '../../../../core/design/window_size_class.dart';
 import '../../../../core/design/tokens/radius.dart';
 import '../../../../core/design/tokens/spacing.dart';
+import '../../../../core/design/tokens/typography.dart';
 import '../../../../core/units/unit_registry.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../activity_types/domain/activity_type.dart';
@@ -131,6 +133,11 @@ class _SuggestionList extends StatelessWidget {
 
 /// Number editor with an optional unit picker for dimensioned fields
 /// (ADR-020). Unparsable input shows an error and stores no value.
+///
+/// With [stepper] it's the big entry of a list row being filled in
+/// (ADR-045): − and + around the value, one step at a time (1, or 0.5 for a
+/// number with decimals), never below the field's minimum (or 0 when it has
+/// none and the value isn't negative). The value can still be typed.
 class NumberValueEditor extends StatefulWidget {
   const NumberValueEditor({
     super.key,
@@ -139,6 +146,7 @@ class NumberValueEditor extends StatefulWidget {
     required this.onChanged,
     this.label,
     this.errorText,
+    this.stepper = false,
   });
 
   final ActivityField field;
@@ -150,6 +158,8 @@ class NumberValueEditor extends StatefulWidget {
 
   /// A validation message shown under the input.
   final String? errorText;
+
+  final bool stepper;
 
   @override
   State<NumberValueEditor> createState() => _NumberValueEditorState();
@@ -186,10 +196,43 @@ class _NumberValueEditorState extends State<NumberValueEditor> {
     );
   }
 
+  double get _step => _config.decimals == 0 ? 1 : 0.5;
+
+  /// Moves the value one step ([direction] -1 or 1) and shows it.
+  void _nudge(int direction) {
+    final text = _controller.text.trim().replaceAll(',', '.');
+    final current = double.tryParse(text) ?? 0;
+    var next = current + _step * direction;
+    final min = _config.min ?? (current >= 0 ? 0 : null);
+    if (min != null && next < min) next = min.toDouble();
+    if (_config.max case final max? when next > max) next = max.toDouble();
+    _controller.text = formatNumber(next, _config.decimals);
+    _emit();
+  }
+
   @override
   Widget build(BuildContext context) {
     final dimension = widget.field.dimension;
     final l10n = AppLocalizations.of(context);
+    final unitPicker = dimension == null
+        ? null
+        : DropdownButton<String>(
+            value: _unitCode,
+            isDense: true,
+            isExpanded: widget.stepper,
+            underline: const SizedBox.shrink(),
+            items: [
+              for (final unit in UnitRegistry.forDimension(dimension))
+                DropdownMenuItem(value: unit.code, child: Text(unit.symbol)),
+            ],
+            onChanged: (code) {
+              setState(() => _unitCode = code);
+              _emit();
+            },
+          );
+    if (widget.stepper) {
+      return _stepperLayout(context, l10n, unitPicker);
+    }
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -209,21 +252,82 @@ class _NumberValueEditorState extends State<NumberValueEditor> {
             onChanged: (_) => _emit(),
           ),
         ),
-        if (dimension != null) ...[
+        if (unitPicker != null) ...[
           const SizedBox(width: AppSpacing.md),
-          DropdownButton<String>(
-            value: _unitCode,
-            items: [
-              for (final unit in UnitRegistry.forDimension(dimension))
-                DropdownMenuItem(value: unit.code, child: Text(unit.symbol)),
-            ],
-            onChanged: (code) {
-              setState(() => _unitCode = code);
-              _emit();
-            },
-          ),
+          unitPicker,
         ],
       ],
+    );
+  }
+
+  Widget _stepperLayout(
+    BuildContext context,
+    AppLocalizations l10n,
+    Widget? unitPicker,
+  ) {
+    final c = context.colors;
+    final name = widget.label ?? widget.field.name;
+    Widget nudge(int direction) => IconButton.filledTonal(
+      style: IconButton.styleFrom(
+        backgroundColor: c.brandPrimarySoft,
+        foregroundColor: c.onBrandPrimarySoft,
+        visualDensity: VisualDensity.compact,
+      ),
+      tooltip: direction < 0
+          ? l10n.stepperDecrease(widget.field.name)
+          : l10n.stepperIncrease(widget.field.name),
+      icon: Icon(direction < 0 ? AppIcons.minus : AppIcons.add),
+      onPressed: () => _nudge(direction),
+    );
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: c.surfaceBase,
+        borderRadius: AppRadius.lgAll,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.xs),
+        child: Column(
+          children: [
+            TextField(
+              controller: _controller,
+              textAlign: TextAlign.center,
+              style: AppTypography.numericMedium.copyWith(
+                fontSize: 24,
+                color: c.textPrimary,
+              ),
+              keyboardType: TextInputType.numberWithOptions(
+                decimal: _config.decimals > 0,
+                signed: (_config.min ?? 0) < 0,
+              ),
+              decoration: InputDecoration(
+                labelText: name,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                floatingLabelAlignment: FloatingLabelAlignment.center,
+                filled: false,
+                isDense: true,
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: AppSpacing.sm,
+                ),
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                errorText: _invalid
+                    ? l10n.validationNotANumber
+                    : widget.errorText,
+              ),
+              onChanged: (_) => _emit(),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                nudge(-1),
+                if (unitPicker != null) Flexible(child: unitPicker),
+                nudge(1),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

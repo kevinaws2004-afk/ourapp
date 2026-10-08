@@ -25,6 +25,7 @@ class ActivityLogFormFields extends StatelessWidget {
     required this.onChanged,
     this.issues = const [],
     this.targetPrefix = '',
+    this.boxed = false,
   });
 
   /// The activity type [fields] belong to (Repeating Groups read their
@@ -39,6 +40,9 @@ class ActivityLogFormFields extends StatelessWidget {
   /// `<itemId>/` inside a Repeating Group item (`LogValidator.itemTarget`).
   final String targetPrefix;
 
+  /// Each field in its own card (logging into an item, ADR-045).
+  final bool boxed;
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -48,6 +52,7 @@ class ActivityLogFormFields extends StatelessWidget {
         for (final field in fields)
           FieldEditorShell(
             key: ValueKey(field.id),
+            boxed: boxed,
             label: field.isRemoved ? l10n.fieldRemoved(field.name) : field.name,
             required: field.required && !field.isRemoved,
             error: firstIssueMessage(

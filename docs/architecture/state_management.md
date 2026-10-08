@@ -12,7 +12,7 @@
 | **Derived state** | today's timeline, planned vs actual, chart series | `Provider`/`FutureProvider` combining other providers + domain functions |
 | **Editing/draft state** | log form in progress, builder draft | `Notifier` / `AsyncNotifier` scoped to the screen (`autoDispose`) |
 | **Ephemeral widget state** | text controllers, animation controllers, scroll position, expanded/collapsed | `StatefulWidget` local state. Not Riverpod. |
-| **App preferences** | theme mode, units, onboarding complete | `settings` repository stream → provider |
+| **App preferences** | theme (ADR-045), units, onboarding complete | `settings` repository stream → provider |
 | **Ticking state** | focus timer display | small widget-local ticker reading persisted session timestamps |
 
 Rule: **if it must survive a screen being closed, it is in SQLite.** Riverpod holds no authoritative long-lived state of its own.
@@ -61,9 +61,9 @@ Riverpod **3.4** (`flutter_riverpod`), hand-written providers (ADR-014).
 | `clockProvider`, `idGeneratorProvider`, `loggerProvider` | `Provider` | `core/` | Overridable in tests |
 | `appPreferencesRepositoryProvider` | `Provider<AppPreferencesRepository>` | `features/settings/presentation/` | Typed to the domain interface |
 | `initialPreferencesProvider` | `Provider<PreferencesSnapshot>` | same | Startup snapshot overridden by bootstrap, so the first frame needs no loading state |
-| `themePreferenceProvider`, `onboardingCompletedProvider` | `StreamProvider` | same | Live DB streams |
-| `effectiveThemePreferenceProvider` | `Provider` | same | Stream value, else the startup snapshot |
-| `preferencesNotifierProvider` | `NotifierProvider<PreferencesNotifier, void>` | same | Intents: `setThemePreference`, `completeOnboarding`, `resetOnboarding` (debug) |
+| `themeProvider`, `onboardingCompletedProvider` | `StreamProvider` | same | Live DB streams |
+| `effectiveThemeProvider` | `Provider<AppThemeId>` | same | Stream value, else the startup snapshot |
+| `preferencesNotifierProvider` | `NotifierProvider<PreferencesNotifier, void>` | same | Intents: `setTheme`, `completeOnboarding`, `resetOnboarding` (debug) |
 | `routerProvider` | `Provider<GoRouter>` | `app/router.dart` | Listens to `onboardingCompletedProvider`; disposes the router with the provider |
 
 **Startup-snapshot pattern:** values needed on the first frame (theme, first route) are read once in `bootstrap()` and overridden into `initialPreferencesProvider`. Live streams take over as soon as they emit. Tests must seed the database with the same values they pass as the snapshot, as `pumpTestApp` does, because the live stream always wins.

@@ -14,7 +14,7 @@ import sys
 from pathlib import Path
 
 UI_ICONS = [
-    'plus', 'trash', 'pencil-simple', 'check', 'x', 'caret-right', 'caret-down',
+    'plus', 'minus', 'trash', 'pencil-simple', 'check', 'x', 'caret-right', 'caret-down',
     'dots-three-vertical', 'arrow-counter-clockwise', 'palette', 'dots-six-vertical',
     'lock-simple', 'warning-circle', 'clock', 'calendar-blank', 'star', 'archive', 'info',
     'sun', 'calendar-dots', 'squares-four', 'chart-line-up', 'user', 'timer', 'check-circle',

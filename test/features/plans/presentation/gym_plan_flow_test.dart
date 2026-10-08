@@ -70,14 +70,11 @@ void main() {
     await tester.ensureVisible(exercise);
     await tester.enterText(exercise, 'Chest Press');
     await tester.pumpAndSettle();
-    for (final (i, (kg, reps)) in [
-      ('60', '10'),
-      ('65', '8'),
-      ('70', '6'),
-    ].indexed) {
+    // Only the set being filled in has inputs; earlier ones fold (ADR-045).
+    for (final (kg, reps) in [('60', '10'), ('65', '8'), ('70', '6')]) {
       await scrollAndTap(tester, find.text('Add Set'));
-      await enterAt(tester, 'Weight', i, kg);
-      await enterAt(tester, 'Reps', i, reps);
+      await enterAt(tester, 'Weight', 0, kg);
+      await enterAt(tester, 'Reps', 0, reps);
     }
     FocusManager.instance.primaryFocus?.unfocus();
     await waitForSave(tester);
@@ -91,8 +88,9 @@ void main() {
     // Back at the gym: the sets are there; one more.
     await openItem(tester, find.byType(PlanItemTile));
     await scrollAndTap(tester, find.text('Add Set'));
-    await enterAt(tester, 'Weight', 3, '70');
-    await enterAt(tester, 'Reps', 3, '5');
+    expect(find.text('Set 4'), findsOneWidget);
+    await enterAt(tester, 'Weight', 0, '70');
+    await enterAt(tester, 'Reps', 0, '5');
     FocusManager.instance.primaryFocus?.unfocus();
     await waitForSave(tester);
     await closeItem(tester);

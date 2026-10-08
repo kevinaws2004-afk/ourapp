@@ -27,9 +27,9 @@ class AppShadows {
   List<BoxShadow> glow(Color color) => [
     BoxShadow(
       color: color.withValues(alpha: glowAlpha),
-      offset: const Offset(0, 10),
-      blurRadius: 24,
-      spreadRadius: -6,
+      offset: const Offset(0, 8),
+      blurRadius: 28,
+      spreadRadius: -10,
     ),
   ];
 

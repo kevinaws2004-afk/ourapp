@@ -75,7 +75,7 @@ Example: Plan Oct 4 → Gym, Reading, Doctor call.
 
 Phase 5 (ADR-031), moved into the item by ADR-035.
 1. In an item → **Start timer**. From an activity's page, **Start focus** adds an item for now with its timer running. Only one timer runs at a time.
-2. The timer shows at the top of the item (DM Mono) with Pause/Resume and Finish; keep logging while it runs. The full-screen timer is optional.
+2. The timer shows big at the top of the item (tabular figures) with Pause/Resume and Finish; keep logging while it runs. The full-screen timer is optional. From Today, **Up next → Start** does steps 1–2 in one tap (ADR-045).
 3. Pause/resume any number of times. Leaving the app or the process dying doesn't affect elapsed time: it is computed from stored timestamps. Today shows a live "Reading · 23:14 · Return" banner (Return opens the item), and the item shows "In progress".
 4. Finish → the timed span becomes the item's start, end and duration, keeping everything logged → "Reading session complete · 42 min". A second timer on the same item adds its time.
 5. Discard (full-screen timer) asks for confirmation and logs nothing.
@@ -135,3 +135,8 @@ Log detail → Edit (same generic form) → save. Delete → immediate soft dele
 ## F16. Export (FR-DA-01; V1 status pending OQ-03)
 
 Me → Data → Export → choose JSON (complete backup) or CSV (per activity type) → system save/share sheet → success state with file name.
+
+## F18. Change how the app looks (ADR-045)
+1. Me → **Appearance** (the row shows the theme in use).
+2. Three previews, each drawn in its own theme: Rose, Lavender, Papaya.
+3. Tap one: the whole app changes at once and stays that way after a restart. Nothing else changes: same screens, same data.

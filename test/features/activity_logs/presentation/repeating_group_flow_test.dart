@@ -69,17 +69,23 @@ void main() {
     await enterAt(tester, 'Weight', 0, '50');
     await enterAt(tester, 'Reps', 0, '12');
 
-    // A new set starts from the previous one.
+    // A new set starts from the previous one, which folds into one line
+    // (ADR-045); only the set being filled in has inputs.
     await scrollAndTap(tester, find.text('Add Set'));
     expect(find.text('Set 2'), findsOneWidget);
-    final prefilled = tester.widget<TextField>(labelledInput('Weight', 1));
+    expect(find.text('50 kg × 12'), findsOneWidget, reason: 'set 1, folded');
+    final prefilled = tester.widget<TextField>(labelledInput('Weight', 0));
     expect(prefilled.controller!.text, '50');
-    await enterAt(tester, 'Weight', 1, '55');
-    await enterAt(tester, 'Reps', 1, '10');
+    await enterAt(tester, 'Weight', 0, '55');
+    await enterAt(tester, 'Reps', 0, '10');
+
+    // Its stepper moves it one step at a time.
+    await scrollAndTap(tester, find.byTooltip('More Reps'));
+    await scrollAndTap(tester, find.byTooltip('Less Reps'));
 
     await scrollAndTap(tester, find.text('Add Set'));
-    await enterAt(tester, 'Weight', 2, '60');
-    await enterAt(tester, 'Reps', 2, '8');
+    await enterAt(tester, 'Weight', 0, '60');
+    await enterAt(tester, 'Reps', 0, '8');
 
     FocusManager.instance.primaryFocus?.unfocus();
     await waitForSave(tester);
@@ -92,23 +98,27 @@ void main() {
       findsOneWidget,
     );
 
-    // Reopening shows every set as recorded.
+    // Reopening shows every set as recorded: the earlier ones folded, the
+    // last one open.
     await tester.tap(find.textContaining('Chest Press'));
     await tester.pumpAndSettle();
     expect(find.byType(ItemScreen), findsOneWidget);
-    for (final (i, (kg, reps)) in [
-      ('50', '12'),
-      ('55', '10'),
-      ('60', '8'),
-    ].indexed) {
-      final weight = labelledInput('Weight', i);
-      await tester.ensureVisible(weight);
-      expect(tester.widget<TextField>(weight).controller!.text, kg);
-      expect(
-        tester.widget<TextField>(labelledInput('Reps', i)).controller!.text,
-        reps,
-      );
-    }
+    expect(find.text('50 kg × 12'), findsOneWidget);
+    expect(find.text('55 kg × 10'), findsOneWidget);
+    final weight = labelledInput('Weight', 0);
+    await tester.ensureVisible(weight);
+    expect(tester.widget<TextField>(weight).controller!.text, '60');
+    expect(
+      tester.widget<TextField>(labelledInput('Reps', 0)).controller!.text,
+      '8',
+    );
+
+    // Tapping a folded set opens it to change it.
+    await scrollAndTap(tester, find.text('50 kg × 12'));
+    expect(
+      tester.widget<TextField>(labelledInput('Weight', 0)).controller!.text,
+      '50',
+    );
   });
 
   testAppWidgets('an exercise without a name yet is still saved (required '

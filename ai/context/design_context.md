@@ -1,28 +1,29 @@
 # Design Context (AI quick-load)
 
-> Compressed context. Canonical: [design_system.md](../../docs/ui/design_system.md), [ui_guidelines.md](../../docs/ui/ui_guidelines.md), [responsive_design.md](../../docs/ui/responsive_design.md). Status of concrete values: accepted as provisional v0 (ADR-016), pending the owner's on-device showcase review. "Daylight" is not the product name.
+> Compressed context. Canonical: [design_system.md](../../docs/ui/design_system.md), [ui_guidelines.md](../../docs/ui/ui_guidelines.md), [responsive_design.md](../../docs/ui/responsive_design.md), [visual_redesign_plan.md](../../docs/ui/visual_redesign_plan.md). Decision: ADR-045.
 
-**Upcoming (owner, 2026-10-04):** a dedicated visual pass after core functionality. The target is colorful, alive and premium (not cream-heavy, not all dark, not plain white). Story: Plan → Do → Record → Measure → Understand → Improve. Until then: no redesign or new features; keep everything token-driven (incl. `AppSizes`) so the look can change without domain/DB changes. See design_system.md (top note).
+**Direction (owner, 2026-10-08):** take the functional app to a real consumer product using the owner's **Stitch** project as the visual/UX reference (exports in `design/`), with **three selectable light themes**. Stitch guides tokens *and* screen composition; its sample content (gym sets, kcal, budgets, sensors, AI) never sets the data model. Story: Plan → Do → Record → Measure → Understand → Improve.
 
-**Feel:** calm, premium, personal, modern, visually distinctive, easy on the eyes, fast, uncluttered, intentionally designed. One recognizable visual world, not a set of screens.
+**Status:** first slice built (tokens, shared components, Me → Appearance, Today, the item screen). Plan, Challenges, Insights and Me each get an explicit Stitch-based screen pass **after the owner reviews the slice on the phone**; until then they only use the new tokens/components.
 
-**Identity "Daylight":** the shape and light of a day.
-- Light: white-shade canvas (`#F7FBFB`), white cards, mist `#DDF0EF` sunken surfaces, slate-ink text. Dark: deep slate surfaces (`#13171E`), white-shade text. Never pure black.
-- **Only white shades, mist `#DDF0EF` and six palette colors are used (ADR-029, ADR-038).** Brand = **teal**, accent = **coral** (rating stars), success = **teal**, warning = **coral**, danger = **rose**. Neutrals are white and slate shades. Coral and teal are graphics-only for small text in light mode.
-- Activity palette keys (six): sky, lilac, rose, teal, coral, slate. Sand, sage, apricot, moss were removed (stored sage/moss → teal, apricot → coral). Each has `solid` (icons/charts) and `soft` (surfaces). Text on soft = textPrimary.
-- Type: **Fraunces** for display/headlines (≥ 21px), **DM Sans** for UI/body, tabular figures for numbers.
-- Motifs: **Day Arc** (Today header, onboarding progress, focus ring, completion) and **Plan vs Reality grammar**: planned = outline/dashed; actual = filled soft + solid accent. Skipped ≠ error.
+**Feel:** calm, premium, personal, modern, distinctive, easy on the eyes, fast, uncluttered. One product, three personalities.
 
-**Tokens (use, never hardcode):** spacing 2/4/8/12/16/20/24/32/48/64 · radius 6/10/16/24/32/pill · elevation flat/raised/overlay (dark uses tone, not shadow) · motion 90/150/250/400/600–900ms with defined curves · component states default/hovered/focused/pressed/selected/disabled/loading/error.
+**Themes (`AppThemeId`):** Rose (blush canvas, rose signature, teal action, butter accent; borderless cards), **Lavender** (default; porcelain, electric lavender, mint action, sky accent; hairline edges, lavender→mint progress), Papaya (warm porcelain, papaya, aqua-mint action with dark text, periwinkle; rimmed cards, floating nav, coral→peach progress, facts as chips). The rose theme uses the app's own rose/teal, not Stitch's Flowfy-derived pink/teal. Light only; no dark mode for now.
+- Roles: surfaces (canvas tinted, cards white, sunken wells), text ×3, `brandPrimary`(+soft/on), `action`(+soft/on), `accent`(+soft/on), `accentDawn` (stars), success/warning/danger. Activity keys (six, stored): sky, lilac, rose, teal, coral, slate; each theme has its own solid/soft. Text on soft = text roles.
+- Type: **Plus Jakarta Sans** only: heavy tight headlines, bold labels, tabular `numeric*` styles.
+- Shapes: cards 28, inputs/tiles 24, pills everywhere else. Soft tinted glows, not grey shadows.
+- Plan vs Reality: item cards with a status chip (Planned / In progress / Done / Live; skipped faded) and the done check on the right.
 
-**Must-haves per screen:** loading (skeleton after ~150ms), empty (explain + next action), error (calm + retry, keep input), success (brief, meaningful). Responsive: compact (<600) bottom nav; medium/expanded rail + two panes; max content widths; 200% text scale; 48dp targets; reduced motion.
+**Tokens (use, never hardcode):** spacing 2/4/8/12/16/20/24/32/48/64 · radius 8/12/16/24/28/32/pill · shadows card/floating/glow · motion 90/150/250/400/600–900ms · component states default/hovered/focused/pressed/selected/disabled/loading/error.
 
-**Interaction:** ≤ 2 taps for common actions; Undo snackbars instead of confirm dialogs for reversible actions; purposeful micro-interactions only; sheets for short tasks; one primary action per view.
+**Shared components:** `AppCard`, `ItemCard`, `StatusChip`, `ProgressRing`, `AppProgressBar`, `FactPill`, `EmptyStateCard`, `AppButton` (primary/action/secondary/tertiary/destructive, `expand`), `ActivityBadge`, `DoneCheck`, `StatTile`, `PanelCard`. Only they read theme treatments.
 
-**Onboarding:** understand → one question → personalize → show value → begin; ≤ 5 skippable screens; privacy promise; no account.
+**Must-haves per screen:** loading, empty (explain + next action), error (calm + retry), success. Responsive; 200% text; 48dp targets; reduced motion; contrast tested in all three themes.
 
-**Copy:** warm, concise, outcome-oriented where helpful, neutral about misses, sentence case.
+**Interaction:** ≤ 2 taps for common actions; one big action per card; Undo snackbars; sheets for short tasks.
 
-**Icons:** Phosphor (bundled official font, ADR-024): regular by default, fill when selected, through `AppIcons`/`ActivityIconRegistry`. Activities store an `icon_id` such as `barbell`.
+**Copy:** warm, concise, neutral about misses, sentence case. No developer words ("schema", "fields") in the UI.
 
-**Avoid:** generic white CRUD, black productivity dashboards, excessive gradients/cards/buttons, spreadsheet layouts, unadapted Material defaults, one-off values, copying Flowfy (principles only, no palette/fonts/illustrations/mascot/layouts/wording).
+**Icons:** Phosphor (bundled, ADR-024) through `AppIcons`/`ActivityIconRegistry`; activity icons on soft circles.
+
+**Avoid:** copying Stitch's out-of-scope concepts (energy scores, calibration, sensors, AI, budgets, routines, XP, photos), the name "LifeOS", Flowfy's palette/name, a floating Quick Log button (ADR-028), per-theme screens, one-off values.

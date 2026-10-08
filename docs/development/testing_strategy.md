@@ -12,7 +12,7 @@
 | **Repository / DB** | Real SQL against in-memory SQLite: queries, transactions, constraints, migrations | fast | Every repository |
 | **Widget** | Behavior of meaningful widgets: generic form renderer, field editors, set table, key screen states | fast | Targeted |
 | **Integration** | End-to-end flows on device/emulator with a real DB file | slow | Few, high value |
-| **Golden** (optional) | Design system components in light/dark | fast | Small set, if they prove stable |
+| **Golden** (optional) | Design system components in each theme | fast | Small set, if they prove stable. Contrast is already tested per theme (`color_contrast_test.dart`), and the slice screens lay out in every theme at 200% text (`today_slice_test.dart`) |
 
 ## 2. When to use what
 

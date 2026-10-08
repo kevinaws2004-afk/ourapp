@@ -160,7 +160,7 @@ Each type has defined value semantics, validation, storage mapping, rendering an
 |---|---|---|---|
 | FR-UX-01 | Short first-run onboarding with a narrative: understand the user → one meaningful question at a time → personalize → show what they'll get → begin. | V1 | §33.4, §41 |
 | FR-UX-02 | Onboarding must not force configuring the whole system. | V1 | §33.4 |
-| FR-UX-03 | Light and dark themes. | V1 | §33.2, §41 |
+| FR-UX-03 | Light and dark themes. **Changed by the owner (ADR-045):** three selectable light themes (Rose, Lavender, Papaya) in Me → Appearance, saved locally; dark mode later. | V1 | §33.2, §41, owner |
 | FR-UX-04 | Empty, loading, error and success states for every data-bearing screen. | V1 | §41 |
 | FR-UX-05 | Meaningful micro-interactions and smooth navigation. | V1 | §33.6, §41 |
 | FR-UX-06 | Responsive phone and tablet layouts (no stretched phone UI). | V1 | §33.7, §41 |

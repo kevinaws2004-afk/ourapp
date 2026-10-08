@@ -22,6 +22,7 @@ import '../features/plans/presentation/item/item_screen.dart';
 import '../features/plans/presentation/plan_date_notifier.dart';
 import '../features/plans/presentation/plan_providers.dart';
 import '../features/plans/presentation/plan_screen.dart';
+import '../features/settings/presentation/appearance_screen.dart';
 import '../features/settings/presentation/me_screen.dart';
 import '../features/settings/presentation/preferences_providers.dart';
 import '../features/today/presentation/today_screen.dart';
@@ -62,6 +63,9 @@ abstract final class AppRoutes {
 
   /// The Challenges tab (ADR-044).
   static const challenges = '/challenges';
+
+  /// The app's theme, under Me (ADR-045).
+  static const appearance = '/me/appearance';
 
   /// Body measurements, under Me (Phase 6).
   static const measurements = '/me/measurements';
@@ -288,6 +292,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                 builder: (context, state) => MeScreen(
                   onOpenActivities: () => context.go(AppRoutes.activities),
                   onOpenMeasurements: () => context.go(AppRoutes.measurements),
+                  onOpenAppearance: () => context.go(AppRoutes.appearance),
                   onOpenTokenShowcase: devToolsEnabled
                       ? () => context.push(AppRoutes.tokenShowcase)
                       : null,
@@ -299,6 +304,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                       : null,
                 ),
                 routes: [
+                  GoRoute(
+                    path: 'appearance',
+                    builder: (context, state) => const AppearanceScreen(),
+                  ),
                   GoRoute(
                     path: 'measurements',
                     builder: (context, state) => MeasurementsScreen(

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/design/app_icons.dart';
 import '../../../../core/design/context_ext.dart';
 import '../../../../core/design/tokens/spacing.dart';
 import '../../../../core/time/local_date.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../../shared/widgets/empty_state_card.dart';
 import '../../../../shared/widgets/state_views.dart';
 import '../../../activity_logs/domain/activity_log.dart';
 import '../../../activity_logs/presentation/value_formatting.dart';
@@ -27,12 +29,20 @@ class DayItems extends ConsumerWidget {
     required this.onOpenRecord,
     required this.chooser,
     this.onStartNow,
+    this.emptyTitle,
+    this.showSummary = true,
   });
 
   final LocalDate date;
 
   /// Shown when the day has no items.
   final String emptyMessage;
+
+  /// With a title, the empty day is an empty-state card (Today, ADR-045).
+  final String? emptyTitle;
+
+  /// "3 done · 1 h 20 min" above the items; Today shows it in its hero.
+  final bool showSummary;
 
   /// Opens a plan's item screen.
   final ValueChanged<PlanId> onOpenItem;
@@ -64,6 +74,8 @@ class DayItems extends ConsumerWidget {
           data: (overview) => _Entries(
             overview: overview,
             emptyMessage: emptyMessage,
+            emptyTitle: emptyTitle,
+            showSummary: showSummary,
             onOpenItem: onOpenItem,
             onOpenRecord: onOpenRecord,
           ),
@@ -77,12 +89,16 @@ class _Entries extends StatelessWidget {
   const _Entries({
     required this.overview,
     required this.emptyMessage,
+    required this.emptyTitle,
+    required this.showSummary,
     required this.onOpenItem,
     required this.onOpenRecord,
   });
 
   final DayOverview overview;
   final String emptyMessage;
+  final String? emptyTitle;
+  final bool showSummary;
   final ValueChanged<PlanId> onOpenItem;
   final ValueChanged<ActivityLog> onOpenRecord;
 
@@ -94,6 +110,13 @@ class _Entries extends StatelessWidget {
     );
     final entries = overview.entries;
     if (entries.isEmpty) {
+      if (emptyTitle case final title?) {
+        return EmptyStateCard(
+          icon: AppIcons.today.outline,
+          title: title,
+          message: emptyMessage,
+        );
+      }
       return Padding(
         padding: const EdgeInsets.only(top: AppSpacing.sm),
         child: Text(emptyMessage, style: quiet),
@@ -111,7 +134,7 @@ class _Entries extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (done > 0)
+        if (showSummary && done > 0)
           Padding(
             padding: const EdgeInsets.only(bottom: AppSpacing.md),
             child: Text(

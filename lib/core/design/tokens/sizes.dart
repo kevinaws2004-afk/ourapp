@@ -17,7 +17,7 @@ abstract final class AppSizes {
   static const double monthDot = 6;
 
   /// Width of one hours/minutes box in a duration input.
-  static const double durationBox = 96;
+  static const double durationBox = 124;
 
   /// Small inline icon (e.g. a lock beside a field).
   static const double iconSmall = 18;

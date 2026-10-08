@@ -14,14 +14,14 @@
 10. Accessibility: ≥ 48dp targets, contrast per tokens, semantics labels for icon buttons and painted content, 200% text scale works, logical focus order.
 11. Illustrations only in onboarding, empty, completion, intro and error screens, never on Insights/History/forms.
 12. Copy: warm, concise, outcome-oriented where helpful, neutral about misses, sentence case, localizable.
-13. Display font only at ≥ 21px; live and tabular numbers use the `numeric*` tokens (DM Mono, ADR-032).
+13. One family, Plus Jakarta Sans (ADR-045); live and tabular numbers use the `numeric*` tokens (tabular figures).
 14. Before calling UI work done, run the visual quality checklist (ui_guidelines.md §10) in light + dark, compact + expanded, text scale 1.0 + 2.0.
 15. Never copy Flowfy or any other product's palette, fonts, illustrations, mascot, layouts or wording.
 16. Icons are Phosphor through `AppIcons`/`ActivityIconRegistry` only (ADR-024): regular weight by default, fill for selected states.
 17. Field editors go through `FieldEditorRegistry` and `FieldEditorShell` (visible label, `*` for required, inline error).
 18. Primary navigation is Today | Plan | Challenges | Insights | Me (ADR-028, ADR-044). No floating Record button: anything unplanned is added with the quick add's **Start now** and opened (ADR-035, ADR-039). Plan is Week | Month; a day opens via the shared `DayItems`, never a second day layout. Don't add tabs or a FAB. Activity setup lives under Me → Activities.
 19. User-facing copy talks about items being **done** and logging into them; never "Log" as a noun. The activity page's button says "Record". Activity Log is internal only.
-20. Color: only white shades, mist `#DDF0EF` and the six activity-palette colors sky, lilac, teal, rose, slate, coral; text/borders are slate shades (ADR-029, ADR-038). Use the semantic roles (`brandPrimary` = teal, `accentDawn` = coral, `success` = teal, `warning` = coral, `danger` = rose); never introduce another hue. Moss/apricot are never small text.
+20. Color comes from the current theme's roles only (ADR-045): `brandPrimary` (signature), `action` (Start, Mark done), `accent` (scheduled/info), `success`, `warning`, `danger`, surfaces and text roles, and `tokens.activity(key)` for an activity. Never a hex value outside `lib/core/design/themes/`, and never branch on the theme in a screen: theme differences (card edge, nav style, progress fill, facts as chips) are read only by shared components. Every new color pair gets a contrast check in all three themes.
 21. Tapping an item opens it to log into it (ADR-035); plan options (edit, Skip, Move, Delete) live behind its More button. Never add a Save button or a separate record form: items save as you type.
 22. Never hard-code what an activity records, and never require setup before logging: any item takes notes straight away and gets its own activity on the first thing logged (ADR-035).
 23. Charts only through `AppChart` (ADR-033); never use fl_chart widgets in features. Chart copy stays neutral ("+12 % vs previous period").

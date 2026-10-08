@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
-import '../../../core/design/context_ext.dart';
 import '../../../core/design/tokens/spacing.dart';
 import '../../../core/design/window_size_class.dart';
 import '../../../core/time/clock.dart';
@@ -14,11 +14,18 @@ import '../../focus/presentation/focus_banner.dart';
 import '../../plans/domain/plan.dart';
 import '../../plans/presentation/activity_chooser.dart';
 import '../../plans/presentation/plan_date_notifier.dart';
+import '../../plans/domain/day_progress.dart';
+import '../../plans/presentation/plan_providers.dart';
 import '../../plans/presentation/widgets/day_items.dart';
+import '../../../shared/widgets/section_header.dart';
+import 'day_hero.dart';
+import 'up_next_card.dart';
 
-/// Today tab (ADR-035): a greeting, then today as [DayItems]: a quick way to
-/// add to the day (planned, or "Start now" to log it straight away) and the
-/// day's items in time order. Opening an item is where you log into it.
+/// Today tab (ADR-035, ADR-045): a hero with the date, a greeting and how
+/// much of the day is done; **Up next** with one action to start it; then the
+/// day as [DayItems]: a quick way to add to the day (planned, or "Start now"
+/// to log it straight away) and the day's items in time order. Opening an
+/// item is where you log into it.
 class TodayScreen extends ConsumerWidget {
   const TodayScreen({
     super.key,
@@ -50,6 +57,8 @@ class TodayScreen extends ConsumerWidget {
     final margin = WindowSizeClass.of(context).screenMargin;
     final clock = ref.watch(clockProvider);
     final today = currentLocalDate(clock);
+    final overview = ref.watch(dayOverviewProvider(today)).value;
+    final next = overview == null ? null : upNext(overview, clock.nowUtc());
     return SafeArea(
       child: Align(
         alignment: Alignment.topLeft,
@@ -58,29 +67,30 @@ class TodayScreen extends ConsumerWidget {
           child: ListView(
             padding: EdgeInsets.fromLTRB(
               margin,
-              AppSpacing.huge,
+              AppSpacing.lg,
               margin,
               AppSpacing.giant,
             ),
             children: [
-              Text(
-                _greeting(l10n, clock),
-                style: context.textStyles.displayMedium,
-              ),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                MaterialLocalizations.of(
-                  context,
-                ).formatFullDate(DateTime(today.year, today.month, today.day)),
-                style: context.textStyles.titleMedium?.copyWith(
-                  color: context.colors.textSecondary,
-                ),
+              DayHero(
+                // "Saturday, Oct 3", in the device's language.
+                date: DateFormat.MMMEd(
+                  Localizations.localeOf(context).toString(),
+                ).format(DateTime(today.year, today.month, today.day)),
+                greeting: _greeting(l10n, clock),
+                progress: overview == null ? null : DayProgress.of(overview),
               ),
               FocusBanner(onOpen: onOpenFocus),
-              const SizedBox(height: AppSpacing.lg),
+              if (next != null) ...[
+                const SizedBox(height: AppSpacing.lg),
+                UpNextCard(item: next, onOpenItem: onOpenItem),
+              ],
+              SectionHeader(title: l10n.todayYourDay),
               DayItems(
                 date: today,
+                emptyTitle: l10n.todayEmptyTitle,
                 emptyMessage: l10n.todayEmptyMessageItems,
+                showSummary: false,
                 onOpenItem: onOpenItem,
                 onOpenRecord: onOpenRecord,
                 chooser: chooser,

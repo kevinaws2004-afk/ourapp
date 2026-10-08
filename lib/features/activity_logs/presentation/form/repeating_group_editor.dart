@@ -20,6 +20,7 @@ import '../../domain/log_validator.dart';
 import '../activity_log_providers.dart';
 import '../value_formatting.dart';
 import 'activity_log_form.dart';
+import '../../../../shared/widgets/status_chip.dart';
 import 'add_detail_scope.dart';
 import 'rest_timer_scope.dart';
 import 'row_memory_scope.dart';
@@ -29,10 +30,11 @@ import 'text_number_editors.dart';
 /// the group's sub-field values. Generic: nothing here knows what an item
 /// represents (an exercise, a set, an ingredient).
 ///
-/// When every sub-field is a Number, items render as compact rows ("Set 1 ·
-/// 50 kg · 12") and a new row starts from the previous row's values, so
-/// repeating a set is one tap. Otherwise each item is a card with the full
-/// form for its sub-fields.
+/// When every sub-field is a Number, the row being filled in is a card with
+/// a − / + stepper per number, earlier rows fold into one line ("2 · 60 kg ×
+/// 8"; tap to change one), and a new row starts from the previous row's
+/// values, so repeating a set is one tap (ADR-045). Otherwise each item is a
+/// card with the full form for its sub-fields.
 class RepeatingGroupEditor extends ConsumerWidget {
   const RepeatingGroupEditor({
     super.key,
@@ -106,47 +108,54 @@ class RepeatingGroupEditor extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        for (final (index, item) in _items.indexed)
-          compact
-              ? _CompactItemRow(
-                  key: ValueKey(item.id),
-                  title: l10n.groupItemTitle(_itemLabel, index + 1),
-                  removeLabel: l10n.removeGroupItem(_itemLabel),
-                  fields: subFields,
-                  item: item,
-                  issues: issues,
-                  onChanged: (item) => _replace(index, item),
-                  onRemove: () => _emit([..._items]..removeAt(index)),
-                )
-              : _ItemCard(
-                  key: ValueKey(item.id),
-                  group: field,
-                  title: l10n.groupItemTitle(_itemLabel, index + 1),
-                  removeLabel: l10n.removeGroupItem(_itemLabel),
-                  type: type,
-                  fields: subFields,
-                  item: item,
-                  issues: issues,
-                  onChanged: (item) => _replace(index, item),
-                  onRemove: () => _emit([..._items]..removeAt(index)),
-                ),
+        if (compact)
+          _CompactRows(
+            type: type,
+            group: field,
+            itemLabel: _itemLabel,
+            fields: subFields,
+            items: _items,
+            issues: issues,
+            onReplace: _replace,
+            onRemove: (index) => _emit([..._items]..removeAt(index)),
+          )
+        else
+          for (final (index, item) in _items.indexed)
+            _ItemCard(
+              key: ValueKey(item.id),
+              group: field,
+              title: l10n.groupItemTitle(_itemLabel, index + 1),
+              removeLabel: l10n.removeGroupItem(_itemLabel),
+              type: type,
+              fields: subFields,
+              item: item,
+              issues: issues,
+              onChanged: (item) => _replace(index, item),
+              onRemove: () => _emit([..._items]..removeAt(index)),
+            ),
         Builder(
           builder: (actionsContext) => Row(
             children: [
-              TextButton.icon(
-                icon: const Icon(AppIcons.add),
-                label: Text(l10n.addGroupItem(_itemLabel)),
-                onPressed: () => add(actionsContext),
+              // The actions wrap on a narrow screen.
+              Expanded(
+                child: Wrap(
+                  children: [
+                    TextButton.icon(
+                      icon: const Icon(AppIcons.add),
+                      label: Text(l10n.addGroupItem(_itemLabel)),
+                      onPressed: () => add(actionsContext),
+                    ),
+                    // Rows of numbers (e.g. sets) can have a rest between them (B5).
+                    if (compact && _items.isNotEmpty)
+                      if (RestTimerScope.maybeOf(context) case final rest?)
+                        TextButton.icon(
+                          icon: const Icon(AppIcons.timer),
+                          label: Text(l10n.restAction),
+                          onPressed: rest.onRest,
+                        ),
+                  ],
+                ),
               ),
-              // Rows of numbers (e.g. sets) can have a rest between them (B5).
-              if (compact && _items.isNotEmpty)
-                if (RestTimerScope.maybeOf(context) case final rest?)
-                  TextButton.icon(
-                    icon: const Icon(AppIcons.timer),
-                    label: Text(l10n.restAction),
-                    onPressed: rest.onRest,
-                  ),
-              const Spacer(),
               // Logging into an item: the list can grow a new detail, kept in
               // a menu so it doesn't compete with adding a row (A13).
               if (AddDetailScope.maybeOf(context) case final scope?)
@@ -337,9 +346,156 @@ class _LastRowHint extends ConsumerWidget {
   }
 }
 
-/// One all-number item as a single row of labelled number inputs.
-class _CompactItemRow extends StatelessWidget {
-  const _CompactItemRow({
+/// The rows of an all-number list (ADR-045): the active row (the newest, or
+/// the one tapped) as a card with a stepper per number; every other row
+/// folded into one line. A row with a problem stays open so it can be fixed.
+class _CompactRows extends StatefulWidget {
+  const _CompactRows({
+    required this.type,
+    required this.group,
+    required this.itemLabel,
+    required this.fields,
+    required this.items,
+    required this.issues,
+    required this.onReplace,
+    required this.onRemove,
+  });
+
+  final ActivityType type;
+  final ActivityField group;
+  final String itemLabel;
+  final List<ActivityField> fields;
+  final List<GroupItem> items;
+  final List<ValidationIssue> issues;
+  final void Function(int index, GroupItem item) onReplace;
+  final ValueChanged<int> onRemove;
+
+  @override
+  State<_CompactRows> createState() => _CompactRowsState();
+}
+
+class _CompactRowsState extends State<_CompactRows> {
+  GroupItemId? _active;
+
+  @override
+  void didUpdateWidget(_CompactRows old) {
+    super.didUpdateWidget(old);
+    // A new row is the one to fill in.
+    if (widget.items.length > old.items.length) _active = null;
+  }
+
+  bool _hasIssue(GroupItem item) => widget.issues.any(
+    (i) => i.target?.startsWith('${item.id.value}/') ?? false,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final items = widget.items;
+    final active = items.any((i) => i.id == _active)
+        ? _active
+        : items.lastOrNull?.id;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        for (final (index, item) in items.indexed)
+          if (item.id == active || _hasIssue(item))
+            _ActiveRow(
+              key: ValueKey(item.id),
+              title: l10n.groupItemTitle(widget.itemLabel, index + 1),
+              removeLabel: l10n.removeGroupItem(widget.itemLabel),
+              fields: widget.fields,
+              item: item,
+              issues: widget.issues,
+              onChanged: (item) => widget.onReplace(index, item),
+              onRemove: () => widget.onRemove(index),
+            )
+          else
+            _FoldedRow(
+              key: ValueKey(item.id),
+              number: index + 1,
+              title: l10n.groupItemTitle(widget.itemLabel, index + 1),
+              summary: formatGroupSummary(
+                context,
+                widget.type,
+                widget.group,
+                RepeatingGroupValue([item]),
+              ),
+              onTap: () => setState(() => _active = item.id),
+            ),
+      ],
+    );
+  }
+}
+
+/// A finished row in one line: its number, what's in it, and a check.
+class _FoldedRow extends StatelessWidget {
+  const _FoldedRow({
+    super.key,
+    required this.number,
+    required this.title,
+    required this.summary,
+    required this.onTap,
+  });
+
+  final int number;
+  final String title;
+  final String summary;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: Semantics(
+        button: true,
+        label: '$title: $summary',
+        excludeSemantics: true,
+        child: Material(
+          color: c.surfaceSunken,
+          borderRadius: AppRadius.pillAll,
+          child: InkWell(
+            borderRadius: AppRadius.pillAll,
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.sm,
+              ),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 14,
+                    backgroundColor: c.surfaceBase,
+                    child: Text(
+                      '$number',
+                      style: context.textStyles.labelMedium,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Text(
+                      summary,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.textStyles.titleMedium,
+                    ),
+                  ),
+                  Icon(AppIcons.check, color: c.success, size: 20),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The row being filled in: its title, "Now", a stepper per number, and
+/// remove.
+class _ActiveRow extends StatelessWidget {
+  const _ActiveRow({
     super.key,
     required this.title,
     required this.removeLabel,
@@ -361,50 +517,87 @@ class _CompactItemRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final c = context.colors;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-              top: AppSpacing.lg,
-              right: AppSpacing.md,
-            ),
-            child: Text(
-              title,
-              style: context.textStyles.labelMedium?.copyWith(
-                color: context.colors.textSecondary,
-              ),
-            ),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: c.brandPrimarySoft.withValues(alpha: 0.5),
+          borderRadius: AppRadius.lgAll,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.md,
+            AppSpacing.xs,
+            AppSpacing.xs,
+            AppSpacing.md,
           ),
-          for (final sub in fields) ...[
-            Expanded(
-              child: NumberValueEditor(
-                field: sub,
-                value: item.values[sub.id] as NumberValue?,
-                label: sub.required ? '${sub.name} *' : sub.name,
-                errorText: firstIssueMessage(
-                  l10n,
-                  issues,
-                  LogValidator.itemTarget(item.id, sub.id),
-                ),
-                onChanged: (value) => onChanged(
-                  item.withValues(_withValue(item.values, sub.id, value)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  Text(title, style: context.textStyles.titleMedium),
+                  const SizedBox(width: AppSpacing.sm),
+                  StatusChip(label: l10n.groupRowNow, tone: StatusTone.active),
+                  const Spacer(),
+                  IconButton(
+                    tooltip: removeLabel,
+                    icon: const Icon(AppIcons.close),
+                    onPressed: onRemove,
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: AppSpacing.sm),
+                // Side by side when every stepper has room; stacked on a
+                // narrow screen.
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    Widget editor(ActivityField sub) => NumberValueEditor(
+                      field: sub,
+                      value: item.values[sub.id] as NumberValue?,
+                      label: sub.required ? '${sub.name} *' : sub.name,
+                      stepper: true,
+                      errorText: firstIssueMessage(
+                        l10n,
+                        issues,
+                        LogValidator.itemTarget(item.id, sub.id),
+                      ),
+                      onChanged: (value) => onChanged(
+                        item.withValues(_withValue(item.values, sub.id, value)),
+                      ),
+                    );
+                    final roomy =
+                        constraints.maxWidth / fields.length >= _stepperWidth;
+                    return Flex(
+                      direction: roomy ? Axis.horizontal : Axis.vertical,
+                      crossAxisAlignment: roomy
+                          ? CrossAxisAlignment.start
+                          : CrossAxisAlignment.stretch,
+                      children: [
+                        for (final (i, sub) in fields.indexed) ...[
+                          if (i > 0)
+                            const SizedBox.square(dimension: AppSpacing.sm),
+                          if (roomy)
+                            Expanded(child: editor(sub))
+                          else
+                            editor(sub),
+                        ],
+                      ],
+                    );
+                  },
                 ),
               ),
-            ),
-            const SizedBox(width: AppSpacing.sm),
-          ],
-          IconButton(
-            tooltip: removeLabel,
-            icon: const Icon(AppIcons.close),
-            onPressed: onRemove,
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
+
+  /// The narrowest a stepper is laid out beside another.
+  static const double _stepperWidth = 150;
 }
 
 Map<ActivityFieldId, FieldValue> _withValue(

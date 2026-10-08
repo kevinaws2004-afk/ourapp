@@ -28,7 +28,7 @@ If code and docs disagree, the docs win unless the owner says otherwise; fix the
 
 ## 3. Technology stack
 
-Flutter · Dart 3 (null-safe) · SQLite (local, V1 source of truth) · Riverpod · go_router · native Flutter animations · gesture/drag-and-drop built-ins · fl_chart behind the shared `AppChart` (ADR-033) · drift for SQLite (ADR-011) · gen-l10n localization (ADR-015) · Phosphor icons via the bundled official font + generated registry (ADR-024) · DM Mono for numeric tokens (ADR-032). Riverpod 3 providers are hand-written; no riverpod_generator, no freezed (ADR-014). **No backend.** Android first, iOS-compatible.
+Flutter · Dart 3 (null-safe) · SQLite (local, V1 source of truth) · Riverpod · go_router · native Flutter animations · gesture/drag-and-drop built-ins · fl_chart behind the shared `AppChart` (ADR-033) · drift for SQLite (ADR-011) · gen-l10n localization (ADR-015) · Phosphor icons via the bundled official font + generated registry (ADR-024) · three light themes on one token system, Plus Jakarta Sans (ADR-045). Riverpod 3 providers are hand-written; no riverpod_generator, no freezed (ADR-014). **No backend.** Android first, iOS-compatible.
 
 ## 4. Where things live
 
@@ -40,7 +40,7 @@ Flutter · Dart 3 (null-safe) · SQLite (local, V1 source of truth) · Riverpod 
 | `lib/shared/widgets/` | Reusable design-system components |
 | `lib/features/<feature>/{data,domain,presentation}/` | Feature code (only the layers that are needed). Implemented: `settings` (preferences, Me), `activity_types` (types, fields, builder, built-in activities, the one list of activities in Me → Activities and Browse activities), `activity_logs` (logs, typed values, generic form renderer), `plans` (plans and tasks, day overview, the item screen where you log (ADR-035), date-based Plan tab), `today` (Today screen), `focus` (focus timer, ADR-031), `measurements` (Me → Body measurements), `insights` (generic analytics engine + charts, ADR-034, ADR-043), `challenges` (daily challenges and streaks, ADR-044) |
 | `lib/l10n/` | ARB strings (`app_en.arb`) + committed gen-l10n output |
-| `assets/fonts/` | Bundled fonts with licenses: Fraunces, DM Sans and DM Mono (OFL), Phosphor icons (MIT) |
+| `assets/fonts/` | Bundled fonts with licenses: Plus Jakarta Sans (OFL), Phosphor icons (MIT) |
 | `tool/` | `generate_phosphor_glyphs.py` (icon constants and registry) |
 | `drift_schemas/` | Exported schema snapshots per version (for migration tests) |
 | `test/`, `integration_test/` | Unit/widget/repository tests mirroring `lib/`; on-device launch test |
@@ -97,7 +97,7 @@ Unit tests for domain rules; repository tests against real in-memory SQLite (no 
 
 ## 10. UI/UX rules
 
-The product must feel calm, premium, personal and distinctive, never a generic CRUD or black dashboard app. Use tokens and shared components; implement loading/empty/error/success states; apply the Plan vs Reality grammar; responsive by window size class; accessibility (48dp, contrast, 200% text, semantics, reduced motion); purposeful motion; run the visual quality checklist before calling UI done. Colors: only white shades, mist `#DDF0EF` and the six palette colors sky, lilac, teal, rose, slate, coral; text/borders are slate shades (ADR-029, ADR-038; brand = teal). Flowfy is a principles reference only; never copy it. Rules: [`ai/rules/ui_rules.md`](ai/rules/ui_rules.md).
+The product must feel calm, premium, personal and distinctive, never a generic CRUD or black dashboard app. Use tokens and shared components; implement loading/empty/error/success states; apply the Plan vs Reality grammar; responsive by window size class; accessibility (48dp, contrast, 200% text, semantics, reduced motion); purposeful motion; run the visual quality checklist before calling UI done. Themes (ADR-045): three light themes (Rose, Lavender, Papaya) chosen in Me → Appearance; each is a set of token values plus a few treatments read only by shared components, so screens never branch on the theme; no dark mode for now. The owner's Stitch project (`design/`) is the visual/UX reference for tokens and screen composition, but its example content never sets the data model. Flowfy is a principles reference only; never copy it or use its name. Rules: [`ai/rules/ui_rules.md`](ai/rules/ui_rules.md).
 
 ## 11. Dependency rules
 

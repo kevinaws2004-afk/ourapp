@@ -5,24 +5,22 @@ import '../../../../core/design/tokens/sizes.dart';
 import '../../../../core/design/context_ext.dart';
 import '../../../../core/design/keys/activity_icon_ids.dart';
 import '../../../../core/design/tokens/activity_palette.dart';
-import '../../../../core/design/tokens/radius.dart';
-import '../../../../core/design/tokens/spacing.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../shared/widgets/activity_badge.dart';
 import '../../../../shared/widgets/done_check.dart';
+import '../../../../shared/widgets/item_card.dart';
+import '../../../../shared/widgets/status_chip.dart';
 import '../../domain/plan.dart';
 import '../../domain/watch_day_overview.dart';
 import '../../../activity_logs/presentation/value_formatting.dart';
 import '../plan_formatting.dart';
 
-/// A plan in the Plan vs Reality grammar (design_system.md §1.2, A16), the
-/// same for tasks and activities:
-/// - open or in progress: outline (the activity color), secondary text
-/// - done: filled with the activity's soft color (tasks: brand soft),
-///   primary text
-/// - skipped / cancelled: faint outline, faded (never red)
+/// A plan as an item card (ADR-045) in the Plan vs Reality grammar
+/// (design_system.md §1.2): the status chip says planned, in progress or
+/// done, the check on the right fills when done, and skipped or cancelled
+/// items fade (never red). The same for tasks and activities.
 ///
-/// The check on the left marks it done or not done ([onToggleDone], A17);
+/// The check marks it done or not done ([onToggleDone], A17);
 /// it's inactive when there's nothing to toggle. Tapping the row opens the
 /// item to log into it ([onTap], ADR-035); [onMore] opens the plan options.
 class PlanItemTile extends StatelessWidget {
@@ -65,33 +63,37 @@ class PlanItemTile extends StatelessWidget {
     final inactive =
         status == EffectivePlanStatus.skipped ||
         status == EffectivePlanStatus.cancelled;
-
-    final decoration = BoxDecoration(
-      color: done ? activity?.soft ?? colors.brandPrimarySoft : null,
-      borderRadius: AppRadius.mdAll,
-      border: done
-          ? null
-          : Border.all(
-              color: inactive
-                  ? colors.borderSubtle
-                  : activity?.solid ?? colors.borderStrong,
-              width: AppSizes.outline,
-            ),
-    );
-    final details = [
-      ?formatPlanTime(context, plan),
-      ?formatPlanOutcome(context, item),
-    ].join(' · ');
-    final titleColor = inactive
-        ? colors.textTertiary
-        : done
-        ? colors.textPrimary
-        : colors.textSecondary;
-    // What was logged into it ("Bench press 60 kg × 8 (×2)"), A18.
-    final summary = switch ((type, item.records.firstOrNull)) {
+    final chip = switch (status) {
+      EffectivePlanStatus.planned => StatusChip(
+        label: l10n.planStatusPlanned,
+        tone: StatusTone.scheduled,
+      ),
+      EffectivePlanStatus.inProgress => StatusChip(
+        label: l10n.planStatusInProgress,
+        tone: StatusTone.active,
+      ),
+      EffectivePlanStatus.completed => StatusChip(
+        label: l10n.planStatusDone,
+        tone: StatusTone.done,
+        icon: AppIcons.check,
+      ),
+      EffectivePlanStatus.skipped => StatusChip(
+        label: l10n.planStatusSkipped,
+        tone: StatusTone.neutral,
+      ),
+      EffectivePlanStatus.cancelled => StatusChip(
+        label: l10n.planStatusCancelled,
+        tone: StatusTone.neutral,
+      ),
+    };
+    // What was logged into it ("Bench press 60 kg × 8 (×2)", A18), or how
+    // long it took against the plan once done.
+    final logged = switch ((type, item.records.firstOrNull)) {
       (final type?, final log?) => summarizeLog(context, type, log),
       _ => '',
     };
+    final outcome = done ? formatPlanOutcome(context, item) : null;
+    final summary = [?outcome, if (logged.isNotEmpty) logged].join(' · ');
 
     // Say what a tap does (ADR-030).
     final tapHint = plan.isTask
@@ -99,96 +101,47 @@ class PlanItemTile extends StatelessWidget {
         : done
         ? l10n.planOpenRecordHint
         : l10n.planRecordHint(plan.title);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: Semantics(
-        onTapHint: tapHint,
-        onLongPressHint: onLongPress == null ? null : l10n.planQuickActionsHint,
-        child: Material(
-          type: MaterialType.transparency,
-          child: InkWell(
-            borderRadius: AppRadius.mdAll,
-            onTap: onTap,
-            onLongPress: onLongPress,
-            child: Ink(
-              decoration: decoration,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.xs,
-                  vertical: AppSpacing.sm,
-                ),
-                child: Row(
-                  children: [
-                    DoneCheck(
-                      done: done,
-                      color: inactive
-                          ? colors.textTertiary
-                          : activity?.solid ?? colors.textSecondary,
-                      onPressed: onToggleDone,
-                    ),
-                    if (!plan.isTask) ...[
-                      Opacity(
-                        opacity: inactive ? 0.5 : 1,
-                        // The type can briefly be missing while the types
-                        // stream catches up with a just-created activity.
-                        child: ActivityBadge(
-                          iconId: type?.iconId ?? ActivityIconIds.fallback,
-                          colorKey:
-                              type?.colorKey ?? ActivityColorKey.slate.name,
-                          size: AppSizes.badgeSmall,
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.md),
-                    ],
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            plan.title,
-                            style: context.textStyles.titleMedium?.copyWith(
-                              color: titleColor,
-                            ),
-                          ),
-                          if (details.isNotEmpty)
-                            Text(
-                              details,
-                              style: context.textStyles.bodyMedium?.copyWith(
-                                color: colors.textSecondary,
-                              ),
-                            ),
-                          if (summary.isNotEmpty)
-                            Text(
-                              summary,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: context.textStyles.bodyMedium?.copyWith(
-                                color: colors.textSecondary,
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                    if (plan.isRepeating)
-                      Icon(
-                        AppIcons.repeat,
-                        size: AppSpacing.lg,
-                        color: colors.textSecondary,
-                        semanticLabel: l10n.planRepeating,
-                      ),
-                    IconButton(
-                      tooltip: l10n.planOptions,
-                      icon: const Icon(AppIcons.more),
-                      onPressed: onMore,
-                    ),
-                    ?dragHandle,
-                  ],
-                ),
-              ),
+    return ItemCard(
+      title: plan.title,
+      time: formatPlanTime(context, plan),
+      chip: chip,
+      summary: summary,
+      faded: inactive,
+      onTap: onTap,
+      onLongPress: onLongPress,
+      tapHint: tapHint,
+      longPressHint: onLongPress == null ? null : l10n.planQuickActionsHint,
+      // The type can briefly be missing while the types stream catches up
+      // with a just-created activity.
+      leading: plan.isTask
+          ? null
+          : ActivityBadge(
+              iconId: type?.iconId ?? ActivityIconIds.fallback,
+              colorKey: type?.colorKey ?? ActivityColorKey.slate.name,
             ),
+      trailing: [
+        if (plan.isRepeating)
+          Icon(
+            AppIcons.repeat,
+            size: AppSizes.iconSmall,
+            color: colors.textSecondary,
+            semanticLabel: l10n.planRepeating,
           ),
+        DoneCheck(
+          done: done,
+          color: inactive
+              ? colors.textTertiary
+              : activity?.solid ?? colors.textSecondary,
+          onPressed: onToggleDone,
         ),
-      ),
+        IconButton(
+          tooltip: l10n.planOptions,
+          icon: const Icon(AppIcons.more),
+          color: colors.textSecondary,
+          onPressed: onMore,
+        ),
+        ?dragHandle,
+      ],
     );
   }
 }

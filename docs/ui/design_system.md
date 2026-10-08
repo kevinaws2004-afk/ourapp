@@ -3,51 +3,35 @@
 > The canonical source for every visual value in the app. Feature code consumes **semantic tokens** from here and never hardcodes colors, type styles, spacing, radii, shadows, durations or curves.
 > Interaction patterns, screens and states: [ui_guidelines.md](ui_guidelines.md). Layout adaptation: [responsive_design.md](responsive_design.md).
 >
-> **Owner direction for the upcoming visual pass (2026-10-04).** The current look reads as a functional prototype: cream/white surfaces with basic cards and forms. After the core functionality is done, one **dedicated visual/product-design pass across the whole app** will replace the provisional v0 values. It won't patch screens one by one. The brief:
-> - **Colorful, alive, polished, premium, enjoyable**: a product people *want* to open every day. Not the cream/yellow-heavy v0, not all dark, not plain white. A balanced system of soft but meaningful colors; activity colors stay colorful.
-> - Typography, spacing, cards, buttons, icons, progress indicators, illustrations and empty states should feel like a real consumer product. Clean doesn't mean empty.
-> - The product story is **Plan → Do → Record → Measure → Understand → Improve**, not just planning. Today = a living view of the day. Plan = designing the future. Record = naturally continuing a planned activity. Insights = "am I actually improving?" Me = personal configuration.
-> - Planner apps such as PlanWiz are a reference for *quality of feel only*. Never copy their layouts, colors or branding.
-> - **Until then:** no visual redesign, no architecture changes for looks, no new features from this direction. Keep everything token-driven (colors, type, spacing, radii, sizes in `AppSizes`, motion) and in shared components, so the pass can change the visual system without touching domain or database code.
->
-> **Status: Accepted as provisional v0 (ADR-016).** The *structure* (token categories, semantic roles, rules) is binding. The concrete *values* (hex codes, font families, motif) are provisional until the owner reviews the dev token showcase on a device. "Daylight" is the design direction's name, never the product name (ADR-010). Contrast ratios listed were computed for the proposed values (WCAG 2.x formula).
+> **Status: three light themes on one token system (ADR-045, 2026-10-08).** The visual reference is the owner's Stitch project ("Personal Life OS", exports in `design/stitch_personal_life_os*/`), studied in [visual_redesign_plan.md](visual_redesign_plan.md). It replaced the provisional "Daylight" v0 values (ADR-016) and the six-color restriction (ADR-038). Built so far: the tokens and shared components, Me → Appearance, Today and the item screen (the first vertical slice). Plan, Challenges, Insights and Me get their own screen-level pass after the owner reviews the slice; until then they use the new tokens and components without a new layout.
 
 ---
 
-## 1. Identity concept
+## 1. Identity
 
-**What the product is about:** understanding and improving how a person spends their time and lives their day (§33.1). The identity draws on **the shape and light of a day**: dawn, daylight, dusk, night. It does not borrow from fitness or productivity clichés.
+**One product, three visual personalities.** The user picks a theme in Me → Appearance; everything about the product (screens, flows, data, components) is the same in each. Themes differ in token *values* and a few *treatments* read only by shared components (§7.1). Screens never branch on the theme.
 
-Working concept name: **"Daylight"** (internal design language name, not the product name).
+| Theme (working name) | Canvas | Signature (`brandPrimary`) | Action (`action`) | Accent | Character |
+|---|---|---|---|---|---|
+| **Rose** (`rose`) | blush `#FBF4F5` | rose `#B04E62` | teal `#2F8180` | butter `#9A6A12` | soft, warm; borderless cards with a rose glow |
+| **Lavender** (`lavender`, default) | porcelain `#F8F8FE` | electric lavender `#6847F0` | mint `#047857` | sky `#0369A1` | crisp, luminous; hairline lavender edges, lavender→mint progress |
+| **Papaya** (`papaya`) | warm porcelain `#FBF9F7` | papaya `#C93A1B` | aqua mint `#2DD4BF` (dark text) | periwinkle `#4F46E5` | bright, tactile; rimmed cards, sand wells, floating nav, coral→peach progress, facts as chips |
 
-| Quality (§33) | How the identity delivers it |
-|---|---|
-| Calm, easy on the eyes | Warm paper-like neutrals instead of stark white; deep night blue-ink instead of pure black; low-saturation pastels |
-| Premium, intentional | Confident editorial display type paired with a clean UI sans; generous spacing; restrained depth |
-| Personal | Each activity owns a color from a curated palette; greetings and copy adapt to the time of day and the user's activities |
-| Visually distinctive | Signature motifs: the **Day Arc** and the **Plan vs Reality** visual language (§1.1, §1.2) |
-| Fast, uncluttered | Few surfaces, few buttons, progressive disclosure, motion that finishes quickly |
+The rose theme is built from the app's own rose and teal. It deliberately does not use the Stitch export's pink/teal values, which are another product's palette.
 
-### 1.1 Signature motif: the Day Arc
-A soft horizon arc that represents the hours of a day. Used sparingly and consistently:
-- Today header: shows progress through the day; logged activities appear as colored segments along the arc.
-- Onboarding: the narrative device (the arc rises as the user progresses).
-- Focus Mode: a slow-filling arc/ring around the timer.
-- Completion states: brief arc "fill" animation.
-Never used as decoration on data-dense screens (Insights, History).
+Qualities (§33) the system delivers: calm (tinted canvases, never pure white or black), premium (heavy display type, generous rounded cards, soft tinted glows), personal (each activity keeps its color; the theme is the user's choice), distinctive (status chips and the done check, the day ring, Up next), fast (one big action per card; cards, not forms).
 
-### 1.2 Plan vs Reality visual language (core, product-wide)
-The product's central distinction (§20) gets a consistent visual grammar:
-- **Planned** = *outline*: dashed or thin 1.5dp border in the activity color, transparent/canvas fill, secondary text.
-- **Actual (logged)** = *filled*: activity `soft` surface with a solid activity-color accent (bar/dot/icon), primary text.
-- **Completed task** = filled like any done item (brand `soft` surface) with the ✓; not struck through (strike-through is visually noisy).
-- **One rule for every row (A16, A17):** planned/in progress = outline; done = filled + ✓; skipped/cancelled = faded outline. Every row starts with the same check (open circle in the activity color, ✓ in `success` when done), which toggles done where that's possible. "Done" isn't repeated as text.
-- **Skipped/cancelled** = outline at reduced emphasis + status label (never red; skipping is not an error).
-Shape carries the meaning, not only color (accessibility).
+### 1.1 Plan vs Reality visual language (product-wide)
+Every item on a day is an **item card** (`ItemCard`): activity badge, time, a **status chip**, title, what was logged, and the **done check** on the right.
+- **Planned** = `scheduled` chip ("Planned"), open ring in the activity color.
+- **In progress** = `active` chip ("In progress"; "Live" while its timer runs).
+- **Done** = `done` chip with ✓ and the filled check circle in `success`; the summary shows what was logged and, for a planned length, "45 min of 1 h".
+- **Skipped / cancelled** = neutral chip, the card fades to 55% (never red; skipping is not an error).
+- Text always says the state; color and the check only reinforce it (accessibility).
 
-### 1.3 Relationship to the reference (Flowfy)
-Principles adopted (§33.1): cohesive visual world, soft pastel surfaces, large confident display type, rounded touch-friendly components, subtle borders over heavy shadows, small memorable accent set, purposeful illustration, conversational onboarding, progressive disclosure, personalization, outcome-oriented copy.
-**Not adopted:** its palette, fonts, illustrations, mascot, layouts, wording, component designs. No mascot is planned for this product. Any resemblance found in review must be changed.
+### 1.2 References
+- **Stitch "Personal Life OS"** (owner's own design work): visual and UX reference for tokens *and* screen composition (ADR-045). Its example content (gym sets, kcal, budgets, sensors, AI) never dictates the data model; screens are built from the generic engine.
+- **Flowfy**: principles only (§33.1). Not its palette, fonts, illustrations, layouts or wording. No product name, file or token may contain "Flowfy".
 
 ---
 
@@ -55,116 +39,86 @@ Principles adopted (§33.1): cohesive visual world, soft pastel surfaces, large 
 
 ### 2.1 Token architecture
 ```text
-Raw palette (private)  →  Semantic roles (public, theme-aware)  →  Components
-   e.g. whiteCanvas           surface.canvas                          AppSurface
+Theme values (lib/core/design/themes/*_theme.dart)  →  AppColors roles (public)  →  shared components / screens
 ```
-- Feature code uses **semantic roles only** (`tokens.color.surfaceCanvas`, `tokens.color.textSecondary`, `tokens.activity(key).soft`).
-- Raw palette values are referenced only inside `core/design/`.
-- Every semantic role has a light and a dark value.
+- Feature code uses **semantic roles only** (`context.colors.surfaceCanvas`, `context.colors.textSecondary`, `context.tokens.activity(key).soft`).
+- Hex values live only in the three theme files.
+- Every role has a value in every theme. All themes are light (ADR-045); there is no dark mode for now.
 
-### 2.2 Semantic roles: neutrals & brand
+### 2.2 Roles
 
-**ADR-029 / ADR-038 (owner decisions):** the whole app uses only **white shades, mist `#DDF0EF` and six activity-palette colors: sky, lilac, teal, rose, slate, coral** (§2.4). Neutrals are white shades (light surfaces), slate shades (text, borders, dark-mode surfaces) and mist (light sunken surface, = teal soft). Roles:
-- brand = **teal**
-- accent = **coral**
-- success = **teal**
-- warning = **coral**
-- danger = **rose**
-
-`test/core/design/palette_consistency_test.dart` enforces this.
-
-| Role | Light | Dark | Usage | Contrast notes |
+| Role | Rose | Lavender | Papaya | Usage |
 |---|---|---|---|---|
-| `surfaceCanvas` | `#F7FBFB` (white shade) | `#13171E` (deep slate) | App background | — |
-| `surfaceBase` | `#FFFFFF` | `#1A1F28` | Primary content surfaces, sheets | — |
-| `surfaceRaised` | `#FFFFFF` | `#232935` | Floating elements (menus, popovers, FAB container) | — |
-| `surfaceSunken` | `#DDF0EF` (**mist**) | `#0E1116` | Wells, input backgrounds, segmented control track | — |
-| `borderSubtle` | `#E6E9EF` (slate soft) | `#2A313E` | Hairline separators, card outlines (decorative) | decorative only |
-| `borderStrong` | `#5D6A80` (slate solid) | `#6F7A8F` | Input outlines, focus-adjacent boundaries | ≥ 3:1 on canvas (5.25 / 4.15) |
-| `textPrimary` | `#252C3A` (slate ink) | `#F4FAF9` (white shade) | Body and headings | 13.4 / 17.0 on canvas |
-| `textSecondary` | `#515D72` | `#A8B3C7` (slate solid) | Supporting text, metadata | 6.4 / 8.5 (5.6 on mist) |
-| `textTertiary` | `#7F889C` | `#808AA0` | Placeholders, disabled, large-only decorative text | 3.4 / 5.2 (light: **not** for small essential text) |
-| `brandPrimary` | `#2F8180` (**teal** solid) | `#7CCBC8` (teal solid) | Primary actions, selection, focus ring, links | white text on it 4.59:1; 4.4 / 9.6 vs canvas (graphics) |
-| `onBrandPrimary` | `#FFFFFF` | `#13171E` | Text/icons on primary | 4.59 / 9.61 |
-| `brandPrimarySoft` | `#DDF0EF` (teal soft = mist) | `#162B2B` (teal soft) | Selected chips, highlighted rows, nav indicator | — |
-| `onBrandPrimarySoft` | `#252C3A` (= textPrimary) | `#F4FAF9` (= textPrimary) | Text/icons on soft primary | ≥ 4.5 |
-| `accentDawn` | `#C0503E` (**coral** solid) | `#F29A89` (coral solid) | Rating stars, highlights, Day Arc "now" marker, celebration accents | graphics only (4.5 / 8.4); **never small text** |
-| `scrim` | `#252C3A` @ 40% | `#0E1116` @ 60% | Behind sheets/dialogs | — |
+| `surfaceCanvas` | `#FBF4F5` | `#F8F8FE` | `#FBF9F7` | Screen background |
+| `surfaceBase` / `surfaceRaised` | `#FFFFFF` | `#FFFFFF` | `#FFFFFF` | Cards, sheets, menus |
+| `surfaceSunken` | `#F7E8EB` | `#F1EEFD` | `#F4EFEA` | Inputs, tracks, wells, folded rows |
+| `borderSubtle` | `#F1DEE3` | `#E8E4FA` | `#EEE6E0` | Hairlines, card edges (decorative) |
+| `borderStrong` | `#8F6F79` | `#837E9E` | `#8A746D` | Meaningful outlines (≥ 3:1) |
+| `textPrimary` | `#2B2330` | `#1E1B4B` | `#1E232F` | Headings, body |
+| `textSecondary` | `#5C5262` | `#4B4868` | `#4F5563` | Metadata, descriptions |
+| `textTertiary` | `#8C8291` | `#7D7A96` | `#828795` | Placeholders, disabled (never small essential text) |
+| `brandPrimary` / `onBrandPrimary` | `#B04E62` / white | `#6847F0` / white | `#C93A1B` / white | Selection, primary buttons, links, focus |
+| `brandPrimarySoft` / `onBrandPrimarySoft` | `#F9E1E7` / `#7A2C3D` | `#ECE8FE` / `#4A2BC2` | `#FFE9E2` / `#9A2A10` | Active chips, nav indicator, steppers |
+| `action` / `onAction` | `#2F8180` / white | `#047857` / white | `#2DD4BF` / `#1E232F` | Big "go" actions: Start, Mark done |
+| `actionSoft` / `onActionSoft` | `#DDF0EF` / `#1D5655` | `#D9F7E8` / `#065F46` | `#DDF8F4` / `#0F6B62` | Done chips |
+| `accent` / `accentSoft` / `onAccentSoft` | `#9A6A12` / `#FBF0D5` / `#6B4A0C` | `#0369A1` / `#E0F2FE` / `#075985` | `#4F46E5` / `#EEF0FF` / `#3730A3` | Scheduled chips, info |
+| `accentDawn` | `#D9822B` | `#F59E0B` | `#FF6B4A` | Rating stars (graphics only) |
+| `success` / `successContainer` | `#2F8180` / `#DDF0EF` | `#059669` / `#D9F7E8` | `#0D9488` / `#DDF8F4` | Done check, saved (icons/fills) |
+| `warning` / `warningContainer` | `#B4582A` / `#FBE8DC` | `#C2410C` / `#FFEDE0` | `#C2410C` / `#FFEDE0` | At risk (icons/fills) |
+| `danger` / `dangerContainer` | `#B4233F` / `#FBE3E8` | `#BE123C` / `#FFE4E8` | `#BE123C` / `#FFE4E8` | Errors; may be text |
+| `scrim` | ink @ 40% | ink @ 40% | ink @ 40% | Behind sheets |
 
-### 2.3 Semantic roles: status
+**Contrast (enforced by `test/core/design/color_contrast_test.dart` for every theme):** text roles ≥ 4.5:1 on canvas, cards, wells and every soft container; every `on*` role ≥ 4.5:1 on its fill; graphic roles ≥ 3:1 on canvas and cards; brand and danger ≥ 4.5:1 (usable as text). Stitch's bright fills fail with white text (mint 2.5:1, papaya 2.8:1), so bright fills carry dark text (Papaya's action) or a deeper tone is used.
 
-| Role | Light | Dark | Container (light / dark) | Usage |
-|---|---|---|---|---|
-| `success` | `#2F8180` (**teal**) | `#7CCBC8` | `#DDF0EF` / `#162B2B` (teal soft) | Completion, saved. Icons/fills only, never small text (4.4:1 light) |
-| `warning` | `#C0503E` (**coral**) | `#F29A89` | `#FBE4DF` / `#341E1A` (coral soft) | Non-blocking caution. Icons/fills only |
-| `danger` | `#B04E62` (**rose**) | `#EE9AAA` | `#F8E3E7` / `#331E24` (rose soft) | Destructive actions, real errors; may be text (4.9:1 light) |
-| `info` | = `brandPrimary` | = `brandPrimary` | = `brandPrimarySoft` | Neutral notices |
+Status colors never judge the user (a skipped plan is neutral, not `danger`).
 
-Status colors are never used to judge the user (a skipped plan is neutral, not `danger`).
+### 2.3 Activity palette
+The DB stores one of six keys (`sky`, `lilac`, `rose`, `teal`, `coral`, `slate`); each theme resolves them to its own `solid` + `soft`, so an activity's color sits in the theme:
 
-### 2.4 Activity palette
+| Key | Rose (solid / soft) | Lavender | Papaya |
+|---|---|---|---|
+| `sky` | `#4A78A8` / `#E1ECF7` | `#0284C7` / `#E0F2FE` | `#0284C7` / `#E0F2FE` |
+| `lilac` | `#7A62B5` / `#ECE6F8` | `#7C5CFC` / `#EDE9FE` | `#5B5BD6` / `#EEF0FF` |
+| `rose` | `#B04E62` / `#F8E3E7` | `#DB2777` / `#FCE7F3` | `#E11D48` / `#FFE4E9` |
+| `teal` | `#2F8180` / `#DDF0EF` | `#059669` / `#D9F7E8` | `#0D9488` / `#D9F7F3` |
+| `coral` | `#C0503E` / `#FBE4DF` | `#EA580C` / `#FFEDE0` | `#E8512F` / `#FFEAE3` |
+| `slate` | `#5D6A80` / `#E6E9EF` | `#64748B` / `#EEF1F6` | `#5B6170` / `#EEF0F3` |
 
-Users pick an activity color from a curated set. The DB stores the **key**. Each key resolves to four theme-aware values:
+Rules: `solid` for icons, bars, chart marks (≥ 3:1 on cards and on its `soft`); `soft` for tinted surfaces; text on `soft` is always a text role. Keys are permanent: `sand` was removed (ADR-029); stored `sage`/`moss` show as teal and `apricot` as coral (`ActivityColorKey.fromName`); any other unknown key falls back to `slate`.
 
-| Key | `solid` light | `soft` light | `solid` dark | `soft` dark |
-|---|---|---|---|---|
-| `sky` | `#4A78A8` | `#E1ECF7` | `#8DB6E3` | `#1B2533` |
-| `lilac` | `#7A62B5` | `#ECE6F8` | `#B9A6EC` | `#251F35` |
-| `rose` | `#B04E62` | `#F8E3E7` | `#EE9AAA` | `#331E24` |
-| `teal` | `#2F8180` | `#DDF0EF` | `#7CCBC8` | `#162B2B` |
-| `coral` | `#C0503E` | `#FBE4DF` | `#F29A89` | `#341E1A` |
-| `slate` | `#5D6A80` | `#E6E9EF` | `#A8B3C7` | `#20242C` |
-
-Usage rules:
-- `solid` → icons, accent bars, chart lines/bars, dots (graphics; ≥ 3:1 in light, 3.5–4.9 against canvas and 3.3–4.5 against its own `soft`; ≥ 7:1 in dark against both).
-- `soft` → tinted surfaces for logged items, activity headers, selected states.
-- **Text on `soft` is always `textPrimary`/`textSecondary`**, never `solid` (light-mode solids are below 4.5:1 for small text).
-- A screen may show many activity colors, but **one screen = one dominant accent** (brand or the focused activity) to avoid rainbow clutter.
-- Adding or removing a palette key is a design-system change (tokens + contrast check + ADR), never a user-entered hex. `sand` was removed by owner decision (ADR-029); `sage`, `apricot` and `moss` were removed when the owner limited the app to six colors (ADR-038). Stored `sage`/`moss` show as teal and `apricot` as coral (`ActivityColorKey.fromName`), and the builder saves the replacement on the next save. Any other stored key that no longer exists renders with the `slate` fallback until the user picks a new color.
-
-### 2.5 Gradients
-Allowed only for: the Day Arc sky wash (subtle, 2 stops, ≤ 15% lightness change) and onboarding/illustration backgrounds. Never on buttons, cards, charts or text. (Avoid "excessive gradients", §33.5.)
+### 2.4 Gradients
+Allowed for: progress fills in themes whose treatment says so (§7.1), the hero card's corner wash, the empty-state orb. Never on text or as card fills.
 
 ---
 
 ## 3. Typography
 
-### 3.1 Families (provisional, bundled, OFL-licensed)
+### 3.1 Family (ADR-045)
+**Plus Jakarta Sans** (OFL, v2.071 Google Fonts build), bundled as static weights 400/500/600/700/800 in `assets/fonts/plus_jakarta_sans/` with `OFL.txt`. Flutter family `PlusJakartaSans`. One family for every theme and every role.
 
-| Role | Family | Why |
-|---|---|---|
-| **Display / headline** | **Fraunces** (variable; use soft, low-contrast settings, `opsz` matched to size, weights 500–600) | Warm, editorial, human: gives the "personal, premium" voice and is unlike typical productivity apps |
-| **UI / body** | **DM Sans** (or Manrope as alternative) | Clean, friendly geometric sans with good small-size legibility |
-| **Numeric / data** | **DM Mono** (OFL, Regular + Medium; ADR-032), monospaced digits | Stable digits for timers, durations, tables, charts |
-
-Fallback: platform default sans. Fonts are bundled assets; ship only the weights used. Validate the final choice for Latin glyph coverage, tabular figure support, and rendering at small sizes on Android during the token showcase review (ADR-016).
-
-**Bundled files (Phase 1):** `assets/fonts/fraunces/Fraunces-Variable.ttf` (axes opsz, wght, SOFT, WONK) and `assets/fonts/dm_sans/DMSans-Variable.ttf` (axes opsz, wght), each with its `OFL.txt`. Flutter family names: `Fraunces`, `DMSans`. Weight and optical size are applied through `FontVariation`s. Display styles use `SOFT 50, WONK 0`.
-
-**Validation finding (resolved by ADR-032):** neither bundled variable font has a `tnum` feature, so the numeric tokens use DM Mono, whose digits are all the same width.
+Why (owner asked for a deliberate choice, not a copy): it is the family of all three Stitch directions, and its heavy 700–800 headlines with tight tracking are what give those screens their confident, friendly hierarchy. Fraunces' editorial serif fought the pill-and-card composition. It has **tabular figures** (`tnum`), so numbers and running timers no longer need DM Mono (whose monospace look read as technical; ADR-032 superseded). It covers ₹ € ° × –, and one family is lighter to ship than three. Previously bundled: Fraunces, DM Sans, DM Mono (removed).
 
 ### 3.2 Type scale
 
-Size/line-height in logical px. Tokens are semantic; never use raw sizes in features.
+| Token | Size / LH | Weight | Tracking | Usage |
+|---|---|---|---|---|
+| `displayLarge` | 36 / 44 | 800 | −0.9 | Big statements |
+| `displayMedium` | 30 / 38 | 800 | −0.6 | Today's greeting, tab titles |
+| `headlineLarge` | 26 / 34 | 700 | −0.4 | Screen titles |
+| `headlineSmall` | 22 / 28 | 700 | −0.2 | Card titles (Up next) |
+| `titleLarge` | 18 / 24 | 700 | −0.1 | Section headers, sheet titles |
+| `titleMedium` | 16 / 22 | 600 | 0 | Item titles, field card labels |
+| `bodyLarge` | 16 / 24 | 400 | 0 | Reading text, inputs |
+| `bodyMedium` | 14 / 20 | 400 | 0 | Secondary text |
+| `bodySmall` | 12 / 16 | 500 | 0 | Small meta |
+| `labelLarge` | 15 / 20 | 700 | 0.1 | Buttons |
+| `labelMedium` | 13 / 18 | 600 | 0.2 | Times, field labels, nav |
+| `labelSmall` | 11 / 14 | 700 | 0.5 | Chips, overlines (often upper case) |
+| `numericHero` | 56 / 64 | 800 | −1.5 | Running timer (tabular) |
+| `numericLarge` | 32 / 40 | 800 | −0.6 | Headline numbers (tabular) |
+| `numericMedium` | 20 / 26 | 700 | −0.2 | Ring counts, stepper values, stats (tabular) |
 
-| Token | Family | Size / LH | Weight | Tracking | Usage |
-|---|---|---|---|---|---|
-| `displayLarge` | Display | 40 / 46 | 560 | −0.5 | Onboarding statements, completion headlines |
-| `displayMedium` | Display | 32 / 38 | 560 | −0.4 | Today greeting, tab titles (large-title style) |
-| `headlineLarge` | Display | 26 / 32 | 560 | −0.2 | Screen titles, activity name on detail |
-| `headlineSmall` | Display | 21 / 27 | 560 | 0 | Section titles in rich screens |
-| `titleLarge` | UI | 18 / 24 | 600 | 0 | Card/list group titles, sheet titles |
-| `titleMedium` | UI | 16 / 22 | 600 | 0 | List item primary text |
-| `bodyLarge` | UI | 16 / 24 | 400 | 0 | Primary reading text, inputs |
-| `bodyMedium` | UI | 14 / 20 | 400 | 0.1 | Secondary text, descriptions |
-| `labelLarge` | UI | 15 / 20 | 600 | 0.1 | Buttons |
-| `labelMedium` | UI | 13 / 18 | 600 | 0.2 | Chips, tabs, field labels |
-| `labelSmall` | UI | 11 / 14 | 600 | 0.5, uppercase optional | Overlines, chart axes |
-| `numericHero` | DM Mono | 72 / 76 | 400 | −2 | Focus timer |
-| `numericLarge` | DM Mono | 34 / 40 | 500 | −0.5 | Insight headline numbers ("4h 32m") |
-| `numericMedium` | DM Mono | 20 / 24 | 500 | 0 | Durations on timeline, set table cells, focus banner |
-
-Rules: display family only at ≥ 21px; max two families per screen (display + UI); body text never below 14px; hierarchy via size/weight/color, never via ALL CAPS paragraphs. All styles scale with system text size (see accessibility).
+Rules: body text never below 14px except `bodySmall` meta; hierarchy via size/weight/color; all styles scale with system text size.
 
 ---
 
@@ -185,42 +139,50 @@ Rules: display family only at ≥ 21px; max two families per screen (display + U
 | `huge` | 48 | Hero spacing, onboarding |
 | `giant` | 64 | Top-of-screen breathing room on large layouts |
 
-Screen margins per breakpoint: [responsive_design.md](responsive_design.md). Prefer whitespace and grouping over boxes/cards (avoid "excessive cards").
+Screen margins per breakpoint: [responsive_design.md](responsive_design.md). Content sits in cards on the tinted canvas (§7); inside a card, whitespace groups things, not more boxes.
 
-## 5. Corner radius
+## 5. Corner radius (shared by every theme)
 
 | Token | Value | Use |
 |---|---|---|
-| `radius.xs` | 6 | Small tags, chart tooltips |
-| `radius.sm` | 10 | Inputs, set table cells, small chips |
-| `radius.md` | 16 | List groups, cards, buttons (non-pill) |
-| `radius.lg` | 24 | Sheets (top corners), large surfaces, onboarding cards |
-| `radius.xl` | 32 | Hero surfaces, focus mode controls |
-| `radius.pill` | 999 | Primary buttons, chips, segmented controls, FAB |
+| `xs` | 8 | Small tags, tooltips |
+| `sm` | 12 | Small surfaces |
+| `md` | 16 | Inner wells |
+| `lg` | 24 | Inputs, steppers, tiles, menus, snack bars |
+| `card` | 28 | Cards (`AppCard`, item cards, hero) |
+| `xl` | 32 | Sheet tops, floating nav |
+| `pill` | 999 | Buttons, chips, segmented controls, folded rows |
 
-Nested radii: inner radius = outer radius − padding (never larger than the container's).
+Nested radii: inner radius = outer radius − padding.
 
 ## 6. Borders, separators & component sizes
 
-Component sizes (badges, touch target, strokes, chart line/height, day cell) are `AppSizes` tokens (`core/design/tokens/sizes.dart`); features never use size literals.
-
-
-- `border.hairline` = 1dp `borderSubtle`: default outline for grouped surfaces in light mode (instead of shadows).
-- `border.input` = 1dp `borderStrong`; focused = 2dp `brandPrimary`.
-- `border.planned` = 1.5dp dashed (6 on / 4 off) in activity `solid` @ 70%.
-- Separators inside lists: hairline inset to text start; omit when spacing alone separates items.
+Component sizes (badges, touch target, strokes, chart sizes, duration boxes) are `AppSizes` tokens; features never use size literals.
+- Cards are edged by the theme (§7.1), never a heavy outline.
+- Inputs are borderless sunken wells; focused = 2dp `brandPrimary`; error = `danger`.
+- Separators inside lists: avoid; spacing and cards separate items.
 
 ## 7. Elevation & shadows
 
-Depth is restrained (§33.1). Three levels only:
+Shadows are soft glows tinted with the theme's own hue plus a faint contact shadow (`AppShadows`):
 
-| Level | Light | Dark | Use |
-|---|---|---|---|
-| `elevation.flat` | none (hairline border) | none (surface tone step) | Most content |
-| `elevation.raised` | `0 1 2 rgba(31,29,43,0.06)`, `0 4 12 rgba(31,29,43,0.06)` | none; use `surfaceRaised` tone + hairline | Floating buttons, active drag item |
-| `elevation.overlay` | `0 8 24 rgba(31,29,43,0.12)` | `0 8 24 rgba(0,0,0,0.5)` | Sheets, menus, dialogs |
+| Token | Use |
+|---|---|
+| `card` | Cards resting on the canvas |
+| `floating` | Floating nav, menus, popovers |
+| `glow(color)` | Under a full-width primary/action button, in its own color |
 
-Dark mode communicates depth with lighter surface tones, not shadows. Never stack shadows on cards in scrolling lists.
+Never stack shadows inside cards (`AppCard(flat: true)` for nested cards).
+
+### 7.1 Treatments (per theme, read only by shared components)
+
+| Treatment | Rose | Lavender | Papaya | Read by |
+|---|---|---|---|---|
+| `cardEdge` | none | hairline (`borderSubtle`) | rim (ink @ 5%, 1.5dp) | `AppCard`, `cardDecoration` |
+| `navStyle` | bar | bar | floating pill | `AppShell` |
+| `progressGradient` | teal (solid) | lavender → mint | papaya → peach | `AppProgressBar`, `ProgressRing` |
+| `heroWash` | mist | mint | aqua | `DayHero` |
+| `factsAsChips` | tiles | tiles | chips | `FactPill` |
 
 ## 8. Iconography
 
@@ -232,7 +194,7 @@ Dark mode communicates depth with lighter surface tones, not shadows. Never stac
 - `phosphor_glyphs.dart`, `activity_icon_registry.dart` and `keys/activity_icon_ids.dart` are **generated** by `tool/generate_phosphor_glyphs.py`. To add an icon, add its Phosphor name to the script and re-run it.
 - Sizes: 16 (inline meta), 20 (dense UI), 24 (default), 32 (activity badges), 48+ (empty states, use illustration instead when possible).
 - **Activity icons:** a curated catalog of 58 stable IDs (Phosphor names such as `barbell`, `book-open`, `briefcase`, `person-simple-walk`, `flower-lotus`, `translate`, …). The DB stores the ID (`activity_types.icon_id`), never a glyph or codepoint. IDs are permanent, and an unknown ID falls back to `sparkle`.
-- Activity badge = icon in `solid` on a `soft` circle/squircle (`radius.md`). This badge is the activity's identity everywhere (timeline, quick log, insights legend).
+- Activity badge = icon in `solid` on a `soft` **circle** (ADR-045). This badge is the activity's identity everywhere (item cards, quick add, insights legend).
 - Icons never stand alone for unfamiliar actions; pair with labels or provide tooltips + semantics.
 
 ## 9. Motion
@@ -250,7 +212,8 @@ Motion communicates state and continuity; never decoration alone (setup §8A.6, 
 Patterns:
 - **Navigation continuity:** shared-axis/fade-through between tabs (short), container transform from an item to its detail where it clarifies origin.
 - **Reorder / drag:** lifted item scales to 1.02 with `elevation.raised`; neighbors slide with `standard`.
-- **Timer:** pause/resume crossfades control state and dims/brightens the arc; no per-second bouncing.
+- **Timer:** pause/resume crossfades the control and dims the time; no per-second bouncing.
+- **Theme switch:** the whole app cross-fades its colors (`AppTokens.lerp`); shapes and treatments switch halfway.
 - **Charts:** animate between ranges/metrics (morph line, `emphasized`); first load fades in, does not "draw" slowly every time.
 - **Lists:** inserted items fade + size in; removed items size out with undo affordance.
 - **Reduced motion:** when `MediaQuery.disableAnimations` (or platform "remove animations") is set, replace movement with ≤ 150ms crossfades and skip celebrations.
@@ -277,11 +240,11 @@ State layers: overlay of the content color at 8% (hover), 12% (focus/pressed), 1
 
 ## 12. Illustration
 
-- **Original** illustrations only. Style: simple, soft geometric and organic shapes built on the Day Arc/horizon idea (sun/moon discs, horizon lines, layered hills, soft paper textures), using the brand and activity palettes, with flat fills and minimal line work. No characters/mascot unless decided later.
+- **Original** illustrations only. Style: simple, soft geometric and organic shapes in the current theme's palette (soft orbs and pastel washes, as in the empty-state card), with flat fills and minimal line work. No characters/mascot unless decided later.
 - Used in: onboarding, empty states, completion states, feature introductions, error/fatal screens. **Not** on Insights, History or forms.
-- Delivered as vector (SVG rendered via a vector package, or `CustomPaint` for simple motifs). Must have light and dark variants or use theme tokens.
+- Delivered as vector (SVG rendered via a vector package, or `CustomPaint` for simple motifs). Must use theme tokens so it fits all three themes.
 - Size: illustrations occupy ≤ 40% of the viewport height on compact screens; content and actions remain visible without scrolling.
-- Asset production is an open task (no assets exist yet).
+- Asset production is an open task; empty states use the shared `EmptyStateCard` orb meanwhile.
 
 ## 13. Data visualization tokens
 
@@ -290,6 +253,7 @@ State layers: overlay of the content color at 8% (hover), 12% (focus/pressed), 1
 - Gridlines: `borderSubtle`, horizontal only, max 4; axis labels `labelSmall` `textSecondary`.
 - Line width 2.5dp; points shown only for ≤ 31 points or on selection; selected point = 8dp dot with `surfaceBase` ring.
 - Bars: `radius.xs` top corners; 60–70% band width.
+- Progress (bars, rings): pill tracks on `surfaceSunken`, filled with the theme's progress fill (solid or gradient, §7.1).
 - Tooltip/scrubber: `surfaceRaised`, `elevation.overlay`, `numericMedium` value + `labelSmall` date.
 - Empty chart: neutral baseline + message, never a fake chart.
 
@@ -298,8 +262,8 @@ State layers: overlay of the content color at 8% (hover), 12% (focus/pressed), 1
 - Contrast: body text ≥ 4.5:1; large text (≥ 18.66px bold / 24px) and UI graphics ≥ 3:1. All semantic pairs above meet this except where marked "decorative/never text".
 - Touch targets ≥ 48×48dp (visual element may be smaller; hit area may not).
 - Text scales to 200% without clipping or loss of function (layouts reflow; numeric hero scales down gracefully with a min).
-- Never rely on color alone: plan vs actual uses outline vs fill; status uses icon + label.
-- Semantics for custom-painted elements (Day Arc, charts: provide a textual summary such as "Reading, last 7 days, total 4 hours 12 minutes, highest Thursday").
+- Never rely on color alone: status is a text chip ("Planned", "Done"), done adds the ✓.
+- Semantics for custom-painted elements (rings, charts: provide a textual summary such as "Reading, last 7 days, total 4 hours 12 minutes, highest Thursday").
 - Focus order follows visual order; all actions reachable by TalkBack/Switch Access.
 - Respect reduced motion, bold text and system font scale.
 
@@ -307,32 +271,28 @@ State layers: overlay of the content color at 8% (hover), 12% (focus/pressed), 1
 
 ## 15. Implementation (Flutter)
 
-*Implemented in Phase 1.*
-
 ```text
 lib/core/design/
+├── themes/
+│   ├── app_theme_id.dart       # AppThemeId { rose, lavender, papaya }, fallback lavender
+│   ├── rose_theme.dart         # const AppTokens values
+│   ├── lavender_theme.dart
+│   └── papaya_theme.dart
 ├── tokens/
-│   ├── color_tokens.dart       # raw palette (private) + semantic roles (light/dark)
-│   ├── activity_palette.dart   # key → ActivityColors(solid, soft, …) per brightness
-│   ├── typography.dart         # text style tokens
-│   ├── spacing.dart            # const spacing values
-│   ├── radius.dart
-│   ├── elevation.dart
-│   └── motion.dart             # durations + curves
-├── app_theme.dart              # builds ThemeData (light/dark): ColorScheme, TextTheme, component themes from tokens
-├── app_tokens.dart             # ThemeExtension<AppTokens> for roles Material doesn't model
+│   ├── color_tokens.dart       # AppColors roles
+│   ├── activity_palette.dart   # ActivityPalette (per theme), ActivityColors(solid, soft)
+│   ├── elevation.dart          # AppShadows: card, floating, glow(color)
+│   ├── treatments.dart         # AppTreatments: cardEdge, navStyle, progressGradient, heroWash, factsAsChips
+│   ├── typography.dart         # Plus Jakarta Sans scale
+│   ├── spacing.dart, radius.dart, sizes.dart, motion.dart
+├── app_theme.dart              # AppTheme.of(id): ThemeData from tokens (cached)
+├── app_tokens.dart             # ThemeExtension<AppTokens>: colors, shadows, treatments, palette; AppTokens.of(id)
 ├── context_ext.dart            # context.tokens, context.colors, context.textStyles
-├── app_icons.dart              # semantic UI icon map (Phosphor, ADR-024)
-├── icons/                      # generated: phosphor_glyphs.dart, activity_icon_registry.dart
-├── keys/                       # pure Dart: activity_icon_ids.dart (generated), activity_color_key.dart
-└── window_size_class.dart      # compact/medium/expanded + screen margins + content widths
+├── app_icons.dart, icons/, keys/, window_size_class.dart
 ```
 
-Activity colors resolve with `context.tokens.activity(ActivityColorKey.teal)`. Numeric styles (no Material slot) are `AppTypography.numericHero/Large/Medium`. `AppTheme.light`/`AppTheme.dark` are built once. Not yet implemented: `inputDecorationTheme` (no inputs exist yet), page-transition customization (Flutter defaults), the planned-border token and the Day Arc (no screen uses them yet).
-
-- `ThemeData` is fully derived from tokens so that remaining Material widgets inherit the identity (`ColorScheme`, `TextTheme`, `inputDecorationTheme`, `filledButtonTheme`, `bottomSheetTheme`, `navigationBarTheme`, `snackBarTheme`, page transitions, splash factory).
-- Roles not covered by Material (surface steps, activity palette, planned border, motion) live in `AppTokens` (`ThemeExtension`) with `lerp` for smooth theme switching.
-- Spacing/radius/motion are `const` (theme-independent); colors and text styles are theme-dependent and accessed via context.
-- A **debug-only token showcase screen** (`lib/app/dev/`, route `/dev/tokens`, opened from Me → "Design tokens (debug)") renders colors, the activity palette, the type scale, spacing, radius, elevation and buttons, with a System/Light/Dark switch.
-- `test/core/design/color_contrast_test.dart` enforces the contrast promises in §2 and §14 for both themes.
-- Theme mode: System (default) / Light / Dark preference.
+- The chosen theme is the `theme` row of `app_preferences` (`AppThemeId.name`); unknown or missing → Lavender. The old `theme_mode` value is ignored. `App` uses `AppTheme.of(effectiveThemeProvider)` with `ThemeMode.light`.
+- `ThemeData` is derived from tokens: `ColorScheme` (primary = brand, secondary = action, tertiary = accent), `TextTheme`, inputs (sunken pill wells), chips, buttons (pills), navigation bar/rail, sheets, dialogs, snack bars (inverse), pickers, popup menus.
+- Shared components (`lib/shared/widgets/`): `AppCard`/`cardDecoration`, `AppButton` (primary, action, secondary, tertiary, destructive; `expand` = full width + glow), `StatusChip`, `ItemCard`, `ProgressRing`, `AppProgressBar`, `FactPill`, `EmptyStateCard`, `ActivityBadge`, `DoneCheck`, `StatTile`, `PanelCard`, `SectionHeader`, state views, charts. The number stepper is the `stepper` mode of the form renderer's `NumberValueEditor`.
+- The debug token showcase (`/dev/tokens`) switches between the three themes.
+- Tests: `color_contrast_test.dart` (every theme), `palette_consistency_test.dart` (three distinct themes, six keys), `picker_theme_test.dart`, app/slice tests switching themes.

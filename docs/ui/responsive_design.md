@@ -30,7 +30,7 @@ Implemented: `WindowSizeClass` in `lib/core/design/window_size_class.dart` (`of(
 
 | Screen | Compact | Medium | Expanded |
 |---|---|---|---|
-| **Today** | Single column: header + Day Arc, plan, timeline | Single column, constrained width, larger Day Arc | Two panes: **Plan** (left) and **Actual timeline** (right), visually pairing planned vs actual; header spans both |
+| **Today** | Single column: hero (date, greeting, day ring), Up next, the day's items | Single column, constrained width | Two panes: **Plan** (left) and **Actual timeline** (right), visually pairing planned vs actual; header spans both |
 | **Plan** | Week strip + calendar button; selected date's Planned and Recorded sections stacked | Same, constrained width | Month calendar (left) + selected date (right) |
 | **Me → Activities** | List of activity types | Constrained list | List of types (left) + activity detail (right) |
 | **Log editor** | Full-screen route | Full-screen, constrained to 600dp | Side sheet/right pane over the current screen (keeps context), or constrained full-screen for structured logs |

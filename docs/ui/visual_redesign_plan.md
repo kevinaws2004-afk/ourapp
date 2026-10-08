@@ -1,10 +1,23 @@
 # Visual redesign plan: Stitch reference → three light themes
 
-> **Status: PROPOSAL for owner review (2026-10-08). Nothing here is built.**
-> No code changes until the owner approves this plan and the decisions in §0.
-> When approved, the decisions become ADR-045 and this file becomes the build
-> checklist; the main design docs (`design_system.md`, `ui_guidelines.md`) are
-> rewritten in the same change as the code, per CLAUDE.md §13.
+> **Status: approved by the owner 2026-10-08 → ADR-045. First vertical slice
+> built** (theme foundation, shared components, Me → Appearance, Today, the item
+> screen). Next: the owner reviews it on the phone; then an explicit Stitch-based
+> screen pass for Plan, Challenges, Insights and Me (step 6 onwards).
+>
+> Owner adjustments on approval: the first slice is Today → open an item →
+> record → done → back, in all three themes; Stitch guides screen composition,
+> not only tokens; typography decided deliberately (Plus Jakarta Sans, see
+> design_system.md §3.1); scope boundaries (§8) unchanged; nothing beyond the
+> slice before the review.
+>
+> Decisions as built: D1 Rose/Lavender/Papaya (Lavender default) · D2 rose
+> rebuilt from our own colors · D3 Plus Jakarta Sans · D4 no floating button ·
+> D5 not yet (Plan comes after the review) · D6 no name in the greeting · D7
+> one layout + treatments · D8 light only, dark code removed · D9 five tabs.
+>
+> The sections below are the plan as proposed; the canonical description of
+> what's built is design_system.md and ui_guidelines.md.
 
 Inputs studied:
 - **Stitch project "Personal Life OS"**: 22 exported screens (HTML + PNG) in
