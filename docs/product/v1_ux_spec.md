@@ -253,7 +253,9 @@ Not done if done (Undo). Long-press → **R1 options sheet**.
 - **Secondary:** tap card/row → A3; other circles (Done works for others).
 - **Rule:** Start on another thing → **R2** dialog "Finish Meditation and
   start Deep work?" (**Finish and start** · Cancel). Only one timer.
-- **Transitions:** Finish → T5 (simple) or A6 (meaningful details).
+- **Transitions:** Finish (from the card) → T5 directly (simple), or the A6
+  sheet over Today and then T5 (meaningful details). Today never opens A7
+  here.
 
 ### T5 · Just completed (transition state, ~2 s)
 
@@ -338,7 +340,8 @@ Not done if done (Undo). Long-press → **R1 options sheet**.
 ### R2 · One timer at a time (dialog)
 
 "Finish Meditation and start Deep work?" · **Finish and start** · Cancel.
-Finishing follows the normal Finish (A6 if needed, then starts the other).
+Finishing follows the normal Finish (A6 over Today if needed), then starts
+the other and opens it running.
 
 ---
 
@@ -346,6 +349,20 @@ Finishing follows the normal Finish (A6 if needed, then starts the other).
 
 One screen, states A1–A13. App bar: back · badge + title · ⋯ (A11).
 Always saves as you type ("Saved" appears briefly; no Save button).
+
+**Finishing returns to where it started (owner, 2026-10-08).** Completing an
+activity never lands on its Done view. The flow is:
+
+```
+Today → Start → Running → Finish → [How did it go?, if meaningful] → Today
+```
+
+Done / Finish closes the activity and returns to the screen it was opened
+from (Today, Plan, a challenge, Progress); "How did it go?" (A6) appears as a
+sheet first when the activity has meaningful details. The consequence (✓,
+result, 🔥, status line) shows on that screen at once (T5). **A7 (Done) is
+the inspect/edit view of a completed activity**: it opens only when the user
+taps a done row (Today, Plan, Progress, a challenge's "Done today").
 
 ### A1 · Ready, timer activity
 
@@ -359,13 +376,15 @@ Always saves as you type ("Saved" appears briefly; no Save button).
 - **Secondary:** Done; Use last time; fill details now; ⋯.
 - **Hides:** When/Duration editors (set by the timer; editable in A8),
   Plan next (A7), Add-a-detail (⋯ → Edit details).
-- **Transitions:** Start → A3; Done → A6 or A7.
+- **Transitions:** Start → A3; Done → closes and returns to the opener (A6
+  first for meaningful details) → T5.
 
 ### A2 · Ready, simple activity (no timer)
 
 - Same as A1 with **Done** as the full-width primary and no Start; a quiet
   "Time it instead" link if the activity allows timing.
-- **Transitions:** Done → A7 (simple) / A6 (meaningful details).
+- **Transitions:** Done → closes and returns to the opener (A6 first for
+  meaningful details) → T5.
 
 ### A3 · Running
 
@@ -379,7 +398,8 @@ Always saves as you type ("Saved" appears briefly; no Save button).
 - **Secondary:** Pause; fill details; Rest; Focus (A5).
 - **Hides:** Done (Finish is Done), Start time/Duration editors, Plan next.
 - **Navigation:** back → Today T4 (still running).
-- **Transitions:** Pause → A4; Finish → A6/A7; Focus → A5.
+- **Transitions:** Pause → A4; Finish → [A6] → back to the opener (T5 on
+  Today); Focus → A5.
 
 ### A4 · Paused
 
@@ -390,7 +410,8 @@ Always saves as you type ("Saved" appears briefly; no Save button).
 
 - Full screen: activity badge and name, very big timer, **Pause/Resume**,
   **Finish**; × returns to A3; screen stays awake; nothing else.
-- **Transitions:** Finish → A6/A7 (closing focus).
+- **Transitions:** Finish → closes focus and the activity → [A6] → the
+  opener (T5).
 
 ### A6 · How did it go? (sheet, meaningful details only)
 
@@ -404,23 +425,29 @@ Always saves as you type ("Saved" appears briefly; no Save button).
   running; empty ones show last time's value as a hint and **Use last time**
   · **Save** (primary, full width) · **Skip** (text).
 - **Primary:** **Save**.
-- **Hides:** notes (stay in A7), Add-a-detail, setup.
-- **Completion:** Save or Skip closes it → A7. It's already Done either way.
+- **Hides:** notes (reachable later in A7), Add-a-detail, setup.
+- **Completion:** Save or Skip closes the sheet and returns to the opener
+  (T5 on Today) where the row already shows the result. It's Done either
+  way; Skip leaves an "Add details" link on the done row's A7.
 - **Error:** a value that can't be saved stays highlighted; Save shows "Check
   the highlighted details"; Skip still works.
 
 ### A7 · Done
 
-- **Purpose:** see the result and what it changed.
+- **Purpose:** inspect or edit a completed activity.
+- **Entered:** only by tapping a done row (Today, Plan, Progress) or "Done
+  today" on a challenge. Never as the end of finishing.
 - **Hierarchy:** **ResultHeader**: chip "Done ✓", the result big ("32
   pages", "45 min"), "Meditation · 13 days in a row 🔥", "3 of 5 done today"
-  · details (editable) · Notes · When + Duration (editable) · **Plan next…**
-  (text) · **Back to today** (quiet full-width).
-- **Primary:** **Back to today** (when opened from Today), otherwise back.
+  · details (editable; "Add details" when none were recorded) · Notes ·
+  When + Duration (editable) · **Plan next…** (text).
+- **Primary:** none forced; reading and editing are the point. Back returns
+  to where it was opened.
 - **Secondary:** edit details/notes/time; **Not done** (in the header, with
-  Undo); Plan next.
+  Undo); Plan next; ⋯.
 - **Hides:** Start (a second session is in ⋯ → "Time again").
-- **Transitions:** back → Today T5 (if just finished) / T3.
+- **Transitions:** back → the opener, with the row updated if anything was
+  edited; Not done → the row reopens there (with Undo).
 
 ### A8 · Done, editing
 
@@ -713,12 +740,13 @@ where possible.
 |---|---|---|---|
 | 07:05 | T1 + T2 | "From yesterday: Reading" → **Do today** | Section says "All set"; Reading joins Anytime |
 | 07:06 | T1, NowNext NOW · Meditation | **Start** | A3 opens: LIVE, 00:00 counting |
-| 07:21 | A3 | **Finish** | Simple activity: A7 "15 min · 🔥 13 days in a row · 1 of 5 done" |
-| 07:21 | back → T5 | — | Row ✓ "15 min", 🔥 13; status "1 of 5 done"; NEXT · 9:30 Deep work |
+| 07:21 | A3 | **Finish** | Simple activity: back on Today at once (T5) |
+| 07:21 | T5 | — | Row ✓ "15 min", 🔥 13; status "1 of 5 done"; snackbar "Meditation done · 🔥 13 · Undo"; NEXT · 9:30 Deep work |
 | 09:30 | T3 NOW · Deep work | **Start** … 11:30 **Finish** | ✓ "2 h"; "2 of 5 done · 2 h 15 min so far" |
 | 13:00 | T3 NOW · Lunch | circle | ✓ "Done" |
 | 18:00 | T3 NOW · Gym → A1 | **Use last time** → **Start** → A3 sets with steppers | done sets fold "1 · 60 kg × 8 ✓" |
-| 19:05 | A3 | **Finish** → A6 (sets prefilled) → **Save** | A7 "Bench 60 kg × 8 ×3 · 🔥 4" |
+| 19:05 | A3 | **Finish** → A6 (sets prefilled) → **Save** | Back on Today (T5): row ✓ "Bench 60 kg × 8 ×3", 🔥 4, "4 of 5 done" |
+| 20:00 | T3 | taps the Gym row | A7: result, streak, sets editable; fixes a rep; back to Today |
 | 21:30 | T7 | Reading → **Tomorrow** | T8 "Day closed · 4 of 5 done" |
 | 21:31 | Plan tomorrow → P2 | adjust, + | Friday ready |
 | Sunday | PR1 | read | "17 of 20 planned · Deep work 9 h · Bench 72.5 kg, a new best" |
@@ -730,7 +758,7 @@ where possible.
 | Plan | AD (+), P1–P7, T7 → P2 |
 | Do | T1/T3 NowNext, A1–A5 |
 | Record | Finish/Done, A6, A8 |
-| Measure | Row result, 🔥, StatusLine, A7 ResultHeader |
+| Measure | Row result, 🔥, StatusLine (immediately after finishing); A7 ResultHeader when inspecting |
 | Understand | T7 evening review, PR1–PR5 |
 | Improve | T2 Do today/Let it go, T7 Tomorrow/Plan tomorrow, PR Plan it |
 
