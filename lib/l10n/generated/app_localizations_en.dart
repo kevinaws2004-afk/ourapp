@@ -829,9 +829,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get planOptions => 'Plan options';
-
-  @override
   String get planOpenRecordHint => 'open it';
 
   @override
@@ -1181,9 +1178,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get itemSaveFailed => 'Not saved yet: check the highlighted fields';
 
   @override
-  String get itemMarkDone => 'Mark done';
-
-  @override
   String get itemDone => 'Done';
 
   @override
@@ -1430,10 +1424,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get durationMinutesLabel => 'Minutes';
-
-  @override
-  String get itemMarkDoneHint =>
-      'Logged so far. Mark it done when you’ve finished.';
 
   @override
   String get planAnytime => 'Anytime';
@@ -4950,4 +4940,157 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get todayAdd => 'Add to today';
+
+  @override
+  String get fromYesterdayTitle => 'From yesterday';
+
+  @override
+  String get fromYesterdayDoToday => 'Do today';
+
+  @override
+  String get fromYesterdayLetGo => 'Let it go';
+
+  @override
+  String get fromYesterdayAllToday => 'All today';
+
+  @override
+  String get fromYesterdayLetAllGo => 'Let all go';
+
+  @override
+  String fromYesterdayMoved(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count moved to today',
+      one: 'Moved to today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String letGoMessage(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count let go',
+      one: 'Let go',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String eveningSummary(int done, int total) {
+    return '$done of $total done';
+  }
+
+  @override
+  String eveningSummaryTime(int done, int total, String duration) {
+    return '$done of $total done · $duration';
+  }
+
+  @override
+  String eveningAllDone(int total) {
+    return 'All $total done today';
+  }
+
+  @override
+  String eveningStreakKept(String name, int days) {
+    return '$name $days';
+  }
+
+  @override
+  String eveningStreaksKept(String streaks) {
+    return '$streaks kept today';
+  }
+
+  @override
+  String eveningAtRisk(String name, int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    return '$name streak at risk ($_temp0)';
+  }
+
+  @override
+  String get eveningDoItNow => 'Do it now';
+
+  @override
+  String get eveningNotDone => 'Not done';
+
+  @override
+  String get eveningTomorrow => 'Tomorrow';
+
+  @override
+  String get eveningPlanTomorrow => 'Plan tomorrow';
+
+  @override
+  String eveningClosed(int done, int total) {
+    return 'Day closed · $done of $total done';
+  }
+
+  @override
+  String get noPlanFirstTitle => 'Your day is empty.';
+
+  @override
+  String get noPlanFirstMessage => 'Add the first thing you\'re doing today.';
+
+  @override
+  String get noPlanReturningTitle => 'Nothing planned today.';
+
+  @override
+  String noPlanUsual(String weekday) {
+    return 'Your usual $weekday';
+  }
+
+  @override
+  String get noPlanTryOne => 'Or start with one of these';
+
+  @override
+  String get noPlanStartNow => 'Start something now';
+
+  @override
+  String addedToToday(String title) {
+    return '$title added to today';
+  }
+
+  @override
+  String get addWhatHint => 'What are you doing?';
+
+  @override
+  String get addWhen => 'When';
+
+  @override
+  String get addNow => 'Now';
+
+  @override
+  String get addTimeChoose => 'Time…';
+
+  @override
+  String get addRepeat => 'Repeat';
+
+  @override
+  String get addAction => 'Add';
+
+  @override
+  String get addStartAction => 'Start';
+
+  @override
+  String get addBrowseAll => 'Browse all activities';
+
+  @override
+  String addMakeYoursNamed(String name) {
+    return 'Make “$name” yours';
+  }
+
+  @override
+  String get addMakeYoursHint => 'New activity · nothing to set up';
+
+  @override
+  String get addCommon => 'Common';
+
+  @override
+  String get itemUndoSkip => 'Undo skip';
 }

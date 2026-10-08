@@ -171,7 +171,15 @@ class MovePlan {
   final IdGenerator _ids;
   final Clock _clock;
 
-  Future<PlanId> call(PlanId id, LocalDate to) async {
+  /// Moves the plan to [to], keeping its time of day. With
+  /// [anytimeIfPassed] (bringing yesterday's thing to today, T2), a time
+  /// that has already passed on [to] is dropped: it becomes Anytime and
+  /// keeps its length.
+  Future<PlanId> call(
+    PlanId id,
+    LocalDate to, {
+    bool anytimeIfPassed = false,
+  }) async {
     final plan = await _plans.getPlan(id);
     if (plan == null) {
       throw NotFoundException(debugContext: 'MovePlan ${id.value}');
@@ -180,10 +188,13 @@ class MovePlan {
     DateTime? shift(DateTime? instant) =>
         instant == null ? null : _clock.shiftDays(instant, days);
     final now = _clock.nowUtc();
+    final start = shift(plan.plannedStartAt);
+    final passed = anytimeIfPassed && start != null && start.isBefore(now);
     final moved = plan.copyWith(
       planDate: to,
-      plannedStartAt: () => shift(plan.plannedStartAt),
-      plannedEndAt: () => shift(plan.plannedEndAt),
+      plannedStartAt: () => passed ? null : start,
+      plannedEndAt: () => passed ? null : shift(plan.plannedEndAt),
+      plannedDurationMs: passed ? () => plan.plannedLengthMs : null,
       sortOrder: await _plans.nextSortOrder(to),
       status: PlanStatus.planned,
       updatedAt: now,
@@ -200,7 +211,7 @@ class MovePlan {
       notes: plan.notes,
       plannedStartAt: moved.plannedStartAt,
       plannedEndAt: moved.plannedEndAt,
-      plannedDurationMs: plan.plannedDurationMs,
+      plannedDurationMs: moved.plannedDurationMs,
       sortOrder: moved.sortOrder,
       status: PlanStatus.planned,
       createdAt: now,

@@ -80,7 +80,7 @@ void main() {
 
   testAppWidgets('an empty day says so and offers a way in', (tester) async {
     await pumpTestApp(tester, preferences: _onboarded);
-    expect(find.text('Nothing on today yet'), findsOneWidget);
+    expect(find.text('Your day is empty.'), findsOneWidget);
     expect(find.byType(NowNextCard), findsNothing);
   });
 

@@ -272,7 +272,7 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
           ],
         ),
         if (_typeId == null)
-          _Suggestions(
+          ActivitySuggestions(
             text: _title.text,
             types: recent,
             builtIns: [
@@ -360,19 +360,27 @@ class _PlanQuickAddState extends ConsumerState<PlanQuickAdd> {
   }
 }
 
-/// Activities matching what's being typed (A6): yours, then built-in ones,
+/// Activities matching what's being typed (A6, AD2): yours, then built-in ones,
 /// each with what it logs and nothing marking which is which (ADR-042).
-class _Suggestions extends StatelessWidget {
-  const _Suggestions({
+class ActivitySuggestions extends StatelessWidget {
+  const ActivitySuggestions({
+    super.key,
     required this.text,
     required this.types,
     required this.builtIns,
     required this.onType,
     required this.onBuiltIn,
     required this.onMakeOwn,
+    this.makeOwnLabel,
+    this.makeOwnHint,
   });
 
   static const _limit = 4;
+
+  /// "Make “Pottery” yours" and its hint (the add sheet, AD3); defaults to
+  /// the quick add's wording.
+  final String Function(String name)? makeOwnLabel;
+  final String? makeOwnHint;
 
   final String text;
   final List<ActivityType> types;
@@ -436,8 +444,10 @@ class _Suggestions extends StatelessWidget {
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: const Icon(AppIcons.add),
-              title: Text(l10n.planMakeOwnNamed(name)),
-              subtitle: Text(l10n.planMakeOwnHint),
+              title: Text(
+                makeOwnLabel?.call(name) ?? l10n.planMakeOwnNamed(name),
+              ),
+              subtitle: Text(makeOwnHint ?? l10n.planMakeOwnHint),
               onTap: onMakeOwn,
             ),
         ],

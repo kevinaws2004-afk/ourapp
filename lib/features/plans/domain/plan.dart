@@ -115,10 +115,22 @@ class Plan {
     };
   }
 
+  /// The plan as a draft, to put it back as it was (Undo).
+  PlanDraft toDraft() => PlanDraft(
+    planDate: planDate,
+    title: title,
+    activityTypeId: activityTypeId,
+    notes: notes,
+    plannedStartAt: plannedStartAt,
+    plannedEndAt: plannedEndAt,
+    plannedDurationMs: plannedDurationMs,
+  );
+
   Plan copyWith({
     LocalDate? planDate,
     DateTime? Function()? plannedStartAt,
     DateTime? Function()? plannedEndAt,
+    int? Function()? plannedDurationMs,
     int? sortOrder,
     PlanStatus? status,
     DateTime? updatedAt,
@@ -132,7 +144,9 @@ class Plan {
         ? plannedStartAt()
         : this.plannedStartAt,
     plannedEndAt: plannedEndAt != null ? plannedEndAt() : this.plannedEndAt,
-    plannedDurationMs: plannedDurationMs,
+    plannedDurationMs: plannedDurationMs != null
+        ? plannedDurationMs()
+        : this.plannedDurationMs,
     sortOrder: sortOrder ?? this.sortOrder,
     status: status ?? this.status,
     createdAt: createdAt,

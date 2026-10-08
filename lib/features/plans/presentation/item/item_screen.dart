@@ -449,8 +449,13 @@ class _ItemActions extends ConsumerWidget {
     final session = ref.watch(activeFocusSessionProvider).value;
     final timerHere =
         session != null && plan != null && session.planId == plan.id;
-    final canTime = plan != null && (type == null || type.supportsTimer);
     final today = currentLocalDate(ref.watch(clockProvider));
+    // Timing is for today's things; a past day's thing is only done or not
+    // (A12).
+    final canTime =
+        plan != null &&
+        plan.planDate == today &&
+        (type == null || type.supportsTimer);
     final done = state.isDoneOn(today);
 
     if (timerHere) {
@@ -478,6 +483,38 @@ class _ItemActions extends ConsumerWidget {
     }
 
     if (done) return _DoneHeader(args: args, state: state);
+
+    if (plan != null && plan.status == PlanStatus.skipped) {
+      return AppCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _Meta(
+              chip: StatusChip(
+                label: l10n.planStatusSkipped,
+                tone: StatusTone.neutral,
+              ),
+              planTime: planTime,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            AppButton(
+              label: l10n.itemUndoSkip,
+              icon: AppIcons.undo,
+              variant: AppButtonVariant.secondary,
+              expand: true,
+              onPressed: () => _run(
+                context,
+                ref,
+                () => ref.read(setPlanStatusProvider)(
+                  plan.id,
+                  PlanStatus.planned,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
 
     final otherRunning = session != null && !timerHere;
     return AppCard(
@@ -695,7 +732,10 @@ class _DoneHeader extends ConsumerWidget {
         : null;
     final session = ref.watch(activeFocusSessionProvider).value;
     final canTime =
-        plan != null && session == null && (type == null || type.supportsTimer);
+        plan != null &&
+        plan.planDate == today &&
+        session == null &&
+        (type == null || type.supportsTimer);
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

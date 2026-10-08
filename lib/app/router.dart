@@ -224,6 +224,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                   onOpenFocus: () => openFocus(context),
                   onOpenChallenge: (id) =>
                       unawaited(context.push(AppRoutes.challenge(id))),
+                  onPlanDate: (date) {
+                    ref.read(planSelectedDateProvider.notifier).select(date);
+                    context.go(AppRoutes.plan);
+                  },
                   chooser: chooser(context),
                 ),
               ),

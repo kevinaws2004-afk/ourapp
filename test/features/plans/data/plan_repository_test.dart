@@ -264,6 +264,40 @@ void main() {
     },
   );
 
+  test('bringing yesterday\'s thing to today keeps its time, or makes it '
+      'Anytime with its length when that time has passed (T2)', () async {
+    final yesterday = today.addDays(-1);
+    final move = MovePlan(plans, SequentialIdGenerator(), clock);
+    DateTime at(LocalDate d, int hour) =>
+        DateTime.utc(d.year, d.month, d.day, hour);
+    final late = await createPlan(
+      PlanDraft(
+        planDate: yesterday,
+        title: 'Late',
+        plannedStartAt: at(yesterday, 20),
+        plannedEndAt: at(yesterday, 21),
+      ),
+    );
+    final early = await createPlan(
+      PlanDraft(
+        planDate: yesterday,
+        title: 'Early',
+        plannedStartAt: at(yesterday, 0),
+        plannedEndAt: at(yesterday, 0).add(const Duration(minutes: 45)),
+      ),
+    );
+
+    await move(late, today, anytimeIfPassed: true);
+    await move(early, today, anytimeIfPassed: true);
+
+    final kept = (await plans.getPlan(late))!;
+    expect(kept.plannedStartAt, at(today, 20));
+    final anytime = (await plans.getPlan(early))!;
+    expect(anytime.planDate, today);
+    expect(anytime.plannedStartAt, isNull);
+    expect(anytime.plannedLengthMs, 45 * 60000, reason: 'keeps its length');
+  });
+
   test('reordering rewrites the manual order', () async {
     final a = await createPlan(PlanDraft(planDate: today, title: 'A'));
     final b = await createPlan(PlanDraft(planDate: today, title: 'B'));

@@ -6708,5 +6708,231 @@
   "todayAdd": "Add to today",
   "@todayAdd": {
     "description": "Tooltip of Today's + button."
+  },
+  "fromYesterdayTitle": "From yesterday",
+  "@fromYesterdayTitle": {
+    "description": "Today, mornings: heading of yesterday's unfinished things (T2, ADR-046)."
+  },
+  "fromYesterdayDoToday": "Do today",
+  "@fromYesterdayDoToday": {
+    "description": "From yesterday: move this thing to today."
+  },
+  "fromYesterdayLetGo": "Let it go",
+  "@fromYesterdayLetGo": {
+    "description": "From yesterday / evening review: mark this thing skipped, no judgment."
+  },
+  "fromYesterdayAllToday": "All today",
+  "@fromYesterdayAllToday": {
+    "description": "From yesterday: move all of them to today."
+  },
+  "fromYesterdayLetAllGo": "Let all go",
+  "@fromYesterdayLetAllGo": {
+    "description": "From yesterday: skip all of them."
+  },
+  "fromYesterdayMoved": "{count, plural, =1{Moved to today} other{{count} moved to today}}",
+  "@fromYesterdayMoved": {
+    "description": "Snackbar after Do today.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "letGoMessage": "{count, plural, =1{Let go} other{{count} let go}}",
+  "@letGoMessage": {
+    "description": "Snackbar after Let it go (the thing is skipped).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eveningSummary": "{done} of {total} done",
+  "@eveningSummary": {
+    "description": "Evening review headline.",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "eveningSummaryTime": "{done} of {total} done · {duration}",
+  "@eveningSummaryTime": {
+    "description": "Evening review headline with time recorded today.",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "eveningAllDone": "All {total} done today",
+  "@eveningAllDone": {
+    "description": "Evening review headline when everything planned was done.",
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "eveningStreakKept": "{name} {days}",
+  "@eveningStreakKept": {
+    "description": "One streak kept today in the evening review, e.g. 'Meditation 13'.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "eveningStreaksKept": "{streaks} kept today",
+  "@eveningStreaksKept": {
+    "description": "Evening review: the streaks kept today, e.g. 'Meditation 13 · Reading 5 kept today'.",
+    "placeholders": {
+      "streaks": {
+        "type": "String"
+      }
+    }
+  },
+  "eveningAtRisk": "{name} streak at risk ({days, plural, =1{1 day} other{{days} days}})",
+  "@eveningAtRisk": {
+    "description": "Evening review: a running challenge's activity isn't done today.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "eveningDoItNow": "Do it now",
+  "@eveningDoItNow": {
+    "description": "Evening review: open the at-risk activity to do it now."
+  },
+  "eveningNotDone": "Not done",
+  "@eveningNotDone": {
+    "description": "Evening review: heading of today's unfinished things."
+  },
+  "eveningTomorrow": "Tomorrow",
+  "@eveningTomorrow": {
+    "description": "Evening review: move this thing to tomorrow."
+  },
+  "eveningPlanTomorrow": "Plan tomorrow",
+  "@eveningPlanTomorrow": {
+    "description": "Evening review: open Plan on tomorrow."
+  },
+  "eveningClosed": "Day closed · {done} of {total} done",
+  "@eveningClosed": {
+    "description": "Evening review once nothing is left to decide (T8).",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "noPlanFirstTitle": "Your day is empty.",
+  "@noPlanFirstTitle": {
+    "description": "Today, first use with no activities (T9)."
+  },
+  "noPlanFirstMessage": "Add the first thing you're doing today.",
+  "@noPlanFirstMessage": {
+    "description": "Today, first use (T9)."
+  },
+  "noPlanReturningTitle": "Nothing planned today.",
+  "@noPlanReturningTitle": {
+    "description": "Today, nothing planned, returning user (T10)."
+  },
+  "noPlanUsual": "Your usual {weekday}",
+  "@noPlanUsual": {
+    "description": "Today, nothing planned: what you usually do on this weekday (T10).",
+    "placeholders": {
+      "weekday": {
+        "type": "String"
+      }
+    }
+  },
+  "noPlanTryOne": "Or start with one of these",
+  "@noPlanTryOne": {
+    "description": "Today, first use: common activities that add to today in one tap."
+  },
+  "noPlanStartNow": "Start something now",
+  "@noPlanStartNow": {
+    "description": "Today, nothing planned: open the add sheet set to Now."
+  },
+  "addedToToday": "{title} added to today",
+  "@addedToToday": {
+    "description": "Snackbar after a usual or common activity chip adds it to today.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "addWhatHint": "What are you doing?",
+  "@addWhatHint": {
+    "description": "Add sheet: the name field (AD1, ADR-046)."
+  },
+  "addWhen": "When",
+  "@addWhen": {
+    "description": "Add sheet: label of the time choices."
+  },
+  "addNow": "Now",
+  "@addNow": {
+    "description": "Add sheet: start it now (today only)."
+  },
+  "addTimeChoose": "Time…",
+  "@addTimeChoose": {
+    "description": "Add sheet: choose a time and length."
+  },
+  "addRepeat": "Repeat",
+  "@addRepeat": {
+    "description": "Add sheet: make it repeat on chosen weekdays (AD5)."
+  },
+  "addAction": "Add",
+  "@addAction": {
+    "description": "Add sheet: add the thing to the day."
+  },
+  "addStartAction": "Start",
+  "@addStartAction": {
+    "description": "Add sheet: with Now chosen, add it and start it."
+  },
+  "addBrowseAll": "Browse all activities",
+  "@addBrowseAll": {
+    "description": "Add sheet: the full list of activities (AD6)."
+  },
+  "addMakeYoursNamed": "Make “{name}” yours",
+  "@addMakeYoursNamed": {
+    "description": "Add sheet: a new name becomes a new activity (AD3).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "addMakeYoursHint": "New activity · nothing to set up",
+  "@addMakeYoursHint": {
+    "description": "Add sheet: under Make it yours; details can be added later."
+  },
+  "addCommon": "Common",
+  "@addCommon": {
+    "description": "Add sheet, first use: common activities instead of Recent."
+  },
+  "itemUndoSkip": "Undo skip",
+  "@itemUndoSkip": {
+    "description": "A skipped thing (A9): put it back as planned."
   }
 }

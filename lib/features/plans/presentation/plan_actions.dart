@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/design/app_icons.dart';
+import '../../../core/time/local_date.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/errors/error_copy.dart';
 import '../../../shared/widgets/state_views.dart';
@@ -184,6 +185,57 @@ class PlanActions {
       },
     );
   }
+
+  /// Brings yesterday's [items] to [today] (T2): each keeps its time, or
+  /// becomes Anytime when that time has passed. Undo puts them back.
+  Future<void> doToday(List<PlannedItem> items, LocalDate today) {
+    final move = _ref.read(movePlanProvider);
+    final update = _ref.read(updatePlanProvider);
+    final restore = _ref.read(restoreItemProvider);
+    final delete = _ref.read(deleteItemProvider);
+    final moved = <PlanId, PlanId>{};
+    return _run(
+      () async {
+        for (final item in items) {
+          moved[item.plan.id] = await move(
+            item.plan.id,
+            today,
+            anytimeIfPassed: true,
+          );
+        }
+      },
+      message: _l10n.fromYesterdayMoved(items.length),
+      undo: () async {
+        for (final item in items) {
+          final id = item.plan.id;
+          final copy = moved[id];
+          if (copy == null) continue;
+          if (copy == id) {
+            await update(id, item.plan.toDraft());
+          } else {
+            // A repeating occurrence moved as a copy.
+            await delete(copy);
+            await restore(id, const []);
+          }
+        }
+      },
+    );
+  }
+
+  /// Lets [items] go (T2, T7): skipped where they are, no judgment; Undo.
+  Future<void> letGo(List<PlannedItem> items) => _run(
+    () async {
+      for (final item in items) {
+        await _setStatus(item.plan.id, PlanStatus.skipped);
+      }
+    },
+    message: _l10n.letGoMessage(items.length),
+    undo: () async {
+      for (final item in items) {
+        await _setStatus(item.plan.id, item.plan.status);
+      }
+    },
+  );
 
   /// A copy of the item on the same day (B7), with Undo.
   Future<void> duplicate(PlannedItem item) {

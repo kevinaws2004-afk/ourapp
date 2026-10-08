@@ -1612,12 +1612,6 @@ abstract class AppLocalizations {
   /// **'{start}–{end}'**
   String planTimeRange(String start, String end);
 
-  /// Tooltip of a plan's More button: edit, skip, move, delete.
-  ///
-  /// In en, this message translates to:
-  /// **'Plan options'**
-  String get planOptions;
-
   /// Screen reader hint for tapping a recorded plan.
   ///
   /// In en, this message translates to:
@@ -2254,12 +2248,6 @@ abstract class AppLocalizations {
   /// **'Not saved yet: check the highlighted fields'**
   String get itemSaveFailed;
 
-  /// Button in an item: done, without logging details.
-  ///
-  /// In en, this message translates to:
-  /// **'Mark done'**
-  String get itemMarkDone;
-
   /// Status of an item that has been done or logged.
   ///
   /// In en, this message translates to:
@@ -2661,12 +2649,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Minutes'**
   String get durationMinutesLabel;
-
-  /// Item screen: line above Mark done when something is logged but the item is not finished yet.
-  ///
-  /// In en, this message translates to:
-  /// **'Logged so far. Mark it done when you’ve finished.'**
-  String get itemMarkDoneHint;
 
   /// Heading above a day's items that have no time.
   ///
@@ -9411,6 +9393,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add to today'**
   String get todayAdd;
+
+  /// Today, mornings: heading of yesterday's unfinished things (T2, ADR-046).
+  ///
+  /// In en, this message translates to:
+  /// **'From yesterday'**
+  String get fromYesterdayTitle;
+
+  /// From yesterday: move this thing to today.
+  ///
+  /// In en, this message translates to:
+  /// **'Do today'**
+  String get fromYesterdayDoToday;
+
+  /// From yesterday / evening review: mark this thing skipped, no judgment.
+  ///
+  /// In en, this message translates to:
+  /// **'Let it go'**
+  String get fromYesterdayLetGo;
+
+  /// From yesterday: move all of them to today.
+  ///
+  /// In en, this message translates to:
+  /// **'All today'**
+  String get fromYesterdayAllToday;
+
+  /// From yesterday: skip all of them.
+  ///
+  /// In en, this message translates to:
+  /// **'Let all go'**
+  String get fromYesterdayLetAllGo;
+
+  /// Snackbar after Do today.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Moved to today} other{{count} moved to today}}'**
+  String fromYesterdayMoved(int count);
+
+  /// Snackbar after Let it go (the thing is skipped).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Let go} other{{count} let go}}'**
+  String letGoMessage(int count);
+
+  /// Evening review headline.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} done'**
+  String eveningSummary(int done, int total);
+
+  /// Evening review headline with time recorded today.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} done · {duration}'**
+  String eveningSummaryTime(int done, int total, String duration);
+
+  /// Evening review headline when everything planned was done.
+  ///
+  /// In en, this message translates to:
+  /// **'All {total} done today'**
+  String eveningAllDone(int total);
+
+  /// One streak kept today in the evening review, e.g. 'Meditation 13'.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} {days}'**
+  String eveningStreakKept(String name, int days);
+
+  /// Evening review: the streaks kept today, e.g. 'Meditation 13 · Reading 5 kept today'.
+  ///
+  /// In en, this message translates to:
+  /// **'{streaks} kept today'**
+  String eveningStreaksKept(String streaks);
+
+  /// Evening review: a running challenge's activity isn't done today.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} streak at risk ({days, plural, =1{1 day} other{{days} days}})'**
+  String eveningAtRisk(String name, int days);
+
+  /// Evening review: open the at-risk activity to do it now.
+  ///
+  /// In en, this message translates to:
+  /// **'Do it now'**
+  String get eveningDoItNow;
+
+  /// Evening review: heading of today's unfinished things.
+  ///
+  /// In en, this message translates to:
+  /// **'Not done'**
+  String get eveningNotDone;
+
+  /// Evening review: move this thing to tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get eveningTomorrow;
+
+  /// Evening review: open Plan on tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan tomorrow'**
+  String get eveningPlanTomorrow;
+
+  /// Evening review once nothing is left to decide (T8).
+  ///
+  /// In en, this message translates to:
+  /// **'Day closed · {done} of {total} done'**
+  String eveningClosed(int done, int total);
+
+  /// Today, first use with no activities (T9).
+  ///
+  /// In en, this message translates to:
+  /// **'Your day is empty.'**
+  String get noPlanFirstTitle;
+
+  /// Today, first use (T9).
+  ///
+  /// In en, this message translates to:
+  /// **'Add the first thing you\'re doing today.'**
+  String get noPlanFirstMessage;
+
+  /// Today, nothing planned, returning user (T10).
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing planned today.'**
+  String get noPlanReturningTitle;
+
+  /// Today, nothing planned: what you usually do on this weekday (T10).
+  ///
+  /// In en, this message translates to:
+  /// **'Your usual {weekday}'**
+  String noPlanUsual(String weekday);
+
+  /// Today, first use: common activities that add to today in one tap.
+  ///
+  /// In en, this message translates to:
+  /// **'Or start with one of these'**
+  String get noPlanTryOne;
+
+  /// Today, nothing planned: open the add sheet set to Now.
+  ///
+  /// In en, this message translates to:
+  /// **'Start something now'**
+  String get noPlanStartNow;
+
+  /// Snackbar after a usual or common activity chip adds it to today.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} added to today'**
+  String addedToToday(String title);
+
+  /// Add sheet: the name field (AD1, ADR-046).
+  ///
+  /// In en, this message translates to:
+  /// **'What are you doing?'**
+  String get addWhatHint;
+
+  /// Add sheet: label of the time choices.
+  ///
+  /// In en, this message translates to:
+  /// **'When'**
+  String get addWhen;
+
+  /// Add sheet: start it now (today only).
+  ///
+  /// In en, this message translates to:
+  /// **'Now'**
+  String get addNow;
+
+  /// Add sheet: choose a time and length.
+  ///
+  /// In en, this message translates to:
+  /// **'Time…'**
+  String get addTimeChoose;
+
+  /// Add sheet: make it repeat on chosen weekdays (AD5).
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat'**
+  String get addRepeat;
+
+  /// Add sheet: add the thing to the day.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get addAction;
+
+  /// Add sheet: with Now chosen, add it and start it.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get addStartAction;
+
+  /// Add sheet: the full list of activities (AD6).
+  ///
+  /// In en, this message translates to:
+  /// **'Browse all activities'**
+  String get addBrowseAll;
+
+  /// Add sheet: a new name becomes a new activity (AD3).
+  ///
+  /// In en, this message translates to:
+  /// **'Make “{name}” yours'**
+  String addMakeYoursNamed(String name);
+
+  /// Add sheet: under Make it yours; details can be added later.
+  ///
+  /// In en, this message translates to:
+  /// **'New activity · nothing to set up'**
+  String get addMakeYoursHint;
+
+  /// Add sheet, first use: common activities instead of Recent.
+  ///
+  /// In en, this message translates to:
+  /// **'Common'**
+  String get addCommon;
+
+  /// A skipped thing (A9): put it back as planned.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo skip'**
+  String get itemUndoSkip;
 }
 
 class _AppLocalizationsDelegate

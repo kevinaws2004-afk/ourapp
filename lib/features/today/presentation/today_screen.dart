@@ -26,6 +26,9 @@ import '../../plans/domain/day_progress.dart';
 import '../../plans/presentation/plan_providers.dart';
 import '../../plans/presentation/widgets/day_items.dart';
 import '../../../shared/widgets/section_header.dart';
+import '../../../core/time/local_date.dart';
+import '../../plans/domain/day_edges.dart';
+import 'day_edges_sections.dart';
 import 'day_hero.dart';
 import 'now_next_card.dart';
 import 'today_status.dart';
@@ -41,6 +44,7 @@ class TodayScreen extends ConsumerWidget {
     required this.onOpenRecord,
     required this.onOpenFocus,
     required this.onOpenChallenge,
+    required this.onPlanDate,
     required this.chooser,
   });
 
@@ -55,6 +59,9 @@ class TodayScreen extends ConsumerWidget {
 
   /// Opens a challenge (ADR-044).
   final ValueChanged<ChallengeId> onOpenChallenge;
+
+  /// Opens Plan on a date (the evening review's Plan tomorrow).
+  final ValueChanged<LocalDate> onPlanDate;
 
   /// Picks an activity from the list, or makes a new one, for the day.
   final ActivityChooser chooser;
@@ -72,20 +79,34 @@ class TodayScreen extends ConsumerWidget {
         : null;
     final progress = overview == null ? null : DayProgress.of(overview);
     Future<void> start(PlannedItem item) => _startAndOpen(context, ref, item);
+    void add({bool now = false}) => unawaited(
+      showAddSheet(
+        context,
+        date: today,
+        dayName: l10n.addToday,
+        chooser: chooser,
+        startNow: now,
+        onStartNow: (id) =>
+            unawaited(_startPlanAndOpen(context, ref, id, null)),
+      ),
+    );
+    final nowUtc = clock.nowUtc();
+    final review = overview == null
+        ? null
+        : EveningReview.of(
+            overview,
+            nowUtc: nowUtc,
+            localHour: nowUtc.add(clock.offsetAt(nowUtc)).hour,
+          );
+    final empty =
+        overview != null &&
+        overview.planned.isEmpty &&
+        overview.unplanned.isEmpty;
     return Scaffold(
       backgroundColor: Colors.transparent,
       floatingActionButton: FloatingActionButton(
         tooltip: l10n.todayAdd,
-        onPressed: () => unawaited(
-          showAddSheet(
-            context,
-            date: today,
-            dayName: l10n.addToday,
-            chooser: chooser,
-            onStartNow: (id) =>
-                unawaited(_startPlanAndOpen(context, ref, id, null)),
-          ),
-        ),
+        onPressed: add,
         child: const Icon(AppIcons.add),
       ),
       body: SafeArea(
@@ -112,7 +133,14 @@ class TodayScreen extends ConsumerWidget {
                 ),
                 // A timer on something that isn't today's (e.g. another day).
                 if (running == null) FocusBanner(onOpen: onOpenFocus),
-                if (next != null) ...[
+                const FromYesterdaySection(),
+                if (review != null)
+                  EveningReviewCard(
+                    review: review,
+                    onOpenItem: onOpenItem,
+                    onPlanDate: onPlanDate,
+                  )
+                else if (next != null) ...[
                   const SizedBox(height: AppSpacing.lg),
                   NowNextCard(
                     item: next,
@@ -120,18 +148,23 @@ class TodayScreen extends ConsumerWidget {
                     onStart: (item) => unawaited(start(item)),
                   ),
                 ],
-                SectionHeader(title: l10n.todayYourDay),
-                DayItems(
-                  date: today,
-                  emptyTitle: l10n.todayEmptyTitle,
-                  emptyMessage: l10n.todayEmptyMessageItems,
-                  showSummary: false,
-                  showQuickAdd: false,
-                  timeline: true,
-                  onOpenItem: onOpenItem,
-                  onOpenRecord: onOpenRecord,
-                  chooser: chooser,
-                ),
+                if (empty) ...[
+                  const SizedBox(height: AppSpacing.lg),
+                  NoPlanCard(onAdd: add, onStartNow: () => add(now: true)),
+                ] else ...[
+                  SectionHeader(title: l10n.todayYourDay),
+                  DayItems(
+                    date: today,
+                    emptyTitle: l10n.todayEmptyTitle,
+                    emptyMessage: l10n.todayEmptyMessageItems,
+                    showSummary: false,
+                    showQuickAdd: false,
+                    timeline: true,
+                    onOpenItem: onOpenItem,
+                    onOpenRecord: onOpenRecord,
+                    chooser: chooser,
+                  ),
+                ],
               ],
             ),
           ),

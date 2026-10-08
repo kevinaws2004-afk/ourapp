@@ -188,6 +188,24 @@ void main() {
     expect(find.text('Read'), findsOneWidget);
   });
 
+  testAppWidgets('a skipped thing says so and can be put back (A9)', (
+    tester,
+  ) async {
+    await pumpTestApp(tester, preferences: _onboarded, seed: seedReadingPlan);
+    await openPlan(tester);
+    await rowOptions(tester, 'Read');
+    await tester.tap(find.text('Skip'));
+    await tester.pumpAndSettle();
+
+    await openItem(tester, find.text('Read'));
+    expect(find.text('Skipped'), findsWidgets, reason: 'chip (+ snackbar)');
+    expect(find.text('Start'), findsNothing);
+    await tester.tap(find.text('Undo skip'));
+    await tester.pumpAndSettle();
+    expect(find.text('Planned'), findsOneWidget);
+    expect(find.text('Start'), findsOneWidget);
+  });
+
   testAppWidgets(
     'an item of your own opens like any item and can be marked done there',
     (tester) async {
@@ -246,11 +264,13 @@ void main() {
     await tester.tap(find.byTooltip('Add to today'));
     await tester.pumpAndSettle();
     await tester.enterText(
-      find.widgetWithText(TextField, 'Add an activity to this day'),
+      find.widgetWithText(TextField, 'What are you doing?'),
       'Reading',
     );
     await tester.pump();
-    await tester.tap(find.text('Start now'));
+    await tester.tap(find.widgetWithText(ChoiceChip, 'Now'));
+    await tester.pump();
+    await tester.tap(find.widgetWithText(AppButton, 'Start'));
     await tester.pumpAndSettle();
 
     expect(find.byType(ItemScreen), findsOneWidget);
@@ -265,12 +285,7 @@ void main() {
   testAppWidgets('an empty Today invites adding to the day', (tester) async {
     await pumpTestApp(tester, preferences: _onboarded);
 
-    expect(
-      find.text(
-        "Add what you're doing or planning. Open it later to log how it went.",
-      ),
-      findsOneWidget,
-    );
+    expect(find.text('Your day is empty.'), findsOneWidget);
     expect(find.byTooltip('Add to today'), findsOneWidget, reason: 'the +');
   });
 
