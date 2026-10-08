@@ -19,6 +19,7 @@ ActivityType 1───* ActivityField
      └─0..1── FocusSession ──▶ ActivityLog (set on finish; Phase 5)
 
 Plan *───0..1 ActivityType           (Task = Plan without ActivityType, ADR-018)
+Challenge *───1 ActivityType         (daily streak on an activity; days come from its logs, ADR-044)
 
 Measurement                           (independent; Phase 6)
 AppPreference                         (key/value, ADR-012)
@@ -241,6 +242,20 @@ InsightSeries (buckets + total, count, average, best, latest) ──▶ AppChart
 **Display:** canonical values convert to the field's (or measurement type's) default unit; durations show as time; yes/no as a percentage (axis 0–100 %); times of day as clock times; ratings on a 0–scale axis (`InsightDisplay`).
 
 Queries are relational, with no JSON on these paths except multi-select picks ([database.md §6](database.md#6-indexes-and-query-plans)). Plan vs reality covers tasks too (all plans).
+
+## 8a. Challenges (implemented, ADR-044)
+
+A `Challenge` (`features/challenges/domain/challenge.dart`) is "complete this activity every day for `targetDays` days": an activity type, a title, a `startDate` and `targetDays`. **Only that is stored.** `ChallengeProgress.compute(doneDays, startDate, today, targetDays)` (pure) works out everything else whenever it is shown:
+
+| Value | Meaning |
+|---|---|
+| `daysDone` / `progress` | Distinct successful days from the start to today / capped at the target ("21 / 75"). A missed day never lowers it. |
+| `currentStreak` | Consecutive successful days ending today, or yesterday while today is still open. |
+| `bestStreak` | The longest consecutive run. |
+| `today` | `done`, `atRisk` (a streak runs and today isn't recorded), `notYet`, `completed`. |
+| `completedOn` | The day of the target-th successful day. |
+
+**Successful days** come from `ChallengeRepository.watchDoneDays()`: the distinct `local_date`s of live `activity_logs` of activity types that have a live challenge, where the record counts as done (`doneRecordSql`: a duration, notes, any value, or its plan marked done; shared with Insights counts, ADR-043). Days before the start or after today are ignored. `WatchChallenges` combines the challenges and the days (running first, completed last). Use cases: `CreateChallenge` (needs a live activity, a name of at most 60 characters, 1 to 1000 days, a start not after today), `UpdateChallenge` (name, days), `RestartChallenge` / `SetChallengeStart` (start moves to today; Undo), `EndChallenge` / `RestoreChallenge` (soft delete). Streaks are never stored, so editing, deleting, restoring or back-filling a record just changes them. Reminders are planned as step 2.
 
 ## 9. Built-in activities
 

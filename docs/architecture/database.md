@@ -13,6 +13,8 @@
 > | `focus_sessions` | v5 | 5 | Implemented (ADR-031) |
 > | `measurements`, `insight_charts` | v6 | 6 | Implemented (ADR-034) |
 > | `plan_series` + `plans.series_id` | v7 | Rework step 3 | Implemented (ADR-036) |
+> | `plans` rebuilt without the tasks-only check | v8 | Backlog | Implemented (ADR-040) |
+> | `challenges` | v9 | Challenges | Implemented (ADR-044) |
 >
 > Implemented DDL lives in `lib/core/database/tables/activity_engine.drift` (activity engine) and `tables/app_preferences_table.dart`. If this document and those files ever disagree, the code is the truth and this document must be fixed in the same change.
 
@@ -336,6 +338,24 @@ CREATE TABLE insight_charts (
 ```
 - The user's saved charts. The config references activities and fields by public ID; an unreadable config (newer `"v"`) is skipped. A handful of rows, so there's no index beyond the public ID.
 - Chart data is never stored: it is computed from records, plans and measurements (§6).
+
+### 3.12 `challenges` (v9, implemented, ADR-044)
+```sql
+CREATE TABLE challenges (
+  internal_id      INTEGER NOT NULL PRIMARY KEY,
+  public_id        TEXT NOT NULL UNIQUE CHECK (length(public_id) = 36),
+  activity_type_id INTEGER NOT NULL REFERENCES activity_types (internal_id) ON DELETE RESTRICT,
+  title            TEXT NOT NULL CHECK (length(trim(title)) > 0),
+  start_date       TEXT NOT NULL CHECK (start_date GLOB '[0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]'),
+  target_days      INTEGER NOT NULL CHECK (target_days BETWEEN 1 AND 1000),
+  created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL, deleted_at INTEGER
+) STRICT;
+CREATE INDEX idx_challenges_type ON challenges (activity_type_id) WHERE deleted_at IS NULL;
+-- trg_challenges_public_id_immutable
+```
+- A daily challenge on an activity. **No progress or streak is stored**: they are computed from `activity_logs` (the done-day query uses `idx_activity_logs_type_day`, narrowed to activities that have a live challenge with `idx_challenges_type`).
+- Ending a challenge sets `deleted_at` (ADR-022). No column for reminders yet; step 2 adds one (v10).
+- Migration `from8To9` creates the table, the index and the trigger; `test/drift/app_database/migration_test.dart` checks that activities and records survive and that the table is guarded.
 
 ### 3.10 Repeating Groups (v3, implemented, ADR-027)
 

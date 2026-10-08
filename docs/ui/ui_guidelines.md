@@ -142,8 +142,16 @@ Default cards generated from the user's data (stat tiles with deltas and sparkli
   - Field sheet → Advanced for a Number: "In insights, show it as" (Total / Average / Latest) and "Better is" (Higher / Lower / Neither).
 - **Not built yet:** sparklines.
 
+### 4.7a Challenges (ADR-044)
+- **Card (`ChallengeCard`)**: an activity-soft surface like the activity list, the activity's badge, the name, a thin `AppProgressBar` in the activity color, "12 / 75 days · 12-day streak", and today's state line (`ChallengeStateLine`: an icon, the text in normal text colors). States: "Done today" (✓), "Not yet today — streak at risk" (clock in the warning color), "Not yet today", "Completed" (✓).
+- **Today**: a "Challenges" section below the day's items, one card per running challenge; nothing at all when none runs. Completed challenges leave Today.
+- **Me → Challenges**: title, subtitle, **New challenge**, then all cards (running first, completed last); empty state explains.
+- **New / edit sheet**: Activity (Browse activities / Make your own; once chosen a tile, tappable to change), Number of days (digits plus 7 · 21 · 30 · 75 · 100 chips, "Complete the activity once every day."), First day (create only; date picker up to today), Name (hint is the default name). Edit shows the activity read-only and changes name and days only. Unsaved changes ask before closing (`DiscardGuard`).
+- **Challenge screen**: badge and name, "Since Sep 1", a big "21 / 75" (`numericHero`) with the progress bar, the state line (and "Completed Oct 3" once reached), four `StatTile`s (Current streak, Best streak, Days done, Days left), and "Your days" (`DayGrid` from the first day to today). App bar ⋯: Edit, Restart from today, End challenge; restart and end show an Undo snackbar.
+- No reminders yet (step 2).
+
 ### 4.8 Me
-**Activities** (implemented, §4.3), **Body measurements** (implemented in Phase 6: latest values, per-type history with a line chart, add/edit/delete with Undo), preferences (theme, units), data (export if approved), about/privacy statement. A calm settings list built from shared list items, not default settings screens.
+**Activities** (implemented, §4.3), **Challenges** (§4.7a), **Body measurements** (implemented in Phase 6: latest values, per-type history with a line chart, add/edit/delete with Undo), preferences (theme, units), data (export if approved), about/privacy statement. A calm settings list built from shared list items, not default settings screens.
 
 ## 5. States
 

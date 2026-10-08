@@ -7461,6 +7461,572 @@ class InsightChartsCompanion extends UpdateCompanion<InsightChartRow> {
   }
 }
 
+class Challenges extends Table with TableInfo<Challenges, ChallengeRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  Challenges(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _internalIdMeta = const VerificationMeta(
+    'internalId',
+  );
+  late final GeneratedColumn<int> internalId = GeneratedColumn<int>(
+    'internal_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints: 'NOT NULL PRIMARY KEY',
+  );
+  static const VerificationMeta _publicIdMeta = const VerificationMeta(
+    'publicId',
+  );
+  late final GeneratedColumn<String> publicId = GeneratedColumn<String>(
+    'public_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL UNIQUE CHECK (length(public_id) = 36)',
+  );
+  static const VerificationMeta _activityTypeIdMeta = const VerificationMeta(
+    'activityTypeId',
+  );
+  late final GeneratedColumn<int> activityTypeId = GeneratedColumn<int>(
+    'activity_type_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints:
+        'NOT NULL REFERENCES activity_types(internal_id)ON DELETE RESTRICT',
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL CHECK (length(trim(title)) > 0)',
+  );
+  static const VerificationMeta _startDateMeta = const VerificationMeta(
+    'startDate',
+  );
+  late final GeneratedColumn<String> startDate = GeneratedColumn<String>(
+    'start_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL CHECK (start_date GLOB \'[0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]\')',
+  );
+  static const VerificationMeta _targetDaysMeta = const VerificationMeta(
+    'targetDays',
+  );
+  late final GeneratedColumn<int> targetDays = GeneratedColumn<int>(
+    'target_days',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL CHECK (target_days BETWEEN 1 AND 1000)',
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  late final GeneratedColumn<int> createdAt = GeneratedColumn<int>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  late final GeneratedColumn<int> updatedAt = GeneratedColumn<int>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  late final GeneratedColumn<int> deletedAt = GeneratedColumn<int>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints: '',
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    internalId,
+    publicId,
+    activityTypeId,
+    title,
+    startDate,
+    targetDays,
+    createdAt,
+    updatedAt,
+    deletedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'challenges';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ChallengeRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('internal_id')) {
+      context.handle(
+        _internalIdMeta,
+        internalId.isAcceptableOrUnknown(data['internal_id']!, _internalIdMeta),
+      );
+    }
+    if (data.containsKey('public_id')) {
+      context.handle(
+        _publicIdMeta,
+        publicId.isAcceptableOrUnknown(data['public_id']!, _publicIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_publicIdMeta);
+    }
+    if (data.containsKey('activity_type_id')) {
+      context.handle(
+        _activityTypeIdMeta,
+        activityTypeId.isAcceptableOrUnknown(
+          data['activity_type_id']!,
+          _activityTypeIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_activityTypeIdMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(
+        _startDateMeta,
+        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startDateMeta);
+    }
+    if (data.containsKey('target_days')) {
+      context.handle(
+        _targetDaysMeta,
+        targetDays.isAcceptableOrUnknown(data['target_days']!, _targetDaysMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_targetDaysMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {internalId};
+  @override
+  ChallengeRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ChallengeRow(
+      internalId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}internal_id'],
+      )!,
+      publicId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}public_id'],
+      )!,
+      activityTypeId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}activity_type_id'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      startDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}start_date'],
+      )!,
+      targetDays: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}target_days'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}deleted_at'],
+      ),
+    );
+  }
+
+  @override
+  Challenges createAlias(String alias) {
+    return Challenges(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
+  final int internalId;
+  final String publicId;
+  final int activityTypeId;
+  final String title;
+
+  /// The first local day that counts.
+  final String startDate;
+  final int targetDays;
+  final int createdAt;
+  final int updatedAt;
+  final int? deletedAt;
+  const ChallengeRow({
+    required this.internalId,
+    required this.publicId,
+    required this.activityTypeId,
+    required this.title,
+    required this.startDate,
+    required this.targetDays,
+    required this.createdAt,
+    required this.updatedAt,
+    this.deletedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['internal_id'] = Variable<int>(internalId);
+    map['public_id'] = Variable<String>(publicId);
+    map['activity_type_id'] = Variable<int>(activityTypeId);
+    map['title'] = Variable<String>(title);
+    map['start_date'] = Variable<String>(startDate);
+    map['target_days'] = Variable<int>(targetDays);
+    map['created_at'] = Variable<int>(createdAt);
+    map['updated_at'] = Variable<int>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<int>(deletedAt);
+    }
+    return map;
+  }
+
+  ChallengesCompanion toCompanion(bool nullToAbsent) {
+    return ChallengesCompanion(
+      internalId: Value(internalId),
+      publicId: Value(publicId),
+      activityTypeId: Value(activityTypeId),
+      title: Value(title),
+      startDate: Value(startDate),
+      targetDays: Value(targetDays),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+    );
+  }
+
+  factory ChallengeRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ChallengeRow(
+      internalId: serializer.fromJson<int>(json['internal_id']),
+      publicId: serializer.fromJson<String>(json['public_id']),
+      activityTypeId: serializer.fromJson<int>(json['activity_type_id']),
+      title: serializer.fromJson<String>(json['title']),
+      startDate: serializer.fromJson<String>(json['start_date']),
+      targetDays: serializer.fromJson<int>(json['target_days']),
+      createdAt: serializer.fromJson<int>(json['created_at']),
+      updatedAt: serializer.fromJson<int>(json['updated_at']),
+      deletedAt: serializer.fromJson<int?>(json['deleted_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'internal_id': serializer.toJson<int>(internalId),
+      'public_id': serializer.toJson<String>(publicId),
+      'activity_type_id': serializer.toJson<int>(activityTypeId),
+      'title': serializer.toJson<String>(title),
+      'start_date': serializer.toJson<String>(startDate),
+      'target_days': serializer.toJson<int>(targetDays),
+      'created_at': serializer.toJson<int>(createdAt),
+      'updated_at': serializer.toJson<int>(updatedAt),
+      'deleted_at': serializer.toJson<int?>(deletedAt),
+    };
+  }
+
+  ChallengeRow copyWith({
+    int? internalId,
+    String? publicId,
+    int? activityTypeId,
+    String? title,
+    String? startDate,
+    int? targetDays,
+    int? createdAt,
+    int? updatedAt,
+    Value<int?> deletedAt = const Value.absent(),
+  }) => ChallengeRow(
+    internalId: internalId ?? this.internalId,
+    publicId: publicId ?? this.publicId,
+    activityTypeId: activityTypeId ?? this.activityTypeId,
+    title: title ?? this.title,
+    startDate: startDate ?? this.startDate,
+    targetDays: targetDays ?? this.targetDays,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+  );
+  ChallengeRow copyWithCompanion(ChallengesCompanion data) {
+    return ChallengeRow(
+      internalId: data.internalId.present
+          ? data.internalId.value
+          : this.internalId,
+      publicId: data.publicId.present ? data.publicId.value : this.publicId,
+      activityTypeId: data.activityTypeId.present
+          ? data.activityTypeId.value
+          : this.activityTypeId,
+      title: data.title.present ? data.title.value : this.title,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      targetDays: data.targetDays.present
+          ? data.targetDays.value
+          : this.targetDays,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ChallengeRow(')
+          ..write('internalId: $internalId, ')
+          ..write('publicId: $publicId, ')
+          ..write('activityTypeId: $activityTypeId, ')
+          ..write('title: $title, ')
+          ..write('startDate: $startDate, ')
+          ..write('targetDays: $targetDays, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    internalId,
+    publicId,
+    activityTypeId,
+    title,
+    startDate,
+    targetDays,
+    createdAt,
+    updatedAt,
+    deletedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ChallengeRow &&
+          other.internalId == this.internalId &&
+          other.publicId == this.publicId &&
+          other.activityTypeId == this.activityTypeId &&
+          other.title == this.title &&
+          other.startDate == this.startDate &&
+          other.targetDays == this.targetDays &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt);
+}
+
+class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
+  final Value<int> internalId;
+  final Value<String> publicId;
+  final Value<int> activityTypeId;
+  final Value<String> title;
+  final Value<String> startDate;
+  final Value<int> targetDays;
+  final Value<int> createdAt;
+  final Value<int> updatedAt;
+  final Value<int?> deletedAt;
+  const ChallengesCompanion({
+    this.internalId = const Value.absent(),
+    this.publicId = const Value.absent(),
+    this.activityTypeId = const Value.absent(),
+    this.title = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.targetDays = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+  });
+  ChallengesCompanion.insert({
+    this.internalId = const Value.absent(),
+    required String publicId,
+    required int activityTypeId,
+    required String title,
+    required String startDate,
+    required int targetDays,
+    required int createdAt,
+    required int updatedAt,
+    this.deletedAt = const Value.absent(),
+  }) : publicId = Value(publicId),
+       activityTypeId = Value(activityTypeId),
+       title = Value(title),
+       startDate = Value(startDate),
+       targetDays = Value(targetDays),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<ChallengeRow> custom({
+    Expression<int>? internalId,
+    Expression<String>? publicId,
+    Expression<int>? activityTypeId,
+    Expression<String>? title,
+    Expression<String>? startDate,
+    Expression<int>? targetDays,
+    Expression<int>? createdAt,
+    Expression<int>? updatedAt,
+    Expression<int>? deletedAt,
+  }) {
+    return RawValuesInsertable({
+      if (internalId != null) 'internal_id': internalId,
+      if (publicId != null) 'public_id': publicId,
+      if (activityTypeId != null) 'activity_type_id': activityTypeId,
+      if (title != null) 'title': title,
+      if (startDate != null) 'start_date': startDate,
+      if (targetDays != null) 'target_days': targetDays,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+    });
+  }
+
+  ChallengesCompanion copyWith({
+    Value<int>? internalId,
+    Value<String>? publicId,
+    Value<int>? activityTypeId,
+    Value<String>? title,
+    Value<String>? startDate,
+    Value<int>? targetDays,
+    Value<int>? createdAt,
+    Value<int>? updatedAt,
+    Value<int?>? deletedAt,
+  }) {
+    return ChallengesCompanion(
+      internalId: internalId ?? this.internalId,
+      publicId: publicId ?? this.publicId,
+      activityTypeId: activityTypeId ?? this.activityTypeId,
+      title: title ?? this.title,
+      startDate: startDate ?? this.startDate,
+      targetDays: targetDays ?? this.targetDays,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (internalId.present) {
+      map['internal_id'] = Variable<int>(internalId.value);
+    }
+    if (publicId.present) {
+      map['public_id'] = Variable<String>(publicId.value);
+    }
+    if (activityTypeId.present) {
+      map['activity_type_id'] = Variable<int>(activityTypeId.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<String>(startDate.value);
+    }
+    if (targetDays.present) {
+      map['target_days'] = Variable<int>(targetDays.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<int>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<int>(updatedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<int>(deletedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ChallengesCompanion(')
+          ..write('internalId: $internalId, ')
+          ..write('publicId: $publicId, ')
+          ..write('activityTypeId: $activityTypeId, ')
+          ..write('title: $title, ')
+          ..write('startDate: $startDate, ')
+          ..write('targetDays: $targetDays, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $AppPreferencesTable extends AppPreferences
     with TableInfo<$AppPreferencesTable, AppPreferenceRow> {
   @override
@@ -7885,6 +8451,15 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     'CREATE TRIGGER trg_plan_series_public_id_immutable BEFORE UPDATE OF public_id ON plan_series WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
     'trg_plan_series_public_id_immutable',
   );
+  late final Challenges challenges = Challenges(this);
+  late final Index idxChallengesType = Index(
+    'idx_challenges_type',
+    'CREATE INDEX idx_challenges_type ON challenges (activity_type_id) WHERE deleted_at IS NULL',
+  );
+  late final Trigger trgChallengesPublicIdImmutable = Trigger(
+    'CREATE TRIGGER trg_challenges_public_id_immutable BEFORE UPDATE OF public_id ON challenges WHEN OLD.public_id IS NOT NEW.public_id BEGIN SELECT RAISE (ABORT, \'public_id_immutable\');END',
+    'trg_challenges_public_id_immutable',
+  );
   late final $AppPreferencesTable appPreferences = $AppPreferencesTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -7937,6 +8512,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     insightCharts,
     trgMeasurementsPublicIdImmutable,
     trgPlanSeriesPublicIdImmutable,
+    challenges,
+    idxChallengesType,
+    trgChallengesPublicIdImmutable,
     appPreferences,
   ];
   @override
@@ -8109,6 +8687,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       ),
       result: [],
     ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'challenges',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [],
+    ),
   ]);
 }
 
@@ -8237,6 +8822,25 @@ final class $ActivityTypesReferences
     );
 
     final cache = $_typedResult.readTableOrNull(_focusSessionsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<Challenges, List<ChallengeRow>>
+  _challengesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.challenges,
+    aliasName: 'activity_types__internal_id__challenges__activity_type_id',
+  );
+
+  $ChallengesProcessedTableManager get challengesRefs {
+    final manager = $ChallengesTableManager($_db, $_db.challenges).filter(
+      (f) => f.activityTypeId.internalId.sqlEquals(
+        $_itemColumn<int>('internal_id')!,
+      ),
+    );
+
+    final cache = $_typedResult.readTableOrNull(_challengesRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -8428,6 +9032,31 @@ class $ActivityTypesFilterComposer
           }) => $FocusSessionsFilterComposer(
             $db: $db,
             $table: $db.focusSessions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> challengesRefs(
+    Expression<bool> Function($ChallengesFilterComposer f) f,
+  ) {
+    final $ChallengesFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.internalId,
+      referencedTable: $db.challenges,
+      getReferencedColumn: (t) => t.activityTypeId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $ChallengesFilterComposer(
+            $db: $db,
+            $table: $db.challenges,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8685,6 +9314,31 @@ class $ActivityTypesAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> challengesRefs<T extends Object>(
+    Expression<T> Function($ChallengesAnnotationComposer a) f,
+  ) {
+    final $ChallengesAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.internalId,
+      referencedTable: $db.challenges,
+      getReferencedColumn: (t) => t.activityTypeId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $ChallengesAnnotationComposer(
+            $db: $db,
+            $table: $db.challenges,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $ActivityTypesTableManager
@@ -8706,6 +9360,7 @@ class $ActivityTypesTableManager
             bool plansRefs,
             bool activityLogsRefs,
             bool focusSessionsRefs,
+            bool challengesRefs,
           })
         > {
   $ActivityTypesTableManager(_$AppDatabase db, ActivityTypes table)
@@ -8790,6 +9445,7 @@ class $ActivityTypesTableManager
                 plansRefs = false,
                 activityLogsRefs = false,
                 focusSessionsRefs = false,
+                challengesRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -8799,6 +9455,7 @@ class $ActivityTypesTableManager
                     if (plansRefs) db.plans,
                     if (activityLogsRefs) db.activityLogs,
                     if (focusSessionsRefs) db.focusSessions,
+                    if (challengesRefs) db.challenges,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -8904,6 +9561,27 @@ class $ActivityTypesTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (challengesRefs)
+                        await $_getPrefetchedData<
+                          ActivityTypeRow,
+                          ActivityTypes,
+                          ChallengeRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $ActivityTypesReferences
+                              ._challengesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $ActivityTypesReferences(
+                                db,
+                                table,
+                                p0,
+                              ).challengesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.activityTypeId == item.internalId,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -8930,6 +9608,7 @@ typedef $ActivityTypesProcessedTableManager =
         bool plansRefs,
         bool activityLogsRefs,
         bool focusSessionsRefs,
+        bool challengesRefs,
       })
     >;
 typedef $ActivityFieldsCreateCompanionBuilder =
@@ -14487,6 +15166,392 @@ typedef $InsightChartsProcessedTableManager =
       InsightChartRow,
       PrefetchHooks Function()
     >;
+typedef $ChallengesCreateCompanionBuilder = ChallengesCompanion Function({
+  Value<int> internalId,
+  required String publicId,
+  required int activityTypeId,
+  required String title,
+  required String startDate,
+  required int targetDays,
+  required int createdAt,
+  required int updatedAt,
+  Value<int?> deletedAt,
+});
+typedef $ChallengesUpdateCompanionBuilder = ChallengesCompanion Function({
+  Value<int> internalId,
+  Value<String> publicId,
+  Value<int> activityTypeId,
+  Value<String> title,
+  Value<String> startDate,
+  Value<int> targetDays,
+  Value<int> createdAt,
+  Value<int> updatedAt,
+  Value<int?> deletedAt,
+});
+
+final class $ChallengesReferences
+    extends BaseReferences<_$AppDatabase, Challenges, ChallengeRow> {
+  $ChallengesReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static ActivityTypes _activityTypeIdTable(_$AppDatabase db) => db
+      .activityTypes
+      .createAlias('challenges__activity_type_id__activity_types__internal_id');
+
+  $ActivityTypesProcessedTableManager get activityTypeId {
+    final $_column = $_itemColumn<int>('activity_type_id')!;
+
+    final manager = $ActivityTypesTableManager(
+      $_db,
+      $_db.activityTypes,
+    ).filter((f) => f.internalId.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_activityTypeIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $ChallengesFilterComposer extends Composer<_$AppDatabase, Challenges> {
+  $ChallengesFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get internalId => $composableBuilder(
+    column: $table.internalId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get publicId => $composableBuilder(
+    column: $table.publicId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get targetDays => $composableBuilder(
+    column: $table.targetDays,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $ActivityTypesFilterComposer get activityTypeId {
+    final $ActivityTypesFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.activityTypeId,
+      referencedTable: $db.activityTypes,
+      getReferencedColumn: (t) => t.internalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $ActivityTypesFilterComposer(
+            $db: $db,
+            $table: $db.activityTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $ChallengesOrderingComposer extends Composer<_$AppDatabase, Challenges> {
+  $ChallengesOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get internalId => $composableBuilder(
+    column: $table.internalId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get publicId => $composableBuilder(
+    column: $table.publicId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get targetDays => $composableBuilder(
+    column: $table.targetDays,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $ActivityTypesOrderingComposer get activityTypeId {
+    final $ActivityTypesOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.activityTypeId,
+      referencedTable: $db.activityTypes,
+      getReferencedColumn: (t) => t.internalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $ActivityTypesOrderingComposer(
+            $db: $db,
+            $table: $db.activityTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $ChallengesAnnotationComposer
+    extends Composer<_$AppDatabase, Challenges> {
+  $ChallengesAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get internalId => $composableBuilder(
+    column: $table.internalId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get publicId =>
+      $composableBuilder(column: $table.publicId, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<int> get targetDays => $composableBuilder(
+    column: $table.targetDays,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<int> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<int> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  $ActivityTypesAnnotationComposer get activityTypeId {
+    final $ActivityTypesAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.activityTypeId,
+      referencedTable: $db.activityTypes,
+      getReferencedColumn: (t) => t.internalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $ActivityTypesAnnotationComposer(
+            $db: $db,
+            $table: $db.activityTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $ChallengesTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          Challenges,
+          ChallengeRow,
+          $ChallengesFilterComposer,
+          $ChallengesOrderingComposer,
+          $ChallengesAnnotationComposer,
+          $ChallengesCreateCompanionBuilder,
+          $ChallengesUpdateCompanionBuilder,
+          (ChallengeRow, $ChallengesReferences),
+          ChallengeRow,
+          PrefetchHooks Function({bool activityTypeId})
+        > {
+  $ChallengesTableManager(_$AppDatabase db, Challenges table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $ChallengesFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $ChallengesOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $ChallengesAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> internalId = const Value.absent(),
+                Value<String> publicId = const Value.absent(),
+                Value<int> activityTypeId = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String> startDate = const Value.absent(),
+                Value<int> targetDays = const Value.absent(),
+                Value<int> createdAt = const Value.absent(),
+                Value<int> updatedAt = const Value.absent(),
+                Value<int?> deletedAt = const Value.absent(),
+              }) => ChallengesCompanion(
+                internalId: internalId,
+                publicId: publicId,
+                activityTypeId: activityTypeId,
+                title: title,
+                startDate: startDate,
+                targetDays: targetDays,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> internalId = const Value.absent(),
+                required String publicId,
+                required int activityTypeId,
+                required String title,
+                required String startDate,
+                required int targetDays,
+                required int createdAt,
+                required int updatedAt,
+                Value<int?> deletedAt = const Value.absent(),
+              }) => ChallengesCompanion.insert(
+                internalId: internalId,
+                publicId: publicId,
+                activityTypeId: activityTypeId,
+                title: title,
+                startDate: startDate,
+                targetDays: targetDays,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<Challenges, ChallengeRow>(table),
+                  $ChallengesReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({activityTypeId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (activityTypeId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.activityTypeId,
+                        referencedTable: $ChallengesReferences
+                            ._activityTypeIdTable(db),
+                        referencedColumn: $ChallengesReferences
+                            ._activityTypeIdTable(db)
+                            .internalId,
+                      ) as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $ChallengesProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      Challenges,
+      ChallengeRow,
+      $ChallengesFilterComposer,
+      $ChallengesOrderingComposer,
+      $ChallengesAnnotationComposer,
+      $ChallengesCreateCompanionBuilder,
+      $ChallengesUpdateCompanionBuilder,
+      (ChallengeRow, $ChallengesReferences),
+      ChallengeRow,
+      PrefetchHooks Function({bool activityTypeId})
+    >;
 typedef $$AppPreferencesTableCreateCompanionBuilder =
     AppPreferencesCompanion Function({
       required String key,
@@ -14687,6 +15752,8 @@ class $AppDatabaseManager {
       $MeasurementsTableManager(_db, _db.measurements);
   $InsightChartsTableManager get insightCharts =>
       $InsightChartsTableManager(_db, _db.insightCharts);
+  $ChallengesTableManager get challenges =>
+      $ChallengesTableManager(_db, _db.challenges);
   $$AppPreferencesTableTableManager get appPreferences =>
       $$AppPreferencesTableTableManager(_db, _db.appPreferences);
 }

@@ -48,6 +48,7 @@ abstract final class AppIcons {
   static const start = PhosphorGlyphs.play;
   static const pause = PhosphorGlyphs.pause;
   static const measurements = PhosphorGlyphs.ruler;
+  static const challenge = PhosphorGlyphs.target;
   static const skip = PhosphorGlyphs.skipForward;
   static const moveToTomorrow = PhosphorGlyphs.arrowBendUpRight;
   static const repeat = PhosphorGlyphs.repeat;

@@ -32,6 +32,9 @@ abstract final class AppSizes {
   static const double chartLine = 2.5;
   static const double chartDot = 3;
 
+  /// Thickness of a progress bar (challenges).
+  static const double progressBar = 8;
+
   /// Thickness of a breakdown bar ("how often each option").
   static const double breakdownBar = 10;
 

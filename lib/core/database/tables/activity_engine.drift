@@ -469,3 +469,31 @@ WHEN OLD.public_id IS NOT NEW.public_id
 BEGIN
   SELECT RAISE(ABORT, 'public_id_immutable');
 END;
+
+-- v9: daily challenges (ADR-044). "Complete this activity every day for
+-- target_days days." Only the definition is stored: progress and streaks
+-- are worked out from activity_logs, so editing or deleting a record just
+-- changes them. Ending a challenge soft-deletes it (ADR-022).
+CREATE TABLE challenges (
+  internal_id      INTEGER NOT NULL PRIMARY KEY,
+  public_id        TEXT NOT NULL UNIQUE CHECK (length(public_id) = 36),
+  activity_type_id INTEGER NOT NULL REFERENCES activity_types (internal_id) ON DELETE RESTRICT,
+  title            TEXT NOT NULL CHECK (length(trim(title)) > 0),
+  -- The first local day that counts.
+  start_date       TEXT NOT NULL CHECK (start_date GLOB '[0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]'),
+  target_days      INTEGER NOT NULL CHECK (target_days BETWEEN 1 AND 1000),
+  created_at       INTEGER NOT NULL,
+  updated_at       INTEGER NOT NULL,
+  deleted_at       INTEGER
+) STRICT AS ChallengeRow;
+
+-- The active challenges of an activity (done-day query, Today).
+CREATE INDEX idx_challenges_type ON challenges (activity_type_id)
+  WHERE deleted_at IS NULL;
+
+CREATE TRIGGER trg_challenges_public_id_immutable
+BEFORE UPDATE OF public_id ON challenges
+WHEN OLD.public_id IS NOT NEW.public_id
+BEGIN
+  SELECT RAISE(ABORT, 'public_id_immutable');
+END;

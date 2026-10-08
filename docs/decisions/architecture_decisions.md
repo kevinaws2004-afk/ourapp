@@ -595,6 +595,27 @@
 - **Context:** The audit found wrong totals (blood pressure added up), misleading first bars, "best" meaning highest for everything, fields that could never be charted, and Insights with little more than a list.
 - **Consequences:** No schema change; the new config keys and the volume `formula` key are optional, so older data and saved charts read as before. More automatic charts per activity (four per exercise). Not done: per-chart query merging (E2): each chart still runs its own small, period-limited queries.
 
+### ADR-044: Daily challenges: progress and streak are separate and derived (schema v9)
+- **Status:** Accepted 2026-10-08 (owner, after a proposal; changes by the owner: progress and streak are separate, daily only). **Implemented 2026-10-08, step 1** (no reminders yet). Adds schema v9. Streaks were "unspecified, so not V1" before; the owner approved them here. This is **not** a goal engine (the spec lists "Goal tracking" as a future advanced analytic).
+- **Decision:**
+  - **A Challenge is "Complete this activity every day for X days"** (`Challenge`: activity type, title, start date, target days). Daily only: no weekly frequency, rest days, quantities, milestones or other goal types. The rule is fixed in the product, not configurable.
+  - **Challenge → Activity Type → Activity Log.** A challenge points at one Activity Type (any: yours or built in). **Recording that activity counts the day automatically**; there is no "complete challenge" action. A day counts when a live record of the activity has something in it (a time, notes, a value) or its item is marked done: the same rule as Insights counts (`core/database/done_records.dart`, ADR-043). The day is the record's `local_date` (ADR-013).
+  - **Progress and streak are different things** (`ChallengeProgress`, pure):
+    - **Progress** = the total number of successful days from the start to today, out of the target ("21 / 75"). A missed day never lowers it. Completed once it reaches the target (`completedOn` = the day of the target-th successful day).
+    - **Current streak** = consecutive successful days ending today, or yesterday while today is still open. A missed day resets only this.
+    - **Best streak** = the longest consecutive run since the start.
+    - Example: 20 days done, one missed, the next day done: progress 21 / 75, current streak 1, best streak 20.
+  - **Today's state:** done, **at risk** ("Not yet today — streak at risk": a streak is running and today isn't recorded), not yet (no streak running), or completed.
+  - **Nothing derived is stored.** One table, `challenges` (`public_id`, `activity_type_id`, `title`, `start_date`, `target_days`, timestamps, soft delete). Progress, streaks and states are computed from `activity_logs` whenever shown, so editing, deleting or restoring a record, or adding one for a forgotten day, just changes them. Ending a challenge soft-deletes it (ADR-022); the records are untouched. **Restart** moves the start to today (earlier days stop counting; Undo restores the start). Editing changes only the name and the number of days.
+  - **UI:** a "Challenges" section below Today's items for running challenges (completed ones leave it); **Me → Challenges** (list, **New challenge**); a challenge screen (progress, current and best streak, days done and left, calendar of days done, Edit / Restart from today / End challenge).
+- **Reminders are not part of this step.** The next step needs a local-notification package, which needs its own decision (new dependency, permission). Plan: schedule the next days' reminders at the chosen time when the app opens or records change, and cancel today's when the activity is recorded (calm wording, e.g. "Keep your 12-day meditation streak alive."). A `reminder_minute` column will be added then (schema v10) rather than carried unused now.
+- **Context:** The owner wants simple streak maintenance, not a goal/OKR system: Challenge → do the Activity → streak increases → (later) a reminder protects the streak.
+- **Consequences:**
+  - Schema v9 (one table, one partial index, the `public_id` immutability trigger), forward-only migration with a data-survival test.
+  - The "counts as done" SQL moved to one place so Insights and challenges agree.
+  - Shared widgets `PanelCard`, `StatTile` and `AppProgressBar` (the first two were Insights-only).
+  - Limits: a record counts even if a yes/no field in it says "no" (for "7 Days No Sugar", record only the days it was kept); "Gym 30 days" means every single day; today's state doesn't roll over at midnight while a screen stays open until the next data change.
+
 ## Pending decisions
 
 Each needs owner approval. **Recommendation** is what the docs currently assume. Resolved entries are struck through and point to their accepted ADR.

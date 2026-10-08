@@ -12,6 +12,7 @@ import 'generated/schema_v2.dart' as v2;
 import 'generated/schema_v3.dart' as v3;
 import 'generated/schema_v6.dart' as v6;
 import 'generated/schema_v7.dart' as v7;
+import 'generated/schema_v8.dart' as v8;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -269,6 +270,59 @@ void main() {
       ),
       throwsA(anything),
       reason: 'a plan with logs keeps its activity',
+    );
+    await db.close();
+  });
+
+  test('migration from v8 to v9 keeps activities and records and adds '
+      'challenges', () async {
+    final schema = await verifier.schemaAt(8);
+    final old = v8.DatabaseAtV8(schema.newConnection());
+    const type = '00000000-0000-7000-8000-000000000001';
+    const log = '00000000-0000-7000-8000-000000000002';
+    await old.customStatement(
+      'INSERT INTO activity_types (internal_id, public_id, name, icon_id, color_key, created_at, updated_at) '
+      "VALUES (1, '$type', 'Meditation', 'flower-lotus', 'teal', 1, 1)",
+    );
+    await old.customStatement(
+      'INSERT INTO activity_logs (internal_id, public_id, activity_type_id, started_at, '
+      'tz_offset_minutes, local_date, created_at, updated_at) '
+      "VALUES (1, '$log', 1, 1000, 0, '2026-10-05', 1, 1)",
+    );
+    await old.close();
+
+    final db = AppDatabase(schema.newConnection());
+    await verifier.migrateAndValidate(db, 9);
+
+    expect((await db.select(db.activityTypes).getSingle()).name, 'Meditation');
+    expect(
+      (await db.select(db.activityLogs).getSingle()).localDate,
+      '2026-10-05',
+    );
+    expect(await db.select(db.challenges).get(), isEmpty);
+
+    // The new table is usable and guarded.
+    const challenge = '00000000-0000-7000-8000-000000000003';
+    await db.customStatement(
+      'INSERT INTO challenges (public_id, activity_type_id, title, start_date, '
+      'target_days, created_at, updated_at) '
+      "VALUES ('$challenge', 1, '75 days of Meditation', '2026-10-05', 75, 1, 1)",
+    );
+    await expectLater(
+      db.customStatement(
+        "UPDATE challenges SET public_id = '00000000-0000-7000-8000-000000000009'",
+      ),
+      throwsA(anything),
+      reason: 'public_id is immutable',
+    );
+    await expectLater(
+      db.customStatement(
+        'INSERT INTO challenges (public_id, activity_type_id, title, start_date, '
+        'target_days, created_at, updated_at) '
+        "VALUES ('00000000-0000-7000-8000-000000000004', 1, 'Zero', '2026-10-05', 0, 1, 1)",
+      ),
+      throwsA(anything),
+      reason: 'a challenge lasts at least a day',
     );
     await db.close();
   });

@@ -16,6 +16,7 @@
 - **Task**: a lightweight plan item with no detailed logging (e.g. "Buy milk"). It is a Plan with no Activity Type (ADR-018). *New items always come from an activity (ADR-042); plans without one remain only in older data.*
 - **An item on your day is where you log (ADR-035):** opening a plan opens the item; what you log saves as you type, and the first thing logged makes it done. Leave and come back to add more. Older items without an activity get one when first logged into. "Mark done" logs the planned time. One session = one record (sets are rows inside it).
 - **Measurement**: a value analyzable over time; also **Body Measurements** (weight, height, body fat, chest, waist, arms, legs), stored separately.
+- **Challenge** (ADR-044): "complete this activity every day for X days" on one Activity Type. Recording the activity counts the day. **Progress** = total successful days ("21 / 75", never lowered by a missed day); **current streak** = consecutive days ending today/yesterday (a miss resets only this); **best streak** = longest run. All derived from logs, nothing stored but the definition. Daily only: no weekly, rest days, quantities or milestones; not a goal engine. Shown on Today ("streak at risk" when today isn't done), Me → Challenges, and its own screen. Reminders: step 2, not built.
 - **Focus Session**: full-screen timer whose active duration lands in a Log.
 - **Repeating Group**: the structured field type (exercise list; sets = a nested Repeating Group of Numbers). "Set Table" from the spec is a composition, not a type (OQ-01).
 
@@ -31,7 +32,7 @@
 
 **V1 success scenario (§43):** plan tomorrow at night → see plan in morning → log Gym sets → 1h42m focus on Work → 43m Reading timer → log 48m Meeting → evening Today shows planned vs actual → Insights shows progress. This is the primary acceptance test.
 
-**Out of V1:** accounts, cloud sync, social, leaderboards, multiplayer, AI, subscriptions, recommendations, web/desktop, cross-device sync, app blocking, wearables, automation. Also unspecified (so not V1): recurring plans, reminders, goals, streaks, widgets, import.
+**Out of V1:** accounts, cloud sync, social, leaderboards, multiplayer, AI, subscriptions, recommendations, web/desktop, cross-device sync, app blocking, wearables, automation. Also unspecified (so not V1): reminders, goals, widgets, import. (Recurring plans and daily challenge streaks were added later: ADR-036, ADR-044.)
 
 **Field types (OQ-01, resolved):** Text, Number (+ optional unit dimension), Boolean, Single Select, Multi Select, Date, Time, Duration, Rating, Repeating Group (implemented in Phase 3; the built-in Gym, Meeting and Cooking activities use it). Domain-specific types are compositions, never new types. Every log also has a built-in start, actual duration and notes.
 

@@ -4559,4 +4559,141 @@ class AppLocalizationsEn extends AppLocalizations {
   String insightPoints(String change) {
     return '$change pts';
   }
+
+  @override
+  String get validationInvalidChallengeTarget =>
+      'Choose between 1 and 1000 days.';
+
+  @override
+  String get validationChallengeStartInFuture =>
+      'A challenge can\'t start in the future.';
+
+  @override
+  String get meChallengesSubtitle => 'Streaks for things you do every day';
+
+  @override
+  String get challengesTitle => 'Challenges';
+
+  @override
+  String get challengesSubtitle =>
+      'Do an activity every day and keep your streak going.';
+
+  @override
+  String get challengesEmptyTitle => 'No challenges yet';
+
+  @override
+  String get challengesEmptyMessage =>
+      'Pick an activity and a number of days, like 75 days of Meditation. Recording it each day keeps your streak going.';
+
+  @override
+  String get newChallenge => 'New challenge';
+
+  @override
+  String get challengeNewTitle => 'New challenge';
+
+  @override
+  String get challengeEditTitle => 'Edit challenge';
+
+  @override
+  String get challengeActivityLabel => 'Activity';
+
+  @override
+  String get challengeActivityHelper => 'Recording it each day counts the day.';
+
+  @override
+  String get challengeDaysLabel => 'Number of days';
+
+  @override
+  String get challengeDaysHelper => 'Complete the activity once every day.';
+
+  @override
+  String get challengeStartLabel => 'First day';
+
+  @override
+  String get challengeNameLabel => 'Name';
+
+  @override
+  String get challengeStartAction => 'Start challenge';
+
+  @override
+  String challengeAutoTitle(int days, String activity) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days of $activity',
+      one: '1 day of $activity',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String challengeProgressDays(int done, int target) {
+    return '$done / $target days';
+  }
+
+  @override
+  String challengeStreakDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count-day streak',
+      one: '1-day streak',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get challengeTodayDone => 'Done today';
+
+  @override
+  String get challengeTodayAtRisk => 'Not yet today — streak at risk';
+
+  @override
+  String get challengeTodayNotYet => 'Not yet today';
+
+  @override
+  String get challengeCompleted => 'Completed';
+
+  @override
+  String challengeCompletedOn(String date) {
+    return 'Completed $date';
+  }
+
+  @override
+  String get challengeCurrentStreak => 'Current streak';
+
+  @override
+  String get challengeBestStreak => 'Best streak';
+
+  @override
+  String get challengeDaysDone => 'Days done';
+
+  @override
+  String get challengeDaysLeft => 'Days left';
+
+  @override
+  String get challengeCalendarSection => 'Your days';
+
+  @override
+  String get challengeRestart => 'Restart from today';
+
+  @override
+  String get challengeRestarted => 'Counting from today';
+
+  @override
+  String get challengeEnd => 'End challenge';
+
+  @override
+  String get challengeEnded => 'Challenge ended';
+
+  @override
+  String get challengeNotFound => 'This challenge has ended.';
+
+  @override
+  String challengeStartsOn(String date) {
+    return 'Since $date';
+  }
+
+  @override
+  String get challengeOptions => 'Challenge options';
 }

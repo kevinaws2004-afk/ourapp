@@ -25,7 +25,7 @@ import '../domain/insight.dart';
 import '../domain/insight_use_cases.dart';
 import 'insight_chart_card.dart';
 import 'insight_formatting.dart';
-import 'insight_panel.dart';
+import '../../../shared/widgets/panel_card.dart';
 import 'insight_providers.dart';
 import 'insight_range_picker.dart';
 
@@ -270,7 +270,7 @@ class ConsistencyPanel extends ConsumerWidget {
     final counts = ref.watch(dayCountsProvider(typeId)).value;
     if (counts == null) return const SizedBox.shrink();
     final caption = l10n.insightDaysOfPeriod(counts.length, range.days);
-    return InsightPanel(
+    return PanelCard(
       title: l10n.insightConsistencySection,
       subtitle: caption,
       child: DayGrid(
@@ -307,7 +307,7 @@ class _WhenYouDoIt extends ConsumerWidget {
       PartOfDay.evening => l10n.insightEvening,
       PartOfDay.night => l10n.insightNight,
     };
-    return InsightPanel(
+    return PanelCard(
       title: l10n.insightWhenSection,
       child: BreakdownBars(
         color: color,
@@ -340,7 +340,7 @@ class _ChoiceBreakdown extends ConsumerWidget {
     }
     final labels = {for (final o in options) o.id.value: o.label};
     final counts = optionCounts(picks, [for (final o in options) o.id.value]);
-    return InsightPanel(
+    return PanelCard(
       title: field.name,
       subtitle: l10n.insightChoiceTimes,
       child: BreakdownBars(

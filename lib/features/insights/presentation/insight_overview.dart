@@ -20,7 +20,8 @@ import '../../plans/presentation/plan_date_notifier.dart';
 import '../domain/insight.dart';
 import '../domain/insight_use_cases.dart';
 import 'insight_formatting.dart';
-import 'insight_panel.dart';
+import '../../../shared/widgets/panel_card.dart';
+import '../../../shared/widgets/stat_tile.dart';
 import 'insight_providers.dart';
 
 /// The period at a glance against the one before (H5): days active, time
@@ -33,13 +34,16 @@ class InsightSummaryTiles extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final summary = ref.watch(insightSummaryProvider).value;
     if (summary == null) return const SizedBox.shrink();
-    double? change(num now, num before) =>
-        relativeChange(now.toDouble(), before.toDouble());
+    String? change(num now, num before) =>
+        switch (relativeChange(now.toDouble(), before.toDouble())) {
+          final c? => formatChange(c),
+          null => null,
+        };
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: _Tile(
+          child: StatTile(
             label: l10n.insightDaysActive,
             value: '${summary.daysActive}',
             change: change(summary.daysActive, summary.previousDaysActive),
@@ -47,7 +51,7 @@ class InsightSummaryTiles extends ConsumerWidget {
         ),
         const SizedBox(width: AppSpacing.sm),
         Expanded(
-          child: _Tile(
+          child: StatTile(
             label: l10n.insightTimeRecorded,
             value: formatDuration(l10n, summary.durationMs),
             change: change(summary.durationMs, summary.previousDurationMs),
@@ -55,56 +59,13 @@ class InsightSummaryTiles extends ConsumerWidget {
         ),
         const SizedBox(width: AppSpacing.sm),
         Expanded(
-          child: _Tile(
+          child: StatTile(
             label: l10n.insightThingsDone,
             value: '${summary.count}',
             change: change(summary.count, summary.previousCount),
           ),
         ),
       ],
-    );
-  }
-}
-
-class _Tile extends StatelessWidget {
-  const _Tile({required this.label, required this.value, this.change});
-
-  final String label;
-  final String value;
-  final double? change;
-
-  @override
-  Widget build(BuildContext context) {
-    final quiet = context.textStyles.labelMedium?.copyWith(
-      color: context.colors.textSecondary,
-    );
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: context.colors.surfaceBase,
-        borderRadius: AppRadius.lgAll,
-        border: Border.all(color: context.colors.borderSubtle),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(label, style: quiet),
-            const SizedBox(height: AppSpacing.xs),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
-              child: Text(
-                value,
-                style: AppTypography.numericMedium.copyWith(
-                  color: context.colors.textPrimary,
-                ),
-              ),
-            ),
-            if (change case final c?) Text(formatChange(c), style: quiet),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -167,7 +128,7 @@ class TimeByActivityPanel extends ConsumerWidget {
       const ActivityDurationSource(ActivityTypeId('')),
       null,
     );
-    return InsightPanel(
+    return PanelCard(
       title: l10n.insightTimeByActivitySection,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -268,7 +229,7 @@ class PlanAdherencePanel extends ConsumerWidget {
       color: context.colors.textSecondary,
     );
     if (now.planned == 0) {
-      return InsightPanel(
+      return PanelCard(
         title: l10n.insightPlanSection,
         child: Text(l10n.insightPlanEmpty, style: quiet),
       );
@@ -276,7 +237,7 @@ class PlanAdherencePanel extends ConsumerWidget {
     double share(({int planned, int done}) s) => s.done / s.planned;
     final change = before.planned == 0 ? null : share(now) - share(before);
     final bucketed = planShareBuckets(days, from, to, range.bucket);
-    return InsightPanel(
+    return PanelCard(
       title: l10n.insightPlanSection,
       subtitle: l10n.insightPlanDone(now.done, now.planned),
       child: Column(
