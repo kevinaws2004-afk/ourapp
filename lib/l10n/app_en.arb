@@ -1156,7 +1156,7 @@
   "@focusNoneMessage": {
     "description": "Focus screen when nothing is running."
   },
-  "planStatusInProgress": "In progress",
+  "planStatusInProgress": "Running",
   "@planStatusInProgress": {
     "description": "Plan status while a focus session runs on it."
   },
@@ -7105,5 +7105,14 @@
   "challengeDoItToday": "Do it today",
   "@challengeDoItToday": {
     "description": "A challenge not yet done today: open today's thing for its activity (C3)."
+  },
+  "meActivitiesCount": "{count, plural, =0{Add them as you go} =1{1 activity} other{{count} activities}}",
+  "@meActivitiesCount": {
+    "description": "Me: how many activities you have (M1).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

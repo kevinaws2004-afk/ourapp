@@ -7,6 +7,11 @@ import '../../../core/design/tokens/spacing.dart';
 import '../../../core/design/window_size_class.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/widgets/section_header.dart';
+import '../../../shared/widgets/app_card.dart';
+import '../../activity_types/presentation/activity_type_providers.dart';
+import '../../measurements/domain/measurement.dart';
+import '../../measurements/presentation/measurement_formatting.dart';
+import '../../measurements/presentation/measurement_providers.dart';
 import 'appearance_screen.dart';
 import 'preferences_providers.dart';
 
@@ -56,28 +61,31 @@ class MeScreen extends ConsumerWidget {
             ),
             children: [
               Text(l10n.navMe, style: context.textStyles.displayMedium),
-              SectionHeader(title: l10n.meSectionSetup),
-              ListTile(
-                leading: const Icon(AppIcons.activities),
-                title: Text(l10n.activitiesTitle),
-                subtitle: Text(l10n.meActivitiesSubtitle),
-                trailing: const Icon(AppIcons.chevron),
+              const SizedBox(height: AppSpacing.xl),
+              _MeCard(
+                icon: AppIcons.activities,
+                title: l10n.activitiesTitle,
+                value: switch (ref.watch(activeActivityTypesProvider).value) {
+                  final types? => l10n.meActivitiesCount(types.length),
+                  null => l10n.meActivitiesSubtitle,
+                },
                 onTap: onOpenActivities,
               ),
-              ListTile(
-                leading: const Icon(AppIcons.measurements),
-                title: Text(l10n.measurementsTitle),
-                subtitle: Text(l10n.meMeasurementsSubtitle),
-                trailing: const Icon(AppIcons.chevron),
+              _MeCard(
+                icon: AppIcons.measurements,
+                title: l10n.measurementsTitle,
+                value: switch (ref
+                    .watch(latestMeasurementsProvider)
+                    .value?[MeasurementType.weight]) {
+                  final weight? => formatMeasurement(weight),
+                  null => l10n.meMeasurementsSubtitle,
+                },
                 onTap: onOpenMeasurements,
               ),
-              ListTile(
-                leading: const Icon(AppIcons.appearance),
-                title: Text(l10n.appearanceTitle),
-                subtitle: Text(
-                  themeName(l10n, ref.watch(effectiveThemeProvider)),
-                ),
-                trailing: const Icon(AppIcons.chevron),
+              _MeCard(
+                icon: AppIcons.appearance,
+                title: l10n.appearanceTitle,
+                value: themeName(l10n, ref.watch(effectiveThemeProvider)),
                 onTap: onOpenAppearance,
               ),
               // Plain release builds never show developer tools (A3).
@@ -108,6 +116,58 @@ class MeScreen extends ConsumerWidget {
                     onTap: onLoadRecentDemoData,
                   ),
               ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// One part of your setup as a card: what it is and its value right now
+/// ("12 activities", "84.2 kg", "Lavender").
+class _MeCard extends StatelessWidget {
+  const _MeCard({
+    required this.icon,
+    required this.title,
+    required this.value,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String value;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: Semantics(
+        button: true,
+        child: AppCard(
+          onTap: onTap,
+          child: Row(
+            children: [
+              Icon(icon, color: c.brandPrimary),
+              const SizedBox(width: AppSpacing.lg),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: context.textStyles.titleMedium),
+                    const SizedBox(height: AppSpacing.xxs),
+                    Text(
+                      value,
+                      style: context.textStyles.bodyMedium?.copyWith(
+                        color: c.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(AppIcons.chevron, color: c.textTertiary),
             ],
           ),
         ),

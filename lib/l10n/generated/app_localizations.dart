@@ -1711,7 +1711,7 @@ abstract class AppLocalizations {
   /// Plan status while a focus session runs on it.
   ///
   /// In en, this message translates to:
-  /// **'In progress'**
+  /// **'Running'**
   String get planStatusInProgress;
 
   /// Validation message.
@@ -9674,6 +9674,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Do it today'**
   String get challengeDoItToday;
+
+  /// Me: how many activities you have (M1).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Add them as you go} =1{1 activity} other{{count} activities}}'**
+  String meActivitiesCount(int count);
 }
 
 class _AppLocalizationsDelegate

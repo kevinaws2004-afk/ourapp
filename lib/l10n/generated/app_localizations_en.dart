@@ -879,7 +879,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get focusNoneMessage => 'Start one from a plan or an activity.';
 
   @override
-  String get planStatusInProgress => 'In progress';
+  String get planStatusInProgress => 'Running';
 
   @override
   String get validationFocusAlreadyActive =>
@@ -5200,4 +5200,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get challengeDoItToday => 'Do it today';
+
+  @override
+  String meActivitiesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count activities',
+      one: '1 activity',
+      zero: 'Add them as you go',
+    );
+    return '$_temp0';
+  }
 }
