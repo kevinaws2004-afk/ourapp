@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../shared/widgets/streak_badge.dart';
+import '../../challenges/presentation/challenge_providers.dart';
 
 import '../../../core/design/context_ext.dart';
 import '../../../core/design/tokens/spacing.dart';
@@ -13,7 +17,7 @@ import 'activity_catalog.dart';
 /// in one list ([ActivityCatalog]): the user's own, with **Record**, then the
 /// built-in ones, plus **New activity** to make one's own. Configuration
 /// lives here; daily recording happens on the day.
-class ActivitiesScreen extends StatelessWidget {
+class ActivitiesScreen extends ConsumerWidget {
   const ActivitiesScreen({
     super.key,
     required this.onNewActivity,
@@ -28,9 +32,10 @@ class ActivitiesScreen extends StatelessWidget {
   final ValueChanged<ActivityType> onRecordType;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final margin = WindowSizeClass.of(context).screenMargin;
+    final streaks = ref.watch(activityStreaksProvider);
     return Scaffold(
       appBar: AppBar(),
       body: Align(
@@ -69,10 +74,20 @@ class ActivitiesScreen extends StatelessWidget {
               ActivityCatalog(
                 onOpen: (type) => onOpenActivity(type.id),
                 onUseBuiltIn: onOpenActivity,
-                trailing: (type) => AppButton(
-                  label: l10n.actionRecord,
-                  variant: AppButtonVariant.secondary,
-                  onPressed: () => onRecordType(type),
+                trailing: (type) => Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // In a running challenge (M2).
+                    if (streaks[type.id] case final streak?) ...[
+                      StreakBadge(days: streak.days),
+                      const SizedBox(width: AppSpacing.sm),
+                    ],
+                    AppButton(
+                      label: l10n.actionRecord,
+                      variant: AppButtonVariant.secondary,
+                      onPressed: () => onRecordType(type),
+                    ),
+                  ],
                 ),
               ),
             ],

@@ -78,6 +78,7 @@ const lavenderTokens = AppTokens(
     progressGradient: [Color(0xFF6847F0), Color(0xFF10B981)],
     heroWash: Color(0xFFD9F7E8),
     factsAsChips: false,
+    timeColumn: true,
   ),
   palette: ActivityPalette({
     ActivityColorKey.sky: ActivityColors(

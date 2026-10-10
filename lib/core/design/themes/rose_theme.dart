@@ -79,6 +79,7 @@ const roseTokens = AppTokens(
     progressGradient: [Color(0xFF2F8180)],
     heroWash: Color(0xFFDDF0EF),
     factsAsChips: false,
+    timeColumn: true,
   ),
   palette: ActivityPalette({
     ActivityColorKey.sky: ActivityColors(

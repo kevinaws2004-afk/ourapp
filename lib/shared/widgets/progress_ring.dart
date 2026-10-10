@@ -15,6 +15,7 @@ class ProgressRing extends StatelessWidget {
     this.size = 96,
     this.stroke = 10,
     this.color,
+    this.trackColor,
     this.child,
   });
 
@@ -23,6 +24,9 @@ class ProgressRing extends StatelessWidget {
   final double size;
   final double stroke;
   final Color? color;
+
+  /// The unfilled part; defaults to the sunken surface.
+  final Color? trackColor;
   final Widget? child;
 
   @override
@@ -38,7 +42,7 @@ class ProgressRing extends StatelessWidget {
         child: CustomPaint(
           painter: _RingPainter(
             fraction: fraction.clamp(0, 1).toDouble(),
-            track: context.colors.surfaceSunken,
+            track: trackColor ?? context.colors.surfaceSunken,
             stops: stops,
             stroke: stroke,
           ),

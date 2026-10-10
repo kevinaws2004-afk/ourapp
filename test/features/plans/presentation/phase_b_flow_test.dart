@@ -24,7 +24,7 @@ import '../../activity_types/presentation/activities_flow_test.dart'
     show enterField, scrollAndTap;
 import 'plan_screen_test.dart' show openPlan;
 import 'plans_flow_test.dart'
-    show closeItem, itemRow, openItem, saveOwnActivity, waitForSave;
+    show addNew, closeItem, itemRow, openItem, waitForSave;
 
 const _onboarded = PreferencesSnapshot(
   theme: AppThemeId.lavender,
@@ -163,13 +163,7 @@ void main() {
   ) async {
     await pumpTestApp(tester, preferences: _onboarded);
     await openPlan(tester);
-    await tester.enterText(
-      find.widgetWithText(TextField, 'Add an activity to this day'),
-      'Lunch',
-    );
-    await tester.testTextInput.receiveAction(TextInputAction.done);
-    await tester.pumpAndSettle();
-    await saveOwnActivity(tester, 'Lunch');
+    await addNew(tester, 'Lunch');
     await openItem(tester, itemRow('Lunch'));
 
     await scrollAndTap(tester, find.widgetWithText(ActionChip, 'How it went'));

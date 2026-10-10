@@ -79,6 +79,7 @@ const papayaTokens = AppTokens(
     progressGradient: [Color(0xFFFF6B4A), Color(0xFFFDBA74)],
     heroWash: Color(0xFFDDF8F4),
     factsAsChips: true,
+    timeColumn: false,
   ),
   palette: ActivityPalette({
     ActivityColorKey.sky: ActivityColors(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:daylog/features/focus/presentation/focus_screen.dart';
 import 'package:daylog/features/plans/presentation/item/item_screen.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
+import 'package:daylog/features/today/presentation/now_next_card.dart';
 import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -18,10 +19,12 @@ const _onboarded = PreferencesSnapshot(
 );
 
 /// The timer lives in the item (ADR-035): start it, keep logging while it
-/// runs, finish → the item has its time and everything logged.
+/// runs, Finish → back where it was opened, done with its time and
+/// everything logged (ADR-046).
 void main() {
-  testAppWidgets('an item is timed while you log into it; finishing fills '
-      'its time', (tester) async {
+  testAppWidgets('an item is timed while you log into it; Finish returns to '
+      'the day after "How did it go?", the row shows the result, and the '
+      'done item (A7) has its time', (tester) async {
     late FakeClock clock;
     await pumpTestApp(
       tester,
@@ -33,7 +36,7 @@ void main() {
     );
 
     await openItem(tester, find.text('Read'));
-    await tester.tap(find.text('Start timer'));
+    await tester.tap(find.text('Start'));
     await tester.pumpAndSettle();
     expect(find.text('00:00'), findsOneWidget);
 
@@ -50,9 +53,22 @@ void main() {
     await tester.tap(find.text('Finish'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Read session complete · 42 min'), findsOneWidget);
-    expect(find.text('Fooled by Randomness'), findsOneWidget, reason: 'kept');
-    expect(find.text('Done'), findsOneWidget);
+    expect(find.text('How did it go?'), findsOneWidget);
+    expect(find.text('Read · 42 min'), findsOneWidget, reason: 'subtitle');
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ItemScreen), findsNothing, reason: 'back to Today');
+    expect(find.text('Read done'), findsOneWidget, reason: 'snackbar');
+    expect(find.byTooltip('Mark as not done'), findsOneWidget);
+    expect(
+      find.text('Fooled by Randomness'),
+      findsOneWidget,
+      reason: 'its result on the row',
+    );
+
+    await openItem(tester, find.text('Read'));
+    expect(find.text('Not done'), findsOneWidget, reason: 'A7');
     await tester.scrollUntilVisible(
       find.text('Minutes'),
       200,
@@ -63,24 +79,24 @@ void main() {
       findsOneWidget,
       reason: 'the timed length fills the duration (A11)',
     );
-
-    await closeItem(tester);
-    // Finishing the timer finished the item (ADR-040).
-    expect(find.textContaining('42 min of 1h 0m'), findsOneWidget);
-    expect(find.byTooltip('Mark as not done'), findsOneWidget);
   });
 
-  testAppWidgets('a running timer shows on Today; Return goes back to its '
-      'item, which can open it full screen', (tester) async {
+  testAppWidgets('a running timer is the Running card on Today; tapping it '
+      'goes back to its item, which can open it full screen', (tester) async {
     await pumpTestApp(tester, preferences: _onboarded, seed: seedReadingPlan);
     await openItem(tester, find.text('Read'));
-    await tester.tap(find.text('Start timer'));
+    await tester.tap(find.text('Start'));
     await tester.pumpAndSettle();
     await closeItem(tester);
 
-    expect(find.text('Return'), findsOneWidget);
-    expect(find.textContaining('In progress'), findsOneWidget);
-    await tester.tap(find.text('Return'));
+    final card = find.byType(NowNextCard);
+    expect(
+      find.descendant(of: card, matching: find.text('RUNNING')),
+      findsOneWidget,
+    );
+    expect(find.descendant(of: card, matching: find.text('Finish')), findsOne);
+    expect(find.textContaining('Running · '), findsOneWidget, reason: 'row');
+    await tester.tap(find.descendant(of: card, matching: find.text('Read')));
     await tester.pumpAndSettle();
     expect(find.byType(ItemScreen), findsOneWidget);
 

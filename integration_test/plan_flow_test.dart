@@ -10,11 +10,11 @@ import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:daylog/features/settings/presentation/preferences_providers.dart';
 import 'package:drift/native.dart';
+import 'package:daylog/shared/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:intl/intl.dart';
 
 /// Plans on a real device (ADR-018, ADR-035): install Reading, plan it for
 /// today from the Plan tab's week (today's day screen), open it and log into it (saved as you type), and
@@ -73,14 +73,10 @@ void main() {
     await tester.pumpAndSettle();
 
     await tapTab('Plan');
-    // The week opens; tapping today's heading opens the day (A1).
-    await tester.tap(
-      find.text(DateFormat.yMMMMEEEEd('en_US').format(DateTime.now())),
-    );
+    // The week opens on today; + adds to it, a Recent activity in one tap.
+    await tester.tap(find.byTooltip('Add to this day'));
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(ChoiceChip, 'Reading'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Add plan'));
     await tester.pumpAndSettle();
     // Opening the planned activity is where you log into it (ADR-035).
     await tester.tap(find.byType(PlanItemTile));
@@ -97,21 +93,22 @@ void main() {
     await tester.pump(ItemNotifier.saveDelay * 2);
     await tester.pumpAndSettle();
     expect(find.text('Saved'), findsOneWidget);
-    // Logging doesn't finish it; Mark done at the bottom does (ADR-040).
+    // Logging doesn't finish it; Done at the top does, then "How did it
+    // go?" and back to the day (ADR-046).
+    final done = find.widgetWithText(AppButton, 'Done');
     await tester.scrollUntilVisible(
-      find.text('Mark done'),
-      200,
+      done,
+      -200,
       scrollable: find.byType(Scrollable).hitTestable().first,
     );
-    await tester.ensureVisible(find.text('Mark done'));
+    await tester.tap(done);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Mark done'));
+    await tester.tap(find.text('Skip'));
     await tester.pumpAndSettle();
-    await tester.pageBack();
-    await tester.pumpAndSettle();
+    expect(find.byType(ItemScreen), findsNothing);
 
     await tapTab('Today');
-    expect(find.textContaining('1 done'), findsOneWidget);
+    expect(find.textContaining('All 1 done'), findsOneWidget);
     expect(find.byIcon(AppIcons.taskDone), findsOneWidget);
 
     await db.close();

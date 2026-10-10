@@ -1,7 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:intl/intl.dart';
 
 import '../../../core/design/app_icons.dart';
 import '../../../core/design/context_ext.dart';
@@ -12,17 +12,17 @@ import '../../../core/design/tokens/spacing.dart';
 import '../../../core/time/clock_provider.dart';
 import '../../../core/time/local_date.dart';
 import '../../../l10n/generated/app_localizations.dart';
-import '../../../shared/widgets/state_views.dart';
 import '../../activity_logs/domain/activity_log.dart';
 import '../../activity_types/domain/activity_type.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
 import '../domain/plan.dart';
-import '../domain/watch_day_overview.dart';
 import 'activity_chooser.dart';
 import 'plan_date_notifier.dart';
-import 'plan_editor_sheet.dart';
 import 'plan_providers.dart';
-import 'widgets/planned_list.dart';
+import '../../../shared/widgets/progress_ring.dart';
+import '../domain/day_progress.dart';
+import 'widgets/day_items.dart';
+import 'widgets/no_plan_card.dart';
 
 /// How the Plan tab shows the selected date (ADR-036, A1). A single day
 /// opens on its own screen.
@@ -113,55 +113,101 @@ class _PeriodHeader extends StatelessWidget {
   }
 }
 
-/// Seven days, each with its items (ADR-036). Tapping a day's heading opens
-/// that day; "+" plans something on it.
+/// The week (ADR-046, P1–P4): a strip of seven days (past days and today:
+/// a ring of done out of planned; later days: how many are planned), then
+/// the selected day, shown like Today (the same rows; no Start here: Today
+/// is for doing). An empty day offers what you usually do on that weekday.
 class PlanWeekView extends ConsumerWidget {
   const PlanWeekView({
     super.key,
     required this.onOpenItem,
     required this.onOpenRecord,
-    required this.onOpenDay,
+    required this.onAdd,
     required this.chooser,
   });
 
   final ValueChanged<PlanId> onOpenItem;
   final ValueChanged<ActivityLog> onOpenRecord;
-  final ValueChanged<LocalDate> onOpenDay;
+
+  /// Opens the add sheet for the selected day.
+  final VoidCallback onAdd;
   final ActivityChooser chooser;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final material = MaterialLocalizations.of(context);
     final selected = ref.watch(planSelectedDateProvider);
     final today = currentLocalDate(ref.watch(clockProvider));
     final notifier = ref.read(planSelectedDateProvider.notifier);
     final start = weekStartOf(context, selected);
-    final end = start.addDays(6);
+    final locale = Localizations.localeOf(context).toString();
     DateTime d(LocalDate x) => DateTime(x.year, x.month, x.day);
-    final containsToday =
-        today.compareTo(start) >= 0 && today.compareTo(end) <= 0;
+    final relative = switch (selected) {
+      _ when selected == today => l10n.planToday,
+      _ when selected == today.addDays(1) => l10n.planTomorrow,
+      _ when selected == today.addDays(-1) => l10n.planYesterday,
+      _ => null,
+    };
+    final date = DateFormat.MMMMEEEEd(locale).format(d(selected));
+    final overview = ref.watch(dayOverviewProvider(selected)).value;
+    final progress = overview == null ? null : DayProgress.of(overview);
+    final empty =
+        overview != null &&
+        overview.planned.isEmpty &&
+        overview.unplanned.isEmpty;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _PeriodHeader(
-          title: l10n.planTimeRange(
-            material.formatShortMonthDay(d(start)),
-            material.formatShortMonthDay(d(end)),
-          ),
+          title: DateFormat.yMMMM(locale).format(d(selected)),
           previousTooltip: l10n.planPreviousWeek,
           nextTooltip: l10n.planNextWeek,
           onPrevious: () => notifier.shiftDays(-7),
           onNext: () => notifier.shiftDays(7),
-          onToday: containsToday ? null : notifier.goToToday,
+          onToday: selected == today ? null : notifier.goToToday,
         ),
-        for (var i = 0; i < 7; i++)
-          _WeekDay(
-            date: start.addDays(i),
-            isToday: start.addDays(i) == today,
+        const SizedBox(height: AppSpacing.sm),
+        Row(
+          children: [
+            for (var i = 0; i < 7; i++)
+              Expanded(
+                child: _DayPill(
+                  date: start.addDays(i),
+                  today: today,
+                  selected: start.addDays(i) == selected,
+                  onTap: () => notifier.select(start.addDays(i)),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.xl),
+        Text(
+          relative == null ? date : l10n.planDayRelative(relative, date),
+          style: context.textStyles.titleLarge,
+        ),
+        // A past day: how it went (P3).
+        if (selected.compareTo(today) < 0 &&
+            progress != null &&
+            !progress.isEmpty) ...[
+          const SizedBox(height: AppSpacing.xxs),
+          Text(
+            l10n.todayStatusProgress(progress.done, progress.total),
+            style: context.textStyles.bodyMedium?.copyWith(
+              color: context.colors.textSecondary,
+            ),
+          ),
+        ],
+        const SizedBox(height: AppSpacing.lg),
+        if (empty)
+          NoPlanCard(date: selected, onAdd: onAdd)
+        else
+          DayItems(
+            date: selected,
+            emptyMessage: l10n.planPlannedEmpty,
+            showSummary: false,
+            timeline: selected == today,
             onOpenItem: onOpenItem,
             onOpenRecord: onOpenRecord,
-            onOpenDay: onOpenDay,
             chooser: chooser,
           ),
       ],
@@ -169,84 +215,101 @@ class PlanWeekView extends ConsumerWidget {
   }
 }
 
-class _WeekDay extends ConsumerWidget {
-  const _WeekDay({
+/// One day in the week strip: its weekday and number, and a ring of done
+/// out of planned (past days and today) or how many are planned (later).
+class _DayPill extends ConsumerWidget {
+  const _DayPill({
     required this.date,
-    required this.isToday,
-    required this.onOpenItem,
-    required this.onOpenRecord,
-    required this.onOpenDay,
-    required this.chooser,
+    required this.today,
+    required this.selected,
+    required this.onTap,
   });
 
   final LocalDate date;
-  final bool isToday;
-  final ValueChanged<PlanId> onOpenItem;
-  final ValueChanged<ActivityLog> onOpenRecord;
-  final ValueChanged<LocalDate> onOpenDay;
-  final ActivityChooser chooser;
+  final LocalDate today;
+  final bool selected;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final material = MaterialLocalizations.of(context);
-    final heading = context.textStyles.titleMedium?.copyWith(
-      color: isToday ? context.colors.brandPrimary : null,
-    );
-    return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.lg),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: InkWell(
-                  borderRadius: AppRadius.mdAll,
-                  onTap: () => onOpenDay(date),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: AppSpacing.sm,
-                    ),
-                    child: Text(
-                      material.formatFullDate(
-                        DateTime(date.year, date.month, date.day),
-                      ),
-                      style: heading,
-                    ),
+    final c = context.colors;
+    final locale = Localizations.localeOf(context).toString();
+    final day = DateTime(date.year, date.month, date.day);
+    final overview = ref.watch(dayOverviewProvider(date)).value;
+    final progress = overview == null ? null : DayProgress.of(overview);
+    final future = date.compareTo(today) > 0;
+    final isToday = date == today;
+    final foreground = selected ? c.onBrandPrimary : c.textPrimary;
+    final full = MaterialLocalizations.of(context).formatFullDate(day);
+    final label = future || progress == null
+        ? l10n.weekStripDayPlanned(full, progress?.total ?? 0)
+        : l10n.weekStripDayDone(full, progress.done, progress.total);
+    final Widget mark;
+    if (progress == null || progress.isEmpty) {
+      mark = const SizedBox(height: AppSizes.dayMark);
+    } else if (future) {
+      mark = SizedBox(
+        height: AppSizes.dayMark,
+        child: Text(
+          '${progress.total}',
+          style: context.textStyles.labelSmall?.copyWith(
+            color: selected ? foreground : c.textSecondary,
+          ),
+        ),
+      );
+    } else {
+      mark = ProgressRing(
+        fraction: progress.fraction,
+        size: AppSizes.dayMark,
+        stroke: 3,
+        color: selected ? foreground : null,
+        trackColor: selected ? foreground.withValues(alpha: 0.3) : null,
+        semanticLabel: '',
+      );
+    }
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: label,
+      excludeSemantics: true,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
+        child: InkWell(
+          borderRadius: AppRadius.lgAll,
+          onTap: onTap,
+          child: Ink(
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+            decoration: BoxDecoration(
+              color: selected ? c.brandPrimary : null,
+              borderRadius: AppRadius.lgAll,
+              border: isToday && !selected
+                  ? Border.all(color: c.brandPrimary, width: AppSizes.outline)
+                  : null,
+            ),
+            child: Column(
+              children: [
+                Text(
+                  DateFormat.E(locale).format(day),
+                  maxLines: 1,
+                  overflow: TextOverflow.clip,
+                  style: context.textStyles.labelSmall?.copyWith(
+                    color: selected ? foreground : c.textSecondary,
                   ),
                 ),
-              ),
-              IconButton(
-                tooltip: l10n.planNewTitle,
-                icon: const Icon(AppIcons.add),
-                onPressed: () => unawaited(
-                  showPlanEditor(context, date: date, chooser: chooser),
-                ),
-              ),
-            ],
-          ),
-          AsyncValueView<DayOverview>(
-            value: ref.watch(dayOverviewProvider(date)),
-            onRetry: () => ref.invalidate(dayOverviewProvider(date)),
-            data: (overview) {
-              final entries = overview.entries;
-              if (entries.isEmpty) {
-                return Text(
-                  l10n.planWeekEmptyDay,
-                  style: context.textStyles.bodyMedium?.copyWith(
-                    color: context.colors.textTertiary,
+                const SizedBox(height: AppSpacing.xxs),
+                Text(
+                  '${date.day}',
+                  style: context.textStyles.titleMedium?.copyWith(
+                    color: foreground,
                   ),
-                );
-              }
-              return PlannedList(
-                entries: entries,
-                onOpenItem: (item) => onOpenItem(item.plan.id),
-                onOpenRecord: onOpenRecord,
-              );
-            },
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                mark,
+              ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }

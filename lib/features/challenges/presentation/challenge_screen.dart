@@ -20,7 +20,11 @@ import '../../../shared/widgets/state_views.dart';
 import '../../activity_logs/presentation/value_formatting.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
 import '../../plans/presentation/plan_date_notifier.dart';
+import '../../../shared/widgets/app_button.dart';
+import '../../plans/domain/plan.dart';
+import '../../plans/presentation/plan_providers.dart';
 import '../domain/challenge.dart';
+import '../domain/challenge_progress.dart';
 import '../domain/challenge_use_cases.dart';
 import 'challenge_card.dart';
 import 'challenge_providers.dart';
@@ -33,9 +37,16 @@ enum _Menu { edit, restart, end }
 /// days done. Edit its name or days, restart from today, or end it; ending
 /// and restarting can be undone. Recording the activity is what counts a day.
 class ChallengeScreen extends ConsumerWidget {
-  const ChallengeScreen({super.key, required this.challengeId});
+  const ChallengeScreen({
+    super.key,
+    required this.challengeId,
+    required this.onOpenItem,
+  });
 
   final ChallengeId challengeId;
+
+  /// Opens today's thing for the challenge's activity (Do it today).
+  final ValueChanged<PlanId> onOpenItem;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -68,7 +79,7 @@ class ChallengeScreen extends ConsumerWidget {
                 padding: const EdgeInsets.all(AppSpacing.xl),
                 child: Text(l10n.challengeNotFound),
               )
-            : _Body(view: view),
+            : _Body(view: view, onOpenItem: onOpenItem),
       ),
     );
   }
@@ -128,9 +139,34 @@ class ChallengeScreen extends ConsumerWidget {
 }
 
 class _Body extends ConsumerWidget {
-  const _Body({required this.view});
+  const _Body({required this.view, required this.onOpenItem});
 
   final ChallengeView view;
+  final ValueChanged<PlanId> onOpenItem;
+
+  /// Opens today's open thing for the activity, adding one (Anytime) if
+  /// there is none (C3).
+  Future<void> _doItToday(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context);
+    final typeId = view.challenge.activityTypeId;
+    final today = currentLocalDate(ref.read(clockProvider));
+    try {
+      final day = await ref.read(dayOverviewProvider(today).future);
+      final open = day.planned
+          .where((i) => i.isOpen && i.plan.activityTypeId == typeId)
+          .firstOrNull;
+      final id =
+          open?.plan.id ??
+          await ref.read(createPlanProvider)(
+            PlanDraft(planDate: today, title: '', activityTypeId: typeId),
+          );
+      onOpenItem(id);
+    } catch (error) {
+      if (context.mounted) {
+        showMessageSnackBar(context, errorMessage(l10n, error));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -207,6 +243,17 @@ class _Body extends ConsumerWidget {
             ),
             const SizedBox(height: AppSpacing.md),
             ChallengeStateLine(state: progress.today),
+            if (progress.today == ChallengeToday.notYet ||
+                progress.today == ChallengeToday.atRisk) ...[
+              const SizedBox(height: AppSpacing.md),
+              AppButton(
+                label: l10n.challengeDoItToday,
+                icon: AppIcons.start,
+                variant: AppButtonVariant.action,
+                expand: true,
+                onPressed: () => _doItToday(context, ref),
+              ),
+            ],
             if (progress.completedOn case final on?)
               Text(
                 l10n.challengeCompletedOn(formatDate(context, on)),

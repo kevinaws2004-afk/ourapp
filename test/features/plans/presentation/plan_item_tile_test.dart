@@ -7,6 +7,7 @@ import 'package:daylog/features/plans/domain/watch_day_overview.dart';
 import 'package:daylog/features/plans/presentation/widgets/plan_item_tile.dart';
 import 'package:daylog/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -27,21 +28,22 @@ void main() {
       updatedAt: created,
     );
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.of(AppThemeId.lavender),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: Scaffold(
-          body: PlanItemTile(
-            item: PlannedItem(
-              plan: plan,
-              type: null,
-              records: const [],
-              status: EffectivePlanStatus.planned,
+      ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.of(AppThemeId.lavender),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: PlanItemTile(
+              item: PlannedItem(
+                plan: plan,
+                type: null,
+                records: const [],
+                status: EffectivePlanStatus.planned,
+              ),
+              onTap: () {},
+              onToggleDone: () {},
             ),
-            onTap: () {},
-            onMore: () {},
-            onToggleDone: () {},
           ),
         ),
       ),

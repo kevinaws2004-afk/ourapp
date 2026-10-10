@@ -11,6 +11,7 @@ import '../../focus/presentation/focus_providers.dart';
 import '../data/db_plan_repository.dart';
 import '../domain/activity_usage.dart';
 import '../domain/item_use_cases.dart';
+import '../domain/day_edges.dart';
 import '../domain/plan.dart';
 import '../domain/plan_repository.dart';
 import '../domain/series_use_cases.dart';
@@ -182,7 +183,7 @@ final _recentPlansProvider = StreamProvider.autoDispose
     .family<List<Plan>, LocalDate>(
       (ref, today) => ref
           .watch(planRepositoryProvider)
-          .watchPlansForRange(today.addDays(-27), today.addDays(7)),
+          .watchPlansForRange(today.addDays(-28), today.addDays(7)),
     );
 
 /// Plannable activities, most used first (quick add's "Recent" chips, A7).
@@ -199,3 +200,17 @@ final recentActivityTypesProvider = Provider.autoDispose<List<ActivityType>>((
   final plans = ref.watch(_recentPlansProvider(today)).value ?? const [];
   return rankByUse(types, plans, (t) => t.id);
 });
+
+/// What you usually do on [date]'s weekday (T10, P4, ADR-046), from the
+/// four weeks before it.
+final usualActivitiesProvider = Provider.autoDispose
+    .family<List<UsualActivity>, LocalDate>((ref, date) {
+      final clock = ref.watch(clockProvider);
+      final plans = ref.watch(_recentPlansProvider(date)).value ?? const [];
+      return usualForWeekday(plans, date, (plan) {
+        final start = plan.plannedStartAt;
+        if (start == null) return null;
+        final local = start.add(clock.offsetAt(start));
+        return local.hour * 60 + local.minute;
+      });
+    });

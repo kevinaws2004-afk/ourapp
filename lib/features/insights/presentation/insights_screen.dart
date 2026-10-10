@@ -27,6 +27,11 @@ import 'insight_providers.dart';
 import 'activity_insights_screen.dart';
 import 'insight_overview.dart';
 import 'insight_range_picker.dart';
+import 'progress_sentences.dart';
+import '../../activity_types/domain/activity_type.dart';
+import '../../challenges/presentation/challenge_providers.dart';
+import '../../plans/presentation/activity_chooser.dart';
+import '../../plans/presentation/widgets/add_sheet.dart';
 
 /// Insights tab (§24–26; FR-AN-01…09): the period at a glance against the
 /// one before, the calendar of days something was done, where the time went,
@@ -35,15 +40,23 @@ import 'insight_range_picker.dart';
 /// page (ADR-037), and the user's own charts (any activity, field, set
 /// volume, body measurement or plan).
 class InsightsScreen extends ConsumerWidget {
-  const InsightsScreen({super.key, required this.onOpenActivity});
+  const InsightsScreen({
+    super.key,
+    required this.onOpenActivity,
+    required this.chooser,
+  });
 
   /// Opens an activity's automatic progress page (ADR-037).
   final ValueChanged<ActivityTypeId> onOpenActivity;
+
+  /// For "Plan it" (the add sheet).
+  final ActivityChooser chooser;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final margin = WindowSizeClass.of(context).screenMargin;
+    final early = ref.watch(progressIsEarlyProvider) ?? false;
     return SafeArea(
       child: Align(
         alignment: Alignment.topLeft,
@@ -60,17 +73,25 @@ class InsightsScreen extends ConsumerWidget {
               Text(l10n.navInsights, style: context.textStyles.displayMedium),
               const SizedBox(height: AppSpacing.lg),
               const InsightRangePicker(),
-              SectionHeader(title: l10n.insightSummarySection),
-              const InsightSummaryTiles(),
+              const SizedBox(height: AppSpacing.lg),
+              // Early on, what's true already instead of sentences (PR3).
+              if (early)
+                const ProgressEarlyCard()
+              else ...[
+                const ProgressHeadline(),
+                const ProgressTimeSentence(),
+              ],
+              SectionHeader(title: l10n.insightActivitySection),
+              _ActivityTotals(onOpenActivity: onOpenActivity, chooser: chooser),
               const SizedBox(height: AppSpacing.lg),
               ConsistencyPanel(
                 typeId: null,
                 color: context.colors.brandPrimary,
               ),
-              const TimeByActivityPanel(),
-              const PlanAdherencePanel(),
-              SectionHeader(title: l10n.insightActivitySection),
-              _ActivityTotals(onOpenActivity: onOpenActivity),
+              if (!early) ...[
+                const TimeByActivityPanel(),
+                const PlanAdherencePanel(),
+              ],
               SectionHeader(
                 title: l10n.insightChartsSection,
                 trailing: IconButton(
@@ -89,9 +110,10 @@ class InsightsScreen extends ConsumerWidget {
 }
 
 class _ActivityTotals extends ConsumerWidget {
-  const _ActivityTotals({required this.onOpenActivity});
+  const _ActivityTotals({required this.onOpenActivity, required this.chooser});
 
   final ValueChanged<ActivityTypeId> onOpenActivity;
+  final ActivityChooser chooser;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -99,6 +121,17 @@ class _ActivityTotals extends ConsumerWidget {
     final types = ref.watch(activeActivityTypesProvider).value ?? const [];
     final history = ref.watch(activeDaysProvider).value ?? const {};
     final today = currentLocalDate(ref.watch(clockProvider));
+    final streaks = ref.watch(activityStreaksProvider);
+    final range = ref.watch(insightRangeProvider);
+    void planIt(ActivityType type) => unawaited(
+      showAddSheet(
+        context,
+        date: today,
+        dayName: l10n.addToday,
+        chooser: chooser,
+        initialType: type,
+      ),
+    );
     return AsyncValueView<
       (Map<ActivityTypeId, ActivityTotals>, Map<ActivityTypeId, ActivityTotals>)
     >(
@@ -155,12 +188,13 @@ class _ActivityTotals extends ConsumerWidget {
                   final c? => formatChange(c),
                   null => null,
                 },
+                streak: streaks[type.id]?.days,
                 onTap: () => onOpenActivity(type.id),
               ),
             if (quiet.isNotEmpty) ...[
               const SizedBox(height: AppSpacing.md),
               Text(
-                l10n.insightNotThisPeriod,
+                l10n.progressNotDoneThisPeriod(progressPeriod(l10n, range)),
                 style: context.textStyles.labelLarge?.copyWith(
                   color: context.colors.textSecondary,
                 ),
@@ -170,6 +204,12 @@ class _ActivityTotals extends ConsumerWidget {
                   type: type,
                   muted: true,
                   subtitle: streakText(l10n, history[type.id], today) ?? '',
+                  action: type.supportsPlanning
+                      ? TextButton(
+                          onPressed: () => planIt(type),
+                          child: Text(l10n.progressPlanIt),
+                        )
+                      : null,
                   onTap: () => onOpenActivity(type.id),
                 ),
             ],

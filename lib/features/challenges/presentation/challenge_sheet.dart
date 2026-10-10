@@ -32,17 +32,33 @@ Future<void> showChallengeSheet(
   BuildContext context, {
   Challenge? initial,
   ActivityChooser? chooser,
+  ActivityTypeId? activityId,
+  int? days,
 }) => showModalBottomSheet<void>(
   context: context,
   isScrollControlled: true,
-  builder: (_) => _ChallengeSheet(initial: initial, chooser: chooser),
+  builder: (_) => _ChallengeSheet(
+    initial: initial,
+    chooser: chooser,
+    presetActivity: activityId,
+    presetDays: days,
+  ),
 );
 
 class _ChallengeSheet extends ConsumerStatefulWidget {
-  const _ChallengeSheet({this.initial, this.chooser});
+  const _ChallengeSheet({
+    this.initial,
+    this.chooser,
+    this.presetActivity,
+    this.presetDays,
+  });
 
   final Challenge? initial;
   final ActivityChooser? chooser;
+
+  /// Prefilled from an example ("21 days of Meditation", C1).
+  final ActivityTypeId? presetActivity;
+  final int? presetDays;
 
   @override
   ConsumerState<_ChallengeSheet> createState() => _ChallengeSheetState();
@@ -51,9 +67,10 @@ class _ChallengeSheet extends ConsumerStatefulWidget {
 class _ChallengeSheetState extends ConsumerState<_ChallengeSheet> {
   late final _title = TextEditingController(text: widget.initial?.title ?? '');
   late final _days = TextEditingController(
-    text: '${widget.initial?.targetDays ?? 30}',
+    text: '${widget.initial?.targetDays ?? widget.presetDays ?? 30}',
   );
-  late ActivityTypeId? _activityId = widget.initial?.activityTypeId;
+  late ActivityTypeId? _activityId =
+      widget.initial?.activityTypeId ?? widget.presetActivity;
   LocalDate? _start;
   List<ValidationIssue> _issues = const [];
   bool _saving = false;

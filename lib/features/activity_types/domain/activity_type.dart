@@ -74,6 +74,16 @@ class ActivityType {
   final DateTime updatedAt;
   final bool isDeleted;
 
+  /// Whether finishing it asks "How did it go?" (ADR-046): it records a
+  /// list (exercises, sets…) or a number that shows in Progress (pages, km,
+  /// kg). Text, yes/no, ratings, choices and durations alone don't: the
+  /// check and the timer already cover them.
+  bool get hasMeaningfulDetails => activeFields.any(
+    (f) =>
+        f.type == FieldType.repeatingGroup ||
+        (f.type == FieldType.number && f.measurable),
+  );
+
   /// Top-level fields offered in new logs, in order.
   List<ActivityField> get activeFields =>
       fields.where((f) => !f.isRemoved && f.parentId == null).toList();

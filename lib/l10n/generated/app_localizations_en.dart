@@ -22,16 +22,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navChallenges => 'Challenges';
 
   @override
-  String get navInsights => 'Insights';
+  String get navInsights => 'Progress';
 
   @override
   String get navMe => 'Me';
-
-  @override
-  String get trackPlaceholder => 'The activities you track will appear here.';
-
-  @override
-  String get insightsPlaceholder => 'Your progress over time will appear here.';
 
   @override
   String get onboardingTitle => 'Welcome';
@@ -55,9 +49,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get actionSave => 'Save';
-
-  @override
-  String get actionCancel => 'Cancel';
 
   @override
   String get actionUndo => 'Undo';
@@ -545,9 +536,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planYesterday => 'Yesterday';
 
   @override
-  String get planChooseDate => 'Choose a date';
-
-  @override
   String get planPreviousWeek => 'Previous week';
 
   @override
@@ -693,15 +681,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planTaskChoice => 'Just a task';
 
   @override
-  String get planAddAction => 'Add plan';
-
-  @override
-  String get planAddTime => 'Set a time';
-
-  @override
-  String get planQuickAddHint => 'Add an activity to this day';
-
-  @override
   String get planBrowseActivities => 'Browse activities';
 
   @override
@@ -771,16 +750,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planSkippedMessage => 'Skipped';
 
   @override
-  String get planTaskDoneMessage => 'Done';
-
-  @override
   String get planReorderHandle => 'Reorder';
 
   @override
   String get planStatusDone => 'Done';
-
-  @override
-  String get planStatusRecorded => 'Done';
 
   @override
   String get planStatusSkipped => 'Skipped';
@@ -827,9 +800,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String planTimeRange(String start, String end) {
     return '$start–$end';
   }
-
-  @override
-  String get planOptions => 'Plan options';
 
   @override
   String get planOpenRecordHint => 'open it';
@@ -909,7 +879,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get focusNoneMessage => 'Start one from a plan or an activity.';
 
   @override
-  String get planStatusInProgress => 'In progress';
+  String get planStatusInProgress => 'Running';
 
   @override
   String get validationFocusAlreadyActive =>
@@ -922,11 +892,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get validationFocusNotActive =>
       'This focus session has already ended.';
-
-  @override
-  String focusComplete(String activity, String duration) {
-    return '$activity session complete · $duration';
-  }
 
   @override
   String get dimensionPercentage => 'Percentage';
@@ -1181,13 +1146,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get itemSaveFailed => 'Not saved yet: check the highlighted fields';
 
   @override
-  String get itemMarkDone => 'Mark done';
-
-  @override
   String get itemDone => 'Done';
-
-  @override
-  String get itemStartTimer => 'Start timer';
 
   @override
   String get itemTimerFullScreen => 'Full screen timer';
@@ -1204,9 +1163,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get itemNothingToLogHint =>
       'What do you want to keep track of? Pick one, or just write notes.';
-
-  @override
-  String get itemTimerOtherRunning => 'Another timer is running';
 
   @override
   String todayDoneSummary(int count, String duration) {
@@ -1303,9 +1259,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planRepeatStopped => 'Won\'t repeat after this';
 
   @override
-  String get planRepeating => 'Repeats';
-
-  @override
   String get planNextAction => 'Plan next…';
 
   @override
@@ -1321,9 +1274,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get planViewMonth => 'Month';
-
-  @override
-  String get planWeekEmptyDay => 'Nothing planned';
 
   @override
   String get insightAutoTime => 'Time';
@@ -1369,13 +1319,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get insightOpenActivityHint => 'see its progress';
-
-  @override
   String get actionDone => 'Done';
-
-  @override
-  String get planStartNow => 'Start now';
 
   @override
   String get planRecent => 'Recent';
@@ -1417,12 +1361,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planTimeRemove => 'No time';
 
   @override
-  String get dayPreviousDay => 'Previous day';
-
-  @override
-  String get dayNextDay => 'Next day';
-
-  @override
   String get meSectionSetup => 'Your setup';
 
   @override
@@ -1430,10 +1368,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get durationMinutesLabel => 'Minutes';
-
-  @override
-  String get itemMarkDoneHint =>
-      'Logged so far. Mark it done when you’ve finished.';
 
   @override
   String get planAnytime => 'Anytime';
@@ -4747,30 +4681,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get todayRingCenter => 'done';
 
   @override
-  String get todayHeroEmpty => 'A fresh day. Add what you\'d like to do.';
-
-  @override
-  String get todayHeroAllDone => 'Everything\'s done. Nicely done.';
-
-  @override
-  String get todayUpNext => 'Up next';
-
-  @override
-  String get todayDoingNow => 'Now';
-
-  @override
   String todayUpNextIn(String duration) {
     return 'in $duration';
   }
 
   @override
-  String get todayUpNextAnytime => 'Anytime today';
-
-  @override
   String get todayUpNextStart => 'Start';
-
-  @override
-  String get todayUpNextContinue => 'Continue';
 
   @override
   String get todayFactTime => 'Time';
@@ -4804,5 +4720,496 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String stepperIncrease(String field) {
     return 'More $field';
+  }
+
+  @override
+  String streakBadgeLabel(int days) {
+    return '$days-day streak';
+  }
+
+  @override
+  String itemRunning(String time) {
+    return 'Running · $time';
+  }
+
+  @override
+  String itemDoneMessage(String title) {
+    return '$title done';
+  }
+
+  @override
+  String itemDoneStreakMessage(String title, int days) {
+    return '$title done · 🔥 $days';
+  }
+
+  @override
+  String get howDidItGoTitle => 'How did it go?';
+
+  @override
+  String get howDidItGoSave => 'Save';
+
+  @override
+  String get howDidItGoSkip => 'Skip';
+
+  @override
+  String todayStatusPlanned(int count, String time) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count things today',
+      one: '1 thing today',
+    );
+    return '$_temp0 · first at $time';
+  }
+
+  @override
+  String todayStatusPlannedAnytime(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count things today',
+      one: '1 thing today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String todayStatusProgress(int done, int total) {
+    return '$done of $total done';
+  }
+
+  @override
+  String todayStatusProgressTime(int done, int total, String duration) {
+    return '$done of $total done · $duration so far';
+  }
+
+  @override
+  String todayStatusRunning(String title, int done, int total) {
+    return '$title running · $done of $total done';
+  }
+
+  @override
+  String todayStatusAllDone(int total) {
+    return 'All $total done';
+  }
+
+  @override
+  String todayStatusAllDoneTime(int total, String duration) {
+    return 'All $total done · $duration';
+  }
+
+  @override
+  String get todayStatusEmpty => 'Nothing planned yet';
+
+  @override
+  String get nowNextRunning => 'Running';
+
+  @override
+  String get nowNextNow => 'Now';
+
+  @override
+  String nowNextNext(String time) {
+    return 'Next · $time';
+  }
+
+  @override
+  String get nowNextAnytime => 'Anytime';
+
+  @override
+  String nowLine(String time) {
+    return 'Now · $time';
+  }
+
+  @override
+  String oneTimerTitle(String running, String next) {
+    return 'Finish $running and start $next?';
+  }
+
+  @override
+  String get oneTimerConfirm => 'Finish and start';
+
+  @override
+  String get itemNotDone => 'Not done';
+
+  @override
+  String get itemTimeAgain => 'Time again';
+
+  @override
+  String itemStreakLine(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days in a row',
+      one: '1 day in a row',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String itemDayLine(int done, int total) {
+    return '$done of $total done today';
+  }
+
+  @override
+  String addSheetTitle(String day) {
+    return 'Add to $day';
+  }
+
+  @override
+  String get addToday => 'today';
+
+  @override
+  String get planEditAction => 'Change time and details';
+
+  @override
+  String get todayAdd => 'Add to today';
+
+  @override
+  String get fromYesterdayTitle => 'From yesterday';
+
+  @override
+  String get fromYesterdayDoToday => 'Do today';
+
+  @override
+  String get fromYesterdayLetGo => 'Let it go';
+
+  @override
+  String get fromYesterdayAllToday => 'All today';
+
+  @override
+  String get fromYesterdayLetAllGo => 'Let all go';
+
+  @override
+  String fromYesterdayMoved(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count moved to today',
+      one: 'Moved to today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String letGoMessage(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count let go',
+      one: 'Let go',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String eveningSummary(int done, int total) {
+    return '$done of $total done';
+  }
+
+  @override
+  String eveningSummaryTime(int done, int total, String duration) {
+    return '$done of $total done · $duration';
+  }
+
+  @override
+  String eveningAllDone(int total) {
+    return 'All $total done today';
+  }
+
+  @override
+  String eveningStreakKept(String name, int days) {
+    return '$name $days';
+  }
+
+  @override
+  String eveningStreaksKept(String streaks) {
+    return '$streaks kept today';
+  }
+
+  @override
+  String eveningAtRisk(String name, int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    return '$name streak at risk ($_temp0)';
+  }
+
+  @override
+  String get eveningDoItNow => 'Do it now';
+
+  @override
+  String get eveningNotDone => 'Not done';
+
+  @override
+  String get eveningTomorrow => 'Tomorrow';
+
+  @override
+  String get eveningPlanTomorrow => 'Plan tomorrow';
+
+  @override
+  String eveningClosed(int done, int total) {
+    return 'Day closed · $done of $total done';
+  }
+
+  @override
+  String get noPlanFirstTitle => 'Your day is empty.';
+
+  @override
+  String get noPlanFirstMessage => 'Add the first thing you\'re doing today.';
+
+  @override
+  String get noPlanReturningTitle => 'Nothing planned today.';
+
+  @override
+  String noPlanUsual(String weekday) {
+    return 'Your usual $weekday';
+  }
+
+  @override
+  String get noPlanTryOne => 'Or start with one of these';
+
+  @override
+  String get noPlanStartNow => 'Start something now';
+
+  @override
+  String addedToToday(String title) {
+    return '$title added to today';
+  }
+
+  @override
+  String get addWhatHint => 'What are you doing?';
+
+  @override
+  String get addWhen => 'When';
+
+  @override
+  String get addNow => 'Now';
+
+  @override
+  String get addTimeChoose => 'Time…';
+
+  @override
+  String get addRepeat => 'Repeat';
+
+  @override
+  String get addAction => 'Add';
+
+  @override
+  String get addStartAction => 'Start';
+
+  @override
+  String get addBrowseAll => 'Browse all activities';
+
+  @override
+  String addMakeYoursNamed(String name) {
+    return 'Make “$name” yours';
+  }
+
+  @override
+  String get addMakeYoursHint => 'New activity · nothing to set up';
+
+  @override
+  String get addCommon => 'Common';
+
+  @override
+  String get itemUndoSkip => 'Undo skip';
+
+  @override
+  String noPlanDayTitle(String weekday) {
+    return 'Nothing planned for $weekday.';
+  }
+
+  @override
+  String get noPlanAddSomething => 'Add something';
+
+  @override
+  String addedToDay(String title) {
+    return '$title added';
+  }
+
+  @override
+  String weekStripDayDone(String date, int done, int total) {
+    return '$date: $done of $total done';
+  }
+
+  @override
+  String weekStripDayPlanned(String date, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count planned',
+      one: '1 planned',
+      zero: 'nothing planned',
+    );
+    return '$date: $_temp0';
+  }
+
+  @override
+  String planDayRelative(String relative, String date) {
+    return '$relative · $date';
+  }
+
+  @override
+  String get planMoveTo => 'Move to…';
+
+  @override
+  String planMovedTo(String date) {
+    return 'Moved to $date';
+  }
+
+  @override
+  String get planAddToDay => 'Add to this day';
+
+  @override
+  String get progressThisWeek => 'this week';
+
+  @override
+  String get progressThisMonth => 'this month';
+
+  @override
+  String get progressThisQuarter => 'these 3 months';
+
+  @override
+  String get progressThisYear => 'this year';
+
+  @override
+  String get progressLastWeek => 'last week';
+
+  @override
+  String get progressLastMonth => 'last month';
+
+  @override
+  String get progressLastQuarter => 'the 3 months before';
+
+  @override
+  String get progressLastYear => 'last year';
+
+  @override
+  String progressDidPlanned(int done, int planned, String period) {
+    return 'You did $done of $planned planned things $period.';
+  }
+
+  @override
+  String progressDidThings(int count, String period) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'You did $count things $period.',
+      one: 'You did 1 thing $period.',
+      zero: 'Nothing done $period yet.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String progressDidThingsTime(int count, String period, String duration) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'You did $count things $period · $duration.',
+      one: 'You did 1 thing $period · $duration.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String progressMoreThan(int count, String period) {
+    return '$count more than $period';
+  }
+
+  @override
+  String progressFewerThan(int count, String period) {
+    return '$count fewer than $period';
+  }
+
+  @override
+  String progressSameAs(String period) {
+    return 'The same as $period';
+  }
+
+  @override
+  String progressTimeWent(String list) {
+    return 'Most of your time went to $list.';
+  }
+
+  @override
+  String progressTimeEntry(String name, String duration) {
+    return '$name ($duration)';
+  }
+
+  @override
+  String get progressEarlyTitle => 'Progress builds as you go.';
+
+  @override
+  String get progressEarlyMessage =>
+      'After a few days you\'ll see how your week went here.';
+
+  @override
+  String progressDoneSoFar(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count things done so far.',
+      one: '1 thing done so far.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get progressPlanIt => 'Plan it';
+
+  @override
+  String progressNotDoneThisPeriod(String period) {
+    return 'Not done $period';
+  }
+
+  @override
+  String progressActivitySentence(
+    String name,
+    int days,
+    String period,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count times',
+      one: '1 time',
+    );
+    return '$name: $_temp0 $period, $_temp1.';
+  }
+
+  @override
+  String progressActivityNone(String name, String period) {
+    return 'No $name $period.';
+  }
+
+  @override
+  String challengesCompleted(int count) {
+    return 'Completed ($count)';
+  }
+
+  @override
+  String get challengeDoItToday => 'Do it today';
+
+  @override
+  String meActivitiesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count activities',
+      one: '1 activity',
+      zero: 'Add them as you go',
+    );
+    return '$_temp0';
   }
 }

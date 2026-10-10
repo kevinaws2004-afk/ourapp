@@ -58,7 +58,7 @@ void main() {
           ),
           findsNothing,
         );
-        for (final label in ['Today', 'Plan', 'Challenges', 'Insights', 'Me']) {
+        for (final label in ['Today', 'Plan', 'Challenges', 'Progress', 'Me']) {
           expect(
             find.descendant(
               of: find.byType(NavigationBar),
@@ -215,7 +215,7 @@ void main() {
         app.onGenerateTitle!(tester.element(find.byType(TodayScreen))),
         'OurApp',
       );
-      expect(find.text('Add an activity to this day'), findsOneWidget);
+      expect(find.byTooltip('Add to today'), findsOneWidget);
     },
   );
 }
