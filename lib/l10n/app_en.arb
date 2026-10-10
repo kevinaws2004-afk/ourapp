@@ -16,7 +16,7 @@
   "@navChallenges": {
     "description": "Primary navigation: Challenges tab (ADR-044)."
   },
-  "navInsights": "Insights",
+  "navInsights": "Progress",
   "@navInsights": {
     "description": "Primary navigation tab: graphs and history."
   },
@@ -6904,5 +6904,193 @@
   "planAddToDay": "Add to this day",
   "@planAddToDay": {
     "description": "Plan: the + button, adds to the selected day."
+  },
+  "progressThisWeek": "this week",
+  "@progressThisWeek": {
+    "description": "Progress sentences: the week period."
+  },
+  "progressThisMonth": "this month",
+  "@progressThisMonth": {
+    "description": "Progress sentences: the month period."
+  },
+  "progressThisQuarter": "these 3 months",
+  "@progressThisQuarter": {
+    "description": "Progress sentences: the 3-month period."
+  },
+  "progressThisYear": "this year",
+  "@progressThisYear": {
+    "description": "Progress sentences: the year period."
+  },
+  "progressLastWeek": "last week",
+  "@progressLastWeek": {
+    "description": "Progress comparison: the week before."
+  },
+  "progressLastMonth": "last month",
+  "@progressLastMonth": {
+    "description": "Progress comparison: the month before."
+  },
+  "progressLastQuarter": "the 3 months before",
+  "@progressLastQuarter": {
+    "description": "Progress comparison: the 3 months before."
+  },
+  "progressLastYear": "last year",
+  "@progressLastYear": {
+    "description": "Progress comparison: the year before."
+  },
+  "progressDidPlanned": "You did {done} of {planned} planned things {period}.",
+  "@progressDidPlanned": {
+    "description": "Progress headline (PR1).",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "planned": {
+        "type": "int"
+      },
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "progressDidThings": "{count, plural, =0{Nothing done {period} yet.} =1{You did 1 thing {period}.} other{You did {count} things {period}.}}",
+  "@progressDidThings": {
+    "description": "Progress headline with nothing planned (PR4).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "progressDidThingsTime": "{count, plural, =1{You did 1 thing {period} · {duration}.} other{You did {count} things {period} · {duration}.}}",
+  "@progressDidThingsTime": {
+    "description": "Progress headline with nothing planned, with time.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "period": {
+        "type": "String"
+      },
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "progressMoreThan": "{count} more than {period}",
+  "@progressMoreThan": {
+    "description": "Progress comparison.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFewerThan": "{count} fewer than {period}",
+  "@progressFewerThan": {
+    "description": "Progress comparison.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "progressSameAs": "The same as {period}",
+  "@progressSameAs": {
+    "description": "Progress comparison.",
+    "placeholders": {
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "progressTimeWent": "Most of your time went to {list}.",
+  "@progressTimeWent": {
+    "description": "Progress: where the time went.",
+    "placeholders": {
+      "list": {
+        "type": "String"
+      }
+    }
+  },
+  "progressTimeEntry": "{name} ({duration})",
+  "@progressTimeEntry": {
+    "description": "One activity in 'where the time went'.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "progressEarlyTitle": "Progress builds as you go.",
+  "@progressEarlyTitle": {
+    "description": "Progress, fewer than three days with anything done (PR3)."
+  },
+  "progressEarlyMessage": "After a few days you'll see how your week went here.",
+  "@progressEarlyMessage": {
+    "description": "Progress, early (PR3)."
+  },
+  "progressDoneSoFar": "{count, plural, =1{1 thing done so far.} other{{count} things done so far.}}",
+  "@progressDoneSoFar": {
+    "description": "Progress, early: what's true already.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPlanIt": "Plan it",
+  "@progressPlanIt": {
+    "description": "Progress, an activity not done this period: add it to today."
+  },
+  "progressNotDoneThisPeriod": "Not done {period}",
+  "@progressNotDoneThisPeriod": {
+    "description": "Progress: activities with history but nothing this period.",
+    "placeholders": {
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "progressActivitySentence": "{name}: {days, plural, =1{1 day} other{{days} days}} {period}, {count, plural, =1{1 time} other{{count} times}}.",
+  "@progressActivitySentence": {
+    "description": "An activity's progress page, first line (PR5).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      },
+      "period": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressActivityNone": "No {name} {period}.",
+  "@progressActivityNone": {
+    "description": "An activity's progress page with nothing this period (PR5).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "period": {
+        "type": "String"
+      }
+    }
   }
 }

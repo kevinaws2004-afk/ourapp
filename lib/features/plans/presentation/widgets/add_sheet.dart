@@ -43,6 +43,7 @@ Future<void> showAddSheet(
   required ActivityChooser chooser,
   ValueChanged<PlanId>? onStartNow,
   bool startNow = false,
+  ActivityType? initialType,
 }) => showModalBottomSheet<void>(
   context: context,
   isScrollControlled: true,
@@ -62,6 +63,7 @@ Future<void> showAddSheet(
           dayName: dayName,
           chooser: chooser,
           startNow: startNow && onStartNow != null,
+          initialType: initialType,
           onAdded: (_) => close(),
           onStartNow: onStartNow == null
               ? null
@@ -87,6 +89,7 @@ class AddToDay extends ConsumerStatefulWidget {
     required this.onAdded,
     this.onStartNow,
     this.startNow = false,
+    this.initialType,
   });
 
   /// Recent (or common) activities shown.
@@ -104,6 +107,9 @@ class AddToDay extends ConsumerStatefulWidget {
   final ValueChanged<PlanId>? onStartNow;
   final bool startNow;
 
+  /// Chosen up front ("Plan it" from Progress).
+  final ActivityType? initialType;
+
   @override
   ConsumerState<AddToDay> createState() => _AddToDayState();
 }
@@ -120,6 +126,16 @@ class _AddToDayState extends ConsumerState<AddToDay> {
   LocalTime? _end;
   RepeatRule? _repeat;
   bool _busy = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialType case final type?) {
+      _title.text = type.name;
+      _typeId = type.id;
+      _matchedByName = true;
+    }
+  }
 
   @override
   void dispose() {

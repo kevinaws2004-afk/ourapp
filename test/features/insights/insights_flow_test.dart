@@ -74,7 +74,7 @@ void main() {
     tester,
   ) async {
     await pumpTestApp(tester, preferences: _onboarded);
-    await openTab(tester, 'Insights');
+    await openTab(tester, 'Progress');
 
     expect(find.text('Nothing recorded in this period.'), findsOneWidget);
     expect(find.text('Build your first chart'), findsOneWidget);
@@ -83,7 +83,7 @@ void main() {
   testAppWidgets('building a body-weight chart shows the latest value and a '
       'line', (tester) async {
     await pumpTestApp(tester, preferences: _onboarded, seed: seedWeights);
-    await openTab(tester, 'Insights');
+    await openTab(tester, 'Progress');
 
     await scrollAndTap(tester, find.widgetWithText(FilledButton, 'Add chart'));
     await tester.tap(find.text('Body measurement'));
@@ -159,7 +159,7 @@ void main() {
         );
       },
     );
-    await openTab(tester, 'Insights');
+    await openTab(tester, 'Progress');
 
     // The activities come after the period's overview.
     await scrollToActivities(tester);
@@ -168,7 +168,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(ActivityInsightsScreen), findsOneWidget);
-    expect(find.text('Progress'), findsOneWidget);
+    expect(find.text('Progress'), findsWidgets, reason: 'tab + section');
     await tester.scrollUntilVisible(
       find.text('Chest Press · best Weight'),
       200,
@@ -246,7 +246,7 @@ void main() {
         preferences: _onboarded,
         seed: (db, clock) async => reading = await logReading(db, clock),
       );
-      await openTab(tester, 'Insights');
+      await openTab(tester, 'Progress');
       await scrollToActivities(tester);
       expect(find.textContaining('1 day · once'), findsOneWidget);
 
@@ -272,7 +272,7 @@ void main() {
           await logReading(db, clock);
         },
       );
-      await openTab(tester, 'Insights');
+      await openTab(tester, 'Progress');
       await scrollToActivities(tester);
 
       expect(
@@ -288,7 +288,7 @@ void main() {
         preferences: _onboarded,
         seed: (db, clock) => logReading(db, clock),
       );
-      await openTab(tester, 'Insights');
+      await openTab(tester, 'Progress');
       await scrollToActivities(tester);
       await tester.tap(find.widgetWithText(ListTile, 'Reading'));
       await tester.pumpAndSettle();
@@ -348,14 +348,14 @@ void main() {
         );
       },
     );
-    await openTab(tester, 'Insights');
+    await openTab(tester, 'Progress');
 
-    expect(find.text('At a glance'), findsOneWidget);
-    expect(find.text('Days active'), findsOneWidget);
+    // Two days with anything done so far: early (PR3).
+    expect(find.text('Progress builds as you go.'), findsOneWidget);
     expect(find.text('Consistency'), findsOneWidget);
     expect(find.text('1 of 30 days'), findsOneWidget);
     await tester.scrollUntilVisible(
-      find.text('Not done this period'),
+      find.textContaining('Not done this'),
       200,
       scrollable: find.byType(Scrollable).hitTestable().first,
     );
@@ -432,7 +432,7 @@ void main() {
         );
       },
     );
-    await openTab(tester, 'Insights');
+    await openTab(tester, 'Progress');
     await scrollToActivities(tester);
     await scrollAndTap(tester, find.widgetWithText(ListTile, 'Meds'));
 

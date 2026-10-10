@@ -22,7 +22,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navChallenges => 'Challenges';
 
   @override
-  String get navInsights => 'Insights';
+  String get navInsights => 'Progress';
 
   @override
   String get navMe => 'Me';
@@ -5062,4 +5062,134 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get planAddToDay => 'Add to this day';
+
+  @override
+  String get progressThisWeek => 'this week';
+
+  @override
+  String get progressThisMonth => 'this month';
+
+  @override
+  String get progressThisQuarter => 'these 3 months';
+
+  @override
+  String get progressThisYear => 'this year';
+
+  @override
+  String get progressLastWeek => 'last week';
+
+  @override
+  String get progressLastMonth => 'last month';
+
+  @override
+  String get progressLastQuarter => 'the 3 months before';
+
+  @override
+  String get progressLastYear => 'last year';
+
+  @override
+  String progressDidPlanned(int done, int planned, String period) {
+    return 'You did $done of $planned planned things $period.';
+  }
+
+  @override
+  String progressDidThings(int count, String period) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'You did $count things $period.',
+      one: 'You did 1 thing $period.',
+      zero: 'Nothing done $period yet.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String progressDidThingsTime(int count, String period, String duration) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'You did $count things $period · $duration.',
+      one: 'You did 1 thing $period · $duration.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String progressMoreThan(int count, String period) {
+    return '$count more than $period';
+  }
+
+  @override
+  String progressFewerThan(int count, String period) {
+    return '$count fewer than $period';
+  }
+
+  @override
+  String progressSameAs(String period) {
+    return 'The same as $period';
+  }
+
+  @override
+  String progressTimeWent(String list) {
+    return 'Most of your time went to $list.';
+  }
+
+  @override
+  String progressTimeEntry(String name, String duration) {
+    return '$name ($duration)';
+  }
+
+  @override
+  String get progressEarlyTitle => 'Progress builds as you go.';
+
+  @override
+  String get progressEarlyMessage =>
+      'After a few days you\'ll see how your week went here.';
+
+  @override
+  String progressDoneSoFar(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count things done so far.',
+      one: '1 thing done so far.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get progressPlanIt => 'Plan it';
+
+  @override
+  String progressNotDoneThisPeriod(String period) {
+    return 'Not done $period';
+  }
+
+  @override
+  String progressActivitySentence(
+    String name,
+    int days,
+    String period,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count times',
+      one: '1 time',
+    );
+    return '$name: $_temp0 $period, $_temp1.';
+  }
+
+  @override
+  String progressActivityNone(String name, String period) {
+    return 'No $name $period.';
+  }
 }

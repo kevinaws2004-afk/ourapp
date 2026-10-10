@@ -21,54 +21,8 @@ import '../domain/insight.dart';
 import '../domain/insight_use_cases.dart';
 import 'insight_formatting.dart';
 import '../../../shared/widgets/panel_card.dart';
-import '../../../shared/widgets/stat_tile.dart';
+import '../../../shared/widgets/streak_badge.dart';
 import 'insight_providers.dart';
-
-/// The period at a glance against the one before (H5): days active, time
-/// and things done.
-class InsightSummaryTiles extends ConsumerWidget {
-  const InsightSummaryTiles({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
-    final summary = ref.watch(insightSummaryProvider).value;
-    if (summary == null) return const SizedBox.shrink();
-    String? change(num now, num before) =>
-        switch (relativeChange(now.toDouble(), before.toDouble())) {
-          final c? => formatChange(c),
-          null => null,
-        };
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: StatTile(
-            label: l10n.insightDaysActive,
-            value: '${summary.daysActive}',
-            change: change(summary.daysActive, summary.previousDaysActive),
-          ),
-        ),
-        const SizedBox(width: AppSpacing.sm),
-        Expanded(
-          child: StatTile(
-            label: l10n.insightTimeRecorded,
-            value: formatDuration(l10n, summary.durationMs),
-            change: change(summary.durationMs, summary.previousDurationMs),
-          ),
-        ),
-        const SizedBox(width: AppSpacing.sm),
-        Expanded(
-          child: StatTile(
-            label: l10n.insightThingsDone,
-            value: '${summary.count}',
-            change: change(summary.count, summary.previousCount),
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 /// Where your time went (H2): recorded time per bucket, a stacked bar per
 /// activity in its own colour, with a legend of the biggest ones.
@@ -291,9 +245,17 @@ class ActivityTotalsTile extends StatelessWidget {
     required this.onTap,
     this.trailing,
     this.muted = false,
+    this.streak,
+    this.action,
   });
 
   final ActivityType type;
+
+  /// 🔥 days of a running challenge on it.
+  final int? streak;
+
+  /// A way to act on it ("Plan it").
+  final Widget? action;
   final String subtitle;
   final VoidCallback onTap;
   final String? trailing;
@@ -313,11 +275,23 @@ class ActivityTotalsTile extends StatelessWidget {
       title: Text(type.name, style: muted ? TextStyle(color: quiet) : null),
       subtitle: Text(subtitle),
       onTap: onTap,
-      trailing: trailing == null
+      trailing: trailing == null && streak == null && action == null
           ? null
-          : Text(
-              trailing!,
-              style: context.textStyles.labelMedium?.copyWith(color: quiet),
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (streak case final days?) StreakBadge(days: days),
+                if (trailing case final t?) ...[
+                  const SizedBox(width: AppSpacing.sm),
+                  Text(
+                    t,
+                    style: context.textStyles.labelMedium?.copyWith(
+                      color: quiet,
+                    ),
+                  ),
+                ],
+                ?action,
+              ],
             ),
     );
   }

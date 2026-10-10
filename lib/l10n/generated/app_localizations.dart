@@ -121,7 +121,7 @@ abstract class AppLocalizations {
   /// Primary navigation tab: graphs and history.
   ///
   /// In en, this message translates to:
-  /// **'Insights'**
+  /// **'Progress'**
   String get navInsights;
 
   /// Primary navigation tab: body measurements, preferences, settings.
@@ -9519,6 +9519,149 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add to this day'**
   String get planAddToDay;
+
+  /// Progress sentences: the week period.
+  ///
+  /// In en, this message translates to:
+  /// **'this week'**
+  String get progressThisWeek;
+
+  /// Progress sentences: the month period.
+  ///
+  /// In en, this message translates to:
+  /// **'this month'**
+  String get progressThisMonth;
+
+  /// Progress sentences: the 3-month period.
+  ///
+  /// In en, this message translates to:
+  /// **'these 3 months'**
+  String get progressThisQuarter;
+
+  /// Progress sentences: the year period.
+  ///
+  /// In en, this message translates to:
+  /// **'this year'**
+  String get progressThisYear;
+
+  /// Progress comparison: the week before.
+  ///
+  /// In en, this message translates to:
+  /// **'last week'**
+  String get progressLastWeek;
+
+  /// Progress comparison: the month before.
+  ///
+  /// In en, this message translates to:
+  /// **'last month'**
+  String get progressLastMonth;
+
+  /// Progress comparison: the 3 months before.
+  ///
+  /// In en, this message translates to:
+  /// **'the 3 months before'**
+  String get progressLastQuarter;
+
+  /// Progress comparison: the year before.
+  ///
+  /// In en, this message translates to:
+  /// **'last year'**
+  String get progressLastYear;
+
+  /// Progress headline (PR1).
+  ///
+  /// In en, this message translates to:
+  /// **'You did {done} of {planned} planned things {period}.'**
+  String progressDidPlanned(int done, int planned, String period);
+
+  /// Progress headline with nothing planned (PR4).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Nothing done {period} yet.} =1{You did 1 thing {period}.} other{You did {count} things {period}.}}'**
+  String progressDidThings(int count, String period);
+
+  /// Progress headline with nothing planned, with time.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{You did 1 thing {period} · {duration}.} other{You did {count} things {period} · {duration}.}}'**
+  String progressDidThingsTime(int count, String period, String duration);
+
+  /// Progress comparison.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} more than {period}'**
+  String progressMoreThan(int count, String period);
+
+  /// Progress comparison.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} fewer than {period}'**
+  String progressFewerThan(int count, String period);
+
+  /// Progress comparison.
+  ///
+  /// In en, this message translates to:
+  /// **'The same as {period}'**
+  String progressSameAs(String period);
+
+  /// Progress: where the time went.
+  ///
+  /// In en, this message translates to:
+  /// **'Most of your time went to {list}.'**
+  String progressTimeWent(String list);
+
+  /// One activity in 'where the time went'.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} ({duration})'**
+  String progressTimeEntry(String name, String duration);
+
+  /// Progress, fewer than three days with anything done (PR3).
+  ///
+  /// In en, this message translates to:
+  /// **'Progress builds as you go.'**
+  String get progressEarlyTitle;
+
+  /// Progress, early (PR3).
+  ///
+  /// In en, this message translates to:
+  /// **'After a few days you\'ll see how your week went here.'**
+  String get progressEarlyMessage;
+
+  /// Progress, early: what's true already.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 thing done so far.} other{{count} things done so far.}}'**
+  String progressDoneSoFar(int count);
+
+  /// Progress, an activity not done this period: add it to today.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan it'**
+  String get progressPlanIt;
+
+  /// Progress: activities with history but nothing this period.
+  ///
+  /// In en, this message translates to:
+  /// **'Not done {period}'**
+  String progressNotDoneThisPeriod(String period);
+
+  /// An activity's progress page, first line (PR5).
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: {days, plural, =1{1 day} other{{days} days}} {period}, {count, plural, =1{1 time} other{{count} times}}.'**
+  String progressActivitySentence(
+    String name,
+    int days,
+    String period,
+    int count,
+  );
+
+  /// An activity's progress page with nothing this period (PR5).
+  ///
+  /// In en, this message translates to:
+  /// **'No {name} {period}.'**
+  String progressActivityNone(String name, String period);
 }
 
 class _AppLocalizationsDelegate

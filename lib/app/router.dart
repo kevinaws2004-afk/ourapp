@@ -263,6 +263,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                 builder: (context, state) => InsightsScreen(
                   onOpenActivity: (id) =>
                       unawaited(context.push(AppRoutes.activityInsights(id))),
+                  chooser: chooser(context),
                 ),
                 routes: [
                   GoRoute(

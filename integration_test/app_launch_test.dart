@@ -28,7 +28,7 @@ void main() {
       }
       expect(find.byType(TodayScreen), findsOneWidget);
 
-      for (final tab in ['Plan', 'Insights', 'Me']) {
+      for (final tab in ['Plan', 'Progress', 'Me']) {
         await tester.tap(
           find.descendant(
             of: find.byType(NavigationBar),

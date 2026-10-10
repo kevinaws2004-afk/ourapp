@@ -28,6 +28,9 @@ import 'insight_formatting.dart';
 import '../../../shared/widgets/panel_card.dart';
 import 'insight_providers.dart';
 import 'insight_range_picker.dart';
+import 'progress_sentences.dart';
+import '../../../shared/widgets/streak_badge.dart';
+import '../../challenges/presentation/challenge_providers.dart';
 
 /// One activity's progress, worked out automatically (ADR-037, ADR-043):
 /// days done, time and how often against the previous period and its
@@ -101,6 +104,7 @@ class _ActivityInsightsScreenState
             children: [
               const InsightRangePicker(),
               const SizedBox(height: AppSpacing.lg),
+              if (type != null) _Sentence(type: type),
               _Summary(typeId: typeId),
               const SizedBox(height: AppSpacing.lg),
               _Consistency(typeId: typeId, color: accent),
@@ -350,6 +354,43 @@ class _ChoiceBreakdown extends ConsumerWidget {
             if (labels[id] case final label?) BreakdownEntry(label, n),
         ],
       ),
+    );
+  }
+}
+
+/// The activity's period in one sentence, first (PR5, ADR-046), with its 🔥
+/// when it's in a running challenge.
+class _Sentence extends ConsumerWidget {
+  const _Sentence({required this.type});
+
+  final ActivityType type;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final data = ref.watch(activityTotalsProvider).value;
+    if (data == null) return const SizedBox.shrink();
+    final period = progressPeriod(l10n, ref.watch(insightRangeProvider));
+    final totals = data.$1[type.id];
+    final streak = ref.watch(activityStreaksProvider)[type.id];
+    final sentence = totals == null
+        ? l10n.progressActivityNone(type.name, period)
+        : l10n.progressActivitySentence(
+            type.name,
+            totals.days,
+            period,
+            totals.count,
+          );
+    return Stack(
+      children: [
+        SentenceCard(sentence: sentence),
+        if (streak != null)
+          Positioned(
+            top: AppSpacing.lg,
+            right: AppSpacing.lg,
+            child: StreakBadge(days: streak.days),
+          ),
+      ],
     );
   }
 }
