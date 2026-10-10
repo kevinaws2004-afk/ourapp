@@ -9,6 +9,7 @@ import '../../../core/design/tokens/spacing.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/widgets/activity_badge.dart';
 import '../../../shared/widgets/progress_bar.dart';
+import '../../../shared/widgets/streak_badge.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
 import '../domain/challenge_progress.dart';
 import '../domain/challenge_use_cases.dart';
@@ -60,7 +61,7 @@ class ChallengeStateLine extends StatelessWidget {
 
 /// A challenge at a glance: its activity's badge, its name, progress out of
 /// the target, the running streak and today's state (ADR-044). Shown on
-/// Today and in the list under Me.
+/// the Challenges tab.
 class ChallengeCard extends ConsumerWidget {
   const ChallengeCard({super.key, required this.view, required this.onTap});
 
@@ -82,11 +83,10 @@ class ChallengeCard extends ConsumerWidget {
     final quiet = context.textStyles.bodyMedium?.copyWith(
       color: context.colors.textSecondary,
     );
-    final summary = [
-      l10n.challengeProgressDays(progress.progress, progress.targetDays),
-      if (progress.currentStreak > 0)
-        l10n.challengeStreakDays(progress.currentStreak),
-    ].join(' · ');
+    final summary = l10n.challengeProgressDays(
+      progress.progress,
+      progress.targetDays,
+    );
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: Material(
@@ -109,9 +109,18 @@ class ChallengeCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(
-                        challenge.title,
-                        style: context.textStyles.titleMedium,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              challenge.title,
+                              style: context.textStyles.titleMedium,
+                            ),
+                          ),
+                          if (progress.currentStreak > 0 &&
+                              progress.completedOn == null)
+                            StreakBadge(days: progress.currentStreak),
+                        ],
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       AppProgressBar(

@@ -7092,5 +7092,18 @@
         "type": "String"
       }
     }
+  },
+  "challengesCompleted": "Completed ({count})",
+  "@challengesCompleted": {
+    "description": "Challenges: heading of completed challenges (C2).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeDoItToday": "Do it today",
+  "@challengeDoItToday": {
+    "description": "A challenge not yet done today: open today's thing for its activity (C3)."
   }
 }

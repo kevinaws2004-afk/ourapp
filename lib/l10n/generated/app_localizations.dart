@@ -9662,6 +9662,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No {name} {period}.'**
   String progressActivityNone(String name, String period);
+
+  /// Challenges: heading of completed challenges (C2).
+  ///
+  /// In en, this message translates to:
+  /// **'Completed ({count})'**
+  String challengesCompleted(int count);
+
+  /// A challenge not yet done today: open today's thing for its activity (C3).
+  ///
+  /// In en, this message translates to:
+  /// **'Do it today'**
+  String get challengeDoItToday;
 }
 
 class _AppLocalizationsDelegate

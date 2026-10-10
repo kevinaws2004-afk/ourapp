@@ -5192,4 +5192,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String progressActivityNone(String name, String period) {
     return 'No $name $period.';
   }
+
+  @override
+  String challengesCompleted(int count) {
+    return 'Completed ($count)';
+  }
+
+  @override
+  String get challengeDoItToday => 'Do it today';
 }

@@ -361,6 +361,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/challenge/:id',
         builder: (context, state) => ChallengeScreen(
           challengeId: ChallengeId(state.pathParameters['id']!),
+          onOpenItem: (id) => unawaited(context.push(AppRoutes.item(id))),
         ),
       ),
       GoRoute(

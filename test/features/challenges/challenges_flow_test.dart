@@ -13,6 +13,7 @@ import 'package:daylog/features/challenges/domain/challenge_use_cases.dart';
 import 'package:daylog/features/challenges/presentation/challenge_card.dart';
 import 'package:daylog/features/challenges/presentation/challenge_screen.dart';
 import 'package:daylog/features/plans/data/db_plan_repository.dart';
+import 'package:daylog/features/plans/presentation/item/item_screen.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:daylog/shared/widgets/item_card.dart';
@@ -140,12 +141,18 @@ void main() {
 
     await openChallenges(tester);
     expect(find.text('75 days of Meditation'), findsOneWidget);
-    expect(find.text('12 / 75 days · 12-day streak'), findsOneWidget);
+    expect(find.text('12 / 75 days'), findsOneWidget);
+    expect(
+      tester.widget<StreakBadge>(find.byType(StreakBadge)).days,
+      12,
+      reason: 'the 🔥 on the card',
+    );
     expect(find.text('Not yet today — streak at risk'), findsOneWidget);
 
     // Recording the activity counts the day, with nothing else to press.
     await recordToday(tester, db);
-    expect(find.text('13 / 75 days · 13-day streak'), findsOneWidget);
+    expect(find.text('13 / 75 days'), findsOneWidget);
+    expect(tester.widget<StreakBadge>(find.byType(StreakBadge)).days, 13);
     expect(find.text('Done today'), findsOneWidget);
 
     await openTab(tester, 'Today');
@@ -171,6 +178,38 @@ void main() {
     await openChallenges(tester);
     expect(find.text('5 / 75 days'), findsOneWidget);
     expect(find.text('Not yet today'), findsOneWidget);
+  });
+
+  testAppWidgets('no challenges: an example prefills a new one (C1)', (
+    tester,
+  ) async {
+    await pumpTestApp(tester, preferences: _onboarded);
+    await openChallenges(tester);
+    await tester.tap(find.widgetWithText(ActionChip, '21 days of Meditation'));
+    await tester.pumpAndSettle();
+    expect(find.text('Recording it each day counts the day.'), findsOneWidget);
+    await scrollAndTap(tester, find.text('Start challenge'));
+    expect(find.text('21 days of Meditation'), findsOneWidget);
+    expect(find.text('0 / 21 days'), findsOneWidget);
+  });
+
+  testAppWidgets('Do it today opens today\'s thing for its activity (C3)', (
+    tester,
+  ) async {
+    await pumpTestApp(
+      tester,
+      preferences: _onboarded,
+      seed: seedChallenge(
+        start: _today.addDays(-3),
+        done: run(_today.addDays(-3), 3),
+      ),
+    );
+    await openChallenges(tester);
+    await tester.tap(find.text('75 days of Meditation'));
+    await tester.pumpAndSettle();
+    await scrollAndTap(tester, find.text('Do it today'));
+    expect(find.byType(ItemScreen), findsOneWidget);
+    expect(find.text('Meditation'), findsWidgets);
   });
 
   testAppWidgets('the detail shows progress and streaks apart: 20 days, '
@@ -335,7 +374,7 @@ void main() {
     await openChallenges(tester);
 
     expect(find.text('3 days of Meditation'), findsOneWidget);
-    expect(find.text('Completed'), findsOneWidget);
-    expect(find.text('3 / 3 days · 3-day streak'), findsOneWidget);
+    expect(find.text('Completed (1)'), findsOneWidget, reason: 'its section');
+    expect(find.text('3 / 3 days'), findsOneWidget);
   });
 }
