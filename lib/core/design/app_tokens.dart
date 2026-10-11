@@ -41,6 +41,12 @@ class AppTokens extends ThemeExtension<AppTokens> {
       AppThemeId.sky => skyTokens,
       AppThemeId.honey => honeyTokens,
       AppThemeId.slate => slateTokens,
+      AppThemeId.mint => mintTokens,
+      AppThemeId.cherry => cherryTokens,
+      AppThemeId.forest => forestTokens,
+      AppThemeId.midnight => midnightTokens,
+      AppThemeId.mocha => mochaTokens,
+      AppThemeId.roseGold => roseGoldTokens,
     };
     return brightness == Brightness.light
         ? light

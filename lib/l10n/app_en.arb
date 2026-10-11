@@ -7605,5 +7605,17 @@
   "themeNameHoney": "Honey Glow",
   "@themeNameHoney": {},
   "themeNameSlate": "Calm Slate",
-  "@themeNameSlate": {}
+  "@themeNameSlate": {},
+  "themeNameMint": "Mint Cream",
+  "@themeNameMint": {},
+  "themeNameCherry": "Cherry Pop",
+  "@themeNameCherry": {},
+  "themeNameForest": "Forest Walk",
+  "@themeNameForest": {},
+  "themeNameMidnight": "Midnight Blue",
+  "@themeNameMidnight": {},
+  "themeNameMocha": "Mocha Latte",
+  "@themeNameMocha": {},
+  "themeNameRoseGold": "Rose Gold",
+  "@themeNameRoseGold": {}
 }

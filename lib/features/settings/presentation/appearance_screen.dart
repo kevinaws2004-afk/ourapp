@@ -169,6 +169,12 @@ String themeName(AppLocalizations l10n, AppThemeId id) => switch (id) {
   AppThemeId.sky => l10n.themeNameSky,
   AppThemeId.honey => l10n.themeNameHoney,
   AppThemeId.slate => l10n.themeNameSlate,
+  AppThemeId.mint => l10n.themeNameMint,
+  AppThemeId.cherry => l10n.themeNameCherry,
+  AppThemeId.forest => l10n.themeNameForest,
+  AppThemeId.midnight => l10n.themeNameMidnight,
+  AppThemeId.mocha => l10n.themeNameMocha,
+  AppThemeId.roseGold => l10n.themeNameRoseGold,
 };
 
 /// One theme as a swatch: its signature color as a big circle with its

@@ -5757,4 +5757,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get themeNameSlate => 'Calm Slate';
+
+  @override
+  String get themeNameMint => 'Mint Cream';
+
+  @override
+  String get themeNameCherry => 'Cherry Pop';
+
+  @override
+  String get themeNameForest => 'Forest Walk';
+
+  @override
+  String get themeNameMidnight => 'Midnight Blue';
+
+  @override
+  String get themeNameMocha => 'Mocha Latte';
+
+  @override
+  String get themeNameRoseGold => 'Rose Gold';
 }

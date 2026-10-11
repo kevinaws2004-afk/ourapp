@@ -155,3 +155,58 @@ final slateTokens = paletteTokens(
   ink: const Color(0xFF0F172A),
   canvas: const Color(0xFFF6F7F9),
 );
+
+final mintTokens = paletteTokens(
+  id: AppThemeId.mint,
+  primary: const Color(0xFF0D9488),
+  action: const Color(0xFFF97316),
+  accent: const Color(0xFFA78BFA),
+  ink: const Color(0xFF042F2E),
+  canvas: const Color(0xFFF2FBF9),
+);
+
+final cherryTokens = paletteTokens(
+  id: AppThemeId.cherry,
+  primary: const Color(0xFFE11D48),
+  action: const Color(0xFF14B8A6),
+  accent: const Color(0xFFFBBF24),
+  ink: const Color(0xFF3F0A16),
+  canvas: const Color(0xFFFFF6F7),
+);
+
+final forestTokens = paletteTokens(
+  id: AppThemeId.forest,
+  primary: const Color(0xFF15803D),
+  action: const Color(0xFFF59E0B),
+  onAction: const Color(0xFF2A1B02),
+  accent: const Color(0xFF0EA5E9),
+  ink: const Color(0xFF052E16),
+  canvas: const Color(0xFFF4F8F4),
+);
+
+final midnightTokens = paletteTokens(
+  id: AppThemeId.midnight,
+  primary: const Color(0xFF1E3A8A),
+  action: const Color(0xFFF472B6),
+  accent: const Color(0xFFFBBF24),
+  ink: const Color(0xFF0B1533),
+  canvas: const Color(0xFFF5F6FB),
+);
+
+final mochaTokens = paletteTokens(
+  id: AppThemeId.mocha,
+  primary: const Color(0xFF8B5E3C),
+  action: const Color(0xFF10B981),
+  accent: const Color(0xFFF59E0B),
+  ink: const Color(0xFF2B1B12),
+  canvas: const Color(0xFFFBF7F3),
+);
+
+final roseGoldTokens = paletteTokens(
+  id: AppThemeId.roseGold,
+  primary: const Color(0xFFB76E79),
+  action: const Color(0xFF14B8A6),
+  accent: const Color(0xFFD4A373),
+  ink: const Color(0xFF3A2328),
+  canvas: const Color(0xFFFFF7F7),
+);

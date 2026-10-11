@@ -11,7 +11,13 @@ enum AppThemeId {
   lilac,
   sky,
   honey,
-  slate;
+  slate,
+  mint,
+  cherry,
+  forest,
+  midnight,
+  mocha,
+  roseGold;
 
   /// The theme a new install starts with.
   static const fallback = AppThemeId.lavender;

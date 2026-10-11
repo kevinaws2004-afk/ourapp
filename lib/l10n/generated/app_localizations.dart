@@ -10568,6 +10568,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Calm Slate'**
   String get themeNameSlate;
+
+  /// No description provided for @themeNameMint.
+  ///
+  /// In en, this message translates to:
+  /// **'Mint Cream'**
+  String get themeNameMint;
+
+  /// No description provided for @themeNameCherry.
+  ///
+  /// In en, this message translates to:
+  /// **'Cherry Pop'**
+  String get themeNameCherry;
+
+  /// No description provided for @themeNameForest.
+  ///
+  /// In en, this message translates to:
+  /// **'Forest Walk'**
+  String get themeNameForest;
+
+  /// No description provided for @themeNameMidnight.
+  ///
+  /// In en, this message translates to:
+  /// **'Midnight Blue'**
+  String get themeNameMidnight;
+
+  /// No description provided for @themeNameMocha.
+  ///
+  /// In en, this message translates to:
+  /// **'Mocha Latte'**
+  String get themeNameMocha;
+
+  /// No description provided for @themeNameRoseGold.
+  ///
+  /// In en, this message translates to:
+  /// **'Rose Gold'**
+  String get themeNameRoseGold;
 }
 
 class _AppLocalizationsDelegate
