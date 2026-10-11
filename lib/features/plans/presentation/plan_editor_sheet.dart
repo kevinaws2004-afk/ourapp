@@ -14,6 +14,7 @@ import '../../activity_logs/presentation/form/field_editor_shell.dart';
 import '../../activity_types/domain/activity_ids.dart';
 import '../../activity_types/domain/activity_type.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
+import '../../notifications/presentation/reminder_prompt.dart';
 import '../domain/plan.dart';
 import '../domain/watch_day_overview.dart';
 import 'activity_chooser.dart';
@@ -125,7 +126,17 @@ class _PlanEditorSheetState extends ConsumerState<_PlanEditorSheet> {
       if (_plan case final plan?) {
         await ref.read(updatePlanProvider)(plan.id, draft);
       } else {
-        await ref.read(createPlanProvider)(draft);
+        final id = await ref.read(createPlanProvider)(draft);
+        // Something with a time: "Want a reminder?"
+        if (draft.plannedStartAt case final start? when mounted) {
+          await askReminderFor(
+            context,
+            ref,
+            id,
+            title: _title.text.trim(),
+            startUtc: start,
+          );
+        }
       }
       if (mounted) Navigator.of(context).pop();
     } on ValidationException catch (e) {

@@ -163,6 +163,21 @@ void main() {
 }
 
 void _extra() {
+  testWidgets('notifications', (tester) async {
+    await _pump(tester, onboarded: true);
+    // Long-press a timed item → Reminder → the reminder sheet.
+    await tester.longPress(find.text('Reading').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Reminder'));
+    await _shot(tester, '19_reminder_sheet');
+    await tester.tap(find.text('Remind me'));
+    await tester.pumpAndSettle();
+    await _shot(tester, '19_today_with_bell');
+    await _tapTab(tester, 'Me');
+    await tester.tap(find.text('Notifications'));
+    await _shot(tester, '20_notifications_settings');
+  });
+
   testWidgets('palettes', (tester) async {
     await _pump(tester, onboarded: true, theme: AppThemeId.rose);
     await _shot(tester, '09_pastel_today');

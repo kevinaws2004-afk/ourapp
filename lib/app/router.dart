@@ -39,6 +39,7 @@ import '../features/measurements/presentation/measurement_type_screen.dart';
 import '../features/measurements/presentation/measurements_screen.dart';
 import '../features/today/presentation/quick_start_sheet.dart';
 import '../features/plans/presentation/widgets/add_sheet.dart';
+import '../features/notifications/presentation/notifications_screen.dart';
 import 'app_shell.dart';
 import 'dev/demo_data.dart';
 import 'dev/dev_tools.dart';
@@ -66,6 +67,9 @@ abstract final class AppRoutes {
 
   /// The app's theme, under Me (ADR-045).
   static const appearance = '/me/appearance';
+
+  /// Reminders and notifications, under Me.
+  static const notifications = '/me/notifications';
 
   /// Body measurements, under Me (Phase 6).
   static const measurements = '/me/measurements';
@@ -337,6 +341,8 @@ final routerProvider = Provider<GoRouter>((ref) {
                   onOpenActivities: () => context.go(AppRoutes.activities),
                   onOpenMeasurements: () => context.go(AppRoutes.measurements),
                   onOpenAppearance: () => context.go(AppRoutes.appearance),
+                  onOpenNotifications: () =>
+                      context.go(AppRoutes.notifications),
                   onOpenGoals: () => context.go(AppRoutes.challenges),
                   onOpenTokenShowcase: devToolsEnabled
                       ? () => context.push(AppRoutes.tokenShowcase)
@@ -352,6 +358,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'appearance',
                     builder: (context, state) => const AppearanceScreen(),
+                  ),
+                  GoRoute(
+                    path: 'notifications',
+                    builder: (context, state) => const NotificationsScreen(),
                   ),
                   GoRoute(
                     path: 'measurements',

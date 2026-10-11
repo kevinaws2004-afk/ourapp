@@ -90,6 +90,9 @@ abstract final class AppIcons {
   static const sparkle = PhosphorFillGlyphs.sparkle;
   static const heart = PhosphorFillGlyphs.heart;
 
+  static const bell = PhosphorGlyphs.bell;
+  static const bellOn = PhosphorFillGlyphs.bell;
+
   /// Daylog's mark (the app icon's glyph).
   static const logo = PhosphorFillGlyphs.calendarCheck;
 

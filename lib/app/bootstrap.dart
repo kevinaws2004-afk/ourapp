@@ -13,6 +13,8 @@ import '../core/time/clock.dart';
 import '../features/settings/data/db_app_preferences_repository.dart';
 import '../features/settings/domain/preferences_snapshot.dart';
 import '../features/settings/presentation/preferences_providers.dart';
+import '../core/notifications/notification_service.dart';
+import '../features/notifications/presentation/notification_providers.dart';
 import 'app.dart';
 import 'provider_logger.dart';
 import 'startup_failure_app.dart';
@@ -57,6 +59,9 @@ Future<void> bootstrap() async {
     return;
   }
 
+  // Local notifications; a failure only disables them.
+  final notifications = await NotificationService.start();
+
   runApp(
     ProviderScope(
       observers: const [ProviderLogger(logger)],
@@ -64,6 +69,7 @@ Future<void> bootstrap() async {
         appDatabaseProvider.overrideWithValue(database),
         loggerProvider.overrideWithValue(logger),
         initialPreferencesProvider.overrideWithValue(initialPreferences),
+        notificationServiceProvider.overrideWithValue(notifications),
       ],
       child: const App(),
     ),

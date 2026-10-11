@@ -7398,5 +7398,200 @@
         "type": "int"
       }
     }
-  }
+  },
+  "reminderNone": "No reminder",
+  "@reminderNone": {},
+  "reminderAtStart": "At start time",
+  "@reminderAtStart": {},
+  "reminderMinutesBefore": "{minutes} min before",
+  "@reminderMinutesBefore": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderHoursBefore": "{hours, plural, =1{1 hour before} other{{hours} hours before}}",
+  "@reminderHoursBefore": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderTitle": "Want a reminder?",
+  "@reminderTitle": {},
+  "reminderSubtitle": "{title} at {time}",
+  "@reminderSubtitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderDontAsk": "Use this every time, don't ask again",
+  "@reminderDontAsk": {},
+  "reminderSet": "Remind me",
+  "@reminderSet": {},
+  "reminderSkip": "No reminder",
+  "@reminderSkip": {},
+  "reminderMenu": "Reminder",
+  "@reminderMenu": {},
+  "reminderNeedsTime": "Give it a time to set a reminder.",
+  "@reminderNeedsTime": {},
+  "notifyStartsNow": "{title} starts now",
+  "@notifyStartsNow": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notifyStartsIn": "{title} in {minutes} min",
+  "@notifyStartsIn": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "notifyAt": "At {time}",
+  "@notifyAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "notifyAtFor": "At {time} · {minutes} min planned",
+  "@notifyAtFor": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "notifyTimerDone": "{title}: time is up",
+  "@notifyTimerDone": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notifyTimerDoneBody": "Your {minutes} min are done. Tap to finish and log it.",
+  "@notifyTimerDoneBody": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "notifyTimerFallback": "Timer running",
+  "@notifyTimerFallback": {},
+  "notifyTimerRunning": "Running · tap to open",
+  "@notifyTimerRunning": {},
+  "notifyTimerPaused": "Paused · tap to open",
+  "@notifyTimerPaused": {},
+  "notifyMorning": "{count, plural, =1{1 thing on your plan today} other{{count} things on your plan today}}",
+  "@notifyMorning": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notifyMorningEmpty": "Nothing planned yet today",
+  "@notifyMorningEmpty": {},
+  "notifyMorningBody": "First up: {title} at {time}",
+  "@notifyMorningBody": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "notifyMorningBodyAnytime": "Open Daylog to plan your day.",
+  "@notifyMorningBodyAnytime": {},
+  "notifyEvening": "How did today go?",
+  "@notifyEvening": {},
+  "notifyEveningBody": "Tick off what you did and plan tomorrow.",
+  "@notifyEveningBody": {},
+  "notifyStreak": "Keep your {days}-day {name} streak",
+  "@notifyStreak": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "notifyStreakBody": "Not done yet today. There is still time.",
+  "@notifyStreakBody": {},
+  "notificationsTitle": "Notifications",
+  "@notificationsTitle": {},
+  "notificationsSubtitle": "Reminders, timer alerts and daily nudges",
+  "@notificationsSubtitle": {},
+  "notificationsMaster": "Allow notifications",
+  "@notificationsMaster": {},
+  "notificationsMasterHint": "Off means Daylog never notifies you.",
+  "@notificationsMasterHint": {},
+  "notificationsBlocked": "Notifications are blocked for Daylog in your phone settings.",
+  "@notificationsBlocked": {},
+  "notificationsAllow": "Allow",
+  "@notificationsAllow": {},
+  "notificationsNewItems": "Reminders for new items",
+  "@notificationsNewItems": {},
+  "notificationsAsk": "Ask every time",
+  "@notificationsAsk": {},
+  "notificationsAlways": "Always · {choice}",
+  "@notificationsAlways": {
+    "placeholders": {
+      "choice": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationsNever": "Never",
+  "@notificationsNever": {},
+  "notificationsGroupReminders": "Reminders",
+  "@notificationsGroupReminders": {},
+  "notificationsGroupDaily": "Daily",
+  "@notificationsGroupDaily": {},
+  "notificationsTimer": "Timer alerts",
+  "@notificationsTimer": {},
+  "notificationsTimerHint": "While a timer runs, and when its time is up",
+  "@notificationsTimerHint": {},
+  "notificationsMorning": "Morning plan",
+  "@notificationsMorning": {},
+  "notificationsEvening": "Evening review",
+  "@notificationsEvening": {},
+  "notificationsGoals": "Goal streaks",
+  "@notificationsGoals": {},
+  "notificationsGoalsHint": "At 8 PM if a goal is not done yet",
+  "@notificationsGoalsHint": {},
+  "notificationsAt": "At {time}",
+  "@notificationsAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationsDefault": "Default reminder",
+  "@notificationsDefault": {}
 }

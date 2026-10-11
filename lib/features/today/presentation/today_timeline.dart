@@ -22,6 +22,8 @@ import '../../activity_types/domain/activity_type.dart';
 import '../../challenges/presentation/challenge_providers.dart';
 import '../../focus/presentation/focus_providers.dart';
 import '../../focus/presentation/focus_screen.dart';
+import '../../notifications/data/reminder_store.dart';
+import '../../notifications/presentation/notification_providers.dart';
 import '../../plans/domain/plan.dart';
 import '../../plans/domain/watch_day_overview.dart';
 import '../../plans/presentation/plan_actions.dart';
@@ -140,6 +142,7 @@ class _RowData {
     this.onToggle,
     this.onLongPress,
     this.streak,
+    this.reminder = false,
   });
 
   final String title;
@@ -155,6 +158,9 @@ class _RowData {
   final VoidCallback? onToggle;
   final VoidCallback? onLongPress;
   final int? streak;
+
+  /// It has a reminder set.
+  final bool reminder;
 }
 
 class _TimelineRow extends ConsumerWidget {
@@ -255,6 +261,14 @@ class _TimelineRow extends ConsumerWidget {
           done: done,
           faded: inactive,
           streak: item.type == null ? null : streaks[item.type!.id]?.days,
+          reminder:
+              item.isOpen &&
+              plan.plannedStartAt != null &&
+              reminderFor(
+                    plan,
+                    ref.watch(remindersProvider).value ?? const {},
+                  ) !=
+                  null,
           onTap: () => onOpenItem(plan.id),
           onToggle: PlanActions.canToggleDone(item)
               ? () => unawaited(actions.toggleDone(item))
@@ -389,6 +403,14 @@ class _TimelineRow extends ConsumerWidget {
                               ),
                             ),
                           ),
+                          if (d.reminder) ...[
+                            const SizedBox(width: AppSpacing.xs),
+                            Icon(
+                              AppIcons.bellOn,
+                              size: 13,
+                              color: c.brandPrimary,
+                            ),
+                          ],
                           if (d.streak case final s?) ...[
                             const SizedBox(width: AppSpacing.xs),
                             Icon(AppIcons.streak, size: 13, color: c.warning),

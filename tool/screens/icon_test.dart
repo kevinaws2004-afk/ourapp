@@ -133,6 +133,20 @@ void main() {
     addTearDown(tester.view.reset);
   });
 
+  testWidgets('notification icons', (tester) async {
+    // Status bar icon: white mark on transparent, 24dp.
+    for (final MapEntry(key: d, value: scale) in densities.entries) {
+      final size = 24 * scale;
+      await _render(
+        tester,
+        Center(child: Icon(_glyph, size: size * 0.92, color: Colors.white)),
+        Size.square(size),
+        '$res/drawable-$d/ic_notification.png',
+      );
+    }
+    addTearDown(tester.view.reset);
+  });
+
   testWidgets('store artwork', (tester) async {
     // Play Store icon: 512×512, full bleed (Play applies the mask).
     await _render(

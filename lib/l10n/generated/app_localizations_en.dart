@@ -5552,4 +5552,191 @@ class AppLocalizationsEn extends AppLocalizations {
   String heroStreakLong(int days) {
     return '$days-day streak';
   }
+
+  @override
+  String get reminderNone => 'No reminder';
+
+  @override
+  String get reminderAtStart => 'At start time';
+
+  @override
+  String reminderMinutesBefore(int minutes) {
+    return '$minutes min before';
+  }
+
+  @override
+  String reminderHoursBefore(int hours) {
+    String _temp0 = intl.Intl.pluralLogic(
+      hours,
+      locale: localeName,
+      other: '$hours hours before',
+      one: '1 hour before',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reminderTitle => 'Want a reminder?';
+
+  @override
+  String reminderSubtitle(String title, String time) {
+    return '$title at $time';
+  }
+
+  @override
+  String get reminderDontAsk => 'Use this every time, don\'t ask again';
+
+  @override
+  String get reminderSet => 'Remind me';
+
+  @override
+  String get reminderSkip => 'No reminder';
+
+  @override
+  String get reminderMenu => 'Reminder';
+
+  @override
+  String get reminderNeedsTime => 'Give it a time to set a reminder.';
+
+  @override
+  String notifyStartsNow(String title) {
+    return '$title starts now';
+  }
+
+  @override
+  String notifyStartsIn(String title, int minutes) {
+    return '$title in $minutes min';
+  }
+
+  @override
+  String notifyAt(String time) {
+    return 'At $time';
+  }
+
+  @override
+  String notifyAtFor(String time, int minutes) {
+    return 'At $time · $minutes min planned';
+  }
+
+  @override
+  String notifyTimerDone(String title) {
+    return '$title: time is up';
+  }
+
+  @override
+  String notifyTimerDoneBody(int minutes) {
+    return 'Your $minutes min are done. Tap to finish and log it.';
+  }
+
+  @override
+  String get notifyTimerFallback => 'Timer running';
+
+  @override
+  String get notifyTimerRunning => 'Running · tap to open';
+
+  @override
+  String get notifyTimerPaused => 'Paused · tap to open';
+
+  @override
+  String notifyMorning(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count things on your plan today',
+      one: '1 thing on your plan today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notifyMorningEmpty => 'Nothing planned yet today';
+
+  @override
+  String notifyMorningBody(String title, String time) {
+    return 'First up: $title at $time';
+  }
+
+  @override
+  String get notifyMorningBodyAnytime => 'Open Daylog to plan your day.';
+
+  @override
+  String get notifyEvening => 'How did today go?';
+
+  @override
+  String get notifyEveningBody => 'Tick off what you did and plan tomorrow.';
+
+  @override
+  String notifyStreak(int days, String name) {
+    return 'Keep your $days-day $name streak';
+  }
+
+  @override
+  String get notifyStreakBody => 'Not done yet today. There is still time.';
+
+  @override
+  String get notificationsTitle => 'Notifications';
+
+  @override
+  String get notificationsSubtitle =>
+      'Reminders, timer alerts and daily nudges';
+
+  @override
+  String get notificationsMaster => 'Allow notifications';
+
+  @override
+  String get notificationsMasterHint => 'Off means Daylog never notifies you.';
+
+  @override
+  String get notificationsBlocked =>
+      'Notifications are blocked for Daylog in your phone settings.';
+
+  @override
+  String get notificationsAllow => 'Allow';
+
+  @override
+  String get notificationsNewItems => 'Reminders for new items';
+
+  @override
+  String get notificationsAsk => 'Ask every time';
+
+  @override
+  String notificationsAlways(String choice) {
+    return 'Always · $choice';
+  }
+
+  @override
+  String get notificationsNever => 'Never';
+
+  @override
+  String get notificationsGroupReminders => 'Reminders';
+
+  @override
+  String get notificationsGroupDaily => 'Daily';
+
+  @override
+  String get notificationsTimer => 'Timer alerts';
+
+  @override
+  String get notificationsTimerHint =>
+      'While a timer runs, and when its time is up';
+
+  @override
+  String get notificationsMorning => 'Morning plan';
+
+  @override
+  String get notificationsEvening => 'Evening review';
+
+  @override
+  String get notificationsGoals => 'Goal streaks';
+
+  @override
+  String get notificationsGoalsHint => 'At 8 PM if a goal is not done yet';
+
+  @override
+  String notificationsAt(String time) {
+    return 'At $time';
+  }
+
+  @override
+  String get notificationsDefault => 'Default reminder';
 }

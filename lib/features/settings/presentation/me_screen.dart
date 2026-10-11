@@ -43,6 +43,7 @@ class MeScreen extends ConsumerWidget {
     required this.onOpenMeasurements,
     required this.onOpenAppearance,
     required this.onOpenGoals,
+    required this.onOpenNotifications,
     this.onOpenTokenShowcase,
     this.onLoadDemoData,
     this.onLoadRecentDemoData,
@@ -56,6 +57,9 @@ class MeScreen extends ConsumerWidget {
 
   /// Your goals (challenges).
   final VoidCallback onOpenGoals;
+
+  /// Reminders and notifications.
+  final VoidCallback onOpenNotifications;
 
   /// Debug-only entry point; ignored in release builds.
   final VoidCallback? onOpenTokenShowcase;
@@ -195,6 +199,14 @@ class MeScreen extends ConsumerWidget {
               SettingsGroup(
                 title: l10n.meGroupPreferences,
                 children: [
+                  SettingsTile(
+                    icon: AppIcons.bell,
+                    iconColor: c.warning,
+                    iconBackground: c.warningContainer,
+                    title: l10n.notificationsTitle,
+                    subtitle: l10n.notificationsSubtitle,
+                    onTap: onOpenNotifications,
+                  ),
                   SettingsTile(
                     icon: AppIcons.appearance,
                     title: l10n.appearanceTitle,

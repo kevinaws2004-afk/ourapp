@@ -10244,6 +10244,294 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{days}-day streak'**
   String heroStreakLong(int days);
+
+  /// No description provided for @reminderNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No reminder'**
+  String get reminderNone;
+
+  /// No description provided for @reminderAtStart.
+  ///
+  /// In en, this message translates to:
+  /// **'At start time'**
+  String get reminderAtStart;
+
+  /// No description provided for @reminderMinutesBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min before'**
+  String reminderMinutesBefore(int minutes);
+
+  /// No description provided for @reminderHoursBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours, plural, =1{1 hour before} other{{hours} hours before}}'**
+  String reminderHoursBefore(int hours);
+
+  /// No description provided for @reminderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Want a reminder?'**
+  String get reminderTitle;
+
+  /// No description provided for @reminderSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} at {time}'**
+  String reminderSubtitle(String title, String time);
+
+  /// No description provided for @reminderDontAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this every time, don\'t ask again'**
+  String get reminderDontAsk;
+
+  /// No description provided for @reminderSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me'**
+  String get reminderSet;
+
+  /// No description provided for @reminderSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'No reminder'**
+  String get reminderSkip;
+
+  /// No description provided for @reminderMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder'**
+  String get reminderMenu;
+
+  /// No description provided for @reminderNeedsTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Give it a time to set a reminder.'**
+  String get reminderNeedsTime;
+
+  /// No description provided for @notifyStartsNow.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} starts now'**
+  String notifyStartsNow(String title);
+
+  /// No description provided for @notifyStartsIn.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} in {minutes} min'**
+  String notifyStartsIn(String title, int minutes);
+
+  /// No description provided for @notifyAt.
+  ///
+  /// In en, this message translates to:
+  /// **'At {time}'**
+  String notifyAt(String time);
+
+  /// No description provided for @notifyAtFor.
+  ///
+  /// In en, this message translates to:
+  /// **'At {time} · {minutes} min planned'**
+  String notifyAtFor(String time, int minutes);
+
+  /// No description provided for @notifyTimerDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}: time is up'**
+  String notifyTimerDone(String title);
+
+  /// No description provided for @notifyTimerDoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {minutes} min are done. Tap to finish and log it.'**
+  String notifyTimerDoneBody(int minutes);
+
+  /// No description provided for @notifyTimerFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer running'**
+  String get notifyTimerFallback;
+
+  /// No description provided for @notifyTimerRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Running · tap to open'**
+  String get notifyTimerRunning;
+
+  /// No description provided for @notifyTimerPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused · tap to open'**
+  String get notifyTimerPaused;
+
+  /// No description provided for @notifyMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 thing on your plan today} other{{count} things on your plan today}}'**
+  String notifyMorning(int count);
+
+  /// No description provided for @notifyMorningEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing planned yet today'**
+  String get notifyMorningEmpty;
+
+  /// No description provided for @notifyMorningBody.
+  ///
+  /// In en, this message translates to:
+  /// **'First up: {title} at {time}'**
+  String notifyMorningBody(String title, String time);
+
+  /// No description provided for @notifyMorningBodyAnytime.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Daylog to plan your day.'**
+  String get notifyMorningBodyAnytime;
+
+  /// No description provided for @notifyEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'How did today go?'**
+  String get notifyEvening;
+
+  /// No description provided for @notifyEveningBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tick off what you did and plan tomorrow.'**
+  String get notifyEveningBody;
+
+  /// No description provided for @notifyStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your {days}-day {name} streak'**
+  String notifyStreak(int days, String name);
+
+  /// No description provided for @notifyStreakBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Not done yet today. There is still time.'**
+  String get notifyStreakBody;
+
+  /// No description provided for @notificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsTitle;
+
+  /// No description provided for @notificationsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders, timer alerts and daily nudges'**
+  String get notificationsSubtitle;
+
+  /// No description provided for @notificationsMaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow notifications'**
+  String get notificationsMaster;
+
+  /// No description provided for @notificationsMasterHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Off means Daylog never notifies you.'**
+  String get notificationsMasterHint;
+
+  /// No description provided for @notificationsBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are blocked for Daylog in your phone settings.'**
+  String get notificationsBlocked;
+
+  /// No description provided for @notificationsAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow'**
+  String get notificationsAllow;
+
+  /// No description provided for @notificationsNewItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders for new items'**
+  String get notificationsNewItems;
+
+  /// No description provided for @notificationsAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask every time'**
+  String get notificationsAsk;
+
+  /// No description provided for @notificationsAlways.
+  ///
+  /// In en, this message translates to:
+  /// **'Always · {choice}'**
+  String notificationsAlways(String choice);
+
+  /// No description provided for @notificationsNever.
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get notificationsNever;
+
+  /// No description provided for @notificationsGroupReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get notificationsGroupReminders;
+
+  /// No description provided for @notificationsGroupDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get notificationsGroupDaily;
+
+  /// No description provided for @notificationsTimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer alerts'**
+  String get notificationsTimer;
+
+  /// No description provided for @notificationsTimerHint.
+  ///
+  /// In en, this message translates to:
+  /// **'While a timer runs, and when its time is up'**
+  String get notificationsTimerHint;
+
+  /// No description provided for @notificationsMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning plan'**
+  String get notificationsMorning;
+
+  /// No description provided for @notificationsEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening review'**
+  String get notificationsEvening;
+
+  /// No description provided for @notificationsGoals.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal streaks'**
+  String get notificationsGoals;
+
+  /// No description provided for @notificationsGoalsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'At 8 PM if a goal is not done yet'**
+  String get notificationsGoalsHint;
+
+  /// No description provided for @notificationsAt.
+  ///
+  /// In en, this message translates to:
+  /// **'At {time}'**
+  String notificationsAt(String time);
+
+  /// No description provided for @notificationsDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default reminder'**
+  String get notificationsDefault;
 }
 
 class _AppLocalizationsDelegate
