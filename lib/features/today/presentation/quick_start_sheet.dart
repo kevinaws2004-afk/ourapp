@@ -22,6 +22,7 @@ class QuickStartActions {
     required this.planSomething,
     required this.measure,
     required this.newActivity,
+    required this.writeNote,
   });
 
   /// Starts [type] now (its timer, when it has one) and opens it.
@@ -29,6 +30,7 @@ class QuickStartActions {
   final void Function(BuildContext context) planSomething;
   final void Function(BuildContext context) measure;
   final void Function(BuildContext context) newActivity;
+  final void Function(BuildContext context) writeNote;
 }
 
 Future<void> showQuickStartSheet(
@@ -119,6 +121,13 @@ class _QuickStart extends ConsumerWidget {
               title: l10n.quickPlan,
               subtitle: l10n.quickPlanHint,
               onTap: () => run(() => actions.planSomething(host)),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            _ActionRow(
+              icon: AppIcons.notes.outline,
+              title: l10n.quickNote,
+              subtitle: l10n.quickNoteHint,
+              onTap: () => run(() => actions.writeNote(host)),
             ),
             const SizedBox(height: AppSpacing.sm),
             _ActionRow(

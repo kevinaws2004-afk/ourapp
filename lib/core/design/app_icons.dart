@@ -93,6 +93,14 @@ abstract final class AppIcons {
   static const bell = PhosphorGlyphs.bell;
   static const bellOn = PhosphorFillGlyphs.bell;
 
+  static const notes = AppIconPair(
+    PhosphorGlyphs.note,
+    PhosphorFillGlyphs.note,
+  );
+  static const pin = PhosphorGlyphs.pushPin;
+  static const pinned = PhosphorFillGlyphs.pushPin;
+  static const search = PhosphorGlyphs.magnifyingGlass;
+
   /// Daylog's mark (the app icon's glyph).
   static const logo = PhosphorFillGlyphs.calendarCheck;
 

@@ -7641,5 +7641,65 @@
   "appearanceTrueBlack": "True black",
   "@appearanceTrueBlack": {},
   "appearanceTrueBlackHint": "Pure black dark mode for OLED screens. Saves battery.",
-  "@appearanceTrueBlackHint": {}
+  "@appearanceTrueBlackHint": {},
+  "notesTitle": "Notes",
+  "@notesTitle": {},
+  "notesNew": "New note",
+  "@notesNew": {},
+  "notesCount": "{count, plural, =1{1 note} other{{count} notes}}",
+  "@notesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notesSearch": "Search notes",
+  "@notesSearch": {},
+  "notesEmptyTitle": "Your notes live here",
+  "@notesEmptyTitle": {},
+  "notesEmptyMessage": "Ideas, lists, thoughts, anything that isn't an activity. Private, on this phone.",
+  "@notesEmptyMessage": {},
+  "notesNoMatch": "No notes match your search.",
+  "@notesNoMatch": {},
+  "notesPinned": "Pinned",
+  "@notesPinned": {},
+  "notesOthers": "Notes",
+  "@notesOthers": {},
+  "notesDeleted": "Note deleted",
+  "@notesDeleted": {},
+  "notesColor": "Note color",
+  "@notesColor": {},
+  "notesColorNone": "No color",
+  "@notesColorNone": {},
+  "notesPin": "Pin note",
+  "@notesPin": {},
+  "notesUnpin": "Unpin note",
+  "@notesUnpin": {},
+  "notesTitleHint": "Title",
+  "@notesTitleHint": {},
+  "notesBodyHint": "Start writing…",
+  "@notesBodyHint": {},
+  "notesEdited": "Edited {time}",
+  "@notesEdited": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "notesWords": "{count, plural, =1{1 word} other{{count} words}}",
+  "@notesWords": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "quickNote": "Write a note",
+  "@quickNote": {},
+  "quickNoteHint": "Anything that isn't an activity",
+  "@quickNoteHint": {},
+  "notesMeSubtitle": "Ideas, lists and thoughts",
+  "@notesMeSubtitle": {}
 }

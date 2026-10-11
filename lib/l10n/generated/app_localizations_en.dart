@@ -5812,4 +5812,86 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get appearanceTrueBlackHint =>
       'Pure black dark mode for OLED screens. Saves battery.';
+
+  @override
+  String get notesTitle => 'Notes';
+
+  @override
+  String get notesNew => 'New note';
+
+  @override
+  String notesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count notes',
+      one: '1 note',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notesSearch => 'Search notes';
+
+  @override
+  String get notesEmptyTitle => 'Your notes live here';
+
+  @override
+  String get notesEmptyMessage =>
+      'Ideas, lists, thoughts, anything that isn\'t an activity. Private, on this phone.';
+
+  @override
+  String get notesNoMatch => 'No notes match your search.';
+
+  @override
+  String get notesPinned => 'Pinned';
+
+  @override
+  String get notesOthers => 'Notes';
+
+  @override
+  String get notesDeleted => 'Note deleted';
+
+  @override
+  String get notesColor => 'Note color';
+
+  @override
+  String get notesColorNone => 'No color';
+
+  @override
+  String get notesPin => 'Pin note';
+
+  @override
+  String get notesUnpin => 'Unpin note';
+
+  @override
+  String get notesTitleHint => 'Title';
+
+  @override
+  String get notesBodyHint => 'Start writing…';
+
+  @override
+  String notesEdited(String time) {
+    return 'Edited $time';
+  }
+
+  @override
+  String notesWords(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count words',
+      one: '1 word',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get quickNote => 'Write a note';
+
+  @override
+  String get quickNoteHint => 'Anything that isn\'t an activity';
+
+  @override
+  String get notesMeSubtitle => 'Ideas, lists and thoughts';
 }

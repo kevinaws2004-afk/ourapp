@@ -126,6 +126,9 @@ abstract final class PhosphorGlyphs {
   static const lockKey = IconData(0xe2fe, fontFamily: 'Phosphor');
   static const plusCircle = IconData(0xe3d6, fontFamily: 'Phosphor');
   static const quotes = IconData(0xe660, fontFamily: 'Phosphor');
+  static const pushPin = IconData(0xe3e2, fontFamily: 'Phosphor');
+  static const magnifyingGlass = IconData(0xe30c, fontFamily: 'Phosphor');
+  static const note = IconData(0xe348, fontFamily: 'Phosphor');
 }
 
 /// Filled variants for selected states.
@@ -149,4 +152,6 @@ abstract final class PhosphorFillGlyphs {
   static const sparkle = IconData(0xe6a2, fontFamily: 'PhosphorFill');
   static const calendarCheck = IconData(0xe712, fontFamily: 'PhosphorFill');
   static const bell = IconData(0xe0ce, fontFamily: 'PhosphorFill');
+  static const pushPin = IconData(0xe3e2, fontFamily: 'PhosphorFill');
+  static const note = IconData(0xe348, fontFamily: 'PhosphorFill');
 }

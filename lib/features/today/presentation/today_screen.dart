@@ -54,7 +54,11 @@ class TodayScreen extends ConsumerWidget {
     required this.chooser,
     required this.onOpenMe,
     required this.onStartActivity,
+    required this.onOpenNotes,
   });
+
+  /// Opens Notes.
+  final VoidCallback onOpenNotes;
 
   /// Opens Me (the avatar).
   final VoidCallback onOpenMe;
@@ -141,6 +145,11 @@ class TodayScreen extends ConsumerWidget {
                 ScreenHeader(
                   title: l10n.navToday,
                   actions: [
+                    HeaderIconButton(
+                      icon: AppIcons.notes.outline,
+                      tooltip: l10n.notesTitle,
+                      onPressed: onOpenNotes,
+                    ),
                     UserAvatar(
                       name: name,
                       size: 38,

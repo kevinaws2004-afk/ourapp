@@ -10676,6 +10676,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pure black dark mode for OLED screens. Saves battery.'**
   String get appearanceTrueBlackHint;
+
+  /// No description provided for @notesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notesTitle;
+
+  /// No description provided for @notesNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New note'**
+  String get notesNew;
+
+  /// No description provided for @notesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 note} other{{count} notes}}'**
+  String notesCount(int count);
+
+  /// No description provided for @notesSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search notes'**
+  String get notesSearch;
+
+  /// No description provided for @notesEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your notes live here'**
+  String get notesEmptyTitle;
+
+  /// No description provided for @notesEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Ideas, lists, thoughts, anything that isn\'t an activity. Private, on this phone.'**
+  String get notesEmptyMessage;
+
+  /// No description provided for @notesNoMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'No notes match your search.'**
+  String get notesNoMatch;
+
+  /// No description provided for @notesPinned.
+  ///
+  /// In en, this message translates to:
+  /// **'Pinned'**
+  String get notesPinned;
+
+  /// No description provided for @notesOthers.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notesOthers;
+
+  /// No description provided for @notesDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Note deleted'**
+  String get notesDeleted;
+
+  /// No description provided for @notesColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Note color'**
+  String get notesColor;
+
+  /// No description provided for @notesColorNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No color'**
+  String get notesColorNone;
+
+  /// No description provided for @notesPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin note'**
+  String get notesPin;
+
+  /// No description provided for @notesUnpin.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpin note'**
+  String get notesUnpin;
+
+  /// No description provided for @notesTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get notesTitleHint;
+
+  /// No description provided for @notesBodyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Start writing…'**
+  String get notesBodyHint;
+
+  /// No description provided for @notesEdited.
+  ///
+  /// In en, this message translates to:
+  /// **'Edited {time}'**
+  String notesEdited(String time);
+
+  /// No description provided for @notesWords.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 word} other{{count} words}}'**
+  String notesWords(int count);
+
+  /// No description provided for @quickNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a note'**
+  String get quickNote;
+
+  /// No description provided for @quickNoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Anything that isn\'t an activity'**
+  String get quickNoteHint;
+
+  /// No description provided for @notesMeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ideas, lists and thoughts'**
+  String get notesMeSubtitle;
 }
 
 class _AppLocalizationsDelegate

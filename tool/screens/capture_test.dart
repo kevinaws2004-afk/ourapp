@@ -12,6 +12,7 @@ import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:daylog/core/logging/app_logger.dart';
 import 'package:daylog/core/time/clock_provider.dart';
 import 'package:daylog/features/focus/presentation/focus_providers.dart';
+import 'package:daylog/features/notes/presentation/note_providers.dart';
 import 'package:daylog/features/settings/data/db_app_preferences_repository.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/features/settings/presentation/preferences_providers.dart';
@@ -52,6 +53,21 @@ Future<void> _loadFonts() async {
 
 Future<void> _shot(WidgetTester tester, String name) async {
   await tester.pumpAndSettle();
+  await tester.runAsync(() async {
+    final boundary =
+        _boundary.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+    final image = await boundary.toImage(pixelRatio: 2);
+    final data = await image.toByteData(format: ui.ImageByteFormat.png);
+    File('$_out/$name.png')
+      ..createSync(recursive: true)
+      ..writeAsBytesSync(data!.buffer.asUint8List());
+  });
+}
+
+/// A shot without waiting for everything to settle (screens with a text
+/// cursor or a database read never fully settle in tests).
+Future<void> _shotNow(WidgetTester tester, String name) async {
+  await tester.pump(const Duration(milliseconds: 500));
   await tester.runAsync(() async {
     final boundary =
         _boundary.currentContext!.findRenderObject()! as RenderRepaintBoundary;
@@ -166,6 +182,40 @@ void main() {
 }
 
 void _extra() {
+  testWidgets('notes empty', (tester) async {
+    await _pump(tester, onboarded: true);
+    await tester.tap(find.byTooltip('Notes'));
+    await _shot(tester, '25_notes_empty');
+  });
+
+  testWidgets('notes board', (tester) async {
+    final container = await _pump(tester, onboarded: true);
+    await tester.runAsync(() async {
+      final repo = container.read(noteRepositoryProvider);
+      final samples = [
+        ('Groceries', 'Oat milk\nEggs\nSpinach\nBlueberries\nCoffee beans', 'yellow', true),
+        ('App ideas', "A widget that shows today's ring on the home screen. Weekly email summary?", 'lilac', true),
+        ('Books to read', 'Atomic Habits\nDeep Work\nThe Psychology of Money', null, false),
+        ('', 'Call the bank about the card on Monday morning.', 'sky', false),
+        ('Workout tweaks', 'Add face pulls after bench. Try 3x12 instead of 4x8 for two weeks and see how shoulders feel.', 'teal', false),
+        ('Gift ideas', 'Mom: plant pot\nDad: running socks', 'rose', false),
+      ];
+      for (final (title, body, color, pin) in samples) {
+        final id = await repo.create(colorKey: color);
+        await repo.save(id, title: title, body: body);
+        if (pin) await repo.setPinned(id, pinned: true);
+      }
+    });
+    await tester.tap(find.byTooltip('Notes'));
+    await _shot(tester, '25_notes_board');
+    await tester.tap(find.text('App ideas'));
+    await tester.pump();
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 300)),
+    );
+    await _shotNow(tester, '26_note_editor');
+  });
+
   testWidgets('true black', (tester) async {
     await _pump(
       tester,
