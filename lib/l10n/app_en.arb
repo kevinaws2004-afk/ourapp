@@ -6239,7 +6239,7 @@
   "@appearanceTitle": {
     "description": "Title of Me → Appearance and its row on Me."
   },
-  "appearanceIntro": "Pick the look you like. It changes the whole app; your days stay the same.",
+  "appearanceIntro": "Pick the colors you like. It changes the whole app.",
   "@appearanceIntro": {
     "description": "Intro on the Appearance screen."
   },
@@ -7593,5 +7593,17 @@
     }
   },
   "notificationsDefault": "Default reminder",
-  "@notificationsDefault": {}
+  "@notificationsDefault": {},
+  "themeNameOcean": "Ocean Mist",
+  "@themeNameOcean": {},
+  "themeNameMatcha": "Matcha Latte",
+  "@themeNameMatcha": {},
+  "themeNameLilac": "Lilac Dream",
+  "@themeNameLilac": {},
+  "themeNameSky": "Sky Candy",
+  "@themeNameSky": {},
+  "themeNameHoney": "Honey Glow",
+  "@themeNameHoney": {},
+  "themeNameSlate": "Calm Slate",
+  "@themeNameSlate": {}
 }

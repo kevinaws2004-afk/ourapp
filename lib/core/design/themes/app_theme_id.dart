@@ -1,10 +1,17 @@
-/// The app's three light themes (ADR-045): one product, three visual
-/// personalities. The names are working names; the stored value is [name],
-/// so the shown names can change without touching saved preferences.
+/// The app's color themes: one product, several palettes, each in light and
+/// dark. The stored value is [name], so shown names can change without
+/// touching saved preferences; never rename a value. Declaration order is
+/// the order Appearance shows them in.
 enum AppThemeId {
-  rose,
   lavender,
-  papaya;
+  rose,
+  papaya,
+  ocean,
+  matcha,
+  lilac,
+  sky,
+  honey,
+  slate;
 
   /// The theme a new install starts with.
   static const fallback = AppThemeId.lavender;

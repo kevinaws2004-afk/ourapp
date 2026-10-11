@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'themes/app_theme_id.dart';
 import 'themes/dark_theme.dart';
 import 'themes/lavender_theme.dart';
+import 'themes/palette_themes.dart';
 import 'themes/papaya_theme.dart';
 import 'themes/rose_theme.dart';
 import 'tokens/activity_palette.dart';
@@ -34,6 +35,12 @@ class AppTokens extends ThemeExtension<AppTokens> {
       AppThemeId.rose => roseTokens,
       AppThemeId.lavender => lavenderTokens,
       AppThemeId.papaya => papayaTokens,
+      AppThemeId.ocean => oceanTokens,
+      AppThemeId.matcha => matchaTokens,
+      AppThemeId.lilac => lilacTokens,
+      AppThemeId.sky => skyTokens,
+      AppThemeId.honey => honeyTokens,
+      AppThemeId.slate => slateTokens,
     };
     return brightness == Brightness.light
         ? light

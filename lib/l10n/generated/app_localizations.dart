@@ -8911,7 +8911,7 @@ abstract class AppLocalizations {
   /// Intro on the Appearance screen.
   ///
   /// In en, this message translates to:
-  /// **'Pick the look you like. It changes the whole app; your days stay the same.'**
+  /// **'Pick the colors you like. It changes the whole app.'**
   String get appearanceIntro;
 
   /// Chip on the theme that's currently applied.
@@ -10532,6 +10532,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Default reminder'**
   String get notificationsDefault;
+
+  /// No description provided for @themeNameOcean.
+  ///
+  /// In en, this message translates to:
+  /// **'Ocean Mist'**
+  String get themeNameOcean;
+
+  /// No description provided for @themeNameMatcha.
+  ///
+  /// In en, this message translates to:
+  /// **'Matcha Latte'**
+  String get themeNameMatcha;
+
+  /// No description provided for @themeNameLilac.
+  ///
+  /// In en, this message translates to:
+  /// **'Lilac Dream'**
+  String get themeNameLilac;
+
+  /// No description provided for @themeNameSky.
+  ///
+  /// In en, this message translates to:
+  /// **'Sky Candy'**
+  String get themeNameSky;
+
+  /// No description provided for @themeNameHoney.
+  ///
+  /// In en, this message translates to:
+  /// **'Honey Glow'**
+  String get themeNameHoney;
+
+  /// No description provided for @themeNameSlate.
+  ///
+  /// In en, this message translates to:
+  /// **'Calm Slate'**
+  String get themeNameSlate;
 }
 
 class _AppLocalizationsDelegate

@@ -142,10 +142,7 @@ class MeScreen extends ConsumerWidget {
               const SizedBox(height: AppSpacing.xl),
               Row(
                 children: [
-                  _MeStat(
-                    value: '${allDays.length}',
-                    label: l10n.meStatDays,
-                  ),
+                  _MeStat(value: '${allDays.length}', label: l10n.meStatDays),
                   const SizedBox(width: AppSpacing.md),
                   _MeStat(
                     value: '${types?.length ?? 0}',
@@ -347,9 +344,7 @@ class MeScreen extends ConsumerWidget {
             children: [
               Icon(icon, size: 20, color: c.success),
               const SizedBox(width: AppSpacing.md),
-              Expanded(
-                child: Text(text, style: context.textStyles.bodyLarge),
-              ),
+              Expanded(child: Text(text, style: context.textStyles.bodyLarge)),
             ],
           ),
         );
@@ -366,10 +361,7 @@ class MeScreen extends ConsumerWidget {
             children: [
               Icon(AppIcons.privacy, size: 36, color: c.success),
               const SizedBox(height: AppSpacing.md),
-              Text(
-                l10n.privacyTitle,
-                style: context.textStyles.headlineSmall,
-              ),
+              Text(l10n.privacyTitle, style: context.textStyles.headlineSmall),
               const SizedBox(height: AppSpacing.lg),
               point(AppIcons.device, l10n.privacyPointDevice),
               point(AppIcons.lock, l10n.privacyPointNoAccount),

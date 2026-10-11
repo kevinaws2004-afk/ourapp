@@ -4636,7 +4636,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appearanceIntro =>
-      'Pick the look you like. It changes the whole app; your days stay the same.';
+      'Pick the colors you like. It changes the whole app.';
 
   @override
   String get appearanceInUse => 'In use';
@@ -5739,4 +5739,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notificationsDefault => 'Default reminder';
+
+  @override
+  String get themeNameOcean => 'Ocean Mist';
+
+  @override
+  String get themeNameMatcha => 'Matcha Latte';
+
+  @override
+  String get themeNameLilac => 'Lilac Dream';
+
+  @override
+  String get themeNameSky => 'Sky Candy';
+
+  @override
+  String get themeNameHoney => 'Honey Glow';
+
+  @override
+  String get themeNameSlate => 'Calm Slate';
 }

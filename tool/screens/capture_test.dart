@@ -163,6 +163,19 @@ void main() {
 }
 
 void _extra() {
+  testWidgets('appearance', (tester) async {
+    await _pump(tester, onboarded: true);
+    await _tapTab(tester, 'Me');
+    await tester.tap(find.text('Appearance'));
+    await _shot(tester, '21_appearance');
+  });
+  for (final theme in [AppThemeId.ocean, AppThemeId.lilac, AppThemeId.honey]) {
+    testWidgets('theme ${theme.name}', (tester) async {
+      await _pump(tester, onboarded: true, theme: theme);
+      await _shot(tester, '22_theme_${theme.name}');
+    });
+  }
+
   testWidgets('notifications', (tester) async {
     await _pump(tester, onboarded: true);
     // Long-press a timed item → Reminder → the reminder sheet.

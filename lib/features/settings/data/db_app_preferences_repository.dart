@@ -50,8 +50,7 @@ class DbAppPreferencesRepository implements AppPreferencesRepository {
       _write(appearanceKey, value.name);
 
   @override
-  Stream<String> watchName() =>
-      _watchRaw(nameKey).map(_decodeName).distinct();
+  Stream<String> watchName() => _watchRaw(nameKey).map(_decodeName).distinct();
 
   @override
   Future<void> setName(String value) => _write(nameKey, value.trim());

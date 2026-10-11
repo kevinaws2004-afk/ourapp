@@ -17,10 +17,10 @@ abstract final class AppTheme {
   static ThemeData of(
     AppThemeId id, {
     Brightness brightness = Brightness.light,
-  }) => _cache.putIfAbsent(
-    (id, brightness),
-    () => _build(AppTokens.of(id, brightness: brightness)),
-  );
+  }) => _cache.putIfAbsent((
+    id,
+    brightness,
+  ), () => _build(AppTokens.of(id, brightness: brightness)));
 
   static ThemeData _build(AppTokens tokens) {
     final c = tokens.colors;
