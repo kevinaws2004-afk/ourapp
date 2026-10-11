@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/design/app_icons.dart';
+import '../../../core/design/icons/activity_icon_registry.dart';
 import '../../../core/design/context_ext.dart';
 import '../../../core/design/tokens/spacing.dart';
 import '../../../core/design/tokens/typography.dart';
@@ -11,7 +12,7 @@ import '../../../core/time/clock_provider.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/app_card.dart';
-import '../../../shared/widgets/fact_pill.dart';
+import '../../../core/design/tokens/activity_palette.dart';
 import '../../../shared/widgets/status_chip.dart';
 import '../../../shared/widgets/streak_badge.dart';
 import '../../activity_logs/presentation/value_formatting.dart';
@@ -50,7 +51,6 @@ class NowNextCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final c = context.colors;
     final plan = item.plan;
     final type = item.type;
     final now = ref.watch(clockProvider).nowUtc();
@@ -59,7 +59,8 @@ class NowNextCard extends ConsumerWidget {
     final streak = type == null
         ? null
         : ref.watch(activityStreaksProvider)[type.id];
-    final timed = type == null || type.supportsTimer;
+    // A plain task is ticked off, never timed.
+    final timed = !plan.isTask && (type == null || type.supportsTimer);
     final start = formatPlanStart(context, plan);
 
     final label = switch (kind) {
@@ -74,113 +75,168 @@ class NowNextCard extends ConsumerWidget {
       if (wait > 60000) soon = l10n.todayUpNextIn(formatDuration(l10n, wait));
     }
 
-    final Widget action;
-    if (kind == NowNextKind.running && session != null) {
-      action = AppButton(
-        label: l10n.focusFinish,
-        icon: AppIcons.check,
-        variant: AppButtonVariant.action,
-        expand: true,
-        onPressed: () => unawaited(
-          PlanActions(
-            context,
-            ref,
-          ).finish(session, title: plan.title, type: type),
-        ),
-      );
-    } else if (timed && session == null) {
-      action = AppButton(
-        label: l10n.todayUpNextStart,
-        icon: AppIcons.start,
-        variant: AppButtonVariant.action,
-        expand: true,
-        onPressed: () => onStart(item),
-      );
-    } else {
-      action = AppButton(
-        label: l10n.itemDone,
-        icon: AppIcons.check,
-        variant: AppButtonVariant.action,
-        expand: true,
-        onPressed: () => unawaited(PlanActions(context, ref).complete(item)),
-      );
-    }
+    final running = kind == NowNextKind.running && session != null;
+    final c = context.colors;
+    final ({String label, IconData icon, VoidCallback onPressed}) action =
+        running
+        ? (
+            label: l10n.focusFinish,
+            icon: AppIcons.check,
+            onPressed: () => unawaited(
+              PlanActions(
+                context,
+                ref,
+              ).finish(session, title: plan.title, type: type),
+            ),
+          )
+        : timed && session == null
+        ? (
+            label: l10n.nowNextStartRecord,
+            icon: AppIcons.start,
+            onPressed: () => onStart(item),
+          )
+        : (
+            label: l10n.nowNextMarkDone,
+            icon: AppIcons.check,
+            onPressed: () =>
+                unawaited(PlanActions(context, ref).complete(item)),
+          );
 
     final length = plan.plannedLengthMs;
+    final activity = type == null
+        ? null
+        : context.tokens.activity(
+            ActivityColorKey.fromName(type.colorKey) ?? ActivityColorKey.slate,
+          );
+    final notes = plan.notes?.trim();
+
+    // Tinted with the activity's own palette color.
+    final tint = activity?.soft ?? c.brandPrimarySoft;
     return AppCard(
       onTap: () => onOpenItem(plan.id),
+      color: tint,
+      flat: true,
+      padding: const EdgeInsets.all(AppSpacing.lg + 2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             children: [
-              Flexible(
-                child: Wrap(
-                  spacing: AppSpacing.sm,
-                  runSpacing: AppSpacing.sm,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    StatusChip(
-                      label: label.toUpperCase(),
-                      tone: StatusTone.active,
-                      filled: true,
-                    ),
-                    if (soon != null)
-                      Text(
-                        soon,
-                        style: context.textStyles.labelMedium?.copyWith(
-                          color: c.textSecondary,
-                        ),
-                      ),
-                  ],
-                ),
+              StatusChip(
+                label: label.toUpperCase(),
+                tone: StatusTone.active,
+                filled: true,
               ),
-              if (streak != null) StreakBadge(days: streak.days),
+              if (soon != null) ...[
+                const SizedBox(width: AppSpacing.sm),
+                Flexible(
+                  child: Text(
+                    soon,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.textStyles.labelMedium?.copyWith(
+                      color: c.textSecondary,
+                    ),
+                  ),
+                ),
+              ],
+              const Spacer(),
+              if (streak != null)
+                StreakBadge(days: streak.days)
+              else if (type != null &&
+                  activity != null &&
+                  type.name.trim() != plan.title.trim())
+                StatusChip(label: type.name, tone: StatusTone.neutral),
             ],
           ),
-          const SizedBox(height: AppSpacing.md),
-          Text(plan.title, style: context.textStyles.headlineSmall),
-          if (kind == NowNextKind.running && session != null)
-            _LiveTime(session: session)
-          else ...[
-            if (plan.notes case final notes? when notes.trim().isNotEmpty) ...[
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                notes.trim().split('\n').first,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: context.textStyles.bodyLarge?.copyWith(
-                  color: c.textSecondary,
+          const SizedBox(height: AppSpacing.md + 2),
+          Row(
+            children: [
+              if (type != null) ...[
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: c.surfaceBase,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(
+                    ActivityIconRegistry.resolve(type.iconId),
+                    size: 24,
+                    color: activity?.solid ?? c.brandPrimary,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.md),
+              ],
+              Expanded(
+                child: Text(
+                  plan.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.textStyles.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.3,
+                  ),
                 ),
               ),
             ],
-            if (start != null || length != null) ...[
-              const SizedBox(height: AppSpacing.lg),
-              Wrap(
-                spacing: AppSpacing.sm,
-                runSpacing: AppSpacing.sm,
-                children: [
-                  if (start != null)
-                    FactPill(
-                      icon: AppIcons.time,
-                      label: l10n.todayFactTime,
-                      value: switch (formatPlanEnd(context, plan)) {
-                        final end? => l10n.planTimeRange(start, end),
-                        null => start,
-                      },
-                    ),
-                  if (length != null)
-                    FactPill(
-                      icon: AppIcons.timer,
-                      label: l10n.todayFactLength,
-                      value: formatDuration(l10n, length),
-                    ),
-                ],
+          ),
+          if (notes != null && notes.isNotEmpty && !running) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              notes.split('\n').first,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: context.textStyles.bodyMedium?.copyWith(
+                color: c.textSecondary,
               ),
-            ],
+            ),
           ],
-          const SizedBox(height: AppSpacing.xl),
-          action,
+          if (running) ...[
+            const SizedBox(height: AppSpacing.sm),
+            _LiveTime(session: session),
+          ] else if (start != null || length != null) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Row(
+              children: [
+                if (start != null) ...[
+                  Icon(AppIcons.time, size: 14, color: c.textSecondary),
+                  const SizedBox(width: 4),
+                  Text(
+                    switch (formatPlanEnd(context, plan)) {
+                      final end? => l10n.planTimeRange(start, end),
+                      null => start,
+                    },
+                    style: context.textStyles.labelMedium?.copyWith(
+                      color: c.textSecondary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.md),
+                ],
+                if (length != null) ...[
+                  Icon(AppIcons.timer, size: 14, color: c.textSecondary),
+                  const SizedBox(width: 4),
+                  Text(
+                    formatDuration(l10n, length),
+                    style: context.textStyles.labelMedium?.copyWith(
+                      color: c.textSecondary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ],
+          const SizedBox(height: AppSpacing.lg),
+          AppButton(
+            label: action.label,
+            icon: action.icon,
+            variant: AppButtonVariant.action,
+            expand: true,
+            onPressed: action.onPressed,
+          ),
         ],
       ),
     );

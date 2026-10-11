@@ -10,7 +10,6 @@ import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../shared/errors/error_copy.dart';
 import '../../../../core/time/clock_provider.dart';
 import '../../../../shared/widgets/state_views.dart';
-import '../../../../shared/widgets/status_chip.dart';
 import '../../../activity_logs/domain/activity_log.dart';
 import '../../../activity_logs/presentation/day_record_tile.dart';
 import '../../domain/watch_day_overview.dart';
@@ -152,20 +151,21 @@ class PlannedList extends ConsumerWidget {
 class _AnytimeHeading extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(top: AppSpacing.md, bottom: AppSpacing.sm),
+    padding: const EdgeInsets.only(top: AppSpacing.lg, bottom: AppSpacing.sm),
     child: Semantics(
       header: true,
       child: Text(
-        AppLocalizations.of(context).planAnytime,
-        style: context.textStyles.labelMedium?.copyWith(
-          color: context.colors.textSecondary,
+        AppLocalizations.of(context).planAnytime.toUpperCase(),
+        style: context.textStyles.labelSmall?.copyWith(
+          color: context.colors.textTertiary,
+          letterSpacing: 1.1,
         ),
       ),
     ),
   );
 }
 
-/// "Now · 9:10" on Today's timeline (ADR-046).
+/// "● NOW · 9:10" on Today's timeline (ADR-046): a chip between two lines.
 class NowLine extends StatelessWidget {
   const NowLine({super.key, required this.now});
 
@@ -177,24 +177,57 @@ class NowLine extends StatelessWidget {
     final time = MaterialLocalizations.of(context)
         .formatTimeOfDay(TimeOfDay.fromDateTime(now.toLocal()));
     final line = Expanded(
-      child: Divider(color: c.brandPrimary.withValues(alpha: 0.4)),
+      child: Container(
+        height: 1.5,
+        color: c.brandPrimary.withValues(alpha: 0.3),
+      ),
     );
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.md),
-      child: Row(
-        children: [
-          line,
-          const SizedBox(width: AppSpacing.sm),
-          Flexible(
-            flex: 4,
-            child: StatusChip(
-              label: AppLocalizations.of(context).nowLine(time).toUpperCase(),
-              tone: StatusTone.active,
+    return Semantics(
+      label: AppLocalizations.of(context).nowLine(time),
+      excludeSemantics: true,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: AppSpacing.xs,
+          bottom: AppSpacing.md,
+        ),
+        child: Row(
+          children: [
+            line,
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.sm + 2,
+                vertical: 3,
+              ),
+              decoration: BoxDecoration(
+                color: c.brandPrimarySoft,
+                borderRadius: BorderRadius.circular(999),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 6,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color: c.brandPrimary,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.xs + 1),
+                  Text(
+                    AppLocalizations.of(context).nowLine(time).toUpperCase(),
+                    style: context.textStyles.labelSmall?.copyWith(
+                      color: c.onBrandPrimarySoft,
+                      letterSpacing: 0.6,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(width: AppSpacing.sm),
-          line,
-        ],
+            line,
+          ],
+        ),
       ),
     );
   }

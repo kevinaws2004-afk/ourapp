@@ -8,7 +8,8 @@ import '../../../core/design/context_ext.dart';
 import '../../../core/design/tokens/spacing.dart';
 import '../../../core/design/window_size_class.dart';
 import '../../../l10n/generated/app_localizations.dart';
-import '../../../shared/widgets/app_button.dart';
+import '../../../core/design/app_icons.dart';
+import '../../../shared/widgets/screen_header.dart';
 import '../domain/activity_ids.dart';
 import '../domain/activity_type.dart';
 import 'activity_catalog.dart';
@@ -39,38 +40,29 @@ class ActivitiesScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(),
       body: Align(
-        alignment: Alignment.topLeft,
+        alignment: Alignment.topCenter,
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: AppContentWidth.list),
           child: ListView(
             padding: EdgeInsets.fromLTRB(
               margin,
-              AppSpacing.huge,
+              0,
               margin,
               AppSpacing.xxxl,
             ),
             children: [
-              Text(
-                l10n.activitiesTitle,
-                style: context.textStyles.displayMedium,
+              ScreenHeader(
+                showMark: false,
+                title: l10n.activitiesTitle,
+                subtitle: l10n.activitiesSubtitle,
+                actions: [
+                  HeaderIconButton(
+                    icon: AppIcons.add,
+                    tooltip: l10n.newActivity,
+                    onPressed: onNewActivity,
+                  ),
+                ],
               ),
-              const SizedBox(height: AppSpacing.sm),
-              Text(
-                l10n.activitiesSubtitle,
-                style: context.textStyles.bodyLarge?.copyWith(
-                  color: context.colors.textSecondary,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: AppButton(
-                  label: l10n.newActivity,
-                  variant: AppButtonVariant.secondary,
-                  onPressed: onNewActivity,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
               ActivityCatalog(
                 onOpen: (type) => onOpenActivity(type.id),
                 onUseBuiltIn: onOpenActivity,
@@ -82,9 +74,16 @@ class ActivitiesScreen extends ConsumerWidget {
                       StreakBadge(days: streak.days),
                       const SizedBox(width: AppSpacing.sm),
                     ],
-                    AppButton(
-                      label: l10n.actionRecord,
-                      variant: AppButtonVariant.secondary,
+                    IconButton.filledTonal(
+                      tooltip: l10n.actionRecord,
+                      style: IconButton.styleFrom(
+                        backgroundColor: context.colors.actionSoft,
+                        foregroundColor: context.colors.onActionSoft,
+                      ),
+                      icon: Icon(
+                        type.supportsTimer ? AppIcons.start : AppIcons.add,
+                        size: 18,
+                      ),
                       onPressed: () => onRecordType(type),
                     ),
                   ],

@@ -16,6 +16,7 @@ import '../../../shared/widgets/activity_badge.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/app_card.dart';
 import '../../../shared/widgets/status_chip.dart';
+import '../domain/preferences_snapshot.dart';
 import 'preferences_providers.dart';
 
 /// Me → Appearance (ADR-045): the three themes, each previewed in its own
@@ -43,12 +44,21 @@ class AppearanceScreen extends ConsumerWidget {
             ),
             children: [
               Text(
+                l10n.meDarkMode,
+                style: context.textStyles.titleLarge,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              const AppearanceModePicker(),
+              const SizedBox(height: AppSpacing.xxl),
+              Text(l10n.appearanceThemeTitle, style: context.textStyles.titleLarge),
+              const SizedBox(height: AppSpacing.xxs),
+              Text(
                 l10n.appearanceIntro,
-                style: context.textStyles.bodyLarge?.copyWith(
+                style: context.textStyles.bodyMedium?.copyWith(
                   color: context.colors.textSecondary,
                 ),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.lg),
               for (final id in AppThemeId.values)
                 Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.lg),
@@ -66,6 +76,75 @@ class AppearanceScreen extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// System · Light · Dark as three tiles, each with its icon.
+class AppearanceModePicker extends ConsumerWidget {
+  const AppearanceModePicker({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final c = context.colors;
+    final current = ref.watch(effectiveAppearanceProvider);
+    Widget tile(AppearanceMode mode, IconData icon, String label) {
+      final selected = mode == current;
+      return Expanded(
+        child: Semantics(
+          selected: selected,
+          button: true,
+          label: label,
+          excludeSemantics: true,
+          child: Material(
+            color: selected ? c.brandPrimarySoft : c.surfaceBase,
+            shape: RoundedRectangleBorder(
+              borderRadius: AppRadius.lgAll,
+              side: BorderSide(
+                color: selected ? c.brandPrimary : c.borderSubtle,
+                width: selected ? 2 : 1,
+              ),
+            ),
+            child: InkWell(
+              borderRadius: AppRadius.lgAll,
+              onTap: () => unawaited(
+                ref
+                    .read(preferencesNotifierProvider.notifier)
+                    .setAppearance(mode),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+                child: Column(
+                  children: [
+                    Icon(
+                      icon,
+                      color: selected ? c.brandPrimary : c.textSecondary,
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      label,
+                      style: context.textStyles.labelLarge?.copyWith(
+                        color: selected ? c.onBrandPrimarySoft : c.textPrimary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Row(
+      children: [
+        tile(AppearanceMode.system, AppIcons.systemMode, l10n.appearanceSystem),
+        const SizedBox(width: AppSpacing.sm),
+        tile(AppearanceMode.light, AppIcons.lightMode, l10n.appearanceLight),
+        const SizedBox(width: AppSpacing.sm),
+        tile(AppearanceMode.dark, AppIcons.darkMode, l10n.appearanceDark),
+      ],
     );
   }
 }
@@ -125,7 +204,10 @@ class _ThemeOption extends StatelessWidget {
           // picture: taps select the theme.
           child: IgnorePointer(
             child: Theme(
-              data: AppTheme.of(id),
+              data: AppTheme.of(
+                id,
+                brightness: Theme.of(context).brightness,
+              ),
               child: _ThemePreview(
                 name: themeName(l10n, id),
                 description: _themeDescription(l10n, id),

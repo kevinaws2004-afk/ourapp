@@ -20,10 +20,10 @@ class SectionHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(
         top: AppSpacing.xxl,
-        bottom: AppSpacing.md,
+        bottom: AppSpacing.sm,
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             child: Column(

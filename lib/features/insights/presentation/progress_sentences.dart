@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/design/context_ext.dart';
-import '../../../core/design/tokens/spacing.dart';
 import '../../../core/time/clock_provider.dart';
 import '../../../core/time/local_date.dart';
 import '../../../l10n/generated/app_localizations.dart';
-import '../../../shared/widgets/app_card.dart';
 import '../../activity_logs/presentation/value_formatting.dart';
 import '../../activity_types/domain/activity_ids.dart';
 import '../../activity_types/domain/activity_type.dart';
@@ -14,6 +11,7 @@ import '../../activity_types/presentation/activity_type_providers.dart';
 import '../../plans/presentation/plan_date_notifier.dart';
 import '../domain/insight.dart';
 import 'insight_providers.dart';
+import 'progress_summary.dart';
 
 /// Progress needs a few days before it says much (PR3, ADR-046).
 const _earlyDays = 3;
@@ -51,26 +49,8 @@ class SentenceCard extends StatelessWidget {
   final String? detail;
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(bottom: AppSpacing.md),
-    child: AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(sentence, style: context.textStyles.titleLarge),
-          if (detail case final d?) ...[
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              d,
-              style: context.textStyles.bodyMedium?.copyWith(
-                color: context.colors.textSecondary,
-              ),
-            ),
-          ],
-        ],
-      ),
-    ),
-  );
+  Widget build(BuildContext context) =>
+      InsightSentenceCard(sentence: sentence, detail: detail);
 }
 
 /// Early on (PR3): what's true already, and that the rest comes.

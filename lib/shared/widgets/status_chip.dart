@@ -57,14 +57,14 @@ class StatusChip extends StatelessWidget {
       decoration: BoxDecoration(color: fill, borderRadius: AppRadius.pillAll),
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-          vertical: AppSpacing.xs,
+          horizontal: AppSpacing.sm + AppSpacing.xxs,
+          vertical: 3,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             if (icon != null) ...[
-              Icon(icon, size: 14, color: text),
+              Icon(icon, size: 12, color: text),
               const SizedBox(width: AppSpacing.xs),
             ],
             Flexible(

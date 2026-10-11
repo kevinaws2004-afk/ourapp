@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
 import '../../../core/design/tokens/spacing.dart';
 import '../../../core/design/window_size_class.dart';
@@ -16,6 +15,13 @@ import '../../../core/design/app_icons.dart';
 import '../../../shared/errors/error_copy.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../../activity_types/domain/activity_ids.dart';
+import '../../activity_types/domain/activity_type.dart';
+import '../../challenges/presentation/challenge_providers.dart';
+import '../../settings/presentation/preferences_providers.dart';
+import '../../../shared/widgets/screen_header.dart';
+import '../../../shared/widgets/user_avatar.dart';
+import 'start_row.dart';
+import 'today_timeline.dart';
 import '../../focus/presentation/focus_providers.dart';
 import '../../plans/domain/plan.dart';
 import '../../plans/domain/watch_day_overview.dart';
@@ -24,7 +30,6 @@ import '../../plans/presentation/activity_chooser.dart';
 import '../../plans/presentation/plan_date_notifier.dart';
 import '../../plans/domain/day_progress.dart';
 import '../../plans/presentation/plan_providers.dart';
-import '../../plans/presentation/widgets/day_items.dart';
 import '../../../shared/widgets/section_header.dart';
 import '../../../core/time/local_date.dart';
 import '../../plans/domain/day_edges.dart';
@@ -47,7 +52,15 @@ class TodayScreen extends ConsumerWidget {
     required this.onOpenChallenge,
     required this.onPlanDate,
     required this.chooser,
+    required this.onOpenMe,
+    required this.onStartActivity,
   });
+
+  /// Opens Me (the avatar).
+  final VoidCallback onOpenMe;
+
+  /// Starts one of your activities now ("Start something").
+  final ValueChanged<ActivityType> onStartActivity;
 
   /// Opens a plan's item screen.
   final ValueChanged<PlanId> onOpenItem;
@@ -103,37 +116,48 @@ class TodayScreen extends ConsumerWidget {
         overview != null &&
         overview.planned.isEmpty &&
         overview.unplanned.isEmpty;
+    final name = ref.watch(effectiveUserNameProvider);
+    final streaks = ref.watch(activityStreaksProvider).values;
+    final bestStreak = streaks.isEmpty
+        ? null
+        : streaks.map((s) => s.days).reduce((a, b) => a > b ? a : b);
+    final greeting = _greeting(l10n, clock);
     return Scaffold(
       backgroundColor: Colors.transparent,
-      floatingActionButton: FloatingActionButton(
-        // Today and Plan both keep a + alive in the tab shell.
-        heroTag: 'today-add',
-        tooltip: l10n.todayAdd,
-        onPressed: add,
-        child: const Icon(AppIcons.add),
-      ),
       body: SafeArea(
+        bottom: false,
         child: Align(
-          alignment: Alignment.topLeft,
+          alignment: Alignment.topCenter,
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: AppContentWidth.list),
             child: ListView(
               padding: EdgeInsets.fromLTRB(
                 margin,
-                AppSpacing.lg,
+                AppSpacing.md,
                 margin,
-                AppSpacing.giant + AppSpacing.huge,
+                AppSpacing.huge,
               ),
               children: [
-                DayHero(
-                  // "Saturday, Oct 3", in the device's language.
-                  date: DateFormat.MMMEd(
-                    Localizations.localeOf(context).toString(),
-                  ).format(DateTime(today.year, today.month, today.day)),
-                  greeting: _greeting(l10n, clock),
-                  statusLine: todayStatusLine(context, progress, running),
-                  progress: progress,
+                ScreenHeader(
+                  title: l10n.navToday,
+                  actions: [
+                    UserAvatar(
+                      name: name,
+                      size: 38,
+                      onTap: onOpenMe,
+                      tooltip: l10n.navMe,
+                    ),
+                  ],
                 ),
+                DayHero(
+                  greeting: name.isEmpty
+                      ? greeting
+                      : l10n.greetingNamed(greeting, name),
+                  statusLine: heroLine(context, progress, running),
+                  progress: progress,
+                  bestStreak: bestStreak,
+                ),
+                const SizedBox(height: AppSpacing.xs),
                 // A timer on something that isn't today's (e.g. another day).
                 if (running == null) FocusBanner(onOpen: onOpenFocus),
                 const FromYesterdaySection(),
@@ -152,24 +176,29 @@ class TodayScreen extends ConsumerWidget {
                   ),
                 ],
                 if (empty) ...[
-                  const SizedBox(height: AppSpacing.lg),
+                  const SizedBox(height: AppSpacing.xl),
                   NoPlanCard(
                     date: today,
                     onAdd: add,
                     onStartNow: () => add(now: true),
                   ),
+                  StartRow(onStart: onStartActivity, margin: margin),
                 ] else ...[
-                  SectionHeader(title: l10n.todayYourDay),
-                  DayItems(
-                    date: today,
-                    emptyTitle: l10n.todayEmptyTitle,
-                    emptyMessage: l10n.todayEmptyMessageItems,
-                    showSummary: false,
-                    timeline: true,
-                    onOpenItem: onOpenItem,
-                    onOpenRecord: onOpenRecord,
-                    chooser: chooser,
+                  SectionHeader(
+                    title: l10n.todayYourDay,
+                    trailing: TextButton.icon(
+                      onPressed: add,
+                      icon: const Icon(AppIcons.add, size: 18),
+                      label: Text(l10n.todayAddShort),
+                    ),
                   ),
+                  const SizedBox(height: AppSpacing.xs),
+                  if (overview != null)
+                    TodayTimeline(
+                      overview: overview,
+                      onOpenItem: onOpenItem,
+                      onOpenRecord: onOpenRecord,
+                    ),
                 ],
               ],
             ),

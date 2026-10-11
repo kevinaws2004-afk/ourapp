@@ -27,4 +27,10 @@ class ActivityPalette {
   final Map<ActivityColorKey, ActivityColors> _colors;
 
   ActivityColors resolve(ActivityColorKey key) => _colors[key]!;
+
+  /// The same palette with every color pair transformed (the dark variant).
+  ActivityPalette map(ActivityColors Function(ActivityColors) transform) =>
+      ActivityPalette({
+        for (final entry in _colors.entries) entry.key: transform(entry.value),
+      });
 }

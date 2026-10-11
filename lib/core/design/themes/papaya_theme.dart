@@ -7,40 +7,40 @@ import '../tokens/elevation.dart';
 import '../tokens/treatments.dart';
 import 'app_theme_id.dart';
 
-/// Papaya (ADR-045): warm porcelain canvas, papaya signature, aqua mint
-/// action (dark text on it), periwinkle accent; rimmed cards, a floating
-/// navigation bar, gradient progress and facts as chips.
+/// Papaya Confection: warm porcelain canvas, papaya #FF6B4A signature,
+/// aqua mint #2DD4BF action (dark text on it), periwinkle #818CF8 accent,
+/// ink #1E232F.
 const papayaTokens = AppTokens(
   id: AppThemeId.papaya,
   colors: AppColors(
-    surfaceCanvas: Color(0xFFFBF9F7),
+    surfaceCanvas: Color(0xFFFFF8F5),
     surfaceBase: Color(0xFFFFFFFF),
     surfaceRaised: Color(0xFFFFFFFF),
-    surfaceSunken: Color(0xFFF4EFEA),
-    borderSubtle: Color(0xFFEEE6E0),
-    borderStrong: Color(0xFF8A746D),
+    surfaceSunken: Color(0xFFFBEFEA),
+    borderSubtle: Color(0xFFF7E4DC),
+    borderStrong: Color(0xFF8F7A72),
     textPrimary: Color(0xFF1E232F),
     textSecondary: Color(0xFF4F5563),
     textTertiary: Color(0xFF828795),
-    brandPrimary: Color(0xFFC93A1B),
+    brandPrimary: Color(0xFFFF6B4A),
     onBrandPrimary: Color(0xFFFFFFFF),
-    brandPrimarySoft: Color(0xFFFFE9E2),
-    onBrandPrimarySoft: Color(0xFF9A2A10),
+    brandPrimarySoft: Color(0xFFFFE8E1),
+    onBrandPrimarySoft: Color(0xFFB3361A),
     action: Color(0xFF2DD4BF),
     onAction: Color(0xFF1E232F),
-    actionSoft: Color(0xFFDDF8F4),
-    onActionSoft: Color(0xFF0F6B62),
-    accent: Color(0xFF4F46E5),
+    actionSoft: Color(0xFFD5F7F2),
+    onActionSoft: Color(0xFF0F766E),
+    accent: Color(0xFF818CF8),
     accentSoft: Color(0xFFEEF0FF),
-    onAccentSoft: Color(0xFF3730A3),
+    onAccentSoft: Color(0xFF4338CA),
     accentDawn: Color(0xFFFF6B4A),
     scrim: Color(0x661E232F),
-    success: Color(0xFF0D9488),
-    successContainer: Color(0xFFDDF8F4),
-    warning: Color(0xFFC2410C),
-    warningContainer: Color(0xFFFFEDE0),
-    danger: Color(0xFFBE123C),
-    dangerContainer: Color(0xFFFFE4E8),
+    success: Color(0xFF14B8A6),
+    successContainer: Color(0xFFD5F7F2),
+    warning: Color(0xFFEA580C),
+    warningContainer: Color(0xFFFFEDD5),
+    danger: Color(0xFFDC2626),
+    dangerContainer: Color(0xFFFEE2E2),
   ),
   shadows: AppShadows(
     card: [
@@ -76,7 +76,7 @@ const papayaTokens = AppTokens(
   treatments: AppTreatments(
     cardEdge: CardEdge.rim,
     navStyle: NavStyle.floating,
-    progressGradient: [Color(0xFFFF6B4A), Color(0xFFFDBA74)],
+    progressGradient: [Color(0xFFFF6B4A)],
     heroWash: Color(0xFFDDF8F4),
     factsAsChips: true,
     timeColumn: false,

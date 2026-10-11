@@ -19,7 +19,9 @@ import '../domain/plan.dart';
 import 'activity_chooser.dart';
 import 'plan_date_notifier.dart';
 import 'plan_providers.dart';
+import '../../../shared/widgets/app_card.dart';
 import '../../../shared/widgets/progress_ring.dart';
+import '../../../shared/widgets/segmented_tabs.dart';
 import '../domain/day_progress.dart';
 import 'widgets/day_items.dart';
 import 'widgets/no_plan_card.dart';
@@ -53,15 +55,14 @@ class PlanViewSwitch extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    return SegmentedButton<PlanView>(
-      showSelectedIcon: false,
-      segments: [
-        ButtonSegment(value: PlanView.week, label: Text(l10n.planViewWeek)),
-        ButtonSegment(value: PlanView.month, label: Text(l10n.planViewMonth)),
-      ],
-      selected: {ref.watch(planViewProvider)},
-      onSelectionChanged: (s) =>
-          ref.read(planViewProvider.notifier).show(s.single),
+    return SegmentedTabs<PlanView>(
+      values: PlanView.values,
+      selected: ref.watch(planViewProvider),
+      label: (v) => switch (v) {
+        PlanView.week => l10n.planViewWeek,
+        PlanView.month => l10n.planViewMonth,
+      },
+      onSelect: ref.read(planViewProvider.notifier).show,
     );
   }
 }
@@ -87,27 +88,36 @@ class _PeriodHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final c = context.colors;
+    Widget arrow(IconData icon, String tooltip, VoidCallback onTap) =>
+        IconButton(
+          tooltip: tooltip,
+          visualDensity: VisualDensity.compact,
+          style: IconButton.styleFrom(
+            backgroundColor: c.surfaceSunken,
+            foregroundColor: c.textPrimary,
+          ),
+          icon: Icon(icon, size: 18),
+          onPressed: onTap,
+        );
     return Row(
       children: [
-        IconButton(
-          tooltip: previousTooltip,
-          icon: const Icon(AppIcons.previous),
-          onPressed: onPrevious,
-        ),
-        Expanded(
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: context.textStyles.titleLarge,
-          ),
-        ),
-        IconButton(
-          tooltip: nextTooltip,
-          icon: const Icon(AppIcons.chevron),
-          onPressed: onNext,
-        ),
+        Expanded(child: Text(title, style: context.textStyles.titleMedium)),
         if (onToday != null)
-          TextButton(onPressed: onToday, child: Text(l10n.planToday)),
+          Padding(
+            padding: const EdgeInsets.only(right: AppSpacing.xs),
+            child: TextButton(
+              onPressed: onToday,
+              style: TextButton.styleFrom(
+                minimumSize: const Size(0, 36),
+                visualDensity: VisualDensity.compact,
+              ),
+              child: Text(l10n.planToday),
+            ),
+          ),
+        arrow(AppIcons.previous, previousTooltip, onPrevious),
+        const SizedBox(width: AppSpacing.xs),
+        arrow(AppIcons.chevron, nextTooltip, onNext),
       ],
     );
   }
@@ -158,32 +168,56 @@ class PlanWeekView extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _PeriodHeader(
-          title: DateFormat.yMMMM(locale).format(d(selected)),
-          previousTooltip: l10n.planPreviousWeek,
-          nextTooltip: l10n.planNextWeek,
-          onPrevious: () => notifier.shiftDays(-7),
-          onNext: () => notifier.shiftDays(7),
-          onToday: selected == today ? null : notifier.goToToday,
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        Row(
-          children: [
-            for (var i = 0; i < 7; i++)
-              Expanded(
-                child: _DayPill(
-                  date: start.addDays(i),
-                  today: today,
-                  selected: start.addDays(i) == selected,
-                  onTap: () => notifier.select(start.addDays(i)),
-                ),
+        AppCard(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            AppSpacing.md,
+            AppSpacing.md,
+            AppSpacing.md,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _PeriodHeader(
+                title: DateFormat.yMMMM(locale).format(d(selected)),
+                previousTooltip: l10n.planPreviousWeek,
+                nextTooltip: l10n.planNextWeek,
+                onPrevious: () => notifier.shiftDays(-7),
+                onNext: () => notifier.shiftDays(7),
+                onToday: selected == today ? null : notifier.goToToday,
               ),
-          ],
+              const SizedBox(height: AppSpacing.md),
+              Row(
+                children: [
+                  for (var i = 0; i < 7; i++)
+                    Expanded(
+                      child: _DayPill(
+                        date: start.addDays(i),
+                        today: today,
+                        selected: start.addDays(i) == selected,
+                        onTap: () => notifier.select(start.addDays(i)),
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ),
         ),
         const SizedBox(height: AppSpacing.xl),
-        Text(
-          relative == null ? date : l10n.planDayRelative(relative, date),
-          style: context.textStyles.titleLarge,
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                relative == null ? date : l10n.planDayRelative(relative, date),
+                style: context.textStyles.titleLarge,
+              ),
+            ),
+            TextButton.icon(
+              onPressed: onAdd,
+              icon: const Icon(AppIcons.add, size: 18),
+              label: Text(l10n.todayAddShort),
+            ),
+          ],
         ),
         // A past day: how it went (P3).
         if (selected.compareTo(today) < 0 &&
@@ -197,7 +231,7 @@ class PlanWeekView extends ConsumerWidget {
             ),
           ),
         ],
-        const SizedBox(height: AppSpacing.lg),
+        const SizedBox(height: AppSpacing.md),
         if (empty)
           NoPlanCard(date: selected, onAdd: onAdd)
         else
@@ -275,38 +309,45 @@ class _DayPill extends ConsumerWidget {
       excludeSemantics: true,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
-        child: InkWell(
-          borderRadius: AppRadius.lgAll,
-          onTap: onTap,
-          child: Ink(
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-            decoration: BoxDecoration(
-              color: selected ? c.brandPrimary : null,
-              borderRadius: AppRadius.lgAll,
-              border: isToday && !selected
-                  ? Border.all(color: c.brandPrimary, width: AppSizes.outline)
-                  : null,
-            ),
-            child: Column(
-              children: [
-                Text(
-                  DateFormat.E(locale).format(day),
-                  maxLines: 1,
-                  overflow: TextOverflow.clip,
-                  style: context.textStyles.labelSmall?.copyWith(
-                    color: selected ? foreground : c.textSecondary,
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            borderRadius: AppRadius.pillAll,
+            onTap: onTap,
+            child: Ink(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm + 2),
+              decoration: BoxDecoration(
+                color: selected
+                    ? c.brandPrimary
+                    : isToday
+                    ? c.brandPrimarySoft
+                    : null,
+                borderRadius: AppRadius.pillAll,
+                boxShadow: selected
+                    ? context.tokens.shadows.glow(c.brandPrimary)
+                    : null,
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    DateFormat.E(locale).format(day).toUpperCase(),
+                    maxLines: 1,
+                    overflow: TextOverflow.clip,
+                    style: context.textStyles.labelSmall?.copyWith(
+                      color: selected ? foreground : c.textSecondary,
+                    ),
                   ),
-                ),
-                const SizedBox(height: AppSpacing.xxs),
-                Text(
-                  '${date.day}',
-                  style: context.textStyles.titleMedium?.copyWith(
-                    color: foreground,
+                  const SizedBox(height: AppSpacing.xxs),
+                  Text(
+                    '${date.day}',
+                    style: context.textStyles.titleMedium?.copyWith(
+                      color: foreground,
+                    ),
                   ),
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                mark,
-              ],
+                  const SizedBox(height: AppSpacing.xs),
+                  mark,
+                ],
+              ),
             ),
           ),
         ),
@@ -358,59 +399,67 @@ class PlanMonthView extends ConsumerWidget {
     ];
     final thisMonth =
         today.year == selected.year && today.month == selected.month;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _PeriodHeader(
-          title: material.formatMonthYear(
-            DateTime(selected.year, selected.month),
+    return AppCard(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.lg,
+        AppSpacing.md,
+        AppSpacing.md,
+        AppSpacing.md,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _PeriodHeader(
+            title: material.formatMonthYear(
+              DateTime(selected.year, selected.month),
+            ),
+            previousTooltip: l10n.planPreviousWeek,
+            nextTooltip: l10n.planNextWeek,
+            onPrevious: () => moveMonths(-1),
+            onNext: () => moveMonths(1),
+            onToday: thisMonth ? null : notifier.goToToday,
           ),
-          previousTooltip: l10n.planPreviousWeek,
-          nextTooltip: l10n.planNextWeek,
-          onPrevious: () => moveMonths(-1),
-          onNext: () => moveMonths(1),
-          onToday: thisMonth ? null : notifier.goToToday,
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        Row(
-          children: [
-            for (final label in weekdayLabels)
-              Expanded(
-                child: Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: context.textStyles.labelMedium?.copyWith(
-                    color: context.colors.textSecondary,
-                  ),
-                ),
-              ),
-          ],
-        ),
-        for (var w = 0; w < weeks; w++)
+          const SizedBox(height: AppSpacing.sm),
           Row(
             children: [
-              for (var i = 0; i < 7; i++)
+              for (final label in weekdayLabels)
                 Expanded(
-                  child: _MonthDay(
-                    date: gridStart.addDays(w * 7 + i),
-                    inMonth:
-                        gridStart.addDays(w * 7 + i).month == selected.month,
-                    isToday: gridStart.addDays(w * 7 + i) == today,
-                    dotColors: [
-                      for (final plan
-                          in byDate[gridStart.addDays(w * 7 + i)] ??
-                              const <Plan>[])
-                        _dotColor(
-                          context,
-                          types[plan.activityTypeId]?.colorKey,
-                        ),
-                    ],
-                    onTap: () => onOpenDay(gridStart.addDays(w * 7 + i)),
+                  child: Text(
+                    label,
+                    textAlign: TextAlign.center,
+                    style: context.textStyles.labelMedium?.copyWith(
+                      color: context.colors.textSecondary,
+                    ),
                   ),
                 ),
             ],
           ),
-      ],
+          for (var w = 0; w < weeks; w++)
+            Row(
+              children: [
+                for (var i = 0; i < 7; i++)
+                  Expanded(
+                    child: _MonthDay(
+                      date: gridStart.addDays(w * 7 + i),
+                      inMonth:
+                          gridStart.addDays(w * 7 + i).month == selected.month,
+                      isToday: gridStart.addDays(w * 7 + i) == today,
+                      dotColors: [
+                        for (final plan
+                            in byDate[gridStart.addDays(w * 7 + i)] ??
+                                const <Plan>[])
+                          _dotColor(
+                            context,
+                            types[plan.activityTypeId]?.colorKey,
+                          ),
+                      ],
+                      onTap: () => onOpenDay(gridStart.addDays(w * 7 + i)),
+                    ),
+                  ),
+              ],
+            ),
+        ],
+      ),
     );
   }
 
@@ -458,18 +507,27 @@ class _MonthDay extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                '${date.day}',
-                style: context.textStyles.bodyMedium?.copyWith(
-                  color: isToday
-                      ? colors.brandPrimary
-                      : inMonth
-                      ? colors.textPrimary
-                      : colors.textTertiary,
-                  fontWeight: isToday ? FontWeight.w700 : null,
+              Container(
+                width: 32,
+                height: 32,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: isToday ? colors.brandPrimary : null,
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  '${date.day}',
+                  style: context.textStyles.bodyMedium?.copyWith(
+                    color: isToday
+                        ? colors.onBrandPrimary
+                        : inMonth
+                        ? colors.textPrimary
+                        : colors.textTertiary,
+                    fontWeight: isToday ? FontWeight.w800 : FontWeight.w600,
+                  ),
                 ),
               ),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.xxs),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

@@ -9,6 +9,8 @@ import '../../../core/design/tokens/spacing.dart';
 import '../../../core/design/window_size_class.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/widgets/app_button.dart';
+import '../../../shared/widgets/empty_state_card.dart';
+import '../../../shared/widgets/screen_header.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../../plans/presentation/activity_chooser.dart';
 import '../../../shared/errors/error_copy.dart';
@@ -69,7 +71,11 @@ class ChallengesScreen extends ConsumerWidget {
     super.key,
     required this.onOpenChallenge,
     required this.chooser,
+    this.onBack,
   });
+
+  /// Back to Progress (Goals live inside it).
+  final VoidCallback? onBack;
 
   final ValueChanged<ChallengeId> onOpenChallenge;
 
@@ -81,41 +87,46 @@ class ChallengesScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final margin = WindowSizeClass.of(context).screenMargin;
     return SafeArea(
+      bottom: false,
       child: Align(
-        alignment: Alignment.topLeft,
+        alignment: Alignment.topCenter,
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: AppContentWidth.list),
           child: ListView(
             padding: EdgeInsets.fromLTRB(
               margin,
-              AppSpacing.huge,
+              AppSpacing.md,
               margin,
-              AppSpacing.giant,
+              AppSpacing.huge,
             ),
             children: [
-              Text(
-                l10n.challengesTitle,
-                style: context.textStyles.displayMedium,
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              Text(
-                l10n.challengesSubtitle,
-                style: context.textStyles.bodyLarge?.copyWith(
-                  color: context.colors.textSecondary,
+              if (onBack case final back?)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                    child: HeaderIconButton(
+                      icon: AppIcons.previous,
+                      tooltip: MaterialLocalizations.of(
+                        context,
+                      ).backButtonTooltip,
+                      onPressed: back,
+                    ),
+                  ),
                 ),
+              ScreenHeader(
+                showMark: onBack == null,
+                title: l10n.challengesTitle,
+                subtitle: l10n.challengesSubtitle,
+                actions: [
+                  HeaderIconButton(
+                    icon: AppIcons.add,
+                    tooltip: l10n.newChallenge,
+                    onPressed: () =>
+                        showChallengeSheet(context, chooser: chooser),
+                  ),
+                ],
               ),
-              const SizedBox(height: AppSpacing.lg),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: AppButton(
-                  label: l10n.newChallenge,
-                  icon: AppIcons.add,
-                  variant: AppButtonVariant.secondary,
-                  onPressed: () =>
-                      showChallengeSheet(context, chooser: chooser),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
               AsyncValueView(
                 value: ref.watch(challengesProvider),
                 onRetry: () => ref.invalidate(challengesProvider),
@@ -124,19 +135,37 @@ class ChallengesScreen extends ConsumerWidget {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        AppEmptyState(
-                          icon: AppIcons.challenges.outline,
+                        EmptyStateCard(
+                          icon: AppIcons.trophy,
                           title: l10n.challengesEmptyTitle,
                           message: l10n.challengesEmptyMessage,
+                          actions: [
+                            AppButton(
+                              label: l10n.newChallenge,
+                              icon: AppIcons.add,
+                              onPressed: () => showChallengeSheet(
+                                context,
+                                chooser: chooser,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: AppSpacing.md),
+                        const SizedBox(height: AppSpacing.lg),
+                        Text(
+                          l10n.goalsIdeas,
+                          style: context.textStyles.labelSmall?.copyWith(
+                            color: context.colors.textTertiary,
+                            letterSpacing: 1.1,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
                         Wrap(
-                          alignment: WrapAlignment.center,
                           spacing: AppSpacing.sm,
                           runSpacing: AppSpacing.sm,
                           children: [
                             for (final (name, days) in _examples(l10n))
                               ActionChip(
+                                avatar: const Icon(AppIcons.goal, size: 16),
                                 label: Text(
                                   l10n.challengeAutoTitle(days, name),
                                 ),

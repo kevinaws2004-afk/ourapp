@@ -10,7 +10,9 @@ import '../../../core/design/tokens/typography.dart';
 import '../../../core/time/clock_provider.dart';
 import '../../../core/time/local_date.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import '../../../core/design/app_icons.dart';
 import '../../../shared/widgets/activity_badge.dart';
+import '../../../shared/widgets/app_card.dart';
 import '../../../shared/widgets/charts/app_chart.dart';
 import '../../activity_logs/presentation/value_formatting.dart';
 import '../../activity_types/domain/activity_ids.dart';
@@ -265,34 +267,90 @@ class ActivityTotalsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final quiet = context.colors.textSecondary;
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: Opacity(
-        opacity: muted ? 0.6 : 1,
-        child: ActivityBadge(iconId: type.iconId, colorKey: type.colorKey),
-      ),
-      title: Text(type.name, style: muted ? TextStyle(color: quiet) : null),
-      subtitle: Text(subtitle),
-      onTap: onTap,
-      trailing: trailing == null && streak == null && action == null
-          ? null
-          : Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (streak case final days?) StreakBadge(days: days),
-                if (trailing case final t?) ...[
-                  const SizedBox(width: AppSpacing.sm),
-                  Text(
-                    t,
-                    style: context.textStyles.labelMedium?.copyWith(
-                      color: quiet,
+    final c = context.colors;
+    final change = trailing;
+    final down = change != null && change.trim().startsWith('-');
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm + AppSpacing.xxs),
+      child: AppCard(
+        onTap: onTap,
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.md,
+          AppSpacing.md,
+          AppSpacing.md,
+          AppSpacing.md,
+        ),
+        child: Opacity(
+          opacity: muted ? 0.6 : 1,
+          child: Row(
+            children: [
+              ActivityBadge(
+                iconId: type.iconId,
+                colorKey: type.colorKey,
+                size: 44,
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            type.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: context.textStyles.titleMedium,
+                          ),
+                        ),
+                        if (streak case final days?) ...[
+                          const SizedBox(width: AppSpacing.xs),
+                          StreakBadge(days: days),
+                        ],
+                      ],
+                    ),
+                    if (subtitle.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: AppSpacing.xxs),
+                        child: Text(
+                          subtitle,
+                          style: context.textStyles.bodySmall?.copyWith(
+                            color: c.textSecondary,
+                            height: 1.45,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              if (change != null)
+                Container(
+                  margin: const EdgeInsets.only(left: AppSpacing.sm),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                    vertical: AppSpacing.xxs,
+                  ),
+                  decoration: BoxDecoration(
+                    color: (down ? c.warning : c.success).withValues(
+                      alpha: 0.12,
+                    ),
+                    borderRadius: AppRadius.pillAll,
+                  ),
+                  child: Text(
+                    change.replaceAll(' ', ''),
+                    style: context.textStyles.labelSmall?.copyWith(
+                      color: down ? c.warning : c.success,
                     ),
                   ),
-                ],
-                ?action,
-              ],
-            ),
+                ),
+              ?action,
+              if (action == null && change == null)
+                Icon(AppIcons.chevron, size: 18, color: c.textTertiary),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

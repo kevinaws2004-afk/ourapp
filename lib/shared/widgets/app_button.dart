@@ -42,7 +42,7 @@ class AppButton extends StatelessWidget {
     final colors = context.colors;
     final child = Text(label);
     final iconWidget = icon == null ? null : Icon(icon);
-    final big = expand ? const Size.fromHeight(56) : null;
+    final big = expand ? const Size.fromHeight(52) : null;
     ButtonStyle filled(Color background, Color foreground) =>
         FilledButton.styleFrom(
           backgroundColor: background,

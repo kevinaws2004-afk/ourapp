@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'themes/app_theme_id.dart';
+import 'themes/dark_theme.dart';
 import 'themes/lavender_theme.dart';
 import 'themes/papaya_theme.dart';
 import 'themes/rose_theme.dart';
@@ -11,7 +12,7 @@ import 'tokens/treatments.dart';
 
 /// One theme's tokens that Material's [ThemeData] doesn't model: the full
 /// color role set, shadows, treatments and the activity palette (ADR-045).
-/// All three themes are light.
+/// Every theme comes in light and dark.
 @immutable
 class AppTokens extends ThemeExtension<AppTokens> {
   const AppTokens({
@@ -20,15 +21,31 @@ class AppTokens extends ThemeExtension<AppTokens> {
     required this.shadows,
     required this.treatments,
     required this.palette,
+    this.brightness = Brightness.light,
   });
 
-  static AppTokens of(AppThemeId id) => switch (id) {
-    AppThemeId.rose => roseTokens,
-    AppThemeId.lavender => lavenderTokens,
-    AppThemeId.papaya => papayaTokens,
-  };
+  static final Map<AppThemeId, AppTokens> _dark = {};
+
+  static AppTokens of(
+    AppThemeId id, {
+    Brightness brightness = Brightness.light,
+  }) {
+    final light = switch (id) {
+      AppThemeId.rose => roseTokens,
+      AppThemeId.lavender => lavenderTokens,
+      AppThemeId.papaya => papayaTokens,
+    };
+    return brightness == Brightness.light
+        ? light
+        : _dark.putIfAbsent(id, () => darkTokensFrom(light));
+  }
 
   final AppThemeId id;
+
+  /// Light or dark: each theme has both.
+  final Brightness brightness;
+
+  bool get isDark => brightness == Brightness.dark;
   final AppColors colors;
   final AppShadows shadows;
   final AppTreatments treatments;
@@ -43,12 +60,14 @@ class AppTokens extends ThemeExtension<AppTokens> {
     AppShadows? shadows,
     AppTreatments? treatments,
     ActivityPalette? palette,
+    Brightness? brightness,
   }) => AppTokens(
     id: id ?? this.id,
     colors: colors ?? this.colors,
     shadows: shadows ?? this.shadows,
     treatments: treatments ?? this.treatments,
     palette: palette ?? this.palette,
+    brightness: brightness ?? this.brightness,
   );
 
   /// Colors cross-fade when the theme changes; the rest switches halfway.
@@ -62,6 +81,7 @@ class AppTokens extends ThemeExtension<AppTokens> {
       shadows: half.shadows,
       treatments: half.treatments,
       palette: half.palette,
+      brightness: half.brightness,
     );
   }
 }

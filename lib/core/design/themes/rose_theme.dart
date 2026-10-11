@@ -7,45 +7,44 @@ import '../tokens/elevation.dart';
 import '../tokens/treatments.dart';
 import 'app_theme_id.dart';
 
-/// Rose (ADR-045): blush canvas, rose signature, teal action, butter
-/// accent. Built from the app's own rose and teal, not another product's
-/// palette.
+/// Pastel Confection (stored as `rose`): blush canvas, pink #FF5D9E
+/// signature, teal #48C9B0 action, butter #FEF9C3 accent, ink #2D3142.
 const roseTokens = AppTokens(
   id: AppThemeId.rose,
   colors: AppColors(
-    surfaceCanvas: Color(0xFFFBF4F5),
+    surfaceCanvas: Color(0xFFFFF6F9),
     surfaceBase: Color(0xFFFFFFFF),
     surfaceRaised: Color(0xFFFFFFFF),
-    surfaceSunken: Color(0xFFF7E8EB),
-    borderSubtle: Color(0xFFF1DEE3),
-    borderStrong: Color(0xFF8F6F79),
-    textPrimary: Color(0xFF2B2330),
-    textSecondary: Color(0xFF5C5262),
-    textTertiary: Color(0xFF8C8291),
-    brandPrimary: Color(0xFFB04E62),
+    surfaceSunken: Color(0xFFFCEAF1),
+    borderSubtle: Color(0xFFF9DCE7),
+    borderStrong: Color(0xFF9A7F8C),
+    textPrimary: Color(0xFF2D3142),
+    textSecondary: Color(0xFF5A5E70),
+    textTertiary: Color(0xFF8D90A0),
+    brandPrimary: Color(0xFFFF5D9E),
     onBrandPrimary: Color(0xFFFFFFFF),
-    brandPrimarySoft: Color(0xFFF9E1E7),
-    onBrandPrimarySoft: Color(0xFF7A2C3D),
-    action: Color(0xFF2F8180),
+    brandPrimarySoft: Color(0xFFFFE3EE),
+    onBrandPrimarySoft: Color(0xFFB0195F),
+    action: Color(0xFF48C9B0),
     onAction: Color(0xFFFFFFFF),
-    actionSoft: Color(0xFFDDF0EF),
-    onActionSoft: Color(0xFF1D5655),
-    accent: Color(0xFF9A6A12),
-    accentSoft: Color(0xFFFBF0D5),
-    onAccentSoft: Color(0xFF6B4A0C),
-    accentDawn: Color(0xFFD9822B),
+    actionSoft: Color(0xFFD7F5EF),
+    onActionSoft: Color(0xFF1F7A69),
+    accent: Color(0xFFCA8A04),
+    accentSoft: Color(0xFFFEF9C3),
+    onAccentSoft: Color(0xFF713F12),
+    accentDawn: Color(0xFFF59E0B),
     scrim: Color(0x662B2330),
-    success: Color(0xFF2F8180),
-    successContainer: Color(0xFFDDF0EF),
-    warning: Color(0xFFB4582A),
-    warningContainer: Color(0xFFFBE8DC),
-    danger: Color(0xFFB4233F),
-    dangerContainer: Color(0xFFFBE3E8),
+    success: Color(0xFF2BAE96),
+    successContainer: Color(0xFFD7F5EF),
+    warning: Color(0xFFE8833A),
+    warningContainer: Color(0xFFFDEBDC),
+    danger: Color(0xFFE11D48),
+    dangerContainer: Color(0xFFFFE4E9),
   ),
   shadows: AppShadows(
     card: [
       BoxShadow(
-        color: Color(0x1AB04E62),
+        color: Color(0x1AFF5D9E),
         offset: Offset(0, 8),
         blurRadius: 24,
         spreadRadius: -6,
@@ -59,7 +58,7 @@ const roseTokens = AppTokens(
     ],
     floating: [
       BoxShadow(
-        color: Color(0x24B04E62),
+        color: Color(0x24FF5D9E),
         offset: Offset(0, 16),
         blurRadius: 36,
         spreadRadius: -8,
@@ -76,7 +75,7 @@ const roseTokens = AppTokens(
   treatments: AppTreatments(
     cardEdge: CardEdge.none,
     navStyle: NavStyle.bar,
-    progressGradient: [Color(0xFF2F8180)],
+    progressGradient: [Color(0xFFFF5D9E)],
     heroWash: Color(0xFFDDF0EF),
     factsAsChips: false,
     timeColumn: true,

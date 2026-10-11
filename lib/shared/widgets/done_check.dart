@@ -22,7 +22,7 @@ class DoneCheck extends StatelessWidget {
   final Color color;
   final VoidCallback? onPressed;
 
-  static const double _size = 30;
+  static const double _size = 26;
 
   @override
   Widget build(BuildContext context) {

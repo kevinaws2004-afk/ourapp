@@ -61,6 +61,38 @@ abstract final class AppIcons {
   static const duplicate = PhosphorGlyphs.calendarPlus;
   static const planNext = PhosphorGlyphs.calendarPlus;
 
+  // Product shell, Me and Progress.
+  static const quickAdd = PhosphorGlyphs.plus;
+  static const darkMode = PhosphorGlyphs.moon;
+  static const lightMode = PhosphorGlyphs.sun;
+  static const systemMode = PhosphorGlyphs.circleHalf;
+  static const export = PhosphorGlyphs.export;
+  static const exportFile = PhosphorGlyphs.fileArrowDown;
+  static const privacy = PhosphorGlyphs.shieldCheck;
+  static const energy = PhosphorFillGlyphs.lightning;
+  static const trophy = PhosphorFillGlyphs.trophy;
+  static const goal = PhosphorGlyphs.flag;
+  static const bars = PhosphorGlyphs.chartBar;
+  static const settings = PhosphorGlyphs.gearSix;
+  static const arrowRight = PhosphorGlyphs.arrowRight;
+  static const trendUp = PhosphorGlyphs.trendUp;
+  static const trendDown = PhosphorGlyphs.trendDown;
+  static const dayDone = PhosphorGlyphs.calendarCheck;
+  static const wave = PhosphorGlyphs.handWaving;
+  static const note = PhosphorGlyphs.notePencil;
+  static const verified = PhosphorFillGlyphs.sealCheck;
+  static const help = PhosphorGlyphs.question;
+  static const device = PhosphorGlyphs.deviceMobile;
+  static const lock = PhosphorGlyphs.lockKey;
+  static const addCircle = PhosphorGlyphs.plusCircle;
+  static const quote = PhosphorGlyphs.quotes;
+  static const medal = PhosphorGlyphs.medal;
+  static const sparkle = PhosphorFillGlyphs.sparkle;
+  static const heart = PhosphorFillGlyphs.heart;
+
+  /// Daylog's mark (the app icon's glyph).
+  static const logo = PhosphorFillGlyphs.calendarCheck;
+
   // Field type icons (builder field-type picker).
   static const fieldText = PhosphorGlyphs.textAa;
   static const fieldNumber = PhosphorGlyphs.hash;

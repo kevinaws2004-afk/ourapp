@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "appTitle": "OurApp",
+  "appTitle": "Daylog",
   "@appTitle": {
     "description": "Temporary visible product name. The real name is undecided (ADR-010). Change together with Android strings.xml and iOS Info.plist."
   },
@@ -12,7 +12,7 @@
   "@navPlan": {
     "description": "Primary navigation tab: planning for future days."
   },
-  "navChallenges": "Challenges",
+  "navChallenges": "Goals",
   "@navChallenges": {
     "description": "Primary navigation: Challenges tab (ADR-044)."
   },
@@ -24,11 +24,11 @@
   "@navMe": {
     "description": "Primary navigation tab: body measurements, preferences, settings."
   },
-  "onboardingTitle": "Welcome",
+  "onboardingTitle": "Your day, in order.",
   "@onboardingTitle": {
     "description": "Title of the first-run screen (placeholder for the full onboarding)."
   },
-  "onboardingBody": "Plan your day, record what you actually do, and see your progress over time. Your data stays on this device.",
+  "onboardingBody": "Plan what matters, record what you actually do, and watch your days add up.",
   "@onboardingBody": {
     "description": "Short first-run explanation, based on the product definition and privacy promise."
   },
@@ -6064,11 +6064,11 @@
   "@validationInvalidChallengeTarget": {
     "description": "Validation: a challenge lasts 1 to 1000 days."
   },
-  "validationChallengeStartInFuture": "A challenge can't start in the future.",
+  "validationChallengeStartInFuture": "A goal can't start in the future.",
   "@validationChallengeStartInFuture": {
     "description": "Validation: a challenge's first day can't be after today."
   },
-  "challengesTitle": "Challenges",
+  "challengesTitle": "Goals",
   "@challengesTitle": {
     "description": "Title of the challenges list under Me and the section on Today (ADR-044)."
   },
@@ -6076,7 +6076,7 @@
   "@challengesSubtitle": {
     "description": "Challenges screen subtitle."
   },
-  "challengesEmptyTitle": "No challenges yet",
+  "challengesEmptyTitle": "No goals yet",
   "@challengesEmptyTitle": {
     "description": "Challenges empty state title."
   },
@@ -6084,15 +6084,15 @@
   "@challengesEmptyMessage": {
     "description": "Challenges empty state message."
   },
-  "newChallenge": "New challenge",
+  "newChallenge": "New goal",
   "@newChallenge": {
     "description": "Button: start a new challenge."
   },
-  "challengeNewTitle": "New challenge",
+  "challengeNewTitle": "New goal",
   "@challengeNewTitle": {
     "description": "Challenge sheet title when creating."
   },
-  "challengeEditTitle": "Edit challenge",
+  "challengeEditTitle": "Edit goal",
   "@challengeEditTitle": {
     "description": "Challenge sheet title when editing."
   },
@@ -6120,7 +6120,7 @@
   "@challengeNameLabel": {
     "description": "Challenge sheet: the challenge name."
   },
-  "challengeStartAction": "Start challenge",
+  "challengeStartAction": "Start goal",
   "@challengeStartAction": {
     "description": "Challenge sheet: create button."
   },
@@ -6210,15 +6210,15 @@
   "@challengeRestarted": {
     "description": "Snackbar after restarting a challenge."
   },
-  "challengeEnd": "End challenge",
+  "challengeEnd": "End goal",
   "@challengeEnd": {
     "description": "Challenge detail: end it (its records stay)."
   },
-  "challengeEnded": "Challenge ended",
+  "challengeEnded": "Goal ended",
   "@challengeEnded": {
     "description": "Snackbar after ending a challenge."
   },
-  "challengeNotFound": "This challenge has ended.",
+  "challengeNotFound": "This goal has ended.",
   "@challengeNotFound": {
     "description": "Challenge detail: the challenge no longer exists."
   },
@@ -6231,7 +6231,7 @@
       }
     }
   },
-  "challengeOptions": "Challenge options",
+  "challengeOptions": "Goal options",
   "@challengeOptions": {
     "description": "Tooltip of the challenge screen's menu button."
   },
@@ -6247,27 +6247,27 @@
   "@appearanceInUse": {
     "description": "Chip on the theme that's currently applied."
   },
-  "themeNameRose": "Rose",
+  "themeNameRose": "Pastel Confection",
   "@themeNameRose": {
     "description": "Name of the rose theme."
   },
-  "themeNameLavender": "Lavender",
+  "themeNameLavender": "Electric Lavender",
   "@themeNameLavender": {
     "description": "Name of the lavender theme."
   },
-  "themeNamePapaya": "Papaya",
+  "themeNamePapaya": "Papaya Confection",
   "@themeNamePapaya": {
     "description": "Name of the papaya theme."
   },
-  "themeDescriptionRose": "Soft blush and rose, with calm teal.",
+  "themeDescriptionRose": "Candy pink with fresh teal and butter.",
   "@themeDescriptionRose": {
     "description": "Description of the rose theme."
   },
-  "themeDescriptionLavender": "Porcelain and lavender, with fresh mint.",
+  "themeDescriptionLavender": "Electric lavender with fresh mint and sky.",
   "@themeDescriptionLavender": {
     "description": "Description of the lavender theme."
   },
-  "themeDescriptionPapaya": "Warm papaya, with aqua mint.",
+  "themeDescriptionPapaya": "Warm papaya with aqua mint and periwinkle.",
   "@themeDescriptionPapaya": {
     "description": "Description of the papaya theme."
   },
@@ -7111,6 +7111,290 @@
     "description": "Me: how many activities you have (M1).",
     "placeholders": {
       "count": {
+        "type": "int"
+      }
+    }
+  },
+  "quickTitle": "Quick start",
+  "@quickTitle": {},
+  "quickSubtitle": "Tap an activity to start it now.",
+  "@quickSubtitle": {},
+  "quickPlan": "Plan something",
+  "@quickPlan": {},
+  "quickPlanHint": "Add to today, at a time or anytime",
+  "@quickPlanHint": {},
+  "quickMeasure": "Log a measurement",
+  "@quickMeasure": {},
+  "quickMeasureHint": "Weight, waist, body fat…",
+  "@quickMeasureHint": {},
+  "quickNewActivity": "New activity",
+  "@quickNewActivity": {},
+  "quickNewActivityHint": "Track anything, your way",
+  "@quickNewActivityHint": {},
+  "quickStartActivity": "Start {name} now",
+  "@quickStartActivity": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "greetingNamed": "{greeting}, {name}",
+  "@greetingNamed": {
+    "placeholders": {
+      "greeting": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "heroTitle": "Today",
+  "@heroTitle": {},
+  "heroNothingYet": "A fresh day",
+  "@heroNothingYet": {},
+  "heroDoneOf": "{done} of {total} done",
+  "@heroDoneOf": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "heroTracked": "Tracked",
+  "@heroTracked": {},
+  "heroLeft": "To do",
+  "@heroLeft": {},
+  "heroStreak": "Streak",
+  "@heroStreak": {},
+  "todayStartSomething": "Start something",
+  "@todayStartSomething": {},
+  "todayAddShort": "Add",
+  "@todayAddShort": {},
+  "itemsCount": "{count, plural, =1{1 item} other{{count} items}}",
+  "@itemsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "heroRunning": "{title} is running",
+  "@heroRunning": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "heroEmpty": "Plan your day, or start something now.",
+  "@heroEmpty": {},
+  "heroAllDone": "Everything done. Enjoy the rest of your day.",
+  "@heroAllDone": {},
+  "heroFirstAt": "First up at {time}",
+  "@heroFirstAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "heroLetsGo": "Pick one and get going.",
+  "@heroLetsGo": {},
+  "heroToGo": "{count, plural, =1{One more to go. Keep it up!} other{{count} more to go. Keep it up!}}",
+  "@heroToGo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statDone": "Things done",
+  "@statDone": {},
+  "statTime": "Time tracked",
+  "@statTime": {},
+  "statActiveDays": "Active days",
+  "@statActiveDays": {},
+  "statPlanHit": "Plan completed",
+  "@statPlanHit": {},
+  "statOfDays": "{days}/{total}",
+  "@statOfDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "seeAll": "See all",
+  "@seeAll": {},
+  "goalsEmptyCta": "Set your first goal",
+  "@goalsEmptyCta": {},
+  "goalsEmptyHint": "Pick an activity and a number of days. We will count your streak.",
+  "@goalsEmptyHint": {},
+  "goalsNew": "New goal",
+  "@goalsNew": {},
+  "goalProgress": "{done} of {target} days",
+  "@goalProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "actionCancel": "Cancel",
+  "@actionCancel": {},
+  "meEditName": "Edit your name",
+  "@meEditName": {},
+  "meAddName": "Add your name",
+  "@meAddName": {},
+  "mePrivateBadge": "Private · stored on this device",
+  "@mePrivateBadge": {},
+  "meStatDays": "Active days",
+  "@meStatDays": {},
+  "meStatActivities": "Activities",
+  "@meStatActivities": {},
+  "meStatGoals": "Goals reached",
+  "@meStatGoals": {},
+  "meGroupSetup": "Your setup",
+  "@meGroupSetup": {},
+  "meGroupPreferences": "Preferences",
+  "@meGroupPreferences": {},
+  "meGroupData": "Data & privacy",
+  "@meGroupData": {},
+  "meGroupAbout": "About",
+  "@meGroupAbout": {},
+  "meGoalsSubtitle": "Streaks and day targets",
+  "@meGoalsSubtitle": {},
+  "meDarkMode": "Light & dark",
+  "@meDarkMode": {},
+  "meName": "Your name",
+  "@meName": {},
+  "meNotSet": "Not set",
+  "@meNotSet": {},
+  "meExport": "Export your data",
+  "@meExport": {},
+  "meExportSubtitle": "A full backup as a JSON file",
+  "@meExportSubtitle": {},
+  "meExportSubject": "Daylog backup",
+  "@meExportSubject": {},
+  "mePrivacy": "Privacy",
+  "@mePrivacy": {},
+  "mePrivacySubtitle": "Your data never leaves this phone",
+  "@mePrivacySubtitle": {},
+  "meVersion": "Version {version}",
+  "@meVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "meAboutLegal": "Made for people who like to see their days add up.",
+  "@meAboutLegal": {},
+  "meFooter": "Daylog · Plan it. Do it. See it.",
+  "@meFooter": {},
+  "meNameTitle": "What should we call you?",
+  "@meNameTitle": {},
+  "meNameHint": "Your first name",
+  "@meNameHint": {},
+  "appearanceSystem": "System",
+  "@appearanceSystem": {},
+  "appearanceLight": "Light",
+  "@appearanceLight": {},
+  "appearanceDark": "Dark",
+  "@appearanceDark": {},
+  "appearanceThemeTitle": "Theme",
+  "@appearanceThemeTitle": {},
+  "privacyTitle": "Your days are yours",
+  "@privacyTitle": {},
+  "privacyPointDevice": "Everything you plan and record is stored only on this phone.",
+  "@privacyPointDevice": {},
+  "privacyPointNoAccount": "No account, no sign-in, no tracking, no ads.",
+  "@privacyPointNoAccount": {},
+  "privacyPointExport": "Export a full backup any time and keep it wherever you like.",
+  "@privacyPointExport": {},
+  "onboardingBack": "Back",
+  "@onboardingBack": {},
+  "onboardingSkip": "Skip for now",
+  "@onboardingSkip": {},
+  "onboardingContinue": "Continue",
+  "@onboardingContinue": {},
+  "onboardingPointPlan": "Plan your day",
+  "@onboardingPointPlan": {},
+  "onboardingPointPlanBody": "Set times, or keep it loose with Anytime.",
+  "@onboardingPointPlanBody": {},
+  "onboardingPointDo": "Do it, and record it",
+  "@onboardingPointDo": {},
+  "onboardingPointDoBody": "Start a timer, tick it off, log the details.",
+  "@onboardingPointDoBody": {},
+  "onboardingPointSee": "See your progress",
+  "@onboardingPointSee": {},
+  "onboardingPointSeeBody": "Streaks, goals and charts that build themselves.",
+  "@onboardingPointSeeBody": {},
+  "onboardingNameBody": "Just a first name, so your day can greet you. It stays on this phone.",
+  "@onboardingNameBody": {},
+  "onboardingPickTitle": "What do you want to track?",
+  "@onboardingPickTitle": {},
+  "onboardingPickBody": "Pick a few to start. You can add anything else later, even your own.",
+  "@onboardingPickBody": {},
+  "onboardingPickHint": "Each one comes ready to use. Change its details whenever you like.",
+  "@onboardingPickHint": {},
+  "onboardingFinish": "{count, plural, =1{Start with 1 activity} other{Start with {count} activities}}",
+  "@onboardingFinish": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingFinishEmpty": "Start with an empty day",
+  "@onboardingFinishEmpty": {},
+  "planOverline": "Shape your week",
+  "@planOverline": {},
+  "goalsIdeas": "IDEAS TO START WITH",
+  "@goalsIdeas": {},
+  "statusScheduled": "Scheduled",
+  "@statusScheduled": {},
+  "statusRecorded": "Recorded",
+  "@statusRecorded": {},
+  "heroRhythm": "Today's rhythm",
+  "@heroRhythm": {},
+  "heroTrackedValue": "{time} tracked",
+  "@heroTrackedValue": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "heroNothingTracked": "Nothing tracked yet",
+  "@heroNothingTracked": {},
+  "heroStreakDays": "{days}d",
+  "@heroStreakDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "nowNextStartRecord": "Start & record",
+  "@nowNextStartRecord": {},
+  "nowNextMarkDone": "Mark as done",
+  "@nowNextMarkDone": {},
+  "heroStreakLong": "{days}-day streak",
+  "@heroStreakLong": {
+    "placeholders": {
+      "days": {
         "type": "int"
       }
     }

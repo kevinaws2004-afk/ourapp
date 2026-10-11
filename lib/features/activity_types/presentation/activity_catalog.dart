@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/design/context_ext.dart';
-import '../../../core/design/keys/activity_color_key.dart';
-import '../../../core/design/tokens/radius.dart';
 import '../../../core/design/tokens/sizes.dart';
 import '../../../core/design/tokens/spacing.dart';
 import '../../../core/errors/app_exception.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/errors/error_copy.dart';
 import '../../../shared/widgets/activity_badge.dart';
+import '../../../shared/widgets/app_card.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/section_header.dart';
 import '../../../shared/widgets/state_views.dart';
@@ -163,54 +162,45 @@ class _ActivityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.tokens.activity(
-      ActivityColorKey.fromName(colorKey) ?? ActivityColorKey.slate,
-    );
     final detailText = details.join(' · ');
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.md),
-      child: Material(
-        color: colors.soft,
-        borderRadius: AppRadius.mdAll,
-        child: InkWell(
-          borderRadius: AppRadius.mdAll,
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Row(
-              children: [
-                ActivityBadge(
-                  iconId: iconId,
-                  colorKey: colorKey,
-                  size: AppSizes.badgeLarge,
-                ),
-                const SizedBox(width: AppSpacing.lg),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(name, style: context.textStyles.titleMedium),
-                      if (detailText.isNotEmpty) ...[
-                        const SizedBox(height: AppSpacing.xs),
-                        Text(
-                          detailText,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: context.textStyles.bodyMedium?.copyWith(
-                            color: context.colors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-                if (trailing case final trailing?) ...[
-                  const SizedBox(width: AppSpacing.sm),
-                  trailing,
-                ],
-              ],
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm + AppSpacing.xxs),
+      child: AppCard(
+        flat: true,
+        onTap: onTap,
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: [
+            ActivityBadge(
+              iconId: iconId,
+              colorKey: colorKey,
+              size: AppSizes.badge + 6,
             ),
-          ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(name, style: context.textStyles.titleMedium),
+                  if (detailText.isNotEmpty) ...[
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      detailText,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.textStyles.bodyMedium?.copyWith(
+                        color: context.colors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            if (trailing case final trailing?) ...[
+              const SizedBox(width: AppSpacing.sm),
+              trailing,
+            ],
+          ],
         ),
       ),
     );

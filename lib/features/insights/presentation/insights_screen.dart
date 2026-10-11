@@ -26,8 +26,10 @@ import 'insight_formatting.dart';
 import 'insight_providers.dart';
 import 'activity_insights_screen.dart';
 import 'insight_overview.dart';
-import 'insight_range_picker.dart';
 import 'progress_sentences.dart';
+import 'progress_summary.dart';
+import '../../../shared/widgets/screen_header.dart';
+import '../../challenges/domain/challenge.dart';
 import '../../activity_types/domain/activity_type.dart';
 import '../../challenges/presentation/challenge_providers.dart';
 import '../../plans/presentation/activity_chooser.dart';
@@ -44,7 +46,15 @@ class InsightsScreen extends ConsumerWidget {
     super.key,
     required this.onOpenActivity,
     required this.chooser,
+    required this.onOpenGoal,
+    required this.onOpenGoals,
   });
+
+  /// Opens one goal (a challenge).
+  final ValueChanged<ChallengeId> onOpenGoal;
+
+  /// Opens the list of goals.
+  final VoidCallback onOpenGoals;
 
   /// Opens an activity's automatic progress page (ADR-037).
   final ValueChanged<ActivityTypeId> onOpenActivity;
@@ -57,22 +67,49 @@ class InsightsScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final margin = WindowSizeClass.of(context).screenMargin;
     final early = ref.watch(progressIsEarlyProvider) ?? false;
+    final range = ref.watch(insightRangeProvider);
+    final (from, to) = range.window(
+      currentLocalDate(ref.watch(clockProvider)),
+    );
     return SafeArea(
+      bottom: false,
       child: Align(
-        alignment: Alignment.topLeft,
+        alignment: Alignment.topCenter,
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: AppContentWidth.chart),
           child: ListView(
             padding: EdgeInsets.fromLTRB(
               margin,
-              AppSpacing.huge,
+              AppSpacing.md,
               margin,
-              AppSpacing.giant,
+              AppSpacing.huge,
             ),
             children: [
-              Text(l10n.navInsights, style: context.textStyles.displayMedium),
-              const SizedBox(height: AppSpacing.lg),
-              const InsightRangePicker(),
+              ScreenHeader(
+                title: l10n.navInsights,
+                actions: [
+                  HeaderIconButton(
+                    icon: AppIcons.add,
+                    tooltip: l10n.insightAddChart,
+                    onPressed: () => showChartBuilder(context),
+                  ),
+                ],
+              ),
+              const ProgressRangeTabs(),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: AppSpacing.sm,
+                  bottom: AppSpacing.md,
+                  left: AppSpacing.xs,
+                ),
+                child: Text(
+                  formatPeriod(context, from, to),
+                  style: context.textStyles.labelMedium?.copyWith(
+                    color: context.colors.textTertiary,
+                  ),
+                ),
+              ),
+              const ProgressSummaryGrid(),
               const SizedBox(height: AppSpacing.lg),
               // Early on, what's true already instead of sentences (PR3).
               if (early)
@@ -81,6 +118,18 @@ class InsightsScreen extends ConsumerWidget {
                 const ProgressHeadline(),
                 const ProgressTimeSentence(),
               ],
+              SectionHeader(
+                title: l10n.navChallenges,
+                trailing: TextButton(
+                  onPressed: onOpenGoals,
+                  child: Text(l10n.seeAll),
+                ),
+              ),
+              GoalsStrip(
+                onOpenGoal: onOpenGoal,
+                onOpenGoals: onOpenGoals,
+                margin: margin,
+              ),
               SectionHeader(title: l10n.insightActivitySection),
               _ActivityTotals(onOpenActivity: onOpenActivity, chooser: chooser),
               const SizedBox(height: AppSpacing.lg),
@@ -94,10 +143,10 @@ class InsightsScreen extends ConsumerWidget {
               ],
               SectionHeader(
                 title: l10n.insightChartsSection,
-                trailing: IconButton(
-                  tooltip: l10n.insightAddChart,
-                  icon: const Icon(AppIcons.add),
+                trailing: TextButton.icon(
                   onPressed: () => showChartBuilder(context),
+                  icon: const Icon(AppIcons.add, size: 18),
+                  label: Text(l10n.todayAddShort),
                 ),
               ),
               const _Charts(),

@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/design/app_icons.dart';
-import '../../../core/design/context_ext.dart';
 import '../../../core/design/tokens/spacing.dart';
 import '../../../core/design/window_size_class.dart';
 import '../../../core/time/clock_provider.dart';
@@ -13,6 +12,7 @@ import '../../../core/time/local_date.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../activity_logs/domain/activity_log.dart';
 import '../domain/plan.dart';
+import '../../../shared/widgets/screen_header.dart';
 import 'activity_chooser.dart';
 import 'plan_date_notifier.dart';
 import 'plan_views.dart';
@@ -63,28 +63,30 @@ class PlanScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      floatingActionButton: FloatingActionButton(
-        // Today and Plan both keep a + alive in the tab shell.
-        heroTag: 'plan-add',
-        tooltip: l10n.planAddToDay,
-        onPressed: add,
-        child: const Icon(AppIcons.add),
-      ),
       body: SafeArea(
+        bottom: false,
         child: Align(
-          alignment: Alignment.topLeft,
+          alignment: Alignment.topCenter,
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: AppContentWidth.list),
             child: ListView(
               padding: EdgeInsets.fromLTRB(
                 margin,
-                AppSpacing.huge,
+                AppSpacing.md,
                 margin,
-                AppSpacing.giant + AppSpacing.huge,
+                AppSpacing.huge,
               ),
               children: [
-                Text(l10n.navPlan, style: context.textStyles.displayMedium),
-                const SizedBox(height: AppSpacing.lg),
+                ScreenHeader(
+                  title: l10n.navPlan,
+                  actions: [
+                    HeaderIconButton(
+                      icon: AppIcons.add,
+                      tooltip: l10n.planAddToDay,
+                      onPressed: add,
+                    ),
+                  ],
+                ),
                 const PlanViewSwitch(),
                 const SizedBox(height: AppSpacing.lg),
                 switch (ref.watch(planViewProvider)) {

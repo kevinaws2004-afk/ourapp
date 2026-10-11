@@ -10,7 +10,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'OurApp';
+  String get appTitle => 'Daylog';
 
   @override
   String get navToday => 'Today';
@@ -19,7 +19,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navPlan => 'Plan';
 
   @override
-  String get navChallenges => 'Challenges';
+  String get navChallenges => 'Goals';
 
   @override
   String get navInsights => 'Progress';
@@ -28,11 +28,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navMe => 'Me';
 
   @override
-  String get onboardingTitle => 'Welcome';
+  String get onboardingTitle => 'Your day, in order.';
 
   @override
   String get onboardingBody =>
-      'Plan your day, record what you actually do, and see your progress over time. Your data stays on this device.';
+      'Plan what matters, record what you actually do, and watch your days add up.';
 
   @override
   String get onboardingStart => 'Get started';
@@ -4503,30 +4503,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get validationChallengeStartInFuture =>
-      'A challenge can\'t start in the future.';
+      'A goal can\'t start in the future.';
 
   @override
-  String get challengesTitle => 'Challenges';
+  String get challengesTitle => 'Goals';
 
   @override
   String get challengesSubtitle =>
       'Do an activity every day and keep your streak going.';
 
   @override
-  String get challengesEmptyTitle => 'No challenges yet';
+  String get challengesEmptyTitle => 'No goals yet';
 
   @override
   String get challengesEmptyMessage =>
       'Pick an activity and a number of days, like 75 days of Meditation. Recording it each day keeps your streak going.';
 
   @override
-  String get newChallenge => 'New challenge';
+  String get newChallenge => 'New goal';
 
   @override
-  String get challengeNewTitle => 'New challenge';
+  String get challengeNewTitle => 'New goal';
 
   @override
-  String get challengeEditTitle => 'Edit challenge';
+  String get challengeEditTitle => 'Edit goal';
 
   @override
   String get challengeActivityLabel => 'Activity';
@@ -4547,7 +4547,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get challengeNameLabel => 'Name';
 
   @override
-  String get challengeStartAction => 'Start challenge';
+  String get challengeStartAction => 'Start goal';
 
   @override
   String challengeAutoTitle(int days, String activity) {
@@ -4615,13 +4615,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get challengeRestarted => 'Counting from today';
 
   @override
-  String get challengeEnd => 'End challenge';
+  String get challengeEnd => 'End goal';
 
   @override
-  String get challengeEnded => 'Challenge ended';
+  String get challengeEnded => 'Goal ended';
 
   @override
-  String get challengeNotFound => 'This challenge has ended.';
+  String get challengeNotFound => 'This goal has ended.';
 
   @override
   String challengeStartsOn(String date) {
@@ -4629,7 +4629,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get challengeOptions => 'Challenge options';
+  String get challengeOptions => 'Goal options';
 
   @override
   String get appearanceTitle => 'Appearance';
@@ -4642,23 +4642,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appearanceInUse => 'In use';
 
   @override
-  String get themeNameRose => 'Rose';
+  String get themeNameRose => 'Pastel Confection';
 
   @override
-  String get themeNameLavender => 'Lavender';
+  String get themeNameLavender => 'Electric Lavender';
 
   @override
-  String get themeNamePapaya => 'Papaya';
+  String get themeNamePapaya => 'Papaya Confection';
 
   @override
-  String get themeDescriptionRose => 'Soft blush and rose, with calm teal.';
+  String get themeDescriptionRose => 'Candy pink with fresh teal and butter.';
 
   @override
   String get themeDescriptionLavender =>
-      'Porcelain and lavender, with fresh mint.';
+      'Electric lavender with fresh mint and sky.';
 
   @override
-  String get themeDescriptionPapaya => 'Warm papaya, with aqua mint.';
+  String get themeDescriptionPapaya =>
+      'Warm papaya with aqua mint and periwinkle.';
 
   @override
   String get appearancePreviewTitle => 'Morning walk';
@@ -5211,5 +5212,344 @@ class AppLocalizationsEn extends AppLocalizations {
       zero: 'Add them as you go',
     );
     return '$_temp0';
+  }
+
+  @override
+  String get quickTitle => 'Quick start';
+
+  @override
+  String get quickSubtitle => 'Tap an activity to start it now.';
+
+  @override
+  String get quickPlan => 'Plan something';
+
+  @override
+  String get quickPlanHint => 'Add to today, at a time or anytime';
+
+  @override
+  String get quickMeasure => 'Log a measurement';
+
+  @override
+  String get quickMeasureHint => 'Weight, waist, body fat…';
+
+  @override
+  String get quickNewActivity => 'New activity';
+
+  @override
+  String get quickNewActivityHint => 'Track anything, your way';
+
+  @override
+  String quickStartActivity(String name) {
+    return 'Start $name now';
+  }
+
+  @override
+  String greetingNamed(String greeting, String name) {
+    return '$greeting, $name';
+  }
+
+  @override
+  String get heroTitle => 'Today';
+
+  @override
+  String get heroNothingYet => 'A fresh day';
+
+  @override
+  String heroDoneOf(int done, int total) {
+    return '$done of $total done';
+  }
+
+  @override
+  String get heroTracked => 'Tracked';
+
+  @override
+  String get heroLeft => 'To do';
+
+  @override
+  String get heroStreak => 'Streak';
+
+  @override
+  String get todayStartSomething => 'Start something';
+
+  @override
+  String get todayAddShort => 'Add';
+
+  @override
+  String itemsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String heroRunning(String title) {
+    return '$title is running';
+  }
+
+  @override
+  String get heroEmpty => 'Plan your day, or start something now.';
+
+  @override
+  String get heroAllDone => 'Everything done. Enjoy the rest of your day.';
+
+  @override
+  String heroFirstAt(String time) {
+    return 'First up at $time';
+  }
+
+  @override
+  String get heroLetsGo => 'Pick one and get going.';
+
+  @override
+  String heroToGo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count more to go. Keep it up!',
+      one: 'One more to go. Keep it up!',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statDone => 'Things done';
+
+  @override
+  String get statTime => 'Time tracked';
+
+  @override
+  String get statActiveDays => 'Active days';
+
+  @override
+  String get statPlanHit => 'Plan completed';
+
+  @override
+  String statOfDays(int days, int total) {
+    return '$days/$total';
+  }
+
+  @override
+  String get seeAll => 'See all';
+
+  @override
+  String get goalsEmptyCta => 'Set your first goal';
+
+  @override
+  String get goalsEmptyHint =>
+      'Pick an activity and a number of days. We will count your streak.';
+
+  @override
+  String get goalsNew => 'New goal';
+
+  @override
+  String goalProgress(int done, int target) {
+    return '$done of $target days';
+  }
+
+  @override
+  String get actionCancel => 'Cancel';
+
+  @override
+  String get meEditName => 'Edit your name';
+
+  @override
+  String get meAddName => 'Add your name';
+
+  @override
+  String get mePrivateBadge => 'Private · stored on this device';
+
+  @override
+  String get meStatDays => 'Active days';
+
+  @override
+  String get meStatActivities => 'Activities';
+
+  @override
+  String get meStatGoals => 'Goals reached';
+
+  @override
+  String get meGroupSetup => 'Your setup';
+
+  @override
+  String get meGroupPreferences => 'Preferences';
+
+  @override
+  String get meGroupData => 'Data & privacy';
+
+  @override
+  String get meGroupAbout => 'About';
+
+  @override
+  String get meGoalsSubtitle => 'Streaks and day targets';
+
+  @override
+  String get meDarkMode => 'Light & dark';
+
+  @override
+  String get meName => 'Your name';
+
+  @override
+  String get meNotSet => 'Not set';
+
+  @override
+  String get meExport => 'Export your data';
+
+  @override
+  String get meExportSubtitle => 'A full backup as a JSON file';
+
+  @override
+  String get meExportSubject => 'Daylog backup';
+
+  @override
+  String get mePrivacy => 'Privacy';
+
+  @override
+  String get mePrivacySubtitle => 'Your data never leaves this phone';
+
+  @override
+  String meVersion(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get meAboutLegal =>
+      'Made for people who like to see their days add up.';
+
+  @override
+  String get meFooter => 'Daylog · Plan it. Do it. See it.';
+
+  @override
+  String get meNameTitle => 'What should we call you?';
+
+  @override
+  String get meNameHint => 'Your first name';
+
+  @override
+  String get appearanceSystem => 'System';
+
+  @override
+  String get appearanceLight => 'Light';
+
+  @override
+  String get appearanceDark => 'Dark';
+
+  @override
+  String get appearanceThemeTitle => 'Theme';
+
+  @override
+  String get privacyTitle => 'Your days are yours';
+
+  @override
+  String get privacyPointDevice =>
+      'Everything you plan and record is stored only on this phone.';
+
+  @override
+  String get privacyPointNoAccount =>
+      'No account, no sign-in, no tracking, no ads.';
+
+  @override
+  String get privacyPointExport =>
+      'Export a full backup any time and keep it wherever you like.';
+
+  @override
+  String get onboardingBack => 'Back';
+
+  @override
+  String get onboardingSkip => 'Skip for now';
+
+  @override
+  String get onboardingContinue => 'Continue';
+
+  @override
+  String get onboardingPointPlan => 'Plan your day';
+
+  @override
+  String get onboardingPointPlanBody =>
+      'Set times, or keep it loose with Anytime.';
+
+  @override
+  String get onboardingPointDo => 'Do it, and record it';
+
+  @override
+  String get onboardingPointDoBody =>
+      'Start a timer, tick it off, log the details.';
+
+  @override
+  String get onboardingPointSee => 'See your progress';
+
+  @override
+  String get onboardingPointSeeBody =>
+      'Streaks, goals and charts that build themselves.';
+
+  @override
+  String get onboardingNameBody =>
+      'Just a first name, so your day can greet you. It stays on this phone.';
+
+  @override
+  String get onboardingPickTitle => 'What do you want to track?';
+
+  @override
+  String get onboardingPickBody =>
+      'Pick a few to start. You can add anything else later, even your own.';
+
+  @override
+  String get onboardingPickHint =>
+      'Each one comes ready to use. Change its details whenever you like.';
+
+  @override
+  String onboardingFinish(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Start with $count activities',
+      one: 'Start with 1 activity',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get onboardingFinishEmpty => 'Start with an empty day';
+
+  @override
+  String get planOverline => 'Shape your week';
+
+  @override
+  String get goalsIdeas => 'IDEAS TO START WITH';
+
+  @override
+  String get statusScheduled => 'Scheduled';
+
+  @override
+  String get statusRecorded => 'Recorded';
+
+  @override
+  String get heroRhythm => 'Today\'s rhythm';
+
+  @override
+  String heroTrackedValue(String time) {
+    return '$time tracked';
+  }
+
+  @override
+  String get heroNothingTracked => 'Nothing tracked yet';
+
+  @override
+  String heroStreakDays(int days) {
+    return '${days}d';
+  }
+
+  @override
+  String get nowNextStartRecord => 'Start & record';
+
+  @override
+  String get nowNextMarkDone => 'Mark as done';
+
+  @override
+  String heroStreakLong(int days) {
+    return '$days-day streak';
   }
 }

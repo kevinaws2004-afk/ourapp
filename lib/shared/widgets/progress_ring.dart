@@ -32,7 +32,7 @@ class ProgressRing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final stops = color == null
-        ? context.tokens.treatments.progressGradient
+        ? [context.tokens.treatments.progressGradient.first]
         : [color!];
     return Semantics(
       label: semanticLabel,

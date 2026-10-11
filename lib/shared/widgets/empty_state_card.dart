@@ -34,11 +34,7 @@ class EmptyStateCard extends StatelessWidget {
             child: DecoratedBox(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [c.brandPrimarySoft, c.actionSoft],
-                ),
+                color: c.brandPrimarySoft,
               ),
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.xl),

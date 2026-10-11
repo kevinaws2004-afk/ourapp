@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/design/app_icons.dart';
@@ -89,6 +92,7 @@ class PlanActions {
   /// has meaningful details, asks "How did it go?". Stays on the current
   /// screen: the row shows the result.
   Future<void> complete(PlannedItem item) async {
+    unawaited(HapticFeedback.mediumImpact());
     final id = item.plan.id;
     final type = item.type;
     final streak = type == null
@@ -122,6 +126,7 @@ class PlanActions {
     required String title,
     ActivityType? type,
   }) async {
+    unawaited(HapticFeedback.mediumImpact());
     final streak = type == null
         ? null
         : _ref.read(activityStreaksProvider)[type.id];

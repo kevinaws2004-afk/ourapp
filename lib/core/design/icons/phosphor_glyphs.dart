@@ -103,6 +103,29 @@ abstract final class PhosphorGlyphs {
   static const airplane = IconData(0xe002, fontFamily: 'Phosphor');
   static const car = IconData(0xe112, fontFamily: 'Phosphor');
   static const sparkle = IconData(0xe6a2, fontFamily: 'Phosphor');
+  static const export = IconData(0xeaf0, fontFamily: 'Phosphor');
+  static const shieldCheck = IconData(0xe40c, fontFamily: 'Phosphor');
+  static const lightning = IconData(0xe2de, fontFamily: 'Phosphor');
+  static const bell = IconData(0xe0ce, fontFamily: 'Phosphor');
+  static const trophy = IconData(0xe67e, fontFamily: 'Phosphor');
+  static const flag = IconData(0xe244, fontFamily: 'Phosphor');
+  static const chartBar = IconData(0xe150, fontFamily: 'Phosphor');
+  static const gearSix = IconData(0xe272, fontFamily: 'Phosphor');
+  static const arrowUpRight = IconData(0xe092, fontFamily: 'Phosphor');
+  static const trendUp = IconData(0xe4ae, fontFamily: 'Phosphor');
+  static const trendDown = IconData(0xe4ac, fontFamily: 'Phosphor');
+  static const calendarCheck = IconData(0xe712, fontFamily: 'Phosphor');
+  static const handWaving = IconData(0xe580, fontFamily: 'Phosphor');
+  static const circleHalf = IconData(0xe18c, fontFamily: 'Phosphor');
+  static const notePencil = IconData(0xe34c, fontFamily: 'Phosphor');
+  static const sealCheck = IconData(0xe606, fontFamily: 'Phosphor');
+  static const medal = IconData(0xe320, fontFamily: 'Phosphor');
+  static const fileArrowDown = IconData(0xe232, fontFamily: 'Phosphor');
+  static const question = IconData(0xe3e8, fontFamily: 'Phosphor');
+  static const deviceMobile = IconData(0xe1e0, fontFamily: 'Phosphor');
+  static const lockKey = IconData(0xe2fe, fontFamily: 'Phosphor');
+  static const plusCircle = IconData(0xe3d6, fontFamily: 'Phosphor');
+  static const quotes = IconData(0xe660, fontFamily: 'Phosphor');
 }
 
 /// Filled variants for selected states.
@@ -116,4 +139,14 @@ abstract final class PhosphorFillGlyphs {
   static const star = IconData(0xe46a, fontFamily: 'PhosphorFill');
   static const checkCircle = IconData(0xe184, fontFamily: 'PhosphorFill');
   static const target = IconData(0xe47c, fontFamily: 'PhosphorFill');
+  static const lightning = IconData(0xe2de, fontFamily: 'PhosphorFill');
+  static const trophy = IconData(0xe67e, fontFamily: 'PhosphorFill');
+  static const sealCheck = IconData(0xe606, fontFamily: 'PhosphorFill');
+  static const moon = IconData(0xe330, fontFamily: 'PhosphorFill');
+  static const circleHalf = IconData(0xe18c, fontFamily: 'PhosphorFill');
+  static const flag = IconData(0xe244, fontFamily: 'PhosphorFill');
+  static const heart = IconData(0xe2a8, fontFamily: 'PhosphorFill');
+  static const sparkle = IconData(0xe6a2, fontFamily: 'PhosphorFill');
+  static const calendarCheck = IconData(0xe712, fontFamily: 'PhosphorFill');
+  static const bell = IconData(0xe0ce, fontFamily: 'PhosphorFill');
 }

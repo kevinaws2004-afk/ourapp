@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/design/app_icons.dart';
 import '../../../../core/design/context_ext.dart';
 import '../../../../core/design/keys/activity_icon_ids.dart';
 import '../../../../core/design/tokens/activity_palette.dart';
@@ -9,6 +10,7 @@ import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../shared/widgets/activity_badge.dart';
 import '../../../../shared/widgets/done_check.dart';
 import '../../../../shared/widgets/item_card.dart';
+import '../../../../shared/widgets/status_chip.dart';
 import '../../../activity_logs/presentation/value_formatting.dart';
 import '../../../challenges/presentation/challenge_providers.dart';
 import '../../../focus/presentation/focus_providers.dart';
@@ -79,11 +81,10 @@ class PlanItemTile extends ConsumerWidget {
           ? l10n.planStatusInProgress
           : l10n.itemRunning(formatTimer(session.elapsedMs(now)));
     } else if (done) {
-      subline = formatItemResult(context, item);
-    } else if (status == EffectivePlanStatus.skipped) {
-      subline = l10n.planStatusSkipped;
-    } else if (status == EffectivePlanStatus.cancelled) {
-      subline = l10n.planStatusCancelled;
+      final result = formatItemResult(context, item);
+      subline = result == l10n.planStatusDone ? null : result;
+    } else if (inactive) {
+      subline = null;
     } else if ((type, item.records.firstOrNull) case (final type?, final log?)
         when summarizeLog(context, type, log).isNotEmpty) {
       // Logged into but not done yet: what's in it so far.
@@ -109,6 +110,26 @@ class PlanItemTile extends ConsumerWidget {
         !start.isAfter(now) &&
         end!.isAfter(now);
 
+    // The state as a chip next to the time.
+    final (String?, StatusTone) chip = switch (status) {
+      EffectivePlanStatus.completed => (l10n.planStatusDone, StatusTone.done),
+      EffectivePlanStatus.inProgress => (
+        l10n.planStatusInProgress,
+        StatusTone.active,
+      ),
+      EffectivePlanStatus.skipped => (
+        l10n.planStatusSkipped,
+        StatusTone.neutral,
+      ),
+      EffectivePlanStatus.cancelled => (
+        l10n.planStatusCancelled,
+        StatusTone.neutral,
+      ),
+      _ when isNow => (l10n.nowNextNow, StatusTone.active),
+      _ when start != null => (l10n.statusScheduled, StatusTone.scheduled),
+      _ => (null, StatusTone.neutral),
+    };
+
     // Say what a tap does (ADR-030).
     final tapHint = plan.isTask
         ? null
@@ -120,6 +141,8 @@ class PlanItemTile extends ConsumerWidget {
       startTime: formatPlanStart(context, plan),
       endTime: formatPlanEnd(context, plan),
       subline: subline,
+      status: chip.$1,
+      statusTone: chip.$2,
       streak: streak?.days,
       repeats: plan.isRepeating,
       faded: inactive,
@@ -131,7 +154,7 @@ class PlanItemTile extends ConsumerWidget {
       // The type can briefly be missing while the types stream catches up
       // with a just-created activity.
       leading: plan.isTask
-          ? null
+          ? const _TaskMark()
           : ActivityBadge(
               iconId: type?.iconId ?? ActivityIconIds.fallback,
               colorKey: type?.colorKey ?? ActivityColorKey.slate.name,
@@ -146,6 +169,27 @@ class PlanItemTile extends ConsumerWidget {
         ),
         ?dragHandle,
       ],
+    );
+  }
+}
+
+/// A plain task's mark in the agenda: a quiet checklist tile, so tasks line
+/// up with activities.
+class _TaskMark extends StatelessWidget {
+  const _TaskMark();
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        color: c.surfaceSunken,
+        borderRadius: BorderRadius.circular(40 * 0.32),
+      ),
+      alignment: Alignment.center,
+      child: Icon(AppIcons.browse, size: 20, color: c.textSecondary),
     );
   }
 }

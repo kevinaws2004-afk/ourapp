@@ -13,6 +13,7 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/errors/error_copy.dart';
 import '../../../shared/widgets/activity_badge.dart';
 import '../../../shared/widgets/app_button.dart';
+import '../../../shared/widgets/app_card.dart';
 import '../../../shared/widgets/section_header.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../../activity_logs/domain/activity_log.dart';
@@ -166,19 +167,33 @@ class _Body extends ConsumerWidget {
                 ),
               ),
             ],
-            const SizedBox(height: AppSpacing.xxl),
-            AppButton(label: l10n.actionRecord, onPressed: onLog),
-            if (type.supportsTimer &&
-                !type.isDeleted &&
-                onStartFocus != null) ...[
-              const SizedBox(height: AppSpacing.sm),
-              AppButton(
-                label: l10n.focusStart,
-                icon: AppIcons.timer,
-                variant: AppButtonVariant.secondary,
-                onPressed: onStartFocus,
-              ),
-            ],
+            const SizedBox(height: AppSpacing.xl),
+            Row(
+              children: [
+                Expanded(
+                  child: AppButton(
+                    label: l10n.actionRecord,
+                    icon: AppIcons.add,
+                    expand: true,
+                    onPressed: onLog,
+                  ),
+                ),
+                if (type.supportsTimer &&
+                    !type.isDeleted &&
+                    onStartFocus != null) ...[
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: AppButton(
+                      label: l10n.focusStart,
+                      icon: AppIcons.timer,
+                      variant: AppButtonVariant.action,
+                      expand: true,
+                      onPressed: onStartFocus,
+                    ),
+                  ),
+                ],
+              ],
+            ),
             SectionHeader(title: l10n.recentEntries),
             AsyncValueView(
               value: logs,
@@ -193,25 +208,79 @@ class _Body extends ConsumerWidget {
                   : Column(
                       children: [
                         for (final log in logs)
-                          ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            title: Text(
-                              [
-                                material.formatMediumDate(
-                                  log.startedAt.toLocal(),
-                                ),
-                                material.formatTimeOfDay(
-                                  TimeOfDay.fromDateTime(
-                                    log.startedAt.toLocal(),
-                                  ),
-                                ),
-                                if (log.durationMs != null)
-                                  formatDuration(l10n, log.durationMs!),
-                              ].join(' · '),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: AppSpacing.sm,
                             ),
-                            subtitle: Text(summarizeLog(context, type, log)),
-                            trailing: const Icon(AppIcons.chevron),
-                            onTap: () => onOpenLog(log),
+                            child: AppCard(
+                              flat: true,
+                              onTap: () => onOpenLog(log),
+                              padding: const EdgeInsets.fromLTRB(
+                                AppSpacing.lg,
+                                AppSpacing.md,
+                                AppSpacing.sm,
+                                AppSpacing.md,
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          [
+                                            material.formatMediumDate(
+                                              log.startedAt.toLocal(),
+                                            ),
+                                            material.formatTimeOfDay(
+                                              TimeOfDay.fromDateTime(
+                                                log.startedAt.toLocal(),
+                                              ),
+                                            ),
+                                            if (log.durationMs != null)
+                                              formatDuration(
+                                                l10n,
+                                                log.durationMs!,
+                                              ),
+                                          ].join(' · '),
+                                          style: context.textStyles.labelLarge,
+                                        ),
+                                        if (summarizeLog(
+                                          context,
+                                          type,
+                                          log,
+                                        ).isNotEmpty)
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              top: AppSpacing.xxs,
+                                            ),
+                                            child: Text(
+                                              summarizeLog(context, type, log),
+                                              maxLines: 3,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: context
+                                                  .textStyles
+                                                  .bodySmall
+                                                  ?.copyWith(
+                                                    color: context
+                                                        .colors
+                                                        .textSecondary,
+                                                    height: 1.45,
+                                                  ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                  Icon(
+                                    AppIcons.chevron,
+                                    size: 18,
+                                    color: context.colors.textTertiary,
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                       ],
                     ),

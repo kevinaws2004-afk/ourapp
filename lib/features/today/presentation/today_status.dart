@@ -41,3 +41,28 @@ String todayStatusLine(
       ? l10n.todayStatusProgress(done, total)
       : l10n.todayStatusProgressTime(done, total, time);
 }
+
+/// The hero's line under "2 of 5 done": encouragement, not a repeat of the
+/// count.
+String heroLine(
+  BuildContext context,
+  DayProgress? progress,
+  PlannedItem? running,
+) {
+  final l10n = AppLocalizations.of(context);
+  if (progress == null) return '';
+  if (running != null) return l10n.heroRunning(running.plan.title);
+  if (progress.total == 0) return l10n.heroEmpty;
+  if (progress.allDone) return l10n.heroAllDone;
+  final left = progress.total - progress.done;
+  if (progress.done == 0) {
+    return switch (progress.firstStart) {
+      final first? => l10n.heroFirstAt(
+        MaterialLocalizations.of(context)
+            .formatTimeOfDay(TimeOfDay.fromDateTime(first.toLocal())),
+      ),
+      null => l10n.heroLetsGo,
+    };
+  }
+  return l10n.heroToGo(left);
+}
