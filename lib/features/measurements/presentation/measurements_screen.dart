@@ -6,6 +6,8 @@ import '../../../core/design/context_ext.dart';
 import '../../../core/design/tokens/spacing.dart';
 import '../../../core/design/window_size_class.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import '../../../shared/widgets/screen_header.dart';
+import '../../../shared/widgets/settings_group.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../domain/measurement.dart';
 import 'measurement_copy.dart';
@@ -24,34 +26,38 @@ class MeasurementsScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final margin = WindowSizeClass.of(context).screenMargin;
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.measurementsTitle)),
+      appBar: AppBar(),
       body: AsyncValueView<Map<MeasurementType, Measurement>>(
         value: ref.watch(latestMeasurementsProvider),
         onRetry: () => ref.invalidate(latestMeasurementsProvider),
         data: (latest) => ListView(
-          padding: EdgeInsets.symmetric(
-            horizontal: margin,
-            vertical: AppSpacing.sm,
-          ),
+          padding: EdgeInsets.fromLTRB(margin, 0, margin, AppSpacing.xxxl),
           children: [
-            Text(
-              l10n.measurementsIntro,
-              style: context.textStyles.bodyMedium?.copyWith(
-                color: context.colors.textSecondary,
-              ),
+            ScreenHeader(
+              showMark: false,
+              title: l10n.measurementsTitle,
+              subtitle: l10n.measurementsIntro,
             ),
-            const SizedBox(height: AppSpacing.md),
-            for (final type in MeasurementType.values)
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(measurementTypeLabel(l10n, type)),
-                subtitle: Text(switch (latest[type]) {
-                  final m? => formatMeasurement(m),
-                  null => l10n.measurementNone,
-                }),
-                trailing: const Icon(AppIcons.chevron),
-                onTap: () => onOpenType(type),
-              ),
+            SettingsGroup(
+              children: [
+                for (final type in MeasurementType.values)
+                  SettingsTile(
+                    icon: AppIcons.measurements,
+                    iconColor: latest[type] == null
+                        ? context.colors.textTertiary
+                        : context.colors.accent,
+                    iconBackground: latest[type] == null
+                        ? context.colors.surfaceSunken
+                        : context.colors.accentSoft,
+                    title: measurementTypeLabel(l10n, type),
+                    value: switch (latest[type]) {
+                      final m? => formatMeasurement(m),
+                      null => l10n.measurementNone,
+                    },
+                    onTap: () => onOpenType(type),
+                  ),
+              ],
+            ),
           ],
         ),
       ),

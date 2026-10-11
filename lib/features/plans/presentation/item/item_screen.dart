@@ -1,3 +1,6 @@
+import '../../../notifications/data/reminder_store.dart';
+import '../../../notifications/presentation/notification_providers.dart';
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -94,6 +97,31 @@ class ItemScreen extends ConsumerWidget {
                   await onEditFields!(type.id);
                   await notifier.reload();
                 },
+              ),
+            if (state?.plan case final plan?
+                when plan.plannedStartAt != null &&
+                    plan.status == PlanStatus.planned)
+              IconButton(
+                tooltip: AppLocalizations.of(context).reminderMenu,
+                icon: Icon(
+                  reminderFor(
+                            plan,
+                            ref.watch(remindersProvider).value ?? const {},
+                          ) ==
+                          null
+                      ? AppIcons.bell
+                      : AppIcons.bellOn,
+                ),
+                onPressed: () => unawaited(
+                  PlanActions(context, ref).editReminder(
+                    PlannedItem(
+                      plan: plan,
+                      type: state!.type,
+                      records: const [],
+                      status: EffectivePlanStatus.planned,
+                    ),
+                  ),
+                ),
               ),
             if (state?.plan != null)
               IconButton(

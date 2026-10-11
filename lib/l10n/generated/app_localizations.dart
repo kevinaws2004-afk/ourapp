@@ -97,7 +97,7 @@ abstract class AppLocalizations {
   /// Temporary visible product name. The real name is undecided (ADR-010). Change together with Android strings.xml and iOS Info.plist.
   ///
   /// In en, this message translates to:
-  /// **'OurApp'**
+  /// **'Daylog'**
   String get appTitle;
 
   /// Primary navigation tab: today's plan and timeline.
@@ -115,7 +115,7 @@ abstract class AppLocalizations {
   /// Primary navigation: Challenges tab (ADR-044).
   ///
   /// In en, this message translates to:
-  /// **'Challenges'**
+  /// **'Goals'**
   String get navChallenges;
 
   /// Primary navigation tab: graphs and history.
@@ -133,13 +133,13 @@ abstract class AppLocalizations {
   /// Title of the first-run screen (placeholder for the full onboarding).
   ///
   /// In en, this message translates to:
-  /// **'Welcome'**
+  /// **'Your day, in order.'**
   String get onboardingTitle;
 
   /// Short first-run explanation, based on the product definition and privacy promise.
   ///
   /// In en, this message translates to:
-  /// **'Plan your day, record what you actually do, and see your progress over time. Your data stays on this device.'**
+  /// **'Plan what matters, record what you actually do, and watch your days add up.'**
   String get onboardingBody;
 
   /// Button that finishes the first-run screen.
@@ -8695,13 +8695,13 @@ abstract class AppLocalizations {
   /// Validation: a challenge's first day can't be after today.
   ///
   /// In en, this message translates to:
-  /// **'A challenge can\'t start in the future.'**
+  /// **'A goal can\'t start in the future.'**
   String get validationChallengeStartInFuture;
 
   /// Title of the challenges list under Me and the section on Today (ADR-044).
   ///
   /// In en, this message translates to:
-  /// **'Challenges'**
+  /// **'Goals'**
   String get challengesTitle;
 
   /// Challenges screen subtitle.
@@ -8713,7 +8713,7 @@ abstract class AppLocalizations {
   /// Challenges empty state title.
   ///
   /// In en, this message translates to:
-  /// **'No challenges yet'**
+  /// **'No goals yet'**
   String get challengesEmptyTitle;
 
   /// Challenges empty state message.
@@ -8725,19 +8725,19 @@ abstract class AppLocalizations {
   /// Button: start a new challenge.
   ///
   /// In en, this message translates to:
-  /// **'New challenge'**
+  /// **'New goal'**
   String get newChallenge;
 
   /// Challenge sheet title when creating.
   ///
   /// In en, this message translates to:
-  /// **'New challenge'**
+  /// **'New goal'**
   String get challengeNewTitle;
 
   /// Challenge sheet title when editing.
   ///
   /// In en, this message translates to:
-  /// **'Edit challenge'**
+  /// **'Edit goal'**
   String get challengeEditTitle;
 
   /// Challenge sheet: the activity done every day.
@@ -8779,7 +8779,7 @@ abstract class AppLocalizations {
   /// Challenge sheet: create button.
   ///
   /// In en, this message translates to:
-  /// **'Start challenge'**
+  /// **'Start goal'**
   String get challengeStartAction;
 
   /// Default challenge name, e.g. "75 days of Meditation".
@@ -8875,19 +8875,19 @@ abstract class AppLocalizations {
   /// Challenge detail: end it (its records stay).
   ///
   /// In en, this message translates to:
-  /// **'End challenge'**
+  /// **'End goal'**
   String get challengeEnd;
 
   /// Snackbar after ending a challenge.
   ///
   /// In en, this message translates to:
-  /// **'Challenge ended'**
+  /// **'Goal ended'**
   String get challengeEnded;
 
   /// Challenge detail: the challenge no longer exists.
   ///
   /// In en, this message translates to:
-  /// **'This challenge has ended.'**
+  /// **'This goal has ended.'**
   String get challengeNotFound;
 
   /// Challenge detail: the first day that counts.
@@ -8899,7 +8899,7 @@ abstract class AppLocalizations {
   /// Tooltip of the challenge screen's menu button.
   ///
   /// In en, this message translates to:
-  /// **'Challenge options'**
+  /// **'Goal options'**
   String get challengeOptions;
 
   /// Title of Me → Appearance and its row on Me.
@@ -8911,7 +8911,7 @@ abstract class AppLocalizations {
   /// Intro on the Appearance screen.
   ///
   /// In en, this message translates to:
-  /// **'Pick the look you like. It changes the whole app; your days stay the same.'**
+  /// **'Pick the colors you like. It changes the whole app.'**
   String get appearanceIntro;
 
   /// Chip on the theme that's currently applied.
@@ -8923,37 +8923,37 @@ abstract class AppLocalizations {
   /// Name of the rose theme.
   ///
   /// In en, this message translates to:
-  /// **'Rose'**
+  /// **'Pastel Confection'**
   String get themeNameRose;
 
   /// Name of the lavender theme.
   ///
   /// In en, this message translates to:
-  /// **'Lavender'**
+  /// **'Electric Lavender'**
   String get themeNameLavender;
 
   /// Name of the papaya theme.
   ///
   /// In en, this message translates to:
-  /// **'Papaya'**
+  /// **'Papaya Confection'**
   String get themeNamePapaya;
 
   /// Description of the rose theme.
   ///
   /// In en, this message translates to:
-  /// **'Soft blush and rose, with calm teal.'**
+  /// **'Candy pink with fresh teal and butter.'**
   String get themeDescriptionRose;
 
   /// Description of the lavender theme.
   ///
   /// In en, this message translates to:
-  /// **'Porcelain and lavender, with fresh mint.'**
+  /// **'Electric lavender with fresh mint and sky.'**
   String get themeDescriptionLavender;
 
   /// Description of the papaya theme.
   ///
   /// In en, this message translates to:
-  /// **'Warm papaya, with aqua mint.'**
+  /// **'Warm papaya with aqua mint and periwinkle.'**
   String get themeDescriptionPapaya;
 
   /// Sample item title in a theme preview.
@@ -9680,6 +9680,1128 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =0{Add them as you go} =1{1 activity} other{{count} activities}}'**
   String meActivitiesCount(int count);
+
+  /// No description provided for @quickTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick start'**
+  String get quickTitle;
+
+  /// No description provided for @quickSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap an activity to start it now.'**
+  String get quickSubtitle;
+
+  /// No description provided for @quickPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan something'**
+  String get quickPlan;
+
+  /// No description provided for @quickPlanHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to today, at a time or anytime'**
+  String get quickPlanHint;
+
+  /// No description provided for @quickMeasure.
+  ///
+  /// In en, this message translates to:
+  /// **'Log a measurement'**
+  String get quickMeasure;
+
+  /// No description provided for @quickMeasureHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight, waist, body fat…'**
+  String get quickMeasureHint;
+
+  /// No description provided for @quickNewActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'New activity'**
+  String get quickNewActivity;
+
+  /// No description provided for @quickNewActivityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Track anything, your way'**
+  String get quickNewActivityHint;
+
+  /// No description provided for @quickStartActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Start {name} now'**
+  String quickStartActivity(String name);
+
+  /// No description provided for @greetingNamed.
+  ///
+  /// In en, this message translates to:
+  /// **'{greeting}, {name}'**
+  String greetingNamed(String greeting, String name);
+
+  /// No description provided for @heroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get heroTitle;
+
+  /// No description provided for @heroNothingYet.
+  ///
+  /// In en, this message translates to:
+  /// **'A fresh day'**
+  String get heroNothingYet;
+
+  /// No description provided for @heroDoneOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} done'**
+  String heroDoneOf(int done, int total);
+
+  /// No description provided for @heroTracked.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracked'**
+  String get heroTracked;
+
+  /// No description provided for @heroLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'To do'**
+  String get heroLeft;
+
+  /// No description provided for @heroStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak'**
+  String get heroStreak;
+
+  /// No description provided for @todayStartSomething.
+  ///
+  /// In en, this message translates to:
+  /// **'Start something'**
+  String get todayStartSomething;
+
+  /// No description provided for @todayAddShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get todayAddShort;
+
+  /// No description provided for @itemsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 item} other{{count} items}}'**
+  String itemsCount(int count);
+
+  /// No description provided for @heroRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} is running'**
+  String heroRunning(String title);
+
+  /// No description provided for @heroEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan your day, or start something now.'**
+  String get heroEmpty;
+
+  /// No description provided for @heroAllDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything done. Enjoy the rest of your day.'**
+  String get heroAllDone;
+
+  /// No description provided for @heroFirstAt.
+  ///
+  /// In en, this message translates to:
+  /// **'First up at {time}'**
+  String heroFirstAt(String time);
+
+  /// No description provided for @heroLetsGo.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick one and get going.'**
+  String get heroLetsGo;
+
+  /// No description provided for @heroToGo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{One more to go. Keep it up!} other{{count} more to go. Keep it up!}}'**
+  String heroToGo(int count);
+
+  /// No description provided for @statDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Things done'**
+  String get statDone;
+
+  /// No description provided for @statTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Time tracked'**
+  String get statTime;
+
+  /// No description provided for @statActiveDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Active days'**
+  String get statActiveDays;
+
+  /// No description provided for @statPlanHit.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan completed'**
+  String get statPlanHit;
+
+  /// No description provided for @statOfDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{days}/{total}'**
+  String statOfDays(int days, int total);
+
+  /// No description provided for @seeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get seeAll;
+
+  /// No description provided for @goalsEmptyCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Set your first goal'**
+  String get goalsEmptyCta;
+
+  /// No description provided for @goalsEmptyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick an activity and a number of days. We will count your streak.'**
+  String get goalsEmptyHint;
+
+  /// No description provided for @goalsNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New goal'**
+  String get goalsNew;
+
+  /// No description provided for @goalProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {target} days'**
+  String goalProgress(int done, int target);
+
+  /// No description provided for @actionCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get actionCancel;
+
+  /// No description provided for @meEditName.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit your name'**
+  String get meEditName;
+
+  /// No description provided for @meAddName.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your name'**
+  String get meAddName;
+
+  /// No description provided for @mePrivateBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Private · stored on this device'**
+  String get mePrivateBadge;
+
+  /// No description provided for @meStatDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Active days'**
+  String get meStatDays;
+
+  /// No description provided for @meStatActivities.
+  ///
+  /// In en, this message translates to:
+  /// **'Activities'**
+  String get meStatActivities;
+
+  /// No description provided for @meStatGoals.
+  ///
+  /// In en, this message translates to:
+  /// **'Goals reached'**
+  String get meStatGoals;
+
+  /// No description provided for @meGroupSetup.
+  ///
+  /// In en, this message translates to:
+  /// **'Your setup'**
+  String get meGroupSetup;
+
+  /// No description provided for @meGroupPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get meGroupPreferences;
+
+  /// No description provided for @meGroupData.
+  ///
+  /// In en, this message translates to:
+  /// **'Data & privacy'**
+  String get meGroupData;
+
+  /// No description provided for @meGroupAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get meGroupAbout;
+
+  /// No description provided for @meGoalsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Streaks and day targets'**
+  String get meGoalsSubtitle;
+
+  /// No description provided for @meDarkMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Light & dark'**
+  String get meDarkMode;
+
+  /// No description provided for @meName.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name'**
+  String get meName;
+
+  /// No description provided for @meNotSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get meNotSet;
+
+  /// No description provided for @meExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export your data'**
+  String get meExport;
+
+  /// No description provided for @meExportSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A full backup as a JSON file'**
+  String get meExportSubtitle;
+
+  /// No description provided for @meExportSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Daylog backup'**
+  String get meExportSubject;
+
+  /// No description provided for @mePrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get mePrivacy;
+
+  /// No description provided for @mePrivacySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data never leaves this phone'**
+  String get mePrivacySubtitle;
+
+  /// No description provided for @meVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String meVersion(String version);
+
+  /// No description provided for @meAboutLegal.
+  ///
+  /// In en, this message translates to:
+  /// **'Made for people who like to see their days add up.'**
+  String get meAboutLegal;
+
+  /// No description provided for @meFooter.
+  ///
+  /// In en, this message translates to:
+  /// **'Daylog · Plan it. Do it. See it.'**
+  String get meFooter;
+
+  /// No description provided for @meNameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What should we call you?'**
+  String get meNameTitle;
+
+  /// No description provided for @meNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first name'**
+  String get meNameHint;
+
+  /// No description provided for @appearanceSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get appearanceSystem;
+
+  /// No description provided for @appearanceLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get appearanceLight;
+
+  /// No description provided for @appearanceDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get appearanceDark;
+
+  /// No description provided for @appearanceThemeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get appearanceThemeTitle;
+
+  /// No description provided for @privacyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your days are yours'**
+  String get privacyTitle;
+
+  /// No description provided for @privacyPointDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything you plan and record is stored only on this phone.'**
+  String get privacyPointDevice;
+
+  /// No description provided for @privacyPointNoAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'No account, no sign-in, no tracking, no ads.'**
+  String get privacyPointNoAccount;
+
+  /// No description provided for @privacyPointExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export a full backup any time and keep it wherever you like.'**
+  String get privacyPointExport;
+
+  /// No description provided for @onboardingBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get onboardingBack;
+
+  /// No description provided for @onboardingSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip for now'**
+  String get onboardingSkip;
+
+  /// No description provided for @onboardingContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get onboardingContinue;
+
+  /// No description provided for @onboardingPointPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan your day'**
+  String get onboardingPointPlan;
+
+  /// No description provided for @onboardingPointPlanBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Set times, or keep it loose with Anytime.'**
+  String get onboardingPointPlanBody;
+
+  /// No description provided for @onboardingPointDo.
+  ///
+  /// In en, this message translates to:
+  /// **'Do it, and record it'**
+  String get onboardingPointDo;
+
+  /// No description provided for @onboardingPointDoBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a timer, tick it off, log the details.'**
+  String get onboardingPointDoBody;
+
+  /// No description provided for @onboardingPointSee.
+  ///
+  /// In en, this message translates to:
+  /// **'See your progress'**
+  String get onboardingPointSee;
+
+  /// No description provided for @onboardingPointSeeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Streaks, goals and charts that build themselves.'**
+  String get onboardingPointSeeBody;
+
+  /// No description provided for @onboardingNameBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Just a first name, so your day can greet you. It stays on this phone.'**
+  String get onboardingNameBody;
+
+  /// No description provided for @onboardingPickTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you want to track?'**
+  String get onboardingPickTitle;
+
+  /// No description provided for @onboardingPickBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a few to start. You can add anything else later, even your own.'**
+  String get onboardingPickBody;
+
+  /// No description provided for @onboardingPickHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Each one comes ready to use. Change its details whenever you like.'**
+  String get onboardingPickHint;
+
+  /// No description provided for @onboardingFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Start with 1 activity} other{Start with {count} activities}}'**
+  String onboardingFinish(int count);
+
+  /// No description provided for @onboardingFinishEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Start with an empty day'**
+  String get onboardingFinishEmpty;
+
+  /// No description provided for @planOverline.
+  ///
+  /// In en, this message translates to:
+  /// **'Shape your week'**
+  String get planOverline;
+
+  /// No description provided for @goalsIdeas.
+  ///
+  /// In en, this message translates to:
+  /// **'IDEAS TO START WITH'**
+  String get goalsIdeas;
+
+  /// No description provided for @statusScheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled'**
+  String get statusScheduled;
+
+  /// No description provided for @statusRecorded.
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded'**
+  String get statusRecorded;
+
+  /// No description provided for @heroRhythm.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s rhythm'**
+  String get heroRhythm;
+
+  /// No description provided for @heroTrackedValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{time} tracked'**
+  String heroTrackedValue(String time);
+
+  /// No description provided for @heroNothingTracked.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing tracked yet'**
+  String get heroNothingTracked;
+
+  /// No description provided for @heroStreakDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{days}d'**
+  String heroStreakDays(int days);
+
+  /// No description provided for @nowNextStartRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Start & record'**
+  String get nowNextStartRecord;
+
+  /// No description provided for @nowNextMarkDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as done'**
+  String get nowNextMarkDone;
+
+  /// No description provided for @heroStreakLong.
+  ///
+  /// In en, this message translates to:
+  /// **'{days}-day streak'**
+  String heroStreakLong(int days);
+
+  /// No description provided for @reminderNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No reminder'**
+  String get reminderNone;
+
+  /// No description provided for @reminderAtStart.
+  ///
+  /// In en, this message translates to:
+  /// **'At start time'**
+  String get reminderAtStart;
+
+  /// No description provided for @reminderMinutesBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min before'**
+  String reminderMinutesBefore(int minutes);
+
+  /// No description provided for @reminderHoursBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours, plural, =1{1 hour before} other{{hours} hours before}}'**
+  String reminderHoursBefore(int hours);
+
+  /// No description provided for @reminderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Want a reminder?'**
+  String get reminderTitle;
+
+  /// No description provided for @reminderSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} at {time}'**
+  String reminderSubtitle(String title, String time);
+
+  /// No description provided for @reminderDontAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this every time, don\'t ask again'**
+  String get reminderDontAsk;
+
+  /// No description provided for @reminderSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me'**
+  String get reminderSet;
+
+  /// No description provided for @reminderSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'No reminder'**
+  String get reminderSkip;
+
+  /// No description provided for @reminderMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder'**
+  String get reminderMenu;
+
+  /// No description provided for @reminderNeedsTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Give it a time to set a reminder.'**
+  String get reminderNeedsTime;
+
+  /// No description provided for @notifyStartsNow.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} starts now'**
+  String notifyStartsNow(String title);
+
+  /// No description provided for @notifyStartsIn.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} in {minutes} min'**
+  String notifyStartsIn(String title, int minutes);
+
+  /// No description provided for @notifyAt.
+  ///
+  /// In en, this message translates to:
+  /// **'At {time}'**
+  String notifyAt(String time);
+
+  /// No description provided for @notifyAtFor.
+  ///
+  /// In en, this message translates to:
+  /// **'At {time} · {minutes} min planned'**
+  String notifyAtFor(String time, int minutes);
+
+  /// No description provided for @notifyTimerDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}: time is up'**
+  String notifyTimerDone(String title);
+
+  /// No description provided for @notifyTimerDoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {minutes} min are done. Tap to finish and log it.'**
+  String notifyTimerDoneBody(int minutes);
+
+  /// No description provided for @notifyTimerFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer running'**
+  String get notifyTimerFallback;
+
+  /// No description provided for @notifyTimerRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Running · tap to open'**
+  String get notifyTimerRunning;
+
+  /// No description provided for @notifyTimerPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused · tap to open'**
+  String get notifyTimerPaused;
+
+  /// No description provided for @notifyMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 thing on your plan today} other{{count} things on your plan today}}'**
+  String notifyMorning(int count);
+
+  /// No description provided for @notifyMorningEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing planned yet today'**
+  String get notifyMorningEmpty;
+
+  /// No description provided for @notifyMorningBody.
+  ///
+  /// In en, this message translates to:
+  /// **'First up: {title} at {time}'**
+  String notifyMorningBody(String title, String time);
+
+  /// No description provided for @notifyMorningBodyAnytime.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Daylog to plan your day.'**
+  String get notifyMorningBodyAnytime;
+
+  /// No description provided for @notifyEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'How did today go?'**
+  String get notifyEvening;
+
+  /// No description provided for @notifyEveningBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tick off what you did and plan tomorrow.'**
+  String get notifyEveningBody;
+
+  /// No description provided for @notifyStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your {days}-day {name} streak'**
+  String notifyStreak(int days, String name);
+
+  /// No description provided for @notifyStreakBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Not done yet today. There is still time.'**
+  String get notifyStreakBody;
+
+  /// No description provided for @notificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsTitle;
+
+  /// No description provided for @notificationsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders, timer alerts and daily nudges'**
+  String get notificationsSubtitle;
+
+  /// No description provided for @notificationsMaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow notifications'**
+  String get notificationsMaster;
+
+  /// No description provided for @notificationsMasterHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Off means Daylog never notifies you.'**
+  String get notificationsMasterHint;
+
+  /// No description provided for @notificationsBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are blocked for Daylog in your phone settings.'**
+  String get notificationsBlocked;
+
+  /// No description provided for @notificationsAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow'**
+  String get notificationsAllow;
+
+  /// No description provided for @notificationsNewItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders for new items'**
+  String get notificationsNewItems;
+
+  /// No description provided for @notificationsAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask every time'**
+  String get notificationsAsk;
+
+  /// No description provided for @notificationsAlways.
+  ///
+  /// In en, this message translates to:
+  /// **'Always · {choice}'**
+  String notificationsAlways(String choice);
+
+  /// No description provided for @notificationsNever.
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get notificationsNever;
+
+  /// No description provided for @notificationsGroupReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get notificationsGroupReminders;
+
+  /// No description provided for @notificationsGroupDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get notificationsGroupDaily;
+
+  /// No description provided for @notificationsTimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer alerts'**
+  String get notificationsTimer;
+
+  /// No description provided for @notificationsTimerHint.
+  ///
+  /// In en, this message translates to:
+  /// **'While a timer runs, and when its time is up'**
+  String get notificationsTimerHint;
+
+  /// No description provided for @notificationsMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning plan'**
+  String get notificationsMorning;
+
+  /// No description provided for @notificationsEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening review'**
+  String get notificationsEvening;
+
+  /// No description provided for @notificationsGoals.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal streaks'**
+  String get notificationsGoals;
+
+  /// No description provided for @notificationsGoalsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'At 8 PM if a goal is not done yet'**
+  String get notificationsGoalsHint;
+
+  /// No description provided for @notificationsAt.
+  ///
+  /// In en, this message translates to:
+  /// **'At {time}'**
+  String notificationsAt(String time);
+
+  /// No description provided for @notificationsDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default reminder'**
+  String get notificationsDefault;
+
+  /// No description provided for @themeNameOcean.
+  ///
+  /// In en, this message translates to:
+  /// **'Ocean Mist'**
+  String get themeNameOcean;
+
+  /// No description provided for @themeNameMatcha.
+  ///
+  /// In en, this message translates to:
+  /// **'Matcha Latte'**
+  String get themeNameMatcha;
+
+  /// No description provided for @themeNameLilac.
+  ///
+  /// In en, this message translates to:
+  /// **'Lilac Dream'**
+  String get themeNameLilac;
+
+  /// No description provided for @themeNameSky.
+  ///
+  /// In en, this message translates to:
+  /// **'Sky Candy'**
+  String get themeNameSky;
+
+  /// No description provided for @themeNameHoney.
+  ///
+  /// In en, this message translates to:
+  /// **'Honey Glow'**
+  String get themeNameHoney;
+
+  /// No description provided for @themeNameSlate.
+  ///
+  /// In en, this message translates to:
+  /// **'Calm Slate'**
+  String get themeNameSlate;
+
+  /// No description provided for @themeNameMint.
+  ///
+  /// In en, this message translates to:
+  /// **'Mint Cream'**
+  String get themeNameMint;
+
+  /// No description provided for @themeNameCherry.
+  ///
+  /// In en, this message translates to:
+  /// **'Cherry Pop'**
+  String get themeNameCherry;
+
+  /// No description provided for @themeNameForest.
+  ///
+  /// In en, this message translates to:
+  /// **'Forest Walk'**
+  String get themeNameForest;
+
+  /// No description provided for @themeNameMidnight.
+  ///
+  /// In en, this message translates to:
+  /// **'Midnight Blue'**
+  String get themeNameMidnight;
+
+  /// No description provided for @themeNameMocha.
+  ///
+  /// In en, this message translates to:
+  /// **'Mocha Latte'**
+  String get themeNameMocha;
+
+  /// No description provided for @themeNameRoseGold.
+  ///
+  /// In en, this message translates to:
+  /// **'Rose Gold'**
+  String get themeNameRoseGold;
+
+  /// No description provided for @activityColorIndigo.
+  ///
+  /// In en, this message translates to:
+  /// **'Indigo'**
+  String get activityColorIndigo;
+
+  /// No description provided for @activityColorViolet.
+  ///
+  /// In en, this message translates to:
+  /// **'Violet'**
+  String get activityColorViolet;
+
+  /// No description provided for @activityColorFuchsia.
+  ///
+  /// In en, this message translates to:
+  /// **'Fuchsia'**
+  String get activityColorFuchsia;
+
+  /// No description provided for @activityColorRed.
+  ///
+  /// In en, this message translates to:
+  /// **'Red'**
+  String get activityColorRed;
+
+  /// No description provided for @activityColorYellow.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow'**
+  String get activityColorYellow;
+
+  /// No description provided for @activityColorAmber.
+  ///
+  /// In en, this message translates to:
+  /// **'Amber'**
+  String get activityColorAmber;
+
+  /// No description provided for @activityColorLime.
+  ///
+  /// In en, this message translates to:
+  /// **'Lime'**
+  String get activityColorLime;
+
+  /// No description provided for @activityColorNavy.
+  ///
+  /// In en, this message translates to:
+  /// **'Navy'**
+  String get activityColorNavy;
+
+  /// No description provided for @activityColorCyan.
+  ///
+  /// In en, this message translates to:
+  /// **'Cyan'**
+  String get activityColorCyan;
+
+  /// No description provided for @activityColorBrown.
+  ///
+  /// In en, this message translates to:
+  /// **'Brown'**
+  String get activityColorBrown;
+
+  /// No description provided for @appearanceTrueBlack.
+  ///
+  /// In en, this message translates to:
+  /// **'True black'**
+  String get appearanceTrueBlack;
+
+  /// No description provided for @appearanceTrueBlackHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Pure black dark mode for OLED screens. Saves battery.'**
+  String get appearanceTrueBlackHint;
+
+  /// No description provided for @notesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notesTitle;
+
+  /// No description provided for @notesNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New note'**
+  String get notesNew;
+
+  /// No description provided for @notesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 note} other{{count} notes}}'**
+  String notesCount(int count);
+
+  /// No description provided for @notesSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search notes'**
+  String get notesSearch;
+
+  /// No description provided for @notesEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your notes live here'**
+  String get notesEmptyTitle;
+
+  /// No description provided for @notesEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Ideas, lists, thoughts, anything that isn\'t an activity. Private, on this phone.'**
+  String get notesEmptyMessage;
+
+  /// No description provided for @notesNoMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'No notes match your search.'**
+  String get notesNoMatch;
+
+  /// No description provided for @notesPinned.
+  ///
+  /// In en, this message translates to:
+  /// **'Pinned'**
+  String get notesPinned;
+
+  /// No description provided for @notesOthers.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notesOthers;
+
+  /// No description provided for @notesDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Note deleted'**
+  String get notesDeleted;
+
+  /// No description provided for @notesColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Note color'**
+  String get notesColor;
+
+  /// No description provided for @notesColorNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No color'**
+  String get notesColorNone;
+
+  /// No description provided for @notesPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin note'**
+  String get notesPin;
+
+  /// No description provided for @notesUnpin.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpin note'**
+  String get notesUnpin;
+
+  /// No description provided for @notesTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get notesTitleHint;
+
+  /// No description provided for @notesBodyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Start writing…'**
+  String get notesBodyHint;
+
+  /// No description provided for @notesEdited.
+  ///
+  /// In en, this message translates to:
+  /// **'Edited {time}'**
+  String notesEdited(String time);
+
+  /// No description provided for @notesWords.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 word} other{{count} words}}'**
+  String notesWords(int count);
+
+  /// No description provided for @quickNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a note'**
+  String get quickNote;
+
+  /// No description provided for @quickNoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Anything that isn\'t an activity'**
+  String get quickNoteHint;
+
+  /// No description provided for @notesMeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ideas, lists and thoughts'**
+  String get notesMeSubtitle;
 }
 
 class _AppLocalizationsDelegate

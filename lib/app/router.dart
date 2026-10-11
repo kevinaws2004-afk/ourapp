@@ -37,6 +37,13 @@ import '../features/focus/presentation/focus_screen.dart';
 import '../features/measurements/domain/measurement.dart';
 import '../features/measurements/presentation/measurement_type_screen.dart';
 import '../features/measurements/presentation/measurements_screen.dart';
+import '../features/today/presentation/quick_start_sheet.dart';
+import '../features/plans/presentation/widgets/add_sheet.dart';
+import '../features/notifications/presentation/notifications_screen.dart';
+import '../features/notes/domain/note.dart';
+import '../features/notes/presentation/note_editor_screen.dart';
+import '../features/notes/presentation/note_providers.dart';
+import '../features/notes/presentation/notes_screen.dart';
 import 'app_shell.dart';
 import 'dev/demo_data.dart';
 import 'dev/dev_tools.dart';
@@ -64,6 +71,13 @@ abstract final class AppRoutes {
 
   /// The app's theme, under Me (ADR-045).
   static const appearance = '/me/appearance';
+
+  /// Notes: the board, and one note.
+  static const notes = '/notes';
+  static String note(NoteId id) => '/notes/${id.value}';
+
+  /// Reminders and notifications, under Me.
+  static const notifications = '/me/notifications';
 
   /// Body measurements, under Me (Phase 6).
   static const measurements = '/me/measurements';
@@ -192,6 +206,51 @@ final routerProvider = Provider<GoRouter>((ref) {
         context.push<ActivityTypeId>(AppRoutes.newActivityNamed(name)),
   );
 
+  /// Starts a plan just added with "Now" and opens it running.
+  Future<void> startPlanNow(BuildContext context, PlanId planId) async {
+    final l10n = AppLocalizations.of(context);
+    try {
+      final type = await ref.read(ensureItemActivityProvider)(planId);
+      await ref.read(startFocusSessionProvider)(type, planId: planId);
+    } catch (error) {
+      if (context.mounted) {
+        showMessageSnackBar(context, errorMessage(l10n, error));
+      }
+      return;
+    }
+    if (context.mounted) unawaited(context.push(AppRoutes.item(planId)));
+  }
+
+  /// The + sheet for today, from anywhere.
+  void addToToday(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    unawaited(
+      showAddSheet(
+        context,
+        date: currentLocalDate(ref.read(clockProvider)),
+        dayName: l10n.addToday,
+        chooser: chooser(context),
+        onStartNow: (id) => unawaited(startPlanNow(context, id)),
+      ),
+    );
+  }
+
+  /// A new, empty note, opened to write in.
+  Future<void> newNote(BuildContext context) async {
+    final id = await ref.read(noteRepositoryProvider).create();
+    if (context.mounted) unawaited(context.push(AppRoutes.note(id)));
+  }
+
+  /// The center + of the tab bar (spec §37): start, plan, measure, create.
+  final quickStart = QuickStartActions(
+    startActivity: (context, type) =>
+        unawaited(doNow(context, type.id, withTimer: type.supportsTimer)),
+    planSomething: addToToday,
+    measure: (context) => context.go(AppRoutes.measurements),
+    newActivity: (context) => unawaited(openNewActivity(context)),
+    writeNote: (context) => unawaited(newNote(context)),
+  );
+
   final router = GoRouter(
     navigatorKey: rootNavigatorKey,
     initialLocation: onboardingCompleted.value
@@ -208,8 +267,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const OnboardingScreen(),
       ),
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) =>
-            AppShell(navigationShell: navigationShell),
+        builder: (context, state, navigationShell) => AppShell(
+          navigationShell: navigationShell,
+          onQuickStart: (context) =>
+              unawaited(showQuickStartSheet(context, quickStart)),
+        ),
         branches: [
           StatefulShellBranch(
             routes: [
@@ -227,6 +289,11 @@ final routerProvider = Provider<GoRouter>((ref) {
                     context.go(AppRoutes.plan);
                   },
                   chooser: chooser(context),
+                  onOpenMe: () => context.go(AppRoutes.me),
+                  onOpenNotes: () => unawaited(context.push(AppRoutes.notes)),
+                  onStartActivity: (type) => unawaited(
+                    doNow(context, type.id, withTimer: type.supportsTimer),
+                  ),
                 ),
               ),
             ],
@@ -252,6 +319,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                   onOpenChallenge: (id) =>
                       unawaited(context.push(AppRoutes.challenge(id))),
                   chooser: chooser(context),
+                  onBack: () => context.go(AppRoutes.insights),
                 ),
               ),
             ],
@@ -264,6 +332,9 @@ final routerProvider = Provider<GoRouter>((ref) {
                   onOpenActivity: (id) =>
                       unawaited(context.push(AppRoutes.activityInsights(id))),
                   chooser: chooser(context),
+                  onOpenGoal: (id) =>
+                      unawaited(context.push(AppRoutes.challenge(id))),
+                  onOpenGoals: () => context.go(AppRoutes.challenges),
                 ),
                 routes: [
                   GoRoute(
@@ -284,6 +355,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                   onOpenActivities: () => context.go(AppRoutes.activities),
                   onOpenMeasurements: () => context.go(AppRoutes.measurements),
                   onOpenAppearance: () => context.go(AppRoutes.appearance),
+                  onOpenNotifications: () =>
+                      context.go(AppRoutes.notifications),
+                  onOpenGoals: () => context.go(AppRoutes.challenges),
+                  onOpenNotes: () => unawaited(context.push(AppRoutes.notes)),
                   onOpenTokenShowcase: devToolsEnabled
                       ? () => context.push(AppRoutes.tokenShowcase)
                       : null,
@@ -298,6 +373,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'appearance',
                     builder: (context, state) => const AppearanceScreen(),
+                  ),
+                  GoRoute(
+                    path: 'notifications',
+                    builder: (context, state) => const NotificationsScreen(),
                   ),
                   GoRoute(
                     path: 'measurements',
@@ -353,6 +432,22 @@ final routerProvider = Provider<GoRouter>((ref) {
                 ],
               ),
             ],
+          ),
+        ],
+      ),
+      GoRoute(
+        parentNavigatorKey: rootNavigatorKey,
+        path: AppRoutes.notes,
+        builder: (context, state) => NotesScreen(
+          onOpen: (id) => unawaited(context.push(AppRoutes.note(id))),
+          onNew: () => unawaited(newNote(context)),
+        ),
+        routes: [
+          GoRoute(
+            parentNavigatorKey: rootNavigatorKey,
+            path: ':id',
+            builder: (context, state) =>
+                NoteEditorScreen(id: NoteId(state.pathParameters['id']!)),
           ),
         ],
       ),

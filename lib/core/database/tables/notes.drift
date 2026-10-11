@@ -1,0 +1,24 @@
+-- Free-form notes (v10): anything worth writing down that isn't an
+-- activity. Soft-deleted like everything else, so a delete can be undone.
+
+CREATE TABLE notes (
+  internal_id INTEGER NOT NULL PRIMARY KEY,
+  public_id   TEXT NOT NULL UNIQUE CHECK (length(public_id) = 36),
+  title       TEXT NOT NULL DEFAULT '',
+  body        TEXT NOT NULL DEFAULT '',
+  -- An activity color key (ActivityColorKey name) tinting the card, or NULL.
+  color_key   TEXT,
+  pinned      INTEGER NOT NULL DEFAULT 0 CHECK (pinned IN (0, 1)),
+  created_at  INTEGER NOT NULL,
+  updated_at  INTEGER NOT NULL,
+  deleted_at  INTEGER
+) STRICT AS NoteRow;
+
+CREATE INDEX idx_notes_updated ON notes (pinned, updated_at) WHERE deleted_at IS NULL;
+
+CREATE TRIGGER trg_notes_public_id_immutable
+BEFORE UPDATE OF public_id ON notes
+WHEN OLD.public_id IS NOT NEW.public_id
+BEGIN
+  SELECT RAISE(ABORT, 'public_id_immutable');
+END;

@@ -13,4 +13,18 @@ abstract interface class AppPreferencesRepository {
   Stream<bool> watchOnboardingCompleted();
 
   Future<void> setOnboardingCompleted({required bool completed});
+
+  Stream<AppearanceMode> watchAppearance();
+
+  Future<void> setAppearance(AppearanceMode value);
+
+  /// What the app calls you (Today's greeting, Me).
+  Stream<String> watchName();
+
+  Future<void> setName(String value);
+
+  /// Dark mode on pure black.
+  Stream<bool> watchTrueBlack();
+
+  Future<void> setTrueBlack({required bool value});
 }

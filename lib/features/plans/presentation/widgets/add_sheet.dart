@@ -19,6 +19,7 @@ import '../../../activity_types/domain/activity_type_definition.dart';
 import '../../../activity_types/presentation/activity_type_providers.dart';
 import '../../../activity_types/presentation/built_in_activities.dart';
 import '../../../activity_types/presentation/starter_activities.dart';
+import '../../../notifications/presentation/reminder_prompt.dart';
 import '../../domain/plan.dart';
 import '../../domain/plan_series.dart';
 import '../../domain/plan_title_match.dart';
@@ -241,6 +242,16 @@ class _AddToDayState extends ConsumerState<AddToDay> {
       if (typeId == null) await ref.read(ensureItemActivityProvider)(id);
       if (_repeat case final rule? when !now) {
         await ref.read(repeatPlanProvider)(id, rule);
+      }
+      // Something with a time: "Want a reminder?"
+      if (timed && mounted) {
+        await askReminderFor(
+          context,
+          ref,
+          id,
+          title: _title.text.trim(),
+          startUtc: _instant(_start)!,
+        );
       }
       if (!mounted) return;
       if (now) {

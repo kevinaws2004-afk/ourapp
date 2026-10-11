@@ -6,7 +6,7 @@ import '../../core/design/icons/activity_icon_registry.dart';
 import '../../core/design/tokens/activity_palette.dart';
 
 /// An activity's identity everywhere (design_system.md §8): its icon in the
-/// palette `solid` color on a `soft` circle.
+/// palette `solid` color on a `soft` rounded square.
 class ActivityBadge extends StatelessWidget {
   const ActivityBadge({
     super.key,
@@ -27,12 +27,15 @@ class ActivityBadge extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(color: colors.soft, shape: BoxShape.circle),
+      decoration: BoxDecoration(
+        color: colors.soft,
+        borderRadius: BorderRadius.circular(size * 0.32),
+      ),
       alignment: Alignment.center,
       child: Icon(
         ActivityIconRegistry.resolve(iconId),
         color: colors.solid,
-        size: size * 0.5,
+        size: size * 0.52,
       ),
     );
   }

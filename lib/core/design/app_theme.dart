@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'app_icons.dart';
 import 'app_tokens.dart';
 import 'themes/app_theme_id.dart';
 import 'tokens/color_tokens.dart';
@@ -9,19 +10,27 @@ import 'tokens/typography.dart';
 
 /// Builds each theme's [ThemeData] entirely from its design tokens, so any
 /// remaining Material widget inherits the product identity
-/// (design_system.md §15). All themes are light (ADR-045).
+/// (design_system.md §15). Every theme has a light and a dark variant.
 abstract final class AppTheme {
-  static final Map<AppThemeId, ThemeData> _cache = {};
+  static final Map<(AppThemeId, Brightness, bool), ThemeData> _cache = {};
 
-  static ThemeData of(AppThemeId id) =>
-      _cache.putIfAbsent(id, () => _build(AppTokens.of(id)));
+  static ThemeData of(
+    AppThemeId id, {
+    Brightness brightness = Brightness.light,
+    bool trueBlack = false,
+  }) => _cache.putIfAbsent(
+    (id, brightness, trueBlack),
+    () =>
+        _build(AppTokens.of(id, brightness: brightness, trueBlack: trueBlack)),
+  );
 
   static ThemeData _build(AppTokens tokens) {
     final c = tokens.colors;
+    final brightness = tokens.brightness;
     final textTheme = AppTypography.textTheme(c.textPrimary);
 
     final scheme = ColorScheme(
-      brightness: Brightness.light,
+      brightness: brightness,
       primary: c.brandPrimary,
       onPrimary: c.onBrandPrimary,
       primaryContainer: c.brandPrimarySoft,
@@ -58,7 +67,7 @@ abstract final class AppTheme {
 
     return ThemeData(
       useMaterial3: true,
-      brightness: Brightness.light,
+      brightness: brightness,
       colorScheme: scheme,
       scaffoldBackgroundColor: c.surfaceCanvas,
       canvasColor: c.surfaceCanvas,
@@ -73,6 +82,13 @@ abstract final class AppTheme {
         space: 1,
       ),
       iconTheme: IconThemeData(color: c.textSecondary, size: 24),
+      // Back and close in the app's own icon set.
+      actionIconTheme: ActionIconThemeData(
+        backButtonIconBuilder: (context) =>
+            const Icon(AppIcons.previous, size: 22),
+        closeButtonIconBuilder: (context) =>
+            const Icon(AppIcons.close, size: 22),
+      ),
       appBarTheme: AppBarTheme(
         backgroundColor: c.surfaceCanvas,
         foregroundColor: c.textPrimary,
@@ -192,8 +208,8 @@ abstract final class AppTheme {
         filled: true,
         fillColor: c.surfaceSunken,
         contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.xl,
-          vertical: AppSpacing.lg,
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.md + 2,
         ),
         hintStyle: AppTypography.bodyLarge.copyWith(color: c.textTertiary),
         labelStyle: AppTypography.bodyMedium.copyWith(color: c.textSecondary),
@@ -201,23 +217,23 @@ abstract final class AppTheme {
           color: c.brandPrimary,
         ),
         border: const OutlineInputBorder(
-          borderRadius: AppRadius.lgAll,
+          borderRadius: AppRadius.mdAll,
           borderSide: BorderSide.none,
         ),
         enabledBorder: const OutlineInputBorder(
-          borderRadius: AppRadius.lgAll,
+          borderRadius: AppRadius.mdAll,
           borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: AppRadius.lgAll,
+          borderRadius: AppRadius.mdAll,
           borderSide: BorderSide(color: c.brandPrimary, width: 2),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: AppRadius.lgAll,
+          borderRadius: AppRadius.mdAll,
           borderSide: BorderSide(color: c.danger, width: 1.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: AppRadius.lgAll,
+          borderRadius: AppRadius.mdAll,
           borderSide: BorderSide(color: c.danger, width: 2),
         ),
       ),

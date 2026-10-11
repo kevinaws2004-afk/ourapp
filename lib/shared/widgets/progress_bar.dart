@@ -23,7 +23,7 @@ class AppProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final stops = context.tokens.treatments.progressGradient;
+    final stops = [context.tokens.treatments.progressGradient.first];
     final fill = color != null
         ? BoxDecoration(color: color, borderRadius: AppRadius.pillAll)
         : BoxDecoration(

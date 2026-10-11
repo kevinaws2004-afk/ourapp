@@ -33,9 +33,13 @@ class AppCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final decoration = cardDecoration(context, color: color, flat: flat);
     if (onTap == null && onLongPress == null) {
+      // Its own ink layer, so ripples of rows inside paint above the card.
       return DecoratedBox(
         decoration: decoration,
-        child: Padding(padding: padding, child: child),
+        child: Material(
+          type: MaterialType.transparency,
+          child: Padding(padding: padding, child: child),
+        ),
       );
     }
     return Material(

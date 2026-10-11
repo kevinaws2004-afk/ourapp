@@ -1,10 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/design/app_icons.dart';
 import '../../../core/time/local_date.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/errors/error_copy.dart';
+import '../../notifications/data/reminder_store.dart';
+import '../../notifications/presentation/notification_providers.dart';
+import '../../notifications/presentation/reminder_prompt.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../../activity_logs/domain/activity_log.dart';
 import '../../activity_logs/presentation/activity_log_providers.dart';
@@ -89,6 +95,7 @@ class PlanActions {
   /// has meaningful details, asks "How did it go?". Stays on the current
   /// screen: the row shows the result.
   Future<void> complete(PlannedItem item) async {
+    unawaited(HapticFeedback.mediumImpact());
     final id = item.plan.id;
     final type = item.type;
     final streak = type == null
@@ -122,6 +129,7 @@ class PlanActions {
     required String title,
     ActivityType? type,
   }) async {
+    unawaited(HapticFeedback.mediumImpact());
     final streak = type == null
         ? null
         : _ref.read(activityStreaksProvider)[type.id];
@@ -302,6 +310,8 @@ class PlanActions {
                   isOpen ? l10n.planCompleteTask : l10n.planReopenTask,
                   _QuickAction.toggleDone,
                 ),
+              if (isOpen && item.plan.plannedStartAt != null)
+                tile(AppIcons.bell, l10n.reminderMenu, _QuickAction.reminder),
               if (isOpen)
                 tile(
                   AppIcons.moveToTomorrow,
@@ -335,6 +345,8 @@ class PlanActions {
     switch (action) {
       case _QuickAction.toggleDone:
         await toggleDone(item);
+      case _QuickAction.reminder:
+        await editReminder(item);
       case _QuickAction.moveToTomorrow:
         await moveToTomorrow(item);
       case _QuickAction.moveTo:
@@ -354,6 +366,26 @@ class PlanActions {
       case null:
         break;
     }
+  }
+
+  /// Sets, changes or removes the plan's reminder (needs a time).
+  Future<void> editReminder(PlannedItem item) async {
+    final plan = item.plan;
+    final start = plan.plannedStartAt;
+    if (start == null) {
+      showMessageSnackBar(_context, _l10n.reminderNeedsTime);
+      return;
+    }
+    final reminders = _ref.read(remindersProvider).value ?? const {};
+    final choice = await showReminderSheet(
+      _context,
+      title: plan.title,
+      startLabel: MaterialLocalizations.of(_context)
+          .formatTimeOfDay(TimeOfDay.fromDateTime(start.toLocal())),
+      current: reminderFor(plan, reminders),
+    );
+    if (choice.cancelled) return;
+    await _run(() => setReminderFor(_ref, plan.id, choice.minutes));
   }
 
   /// Makes the plan repeat on chosen days (ADR-036).
@@ -417,6 +449,7 @@ class PlanActions {
 
 enum _QuickAction {
   toggleDone,
+  reminder,
   moveToTomorrow,
   moveTo,
   edit,

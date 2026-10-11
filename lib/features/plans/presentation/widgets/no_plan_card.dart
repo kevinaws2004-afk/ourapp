@@ -19,6 +19,7 @@ import '../../../activity_types/domain/activity_type_definition.dart';
 import '../../../activity_types/presentation/activity_type_providers.dart';
 import '../../../activity_types/presentation/built_in_activities.dart';
 import '../../domain/day_edges.dart';
+import '../../../notifications/presentation/reminder_prompt.dart';
 import '../../domain/plan.dart';
 import '../plan_date_notifier.dart';
 import '../plan_providers.dart';
@@ -199,7 +200,7 @@ class NoPlanCard extends ConsumerWidget {
         ).toUtc();
         if (!utc.isBefore(clock.nowUtc())) start = utc;
       }
-      await ref.read(createPlanProvider)(
+      final id = await ref.read(createPlanProvider)(
         PlanDraft(
           planDate: today,
           title: '',
@@ -207,6 +208,8 @@ class NoPlanCard extends ConsumerWidget {
           plannedStartAt: start,
         ),
       );
+      // Suggestions don't ask; they use the saved "always" reminder.
+      if (start != null) await applyDefaultReminder(ref, id);
       if (context.mounted) {
         showMessageSnackBar(
           context,

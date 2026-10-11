@@ -93,16 +93,34 @@ class AppChart extends StatelessWidget {
     );
     final step = (labels.length / 5).ceil().clamp(1, labels.length);
     final axis = _axis;
+    // The value axis is as wide as its widest label, on one line.
+    double widthOf(String text) => (TextPainter(
+      text: TextSpan(text: text, style: labelStyle),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+    )..layout()).width;
+    final reserved =
+        ([
+                  widthOf(formatValue(axis.max)),
+                  widthOf(formatValue(axis.min)),
+                  widthOf(formatValue(axis.max - axis.interval)),
+                ].reduce((a, b) => a > b ? a : b) +
+                AppSpacing.sm)
+            .clamp(28.0, 84.0);
     final titles = FlTitlesData(
       topTitles: const AxisTitles(),
       rightTitles: const AxisTitles(),
       leftTitles: AxisTitles(
         sideTitles: SideTitles(
           showTitles: true,
-          reservedSize: AppSpacing.giant - AppSpacing.md,
+          reservedSize: reserved,
           interval: axis.interval,
-          getTitlesWidget: (value, meta) =>
-              Text(formatValue(value), style: labelStyle),
+          getTitlesWidget: (value, meta) => Text(
+            formatValue(value),
+            maxLines: 1,
+            softWrap: false,
+            style: labelStyle,
+          ),
         ),
       ),
       bottomTitles: AxisTitles(

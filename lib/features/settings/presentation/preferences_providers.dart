@@ -39,6 +39,39 @@ final effectiveThemeProvider = Provider<AppThemeId>(
       ref.watch(initialPreferencesProvider).theme,
 );
 
+final appearanceProvider = StreamProvider<AppearanceMode>(
+  (ref) => ref.watch(appPreferencesRepositoryProvider).watchAppearance(),
+);
+
+/// Light, dark or system, falling back to the startup snapshot.
+final effectiveAppearanceProvider = Provider<AppearanceMode>(
+  (ref) =>
+      ref.watch(appearanceProvider).value ??
+      ref.watch(initialPreferencesProvider).appearance,
+);
+
+final trueBlackProvider = StreamProvider<bool>(
+  (ref) => ref.watch(appPreferencesRepositoryProvider).watchTrueBlack(),
+);
+
+/// Pure black dark mode, falling back to the startup snapshot.
+final effectiveTrueBlackProvider = Provider<bool>(
+  (ref) =>
+      ref.watch(trueBlackProvider).value ??
+      ref.watch(initialPreferencesProvider).trueBlack,
+);
+
+final userNameProvider = StreamProvider<String>(
+  (ref) => ref.watch(appPreferencesRepositoryProvider).watchName(),
+);
+
+/// Your name, or empty, falling back to the startup snapshot.
+final effectiveUserNameProvider = Provider<String>(
+  (ref) =>
+      ref.watch(userNameProvider).value ??
+      ref.watch(initialPreferencesProvider).name,
+);
+
 final preferencesNotifierProvider = NotifierProvider<PreferencesNotifier, void>(
   PreferencesNotifier.new,
 );
@@ -53,6 +86,14 @@ class PreferencesNotifier extends Notifier<void> {
       ref.read(appPreferencesRepositoryProvider);
 
   Future<void> setTheme(AppThemeId value) => _repository.setTheme(value);
+
+  Future<void> setAppearance(AppearanceMode value) =>
+      _repository.setAppearance(value);
+
+  Future<void> setName(String value) => _repository.setName(value);
+
+  Future<void> setTrueBlack({required bool value}) =>
+      _repository.setTrueBlack(value: value);
 
   Future<void> completeOnboarding() =>
       _repository.setOnboardingCompleted(completed: true);

@@ -8,6 +8,7 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/widgets/activity_badge.dart';
 import '../../../shared/widgets/done_check.dart';
 import '../../../shared/widgets/item_card.dart';
+import '../../../shared/widgets/status_chip.dart';
 import '../../challenges/presentation/challenge_providers.dart';
 import '../domain/watch_records_for_day.dart';
 import 'value_formatting.dart';
@@ -40,7 +41,9 @@ class DayRecordTile extends ConsumerWidget {
       startTime: material.formatTimeOfDay(
         TimeOfDay.fromDateTime(log.startedAt.toLocal()),
       ),
-      subline: result,
+      subline: result == l10n.planStatusDone ? null : result,
+      status: l10n.statusRecorded,
+      statusTone: StatusTone.done,
       streak: ref.watch(activityStreaksProvider)[type.id]?.days,
       onTap: onTap,
       leading: ActivityBadge(iconId: type.iconId, colorKey: type.colorKey),

@@ -38,7 +38,9 @@ class FieldEditorShell extends StatelessWidget {
               child: Text(
                 required ? '$label *' : label,
                 style: boxed
-                    ? context.textStyles.titleMedium
+                    ? context.textStyles.labelLarge?.copyWith(
+                        color: context.colors.textSecondary,
+                      )
                     : context.textStyles.labelMedium?.copyWith(
                         color: context.colors.textSecondary,
                       ),
@@ -62,8 +64,19 @@ class FieldEditorShell extends StatelessWidget {
       ],
     );
     return Padding(
-      padding: EdgeInsets.only(bottom: boxed ? AppSpacing.lg : AppSpacing.xl),
-      child: boxed ? AppCard(child: content) : content,
+      padding: EdgeInsets.only(bottom: boxed ? AppSpacing.md : AppSpacing.xl),
+      child: boxed
+          ? AppCard(
+              flat: true,
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                AppSpacing.md,
+                AppSpacing.lg,
+                AppSpacing.lg,
+              ),
+              child: content,
+            )
+          : content,
     );
   }
 }

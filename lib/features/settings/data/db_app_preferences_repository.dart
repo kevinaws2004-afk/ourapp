@@ -9,13 +9,16 @@ import '../../../core/design/themes/app_theme_id.dart';
 
 /// Stores preferences as JSON values keyed by name in `app_preferences`
 /// (ADR-012). Unreadable values fall back to the default instead of failing.
-/// The old `theme_mode` (system/light/dark) value is ignored since the app
-/// became light-only with three themes (ADR-045).
+/// `appearance` (system/light/dark) picks each theme's light or dark
+/// variant.
 class DbAppPreferencesRepository implements AppPreferencesRepository {
   DbAppPreferencesRepository(this._db, this._clock, this._logger);
 
   static const themeKey = 'theme';
   static const onboardingCompletedKey = 'onboarding_completed';
+  static const appearanceKey = 'appearance';
+  static const nameKey = 'user_name';
+  static const trueBlackKey = 'true_black';
 
   final AppDatabase _db;
   final Clock _clock;
@@ -31,7 +34,42 @@ class DbAppPreferencesRepository implements AppPreferencesRepository {
         byKey[onboardingCompletedKey],
         key: onboardingCompletedKey,
       ),
+      appearance: AppearanceMode.fromName(
+        _decode(byKey[appearanceKey], key: appearanceKey),
+      ),
+      name: _decodeName(byKey[nameKey]),
+      trueBlack: _decodeBool(byKey[trueBlackKey], key: trueBlackKey),
     );
+  }
+
+  @override
+  Stream<AppearanceMode> watchAppearance() => _watchRaw(appearanceKey)
+      .map((raw) => AppearanceMode.fromName(_decode(raw, key: appearanceKey)))
+      .distinct();
+
+  @override
+  Future<void> setAppearance(AppearanceMode value) =>
+      _write(appearanceKey, value.name);
+
+  @override
+  Stream<String> watchName() => _watchRaw(nameKey).map(_decodeName).distinct();
+
+  @override
+  Future<void> setName(String value) => _write(nameKey, value.trim());
+
+  @override
+  Stream<bool> watchTrueBlack() =>
+      _watchRaw(trueBlackKey)
+          .map((raw) => _decodeBool(raw, key: trueBlackKey))
+          .distinct();
+
+  @override
+  Future<void> setTrueBlack({required bool value}) =>
+      _write(trueBlackKey, value);
+
+  String _decodeName(String? raw) {
+    final decoded = _decode(raw, key: nameKey);
+    return decoded is String ? decoded.trim() : '';
   }
 
   @override

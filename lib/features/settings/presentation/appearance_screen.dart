@@ -4,22 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/design/app_icons.dart';
-import '../../../core/design/app_theme.dart';
+import '../../../core/design/app_tokens.dart';
 import '../../../core/design/context_ext.dart';
 import '../../../core/design/themes/app_theme_id.dart';
 import '../../../core/design/tokens/radius.dart';
-import '../../../core/design/tokens/sizes.dart';
 import '../../../core/design/tokens/spacing.dart';
 import '../../../core/design/window_size_class.dart';
 import '../../../l10n/generated/app_localizations.dart';
-import '../../../shared/widgets/activity_badge.dart';
-import '../../../shared/widgets/app_button.dart';
-import '../../../shared/widgets/app_card.dart';
-import '../../../shared/widgets/status_chip.dart';
+import '../../../shared/widgets/settings_group.dart';
+import '../domain/preferences_snapshot.dart';
 import 'preferences_providers.dart';
 
-/// Me → Appearance (ADR-045): the three themes, each previewed in its own
-/// look. Tapping one applies it to the whole app straight away and saves it.
+/// Me → Appearance: light, dark or system, and the color theme as a grid of
+/// swatches. Tapping one applies it to the whole app straight away.
 class AppearanceScreen extends ConsumerWidget {
   const AppearanceScreen({super.key});
 
@@ -42,26 +39,69 @@ class AppearanceScreen extends ConsumerWidget {
               AppSpacing.huge,
             ),
             children: [
+              Text(l10n.meDarkMode, style: context.textStyles.titleLarge),
+              const SizedBox(height: AppSpacing.md),
+              const AppearanceModePicker(),
+              const SizedBox(height: AppSpacing.md),
+              SettingsGroup(
+                children: [
+                  SettingsTile(
+                    icon: AppIcons.darkMode,
+                    iconColor: context.colors.textPrimary,
+                    iconBackground: context.colors.surfaceSunken,
+                    title: l10n.appearanceTrueBlack,
+                    subtitle: l10n.appearanceTrueBlackHint,
+                    trailing: Switch(
+                      value: ref.watch(effectiveTrueBlackProvider),
+                      onChanged: (v) => unawaited(
+                        ref
+                            .read(preferencesNotifierProvider.notifier)
+                            .setTrueBlack(value: v),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.xxl),
+              Text(
+                l10n.appearanceThemeTitle,
+                style: context.textStyles.titleLarge,
+              ),
+              const SizedBox(height: AppSpacing.xxs),
               Text(
                 l10n.appearanceIntro,
-                style: context.textStyles.bodyLarge?.copyWith(
+                style: context.textStyles.bodyMedium?.copyWith(
                   color: context.colors.textSecondary,
                 ),
               ),
-              const SizedBox(height: AppSpacing.xl),
-              for (final id in AppThemeId.values)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.lg),
-                  child: _ThemeOption(
-                    id: id,
-                    selected: id == current,
-                    onSelect: () => unawaited(
-                      ref
-                          .read(preferencesNotifierProvider.notifier)
-                          .setTheme(id),
-                    ),
-                  ),
-                ),
+              const SizedBox(height: AppSpacing.lg),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  const gap = AppSpacing.md;
+                  final columns = constraints.maxWidth > 460 ? 4 : 3;
+                  final width =
+                      (constraints.maxWidth - gap * (columns - 1)) / columns;
+                  return Wrap(
+                    spacing: gap,
+                    runSpacing: gap,
+                    children: [
+                      for (final id in AppThemeId.values)
+                        SizedBox(
+                          width: width,
+                          child: _ThemeSwatch(
+                            id: id,
+                            selected: id == current,
+                            onSelect: () => unawaited(
+                              ref
+                                  .read(preferencesNotifierProvider.notifier)
+                                  .setTheme(id),
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -70,23 +110,99 @@ class AppearanceScreen extends ConsumerWidget {
   }
 }
 
+/// System · Light · Dark as three tiles, each with its icon.
+class AppearanceModePicker extends ConsumerWidget {
+  const AppearanceModePicker({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final c = context.colors;
+    final current = ref.watch(effectiveAppearanceProvider);
+    Widget tile(AppearanceMode mode, IconData icon, String label) {
+      final selected = mode == current;
+      return Expanded(
+        child: Semantics(
+          selected: selected,
+          button: true,
+          label: label,
+          excludeSemantics: true,
+          child: Material(
+            color: selected ? c.brandPrimarySoft : c.surfaceBase,
+            shape: RoundedRectangleBorder(
+              borderRadius: AppRadius.lgAll,
+              side: BorderSide(
+                color: selected ? c.brandPrimary : c.borderSubtle,
+                width: selected ? 2 : 1,
+              ),
+            ),
+            child: InkWell(
+              borderRadius: AppRadius.lgAll,
+              onTap: () => unawaited(
+                ref
+                    .read(preferencesNotifierProvider.notifier)
+                    .setAppearance(mode),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+                child: Column(
+                  children: [
+                    Icon(
+                      icon,
+                      color: selected ? c.brandPrimary : c.textSecondary,
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      label,
+                      style: context.textStyles.labelLarge?.copyWith(
+                        color: selected ? c.onBrandPrimarySoft : c.textPrimary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Row(
+      children: [
+        tile(AppearanceMode.system, AppIcons.systemMode, l10n.appearanceSystem),
+        const SizedBox(width: AppSpacing.sm),
+        tile(AppearanceMode.light, AppIcons.lightMode, l10n.appearanceLight),
+        const SizedBox(width: AppSpacing.sm),
+        tile(AppearanceMode.dark, AppIcons.darkMode, l10n.appearanceDark),
+      ],
+    );
+  }
+}
+
 /// The shown name of a theme.
 String themeName(AppLocalizations l10n, AppThemeId id) => switch (id) {
-  AppThemeId.rose => l10n.themeNameRose,
   AppThemeId.lavender => l10n.themeNameLavender,
+  AppThemeId.rose => l10n.themeNameRose,
   AppThemeId.papaya => l10n.themeNamePapaya,
+  AppThemeId.ocean => l10n.themeNameOcean,
+  AppThemeId.matcha => l10n.themeNameMatcha,
+  AppThemeId.lilac => l10n.themeNameLilac,
+  AppThemeId.sky => l10n.themeNameSky,
+  AppThemeId.honey => l10n.themeNameHoney,
+  AppThemeId.slate => l10n.themeNameSlate,
+  AppThemeId.mint => l10n.themeNameMint,
+  AppThemeId.cherry => l10n.themeNameCherry,
+  AppThemeId.forest => l10n.themeNameForest,
+  AppThemeId.midnight => l10n.themeNameMidnight,
+  AppThemeId.mocha => l10n.themeNameMocha,
+  AppThemeId.roseGold => l10n.themeNameRoseGold,
 };
 
-String _themeDescription(AppLocalizations l10n, AppThemeId id) => switch (id) {
-  AppThemeId.rose => l10n.themeDescriptionRose,
-  AppThemeId.lavender => l10n.themeDescriptionLavender,
-  AppThemeId.papaya => l10n.themeDescriptionPapaya,
-};
-
-/// One theme: a small piece of the app drawn in that theme, its name and
-/// description, and a ring when it's the one in use.
-class _ThemeOption extends StatelessWidget {
-  const _ThemeOption({
+/// One theme as a swatch: its signature color as a big circle with its
+/// action and accent colors tucked in, on its own canvas, and its name.
+/// A check and an outline mark the one in use.
+class _ThemeSwatch extends StatelessWidget {
+  const _ThemeSwatch({
     required this.id,
     required this.selected,
     required this.onSelect,
@@ -99,135 +215,93 @@ class _ThemeOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final ring = context.colors.brandPrimary;
+    final brightness = Theme.of(context).brightness;
+    final t = AppTokens.of(
+      id,
+      brightness: brightness,
+      trueBlack: ProviderScope.containerOf(context)
+          .read(effectiveTrueBlackProvider),
+    ).colors;
+    final c = context.colors;
+    Widget dot(Color color, double size) => Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+        border: Border.all(color: t.surfaceBase, width: 2.5),
+      ),
+    );
     return Semantics(
       button: true,
       selected: selected,
-      label: '${themeName(l10n, id)}. ${_themeDescription(l10n, id)}',
+      label: themeName(l10n, id),
       excludeSemantics: true,
-      child: GestureDetector(
-        onTap: onSelect,
-        child: AnimatedContainer(
-          duration: MediaQuery.disableAnimationsOf(context)
-              ? Duration.zero
-              : const Duration(milliseconds: 200),
-          padding: const EdgeInsets.all(AppSpacing.xs),
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(AppRadius.card + AppSpacing.xs),
-            ),
-            border: Border.all(
-              color: selected ? ring : Colors.transparent,
-              width: AppSizes.selectionRing,
-            ),
-          ),
-          // The preview is drawn with the theme it shows, and is only a
-          // picture: taps select the theme.
-          child: IgnorePointer(
-            child: Theme(
-              data: AppTheme.of(id),
-              child: _ThemePreview(
-                name: themeName(l10n, id),
-                description: _themeDescription(l10n, id),
-                selected: selected,
-              ),
-            ),
+      child: Material(
+        color: t.surfaceCanvas,
+        shape: RoundedRectangleBorder(
+          borderRadius: AppRadius.lgAll,
+          side: BorderSide(
+            color: selected ? t.brandPrimary : c.borderSubtle,
+            width: selected ? 2.5 : 1,
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _ThemePreview extends StatelessWidget {
-  const _ThemePreview({
-    required this.name,
-    required this.description,
-    required this.selected,
-  });
-
-  final String name;
-  final String description;
-  final bool selected;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final c = context.colors;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: c.surfaceCanvas,
-        borderRadius: AppRadius.cardAll,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
+        child: InkWell(
+          borderRadius: AppRadius.lgAll,
+          onTap: onSelect,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.sm,
+              AppSpacing.lg,
+              AppSpacing.sm,
+              AppSpacing.md,
+            ),
+            child: Column(
               children: [
-                Expanded(
-                  child: Text(name, style: context.textStyles.titleLarge),
-                ),
-                if (selected)
-                  StatusChip(
-                    label: l10n.appearanceInUse,
-                    tone: StatusTone.active,
-                    icon: AppIcons.check,
+                SizedBox(
+                  width: 64,
+                  height: 56,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        left: 0,
+                        top: 0,
+                        child: Container(
+                          width: 52,
+                          height: 52,
+                          decoration: BoxDecoration(
+                            color: t.brandPrimary,
+                            shape: BoxShape.circle,
+                          ),
+                          alignment: Alignment.center,
+                          child: selected
+                              ? Icon(
+                                  AppIcons.check,
+                                  color: t.onBrandPrimary,
+                                  size: 22,
+                                )
+                              : null,
+                        ),
+                      ),
+                      Positioned(right: 0, top: 4, child: dot(t.action, 22)),
+                      Positioned(right: 4, bottom: 0, child: dot(t.accent, 18)),
+                    ],
                   ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Text(
+                  themeName(l10n, id),
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                  style: context.textStyles.labelMedium?.copyWith(
+                    color: t.textPrimary,
+                    fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
+                    height: 1.2,
+                  ),
+                ),
               ],
             ),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              description,
-              style: context.textStyles.bodyMedium?.copyWith(
-                color: c.textSecondary,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            AppCard(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              child: Row(
-                children: [
-                  const ActivityBadge(
-                    iconId: 'person-simple-walk',
-                    colorKey: 'teal',
-                  ),
-                  const SizedBox(width: AppSpacing.md),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.appearancePreviewTitle,
-                          style: context.textStyles.titleMedium,
-                        ),
-                        Text(
-                          l10n.appearancePreviewDetail,
-                          style: context.textStyles.bodySmall?.copyWith(
-                            color: c.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  StatusChip(
-                    label: l10n.planStatusPlanned,
-                    tone: StatusTone.scheduled,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            AppButton(
-              label: l10n.appearancePreviewAction,
-              icon: AppIcons.start,
-              variant: AppButtonVariant.action,
-              expand: true,
-              // A picture of a button; the whole preview ignores taps.
-              onPressed: () {},
-            ),
-          ],
+          ),
         ),
       ),
     );

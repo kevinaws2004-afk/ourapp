@@ -4,19 +4,16 @@ import '../../core/design/app_icons.dart';
 import '../../core/design/context_ext.dart';
 import '../../core/design/tokens/sizes.dart';
 import '../../core/design/tokens/spacing.dart';
-import '../../core/design/tokens/typography.dart';
 import 'app_card.dart';
+import 'status_chip.dart';
 import 'streak_badge.dart';
 
-/// One thing on a day as a timeline row (ADR-046): the time, the name, one
-/// sub-line (its length, "Running · 12:04", or its result once done), a 🔥
-/// streak when its activity is in a running challenge, then [trailing] (the
-/// done circle).
-///
-/// Themes with a time column put [startTime] (and [endTime]) in a column on
-/// the left; others lead with [leading] (the activity badge) and put the
-/// time into the sub-line. No per-row chips, menus or handles: options are
-/// a long-press.
+/// One thing on a day (ADR-046), the same on Today and in Plan: the
+/// activity's icon tile, then a top line with its time and a status chip
+/// ("Done", "Scheduled", "Running"), its name, and one quiet detail line
+/// (its length, its result once done). A 🔥 streak when its activity is in a
+/// running goal, then [trailing] (the done circle). Options are a
+/// long-press.
 class ItemCard extends StatelessWidget {
   const ItemCard({
     super.key,
@@ -26,6 +23,8 @@ class ItemCard extends StatelessWidget {
     this.startTime,
     this.endTime,
     this.subline,
+    this.status,
+    this.statusTone = StatusTone.neutral,
     this.streak,
     this.repeats = false,
     this.trailing = const [],
@@ -44,7 +43,11 @@ class ItemCard extends StatelessWidget {
   final String title;
   final String? subline;
 
-  /// Current streak days, if its activity is in a running challenge.
+  /// A short state shown as a chip next to the time ("Done").
+  final String? status;
+  final StatusTone statusTone;
+
+  /// Current streak days, if its activity is in a running goal.
   final int? streak;
 
   /// It repeats (ADR-036): a small mark by its title.
@@ -56,7 +59,7 @@ class ItemCard extends StatelessWidget {
   /// Skipped: dimmed.
   final bool faded;
 
-  /// Its time is now: a soft tint.
+  /// Its time is now: outlined in the theme's color.
   final bool emphasized;
 
   /// What a tap does, for screen readers (ADR-030).
@@ -66,85 +69,81 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    final timeColumn = context.tokens.treatments.timeColumn;
     final start = startTime;
-    final sub = [
-      if (!timeColumn && start != null)
-        endTime == null ? start : '$start–$endTime',
-      if (subline case final s? when s.isNotEmpty) s,
-    ].join(' · ');
-    // A time column only where there's a time (or a badge) to put in it.
-    final Widget? lead = !timeColumn
-        ? leading
-        : start == null
-        ? leading
-        : SizedBox(
-            width: AppSpacing.giant - AppSpacing.sm,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    start,
-                    maxLines: 1,
-                    style: AppTypography.numericMedium.copyWith(
-                      fontSize: 16,
-                      color: c.textPrimary,
-                    ),
-                  ),
-                ),
-                if (endTime case final end?)
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      end,
-                      maxLines: 1,
-                      style: context.textStyles.labelSmall?.copyWith(
-                        color: c.textSecondary,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          );
+    final time = start == null
+        ? null
+        : endTime == null
+        ? start
+        : '$start – $endTime';
+    final hasTop = time != null || status != null;
+
     final body = Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        if (lead != null) ...[lead, const SizedBox(width: AppSpacing.md)],
+        if (leading case final l?) ...[l, const SizedBox(width: AppSpacing.md)],
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (hasTop)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.xxs + 1),
+                  child: Row(
+                    children: [
+                      if (time != null)
+                        Flexible(
+                          child: Text(
+                            time,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: context.textStyles.labelMedium?.copyWith(
+                              color: emphasized
+                                  ? c.brandPrimary
+                                  : c.textSecondary,
+                              fontWeight: FontWeight.w600,
+                              fontFeatures: const [
+                                FontFeature.tabularFigures(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      if (time != null && status != null)
+                        const SizedBox(width: AppSpacing.sm),
+                      if (status case final s?)
+                        StatusChip(label: s, tone: statusTone),
+                    ],
+                  ),
+                ),
               Row(
                 children: [
                   Flexible(
                     child: Text(
                       title,
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: context.textStyles.titleMedium,
+                      style: context.textStyles.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                   if (repeats) ...[
                     const SizedBox(width: AppSpacing.xs),
                     Icon(
                       AppIcons.repeat,
-                      size: AppSizes.iconSmall,
+                      size: AppSizes.iconSmall - 4,
                       color: c.textTertiary,
                     ),
                   ],
                 ],
               ),
-              if (sub.isNotEmpty)
+              if (subline case final s? when s.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: AppSpacing.xxs),
                   child: Text(
-                    sub,
+                    s,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: context.textStyles.bodyMedium?.copyWith(
+                    style: context.textStyles.bodySmall?.copyWith(
                       color: c.textSecondary,
                     ),
                   ),
@@ -159,29 +158,47 @@ class ItemCard extends StatelessWidget {
         ...trailing,
       ],
     );
+
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm + AppSpacing.xxs),
       child: Semantics(
         onTapHint: tapHint,
         onLongPressHint: longPressHint,
-        child: AppCard(
-          color: emphasized
-              ? Color.alphaBlend(
-                  c.brandPrimarySoft.withValues(alpha: 0.6),
-                  c.surfaceBase,
+        child: DecoratedBox(
+          decoration: emphasized
+              ? BoxDecoration(
+                  borderRadius: _radius,
+                  border: Border.all(color: c.brandPrimary, width: 1.5),
                 )
-              : null,
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.lg,
-            AppSpacing.md,
-            AppSpacing.xs,
-            AppSpacing.md,
+              : const BoxDecoration(),
+          child: Material(
+            type: MaterialType.transparency,
+            child: Ink(
+              decoration: cardDecoration(
+                context,
+                borderRadius: _radius,
+                flat: !emphasized,
+              ),
+              child: InkWell(
+                borderRadius: _radius,
+                onTap: onTap,
+                onLongPress: onLongPress,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.md + 2,
+                    AppSpacing.md + 2,
+                    AppSpacing.xxs,
+                    AppSpacing.md + 2,
+                  ),
+                  child: Opacity(opacity: faded ? 0.5 : 1, child: body),
+                ),
+              ),
+            ),
           ),
-          onTap: onTap,
-          onLongPress: onLongPress,
-          child: Opacity(opacity: faded ? 0.55 : 1, child: body),
         ),
       ),
     );
   }
+
+  static const _radius = BorderRadius.all(Radius.circular(20));
 }

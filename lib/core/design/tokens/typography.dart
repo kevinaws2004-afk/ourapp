@@ -12,56 +12,56 @@ abstract final class AppTypography {
 
   static const displayLarge = TextStyle(
     fontFamily: family,
-    fontSize: 36,
-    height: 44 / 36,
+    fontSize: 32,
+    height: 40 / 32,
     letterSpacing: -0.9,
     fontWeight: FontWeight.w800,
   );
   static const displayMedium = TextStyle(
     fontFamily: family,
-    fontSize: 30,
-    height: 38 / 30,
+    fontSize: 26,
+    height: 32 / 26,
     letterSpacing: -0.6,
     fontWeight: FontWeight.w800,
   );
   static const headlineLarge = TextStyle(
     fontFamily: family,
-    fontSize: 26,
-    height: 34 / 26,
+    fontSize: 22,
+    height: 28 / 22,
     letterSpacing: -0.4,
     fontWeight: FontWeight.w700,
   );
   static const headlineSmall = TextStyle(
     fontFamily: family,
-    fontSize: 22,
-    height: 28 / 22,
+    fontSize: 19,
+    height: 24 / 19,
     letterSpacing: -0.2,
     fontWeight: FontWeight.w700,
   );
 
   static const titleLarge = TextStyle(
     fontFamily: family,
-    fontSize: 18,
-    height: 24 / 18,
+    fontSize: 17,
+    height: 22 / 17,
     letterSpacing: -0.1,
     fontWeight: FontWeight.w700,
   );
   static const titleMedium = TextStyle(
     fontFamily: family,
-    fontSize: 16,
-    height: 22 / 16,
+    fontSize: 15,
+    height: 20 / 15,
     fontWeight: FontWeight.w600,
   );
   static const bodyLarge = TextStyle(
     fontFamily: family,
-    fontSize: 16,
-    height: 24 / 16,
+    fontSize: 15,
+    height: 22 / 15,
     fontWeight: FontWeight.w400,
   );
   static const bodyMedium = TextStyle(
     fontFamily: family,
-    fontSize: 14,
-    height: 20 / 14,
+    fontSize: 13.5,
+    height: 19 / 13.5,
     fontWeight: FontWeight.w400,
   );
   static const bodySmall = TextStyle(
@@ -72,15 +72,15 @@ abstract final class AppTypography {
   );
   static const labelLarge = TextStyle(
     fontFamily: family,
-    fontSize: 15,
-    height: 20 / 15,
+    fontSize: 14,
+    height: 18 / 14,
     letterSpacing: 0.1,
     fontWeight: FontWeight.w700,
   );
   static const labelMedium = TextStyle(
     fontFamily: family,
-    fontSize: 13,
-    height: 18 / 13,
+    fontSize: 12.5,
+    height: 16 / 12.5,
     letterSpacing: 0.2,
     fontWeight: FontWeight.w600,
   );
@@ -88,8 +88,8 @@ abstract final class AppTypography {
   /// Chips and small caps-style labels ("UP NEXT").
   static const labelSmall = TextStyle(
     fontFamily: family,
-    fontSize: 11,
-    height: 14 / 11,
+    fontSize: 10.5,
+    height: 13 / 10.5,
     letterSpacing: 0.5,
     fontWeight: FontWeight.w700,
   );
