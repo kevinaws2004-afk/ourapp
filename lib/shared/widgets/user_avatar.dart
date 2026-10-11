@@ -36,11 +36,7 @@ class UserAvatar extends StatelessWidget {
       ),
       alignment: Alignment.center,
       child: initial == null
-          ? Icon(
-              AppIcons.me.filled,
-              size: size * 0.48,
-              color: c.brandPrimary,
-            )
+          ? Icon(AppIcons.me.filled, size: size * 0.48, color: c.brandPrimary)
           : Text(
               initial,
               style: AppTypography.titleLarge.copyWith(

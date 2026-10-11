@@ -69,6 +69,7 @@ Future<ProviderContainer> _pump(
   bool demo = true,
   AppThemeId theme = AppThemeId.lavender,
   AppearanceMode appearance = AppearanceMode.light,
+  bool trueBlack = false,
 }) async {
   tester.view.physicalSize = _size;
   tester.view.devicePixelRatio = 1;
@@ -79,6 +80,7 @@ Future<ProviderContainer> _pump(
     onboardingCompleted: onboarded,
     appearance: appearance,
     name: onboarded ? 'Kevin' : '',
+    trueBlack: trueBlack,
   );
   await tester.runAsync(() async {
     final repo = DbAppPreferencesRepository(db, clock, const AppLogger());
@@ -86,6 +88,7 @@ Future<ProviderContainer> _pump(
     await repo.setOnboardingCompleted(completed: prefs.onboardingCompleted);
     await repo.setAppearance(prefs.appearance);
     await repo.setName(prefs.name);
+    await repo.setTrueBlack(value: trueBlack);
   });
   await tester.pumpWidget(
     RepaintBoundary(
@@ -163,6 +166,28 @@ void main() {
 }
 
 void _extra() {
+  testWidgets('true black', (tester) async {
+    await _pump(
+      tester,
+      onboarded: true,
+      appearance: AppearanceMode.dark,
+      trueBlack: true,
+    );
+    await _shot(tester, '23_true_black_today');
+    await _tapTab(tester, 'Progress');
+    await _shot(tester, '23_true_black_progress');
+  });
+  testWidgets('color picker', (tester) async {
+    await _pump(tester, onboarded: true);
+    await _tapTab(tester, 'Me');
+    await tester.tap(find.text('4 activities'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('New activity'));
+    await tester.pumpAndSettle();
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -400));
+    await _shot(tester, '24_color_picker');
+  });
+
   testWidgets('appearance', (tester) async {
     await _pump(tester, onboarded: true);
     await _tapTab(tester, 'Me');

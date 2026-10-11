@@ -31,12 +31,7 @@ class MeasurementsScreen extends ConsumerWidget {
         value: ref.watch(latestMeasurementsProvider),
         onRetry: () => ref.invalidate(latestMeasurementsProvider),
         data: (latest) => ListView(
-          padding: EdgeInsets.fromLTRB(
-            margin,
-            0,
-            margin,
-            AppSpacing.xxxl,
-          ),
+          padding: EdgeInsets.fromLTRB(margin, 0, margin, AppSpacing.xxxl),
           children: [
             ScreenHeader(
               showMark: false,

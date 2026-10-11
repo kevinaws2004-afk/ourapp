@@ -68,9 +68,7 @@ class InsightsScreen extends ConsumerWidget {
     final margin = WindowSizeClass.of(context).screenMargin;
     final early = ref.watch(progressIsEarlyProvider) ?? false;
     final range = ref.watch(insightRangeProvider);
-    final (from, to) = range.window(
-      currentLocalDate(ref.watch(clockProvider)),
-    );
+    final (from, to) = range.window(currentLocalDate(ref.watch(clockProvider)));
     return SafeArea(
       bottom: false,
       child: Align(

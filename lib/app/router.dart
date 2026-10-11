@@ -229,9 +229,8 @@ final routerProvider = Provider<GoRouter>((ref) {
 
   /// The center + of the tab bar (spec §37): start, plan, measure, create.
   final quickStart = QuickStartActions(
-    startActivity: (context, type) => unawaited(
-      doNow(context, type.id, withTimer: type.supportsTimer),
-    ),
+    startActivity: (context, type) =>
+        unawaited(doNow(context, type.id, withTimer: type.supportsTimer)),
     planSomething: addToToday,
     measure: (context) => context.go(AppRoutes.measurements),
     newActivity: (context) => unawaited(openNewActivity(context)),
@@ -253,12 +252,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const OnboardingScreen(),
       ),
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) =>
-            AppShell(
-              navigationShell: navigationShell,
-              onQuickStart: (context) =>
-                  unawaited(showQuickStartSheet(context, quickStart)),
-            ),
+        builder: (context, state, navigationShell) => AppShell(
+          navigationShell: navigationShell,
+          onQuickStart: (context) =>
+              unawaited(showQuickStartSheet(context, quickStart)),
+        ),
         branches: [
           StatefulShellBranch(
             routes: [

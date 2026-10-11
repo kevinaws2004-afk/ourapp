@@ -224,9 +224,7 @@ class _Welcome extends StatelessWidget {
         const SizedBox(height: AppSpacing.sm),
         Text(
           l10n.onboardingBody,
-          style: context.textStyles.bodyLarge?.copyWith(
-            color: c.textSecondary,
-          ),
+          style: context.textStyles.bodyLarge?.copyWith(color: c.textSecondary),
         ),
         const SizedBox(height: AppSpacing.xxl),
         point(
@@ -291,9 +289,7 @@ class _NameStep extends StatelessWidget {
         const SizedBox(height: AppSpacing.sm),
         Text(
           l10n.onboardingNameBody,
-          style: context.textStyles.bodyLarge?.copyWith(
-            color: c.textSecondary,
-          ),
+          style: context.textStyles.bodyLarge?.copyWith(color: c.textSecondary),
         ),
         const SizedBox(height: AppSpacing.xxl),
         TextField(
@@ -348,17 +344,15 @@ class _PickStep extends StatelessWidget {
         const SizedBox(height: AppSpacing.sm),
         Text(
           l10n.onboardingPickBody,
-          style: context.textStyles.bodyLarge?.copyWith(
-            color: c.textSecondary,
-          ),
+          style: context.textStyles.bodyLarge?.copyWith(color: c.textSecondary),
         ),
         const SizedBox(height: AppSpacing.xl),
         LayoutBuilder(
           builder: (context, constraints) {
             const gap = AppSpacing.md;
             final columns = constraints.maxWidth > 440 ? 4 : 3;
-            final width = (constraints.maxWidth - gap * (columns - 1)) /
-                columns;
+            final width =
+                (constraints.maxWidth - gap * (columns - 1)) / columns;
             return Wrap(
               spacing: gap,
               runSpacing: gap,
@@ -380,9 +374,7 @@ class _PickStep extends StatelessWidget {
         Text(
           l10n.onboardingPickHint,
           textAlign: TextAlign.center,
-          style: context.textStyles.bodySmall?.copyWith(
-            color: c.textTertiary,
-          ),
+          style: context.textStyles.bodySmall?.copyWith(color: c.textTertiary),
         ),
       ],
     );

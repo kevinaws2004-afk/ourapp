@@ -12,15 +12,17 @@ import 'tokens/typography.dart';
 /// remaining Material widget inherits the product identity
 /// (design_system.md §15). Every theme has a light and a dark variant.
 abstract final class AppTheme {
-  static final Map<(AppThemeId, Brightness), ThemeData> _cache = {};
+  static final Map<(AppThemeId, Brightness, bool), ThemeData> _cache = {};
 
   static ThemeData of(
     AppThemeId id, {
     Brightness brightness = Brightness.light,
-  }) => _cache.putIfAbsent((
-    id,
-    brightness,
-  ), () => _build(AppTokens.of(id, brightness: brightness)));
+    bool trueBlack = false,
+  }) => _cache.putIfAbsent(
+    (id, brightness, trueBlack),
+    () =>
+        _build(AppTokens.of(id, brightness: brightness, trueBlack: trueBlack)),
+  );
 
   static ThemeData _build(AppTokens tokens) {
     final c = tokens.colors;

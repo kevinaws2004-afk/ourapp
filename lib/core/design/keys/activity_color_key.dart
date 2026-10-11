@@ -4,14 +4,25 @@
 /// decision (ADR-029), and `sage`, `apricot` and `moss` were removed when the
 /// owner limited the app to six colors (ADR-038). Stored legacy keys resolve
 /// through [fromName] to their replacement; any other unknown key renders with
-/// the `slate` fallback until the user picks a new color.
+/// the `slate` fallback until the user picks a new color. Keys after `slate`
+/// were added later; themes that don't tune them use [extraActivityColors].
 enum ActivityColorKey {
   sky,
   lilac,
   rose,
   teal,
   coral,
-  slate;
+  slate,
+  indigo,
+  violet,
+  fuchsia,
+  red,
+  yellow,
+  amber,
+  lime,
+  navy,
+  cyan,
+  brown;
 
   /// Removed keys that may still be stored, and the color they now show as.
   static const Map<String, ActivityColorKey> _legacy = {

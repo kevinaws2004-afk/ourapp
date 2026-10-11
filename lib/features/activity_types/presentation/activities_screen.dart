@@ -44,12 +44,7 @@ class ActivitiesScreen extends ConsumerWidget {
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: AppContentWidth.list),
           child: ListView(
-            padding: EdgeInsets.fromLTRB(
-              margin,
-              0,
-              margin,
-              AppSpacing.xxxl,
-            ),
+            padding: EdgeInsets.fromLTRB(margin, 0, margin, AppSpacing.xxxl),
             children: [
               ScreenHeader(
                 showMark: false,

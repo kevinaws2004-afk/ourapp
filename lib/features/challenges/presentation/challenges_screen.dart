@@ -107,9 +107,8 @@ class ChallengesScreen extends ConsumerWidget {
                     padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                     child: HeaderIconButton(
                       icon: AppIcons.previous,
-                      tooltip: MaterialLocalizations.of(
-                        context,
-                      ).backButtonTooltip,
+                      tooltip: MaterialLocalizations.of(context)
+                          .backButtonTooltip,
                       onPressed: back,
                     ),
                   ),
@@ -143,10 +142,8 @@ class ChallengesScreen extends ConsumerWidget {
                             AppButton(
                               label: l10n.newChallenge,
                               icon: AppIcons.add,
-                              onPressed: () => showChallengeSheet(
-                                context,
-                                chooser: chooser,
-                              ),
+                              onPressed: () =>
+                                  showChallengeSheet(context, chooser: chooser),
                             ),
                           ],
                         ),

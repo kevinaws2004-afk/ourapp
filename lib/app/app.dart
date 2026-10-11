@@ -66,7 +66,11 @@ class _AppState extends ConsumerState<App> {
       debugShowCheckedModeBanner: false,
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       theme: AppTheme.of(theme),
-      darkTheme: AppTheme.of(theme, brightness: Brightness.dark),
+      darkTheme: AppTheme.of(
+        theme,
+        brightness: Brightness.dark,
+        trueBlack: ref.watch(effectiveTrueBlackProvider),
+      ),
       themeMode: switch (ref.watch(effectiveAppearanceProvider)) {
         AppearanceMode.system => ThemeMode.system,
         AppearanceMode.light => ThemeMode.light,

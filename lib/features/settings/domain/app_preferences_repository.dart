@@ -22,4 +22,9 @@ abstract interface class AppPreferencesRepository {
   Stream<String> watchName();
 
   Future<void> setName(String value);
+
+  /// Dark mode on pure black.
+  Stream<bool> watchTrueBlack();
+
+  Future<void> setTrueBlack({required bool value});
 }

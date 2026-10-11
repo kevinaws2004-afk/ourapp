@@ -18,6 +18,7 @@ class DbAppPreferencesRepository implements AppPreferencesRepository {
   static const onboardingCompletedKey = 'onboarding_completed';
   static const appearanceKey = 'appearance';
   static const nameKey = 'user_name';
+  static const trueBlackKey = 'true_black';
 
   final AppDatabase _db;
   final Clock _clock;
@@ -37,6 +38,7 @@ class DbAppPreferencesRepository implements AppPreferencesRepository {
         _decode(byKey[appearanceKey], key: appearanceKey),
       ),
       name: _decodeName(byKey[nameKey]),
+      trueBlack: _decodeBool(byKey[trueBlackKey], key: trueBlackKey),
     );
   }
 
@@ -54,6 +56,16 @@ class DbAppPreferencesRepository implements AppPreferencesRepository {
 
   @override
   Future<void> setName(String value) => _write(nameKey, value.trim());
+
+  @override
+  Stream<bool> watchTrueBlack() =>
+      _watchRaw(trueBlackKey)
+          .map((raw) => _decodeBool(raw, key: trueBlackKey))
+          .distinct();
+
+  @override
+  Future<void> setTrueBlack({required bool value}) =>
+      _write(trueBlackKey, value);
 
   String _decodeName(String? raw) {
     final decoded = _decode(raw, key: nameKey);

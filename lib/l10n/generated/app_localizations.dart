@@ -10604,6 +10604,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rose Gold'**
   String get themeNameRoseGold;
+
+  /// No description provided for @activityColorIndigo.
+  ///
+  /// In en, this message translates to:
+  /// **'Indigo'**
+  String get activityColorIndigo;
+
+  /// No description provided for @activityColorViolet.
+  ///
+  /// In en, this message translates to:
+  /// **'Violet'**
+  String get activityColorViolet;
+
+  /// No description provided for @activityColorFuchsia.
+  ///
+  /// In en, this message translates to:
+  /// **'Fuchsia'**
+  String get activityColorFuchsia;
+
+  /// No description provided for @activityColorRed.
+  ///
+  /// In en, this message translates to:
+  /// **'Red'**
+  String get activityColorRed;
+
+  /// No description provided for @activityColorYellow.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow'**
+  String get activityColorYellow;
+
+  /// No description provided for @activityColorAmber.
+  ///
+  /// In en, this message translates to:
+  /// **'Amber'**
+  String get activityColorAmber;
+
+  /// No description provided for @activityColorLime.
+  ///
+  /// In en, this message translates to:
+  /// **'Lime'**
+  String get activityColorLime;
+
+  /// No description provided for @activityColorNavy.
+  ///
+  /// In en, this message translates to:
+  /// **'Navy'**
+  String get activityColorNavy;
+
+  /// No description provided for @activityColorCyan.
+  ///
+  /// In en, this message translates to:
+  /// **'Cyan'**
+  String get activityColorCyan;
+
+  /// No description provided for @activityColorBrown.
+  ///
+  /// In en, this message translates to:
+  /// **'Brown'**
+  String get activityColorBrown;
+
+  /// No description provided for @appearanceTrueBlack.
+  ///
+  /// In en, this message translates to:
+  /// **'True black'**
+  String get appearanceTrueBlack;
+
+  /// No description provided for @appearanceTrueBlackHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Pure black dark mode for OLED screens. Saves battery.'**
+  String get appearanceTrueBlackHint;
 }
 
 class _AppLocalizationsDelegate

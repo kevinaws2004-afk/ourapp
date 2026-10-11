@@ -5775,4 +5775,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get themeNameRoseGold => 'Rose Gold';
+
+  @override
+  String get activityColorIndigo => 'Indigo';
+
+  @override
+  String get activityColorViolet => 'Violet';
+
+  @override
+  String get activityColorFuchsia => 'Fuchsia';
+
+  @override
+  String get activityColorRed => 'Red';
+
+  @override
+  String get activityColorYellow => 'Yellow';
+
+  @override
+  String get activityColorAmber => 'Amber';
+
+  @override
+  String get activityColorLime => 'Lime';
+
+  @override
+  String get activityColorNavy => 'Navy';
+
+  @override
+  String get activityColorCyan => 'Cyan';
+
+  @override
+  String get activityColorBrown => 'Brown';
+
+  @override
+  String get appearanceTrueBlack => 'True black';
+
+  @override
+  String get appearanceTrueBlackHint =>
+      'Pure black dark mode for OLED screens. Saves battery.';
 }

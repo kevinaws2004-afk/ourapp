@@ -25,11 +25,12 @@ class AppTokens extends ThemeExtension<AppTokens> {
     this.brightness = Brightness.light,
   });
 
-  static final Map<AppThemeId, AppTokens> _dark = {};
+  static final Map<(AppThemeId, bool), AppTokens> _dark = {};
 
   static AppTokens of(
     AppThemeId id, {
     Brightness brightness = Brightness.light,
+    bool trueBlack = false,
   }) {
     final light = switch (id) {
       AppThemeId.rose => roseTokens,
@@ -50,7 +51,10 @@ class AppTokens extends ThemeExtension<AppTokens> {
     };
     return brightness == Brightness.light
         ? light
-        : _dark.putIfAbsent(id, () => darkTokensFrom(light));
+        : _dark.putIfAbsent((
+            id,
+            trueBlack,
+          ), () => darkTokensFrom(light, trueBlack: trueBlack));
   }
 
   final AppThemeId id;

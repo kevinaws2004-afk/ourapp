@@ -80,10 +80,7 @@ class ItemCard extends StatelessWidget {
     final body = Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        if (leading case final l?) ...[
-          l,
-          const SizedBox(width: AppSpacing.md),
-        ],
+        if (leading case final l?) ...[l, const SizedBox(width: AppSpacing.md)],
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

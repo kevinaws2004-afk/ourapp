@@ -10,7 +10,10 @@ import '../tokens/treatments.dart';
 /// themes keep their personality at night: deep ink surfaces tinted with the
 /// theme's signature hue, the signature and action colors lifted for
 /// contrast, and activity colors as luminous solids on dim tinted wells.
-AppTokens darkTokensFrom(AppTokens light) {
+///
+/// With [trueBlack] the canvas is pure black (OLED: premium contrast, less
+/// battery) and cards are barely lifted near-black panels.
+AppTokens darkTokensFrom(AppTokens light, {bool trueBlack = false}) {
   final l = light.colors;
   final hue = HSLColor.fromColor(l.brandPrimary).hue;
 
@@ -18,10 +21,12 @@ AppTokens darkTokensFrom(AppTokens light) {
   Color ink(double lightness, {double saturation = 0.22}) =>
       HSLColor.fromAHSL(1, hue, saturation, lightness).toColor();
 
-  final canvas = ink(0.065);
-  final base = ink(0.095);
-  final raised = ink(0.125);
-  final sunken = ink(0.14, saturation: 0.18);
+  final canvas = trueBlack ? const Color(0xFF000000) : ink(0.065);
+  final base = trueBlack ? ink(0.045, saturation: 0.12) : ink(0.095);
+  final raised = trueBlack ? ink(0.075, saturation: 0.12) : ink(0.125);
+  final sunken = trueBlack
+      ? ink(0.09, saturation: 0.12)
+      : ink(0.14, saturation: 0.18);
 
   final brand = _lift(l.brandPrimary, 0.72);
   final action = _lift(l.action, 0.56, saturation: 0.62);

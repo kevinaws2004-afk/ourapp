@@ -11,6 +11,7 @@ import '../../../core/design/tokens/radius.dart';
 import '../../../core/design/tokens/spacing.dart';
 import '../../../core/design/window_size_class.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import '../../../shared/widgets/settings_group.dart';
 import '../domain/preferences_snapshot.dart';
 import 'preferences_providers.dart';
 
@@ -41,6 +42,26 @@ class AppearanceScreen extends ConsumerWidget {
               Text(l10n.meDarkMode, style: context.textStyles.titleLarge),
               const SizedBox(height: AppSpacing.md),
               const AppearanceModePicker(),
+              const SizedBox(height: AppSpacing.md),
+              SettingsGroup(
+                children: [
+                  SettingsTile(
+                    icon: AppIcons.darkMode,
+                    iconColor: context.colors.textPrimary,
+                    iconBackground: context.colors.surfaceSunken,
+                    title: l10n.appearanceTrueBlack,
+                    subtitle: l10n.appearanceTrueBlackHint,
+                    trailing: Switch(
+                      value: ref.watch(effectiveTrueBlackProvider),
+                      onChanged: (v) => unawaited(
+                        ref
+                            .read(preferencesNotifierProvider.notifier)
+                            .setTrueBlack(value: v),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: AppSpacing.xxl),
               Text(
                 l10n.appearanceThemeTitle,
@@ -195,7 +216,12 @@ class _ThemeSwatch extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final brightness = Theme.of(context).brightness;
-    final t = AppTokens.of(id, brightness: brightness).colors;
+    final t = AppTokens.of(
+      id,
+      brightness: brightness,
+      trueBlack: ProviderScope.containerOf(context)
+          .read(effectiveTrueBlackProvider),
+    ).colors;
     final c = context.colors;
     Widget dot(Color color, double size) => Container(
       width: size,

@@ -121,9 +121,7 @@ class ProgressSummaryGrid extends ConsumerWidget {
         return Wrap(
           spacing: gap,
           runSpacing: gap,
-          children: [
-            for (final t in tiles) SizedBox(width: width, child: t),
-          ],
+          children: [for (final t in tiles) SizedBox(width: width, child: t)],
         );
       },
     );
