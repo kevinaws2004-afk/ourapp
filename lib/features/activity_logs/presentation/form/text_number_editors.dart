@@ -14,6 +14,7 @@ import '../../../activity_types/domain/field_config.dart';
 import '../../domain/field_value.dart';
 import '../activity_log_providers.dart';
 import '../value_formatting.dart';
+import 'exercise_catalog.dart';
 
 /// Text field editor; empty text means "no value". With
 /// `suggestFromHistory`, previously recorded values are offered as the user
@@ -35,7 +36,7 @@ class TextValueEditor extends ConsumerStatefulWidget {
 }
 
 class _TextValueEditorState extends ConsumerState<TextValueEditor> {
-  static const _maxSuggestions = 6;
+  static const _maxSuggestions = 8;
 
   late final _controller = TextEditingController(
     text: widget.value?.text ?? '',
@@ -63,22 +64,35 @@ class _TextValueEditorState extends ConsumerState<TextValueEditor> {
       textCapitalization: TextCapitalization.sentences,
       onChanged: _emit,
     );
-    if (!config.suggestFromHistory || config.multiline) return input;
+    if ((!config.suggestFromHistory && !isExerciseField(widget.field)) ||
+        config.multiline) {
+      return input;
+    }
 
-    final suggestions =
+    final history =
         ref.watch(textSuggestionsProvider(widget.field.id)).value ?? const [];
+    // Your own names first, then common ones.
+    final suggestions = isExerciseField(widget.field)
+        ? {
+            for (final s in [...history, ...exerciseCatalog])
+              s.toLowerCase(): s,
+          }.values.toList()
+        : history;
     return RawAutocomplete<String>(
       textEditingController: _controller,
       focusNode: _focusNode,
       optionsBuilder: (editing) {
         final query = editing.text.trim().toLowerCase();
         if (query.isEmpty) return const [];
-        return suggestions
-            .where((s) {
-              final lower = s.toLowerCase();
-              return lower != query && lower.contains(query);
-            })
-            .take(_maxSuggestions);
+        final matches = suggestions.where((s) {
+          final lower = s.toLowerCase();
+          return lower != query && lower.contains(query);
+        }).toList();
+        // Names starting with what's typed come first.
+        final starting = matches.where(
+          (s) => s.toLowerCase().startsWith(query),
+        );
+        return {...starting, ...matches}.take(_maxSuggestions);
       },
       onSelected: _emit,
       fieldViewBuilder: (_, _, _, _) => input,
@@ -147,10 +161,15 @@ class NumberValueEditor extends StatefulWidget {
     this.label,
     this.errorText,
     this.stepper = false,
+    this.hint,
   });
 
   final ActivityField field;
   final NumberValue? value;
+
+  /// Shown greyed out while empty (e.g. the previous set's weight); a
+  /// − / + starts from it.
+  final NumberValue? hint;
   final ValueChanged<FieldValue?> onChanged;
 
   /// Inline label, for compact rows without a [FieldEditorShell].
@@ -173,7 +192,10 @@ class _NumberValueEditorState extends State<NumberValueEditor> {
         ? ''
         : formatNumber(widget.value!.value, _config.decimals),
   );
-  late String? _unitCode = widget.value?.unitCode ?? _config.defaultUnitCode;
+  late String? _unitCode =
+      widget.value?.unitCode ??
+      widget.hint?.unitCode ??
+      _config.defaultUnitCode;
   bool _invalid = false;
 
   @override
@@ -201,7 +223,11 @@ class _NumberValueEditorState extends State<NumberValueEditor> {
   /// Moves the value one step ([direction] -1 or 1) and shows it.
   void _nudge(int direction) {
     final text = _controller.text.trim().replaceAll(',', '.');
-    final current = double.tryParse(text) ?? 0;
+    // From an empty field, − / + step from the hint.
+    final current =
+        double.tryParse(text) ??
+        (text.isEmpty ? widget.hint?.value : null) ??
+        0;
     var next = current + _step * direction;
     final min = _config.min ?? (current >= 0 ? 0 : null);
     if (min != null && next < min) next = min.toDouble();
@@ -303,6 +329,13 @@ class _NumberValueEditorState extends State<NumberValueEditor> {
                 labelText: name,
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 floatingLabelAlignment: FloatingLabelAlignment.center,
+                hintText: widget.hint == null
+                    ? null
+                    : formatNumber(widget.hint!.value, _config.decimals),
+                hintStyle: AppTypography.numericMedium.copyWith(
+                  fontSize: 24,
+                  color: c.textTertiary,
+                ),
                 filled: false,
                 isDense: true,
                 contentPadding: const EdgeInsets.symmetric(

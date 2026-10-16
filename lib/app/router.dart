@@ -15,6 +15,7 @@ import '../features/insights/presentation/insights_screen.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
 import '../features/plans/presentation/activity_chooser.dart';
 import '../features/plans/domain/plan.dart';
+import '../core/time/local_date.dart';
 import '../core/time/clock_provider.dart';
 import '../features/plans/presentation/item/item_notifier.dart';
 import '../features/plans/presentation/item/item_screen.dart';
@@ -24,6 +25,7 @@ import '../features/plans/presentation/plan_screen.dart';
 import '../features/settings/presentation/appearance_screen.dart';
 import '../features/settings/presentation/me_screen.dart';
 import '../features/settings/presentation/preferences_providers.dart';
+import '../features/today/presentation/day_report_screen.dart';
 import '../features/today/presentation/today_screen.dart';
 import '../l10n/generated/app_localizations.dart';
 import '../shared/errors/error_copy.dart';
@@ -74,6 +76,9 @@ abstract final class AppRoutes {
 
   /// Notes: the board, and one note.
   static const notes = '/notes';
+
+  /// A day's report: what got done, time per activity, untracked time.
+  static String dayReport(LocalDate date) => '/day/${date.toIso()}';
   static String note(NoteId id) => '/notes/${id.value}';
 
   /// Reminders and notifications, under Me.
@@ -271,6 +276,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           navigationShell: navigationShell,
           onQuickStart: (context) =>
               unawaited(showQuickStartSheet(context, quickStart)),
+          onOpenTimer: () => openFocus(context),
         ),
         branches: [
           StatefulShellBranch(
@@ -291,6 +297,8 @@ final routerProvider = Provider<GoRouter>((ref) {
                   chooser: chooser(context),
                   onOpenMe: () => context.go(AppRoutes.me),
                   onOpenNotes: () => unawaited(context.push(AppRoutes.notes)),
+                  onOpenDayReport: (date) =>
+                      unawaited(context.push(AppRoutes.dayReport(date))),
                   onStartActivity: (type) => unawaited(
                     doNow(context, type.id, withTimer: type.supportsTimer),
                   ),
@@ -434,6 +442,14 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
         ],
+      ),
+      GoRoute(
+        parentNavigatorKey: rootNavigatorKey,
+        path: '/day/:date',
+        builder: (context, state) => DayReportScreen(
+          date: LocalDate.parse(state.pathParameters['date']!),
+          onOpenItem: (id) => unawaited(context.push(AppRoutes.item(id))),
+        ),
       ),
       GoRoute(
         parentNavigatorKey: rootNavigatorKey,

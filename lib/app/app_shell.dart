@@ -11,6 +11,7 @@ import '../core/design/tokens/radius.dart';
 import '../core/design/tokens/sizes.dart';
 import '../core/design/tokens/spacing.dart';
 import '../core/design/window_size_class.dart';
+import '../features/focus/presentation/focus_banner.dart';
 import '../l10n/generated/app_localizations.dart';
 
 /// The tab shell: Today, Plan, **+**, Progress, Me. On phones a bottom bar
@@ -23,12 +24,16 @@ class AppShell extends StatelessWidget {
     super.key,
     required this.navigationShell,
     required this.onQuickStart,
+    required this.onOpenTimer,
   });
 
   final StatefulNavigationShell navigationShell;
 
   /// Opens the Quick start sheet.
   final ValueChanged<BuildContext> onQuickStart;
+
+  /// Opens the running timer.
+  final VoidCallback onOpenTimer;
 
   /// Branch order in the router.
   static const today = 0;
@@ -62,7 +67,14 @@ class AppShell extends StatelessWidget {
     ];
     if (!WindowSizeClass.of(context).usesNavigationRail) {
       return Scaffold(
-        body: navigationShell,
+        body: Column(
+          children: [
+            Expanded(child: navigationShell),
+            // Today shows the running timer itself.
+            if (navigationShell.currentIndex != today)
+              RunningTimerBar(onOpen: onOpenTimer),
+          ],
+        ),
         extendBody: false,
         bottomNavigationBar: _BottomBar(
           tabs: tabs,
@@ -103,7 +115,18 @@ class AppShell extends StatelessWidget {
             width: AppSizes.hairline,
             color: context.colors.borderSubtle,
           ),
-          Expanded(child: navigationShell),
+          Expanded(
+            child: Column(
+              children: [
+                Expanded(child: navigationShell),
+                if (navigationShell.currentIndex != today)
+                  SafeArea(
+                    top: false,
+                    child: RunningTimerBar(onOpen: onOpenTimer),
+                  ),
+              ],
+            ),
+          ),
         ],
       ),
     );

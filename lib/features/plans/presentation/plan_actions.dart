@@ -14,6 +14,7 @@ import '../../notifications/presentation/reminder_prompt.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../../activity_logs/domain/activity_log.dart';
 import '../../activity_logs/presentation/activity_log_providers.dart';
+import '../../activity_types/domain/activity_ids.dart';
 import '../../activity_types/domain/activity_type.dart';
 import '../../challenges/presentation/challenge_providers.dart';
 import '../../focus/domain/focus_session.dart';
@@ -310,7 +311,7 @@ class PlanActions {
                   isOpen ? l10n.planCompleteTask : l10n.planReopenTask,
                   _QuickAction.toggleDone,
                 ),
-              if (isOpen && item.plan.plannedStartAt != null)
+              if (isOpen)
                 tile(AppIcons.bell, l10n.reminderMenu, _QuickAction.reminder),
               if (isOpen)
                 tile(
@@ -368,24 +369,24 @@ class PlanActions {
     }
   }
 
-  /// Sets, changes or removes the plan's reminder (needs a time).
+  /// Sets, changes or removes the plan's (first) reminder.
   Future<void> editReminder(PlannedItem item) async {
     final plan = item.plan;
-    final start = plan.plannedStartAt;
-    if (start == null) {
-      showMessageSnackBar(_context, _l10n.reminderNeedsTime);
-      return;
-    }
-    final reminders = _ref.read(remindersProvider).value ?? const {};
+    final all = remindersFor(
+      plan,
+      _ref.read(remindersProvider).value ?? const {},
+    );
     final choice = await showReminderSheet(
       _context,
       title: plan.title,
-      startLabel: MaterialLocalizations.of(_context)
-          .formatTimeOfDay(TimeOfDay.fromDateTime(start.toLocal())),
-      current: reminderFor(plan, reminders),
+      start: plan.plannedStartAt,
+      current: all.firstOrNull,
     );
     if (choice.cancelled) return;
-    await _run(() => setReminderFor(_ref, plan.id, choice.minutes));
+    // Changes the first reminder; any others stay.
+    await _run(
+      () => setRemindersFor(_ref, plan.id, [?choice.reminder, ...all.skip(1)]),
+    );
   }
 
   /// Makes the plan repeat on chosen days (ADR-036).
@@ -418,7 +419,10 @@ class PlanActions {
 
   /// Opens [item]'s plan sheet (edit its title, time and notes) and runs
   /// the action chosen there. Returns that action.
-  Future<PlanSheetAction?> open(PlannedItem item) async {
+  Future<PlanSheetAction?> open(
+    PlannedItem item, {
+    Future<void> Function(ActivityTypeId id)? onEditActivity,
+  }) async {
     final action = await showPlanEditor(
       _context,
       date: item.plan.planDate,
@@ -440,6 +444,10 @@ class PlanActions {
         await moveToTomorrow(item);
       case PlanSheetAction.delete:
         await delete(item);
+      case PlanSheetAction.editActivity:
+        if (item.type case final type? when onEditActivity != null) {
+          await onEditActivity(type.id);
+        }
       case null:
         break;
     }

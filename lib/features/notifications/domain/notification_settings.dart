@@ -51,6 +51,11 @@ class NotificationSettings {
   /// An evening nudge when a running goal's activity isn't done yet today.
   final bool goalStreaks;
 
+  /// The reminder a new timed item starts with (Me → Notifications →
+  /// Default reminder); null for none.
+  int? get defaultBefore =>
+      newItems == NewItemReminders.always ? defaultMinutes : null;
+
   NotificationSettings copyWith({
     bool? enabled,
     NewItemReminders? newItems,

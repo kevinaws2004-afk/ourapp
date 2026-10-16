@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Daylog's icon background: the signature lavender. -->
+<!-- DayCraft's icon background: a pale lavender under the infinity mark. -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#6847F0" />
+    <solid android:color="#F4F0FF" />
 </shape>

@@ -12,6 +12,7 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/widgets/screen_header.dart';
 import '../../../shared/widgets/settings_group.dart';
 import '../domain/notification_settings.dart';
+import '../domain/plan_reminder.dart';
 import 'notification_providers.dart';
 import 'reminder_prompt.dart';
 
@@ -69,22 +70,26 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
     if (picked != null) onPicked(picked.hour * 60 + picked.minute);
   }
 
+  /// Default reminder for new timed items: none, at start, or N before.
   Future<void> _pickNewItems(NotificationSettings s) async {
     final l10n = AppLocalizations.of(context);
-    final choice = await showModalBottomSheet<(NewItemReminders, int)>(
+    final choice = await showModalBottomSheet<({int? minutes})>(
       context: context,
       useSafeArea: true,
       builder: (context) {
-        Widget tile(String label, NewItemReminders mode, int minutes) {
-          final selected =
-              s.newItems == mode &&
-              (mode != NewItemReminders.always || s.defaultMinutes == minutes);
+        Widget tile(int? minutes) {
+          final selected = s.defaultBefore == minutes;
           return ListTile(
-            title: Text(label),
+            title: Text(
+              reminderLabel(
+                context,
+                minutes == null ? null : ReminderBefore(minutes),
+              ),
+            ),
             trailing: selected
                 ? Icon(AppIcons.check, color: context.colors.brandPrimary)
                 : null,
-            onTap: () => Navigator.of(context).pop((mode, minutes)),
+            onTap: () => Navigator.of(context).pop((minutes: minutes)),
           );
         }
 
@@ -100,29 +105,29 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
                     AppSpacing.xl,
                     0,
                     AppSpacing.xl,
-                    AppSpacing.sm,
+                    AppSpacing.xxs,
                   ),
                   child: Text(
                     l10n.notificationsNewItems,
                     style: context.textStyles.headlineSmall,
                   ),
                 ),
-                tile(
-                  l10n.notificationsAsk,
-                  NewItemReminders.ask,
-                  s.defaultMinutes,
-                ),
-                for (final m in NotificationSettings.choices)
-                  tile(
-                    l10n.notificationsAlways(reminderLabel(l10n, m)),
-                    NewItemReminders.always,
-                    m,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.xl,
+                    0,
+                    AppSpacing.xl,
+                    AppSpacing.sm,
                   ),
-                tile(
-                  l10n.notificationsNever,
-                  NewItemReminders.never,
-                  s.defaultMinutes,
+                  child: Text(
+                    l10n.notificationsDefaultHint,
+                    style: context.textStyles.bodySmall?.copyWith(
+                      color: context.colors.textSecondary,
+                    ),
+                  ),
                 ),
+                tile(null),
+                for (final m in NotificationSettings.choices) tile(m),
               ],
             ),
           ),
@@ -130,9 +135,15 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
       },
     );
     if (choice == null) return;
+    final minutes = choice.minutes;
     await _save(
-      s.copyWith(newItems: choice.$1, defaultMinutes: choice.$2),
-      turnedOn: choice.$1 == NewItemReminders.always,
+      minutes == null
+          ? s.copyWith(newItems: NewItemReminders.ask)
+          : s.copyWith(
+              newItems: NewItemReminders.always,
+              defaultMinutes: minutes,
+            ),
+      turnedOn: minutes != null,
     );
   }
 
@@ -148,11 +159,10 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
     String timeOf(int minute) => material.formatTimeOfDay(
       TimeOfDay(hour: minute ~/ 60, minute: minute % 60),
     );
-    final newItems = switch (s.newItems) {
-      NewItemReminders.ask => l10n.notificationsAsk,
-      NewItemReminders.always => reminderLabel(l10n, s.defaultMinutes),
-      NewItemReminders.never => l10n.notificationsNever,
-    };
+    final newItems = reminderLabel(context, switch (s.defaultBefore) {
+      final m? => ReminderBefore(m),
+      null => null,
+    });
 
     Widget toggle(bool value, ValueChanged<bool> onChanged) => Switch(
       value: value && s.enabled,

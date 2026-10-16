@@ -32,9 +32,9 @@ import 'text_number_editors.dart';
 ///
 /// When every sub-field is a Number, the row being filled in is a card with
 /// a − / + stepper per number, earlier rows fold into one line ("2 · 60 kg ×
-/// 8"; tap to change one), and a new row starts from the previous row's
-/// values, so repeating a set is one tap (ADR-045). Otherwise each item is a
-/// card with the full form for its sub-fields.
+/// 8"; tap to change one). A new row starts empty with the previous row's
+/// values as hints; ✓ folds it, and only then is "Add set" offered.
+/// Otherwise each item is a card with the full form for its sub-fields.
 class RepeatingGroupEditor extends ConsumerWidget {
   const RepeatingGroupEditor({
     super.key,
@@ -83,14 +83,7 @@ class RepeatingGroupEditor extends ConsumerWidget {
 
     void add(BuildContext actionsContext) {
       final id = GroupItemId(ref.read(idGeneratorProvider).newId());
-      final previous = _items.lastOrNull;
-      _emit([
-        ..._items,
-        GroupItem(
-          id: id,
-          values: compact && previous != null ? {...previous.values} : const {},
-        ),
-      ]);
+      _emit([..._items, GroupItem(id: id, values: const {})]);
       // Keep the new row in view above the keyboard (A14): the actions sit
       // right below it.
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -105,11 +98,53 @@ class RepeatingGroupEditor extends ConsumerWidget {
       });
     }
 
+    Widget actions({required bool showAdd}) => Builder(
+      builder: (actionsContext) => Row(
+        children: [
+          // The actions wrap on a narrow screen.
+          Expanded(
+            child: Wrap(
+              children: [
+                if (showAdd)
+                  TextButton.icon(
+                    icon: const Icon(AppIcons.add),
+                    label: Text(l10n.addGroupItem(_itemLabel)),
+                    onPressed: () => add(actionsContext),
+                  ),
+                // Rows of numbers (e.g. sets) can have a rest between them (B5).
+                if (compact && showAdd && _items.isNotEmpty)
+                  if (RestTimerScope.maybeOf(context) case final rest?)
+                    TextButton.icon(
+                      icon: const Icon(AppIcons.timer),
+                      label: Text(l10n.restAction),
+                      onPressed: rest.onRest,
+                    ),
+              ],
+            ),
+          ),
+          // Logging into an item: the list can grow a new detail, kept in
+          // a menu so it doesn't compete with adding a row (A13).
+          if (AddDetailScope.maybeOf(context) case final scope?)
+            PopupMenuButton<void>(
+              tooltip: l10n.groupListOptions(_itemLabel),
+              icon: const Icon(AppIcons.more),
+              itemBuilder: (_) => [
+                PopupMenuItem(
+                  onTap: () => scope.onAddDetail(field),
+                  child: Text(l10n.addGroupDetailTo(_itemLabel)),
+                ),
+              ],
+            ),
+        ],
+      ),
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (compact)
           _CompactRows(
+            actions: actions,
             type: type,
             group: field,
             itemLabel: _itemLabel,
@@ -133,45 +168,7 @@ class RepeatingGroupEditor extends ConsumerWidget {
               onChanged: (item) => _replace(index, item),
               onRemove: () => _emit([..._items]..removeAt(index)),
             ),
-        Builder(
-          builder: (actionsContext) => Row(
-            children: [
-              // The actions wrap on a narrow screen.
-              Expanded(
-                child: Wrap(
-                  children: [
-                    TextButton.icon(
-                      icon: const Icon(AppIcons.add),
-                      label: Text(l10n.addGroupItem(_itemLabel)),
-                      onPressed: () => add(actionsContext),
-                    ),
-                    // Rows of numbers (e.g. sets) can have a rest between them (B5).
-                    if (compact && _items.isNotEmpty)
-                      if (RestTimerScope.maybeOf(context) case final rest?)
-                        TextButton.icon(
-                          icon: const Icon(AppIcons.timer),
-                          label: Text(l10n.restAction),
-                          onPressed: rest.onRest,
-                        ),
-                  ],
-                ),
-              ),
-              // Logging into an item: the list can grow a new detail, kept in
-              // a menu so it doesn't compete with adding a row (A13).
-              if (AddDetailScope.maybeOf(context) case final scope?)
-                PopupMenuButton<void>(
-                  tooltip: l10n.groupListOptions(_itemLabel),
-                  icon: const Icon(AppIcons.more),
-                  itemBuilder: (_) => [
-                    PopupMenuItem(
-                      onTap: () => scope.onAddDetail(field),
-                      child: Text(l10n.addGroupDetailTo(_itemLabel)),
-                    ),
-                  ],
-                ),
-            ],
-          ),
-        ),
+        if (!compact) actions(showAdd: true),
       ],
     );
   }
@@ -359,11 +356,15 @@ class _CompactRows extends StatefulWidget {
     required this.issues,
     required this.onReplace,
     required this.onRemove,
+    required this.actions,
   });
 
   final ActivityType type;
   final ActivityField group;
   final String itemLabel;
+
+  /// The list's actions; "Add" only once no row is being filled in.
+  final Widget Function({required bool showAdd}) actions;
   final List<ActivityField> fields;
   final List<GroupItem> items;
   final List<ValidationIssue> issues;
@@ -375,14 +376,26 @@ class _CompactRows extends StatefulWidget {
 }
 
 class _CompactRowsState extends State<_CompactRows> {
+  /// A row tapped open to change it.
   GroupItemId? _active;
+
+  /// Whether the newest row was ticked done. Saved rows start done.
+  late bool _newestDone = widget.items.isNotEmpty;
 
   @override
   void didUpdateWidget(_CompactRows old) {
     super.didUpdateWidget(old);
     // A new row is the one to fill in.
-    if (widget.items.length > old.items.length) _active = null;
+    if (widget.items.length > old.items.length) {
+      _active = null;
+      _newestDone = false;
+    }
   }
+
+  void _done() => setState(() {
+    _active = null;
+    _newestDone = true;
+  });
 
   bool _hasIssue(GroupItem item) => widget.issues.any(
     (i) => i.target?.startsWith('${item.id.value}/') ?? false,
@@ -394,7 +407,7 @@ class _CompactRowsState extends State<_CompactRows> {
     final items = widget.items;
     final active = items.any((i) => i.id == _active)
         ? _active
-        : items.lastOrNull?.id;
+        : (_newestDone ? null : items.lastOrNull?.id);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -402,6 +415,8 @@ class _CompactRowsState extends State<_CompactRows> {
           if (item.id == active || _hasIssue(item))
             _ActiveRow(
               key: ValueKey(item.id),
+              previous: index > 0 ? items[index - 1] : null,
+              onDone: item.values.isEmpty ? null : _done,
               title: l10n.groupItemTitle(widget.itemLabel, index + 1),
               removeLabel: l10n.removeGroupItem(widget.itemLabel),
               fields: widget.fields,
@@ -423,6 +438,7 @@ class _CompactRowsState extends State<_CompactRows> {
               ),
               onTap: () => setState(() => _active = item.id),
             ),
+        widget.actions(showAdd: active == null),
       ],
     );
   }
@@ -504,12 +520,20 @@ class _ActiveRow extends StatelessWidget {
     required this.issues,
     required this.onChanged,
     required this.onRemove,
+    required this.previous,
+    required this.onDone,
   });
 
   final String title;
   final String removeLabel;
   final List<ActivityField> fields;
   final GroupItem item;
+
+  /// The row before, whose values show as hints.
+  final GroupItem? previous;
+
+  /// Folds the row; null until something is filled in.
+  final VoidCallback? onDone;
   final List<ValidationIssue> issues;
   final ValueChanged<GroupItem> onChanged;
   final VoidCallback onRemove;
@@ -546,6 +570,15 @@ class _ActiveRow extends StatelessWidget {
                     icon: const Icon(AppIcons.close),
                     onPressed: onRemove,
                   ),
+                  IconButton.filled(
+                    tooltip: l10n.groupRowDone(title),
+                    style: IconButton.styleFrom(
+                      backgroundColor: c.success,
+                      foregroundColor: c.onBrandPrimary,
+                    ),
+                    icon: const Icon(AppIcons.check),
+                    onPressed: onDone,
+                  ),
                 ],
               ),
               Padding(
@@ -559,6 +592,7 @@ class _ActiveRow extends StatelessWidget {
                       value: item.values[sub.id] as NumberValue?,
                       label: sub.required ? '${sub.name} *' : sub.name,
                       stepper: true,
+                      hint: previous?.values[sub.id] as NumberValue?,
                       errorText: firstIssueMessage(
                         l10n,
                         issues,

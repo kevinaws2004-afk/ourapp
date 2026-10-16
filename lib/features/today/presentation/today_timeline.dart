@@ -214,6 +214,9 @@ class _TimelineRow extends ConsumerWidget {
         final inactive =
             status == EffectivePlanStatus.skipped ||
             status == EffectivePlanStatus.cancelled;
+        final doneTime = material.formatTimeOfDay(
+          TimeOfDay.fromDateTime(plan.updatedAt.toLocal()),
+        );
         String? detail;
         if (running) {
           ref.watch(focusTickProvider);
@@ -224,7 +227,12 @@ class _TimelineRow extends ConsumerWidget {
               : l10n.itemRunning(formatTimer(session.elapsedMs(now)));
         } else if (done) {
           final result = formatItemResult(context, item);
-          detail = result == l10n.planStatusDone ? null : result;
+          // When it was ticked off; without a planned time it goes in the
+          // time column instead.
+          final at = l10n.doneAtTime(doneTime);
+          detail = plan.plannedStartAt == null
+              ? (result == l10n.planStatusDone ? null : result)
+              : (result == l10n.planStatusDone ? at : '$result · $at');
         } else if (!inactive) {
           detail = switch (plan.plannedLengthMs) {
             final ms? => formatDuration(l10n, ms),
@@ -253,7 +261,8 @@ class _TimelineRow extends ConsumerWidget {
         return _RowData(
           title: plan.title,
           type: item.type,
-          time: formatPlanStart(context, plan),
+          // Done without a planned time: when it was done.
+          time: formatPlanStart(context, plan) ?? (done ? doneTime : null),
           endTime: formatPlanEnd(context, plan),
           detail: detail,
           status: chip.$1,
@@ -263,7 +272,6 @@ class _TimelineRow extends ConsumerWidget {
           streak: item.type == null ? null : streaks[item.type!.id]?.days,
           reminder:
               item.isOpen &&
-              plan.plannedStartAt != null &&
               reminderFor(
                     plan,
                     ref.watch(remindersProvider).value ?? const {},
@@ -518,6 +526,27 @@ class _AnytimeRow extends ConsumerWidget {
                 ),
               ),
             ),
+            if (!done &&
+                reminderFor(
+                      item.plan,
+                      ref.watch(remindersProvider).value ?? const {},
+                    ) !=
+                    null) ...[
+              Icon(AppIcons.bellOn, size: 13, color: c.brandPrimary),
+              const SizedBox(width: AppSpacing.sm),
+            ],
+            if (done)
+              Padding(
+                padding: const EdgeInsets.only(right: AppSpacing.sm),
+                child: Text(
+                  MaterialLocalizations.of(context).formatTimeOfDay(
+                    TimeOfDay.fromDateTime(item.plan.updatedAt.toLocal()),
+                  ),
+                  style: context.textStyles.labelSmall?.copyWith(
+                    color: c.textTertiary,
+                  ),
+                ),
+              ),
             if (type != null)
               Icon(
                 ActivityIconRegistry.resolve(type.iconId),

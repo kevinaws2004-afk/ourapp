@@ -20,6 +20,7 @@ import '../../plans/presentation/plan_providers.dart';
 import '../../challenges/domain/challenge_use_cases.dart';
 import '../data/reminder_store.dart';
 import '../domain/notification_settings.dart';
+import '../domain/plan_reminder.dart';
 
 /// The started notification service; `bootstrap()` overrides it. Disabled
 /// by default (tests, previews).
@@ -76,30 +77,43 @@ final scheduledNotesProvider = Provider.autoDispose<List<ScheduledNote>>((ref) {
 
   final notes = <ScheduledNote>[];
 
-  // 1. Item reminders.
+  // 1. Item reminders: before the start, or at a time on the item's day.
   for (final plan in plans) {
+    if (plan.status != PlanStatus.planned) continue;
     final start = plan.plannedStartAt;
-    if (start == null || plan.status != PlanStatus.planned) continue;
-    final minutes = reminderFor(plan, reminders);
-    if (minutes == null) continue;
-    notes.add(
-      ScheduledNote(
-        key: 'plan:${plan.id.value}',
-        at: start.subtract(Duration(minutes: minutes)),
-        title: minutes == 0
-            ? l10n.notifyStartsNow(plan.title)
-            : l10n.notifyStartsIn(plan.title, minutes),
-        body: switch (plan.plannedLengthMs) {
-          final ms? => l10n.notifyAtFor(
-            time(start),
-            Duration(milliseconds: ms).inMinutes,
-          ),
-          null => l10n.notifyAt(time(start)),
-        },
-        channel: NotificationChannel.reminders,
-        payload: 'plan:${plan.id.value}',
-      ),
-    );
+    for (final (i, reminder) in remindersFor(plan, reminders).indexed) {
+      final key = i == 0 ? 'plan:${plan.id.value}' : 'plan:${plan.id.value}#$i';
+      final ScheduledNote? note = switch (reminder) {
+        ReminderBefore(:final minutes) when start != null => ScheduledNote(
+          key: key,
+          at: start.subtract(Duration(minutes: minutes)),
+          title: minutes == 0
+              ? l10n.notifyStartsNow(plan.title)
+              : l10n.notifyStartsIn(plan.title, minutes),
+          body: switch (plan.plannedLengthMs) {
+            final ms? => l10n.notifyAtFor(
+              time(start),
+              Duration(milliseconds: ms).inMinutes,
+            ),
+            null => l10n.notifyAt(time(start)),
+          },
+          channel: NotificationChannel.reminders,
+          payload: 'plan:${plan.id.value}',
+        ),
+        ReminderAt(:final minuteOfDay) => ScheduledNote(
+          key: key,
+          at: at(plan.planDate, minuteOfDay),
+          title: plan.title,
+          body: start == null
+              ? l10n.notifyReminderAnytime
+              : l10n.notifyAt(time(start)),
+          channel: NotificationChannel.reminders,
+          payload: 'plan:${plan.id.value}',
+        ),
+        _ => null,
+      };
+      if (note != null) notes.add(note);
+    }
   }
 
   // 2. The running timer reaching its planned length.

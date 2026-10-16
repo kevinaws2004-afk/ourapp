@@ -858,6 +858,81 @@ List<ActivityCategory> activityCategories(AppLocalizations l10n) {
           _rating(l10n.builtInTeachingHowItWent),
         ],
       ),
+      _activity(
+        l10n.builtInLecture,
+        'presentation-chart',
+        'indigo',
+        timer: true,
+        [
+          _text(l10n.builtInStudySubjectField, suggest: true),
+          _text(l10n.builtInLectureTopic),
+          _text(l10n.builtInLectureKeyPoints, multiline: true),
+          _rating(l10n.builtInLectureUnderstood),
+        ],
+      ),
+      _activity(l10n.builtInRevision, 'brain', 'violet', timer: true, [
+        _text(l10n.builtInStudySubjectField, suggest: true),
+        _text(l10n.builtInRevisionTopics, multiline: true),
+        _rating(l10n.builtInRevisionConfidence),
+      ]),
+      _activity(l10n.builtInAssignment, 'pencil-simple', 'amber', timer: true, [
+        _text(l10n.builtInStudySubjectField, suggest: true),
+        _text(l10n.builtInAssignmentName),
+        _date(l10n.builtInAssignmentDue),
+        _yesNo(l10n.builtInAssignmentSubmitted),
+      ]),
+      _activity(l10n.builtInPracticeProblems, 'target', 'teal', timer: true, [
+        _text(l10n.builtInStudySubjectField, suggest: true),
+        _text(l10n.builtInPracticeProblemsTopic),
+        _number(l10n.builtInPracticeProblemsSolved),
+        _number(l10n.builtInPracticeProblemsCorrect),
+        _rating(l10n.builtInPracticeProblemsDifficulty),
+      ]),
+      _activity(l10n.builtInMakeNotes, 'notebook', 'yellow', timer: true, [
+        _text(l10n.builtInStudySubjectField, suggest: true),
+        _text(l10n.builtInMakeNotesChapter),
+        _number(l10n.builtInMakeNotesPages),
+      ]),
+      _activity(l10n.builtInReadTextbook, 'book-open', 'sky', timer: true, [
+        _text(l10n.builtInStudySubjectField, suggest: true),
+        _text(l10n.builtInReadTextbookChapter),
+        _number(l10n.builtInReadTextbookPages),
+      ]),
+      _activity(l10n.builtInGroupStudy, 'users-three', 'fuchsia', timer: true, [
+        _text(l10n.builtInStudySubjectField, suggest: true),
+        _text(l10n.builtInGroupStudyWith),
+        _text(l10n.builtInGroupStudyCovered, multiline: true),
+      ]),
+      _activity(l10n.builtInResearch, 'globe', 'cyan', timer: true, [
+        _text(l10n.builtInResearchTopic, suggest: true),
+        _number(l10n.builtInResearchSources),
+        _text(l10n.builtInResearchFindings, multiline: true),
+      ]),
+      _activity(l10n.builtInEssay, 'pencil-simple', 'rose', timer: true, [
+        _text(l10n.builtInEssayTitle, suggest: true),
+        _number(l10n.builtInEssayWords),
+        _yesNo(l10n.builtInEssayFinished),
+      ]),
+      _activity(l10n.builtInLab, 'lightbulb', 'lime', timer: true, [
+        _text(l10n.builtInStudySubjectField, suggest: true),
+        _text(l10n.builtInLabExperiment),
+        _text(l10n.builtInLabObservations, multiline: true),
+      ]),
+      _activity(l10n.builtInMockTest, 'timer', 'red', timer: true, [
+        _text(l10n.builtInMockTestExam, suggest: true),
+        _number(
+          l10n.builtInMockTestScore,
+          dimension: Dimension.percentage,
+          unit: 'percent',
+          summary: NumberSummary.average,
+        ),
+        _text(l10n.builtInMockTestWeakTopics, multiline: true),
+      ]),
+      _activity(l10n.builtInDoubtSession, 'chat-circle', 'navy', timer: true, [
+        _text(l10n.builtInStudySubjectField, suggest: true),
+        _number(l10n.builtInDoubtSessionCleared),
+        _text(l10n.builtInDoubtSessionNotes, multiline: true),
+      ]),
     ]),
     ActivityCategory(l10n.builtInCategoryExerciseAndSport, [
       starter(l10n.builtInGym),

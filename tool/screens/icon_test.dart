@@ -1,42 +1,60 @@
-// Renders Daylog's launcher icons and store artwork with the app's own
-// fonts and colors. Not part of the normal test run:
+// Renders DayCraft's launcher icons and store artwork from the app's own
+// logo painter, in the default (lavender) theme. Not part of the normal
+// test run:
 //   flutter test tool/screens/icon_test.dart
 // Writes Android mipmaps into android/app/src/main/res and store artwork
 // into store/.
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:daylog/core/design/keys/activity_color_key.dart';
+import 'package:daylog/core/design/themes/lavender_theme.dart';
+import 'package:daylog/shared/widgets/app_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-const _brand = Color(0xFF6847F0);
+final _colors = LogoColors.from(
+  lavenderTokens.colors,
+  teal: lavenderTokens.activity(ActivityColorKey.teal).solid,
+  coral: lavenderTokens.activity(ActivityColorKey.coral).solid,
+  rose: lavenderTokens.activity(ActivityColorKey.rose).solid,
+);
 
-/// The mark: a filled calendar with a check, Phosphor fill glyph.
-const _glyph = IconData(0xe712, fontFamily: 'PhosphorFill');
+/// Every part in one flat color (monochrome and notification icons).
+LogoColors _flat(Color c) => LogoColors(
+  flow: [c, c, c],
+  glow: [c, c, c],
+  pulse: [c, c],
+  tile: [c, c],
+  ring: c.withValues(alpha: 0),
+  node: c.withValues(alpha: 0),
+  edge: c.withValues(alpha: 0),
+);
+
+/// The adaptive icon's background (also the Android 12 splash icon's).
+const _iconBackground = Color(0xFFF4F0FF);
 
 final _key = GlobalKey();
 
-Future<void> _font(String family, String path) async {
-  final loader = FontLoader(family)
-    ..addFont(
-      Future.value(ByteData.view(File(path).readAsBytesSync().buffer)),
+Future<void> _font(String family, List<String> paths) async {
+  final loader = FontLoader(family);
+  for (final p in paths) {
+    loader.addFont(
+      Future.value(ByteData.view(File(p).readAsBytesSync().buffer)),
     );
+  }
   await loader.load();
 }
 
-/// One flat signature color (no gradients, like the app).
-const _gradient = LinearGradient(colors: [_brand, _brand]);
-
-/// [size] logical pixels rendered at [scale] to [path].
+/// [size] logical pixels rendered to [path].
 Future<void> _render(
   WidgetTester tester,
   Widget child,
   Size size,
-  String path, {
-  double scale = 1,
-}) async {
+  String path,
+) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   await tester.pumpWidget(
@@ -54,7 +72,7 @@ Future<void> _render(
   await tester.runAsync(() async {
     final boundary =
         _key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
-    final image = await boundary.toImage(pixelRatio: scale);
+    final image = await boundary.toImage();
     final data = await image.toByteData(format: ui.ImageByteFormat.png);
     File(path)
       ..createSync(recursive: true)
@@ -62,40 +80,21 @@ Future<void> _render(
   });
 }
 
-/// Legacy square icon: gradient tile with the white mark.
-Widget _legacy(double s) => Container(
-  decoration: BoxDecoration(
-    gradient: _gradient,
-    borderRadius: BorderRadius.circular(s * 0.22),
-  ),
-  alignment: Alignment.center,
-  child: Icon(_glyph, size: s * 0.56, color: Colors.white),
+Widget _logo(double size, {bool tile = true, LogoColors? colors}) => CustomPaint(
+  size: Size.square(size),
+  painter: LogoPainter(colors: colors ?? _colors, tile: tile),
 );
 
-/// Adaptive foreground: the mark inside the 66/108 safe zone.
-Widget _foreground(double s, {Color color = Colors.white}) => Center(
-  child: Icon(_glyph, size: s * 0.40, color: color),
-);
-
-Widget _fullBleed(double s) => Container(
-  decoration: const BoxDecoration(gradient: _gradient),
-  alignment: Alignment.center,
-  child: Icon(_glyph, size: s * 0.52, color: Colors.white),
-);
+/// The mark alone, inside the adaptive icon's 66/108 safe zone.
+Widget _foreground(double s, {LogoColors? colors}) =>
+    Center(child: _logo(s * 0.86, tile: false, colors: colors));
 
 void main() {
   setUpAll(() async {
-    await _font('PhosphorFill', 'assets/fonts/phosphor/Phosphor-Fill.ttf');
     const jakarta = 'assets/fonts/plus_jakarta_sans/PlusJakartaSans-';
-    final loader = FontLoader('PlusJakartaSans');
-    for (final w in ['Regular', 'Bold', 'ExtraBold']) {
-      loader.addFont(
-        Future.value(
-          ByteData.view(File('$jakarta$w.ttf').readAsBytesSync().buffer),
-        ),
-      );
-    }
-    await loader.load();
+    await _font('PlusJakartaSans', [
+      for (final w in ['Regular', 'Bold', 'ExtraBold']) '$jakarta$w.ttf',
+    ]);
   });
 
   const res = 'android/app/src/main/res';
@@ -112,7 +111,12 @@ void main() {
       final legacy = 48 * scale;
       await _render(
         tester,
-        _legacy(legacy),
+        // The tile fills the square (its artwork has a margin).
+        OverflowBox(
+          maxWidth: legacy * 512 / 448,
+          maxHeight: legacy * 512 / 448,
+          child: _logo(legacy * 512 / 448),
+        ),
         Size.square(legacy),
         '$res/mipmap-$d/ic_launcher.png',
       );
@@ -125,7 +129,7 @@ void main() {
       );
       await _render(
         tester,
-        _foreground(adaptive, color: Colors.black),
+        _foreground(adaptive, colors: _flat(Colors.black)),
         Size.square(adaptive),
         '$res/mipmap-$d/ic_launcher_monochrome.png',
       );
@@ -139,7 +143,9 @@ void main() {
       final size = 24 * scale;
       await _render(
         tester,
-        Center(child: Icon(_glyph, size: size * 0.92, color: Colors.white)),
+        Center(
+          child: _logo(size * 1.4, tile: false, colors: _flat(Colors.white)),
+        ),
         Size.square(size),
         '$res/drawable-$d/ic_notification.png',
       );
@@ -151,7 +157,11 @@ void main() {
     // Play Store icon: 512×512, full bleed (Play applies the mask).
     await _render(
       tester,
-      _fullBleed(512),
+      Container(
+        color: _iconBackground,
+        alignment: Alignment.center,
+        child: _logo(512 * 1.08, tile: false),
+      ),
       const Size.square(512),
       'store/icon-512.png',
     );
@@ -159,45 +169,36 @@ void main() {
     await _render(
       tester,
       Container(
-        decoration: const BoxDecoration(gradient: _gradient),
-        padding: const EdgeInsets.symmetric(horizontal: 72),
+        color: lavenderTokens.colors.surfaceCanvas,
+        padding: const EdgeInsets.symmetric(horizontal: 64),
         child: Row(
           children: [
-            Container(
-              width: 168,
-              height: 168,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.16),
-                borderRadius: BorderRadius.circular(44),
-              ),
-              alignment: Alignment.center,
-              child: const Icon(_glyph, size: 96, color: Colors.white),
-            ),
-            const SizedBox(width: 48),
-            const Expanded(
+            _logo(300),
+            const SizedBox(width: 36),
+            Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Daylog',
+                    appBrandName,
                     style: TextStyle(
                       fontFamily: 'PlusJakartaSans',
                       fontWeight: FontWeight.w800,
-                      fontSize: 84,
+                      fontSize: 88,
                       height: 1,
                       letterSpacing: -2.5,
-                      color: Colors.white,
+                      color: lavenderTokens.colors.textPrimary,
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 18),
                   Text(
                     'Plan your day. Do it. See it add up.',
                     style: TextStyle(
                       fontFamily: 'PlusJakartaSans',
                       fontWeight: FontWeight.w400,
                       fontSize: 30,
-                      color: Color(0xE6FFFFFF),
+                      color: lavenderTokens.colors.textSecondary,
                     ),
                   ),
                 ],

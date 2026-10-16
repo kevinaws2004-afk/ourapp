@@ -5,12 +5,15 @@ import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:daylog/app/app.dart';
+import 'package:daylog/app/launch_splash.dart';
+import 'package:daylog/app/launch_theme_cache.dart';
 import 'package:daylog/app/dev/demo_data.dart';
 import 'package:daylog/core/database/app_database.dart';
 import 'package:daylog/core/database/database_provider.dart';
 import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:daylog/core/logging/app_logger.dart';
 import 'package:daylog/core/time/clock_provider.dart';
+import 'package:daylog/features/activity_types/presentation/activity_type_providers.dart';
 import 'package:daylog/features/focus/presentation/focus_providers.dart';
 import 'package:daylog/features/notes/presentation/note_providers.dart';
 import 'package:daylog/features/settings/data/db_app_preferences_repository.dart';
@@ -182,6 +185,139 @@ void main() {
 }
 
 void _extra() {
+  testWidgets('item details', (tester) async {
+    await _pump(tester, onboarded: true);
+    await tester.tap(find.text('Reading').last);
+    await tester.pump();
+    for (var i = 0; i < 5; i++) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 300)),
+      );
+      await tester.pump(const Duration(milliseconds: 300));
+    }
+    await tester.ensureVisible(find.text('How long'));
+    await _shotNow(tester, '44_item_details');
+    await tester.ensureVisible(find.text('Duplicate'));
+    await _shotNow(tester, '44_item_details_2');
+  });
+  testWidgets('splash', (tester) async {
+    tester.view.physicalSize = _size;
+    tester.view.devicePixelRatio = 1;
+    for (final (name, look) in [
+      ('lavender', const LaunchTheme()),
+      ('papaya', const LaunchTheme(theme: AppThemeId.papaya)),
+      (
+        'dark',
+        const LaunchTheme(appearance: AppearanceMode.dark),
+      ),
+    ]) {
+      await tester.pumpWidget(
+        RepaintBoundary(key: _boundary, child: LaunchSplash(look: look)),
+      );
+      await tester.pump(const Duration(milliseconds: 350));
+      await _shotNow(tester, '40_splash_${name}_a');
+      await tester.pump(const Duration(milliseconds: 1200));
+      await _shotNow(tester, '40_splash_${name}_b');
+      await tester.pumpWidget(const SizedBox());
+    }
+  });
+  testWidgets('day report', (tester) async {
+    await _pump(tester, onboarded: true);
+    await tester.tap(find.byTooltip('Day report'));
+    await tester.pump();
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 300)),
+    );
+    await _shotNow(tester, '41_day_report');
+    await tester.tap(find.byTooltip('Previous day'));
+    await tester.pump();
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 300)),
+    );
+    await _shotNow(tester, '41_day_report_yesterday');
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -600));
+    await _shotNow(tester, '41_day_report_yesterday_2');
+  });
+  testWidgets('timer bar', (tester) async {
+    final container = await _pump(tester, onboarded: true);
+    await tester.runAsync(() async {
+      final types = await container.read(activeActivityTypesProvider.future);
+      await container.read(startFocusSessionProvider)(
+        types.firstWhere((t) => t.name == 'Reading').id,
+      );
+    });
+    await tester.pump();
+    await _tapTab(tester, 'Plan');
+    await _shot(tester, '42_timer_bar');
+  });
+  testWidgets('gym sets', (tester) async {
+    await _pump(tester, onboarded: true);
+    await _tapTab(tester, 'Me');
+    await tester.tap(find.text('4 activities'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Gym').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Record').first);
+    await tester.pump();
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 400)),
+    );
+    await _shotNow(tester, '43_gym_record');
+    await tester.tap(find.text('Add Exercise').first);
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.enterText(find.byType(TextField).first, 'pre');
+    await tester.pump(const Duration(milliseconds: 400));
+    await _shotNow(tester, '43_gym_suggest');
+    await tester.tap(find.text('Preacher curl').first);
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.tap(find.text('Add Set').first);
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.ensureVisible(find.byTooltip('More Reps').first);
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, 350));
+    await tester.pump(const Duration(milliseconds: 400));
+    for (var i = 0; i < 8; i++) {
+      await tester.tap(find.byTooltip('More Reps').first);
+    }
+    await tester.tap(find.byTooltip('More Weight').first);
+    await tester.pump(const Duration(milliseconds: 400));
+    await _shotNow(tester, '43_gym_set1');
+    await tester.tap(find.byTooltip('Finish Set 1').first);
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(milliseconds: 400));
+    await _shotNow(tester, '43_gym_set1_done');
+    await tester.tap(find.text('Add Set').first);
+    await tester.pump(const Duration(milliseconds: 400));
+    await _shotNow(tester, '43_gym_set2');
+  });
+  testWidgets('edit flow', (tester) async {
+    await _pump(tester, onboarded: true);
+    await tester.tap(find.text('Reading').last);
+    await tester.pump();
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 300)),
+    );
+    await _shotNow(tester, '27_item_topbar');
+    await tester.tap(find.byTooltip('Edit item'));
+    await _shotNow(tester, '28_edit_sheet');
+    await tester.drag(find.text('Reminder').last, const Offset(0, -500));
+    await _shotNow(tester, '28_edit_sheet_2');
+  });
+  testWidgets('untimed reminder', (tester) async {
+    await _pump(tester, onboarded: true);
+    await tester.longPress(find.text('Buy groceries'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Reminder'));
+    await _shot(tester, '29_untimed_reminder');
+  });
+  testWidgets('add sheet chip', (tester) async {
+    await _pump(tester, onboarded: true);
+    await tester.tap(find.text('Add').first);
+    await tester.pump(const Duration(milliseconds: 600));
+    await tester.enterText(find.byType(TextField).first, 'Physics revision');
+    await tester.pump(const Duration(milliseconds: 600));
+    await _shotNow(tester, '30_add_sheet');
+  });
+
   testWidgets('notes empty', (tester) async {
     await _pump(tester, onboarded: true);
     await tester.tap(find.byTooltip('Notes'));

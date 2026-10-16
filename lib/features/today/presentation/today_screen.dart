@@ -55,10 +55,14 @@ class TodayScreen extends ConsumerWidget {
     required this.onOpenMe,
     required this.onStartActivity,
     required this.onOpenNotes,
+    required this.onOpenDayReport,
   });
 
   /// Opens Notes.
   final VoidCallback onOpenNotes;
+
+  /// Opens a day's report.
+  final ValueChanged<LocalDate> onOpenDayReport;
 
   /// Opens Me (the avatar).
   final VoidCallback onOpenMe;
@@ -145,6 +149,11 @@ class TodayScreen extends ConsumerWidget {
                 ScreenHeader(
                   title: l10n.navToday,
                   actions: [
+                    HeaderIconButton(
+                      icon: AppIcons.bars,
+                      tooltip: l10n.dayReportTitle,
+                      onPressed: () => onOpenDayReport(today),
+                    ),
                     HeaderIconButton(
                       icon: AppIcons.notes.outline,
                       tooltip: l10n.notesTitle,

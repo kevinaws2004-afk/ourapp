@@ -16,11 +16,17 @@ import '../features/settings/presentation/preferences_providers.dart';
 import '../core/notifications/notification_service.dart';
 import '../features/notifications/presentation/notification_providers.dart';
 import 'app.dart';
+import 'launch_splash.dart';
+import 'launch_theme_cache.dart';
 import 'provider_logger.dart';
 import 'startup_failure_app.dart';
 
 /// Startup sequence (application_architecture.md §7): error handlers →
-/// open + migrate the database → read preferences → run the app.
+/// open + migrate the database → read preferences → run the app. The
+/// animated splash shows meanwhile, for at least [_minSplash] so it never
+/// just flickers.
+const _minSplash = Duration(milliseconds: 900);
+
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
   const logger = AppLogger();
@@ -37,6 +43,9 @@ Future<void> bootstrap() async {
     logger.error('Uncaught error', error: error, stackTrace: stackTrace);
     return true;
   };
+
+  runApp(LaunchSplash(look: await LaunchTheme.load()));
+  final shown = Stopwatch()..start();
 
   AppDatabase? database;
   final PreferencesSnapshot initialPreferences;
@@ -61,6 +70,9 @@ Future<void> bootstrap() async {
 
   // Local notifications; a failure only disables them.
   final notifications = await NotificationService.start();
+
+  final left = _minSplash - shown.elapsed;
+  if (left > Duration.zero) await Future<void>.delayed(left);
 
   runApp(
     ProviderScope(

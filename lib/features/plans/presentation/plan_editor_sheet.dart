@@ -14,6 +14,9 @@ import '../../activity_logs/presentation/form/field_editor_shell.dart';
 import '../../activity_types/domain/activity_ids.dart';
 import '../../activity_types/domain/activity_type.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
+import '../../notifications/data/reminder_store.dart';
+import '../../notifications/domain/plan_reminder.dart';
+import '../../notifications/presentation/notification_providers.dart';
 import '../../notifications/presentation/reminder_prompt.dart';
 import '../domain/plan.dart';
 import '../domain/watch_day_overview.dart';
@@ -31,6 +34,9 @@ enum PlanSheetAction {
   reopen,
   moveToTomorrow,
   delete,
+
+  /// Change what its activity records (the activity builder).
+  editActivity,
 }
 
 /// Creates a plan for [date] ([item] null) or edits [item] and offers its
@@ -77,7 +83,45 @@ class _PlanEditorSheetState extends ConsumerState<_PlanEditorSheet> {
   static TimeOfDay? _timeOf(DateTime? instant) =>
       instant == null ? null : TimeOfDay.fromDateTime(instant.toLocal());
 
-  LocalDate get _date => _plan?.planDate ?? widget.date;
+  late LocalDate _date = _plan?.planDate ?? widget.date;
+
+  /// The item's reminder; changed here, saved with the item.
+  late PlanReminder? _reminder = _plan == null
+      ? defaultReminderFor(ref, timed: false)
+      : reminderFor(_plan!, ref.read(remindersProvider).value ?? const {});
+  bool _reminderTouched = false;
+
+  /// An offset reminder needs a start time.
+  PlanReminder? get _effectiveReminder =>
+      _reminder is ReminderBefore && _start == null ? null : _reminder;
+
+  Future<void> _pickReminder() async {
+    final choice = await showReminderSheet(
+      context,
+      title: _title.text.trim().isEmpty
+          ? (widget.item?.type?.name ?? '')
+          : _title.text.trim(),
+      start: _instant(_start),
+      current: _effectiveReminder,
+    );
+    if (choice.cancelled || !mounted) return;
+    setState(() {
+      _reminderTouched = true;
+      _reminder = choice.reminder;
+    });
+  }
+
+  Future<void> _pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime(_date.year, _date.month, _date.day),
+      firstDate: DateTime(_date.year - 1),
+      lastDate: DateTime(_date.year + 3),
+    );
+    if (picked != null && mounted) {
+      setState(() => _date = LocalDate(picked.year, picked.month, picked.day));
+    }
+  }
 
   DateTime? _instant(TimeOfDay? time) => time == null
       ? null
@@ -125,17 +169,19 @@ class _PlanEditorSheetState extends ConsumerState<_PlanEditorSheet> {
     try {
       if (_plan case final plan?) {
         await ref.read(updatePlanProvider)(plan.id, draft);
+        // Save the reminder when it changed, or when a time was removed
+        // under an "N min before" one.
+        final had = reminderFor(
+          plan,
+          ref.read(remindersProvider).value ?? const {},
+        );
+        if (_reminderTouched || had != _effectiveReminder) {
+          await setReminderFor(ref, plan.id, _effectiveReminder);
+        }
       } else {
         final id = await ref.read(createPlanProvider)(draft);
-        // Something with a time: "Want a reminder?"
-        if (draft.plannedStartAt case final start? when mounted) {
-          await askReminderFor(
-            context,
-            ref,
-            id,
-            title: _title.text.trim(),
-            startUtc: start,
-          );
+        if (_effectiveReminder case final reminder?) {
+          await setReminderFor(ref, id, reminder);
         }
       }
       if (mounted) Navigator.of(context).pop();
@@ -170,6 +216,10 @@ class _PlanEditorSheetState extends ConsumerState<_PlanEditorSheet> {
         _durationMs = null;
       } else {
         _start = picked;
+        // A new time: start from the default reminder.
+        if (!_reminderTouched && _reminder == null) {
+          _reminder = defaultReminderFor(ref, timed: true);
+        }
       }
     });
   }
@@ -182,7 +232,9 @@ class _PlanEditorSheetState extends ConsumerState<_PlanEditorSheet> {
           _typeId != _plan?.activityTypeId ||
           _start != _timeOf(_plan?.plannedStartAt) ||
           _end != _timeOf(_plan?.plannedEndAt) ||
-          _durationMs != _plan?.plannedDurationMs);
+          _durationMs != _plan?.plannedDurationMs ||
+          _date != (_plan?.planDate ?? widget.date) ||
+          _reminderTouched);
 
   @override
   void initState() {
@@ -245,6 +297,7 @@ class _PlanEditorSheetState extends ConsumerState<_PlanEditorSheet> {
                   errorText: issue('title'),
                 ),
               ),
+              const SizedBox(height: AppSpacing.lg),
               FieldEditorShell(
                 label: l10n.planActivityLabel,
                 error: issue('activity'),
@@ -279,6 +332,18 @@ class _PlanEditorSheetState extends ConsumerState<_PlanEditorSheet> {
                       ),
                     ],
                   ],
+                ),
+              ),
+              FieldEditorShell(
+                label: l10n.planDateLabel,
+                child: OutlinedButton.icon(
+                  icon: const Icon(AppIcons.date),
+                  label: Text(
+                    material.formatMediumDate(
+                      DateTime(_date.year, _date.month, _date.day),
+                    ),
+                  ),
+                  onPressed: _pickDate,
                 ),
               ),
               FieldEditorShell(
@@ -327,6 +392,24 @@ class _PlanEditorSheetState extends ConsumerState<_PlanEditorSheet> {
                   ),
                 ),
               FieldEditorShell(
+                label: l10n.reminderLabel,
+                onClear: _effectiveReminder == null
+                    ? null
+                    : () => setState(() {
+                        _reminderTouched = true;
+                        _reminder = null;
+                      }),
+                child: OutlinedButton.icon(
+                  icon: Icon(
+                    _effectiveReminder == null
+                        ? AppIcons.bell
+                        : AppIcons.bellOn,
+                  ),
+                  label: Text(reminderLabel(context, _effectiveReminder)),
+                  onPressed: _pickReminder,
+                ),
+              ),
+              FieldEditorShell(
                 label: l10n.notesLabel,
                 error: issue('notes'),
                 child: TextField(
@@ -360,6 +443,14 @@ class _PlanEditorSheetState extends ConsumerState<_PlanEditorSheet> {
         );
     return [
       const SizedBox(height: AppSpacing.lg),
+      if (item.type case final type?)
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: const Icon(AppIcons.activities),
+          title: Text(l10n.planEditActivityFields(type.name)),
+          trailing: const Icon(AppIcons.chevron),
+          onTap: () => Navigator.of(context).pop(PlanSheetAction.editActivity),
+        ),
       // Any item can be marked done (ADR-040).
       if (open)
         action(

@@ -97,7 +97,7 @@ abstract class AppLocalizations {
   /// Temporary visible product name. The real name is undecided (ADR-010). Change together with Android strings.xml and iOS Info.plist.
   ///
   /// In en, this message translates to:
-  /// **'Daylog'**
+  /// **'DayCraft'**
   String get appTitle;
 
   /// Primary navigation tab: today's plan and timeline.
@@ -1405,13 +1405,13 @@ abstract class AppLocalizations {
   /// Plan sheet title when editing a plan.
   ///
   /// In en, this message translates to:
-  /// **'Plan'**
+  /// **'Edit item'**
   String get planEditTitle;
 
   /// Plan sheet: title field.
   ///
   /// In en, this message translates to:
-  /// **'Title'**
+  /// **'Name'**
   String get planTitleLabel;
 
   /// Plan sheet: helper under the title field.
@@ -2203,7 +2203,7 @@ abstract class AppLocalizations {
   /// Section in an item with when it happened and how long.
   ///
   /// In en, this message translates to:
-  /// **'When'**
+  /// **'Done at'**
   String get itemWhenSection;
 
   /// Tooltip of the item's options menu (edit, skip, move, delete).
@@ -5221,7 +5221,7 @@ abstract class AppLocalizations {
   /// Activity list: a category heading for built-in activities.
   ///
   /// In en, this message translates to:
-  /// **'Learning'**
+  /// **'Study & learning'**
   String get builtInCategoryLearning;
 
   /// Built-in activity content (becomes the user's own editable activity once used).
@@ -9996,7 +9996,7 @@ abstract class AppLocalizations {
   /// No description provided for @meExportSubject.
   ///
   /// In en, this message translates to:
-  /// **'Daylog backup'**
+  /// **'DayCraft backup'**
   String get meExportSubject;
 
   /// No description provided for @mePrivacy.
@@ -10026,7 +10026,7 @@ abstract class AppLocalizations {
   /// No description provided for @meFooter.
   ///
   /// In en, this message translates to:
-  /// **'Daylog · Plan it. Do it. See it.'**
+  /// **'DayCraft · Plan it. Do it. See it.'**
   String get meFooter;
 
   /// No description provided for @meNameTitle.
@@ -10272,7 +10272,7 @@ abstract class AppLocalizations {
   /// No description provided for @reminderTitle.
   ///
   /// In en, this message translates to:
-  /// **'Want a reminder?'**
+  /// **'Reminder'**
   String get reminderTitle;
 
   /// No description provided for @reminderSubtitle.
@@ -10296,7 +10296,7 @@ abstract class AppLocalizations {
   /// No description provided for @reminderSkip.
   ///
   /// In en, this message translates to:
-  /// **'No reminder'**
+  /// **'Save'**
   String get reminderSkip;
 
   /// No description provided for @reminderMenu.
@@ -10386,7 +10386,7 @@ abstract class AppLocalizations {
   /// No description provided for @notifyMorningBodyAnytime.
   ///
   /// In en, this message translates to:
-  /// **'Open Daylog to plan your day.'**
+  /// **'Open DayCraft to plan your day.'**
   String get notifyMorningBodyAnytime;
 
   /// No description provided for @notifyEvening.
@@ -10434,13 +10434,13 @@ abstract class AppLocalizations {
   /// No description provided for @notificationsMasterHint.
   ///
   /// In en, this message translates to:
-  /// **'Off means Daylog never notifies you.'**
+  /// **'Off means DayCraft never notifies you.'**
   String get notificationsMasterHint;
 
   /// No description provided for @notificationsBlocked.
   ///
   /// In en, this message translates to:
-  /// **'Notifications are blocked for Daylog in your phone settings.'**
+  /// **'Notifications are blocked for DayCraft in your phone settings.'**
   String get notificationsBlocked;
 
   /// No description provided for @notificationsAllow.
@@ -10452,7 +10452,7 @@ abstract class AppLocalizations {
   /// No description provided for @notificationsNewItems.
   ///
   /// In en, this message translates to:
-  /// **'Reminders for new items'**
+  /// **'Default reminder'**
   String get notificationsNewItems;
 
   /// No description provided for @notificationsAsk.
@@ -10802,6 +10802,498 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ideas, lists and thoughts'**
   String get notesMeSubtitle;
+
+  /// No description provided for @builtInStudySubjectField.
+  ///
+  /// In en, this message translates to:
+  /// **'Subject'**
+  String get builtInStudySubjectField;
+
+  /// No description provided for @builtInLecture.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch lecture'**
+  String get builtInLecture;
+
+  /// No description provided for @builtInLectureTopic.
+  ///
+  /// In en, this message translates to:
+  /// **'Lecture topic'**
+  String get builtInLectureTopic;
+
+  /// No description provided for @builtInLectureKeyPoints.
+  ///
+  /// In en, this message translates to:
+  /// **'Key points'**
+  String get builtInLectureKeyPoints;
+
+  /// No description provided for @builtInLectureUnderstood.
+  ///
+  /// In en, this message translates to:
+  /// **'How well I understood'**
+  String get builtInLectureUnderstood;
+
+  /// No description provided for @builtInRevision.
+  ///
+  /// In en, this message translates to:
+  /// **'Revision'**
+  String get builtInRevision;
+
+  /// No description provided for @builtInRevisionTopics.
+  ///
+  /// In en, this message translates to:
+  /// **'Topics revised'**
+  String get builtInRevisionTopics;
+
+  /// No description provided for @builtInRevisionConfidence.
+  ///
+  /// In en, this message translates to:
+  /// **'Confidence'**
+  String get builtInRevisionConfidence;
+
+  /// No description provided for @builtInAssignment.
+  ///
+  /// In en, this message translates to:
+  /// **'Assignment'**
+  String get builtInAssignment;
+
+  /// No description provided for @builtInAssignmentName.
+  ///
+  /// In en, this message translates to:
+  /// **'Assignment'**
+  String get builtInAssignmentName;
+
+  /// No description provided for @builtInAssignmentDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Due date'**
+  String get builtInAssignmentDue;
+
+  /// No description provided for @builtInAssignmentSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted'**
+  String get builtInAssignmentSubmitted;
+
+  /// No description provided for @builtInPracticeProblems.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice problems'**
+  String get builtInPracticeProblems;
+
+  /// No description provided for @builtInPracticeProblemsTopic.
+  ///
+  /// In en, this message translates to:
+  /// **'Topic'**
+  String get builtInPracticeProblemsTopic;
+
+  /// No description provided for @builtInPracticeProblemsSolved.
+  ///
+  /// In en, this message translates to:
+  /// **'Problems solved'**
+  String get builtInPracticeProblemsSolved;
+
+  /// No description provided for @builtInPracticeProblemsCorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct'**
+  String get builtInPracticeProblemsCorrect;
+
+  /// No description provided for @builtInPracticeProblemsDifficulty.
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty'**
+  String get builtInPracticeProblemsDifficulty;
+
+  /// No description provided for @builtInMakeNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Make notes'**
+  String get builtInMakeNotes;
+
+  /// No description provided for @builtInMakeNotesChapter.
+  ///
+  /// In en, this message translates to:
+  /// **'Chapter or topic'**
+  String get builtInMakeNotesChapter;
+
+  /// No description provided for @builtInMakeNotesPages.
+  ///
+  /// In en, this message translates to:
+  /// **'Pages'**
+  String get builtInMakeNotesPages;
+
+  /// No description provided for @builtInReadTextbook.
+  ///
+  /// In en, this message translates to:
+  /// **'Read textbook'**
+  String get builtInReadTextbook;
+
+  /// No description provided for @builtInReadTextbookChapter.
+  ///
+  /// In en, this message translates to:
+  /// **'Book or chapter'**
+  String get builtInReadTextbookChapter;
+
+  /// No description provided for @builtInReadTextbookPages.
+  ///
+  /// In en, this message translates to:
+  /// **'Pages read'**
+  String get builtInReadTextbookPages;
+
+  /// No description provided for @builtInGroupStudy.
+  ///
+  /// In en, this message translates to:
+  /// **'Group study'**
+  String get builtInGroupStudy;
+
+  /// No description provided for @builtInGroupStudyWith.
+  ///
+  /// In en, this message translates to:
+  /// **'Studied with'**
+  String get builtInGroupStudyWith;
+
+  /// No description provided for @builtInGroupStudyCovered.
+  ///
+  /// In en, this message translates to:
+  /// **'What we covered'**
+  String get builtInGroupStudyCovered;
+
+  /// No description provided for @builtInResearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Research'**
+  String get builtInResearch;
+
+  /// No description provided for @builtInResearchTopic.
+  ///
+  /// In en, this message translates to:
+  /// **'Topic'**
+  String get builtInResearchTopic;
+
+  /// No description provided for @builtInResearchSources.
+  ///
+  /// In en, this message translates to:
+  /// **'Sources found'**
+  String get builtInResearchSources;
+
+  /// No description provided for @builtInResearchFindings.
+  ///
+  /// In en, this message translates to:
+  /// **'Findings'**
+  String get builtInResearchFindings;
+
+  /// No description provided for @builtInEssay.
+  ///
+  /// In en, this message translates to:
+  /// **'Essay writing'**
+  String get builtInEssay;
+
+  /// No description provided for @builtInEssayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title or topic'**
+  String get builtInEssayTitle;
+
+  /// No description provided for @builtInEssayWords.
+  ///
+  /// In en, this message translates to:
+  /// **'Words written'**
+  String get builtInEssayWords;
+
+  /// No description provided for @builtInEssayFinished.
+  ///
+  /// In en, this message translates to:
+  /// **'Finished'**
+  String get builtInEssayFinished;
+
+  /// No description provided for @builtInLab.
+  ///
+  /// In en, this message translates to:
+  /// **'Lab practical'**
+  String get builtInLab;
+
+  /// No description provided for @builtInLabExperiment.
+  ///
+  /// In en, this message translates to:
+  /// **'Experiment'**
+  String get builtInLabExperiment;
+
+  /// No description provided for @builtInLabObservations.
+  ///
+  /// In en, this message translates to:
+  /// **'Observations'**
+  String get builtInLabObservations;
+
+  /// No description provided for @builtInMockTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Mock test'**
+  String get builtInMockTest;
+
+  /// No description provided for @builtInMockTestExam.
+  ///
+  /// In en, this message translates to:
+  /// **'Exam'**
+  String get builtInMockTestExam;
+
+  /// No description provided for @builtInMockTestScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Score'**
+  String get builtInMockTestScore;
+
+  /// No description provided for @builtInMockTestWeakTopics.
+  ///
+  /// In en, this message translates to:
+  /// **'Topics to work on'**
+  String get builtInMockTestWeakTopics;
+
+  /// No description provided for @builtInDoubtSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Doubt session'**
+  String get builtInDoubtSession;
+
+  /// No description provided for @builtInDoubtSessionCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Doubts cleared'**
+  String get builtInDoubtSessionCleared;
+
+  /// No description provided for @builtInDoubtSessionNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get builtInDoubtSessionNotes;
+
+  /// No description provided for @notificationsDefaultHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What new items with a time start with. You can change it on each item.'**
+  String get notificationsDefaultHint;
+
+  /// No description provided for @reminderAtTime.
+  ///
+  /// In en, this message translates to:
+  /// **'At {time}'**
+  String reminderAtTime(String time);
+
+  /// No description provided for @reminderPickTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me at a time…'**
+  String get reminderPickTime;
+
+  /// No description provided for @reminderPickOtherTime.
+  ///
+  /// In en, this message translates to:
+  /// **'At another time…'**
+  String get reminderPickOtherTime;
+
+  /// No description provided for @notifyReminderAnytime.
+  ///
+  /// In en, this message translates to:
+  /// **'On your plan for today'**
+  String get notifyReminderAnytime;
+
+  /// No description provided for @reminderLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder'**
+  String get reminderLabel;
+
+  /// No description provided for @planDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get planDateLabel;
+
+  /// No description provided for @planEditActivityFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit what {name} records'**
+  String planEditActivityFields(String name);
+
+  /// No description provided for @itemTimeSpent.
+  ///
+  /// In en, this message translates to:
+  /// **'Time spent'**
+  String get itemTimeSpent;
+
+  /// No description provided for @itemRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename'**
+  String get itemRename;
+
+  /// No description provided for @itemEditActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit activity (icon, name, what it records)'**
+  String get itemEditActivity;
+
+  /// No description provided for @itemWhenSectionPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Date & time'**
+  String get itemWhenSectionPlan;
+
+  /// No description provided for @planRepeatLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat'**
+  String get planRepeatLabel;
+
+  /// No description provided for @planRepeatsOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeats · tap to stop'**
+  String get planRepeatsOn;
+
+  /// No description provided for @planRepeatOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Doesn\'t repeat'**
+  String get planRepeatOff;
+
+  /// No description provided for @doneAtTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Done at {time}'**
+  String doneAtTime(String time);
+
+  /// No description provided for @groupRowDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish {title}'**
+  String groupRowDone(String title);
+
+  /// No description provided for @insightAutoSets.
+  ///
+  /// In en, this message translates to:
+  /// **'Sets'**
+  String get insightAutoSets;
+
+  /// No description provided for @insightAutoRowSets.
+  ///
+  /// In en, this message translates to:
+  /// **'{row} · sets'**
+  String insightAutoRowSets(String row);
+
+  /// No description provided for @reminderAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add reminder'**
+  String get reminderAdd;
+
+  /// No description provided for @reminderAddAnother.
+  ///
+  /// In en, this message translates to:
+  /// **'Another'**
+  String get reminderAddAnother;
+
+  /// No description provided for @dayReportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Day report'**
+  String get dayReportTitle;
+
+  /// No description provided for @dayReportPrevious.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous day'**
+  String get dayReportPrevious;
+
+  /// No description provided for @dayReportNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next day'**
+  String get dayReportNext;
+
+  /// No description provided for @dayReportTrackedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Time tracked'**
+  String get dayReportTrackedLabel;
+
+  /// No description provided for @dayReportNothingTracked.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing tracked yet'**
+  String get dayReportNothingTracked;
+
+  /// No description provided for @dayReportDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get dayReportDone;
+
+  /// No description provided for @dayReportDoneOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total}'**
+  String dayReportDoneOf(int done, int total);
+
+  /// No description provided for @dayReportUntracked.
+  ///
+  /// In en, this message translates to:
+  /// **'Untracked'**
+  String get dayReportUntracked;
+
+  /// No description provided for @dayReportUntrackedHintToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Untracked: waking time since 7 AM with nothing recorded.'**
+  String get dayReportUntrackedHintToday;
+
+  /// No description provided for @dayReportUntrackedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Untracked: time out of {hours} waking hours with nothing recorded.'**
+  String dayReportUntrackedHint(int hours);
+
+  /// No description provided for @dayReportByActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Time by activity'**
+  String get dayReportByActivity;
+
+  /// No description provided for @dayReportDoneSection.
+  ///
+  /// In en, this message translates to:
+  /// **'What you did'**
+  String get dayReportDoneSection;
+
+  /// No description provided for @dayReportNothingDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing marked done on this day.'**
+  String get dayReportNothingDone;
+
+  /// No description provided for @dayReportNotDoneSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Not done'**
+  String get dayReportNotDoneSection;
+
+  /// No description provided for @dayReportOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get dayReportOpen;
+
+  /// No description provided for @planEndsAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends {time}'**
+  String planEndsAt(String time);
+
+  /// No description provided for @planAddEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add end time'**
+  String get planAddEnd;
 }
 
 class _AppLocalizationsDelegate

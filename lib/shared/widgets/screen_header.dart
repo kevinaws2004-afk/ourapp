@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../core/design/app_icons.dart';
+import 'app_logo.dart';
+
 import '../../core/design/context_ext.dart';
 import '../../core/design/tokens/radius.dart';
 import '../../core/design/tokens/spacing.dart';
 
-/// The top of every tab, like a product app bar: Daylog's mark, a tiny
+/// The top of every tab, like a product app bar: the app's logo, a tiny
 /// [overline] (the app's name unless given), the screen [title], and round
 /// [actions] on the right (an avatar, a button). An optional [subtitle]
 /// sits under it. One header, so every tab reads as the same product.
@@ -24,7 +25,7 @@ class ScreenHeader extends StatelessWidget {
   final String? subtitle;
   final List<Widget> actions;
 
-  /// The Daylog mark on the left (tabs); off for pushed screens.
+  /// The app's logo on the left (tabs); off for pushed screens.
   final bool showMark;
 
   @override
@@ -38,16 +39,7 @@ class ScreenHeader extends StatelessWidget {
           Row(
             children: [
               if (showMark) ...[
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: c.brandPrimary,
-                    borderRadius: AppRadius.smAll,
-                  ),
-                  alignment: Alignment.center,
-                  child: Icon(AppIcons.logo, size: 19, color: c.onBrandPrimary),
-                ),
+                const AppLogo(size: 42),
                 const SizedBox(width: AppSpacing.sm + AppSpacing.xxs),
               ],
               Expanded(
@@ -56,7 +48,7 @@ class ScreenHeader extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      (overline ?? 'Daylog').toUpperCase(),
+                      (overline ?? appBrandName).toUpperCase(),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: context.textStyles.labelSmall?.copyWith(

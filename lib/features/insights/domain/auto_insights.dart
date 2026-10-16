@@ -2,7 +2,6 @@ import '../../activity_types/domain/activity_ids.dart';
 import '../../activity_types/domain/activity_type.dart';
 import '../../activity_types/domain/field_config.dart';
 import '../../activity_types/domain/field_type.dart';
-import '../../../core/units/unit_registry.dart';
 import 'insight.dart';
 
 /// What an automatic chart shows, for its title (the UI words it).
@@ -30,6 +29,9 @@ enum AutoChartKind {
 
   /// The second number of a weight × reps list, added up (total reps).
   rowTotal,
+
+  /// How many rows of a weight × reps list (sets).
+  sets,
 
   /// The share of "yes" for a yes/no field.
   yesShare,
@@ -109,8 +111,8 @@ Aggregation defaultAggregationFor(ActivityField field) =>
 /// - inside lists, for each row name ([rowNames], most used first; e.g.
 ///   each exercise): the best of each Number (or its total/average/latest
 ///   when nothing is "best"); for a list with two Numbers (weight × reps),
-///   the first one's best, its estimated one-rep maximum when it's a mass,
-///   the volume, and the second one's total (B5); plus the share of "yes"
+///   the first one's best, the number of rows (sets) and the second one's
+///   total (B5); plus the share of "yes"
 ///   of each Yes/No in the list
 ///
 /// [maxRows] row names per list (all when null). Choice fields are shown
@@ -243,46 +245,20 @@ List<AutoChart> autoChartsFor(
       }
 
       if (pair.length >= 2) {
-        // Weight × reps: the best weight, its estimated maximum, the
-        // volume and the reps tell the story (B5).
+        // Weight × reps: the heaviest weight (is it going up?), how many
+        // sets and how many reps tell the story; a total of weight × reps
+        // means little to most people (B5).
         final amount = pair[0];
         final count = pair[1];
         best(amount);
-        if (amount.dimension == Dimension.mass &&
-            bestIsFor(amount) == BestIs.highest) {
-          charts.add(
-            AutoChart(
-              kind: AutoChartKind.estimatedMax,
-              rowName: name,
-              config: chart(
-                VolumeSource(
-                  type.id,
-                  groupFieldId: group.id,
-                  amountFieldId: amount.id,
-                  countFieldId: count.id,
-                  filter: filter,
-                  formula: VolumeFormula.estimatedMax,
-                ),
-                Aggregation.max,
-                ChartKind.line,
-              ),
-            ),
-          );
-        }
         charts
           ..add(
             AutoChart(
-              kind: AutoChartKind.volume,
+              kind: AutoChartKind.sets,
               rowName: name,
               config: chart(
-                VolumeSource(
-                  type.id,
-                  groupFieldId: group.id,
-                  amountFieldId: amount.id,
-                  countFieldId: count.id,
-                  filter: filter,
-                ),
-                Aggregation.sum,
+                FieldValueSource(type.id, count.id, filter: filter),
+                Aggregation.count,
                 ChartKind.bar,
               ),
             ),

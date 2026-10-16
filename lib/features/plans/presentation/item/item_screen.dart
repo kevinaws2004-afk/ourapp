@@ -1,6 +1,3 @@
-import '../../../notifications/data/reminder_store.dart';
-import '../../../notifications/presentation/notification_providers.dart';
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -41,13 +38,13 @@ import '../../../focus/presentation/focus_screen.dart';
 import '../../domain/plan.dart';
 import '../../domain/watch_day_overview.dart';
 import '../plan_actions.dart';
-import '../plan_editor_sheet.dart';
 import '../../../../core/time/local_date.dart';
 import '../plan_date_notifier.dart';
 import '../plan_formatting.dart';
 import '../plan_providers.dart';
 import 'add_to_log_sheet.dart';
 import 'item_notifier.dart';
+import 'plan_details_card.dart';
 import 'last_time_card.dart';
 import 'rest_timer.dart';
 
@@ -86,55 +83,36 @@ class ItemScreen extends ConsumerWidget {
           title: state == null ? null : _ItemTitle(state: state),
           actions: [
             if (state != null) _SaveStatusLabel(status: state.saveStatus),
-            if (state?.type case final type?
-                when onEditFields != null && type.fields.isNotEmpty)
+            // One Edit: everything about this item (time, date, reminder,
+            // repeat, what its activity records, done/skip/move/delete).
+            if (state?.plan case final plan?)
               IconButton(
-                tooltip: AppLocalizations.of(context).itemEditFields,
+                tooltip: state?.type == null
+                    ? AppLocalizations.of(context).itemRename
+                    : AppLocalizations.of(context).itemEditActivity,
                 icon: const Icon(AppIcons.edit),
-                onPressed: () async {
-                  final notifier = ref.read(itemProvider(args).notifier);
-                  await notifier.flush();
-                  await onEditFields!(type.id);
-                  await notifier.reload();
-                },
-              ),
-            if (state?.plan case final plan?
-                when plan.plannedStartAt != null &&
-                    plan.status == PlanStatus.planned)
-              IconButton(
-                tooltip: AppLocalizations.of(context).reminderMenu,
-                icon: Icon(
-                  reminderFor(
-                            plan,
-                            ref.watch(remindersProvider).value ?? const {},
-                          ) ==
-                          null
-                      ? AppIcons.bell
-                      : AppIcons.bellOn,
-                ),
-                onPressed: () => unawaited(
-                  PlanActions(context, ref).editReminder(
-                    PlannedItem(
-                      plan: plan,
-                      type: state!.type,
-                      records: const [],
-                      status: EffectivePlanStatus.planned,
-                    ),
+                onPressed: () => unawaited(switch (state?.type) {
+                  final type? when onEditFields != null => _editFields(
+                    ref,
+                    type.id,
                   ),
-                ),
-              ),
-            if (state?.plan != null)
-              IconButton(
-                tooltip: AppLocalizations.of(context).itemOptions,
-                icon: const Icon(AppIcons.more),
-                onPressed: () => _openOptions(context, ref, state!),
+                  _ => _rename(context, ref, plan),
+                }),
               )
-            else if (state?.logId != null)
+            else if (state?.logId != null) ...[
+              if (state?.type case final type?
+                  when onEditFields != null && type.fields.isNotEmpty)
+                IconButton(
+                  tooltip: AppLocalizations.of(context).itemEditFields,
+                  icon: const Icon(AppIcons.edit),
+                  onPressed: () => unawaited(_editFields(ref, type.id)),
+                ),
               IconButton(
                 tooltip: AppLocalizations.of(context).actionDelete,
                 icon: const Icon(AppIcons.delete),
                 onPressed: () => _deleteLog(context, ref, state!),
               ),
+            ],
           ],
         ),
         bottomNavigationBar: const RestTimerBar(),
@@ -152,34 +130,61 @@ class ItemScreen extends ConsumerWidget {
     );
   }
 
-  /// The plan sheet: edit title/time/notes, skip, move, delete.
-  Future<void> _openOptions(
-    BuildContext context,
-    WidgetRef ref,
-    ItemState state,
-  ) async {
+  /// Changes what the activity records, then shows the item again.
+  Future<void> _editFields(WidgetRef ref, ActivityTypeId typeId) async {
     final notifier = ref.read(itemProvider(args).notifier);
     await notifier.flush();
-    if (!context.mounted) return;
-    final session = ref.read(activeFocusSessionProvider).value;
-    final plan = state.plan!;
-    final action = await PlanActions(context, ref).open(
-      PlannedItem(
-        plan: plan,
-        type: state.type,
-        records: const [],
-        status: plan.effectiveStatus(
-          hasRecord: state.hasLog,
-          today: currentLocalDate(ref.read(clockProvider)),
-          inFocus: session?.planId == plan.id,
+    await onEditFields!(typeId);
+    await notifier.reload();
+  }
+
+  /// Renames a plain task.
+  Future<void> _rename(BuildContext context, WidgetRef ref, Plan plan) async {
+    final l10n = AppLocalizations.of(context);
+    final controller = TextEditingController(text: plan.title);
+    final name = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.itemRename),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          textCapitalization: TextCapitalization.sentences,
+          onSubmitted: (v) => Navigator.of(context).pop(v),
         ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(l10n.actionCancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(controller.text),
+            child: Text(l10n.actionSave),
+          ),
+        ],
       ),
     );
-    if (!context.mounted) return;
-    if (action == PlanSheetAction.delete) {
-      Navigator.of(context).pop();
-    } else {
-      await notifier.reload();
+    controller.dispose();
+    if (name == null || name.trim().isEmpty) return;
+    try {
+      final draft = plan.toDraft();
+      await ref.read(updatePlanProvider)(
+        plan.id,
+        PlanDraft(
+          planDate: draft.planDate,
+          title: name.trim(),
+          activityTypeId: draft.activityTypeId,
+          notes: draft.notes,
+          plannedStartAt: draft.plannedStartAt,
+          plannedEndAt: draft.plannedEndAt,
+          plannedDurationMs: draft.plannedDurationMs,
+        ),
+      );
+      await ref.read(itemProvider(args).notifier).reload();
+    } catch (error) {
+      if (context.mounted) {
+        showMessageSnackBar(context, errorMessage(l10n, error));
+      }
     }
   }
 
@@ -387,45 +392,48 @@ class _ItemBody extends ConsumerWidget {
                 ),
               ),
             const SizedBox(height: AppSpacing.lg),
-            // Notes, when and how long: one card of details (ADR-045).
-            AppCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    l10n.itemDetailsSection,
-                    style: context.textStyles.titleMedium,
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  FieldEditorShell(
-                    label: l10n.notesLabel,
-                    error: firstIssueMessage(l10n, state.issues, 'notes'),
-                    child: TextFormField(
-                      initialValue: state.notes,
-                      minLines: 3,
-                      maxLines: 12,
-                      textCapitalization: TextCapitalization.sentences,
-                      onChanged: notifier.setNotes,
+            // Everything about the item, edited right here.
+            if (plan != null)
+              PlanDetailsCard(args: args, state: state)
+            else
+              AppCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      l10n.itemDetailsSection,
+                      style: context.textStyles.titleMedium,
                     ),
-                  ),
-                  FieldEditorShell(
-                    label: l10n.itemWhenSection,
-                    child: _StartedAtPicker(
-                      value: state.startedAt,
-                      onChanged: notifier.setStartedAt,
+                    const SizedBox(height: AppSpacing.lg),
+                    FieldEditorShell(
+                      label: l10n.notesLabel,
+                      error: firstIssueMessage(l10n, state.issues, 'notes'),
+                      child: TextFormField(
+                        initialValue: state.notes,
+                        minLines: 3,
+                        maxLines: 12,
+                        textCapitalization: TextCapitalization.sentences,
+                        onChanged: notifier.setNotes,
+                      ),
                     ),
-                  ),
-                  FieldEditorShell(
-                    label: l10n.durationLabel,
-                    error: firstIssueMessage(l10n, state.issues, 'duration'),
-                    child: DurationInput(
-                      milliseconds: state.durationMs,
-                      onChanged: notifier.setDuration,
+                    FieldEditorShell(
+                      label: l10n.itemWhenSection,
+                      child: _StartedAtPicker(
+                        value: state.startedAt,
+                        onChanged: notifier.setStartedAt,
+                      ),
                     ),
-                  ),
-                ],
+                    FieldEditorShell(
+                      label: l10n.itemTimeSpent,
+                      error: firstIssueMessage(l10n, state.issues, 'duration'),
+                      child: DurationInput(
+                        milliseconds: state.durationMs,
+                        onChanged: notifier.setDuration,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
             // Plan ahead from here: next appointment, next session (ADR-036).
             if (plan != null)
               Align(
@@ -437,6 +445,10 @@ class _ItemBody extends ConsumerWidget {
                       unawaited(_planNext(context, ref, plan, onOpenItem)),
                 ),
               ),
+            if (plan != null) ...[
+              const SizedBox(height: AppSpacing.sm),
+              ItemFooterActions(args: args, state: state),
+            ],
           ],
         ),
       ),

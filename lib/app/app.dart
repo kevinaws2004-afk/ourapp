@@ -11,6 +11,7 @@ import '../l10n/generated/app_localizations.dart';
 import '../features/focus/presentation/focus_providers.dart';
 import '../features/notifications/presentation/notification_providers.dart';
 import '../features/plans/domain/plan.dart';
+import 'launch_theme_cache.dart';
 import 'router.dart';
 
 /// The app: one of three themes, each light or dark, chosen in Me →
@@ -23,6 +24,8 @@ class App extends ConsumerStatefulWidget {
 }
 
 class _AppState extends ConsumerState<App> {
+  LaunchTheme? _savedLook;
+
   StreamSubscription<String>? _taps;
 
   @override
@@ -62,6 +65,16 @@ class _AppState extends ConsumerState<App> {
     // Keeps scheduled notifications in step with plans and settings.
     ref.watch(notificationSyncProvider);
     final theme = ref.watch(effectiveThemeProvider);
+    // The next launch's loading screen opens in this look.
+    final look = LaunchTheme(
+      theme: theme,
+      appearance: ref.watch(effectiveAppearanceProvider),
+      trueBlack: ref.watch(effectiveTrueBlackProvider),
+    );
+    if (look != _savedLook) {
+      _savedLook = look;
+      unawaited(look.save());
+    }
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,

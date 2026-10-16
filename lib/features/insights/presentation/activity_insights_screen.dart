@@ -170,6 +170,8 @@ class _ActivityInsightsScreenState
         row == null
             ? l10n.insightAutoTotal(field)
             : l10n.insightAutoRowTotal(row, field),
+      AutoChartKind.sets =>
+        row == null ? l10n.insightAutoSets : l10n.insightAutoRowSets(row),
       AutoChartKind.yesShare => l10n.insightAutoYesShare(field),
     };
     final c = chart.config;

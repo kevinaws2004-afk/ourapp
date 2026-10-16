@@ -10,7 +10,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Daylog';
+  String get appTitle => 'DayCraft';
 
   @override
   String get navToday => 'Today';
@@ -713,10 +713,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planNewTitle => 'New plan';
 
   @override
-  String get planEditTitle => 'Plan';
+  String get planEditTitle => 'Edit item';
 
   @override
-  String get planTitleLabel => 'Title';
+  String get planTitleLabel => 'Name';
 
   @override
   String get planTitleHelper =>
@@ -1152,7 +1152,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get itemTimerFullScreen => 'Full screen timer';
 
   @override
-  String get itemWhenSection => 'When';
+  String get itemWhenSection => 'Done at';
 
   @override
   String get itemOptions => 'Item options';
@@ -2727,7 +2727,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get builtInPresentationHowItWent => 'How it went';
 
   @override
-  String get builtInCategoryLearning => 'Learning';
+  String get builtInCategoryLearning => 'Study & learning';
 
   @override
   String get builtInClass => 'Class';
@@ -5402,7 +5402,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get meExportSubtitle => 'A full backup as a JSON file';
 
   @override
-  String get meExportSubject => 'Daylog backup';
+  String get meExportSubject => 'DayCraft backup';
 
   @override
   String get mePrivacy => 'Privacy';
@@ -5420,7 +5420,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Made for people who like to see their days add up.';
 
   @override
-  String get meFooter => 'Daylog · Plan it. Do it. See it.';
+  String get meFooter => 'DayCraft · Plan it. Do it. See it.';
 
   @override
   String get meNameTitle => 'What should we call you?';
@@ -5576,7 +5576,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get reminderTitle => 'Want a reminder?';
+  String get reminderTitle => 'Reminder';
 
   @override
   String reminderSubtitle(String title, String time) {
@@ -5590,7 +5590,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reminderSet => 'Remind me';
 
   @override
-  String get reminderSkip => 'No reminder';
+  String get reminderSkip => 'Save';
 
   @override
   String get reminderMenu => 'Reminder';
@@ -5657,7 +5657,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get notifyMorningBodyAnytime => 'Open Daylog to plan your day.';
+  String get notifyMorningBodyAnytime => 'Open DayCraft to plan your day.';
 
   @override
   String get notifyEvening => 'How did today go?';
@@ -5684,17 +5684,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notificationsMaster => 'Allow notifications';
 
   @override
-  String get notificationsMasterHint => 'Off means Daylog never notifies you.';
+  String get notificationsMasterHint =>
+      'Off means DayCraft never notifies you.';
 
   @override
   String get notificationsBlocked =>
-      'Notifications are blocked for Daylog in your phone settings.';
+      'Notifications are blocked for DayCraft in your phone settings.';
 
   @override
   String get notificationsAllow => 'Allow';
 
   @override
-  String get notificationsNewItems => 'Reminders for new items';
+  String get notificationsNewItems => 'Default reminder';
 
   @override
   String get notificationsAsk => 'Ask every time';
@@ -5894,4 +5895,268 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notesMeSubtitle => 'Ideas, lists and thoughts';
+
+  @override
+  String get builtInStudySubjectField => 'Subject';
+
+  @override
+  String get builtInLecture => 'Watch lecture';
+
+  @override
+  String get builtInLectureTopic => 'Lecture topic';
+
+  @override
+  String get builtInLectureKeyPoints => 'Key points';
+
+  @override
+  String get builtInLectureUnderstood => 'How well I understood';
+
+  @override
+  String get builtInRevision => 'Revision';
+
+  @override
+  String get builtInRevisionTopics => 'Topics revised';
+
+  @override
+  String get builtInRevisionConfidence => 'Confidence';
+
+  @override
+  String get builtInAssignment => 'Assignment';
+
+  @override
+  String get builtInAssignmentName => 'Assignment';
+
+  @override
+  String get builtInAssignmentDue => 'Due date';
+
+  @override
+  String get builtInAssignmentSubmitted => 'Submitted';
+
+  @override
+  String get builtInPracticeProblems => 'Practice problems';
+
+  @override
+  String get builtInPracticeProblemsTopic => 'Topic';
+
+  @override
+  String get builtInPracticeProblemsSolved => 'Problems solved';
+
+  @override
+  String get builtInPracticeProblemsCorrect => 'Correct';
+
+  @override
+  String get builtInPracticeProblemsDifficulty => 'Difficulty';
+
+  @override
+  String get builtInMakeNotes => 'Make notes';
+
+  @override
+  String get builtInMakeNotesChapter => 'Chapter or topic';
+
+  @override
+  String get builtInMakeNotesPages => 'Pages';
+
+  @override
+  String get builtInReadTextbook => 'Read textbook';
+
+  @override
+  String get builtInReadTextbookChapter => 'Book or chapter';
+
+  @override
+  String get builtInReadTextbookPages => 'Pages read';
+
+  @override
+  String get builtInGroupStudy => 'Group study';
+
+  @override
+  String get builtInGroupStudyWith => 'Studied with';
+
+  @override
+  String get builtInGroupStudyCovered => 'What we covered';
+
+  @override
+  String get builtInResearch => 'Research';
+
+  @override
+  String get builtInResearchTopic => 'Topic';
+
+  @override
+  String get builtInResearchSources => 'Sources found';
+
+  @override
+  String get builtInResearchFindings => 'Findings';
+
+  @override
+  String get builtInEssay => 'Essay writing';
+
+  @override
+  String get builtInEssayTitle => 'Title or topic';
+
+  @override
+  String get builtInEssayWords => 'Words written';
+
+  @override
+  String get builtInEssayFinished => 'Finished';
+
+  @override
+  String get builtInLab => 'Lab practical';
+
+  @override
+  String get builtInLabExperiment => 'Experiment';
+
+  @override
+  String get builtInLabObservations => 'Observations';
+
+  @override
+  String get builtInMockTest => 'Mock test';
+
+  @override
+  String get builtInMockTestExam => 'Exam';
+
+  @override
+  String get builtInMockTestScore => 'Score';
+
+  @override
+  String get builtInMockTestWeakTopics => 'Topics to work on';
+
+  @override
+  String get builtInDoubtSession => 'Doubt session';
+
+  @override
+  String get builtInDoubtSessionCleared => 'Doubts cleared';
+
+  @override
+  String get builtInDoubtSessionNotes => 'Notes';
+
+  @override
+  String get notificationsDefaultHint =>
+      'What new items with a time start with. You can change it on each item.';
+
+  @override
+  String reminderAtTime(String time) {
+    return 'At $time';
+  }
+
+  @override
+  String get reminderPickTime => 'Remind me at a time…';
+
+  @override
+  String get reminderPickOtherTime => 'At another time…';
+
+  @override
+  String get notifyReminderAnytime => 'On your plan for today';
+
+  @override
+  String get reminderLabel => 'Reminder';
+
+  @override
+  String get planDateLabel => 'Date';
+
+  @override
+  String planEditActivityFields(String name) {
+    return 'Edit what $name records';
+  }
+
+  @override
+  String get itemTimeSpent => 'Time spent';
+
+  @override
+  String get itemRename => 'Rename';
+
+  @override
+  String get itemEditActivity => 'Edit activity (icon, name, what it records)';
+
+  @override
+  String get itemWhenSectionPlan => 'Date & time';
+
+  @override
+  String get planRepeatLabel => 'Repeat';
+
+  @override
+  String get planRepeatsOn => 'Repeats · tap to stop';
+
+  @override
+  String get planRepeatOff => 'Doesn\'t repeat';
+
+  @override
+  String doneAtTime(String time) {
+    return 'Done at $time';
+  }
+
+  @override
+  String groupRowDone(String title) {
+    return 'Finish $title';
+  }
+
+  @override
+  String get insightAutoSets => 'Sets';
+
+  @override
+  String insightAutoRowSets(String row) {
+    return '$row · sets';
+  }
+
+  @override
+  String get reminderAdd => 'Add reminder';
+
+  @override
+  String get reminderAddAnother => 'Another';
+
+  @override
+  String get dayReportTitle => 'Day report';
+
+  @override
+  String get dayReportPrevious => 'Previous day';
+
+  @override
+  String get dayReportNext => 'Next day';
+
+  @override
+  String get dayReportTrackedLabel => 'Time tracked';
+
+  @override
+  String get dayReportNothingTracked => 'Nothing tracked yet';
+
+  @override
+  String get dayReportDone => 'Done';
+
+  @override
+  String dayReportDoneOf(int done, int total) {
+    return '$done of $total';
+  }
+
+  @override
+  String get dayReportUntracked => 'Untracked';
+
+  @override
+  String get dayReportUntrackedHintToday =>
+      'Untracked: waking time since 7 AM with nothing recorded.';
+
+  @override
+  String dayReportUntrackedHint(int hours) {
+    return 'Untracked: time out of $hours waking hours with nothing recorded.';
+  }
+
+  @override
+  String get dayReportByActivity => 'Time by activity';
+
+  @override
+  String get dayReportDoneSection => 'What you did';
+
+  @override
+  String get dayReportNothingDone => 'Nothing marked done on this day.';
+
+  @override
+  String get dayReportNotDoneSection => 'Not done';
+
+  @override
+  String get dayReportOpen => 'Open';
+
+  @override
+  String planEndsAt(String time) {
+    return 'Ends $time';
+  }
+
+  @override
+  String get planAddEnd => 'Add end time';
 }

@@ -20,6 +20,7 @@ import '../../../activity_types/presentation/activity_type_providers.dart';
 import '../../../activity_types/presentation/built_in_activities.dart';
 import '../../../activity_types/presentation/starter_activities.dart';
 import '../../../notifications/presentation/reminder_prompt.dart';
+import '../../../notifications/domain/plan_reminder.dart';
 import '../../domain/plan.dart';
 import '../../domain/plan_series.dart';
 import '../../domain/plan_title_match.dart';
@@ -120,12 +121,25 @@ class _AddToDayState extends ConsumerState<AddToDay> {
   ActivityTypeId? _typeId;
   bool _matchedByName = false;
 
+  /// The chosen activity's name, while the title still starts with it.
+  String? get _chosenName {
+    final id = _typeId;
+    if (id == null) return null;
+    final types = ref.read(activeActivityTypesProvider).value ?? const [];
+    return types.where((t) => t.id == id).firstOrNull?.name ??
+        widget.initialType?.name;
+  }
+
   /// A new name chosen to become an activity of yours (AD3).
   bool _makeYours = false;
   late _When _when = widget.startNow ? _When.now : _When.anytime;
   LocalTime? _start;
   LocalTime? _end;
   RepeatRule? _repeat;
+
+  /// The reminder chosen here (or the default once a time is set).
+  PlanReminder? _reminder;
+  bool _reminderTouched = false;
   bool _busy = false;
 
   @override
@@ -149,6 +163,13 @@ class _AddToDayState extends ConsumerState<AddToDay> {
   void _onTitleChanged(String text) {
     _makeYours = false;
     if (_typeId != null && !_matchedByName) {
+      setState(() {});
+      return;
+    }
+    // "Meeting with Sam": a chosen activity stays while its name is
+    // extended, so a day can hold several meetings with their own names.
+    if (_chosenName case final name?
+        when text.trim().toLowerCase().startsWith(name.toLowerCase())) {
       setState(() {});
       return;
     }
@@ -215,6 +236,15 @@ class _AddToDayState extends ConsumerState<AddToDay> {
     return ref.read(addBuiltInActivityProvider)(builtIn);
   }
 
+  String _titleFor(ActivityTypeId? typeId) {
+    final title = _title.text.trim();
+    if (typeId == null) return title;
+    final name = _chosenName;
+    return name == null || title.toLowerCase() == name.toLowerCase()
+        ? ''
+        : title;
+  }
+
   Future<void> _add() async {
     if (!_hasInput || _busy) return;
     final l10n = AppLocalizations.of(context);
@@ -226,8 +256,9 @@ class _AddToDayState extends ConsumerState<AddToDay> {
       final id = await ref.read(createPlanProvider)(
         PlanDraft(
           planDate: widget.date,
-          // With an activity, the plan takes its name.
-          title: typeId == null ? _title.text.trim() : '',
+          // With an activity, the plan takes its name unless one was
+          // typed ("Meeting with Sam").
+          title: _titleFor(typeId),
           activityTypeId: typeId,
           plannedStartAt: now
               ? ref.read(clockProvider).nowUtc()
@@ -243,15 +274,10 @@ class _AddToDayState extends ConsumerState<AddToDay> {
       if (_repeat case final rule? when !now) {
         await ref.read(repeatPlanProvider)(id, rule);
       }
-      // Something with a time: "Want a reminder?"
-      if (timed && mounted) {
-        await askReminderFor(
-          context,
-          ref,
-          id,
-          title: _title.text.trim(),
-          startUtc: _instant(_start)!,
-        );
+      // The reminder chosen in the sheet (an offset needs a time).
+      final reminder = _effectiveReminder(timed: timed);
+      if (reminder != null && !now) {
+        await setReminderFor(ref, id, reminder);
       }
       if (!mounted) return;
       if (now) {
@@ -289,6 +315,31 @@ class _AddToDayState extends ConsumerState<AddToDay> {
       _start = choice.start;
       _end = choice.end;
       _when = choice.start == null ? _When.anytime : _When.time;
+      // A time just set: start from the default reminder.
+      if (!_reminderTouched) {
+        _reminder = defaultReminderFor(ref, timed: choice.start != null);
+      }
+    });
+  }
+
+  /// The reminder to save: an offset only makes sense with a time.
+  PlanReminder? _effectiveReminder({required bool timed}) =>
+      _reminder is ReminderBefore && !timed ? null : _reminder;
+
+  Future<void> _pickReminder() async {
+    final timed = _when == _When.time && _start != null;
+    final choice = await showReminderSheet(
+      context,
+      title: _title.text.trim().isEmpty
+          ? AppLocalizations.of(context).reminderTitle
+          : _title.text.trim(),
+      start: timed ? _instant(_start) : null,
+      current: _effectiveReminder(timed: timed),
+    );
+    if (choice.cancelled || !mounted) return;
+    setState(() {
+      _reminderTouched = true;
+      _reminder = choice.reminder;
     });
   }
 
@@ -433,6 +484,30 @@ class _AddToDayState extends ConsumerState<AddToDay> {
                 ),
                 selected: _repeat != null,
                 onSelected: (_) => _pickRepeat(),
+              ),
+            if (_when != _When.now)
+              ChoiceChip(
+                avatar: Icon(
+                  _effectiveReminder(
+                            timed: _when == _When.time && _start != null,
+                          ) ==
+                          null
+                      ? AppIcons.bell
+                      : AppIcons.bellOn,
+                  size: 18,
+                ),
+                label: Text(switch (_effectiveReminder(
+                  timed: _when == _When.time && _start != null,
+                )) {
+                  null => l10n.reminderLabel,
+                  final r => reminderLabel(context, r),
+                }),
+                selected:
+                    _effectiveReminder(
+                      timed: _when == _When.time && _start != null,
+                    ) !=
+                    null,
+                onSelected: (_) => _pickReminder(),
               ),
           ],
         ),

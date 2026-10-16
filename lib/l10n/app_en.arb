@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "appTitle": "Daylog",
+  "appTitle": "DayCraft",
   "@appTitle": {
     "description": "Temporary visible product name. The real name is undecided (ADR-010). Change together with Android strings.xml and iOS Info.plist."
   },
@@ -926,11 +926,11 @@
   "@planNewTitle": {
     "description": "Plan sheet title when creating a plan; also the tooltip of the add button."
   },
-  "planEditTitle": "Plan",
+  "planEditTitle": "Edit item",
   "@planEditTitle": {
     "description": "Plan sheet title when editing a plan."
   },
-  "planTitleLabel": "Title",
+  "planTitleLabel": "Name",
   "@planTitleLabel": {
     "description": "Plan sheet: title field."
   },
@@ -1525,7 +1525,7 @@
   "@itemTimerFullScreen": {
     "description": "Opens the running timer full screen."
   },
-  "itemWhenSection": "When",
+  "itemWhenSection": "Done at",
   "@itemWhenSection": {
     "description": "Section in an item with when it happened and how long."
   },
@@ -3673,7 +3673,7 @@
   "@builtInPresentationHowItWent": {
     "description": "Built-in activity content (becomes the user's own editable activity once used)."
   },
-  "builtInCategoryLearning": "Learning",
+  "builtInCategoryLearning": "Study & learning",
   "@builtInCategoryLearning": {
     "description": "Activity list: a category heading for built-in activities."
   },
@@ -7285,7 +7285,7 @@
   "@meExport": {},
   "meExportSubtitle": "A full backup as a JSON file",
   "@meExportSubtitle": {},
-  "meExportSubject": "Daylog backup",
+  "meExportSubject": "DayCraft backup",
   "@meExportSubject": {},
   "mePrivacy": "Privacy",
   "@mePrivacy": {},
@@ -7301,7 +7301,7 @@
   },
   "meAboutLegal": "Made for people who like to see their days add up.",
   "@meAboutLegal": {},
-  "meFooter": "Daylog · Plan it. Do it. See it.",
+  "meFooter": "DayCraft · Plan it. Do it. See it.",
   "@meFooter": {},
   "meNameTitle": "What should we call you?",
   "@meNameTitle": {},
@@ -7419,7 +7419,7 @@
       }
     }
   },
-  "reminderTitle": "Want a reminder?",
+  "reminderTitle": "Reminder",
   "@reminderTitle": {},
   "reminderSubtitle": "{title} at {time}",
   "@reminderSubtitle": {
@@ -7436,7 +7436,7 @@
   "@reminderDontAsk": {},
   "reminderSet": "Remind me",
   "@reminderSet": {},
-  "reminderSkip": "No reminder",
+  "reminderSkip": "Save",
   "@reminderSkip": {},
   "reminderMenu": "Reminder",
   "@reminderMenu": {},
@@ -7523,7 +7523,7 @@
       }
     }
   },
-  "notifyMorningBodyAnytime": "Open Daylog to plan your day.",
+  "notifyMorningBodyAnytime": "Open DayCraft to plan your day.",
   "@notifyMorningBodyAnytime": {},
   "notifyEvening": "How did today go?",
   "@notifyEvening": {},
@@ -7548,13 +7548,13 @@
   "@notificationsSubtitle": {},
   "notificationsMaster": "Allow notifications",
   "@notificationsMaster": {},
-  "notificationsMasterHint": "Off means Daylog never notifies you.",
+  "notificationsMasterHint": "Off means DayCraft never notifies you.",
   "@notificationsMasterHint": {},
-  "notificationsBlocked": "Notifications are blocked for Daylog in your phone settings.",
+  "notificationsBlocked": "Notifications are blocked for DayCraft in your phone settings.",
   "@notificationsBlocked": {},
   "notificationsAllow": "Allow",
   "@notificationsAllow": {},
-  "notificationsNewItems": "Reminders for new items",
+  "notificationsNewItems": "Default reminder",
   "@notificationsNewItems": {},
   "notificationsAsk": "Ask every time",
   "@notificationsAsk": {},
@@ -7701,5 +7701,220 @@
   "quickNoteHint": "Anything that isn't an activity",
   "@quickNoteHint": {},
   "notesMeSubtitle": "Ideas, lists and thoughts",
-  "@notesMeSubtitle": {}
+  "@notesMeSubtitle": {},
+  "builtInStudySubjectField": "Subject",
+  "@builtInStudySubjectField": {},
+  "builtInLecture": "Watch lecture",
+  "@builtInLecture": {},
+  "builtInLectureTopic": "Lecture topic",
+  "@builtInLectureTopic": {},
+  "builtInLectureKeyPoints": "Key points",
+  "@builtInLectureKeyPoints": {},
+  "builtInLectureUnderstood": "How well I understood",
+  "@builtInLectureUnderstood": {},
+  "builtInRevision": "Revision",
+  "@builtInRevision": {},
+  "builtInRevisionTopics": "Topics revised",
+  "@builtInRevisionTopics": {},
+  "builtInRevisionConfidence": "Confidence",
+  "@builtInRevisionConfidence": {},
+  "builtInAssignment": "Assignment",
+  "@builtInAssignment": {},
+  "builtInAssignmentName": "Assignment",
+  "@builtInAssignmentName": {},
+  "builtInAssignmentDue": "Due date",
+  "@builtInAssignmentDue": {},
+  "builtInAssignmentSubmitted": "Submitted",
+  "@builtInAssignmentSubmitted": {},
+  "builtInPracticeProblems": "Practice problems",
+  "@builtInPracticeProblems": {},
+  "builtInPracticeProblemsTopic": "Topic",
+  "@builtInPracticeProblemsTopic": {},
+  "builtInPracticeProblemsSolved": "Problems solved",
+  "@builtInPracticeProblemsSolved": {},
+  "builtInPracticeProblemsCorrect": "Correct",
+  "@builtInPracticeProblemsCorrect": {},
+  "builtInPracticeProblemsDifficulty": "Difficulty",
+  "@builtInPracticeProblemsDifficulty": {},
+  "builtInMakeNotes": "Make notes",
+  "@builtInMakeNotes": {},
+  "builtInMakeNotesChapter": "Chapter or topic",
+  "@builtInMakeNotesChapter": {},
+  "builtInMakeNotesPages": "Pages",
+  "@builtInMakeNotesPages": {},
+  "builtInReadTextbook": "Read textbook",
+  "@builtInReadTextbook": {},
+  "builtInReadTextbookChapter": "Book or chapter",
+  "@builtInReadTextbookChapter": {},
+  "builtInReadTextbookPages": "Pages read",
+  "@builtInReadTextbookPages": {},
+  "builtInGroupStudy": "Group study",
+  "@builtInGroupStudy": {},
+  "builtInGroupStudyWith": "Studied with",
+  "@builtInGroupStudyWith": {},
+  "builtInGroupStudyCovered": "What we covered",
+  "@builtInGroupStudyCovered": {},
+  "builtInResearch": "Research",
+  "@builtInResearch": {},
+  "builtInResearchTopic": "Topic",
+  "@builtInResearchTopic": {},
+  "builtInResearchSources": "Sources found",
+  "@builtInResearchSources": {},
+  "builtInResearchFindings": "Findings",
+  "@builtInResearchFindings": {},
+  "builtInEssay": "Essay writing",
+  "@builtInEssay": {},
+  "builtInEssayTitle": "Title or topic",
+  "@builtInEssayTitle": {},
+  "builtInEssayWords": "Words written",
+  "@builtInEssayWords": {},
+  "builtInEssayFinished": "Finished",
+  "@builtInEssayFinished": {},
+  "builtInLab": "Lab practical",
+  "@builtInLab": {},
+  "builtInLabExperiment": "Experiment",
+  "@builtInLabExperiment": {},
+  "builtInLabObservations": "Observations",
+  "@builtInLabObservations": {},
+  "builtInMockTest": "Mock test",
+  "@builtInMockTest": {},
+  "builtInMockTestExam": "Exam",
+  "@builtInMockTestExam": {},
+  "builtInMockTestScore": "Score",
+  "@builtInMockTestScore": {},
+  "builtInMockTestWeakTopics": "Topics to work on",
+  "@builtInMockTestWeakTopics": {},
+  "builtInDoubtSession": "Doubt session",
+  "@builtInDoubtSession": {},
+  "builtInDoubtSessionCleared": "Doubts cleared",
+  "@builtInDoubtSessionCleared": {},
+  "builtInDoubtSessionNotes": "Notes",
+  "@builtInDoubtSessionNotes": {},
+  "notificationsDefaultHint": "What new items with a time start with. You can change it on each item.",
+  "@notificationsDefaultHint": {},
+  "reminderAtTime": "At {time}",
+  "@reminderAtTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderPickTime": "Remind me at a time…",
+  "@reminderPickTime": {},
+  "reminderPickOtherTime": "At another time…",
+  "@reminderPickOtherTime": {},
+  "notifyReminderAnytime": "On your plan for today",
+  "@notifyReminderAnytime": {},
+  "reminderLabel": "Reminder",
+  "@reminderLabel": {},
+  "planDateLabel": "Date",
+  "@planDateLabel": {},
+  "planEditActivityFields": "Edit what {name} records",
+  "@planEditActivityFields": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "itemTimeSpent": "Time spent",
+  "@itemTimeSpent": {},
+  "itemRename": "Rename",
+  "@itemRename": {},
+  "itemEditActivity": "Edit activity (icon, name, what it records)",
+  "@itemEditActivity": {},
+  "itemWhenSectionPlan": "Date & time",
+  "@itemWhenSectionPlan": {},
+  "planRepeatLabel": "Repeat",
+  "@planRepeatLabel": {},
+  "planRepeatsOn": "Repeats · tap to stop",
+  "@planRepeatsOn": {},
+  "planRepeatOff": "Doesn't repeat",
+  "@planRepeatOff": {},
+  "doneAtTime": "Done at {time}",
+  "@doneAtTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "groupRowDone": "Finish {title}",
+  "@groupRowDone": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "insightAutoSets": "Sets",
+  "@insightAutoSets": {},
+  "insightAutoRowSets": "{row} · sets",
+  "@insightAutoRowSets": {
+    "placeholders": {
+      "row": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderAdd": "Add reminder",
+  "@reminderAdd": {},
+  "reminderAddAnother": "Another",
+  "@reminderAddAnother": {},
+  "dayReportTitle": "Day report",
+  "@dayReportTitle": {},
+  "dayReportPrevious": "Previous day",
+  "@dayReportPrevious": {},
+  "dayReportNext": "Next day",
+  "@dayReportNext": {},
+  "dayReportTrackedLabel": "Time tracked",
+  "@dayReportTrackedLabel": {},
+  "dayReportNothingTracked": "Nothing tracked yet",
+  "@dayReportNothingTracked": {},
+  "dayReportDone": "Done",
+  "@dayReportDone": {},
+  "dayReportDoneOf": "{done} of {total}",
+  "@dayReportDoneOf": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "dayReportUntracked": "Untracked",
+  "@dayReportUntracked": {},
+  "dayReportUntrackedHintToday": "Untracked: waking time since 7 AM with nothing recorded.",
+  "@dayReportUntrackedHintToday": {},
+  "dayReportUntrackedHint": "Untracked: time out of {hours} waking hours with nothing recorded.",
+  "@dayReportUntrackedHint": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "dayReportByActivity": "Time by activity",
+  "@dayReportByActivity": {},
+  "dayReportDoneSection": "What you did",
+  "@dayReportDoneSection": {},
+  "dayReportNothingDone": "Nothing marked done on this day.",
+  "@dayReportNothingDone": {},
+  "dayReportNotDoneSection": "Not done",
+  "@dayReportNotDoneSection": {},
+  "dayReportOpen": "Open",
+  "@dayReportOpen": {},
+  "planEndsAt": "Ends {time}",
+  "@planEndsAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "planAddEnd": "Add end time",
+  "@planAddEnd": {}
 }

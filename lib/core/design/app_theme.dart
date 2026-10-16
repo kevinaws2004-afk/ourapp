@@ -196,6 +196,8 @@ abstract final class AppTheme {
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
+        // Swipe it away sideways, like any notification.
+        dismissDirection: DismissDirection.horizontal,
         backgroundColor: c.textPrimary,
         contentTextStyle: AppTypography.bodyMedium.copyWith(
           color: c.surfaceBase,

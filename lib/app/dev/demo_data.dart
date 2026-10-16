@@ -302,13 +302,8 @@ Future<DemoDataResult> loadDemoData(
   for (final (title, source, aggregation, bucket, kind) in [
     (
       _marker,
-      VolumeSource(
-        gym.id,
-        groupFieldId: gymSets,
-        amountFieldId: gymWeight,
-        countFieldId: gymReps,
-      ),
-      Aggregation.sum,
+      FieldValueSource(gym.id, gymReps),
+      Aggregation.count,
       Bucket.week,
       ChartKind.bar,
     ),
@@ -349,7 +344,7 @@ Future<DemoDataResult> loadDemoData(
 }
 
 /// Title of the first demo chart; its presence means the demo is loaded.
-const _marker = 'Gym volume';
+const _marker = 'Gym sets';
 
 /// Live fields under [parent] (top level when null), in form order.
 /// The [index]th option of a select field (built-in activities are plain data; never
