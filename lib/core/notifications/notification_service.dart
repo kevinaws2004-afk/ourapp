@@ -125,18 +125,33 @@ class NotificationService {
           ),
         ),
         onDidReceiveNotificationResponse: (response) {
-          if (response.payload case final p?) service._taps.add(p);
+          if (_payloadOf(response) case final p?) service._taps.add(p);
         },
       );
       final launch = await plugin.getNotificationAppLaunchDetails();
       if (launch?.didNotificationLaunchApp ?? false) {
-        service._launchPayload = launch!.notificationResponse?.payload;
+        service._launchPayload = switch (launch!.notificationResponse) {
+          final r? => _payloadOf(r),
+          null => null,
+        };
       }
       return service;
     } catch (_) {
       return NotificationService.disabled();
     }
   }
+
+  /// A tap's payload, or `action:ID` for one of a notification's buttons
+  /// (the running timer's Pause/Resume and Finish).
+  static String? _payloadOf(NotificationResponse response) =>
+      switch (response.actionId) {
+        final action? when action.isNotEmpty => 'action:$action',
+        _ => response.payload,
+      };
+
+  /// Ongoing timer buttons.
+  static const actionPauseResume = 'pause_resume';
+  static const actionFinish = 'finish';
 
   /// Asks the system for permission to notify (Android 13+, iOS). True when
   /// allowed.
@@ -228,6 +243,9 @@ class NotificationService {
     required String? title,
     required String body,
     required DateTime startedAt,
+    bool paused = false,
+    String? pauseLabel,
+    String? finishLabel,
   }) async {
     final plugin = _plugin;
     if (plugin == null) return;
@@ -250,11 +268,28 @@ class NotificationService {
           ongoing: true,
           autoCancel: false,
           onlyAlertOnce: true,
-          showWhen: true,
-          usesChronometer: true,
+          // A paused timer shows no running clock.
+          showWhen: !paused,
+          usesChronometer: !paused,
           when: startedAt.millisecondsSinceEpoch,
           icon: 'ic_notification',
           color: _accent,
+          actions: [
+            if (pauseLabel != null)
+              AndroidNotificationAction(
+                actionPauseResume,
+                pauseLabel,
+                showsUserInterface: true,
+                cancelNotification: false,
+              ),
+            if (finishLabel != null)
+              AndroidNotificationAction(
+                actionFinish,
+                finishLabel,
+                showsUserInterface: true,
+                cancelNotification: false,
+              ),
+          ],
         ),
         iOS: const DarwinNotificationDetails(presentSound: false),
       ),

@@ -64,24 +64,30 @@ void main() {
     await scrollAndTap(tester, find.text('Add Exercise'));
     expect(find.text('Exercise 1'), findsOneWidget);
     await enterField(tester, 'Exercise *', 'Chest Press');
+    FocusManager.instance.primaryFocus?.unfocus(); // closes the suggestions
+    await tester.pumpAndSettle();
 
     await scrollAndTap(tester, find.text('Add Set'));
     await enterAt(tester, 'Weight', 0, '50');
     await enterAt(tester, 'Reps', 0, '12');
+    // ✓ folds the set into one line; only then is another offered.
+    await scrollAndTap(tester, find.byTooltip('Finish Set 1'));
+    expect(find.text('50 kg × 12'), findsOneWidget, reason: 'set 1, folded');
 
-    // A new set starts from the previous one, which folds into one line
-    // (ADR-045); only the set being filled in has inputs.
+    // A new set starts empty, the previous numbers only as hints (ADR-045).
     await scrollAndTap(tester, find.text('Add Set'));
     expect(find.text('Set 2'), findsOneWidget);
-    expect(find.text('50 kg × 12'), findsOneWidget, reason: 'set 1, folded');
-    final prefilled = tester.widget<TextField>(labelledInput('Weight', 0));
-    expect(prefilled.controller!.text, '50');
+    final fresh = tester.widget<TextField>(labelledInput('Weight', 0));
+    expect(fresh.controller!.text, isEmpty);
+    expect(fresh.decoration!.hintText, '50');
+    expect(find.text('Add Set'), findsNothing, reason: 'finish this one first');
     await enterAt(tester, 'Weight', 0, '55');
     await enterAt(tester, 'Reps', 0, '10');
 
     // Its stepper moves it one step at a time.
     await scrollAndTap(tester, find.byTooltip('More Reps'));
     await scrollAndTap(tester, find.byTooltip('Less Reps'));
+    await scrollAndTap(tester, find.byTooltip('Finish Set 2'));
 
     await scrollAndTap(tester, find.text('Add Set'));
     await enterAt(tester, 'Weight', 0, '60');
@@ -98,20 +104,13 @@ void main() {
       findsOneWidget,
     );
 
-    // Reopening shows every set as recorded: the earlier ones folded, the
-    // last one open.
+    // Reopening shows every set as recorded, folded, with Add Set ready.
     await tester.tap(find.textContaining('Chest Press'));
     await tester.pumpAndSettle();
     expect(find.byType(ItemScreen), findsOneWidget);
     expect(find.text('50 kg × 12'), findsOneWidget);
     expect(find.text('55 kg × 10'), findsOneWidget);
-    final weight = labelledInput('Weight', 0);
-    await tester.ensureVisible(weight);
-    expect(tester.widget<TextField>(weight).controller!.text, '60');
-    expect(
-      tester.widget<TextField>(labelledInput('Reps', 0)).controller!.text,
-      '8',
-    );
+    expect(find.text('60 kg × 8'), findsOneWidget);
 
     // Tapping a folded set opens it to change it.
     await scrollAndTap(tester, find.text('50 kg × 12'));

@@ -47,11 +47,16 @@ String todayStatusLine(
 String heroLine(
   BuildContext context,
   DayProgress? progress,
-  PlannedItem? running,
-) {
+  PlannedItem? running, {
+  bool paused = false,
+}) {
   final l10n = AppLocalizations.of(context);
   if (progress == null) return '';
-  if (running != null) return l10n.heroRunning(running.plan.title);
+  if (running != null) {
+    return paused
+        ? l10n.heroPaused(running.plan.title)
+        : l10n.heroRunning(running.plan.title);
+  }
   if (progress.total == 0) return l10n.heroEmpty;
   if (progress.allDone) return l10n.heroAllDone;
   final left = progress.total - progress.done;

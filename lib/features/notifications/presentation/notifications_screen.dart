@@ -75,6 +75,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
     final l10n = AppLocalizations.of(context);
     final choice = await showModalBottomSheet<({int? minutes})>(
       context: context,
+      useRootNavigator: true,
       useSafeArea: true,
       builder: (context) {
         Widget tile(int? minutes) {
@@ -324,6 +325,19 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
                       s.goalStreaks,
                       (v) => unawaited(
                         _save(s.copyWith(goalStreaks: v), turnedOn: v),
+                      ),
+                    ),
+                  ),
+                  SettingsTile(
+                    icon: AppIcons.recap,
+                    iconColor: c.brandPrimary,
+                    iconBackground: c.brandPrimarySoft,
+                    title: l10n.notificationsRecap,
+                    subtitle: l10n.notificationsRecapHint,
+                    trailing: toggle(
+                      s.weeklyRecap,
+                      (v) => unawaited(
+                        _save(s.copyWith(weeklyRecap: v), turnedOn: v),
                       ),
                     ),
                   ),

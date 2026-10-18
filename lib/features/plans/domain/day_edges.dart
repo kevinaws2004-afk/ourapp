@@ -11,8 +11,15 @@ abstract final class DayEdges {
   /// "From yesterday" shows until noon (local).
   static const fromYesterdayUntilHour = 12;
 
-  /// The evening review shows from 17:00 (local).
+  /// The evening review shows from 17:00 (local) once everything planned is
+  /// decided.
   static const eveningFromHour = 17;
+
+  /// With things still open it waits until 21:00, and until an hour after
+  /// the last planned thing: the evening is for doing them, not for being
+  /// told they weren't done.
+  static const eveningOpenFromHour = 21;
+  static const eveningGrace = Duration(hours: 1);
 
   /// How many weeks back "your usual Thursday" looks.
   static const usualWeeks = 4;
@@ -33,9 +40,9 @@ List<PlannedItem> leftFromYesterday(DayOverview yesterday, int localHour) {
 
 /// Today's evening review (T7/T8), or null when it isn't time for one.
 ///
-/// It shows from 17:00 when at least one thing was planned and either every
-/// planned thing is decided (done or skipped) or the last planned thing's
-/// end has passed.
+/// It shows from 17:00 when at least one thing was planned and every planned
+/// thing is decided (done or skipped); with things still open, from 21:00
+/// and once an hour has passed since the last planned thing's end.
 class EveningReview {
   const EveningReview({required this.progress, required this.unfinished});
 
@@ -75,8 +82,12 @@ class EveningReview {
       );
       if (lastEnd == null || end.isAfter(lastEnd)) lastEnd = end;
     }
-    final lastPassed = lastEnd != null && !lastEnd.isAfter(nowUtc);
-    if (unfinished.isNotEmpty && !lastPassed) return null;
+    final lastPassed =
+        lastEnd != null && !lastEnd.add(DayEdges.eveningGrace).isAfter(nowUtc);
+    if (unfinished.isNotEmpty &&
+        (!lastPassed || localHour < DayEdges.eveningOpenFromHour)) {
+      return null;
+    }
     return EveningReview(
       progress: DayProgress.of(today),
       unfinished: unfinished,

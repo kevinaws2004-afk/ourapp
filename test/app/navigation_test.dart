@@ -4,6 +4,7 @@ import 'package:daylog/features/activity_types/domain/activity_type_use_cases.da
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:flutter/material.dart';
+import 'package:daylog/app/app_shell.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../support/fake_clock.dart';
@@ -21,25 +22,28 @@ Future<void> seedReading(AppDatabase db, FakeClock clock) => CreateActivityType(
 )(readingDefinition());
 
 void main() {
-  testAppWidgets('no tab has a floating Record button; Today and Plan add '
-      'behind + (ADR-046)', (tester) async {
+  testAppWidgets('no tab has a floating button; every tab reaches Quick '
+      'start from the bar, Today and Plan add from their header (ADR-046)', (
+    tester,
+  ) async {
     await pumpTestApp(tester, preferences: _onboarded, seed: seedReading);
-    for (final tab in ['Today', 'Plan', 'Challenges', 'Progress', 'Me']) {
+    for (final tab in ['Today', 'Plan', 'Progress', 'Me']) {
       await tester.tap(
         find.descendant(
-          of: find.byType(NavigationBar),
+          of: find.byKey(AppShell.tabBarKey),
           matching: find.text(tab),
         ),
       );
       await tester.pumpAndSettle();
+      expect(find.byType(FloatingActionButton), findsNothing, reason: tab);
       expect(
-        find.byType(FloatingActionButton),
-        tab == 'Today' || tab == 'Plan' ? findsOneWidget : findsNothing,
+        find.descendant(
+          of: find.byKey(AppShell.tabBarKey),
+          matching: find.byTooltip('Quick start'),
+        ),
+        findsOneWidget,
         reason: tab,
       );
-      if (tab == 'Today') {
-        expect(find.byTooltip('Add to today'), findsOneWidget);
-      }
       if (tab == 'Plan') {
         expect(find.byTooltip('Add to this day'), findsOneWidget);
       }
@@ -70,13 +74,13 @@ void main() {
       await pumpTestApp(tester, preferences: _onboarded, seed: seedReading);
       await tester.tap(
         find.descendant(
-          of: find.byType(NavigationBar),
+          of: find.byKey(AppShell.tabBarKey),
           matching: find.text('Me'),
         ),
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Activities'));
+      await tester.tap(find.text('1 activity'));
       await tester.pumpAndSettle();
 
       expect(

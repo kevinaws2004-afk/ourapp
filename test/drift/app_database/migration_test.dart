@@ -13,6 +13,7 @@ import 'generated/schema_v3.dart' as v3;
 import 'generated/schema_v6.dart' as v6;
 import 'generated/schema_v7.dart' as v7;
 import 'generated/schema_v8.dart' as v8;
+import 'generated/schema_v10.dart' as v10;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -323,6 +324,64 @@ void main() {
       ),
       throwsA(anything),
       reason: 'a challenge lasts at least a day',
+    );
+    await db.close();
+  });
+
+  test('migration from v10 to v11 keeps goals as daily goals and adds '
+      'weekly and amount goals', () async {
+    final schema = await verifier.schemaAt(10);
+    final old = v10.DatabaseAtV10(schema.newConnection());
+    const type = '00000000-0000-7000-8000-000000000001';
+    const challenge = '00000000-0000-7000-8000-000000000003';
+    await old.customStatement(
+      'INSERT INTO activity_types (internal_id, public_id, name, icon_id, color_key, created_at, updated_at) '
+      "VALUES (1, '$type', 'Reading', 'book-open', 'sky', 1, 1)",
+    );
+    await old.customStatement(
+      'INSERT INTO challenges (public_id, activity_type_id, title, start_date, '
+      'target_days, created_at, updated_at) '
+      "VALUES ('$challenge', 1, '30 days of Reading', '2026-10-01', 30, 1, 1)",
+    );
+    await old.close();
+
+    final db = AppDatabase(schema.newConnection());
+    await verifier.migrateAndValidate(db, 11);
+
+    final kept = await db.select(db.challenges).getSingle();
+    expect(kept.title, '30 days of Reading');
+    expect(kept.targetDays, 30);
+    expect(kept.kind, 'daily', reason: 'existing goals stay daily');
+    expect(kept.restDays, 0);
+    expect(kept.timesPerWeek, isNull);
+    expect(kept.amount, isNull);
+
+    // The new kinds are stored and checked.
+    await db.customStatement(
+      'INSERT INTO challenges (public_id, activity_type_id, title, start_date, '
+      'target_days, created_at, updated_at, kind, times_per_week) '
+      "VALUES ('00000000-0000-7000-8000-000000000004', 1, 'Reading 3x a week', "
+      "'2026-10-01', 8, 1, 1, 'weekly', 3)",
+    );
+    await expectLater(
+      db.customStatement(
+        'INSERT INTO challenges (public_id, activity_type_id, title, start_date, '
+        'target_days, created_at, updated_at, kind) '
+        "VALUES ('00000000-0000-7000-8000-000000000005', 1, 'Odd', "
+        "'2026-10-01', 8, 1, 1, 'monthly')",
+      ),
+      throwsA(anything),
+      reason: 'only daily, weekly and amount goals exist',
+    );
+    await expectLater(
+      db.customStatement(
+        'INSERT INTO challenges (public_id, activity_type_id, title, start_date, '
+        'target_days, created_at, updated_at, kind, times_per_week) '
+        "VALUES ('00000000-0000-7000-8000-000000000006', 1, 'Too many', "
+        "'2026-10-01', 8, 1, 1, 'weekly', 9)",
+      ),
+      throwsA(anything),
+      reason: 'a week has seven days',
     );
     await db.close();
   });

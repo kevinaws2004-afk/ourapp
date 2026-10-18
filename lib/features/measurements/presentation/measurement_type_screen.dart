@@ -110,6 +110,8 @@ Future<void> showMeasurementSheet(
   required MeasurementType type,
   Measurement? existing,
 }) => showModalBottomSheet<void>(
+  useRootNavigator: true,
+  useSafeArea: true,
   context: context,
   isScrollControlled: true,
   builder: (_) => _MeasurementSheet(type: type, existing: existing),
@@ -186,6 +188,8 @@ class _MeasurementSheetState extends ConsumerState<_MeasurementSheet> {
       ..showSnackBar(
         SnackBar(
           content: Text(l10n.measurementDeleted),
+          // Undo stays offered for the usual few seconds, not until dismissed.
+          persist: false,
           action: SnackBarAction(
             label: l10n.actionUndo,
             onPressed: () => unawaited(restore(id)),

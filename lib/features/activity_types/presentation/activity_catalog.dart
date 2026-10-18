@@ -61,6 +61,8 @@ class _ActivityCatalogState extends ConsumerState<ActivityCatalog> {
 
   Future<void> _preview(ActivityTypeDefinition definition) async {
     final id = await showModalBottomSheet<ActivityTypeId>(
+      useRootNavigator: true,
+      useSafeArea: true,
       context: context,
       isScrollControlled: true,
       builder: (_) => _BuiltInPreview(definition: definition),

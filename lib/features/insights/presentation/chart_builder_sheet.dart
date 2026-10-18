@@ -30,6 +30,8 @@ Future<void> showChartBuilder(
   BuildContext context, {
   InsightChartConfig? initial,
 }) => showModalBottomSheet<void>(
+  useRootNavigator: true,
+  useSafeArea: true,
   context: context,
   isScrollControlled: true,
   builder: (_) => _ChartBuilderSheet(initial: initial),

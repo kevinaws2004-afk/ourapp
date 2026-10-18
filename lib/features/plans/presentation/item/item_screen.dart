@@ -35,6 +35,7 @@ import '../../../activity_types/domain/activity_type.dart';
 import '../../../focus/domain/focus_session.dart';
 import '../../../focus/presentation/focus_providers.dart';
 import '../../../focus/presentation/focus_screen.dart';
+import '../../../focus/presentation/pomodoro_line.dart';
 import '../../domain/plan.dart';
 import '../../domain/watch_day_overview.dart';
 import '../plan_actions.dart';
@@ -47,6 +48,7 @@ import 'item_notifier.dart';
 import 'plan_details_card.dart';
 import 'last_time_card.dart';
 import 'rest_timer.dart';
+import '../../../../shared/widgets/text_input_dialog.dart';
 
 /// One item on your day (ADR-035): the place you log into. Planned, in
 /// progress or done, it's the same screen; what you enter is saved as you
@@ -141,30 +143,11 @@ class ItemScreen extends ConsumerWidget {
   /// Renames a plain task.
   Future<void> _rename(BuildContext context, WidgetRef ref, Plan plan) async {
     final l10n = AppLocalizations.of(context);
-    final controller = TextEditingController(text: plan.title);
-    final name = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.itemRename),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          textCapitalization: TextCapitalization.sentences,
-          onSubmitted: (v) => Navigator.of(context).pop(v),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(l10n.actionCancel),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(controller.text),
-            child: Text(l10n.actionSave),
-          ),
-        ],
-      ),
+    final name = await showTextInputDialog(
+      context,
+      title: l10n.itemRename,
+      initial: plan.title,
     );
-    controller.dispose();
     if (name == null || name.trim().isEmpty) return;
     try {
       final draft = plan.toDraft();
@@ -212,6 +195,8 @@ class ItemScreen extends ConsumerWidget {
       ..showSnackBar(
         SnackBar(
           content: Text(l10n.itemDeleted),
+          // Undo stays offered for the usual few seconds, not until dismissed.
+          persist: false,
           action: SnackBarAction(
             label: l10n.actionUndo,
             onPressed: () => unawaited(restore(logId)),
@@ -564,6 +549,9 @@ class _ItemActions extends ConsumerWidget {
           _Meta(
             chip: plan == null
                 ? null
+                : _isDue(ref, plan, today)
+                // Its time has come (or it was just recorded): not "Planned".
+                ? StatusChip(label: l10n.nowNextNow, tone: StatusTone.active)
                 : StatusChip(
                     label: l10n.planStatusPlanned,
                     tone: StatusTone.scheduled,
@@ -734,6 +722,15 @@ class _Meta extends StatelessWidget {
         ),
     ],
   );
+}
+
+/// Whether [plan] is today's and its start time has come.
+bool _isDue(WidgetRef ref, Plan plan, LocalDate today) {
+  ref.watch(minuteTickProvider);
+  final start = plan.plannedStartAt;
+  return plan.planDate == today &&
+      start != null &&
+      !start.isAfter(ref.watch(clockProvider).nowUtc());
 }
 
 /// A done thing's header (A7, ADR-046): "Done ✓", its result big, the streak
@@ -914,6 +911,7 @@ class _ItemTimer extends ConsumerWidget {
             ),
           ),
         ),
+        PomodoroLine(session: session),
         const SizedBox(height: AppSpacing.md),
         Row(
           children: [
@@ -922,7 +920,9 @@ class _ItemTimer extends ConsumerWidget {
                 backgroundColor: c.brandPrimarySoft,
                 foregroundColor: c.onBrandPrimarySoft,
               ),
-              tooltip: paused ? l10n.focusResume : l10n.focusPause,
+              tooltip: paused
+                  ? resumeLabel(l10n, currentPomodoroView(ref, session))
+                  : l10n.focusPause,
               icon: Icon(paused ? AppIcons.start : AppIcons.pause),
               onPressed: () => unawaited(
                 paused
@@ -1117,6 +1117,7 @@ Future<void> _planNext(
           content: Text(
             l10n.planNextPlanned(material.formatMediumDate(picked)),
           ),
+          persist: false,
           action: onOpenItem == null
               ? null
               : SnackBarAction(

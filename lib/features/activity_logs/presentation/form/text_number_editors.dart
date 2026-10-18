@@ -218,7 +218,12 @@ class _NumberValueEditorState extends State<NumberValueEditor> {
     );
   }
 
-  double get _step => _config.decimals == 0 ? 1 : 0.5;
+  /// One − / + step: plates for weights (2.5 kg, 5 lb), else 1 or 0.5.
+  double get _step => switch (_unitCode) {
+    'kg' => 2.5,
+    'lb' => 5,
+    _ => _config.decimals == 0 ? 1 : 0.5,
+  };
 
   /// Moves the value one step ([direction] -1 or 1) and shows it.
   void _nudge(int direction) {
@@ -245,7 +250,7 @@ class _NumberValueEditorState extends State<NumberValueEditor> {
         : DropdownButton<String>(
             value: _unitCode,
             isDense: true,
-            isExpanded: widget.stepper,
+            alignment: Alignment.center,
             underline: const SizedBox.shrink(),
             items: [
               for (final unit in UnitRegistry.forDimension(dimension))
@@ -329,8 +334,10 @@ class _NumberValueEditorState extends State<NumberValueEditor> {
                 labelText: name,
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 floatingLabelAlignment: FloatingLabelAlignment.center,
+                // Last time's value, or 0, so it's clear the number goes
+                // here.
                 hintText: widget.hint == null
-                    ? null
+                    ? '0'
                     : formatNumber(widget.hint!.value, _config.decimals),
                 hintStyle: AppTypography.numericMedium.copyWith(
                   fontSize: 24,
@@ -354,7 +361,8 @@ class _NumberValueEditorState extends State<NumberValueEditor> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 nudge(-1),
-                if (unitPicker != null) Flexible(child: unitPicker),
+                if (unitPicker != null)
+                  Flexible(child: Center(child: unitPicker)),
                 nudge(1),
               ],
             ),

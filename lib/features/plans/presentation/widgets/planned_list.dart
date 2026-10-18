@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/design/app_icons.dart';
 import '../../../../core/design/context_ext.dart';
+import '../../../../core/design/tokens/radius.dart';
 import '../../../../core/design/tokens/spacing.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../shared/errors/error_copy.dart';
@@ -32,6 +33,7 @@ class PlannedList extends ConsumerWidget {
     required this.onOpenRecord,
     this.reorderable = false,
     this.nowLine = false,
+    this.dragToDays = false,
   });
 
   final List<DayEntry> entries;
@@ -42,10 +44,27 @@ class PlannedList extends ConsumerWidget {
   /// Today: a "Now · 9:10" line between what's passed and what's next.
   final bool nowLine;
 
+  /// Plan's week (P6): open plans can be held and dropped on another day of
+  /// the week strip to move them there.
+  final bool dragToDays;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final actions = PlanActions(context, ref);
     Widget tile(DayEntry entry, {Widget? dragHandle}) => switch (entry) {
+      PlanEntry(:final item) when dragToDays && item.isOpen => DayDraggable(
+        key: ValueKey(item.plan.id),
+        item: item,
+        onHold: () => unawaited(actions.quickActions(item)),
+        child: PlanItemTile(
+          item: item,
+          onTap: () => onOpenItem(item),
+          onToggleDone: PlanActions.canToggleDone(item)
+              ? () => actions.toggleDone(item)
+              : null,
+          dragHandle: dragHandle,
+        ),
+      ),
       PlanEntry(:final item) => PlanItemTile(
         key: ValueKey(item.plan.id),
         item: item,
@@ -75,6 +94,7 @@ class PlannedList extends ConsumerWidget {
     final anytime = [
       if (timed.isNotEmpty && untimed.isNotEmpty) _AnytimeHeading(),
     ];
+    ref.watch(minuteTickProvider);
     final now = ref.watch(clockProvider).nowUtc();
     DateTime timeOf(DayEntry e) => switch (e) {
       PlanEntry(:final item) =>
@@ -147,6 +167,77 @@ class PlannedList extends ConsumerWidget {
   }
 }
 
+/// A plan that can be held and dropped on a day of the week strip (P6).
+/// Held and let go without moving, it opens the quick actions instead, as
+/// a long-press does everywhere else.
+class DayDraggable extends StatefulWidget {
+  const DayDraggable({
+    super.key,
+    required this.item,
+    required this.onHold,
+    required this.child,
+  });
+
+  final PlannedItem item;
+
+  /// Held without dragging: the quick actions.
+  final VoidCallback onHold;
+  final Widget child;
+
+  @override
+  State<DayDraggable> createState() => _DayDraggableState();
+}
+
+class _DayDraggableState extends State<DayDraggable> {
+  double _moved = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final c = context.colors;
+    return Semantics(
+      onLongPressHint: l10n.planQuickActionsHint,
+      onLongPress: widget.onHold,
+      child: LayoutBuilder(
+        builder: (context, constraints) => LongPressDraggable<PlannedItem>(
+          data: widget.item,
+          hapticFeedbackOnStart: true,
+          onDragStarted: () => _moved = 0,
+          onDragUpdate: (d) => _moved += d.delta.distance,
+          onDraggableCanceled: (_, _) {
+            if (_moved < 12) widget.onHold();
+          },
+          feedback: Material(
+            color: Colors.transparent,
+            child: Container(
+              constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.8),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg,
+                vertical: AppSpacing.md,
+              ),
+              decoration: BoxDecoration(
+                color: c.brandPrimary,
+                borderRadius: AppRadius.pillAll,
+                boxShadow: context.tokens.shadows.glow(c.brandPrimary),
+              ),
+              child: Text(
+                widget.item.plan.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: context.textStyles.titleSmall?.copyWith(
+                  color: c.onBrandPrimary,
+                ),
+              ),
+            ),
+          ),
+          childWhenDragging: Opacity(opacity: 0.35, child: widget.child),
+          child: widget.child,
+        ),
+      ),
+    );
+  }
+}
+
 /// "Anytime": the heading above a day's untimed items (A19).
 class _AnytimeHeading extends StatelessWidget {
   @override
@@ -190,43 +281,60 @@ class NowLine extends StatelessWidget {
           top: AppSpacing.xs,
           bottom: AppSpacing.md,
         ),
-        child: Row(
-          children: [
-            line,
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.sm + 2,
-                vertical: 3,
-              ),
-              decoration: BoxDecoration(
-                color: c.brandPrimarySoft,
-                borderRadius: BorderRadius.circular(999),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 6,
-                    height: 6,
-                    decoration: BoxDecoration(
-                      color: c.brandPrimary,
-                      shape: BoxShape.circle,
-                    ),
+        // The pill never takes more than the row minus the two lines.
+        child: LayoutBuilder(
+          builder: (context, constraints) => Row(
+            children: [
+              line,
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: (constraints.maxWidth - 48).clamp(
+                    0,
+                    double.infinity,
                   ),
-                  const SizedBox(width: AppSpacing.xs + 1),
-                  Text(
-                    AppLocalizations.of(context).nowLine(time).toUpperCase(),
-                    style: context.textStyles.labelSmall?.copyWith(
-                      color: c.onBrandPrimarySoft,
-                      letterSpacing: 0.6,
-                    ),
+                ),
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm + 2,
+                    vertical: 3,
                   ),
-                ],
+                  decoration: BoxDecoration(
+                    color: c.brandPrimarySoft,
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 6,
+                        height: 6,
+                        decoration: BoxDecoration(
+                          color: c.brandPrimary,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.xs + 1),
+                      Flexible(
+                        child: Text(
+                          AppLocalizations.of(context)
+                              .nowLine(time)
+                              .toUpperCase(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.textStyles.labelSmall?.copyWith(
+                            color: c.onBrandPrimarySoft,
+                            letterSpacing: 0.6,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-            line,
-          ],
+              line,
+            ],
+          ),
         ),
       ),
     );

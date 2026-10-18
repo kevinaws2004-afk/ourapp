@@ -129,6 +129,23 @@ abstract final class PhosphorGlyphs {
   static const pushPin = IconData(0xe3e2, fontFamily: 'Phosphor');
   static const magnifyingGlass = IconData(0xe30c, fontFamily: 'Phosphor');
   static const note = IconData(0xe348, fontFamily: 'Phosphor');
+  static const clockCounterClockwise = IconData(0xe1a0, fontFamily: 'Phosphor');
+  static const cloudCheck = IconData(0xe1b0, fontFamily: 'Phosphor');
+  static const table = IconData(0xe476, fontFamily: 'Phosphor');
+  static const fingerprint = IconData(0xe23e, fontFamily: 'Phosphor');
+  static const shareNetwork = IconData(0xe408, fontFamily: 'Phosphor');
+  static const bellSlash = IconData(0xe0d4, fontFamily: 'Phosphor');
+  static const heartbeat = IconData(0xe2ac, fontFamily: 'Phosphor');
+  static const chatText = IconData(0xe17a, fontFamily: 'Phosphor');
+  static const bug = IconData(0xe5f4, fontFamily: 'Phosphor');
+  static const copy = IconData(0xe1ca, fontFamily: 'Phosphor');
+  static const trayArrowDown = IconData(0xe010, fontFamily: 'Phosphor');
+  static const stack = IconData(0xe466, fontFamily: 'Phosphor');
+  static const arrowsClockwise = IconData(0xe094, fontFamily: 'Phosphor');
+  static const calendarStar = IconData(0xe8b2, fontFamily: 'Phosphor');
+  static const handTap = IconData(0xec90, fontFamily: 'Phosphor');
+  static const appWindow = IconData(0xe5da, fontFamily: 'Phosphor');
+  static const crown = IconData(0xe614, fontFamily: 'Phosphor');
 }
 
 /// Filled variants for selected states.

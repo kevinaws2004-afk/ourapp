@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../focus/domain/focus_session.dart';
+
 import '../../../../core/design/app_icons.dart';
 import '../../../../core/design/context_ext.dart';
 import '../../../../core/design/keys/activity_icon_ids.dart';
@@ -79,7 +81,7 @@ class PlanItemTile extends ConsumerWidget {
       final session = ref.watch(activeFocusSessionProvider).value;
       subline = session == null
           ? l10n.planStatusInProgress
-          : l10n.itemRunning(formatTimer(session.elapsedMs(now)));
+          : sessionLine(l10n, session, now, short: true);
     } else if (done) {
       final result = formatItemResult(context, item);
       subline = result == l10n.planStatusDone ? null : result;
@@ -114,7 +116,7 @@ class PlanItemTile extends ConsumerWidget {
     final (String?, StatusTone) chip = switch (status) {
       EffectivePlanStatus.completed => (l10n.planStatusDone, StatusTone.done),
       EffectivePlanStatus.inProgress => (
-        l10n.planStatusInProgress,
+        _paused(ref) ? l10n.focusPaused : l10n.planStatusInProgress,
         StatusTone.active,
       ),
       EffectivePlanStatus.skipped => (
@@ -193,3 +195,7 @@ class _TaskMark extends StatelessWidget {
     );
   }
 }
+
+/// Whether the running thing's timer is paused (on a break).
+bool _paused(WidgetRef ref) =>
+    ref.watch(activeFocusSessionProvider).value?.state == FocusState.paused;

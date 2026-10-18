@@ -173,6 +173,7 @@ class _PlanDetailsCardState extends ConsumerState<PlanDetailsCard> {
     }
     final picked = await showModalBottomSheet<({ActivityTypeId? id})>(
       context: context,
+      useRootNavigator: true,
       useSafeArea: true,
       isScrollControlled: true,
       builder: (context) => DraggableScrollableSheet(

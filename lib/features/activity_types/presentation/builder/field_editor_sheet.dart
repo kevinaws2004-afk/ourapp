@@ -42,6 +42,8 @@ Future<FieldEditResult?> showFieldEditor(
   Set<ActivityFieldId> lockedFieldIds = const {},
   int depth = 0,
 }) => showModalBottomSheet<FieldEditResult>(
+  useRootNavigator: true,
+  useSafeArea: true,
   context: context,
   isScrollControlled: true,
   builder: (_) => _FieldEditorSheet(

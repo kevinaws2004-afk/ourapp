@@ -7,11 +7,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/database/app_database.dart';
 import '../core/database/database_connection.dart';
 import '../core/database/database_provider.dart';
+import '../core/database/json_preferences.dart';
 import '../core/logging/app_logger.dart';
+import '../core/logging/diagnostics_log.dart';
 import '../core/logging/logger_provider.dart';
 import '../core/time/clock.dart';
 import '../features/settings/data/db_app_preferences_repository.dart';
 import '../features/settings/domain/preferences_snapshot.dart';
+import '../features/settings/presentation/app_lock.dart';
 import '../features/settings/presentation/preferences_providers.dart';
 import '../core/notifications/notification_service.dart';
 import '../features/notifications/presentation/notification_providers.dart';
@@ -30,6 +33,9 @@ const _minSplash = Duration(milliseconds: 900);
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
   const logger = AppLogger();
+  // Errors and crashes are kept on the phone for Send feedback.
+  final diagnostics = await DiagnosticsLog.open();
+  if (diagnostics != null) AppLogger.sink = diagnostics.record;
 
   FlutterError.onError = (details) {
     logger.error(
@@ -68,6 +74,18 @@ Future<void> bootstrap() async {
     return;
   }
 
+  // App lock: read now so the first frame is already covered.
+  var appLock = false;
+  try {
+    appLock = readJson(
+      await JsonPreferences(database, const SystemClock()).read(appLockKey),
+      'enabled',
+      false,
+    );
+  } catch (_) {
+    // Unreadable: unlocked, as before app lock existed.
+  }
+
   // Local notifications; a failure only disables them.
   final notifications = await NotificationService.start();
 
@@ -82,6 +100,8 @@ Future<void> bootstrap() async {
         loggerProvider.overrideWithValue(logger),
         initialPreferencesProvider.overrideWithValue(initialPreferences),
         notificationServiceProvider.overrideWithValue(notifications),
+        initialAppLockProvider.overrideWithValue(appLock),
+        diagnosticsLogProvider.overrideWithValue(diagnostics),
       ],
       child: const App(),
     ),

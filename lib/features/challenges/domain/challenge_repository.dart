@@ -19,9 +19,15 @@ abstract interface class ChallengeRepository {
   /// activity counts in Insights (`core/database/done_records.dart`).
   Stream<Map<ActivityTypeId, Set<LocalDate>>> watchDoneDays();
 
+  /// How much was done per day for each amount goal: milliseconds of
+  /// recorded time, or the total of its number field (canonical unit) or
+  /// duration field (ms). Only days with something count.
+  Stream<Map<ChallengeId, Map<LocalDate, double>>> watchAmounts();
+
   Future<void> create(Challenge challenge);
 
-  /// Replaces [challenge]'s title, start and target.
+  /// Replaces [challenge]'s title, start, target, times a week, amount and
+  /// rest days.
   Future<void> update(Challenge challenge);
 
   /// Ends the challenge (soft delete, ADR-022).

@@ -23,11 +23,12 @@ class AppDatabase extends _$AppDatabase {
   /// v5: focus sessions (ADR-031). v6: measurements, insight charts
   /// (ADR-034). v7: repeating plans (ADR-036). v8: any plan can be stored
   /// as completed (ADR-040). v9: daily challenges (ADR-044). v10: notes.
+  /// v11: weekly and amount goals, rest days (ADR-047).
   /// Every schema change bumps this, adds a step below, regenerates the step
   /// helpers with `dart run drift_dev make-migrations`, and adds migration
   /// tests (docs/architecture/database.md §7).
   @override
-  int get schemaVersion => 10;
+  int get schemaVersion => 11;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -191,6 +192,19 @@ class AppDatabase extends _$AppDatabase {
       await m.createTable(schema.notes);
       await m.create(schema.idxNotesUpdated);
       await m.create(schema.trgNotesPublicIdImmutable);
+    },
+    from10To11: (m, schema) async {
+      // Nullable or defaulted columns: added in place.
+      for (final column in [
+        schema.challenges.kind,
+        schema.challenges.timesPerWeek,
+        schema.challenges.amount,
+        schema.challenges.amountFieldId,
+        schema.challenges.amountPeriod,
+        schema.challenges.restDays,
+      ]) {
+        await m.addColumn(schema.challenges, column);
+      }
     },
   );
 }

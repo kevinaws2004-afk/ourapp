@@ -16,7 +16,7 @@ void main() {
   testAppWidgets('building a repeating group with a sub-field', (tester) async {
     await pumpTestApp(tester, preferences: _onboarded);
     await openActivities(tester);
-    await tester.tap(find.text('New activity'));
+    await tester.tap(find.byTooltip('New activity'));
     await tester.pumpAndSettle();
     await tester.enterText(
       find.widgetWithText(TextFormField, 'Name'),

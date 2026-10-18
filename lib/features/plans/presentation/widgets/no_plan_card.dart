@@ -140,22 +140,24 @@ class NoPlanCard extends ConsumerWidget {
           ],
           if (!firstUse) ...[
             const SizedBox(height: AppSpacing.lg),
-            if (onStartNow case final startNow?)
+            AppButton(
+              label: l10n.noPlanAddSomething,
+              icon: AppIcons.add,
+              variant: AppButtonVariant.secondary,
+              expand: true,
+              onPressed: onAdd,
+            ),
+            // Today can also start something right away.
+            if (onStartNow case final startNow?) ...[
+              const SizedBox(height: AppSpacing.sm),
               AppButton(
                 label: l10n.noPlanStartNow,
                 icon: AppIcons.start,
-                variant: AppButtonVariant.secondary,
+                variant: AppButtonVariant.tertiary,
                 expand: true,
                 onPressed: startNow,
-              )
-            else
-              AppButton(
-                label: l10n.noPlanAddSomething,
-                icon: AppIcons.add,
-                variant: AppButtonVariant.secondary,
-                expand: true,
-                onPressed: onAdd,
               ),
+            ],
           ],
         ],
       ),

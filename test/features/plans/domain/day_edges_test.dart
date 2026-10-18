@@ -84,9 +84,22 @@ void main() {
         _item(_plan('b', hour: 20), EffectivePlanStatus.planned),
       ]);
       expect(EveningReview.of(day, nowUtc: _at(18), localHour: 18), isNull);
-      final late = EveningReview.of(day, nowUtc: _at(21), localHour: 21)!;
+      // An hour of grace after the last thing's end.
+      expect(EveningReview.of(day, nowUtc: _at(21), localHour: 21), isNull);
+      final late = EveningReview.of(day, nowUtc: _at(23), localHour: 23)!;
       expect(late.unfinished.map((i) => i.plan.title), ['a', 'b']);
       expect(late.closed, isFalse);
+    });
+
+    test('a 6 PM thing still open at 6:18 keeps Start on Today: the review '
+        'waits for 21:00', () {
+      final day = _overview([
+        _item(_plan('gym', hour: 7), EffectivePlanStatus.completed),
+        _item(_plan('study', hour: 18), EffectivePlanStatus.planned),
+      ]);
+      expect(EveningReview.of(day, nowUtc: _at(18, 18), localHour: 18), isNull);
+      expect(EveningReview.of(day, nowUtc: _at(20), localHour: 20), isNull);
+      expect(EveningReview.of(day, nowUtc: _at(21), localHour: 21), isNotNull);
     });
 
     test('everything decided opens it early (from 17:00) and closes it', () {

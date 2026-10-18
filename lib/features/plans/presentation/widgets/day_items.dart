@@ -30,9 +30,13 @@ class DayItems extends ConsumerWidget {
     this.emptyTitle,
     this.showSummary = true,
     this.timeline = false,
+    this.dragToDays = false,
   });
 
   final LocalDate date;
+
+  /// Open plans can be dropped on another day of the week strip (P6).
+  final bool dragToDays;
 
   /// Shown when the day has no items.
   final String emptyMessage;
@@ -69,6 +73,7 @@ class DayItems extends ConsumerWidget {
             emptyTitle: emptyTitle,
             showSummary: showSummary,
             timeline: timeline,
+            dragToDays: dragToDays,
             onOpenItem: onOpenItem,
             onOpenRecord: onOpenRecord,
           ),
@@ -87,9 +92,11 @@ class _Entries extends StatelessWidget {
     required this.timeline,
     required this.onOpenItem,
     required this.onOpenRecord,
+    this.dragToDays = false,
   });
 
   final DayOverview overview;
+  final bool dragToDays;
   final String emptyMessage;
   final String? emptyTitle;
   final bool showSummary;
@@ -148,6 +155,7 @@ class _Entries extends StatelessWidget {
           onOpenRecord: onOpenRecord,
           reorderable: !timeline,
           nowLine: timeline,
+          dragToDays: dragToDays,
         ),
       ],
     );

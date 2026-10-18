@@ -11,25 +11,32 @@ import '../../../shared/widgets/activity_badge.dart';
 import '../../../shared/widgets/progress_bar.dart';
 import '../../../shared/widgets/streak_badge.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
+import '../domain/challenge.dart';
 import '../domain/challenge_progress.dart';
 import '../domain/challenge_use_cases.dart';
+import 'goal_copy.dart';
 
 /// Today's state in words: "Done today", "Not yet today — streak at risk"…
-String challengeTodayText(AppLocalizations l10n, ChallengeToday state) =>
-    switch (state) {
-      ChallengeToday.done => l10n.challengeTodayDone,
-      ChallengeToday.atRisk => l10n.challengeTodayAtRisk,
-      ChallengeToday.notYet => l10n.challengeTodayNotYet,
-      ChallengeToday.completed => l10n.challengeCompleted,
-    };
+String challengeTodayText(
+  AppLocalizations l10n,
+  ChallengeToday state, {
+  GoalPeriod period = GoalPeriod.day,
+}) => goalStateText(l10n, state, period);
 
 /// The state with an icon: a check once done or completed, a clock while
 /// today is still open. The text stays in the normal text colors; only the
 /// icon carries the state color.
 class ChallengeStateLine extends StatelessWidget {
-  const ChallengeStateLine({super.key, required this.state});
+  const ChallengeStateLine({
+    super.key,
+    required this.state,
+    this.period = GoalPeriod.day,
+  });
 
   final ChallengeToday state;
+
+  /// A daily goal's day, or a weekly goal's week.
+  final GoalPeriod period;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +55,7 @@ class ChallengeStateLine extends StatelessWidget {
         const SizedBox(width: AppSpacing.xs),
         Flexible(
           child: Text(
-            challengeTodayText(l10n, state),
+            challengeTodayText(l10n, state, period: period),
             style: context.textStyles.labelLarge?.copyWith(
               color: colors.textPrimary,
             ),
@@ -83,10 +90,8 @@ class ChallengeCard extends ConsumerWidget {
     final quiet = context.textStyles.bodyMedium?.copyWith(
       color: context.colors.textSecondary,
     );
-    final summary = l10n.challengeProgressDays(
-      progress.progress,
-      progress.targetDays,
-    );
+    final summary = goalProgressText(l10n, progress);
+    final periodLine = goalPeriodLine(l10n, challenge, progress, type);
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: Material(
@@ -129,11 +134,17 @@ class ChallengeCard extends ConsumerWidget {
                         semanticLabel: summary,
                       ),
                       const SizedBox(height: AppSpacing.sm),
-                      Text(summary, style: quiet),
+                      Text(
+                        periodLine == null ? summary : '$summary · $periodLine',
+                        style: quiet,
+                      ),
                       const SizedBox(height: AppSpacing.xs),
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: ChallengeStateLine(state: progress.today),
+                        child: ChallengeStateLine(
+                          state: progress.today,
+                          period: progress.period,
+                        ),
                       ),
                     ],
                   ),

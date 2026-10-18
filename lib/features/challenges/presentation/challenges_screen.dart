@@ -32,6 +32,7 @@ class ChallengesScreen extends ConsumerWidget {
   static List<(String, int)> _examples(AppLocalizations l10n) => [
     (l10n.builtInMeditation, 21),
     (l10n.builtInReading, 30),
+    (l10n.builtInStudy, 30),
   ];
 
   /// An example: its activity (yours, or the built-in one saved as yours)
@@ -100,27 +101,22 @@ class ChallengesScreen extends ConsumerWidget {
               AppSpacing.huge,
             ),
             children: [
-              if (onBack case final back?)
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                    child: HeaderIconButton(
-                      icon: AppIcons.previous,
-                      tooltip: MaterialLocalizations.of(context)
-                          .backButtonTooltip,
-                      onPressed: back,
-                    ),
-                  ),
-                ),
               ScreenHeader(
-                showMark: onBack == null,
+                leading: switch (onBack) {
+                  final back? => HeaderIconButton(
+                    icon: AppIcons.previous,
+                    tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                    onPressed: back,
+                  ),
+                  null => null,
+                },
                 title: l10n.challengesTitle,
                 subtitle: l10n.challengesSubtitle,
                 actions: [
                   HeaderIconButton(
                     icon: AppIcons.add,
                     tooltip: l10n.newChallenge,
+                    label: l10n.todayAddShort,
                     onPressed: () =>
                         showChallengeSheet(context, chooser: chooser),
                   ),

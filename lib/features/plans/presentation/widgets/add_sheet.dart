@@ -47,6 +47,7 @@ Future<void> showAddSheet(
   bool startNow = false,
   ActivityType? initialType,
 }) => showModalBottomSheet<void>(
+  useRootNavigator: true,
   context: context,
   isScrollControlled: true,
   useSafeArea: true,

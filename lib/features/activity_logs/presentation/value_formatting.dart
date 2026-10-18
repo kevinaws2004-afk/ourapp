@@ -16,9 +16,11 @@ String formatDuration(AppLocalizations l10n, int milliseconds) {
   final totalMinutes = (milliseconds / Duration.millisecondsPerMinute).round();
   final hours = totalMinutes ~/ 60;
   final minutes = totalMinutes % 60;
-  return hours == 0
-      ? l10n.durationMinutes(minutes)
-      : l10n.durationHoursMinutes(hours, minutes);
+  // A few seconds isn't "0 min".
+  if (totalMinutes == 0 && milliseconds > 0) return l10n.durationUnderMinute;
+  if (hours == 0) return l10n.durationMinutes(minutes);
+  if (minutes == 0) return l10n.durationHours(hours);
+  return l10n.durationHoursMinutes(hours, minutes);
 }
 
 /// [value] with at most [decimals] places, trailing zeros removed.
@@ -154,11 +156,13 @@ String summarizeLog(
   for (final field in type.fields.where((f) => f.parentId == null)) {
     final value = log.values[field.id];
     if (value == null) continue;
-    parts.add(
-      value is RepeatingGroupValue
-          ? formatGroupSummary(context, type, field, value)
-          : formatFieldValue(context, field, value),
-    );
+    parts.add(switch (value) {
+      RepeatingGroupValue() => formatGroupSummary(context, type, field, value),
+      // A bare "3" says nothing; "Glasses: 3" does (a unit says it already).
+      NumberValue(unitCode: null) =>
+        '${field.name}: ${formatFieldValue(context, field, value)}',
+      _ => formatFieldValue(context, field, value),
+    });
     if (parts.length == maxParts) break;
   }
   return parts.join(' · ');

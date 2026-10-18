@@ -12,6 +12,7 @@ import 'package:daylog/features/activity_types/domain/activity_type_use_cases.da
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:flutter/material.dart';
+import 'package:daylog/app/app_shell.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../support/fake_clock.dart';
@@ -52,7 +53,7 @@ Future<void> seedTodayRecord(AppDatabase db, FakeClock clock) async {
 Future<void> openPlanTab(WidgetTester tester) async {
   await tester.tap(
     find.descendant(
-      of: find.byType(NavigationBar),
+      of: find.byKey(AppShell.tabBarKey),
       matching: find.text('Plan'),
     ),
   );

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/design/app_icons.dart';
 import '../../../core/design/tokens/spacing.dart';
 import '../../../core/design/window_size_class.dart';
 import '../../../core/time/clock_provider.dart';
@@ -77,16 +76,7 @@ class PlanScreen extends ConsumerWidget {
                 AppSpacing.huge,
               ),
               children: [
-                ScreenHeader(
-                  title: l10n.navPlan,
-                  actions: [
-                    HeaderIconButton(
-                      icon: AppIcons.add,
-                      tooltip: l10n.planAddToDay,
-                      onPressed: add,
-                    ),
-                  ],
-                ),
+                ScreenHeader(title: l10n.navPlan),
                 const PlanViewSwitch(),
                 const SizedBox(height: AppSpacing.lg),
                 switch (ref.watch(planViewProvider)) {

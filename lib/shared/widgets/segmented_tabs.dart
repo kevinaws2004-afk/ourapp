@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,8 +29,13 @@ class SegmentedTabs<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colors;
     final index = values.indexOf(selected);
+    // Taller with large text (Settings → font size), so labels never clip.
+    final height = math.max(
+      44.0,
+      MediaQuery.textScalerOf(context).scale(16) + 28,
+    );
     return Container(
-      height: 44,
+      height: height,
       padding: const EdgeInsets.all(AppSpacing.xs),
       decoration: BoxDecoration(
         color: c.surfaceSunken,
@@ -72,6 +78,8 @@ class SegmentedTabs<T> extends StatelessWidget {
                             child: Text(
                               label(v),
                               maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
                               style: context.textStyles.labelMedium?.copyWith(
                                 color: v == selected
                                     ? c.textPrimary

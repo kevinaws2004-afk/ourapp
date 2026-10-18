@@ -276,53 +276,48 @@ void main() {
     expect(await insights.watchCharts().first, isEmpty);
   });
 
-  test(
-    'automatic charts (ADR-037): per exercise, most done first, the '
-    'best weight, estimated 1-rep max, volume and total reps (B5, C1)',
-    () async {
-      final gym = await install(gymDefinition());
-      await workout(gym, DateTime.utc(2026, 9, 28, 18), {
-        'Chest Press': [(50, 12), (55, 10)],
-        'Squat': [(80, 8)],
-      });
-      await workout(gym, DateTime.utc(2026, 9, 30, 18), {
-        'Chest Press': [(60, 8)],
-      });
-      final exercise = field(gym, 'Exercise');
-      final names = await insights
-          .watchRowNames(gym.id, LocalDate(2026, 9, 1), LocalDate(2026, 10, 1))
-          .first;
+  test('automatic charts (ADR-037): per exercise, most done first, the '
+      'heaviest weight, how many sets and total reps (B5, C1)', () async {
+    final gym = await install(gymDefinition());
+    await workout(gym, DateTime.utc(2026, 9, 28, 18), {
+      'Chest Press': [(50, 12), (55, 10)],
+      'Squat': [(80, 8)],
+    });
+    await workout(gym, DateTime.utc(2026, 9, 30, 18), {
+      'Chest Press': [(60, 8)],
+    });
+    final exercise = field(gym, 'Exercise');
+    final names = await insights
+        .watchRowNames(gym.id, LocalDate(2026, 9, 1), LocalDate(2026, 10, 1))
+        .first;
 
-      expect(names[exercise], ['Chest Press', 'Squat'], reason: 'most used');
-      final charts = autoChartsFor(gym, names);
+    expect(names[exercise], ['Chest Press', 'Squat'], reason: 'most used');
+    final charts = autoChartsFor(gym, names);
 
-      expect(
-        [for (final c in charts) (c.kind, c.rowName, c.fieldName)],
-        [
-          (AutoChartKind.time, null, null),
-          (AutoChartKind.count, null, null),
-          (AutoChartKind.best, 'Chest Press', 'Weight'),
-          (AutoChartKind.estimatedMax, 'Chest Press', null),
-          (AutoChartKind.volume, 'Chest Press', null),
-          (AutoChartKind.rowTotal, 'Chest Press', 'Reps'),
-          (AutoChartKind.best, 'Squat', 'Weight'),
-          (AutoChartKind.estimatedMax, 'Squat', null),
-          (AutoChartKind.volume, 'Squat', null),
-          (AutoChartKind.rowTotal, 'Squat', 'Reps'),
-        ],
-      );
-      Future<List<DataPoint>> points(int i) =>
-          insights.watchPoints(charts[i].config.source).first;
-      expect(aggregate(await points(2), Aggregation.max), 60);
-      // Epley: 50 × 1.4 = 70, 55 × 1.33 = 73.3, 60 × 1.27 = 76: the last set.
-      expect(aggregate(await points(3), Aggregation.max), closeTo(76, 0.001));
-      expect(
-        aggregate(await points(4), Aggregation.sum),
-        50 * 12 + 55 * 10 + 60 * 8,
-      );
-      expect(aggregate(await points(5), Aggregation.sum), 12 + 10 + 8);
-    },
-  );
+    // No weight × reps "volume": the weight going up, sets and reps.
+    expect(
+      [for (final c in charts) (c.kind, c.rowName, c.fieldName)],
+      [
+        (AutoChartKind.time, null, null),
+        (AutoChartKind.count, null, null),
+        (AutoChartKind.best, 'Chest Press', 'Weight'),
+        (AutoChartKind.sets, 'Chest Press', null),
+        (AutoChartKind.rowTotal, 'Chest Press', 'Reps'),
+        (AutoChartKind.best, 'Squat', 'Weight'),
+        (AutoChartKind.sets, 'Squat', null),
+        (AutoChartKind.rowTotal, 'Squat', 'Reps'),
+      ],
+    );
+    Future<List<DataPoint>> points(int i) =>
+        insights.watchPoints(charts[i].config.source).first;
+    expect(aggregate(await points(2), Aggregation.max), 60);
+    expect(
+      aggregate(await points(3), Aggregation.count),
+      3,
+      reason: 'three Chest Press sets',
+    );
+    expect(aggregate(await points(4), Aggregation.sum), 12 + 10 + 8);
+  });
 
   test(
     'automatic charts for a plain activity: its numbers and ratings',

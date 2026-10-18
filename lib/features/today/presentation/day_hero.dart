@@ -48,11 +48,13 @@ class DayHero extends StatelessWidget {
       children: [
         Icon(icon, size: 14, color: color),
         const SizedBox(width: 4),
-        Text(
-          text,
-          style: context.textStyles.labelMedium?.copyWith(
-            color: c.textSecondary,
-            fontWeight: FontWeight.w600,
+        Flexible(
+          child: Text(
+            text,
+            style: context.textStyles.labelMedium?.copyWith(
+              color: c.textSecondary,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ],

@@ -16,9 +16,11 @@ import 'package:daylog/features/plans/data/db_plan_repository.dart';
 import 'package:daylog/features/plans/presentation/item/item_screen.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/core/design/themes/app_theme_id.dart';
-import 'package:daylog/shared/widgets/item_card.dart';
 import 'package:daylog/shared/widgets/streak_badge.dart';
 import 'package:flutter/material.dart';
+import 'package:daylog/app/app_shell.dart';
+import 'package:daylog/shared/widgets/section_header.dart';
+import 'package:daylog/features/today/presentation/today_timeline.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/fake_clock.dart';
@@ -80,13 +82,26 @@ List<LocalDate> run(LocalDate from, int count) => [
 
 Future<void> openTab(WidgetTester tester, String label) async {
   await tester.tap(
-    find.descendant(of: find.byType(NavigationBar), matching: find.text(label)),
+    find.descendant(
+      of: find.byKey(AppShell.tabBarKey),
+      matching: find.text(label),
+    ),
   );
   await tester.pumpAndSettle();
 }
 
-Future<void> openChallenges(WidgetTester tester) =>
-    openTab(tester, 'Challenges');
+/// Goals live in Progress: its Goals section → See all.
+Future<void> openChallenges(WidgetTester tester) async {
+  await openTab(tester, 'Progress');
+  final seeAll = find.descendant(
+    of: find.widgetWithText(SectionHeader, 'Goals'),
+    matching: find.text('See all'),
+  );
+  await tester.ensureVisible(seeAll);
+  await tester.pumpAndSettle();
+  await tester.tap(seeAll);
+  await tester.pumpAndSettle();
+}
 
 /// Records Meditation today, straight through the repositories (the way an
 /// item would), then lets the app notice.
@@ -121,8 +136,8 @@ void main() {
 
     await openChallenges(tester);
 
-    expect(find.text('No challenges yet'), findsOneWidget);
-    expect(find.text('New challenge'), findsOneWidget);
+    expect(find.text('No goals yet'), findsOneWidget);
+    expect(find.text('New goal'), findsOneWidget);
   });
 
   testAppWidgets('a running challenge is at risk until today is recorded; '
@@ -157,7 +172,7 @@ void main() {
 
     await openTab(tester, 'Today');
     final badge = find.descendant(
-      of: find.byType(ItemCard),
+      of: find.byType(TodayTimeline),
       matching: find.byType(StreakBadge),
     );
     expect(badge, findsOneWidget);
@@ -188,7 +203,7 @@ void main() {
     await tester.tap(find.widgetWithText(ActionChip, '21 days of Meditation'));
     await tester.pumpAndSettle();
     expect(find.text('Recording it each day counts the day.'), findsOneWidget);
-    await scrollAndTap(tester, find.text('Start challenge'));
+    await scrollAndTap(tester, find.text('Start goal'));
     expect(find.text('21 days of Meditation'), findsOneWidget);
     expect(find.text('0 / 21 days'), findsOneWidget);
   });
@@ -259,9 +274,9 @@ void main() {
           ),
     );
     await openChallenges(tester);
-    expect(find.text('No challenges yet'), findsOneWidget);
+    expect(find.text('No goals yet'), findsOneWidget);
 
-    await tester.tap(find.text('New challenge'));
+    await tester.tap(find.text('New goal'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Browse activities'));
     await tester.pumpAndSettle();
@@ -271,7 +286,7 @@ void main() {
     expect(find.text('Recording it each day counts the day.'), findsOneWidget);
     await tester.tap(find.widgetWithText(ChoiceChip, '21'));
     await tester.pumpAndSettle();
-    await scrollAndTap(tester, find.text('Start challenge'));
+    await scrollAndTap(tester, find.text('Start goal'));
 
     expect(find.text('21 days of Meditation'), findsOneWidget);
     expect(find.text('0 / 21 days'), findsOneWidget);
@@ -282,12 +297,12 @@ void main() {
     await pumpTestApp(tester, preferences: _onboarded);
     await openChallenges(tester);
 
-    await tester.tap(find.text('New challenge'));
+    await tester.tap(find.text('New goal'));
     await tester.pumpAndSettle();
-    await scrollAndTap(tester, find.text('Start challenge'));
+    await scrollAndTap(tester, find.text('Start goal'));
 
     expect(find.text('This is required.'), findsWidgets);
-    expect(find.text('New challenge'), findsWidgets, reason: 'sheet stays');
+    expect(find.text('New goal'), findsWidgets, reason: 'sheet stays');
   });
 
   group('on the detail screen', () {
@@ -307,7 +322,7 @@ void main() {
     }
 
     Future<void> menu(WidgetTester tester, String item) async {
-      await tester.tap(find.byTooltip('Challenge options'));
+      await tester.tap(find.byTooltip('Goal options'));
       await tester.pumpAndSettle();
       await tester.tap(find.text(item));
       await tester.pumpAndSettle();
@@ -347,9 +362,9 @@ void main() {
         'brings it back', (tester) async {
       await openDetail(tester);
 
-      await menu(tester, 'End challenge');
+      await menu(tester, 'End goal');
       expect(find.byType(ChallengeScreen), findsNothing);
-      expect(find.text('Challenge ended'), findsOneWidget);
+      expect(find.text('Goal ended'), findsOneWidget);
       expect(find.text('75 days of Meditation'), findsNothing);
 
       await tester.tap(find.text('Undo'));

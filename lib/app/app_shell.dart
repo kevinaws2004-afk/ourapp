@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/design/app_icons.dart';
@@ -13,13 +14,14 @@ import '../core/design/tokens/spacing.dart';
 import '../core/design/window_size_class.dart';
 import '../features/focus/presentation/focus_banner.dart';
 import '../l10n/generated/app_localizations.dart';
+import 'home_widget_sync.dart';
 
 /// The tab shell: Today, Plan, **+**, Progress, Me. On phones a bottom bar
 /// with a raised center button that opens Quick start from any tab; on
 /// larger windows a rail with the same button on top. Goals (challenges)
 /// live inside Progress, so its branch lights the Progress tab. Each tab
 /// keeps its own navigation stack.
-class AppShell extends StatelessWidget {
+class AppShell extends ConsumerWidget {
   const AppShell({
     super.key,
     required this.navigationShell,
@@ -34,6 +36,9 @@ class AppShell extends StatelessWidget {
 
   /// Opens the running timer.
   final VoidCallback onOpenTimer;
+
+  /// The phone tab bar, for finding it (e.g. in tests).
+  static const tabBarKey = Key('app-tab-bar');
 
   /// Branch order in the router.
   static const today = 0;
@@ -57,7 +62,23 @@ class AppShell extends StatelessWidget {
       : navigationShell.currentIndex;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // The widget's button and the Quick Settings tile open Quick start,
+    // including a request made before the shell was built (a cold start).
+    void takeQuickStart() {
+      if (ref.read(quickStartRequestProvider.notifier).take()) {
+        onQuickStart(context);
+      }
+    }
+
+    ref.listen(quickStartRequestProvider, (_, pending) {
+      if (pending) takeQuickStart();
+    });
+    if (ref.read(quickStartRequestProvider)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) takeQuickStart();
+      });
+    }
     final l10n = AppLocalizations.of(context);
     final tabs = [
       _Tab(today, AppIcons.today, l10n.navToday),
@@ -77,6 +98,7 @@ class AppShell extends StatelessWidget {
         ),
         extendBody: false,
         bottomNavigationBar: _BottomBar(
+          key: tabBarKey,
           tabs: tabs,
           selected: _selectedBranch,
           onSelect: _onSelect,
@@ -143,6 +165,7 @@ class _Tab {
 
 class _BottomBar extends StatelessWidget {
   const _BottomBar({
+    super.key,
     required this.tabs,
     required this.selected,
     required this.onSelect,

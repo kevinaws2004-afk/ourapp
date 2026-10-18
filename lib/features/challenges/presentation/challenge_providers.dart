@@ -93,7 +93,7 @@ class ActivityStreak {
   int get afterToday => doneToday ? days : days + 1;
 }
 
-/// Running (not completed) challenges by activity. When an activity has
+/// Running (not completed) daily challenges by activity. When an activity has
 /// several, the longest current streak shows.
 final activityStreaksProvider =
     Provider.autoDispose<Map<ActivityTypeId, ActivityStreak>>((ref) {
@@ -101,6 +101,8 @@ final activityStreaksProvider =
       final streaks = <ActivityTypeId, ActivityStreak>{};
       for (final view in views) {
         if (view.progress.isCompleted) continue;
+        // Rows show day streaks; a weekly or amount goal counts otherwise.
+        if (view.challenge.kind != GoalKind.daily) continue;
         final id = view.challenge.activityTypeId;
         final streak = ActivityStreak(
           challengeId: view.challenge.id,

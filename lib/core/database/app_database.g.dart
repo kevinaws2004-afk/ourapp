@@ -8113,6 +8113,73 @@ class Challenges extends Table with TableInfo<Challenges, ChallengeRow> {
     requiredDuringInsert: false,
     $customConstraints: '',
   );
+  static const VerificationMeta _kindMeta = const VerificationMeta('kind');
+  late final GeneratedColumn<String> kind = GeneratedColumn<String>(
+    'kind',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    $customConstraints: 'NOT NULL DEFAULT \'daily\' CHECK (kind IN (\'daily\', \'weekly\', \'amount\'))',
+    defaultValue: const CustomExpression('\'daily\''),
+  );
+  static const VerificationMeta _timesPerWeekMeta = const VerificationMeta(
+    'timesPerWeek',
+  );
+  late final GeneratedColumn<int> timesPerWeek = GeneratedColumn<int>(
+    'times_per_week',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints:
+        'CHECK (times_per_week IS NULL OR times_per_week BETWEEN 1 AND 7)',
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
+    'amount',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    $customConstraints: 'CHECK (amount IS NULL OR amount > 0)',
+  );
+  static const VerificationMeta _amountFieldIdMeta = const VerificationMeta(
+    'amountFieldId',
+  );
+  late final GeneratedColumn<int> amountFieldId = GeneratedColumn<int>(
+    'amount_field_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints:
+        'REFERENCES activity_fields(internal_id)ON DELETE RESTRICT',
+  );
+  static const VerificationMeta _amountPeriodMeta = const VerificationMeta(
+    'amountPeriod',
+  );
+  late final GeneratedColumn<String> amountPeriod = GeneratedColumn<String>(
+    'amount_period',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    $customConstraints:
+        'CHECK (amount_period IS NULL OR amount_period IN (\'day\', \'week\'))',
+  );
+  static const VerificationMeta _restDaysMeta = const VerificationMeta(
+    'restDays',
+  );
+  late final GeneratedColumn<int> restDays = GeneratedColumn<int>(
+    'rest_days',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints: 'NOT NULL DEFAULT 0 CHECK (rest_days BETWEEN 0 AND 2)',
+    defaultValue: const CustomExpression('0'),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     internalId,
@@ -8124,6 +8191,12 @@ class Challenges extends Table with TableInfo<Challenges, ChallengeRow> {
     createdAt,
     updatedAt,
     deletedAt,
+    kind,
+    timesPerWeek,
+    amount,
+    amountFieldId,
+    amountPeriod,
+    restDays,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -8208,6 +8281,51 @@ class Challenges extends Table with TableInfo<Challenges, ChallengeRow> {
         deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
       );
     }
+    if (data.containsKey('kind')) {
+      context.handle(
+        _kindMeta,
+        kind.isAcceptableOrUnknown(data['kind']!, _kindMeta),
+      );
+    }
+    if (data.containsKey('times_per_week')) {
+      context.handle(
+        _timesPerWeekMeta,
+        timesPerWeek.isAcceptableOrUnknown(
+          data['times_per_week']!,
+          _timesPerWeekMeta,
+        ),
+      );
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    }
+    if (data.containsKey('amount_field_id')) {
+      context.handle(
+        _amountFieldIdMeta,
+        amountFieldId.isAcceptableOrUnknown(
+          data['amount_field_id']!,
+          _amountFieldIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('amount_period')) {
+      context.handle(
+        _amountPeriodMeta,
+        amountPeriod.isAcceptableOrUnknown(
+          data['amount_period']!,
+          _amountPeriodMeta,
+        ),
+      );
+    }
+    if (data.containsKey('rest_days')) {
+      context.handle(
+        _restDaysMeta,
+        restDays.isAcceptableOrUnknown(data['rest_days']!, _restDaysMeta),
+      );
+    }
     return context;
   }
 
@@ -8253,6 +8371,30 @@ class Challenges extends Table with TableInfo<Challenges, ChallengeRow> {
         DriftSqlType.int,
         data['${effectivePrefix}deleted_at'],
       ),
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+      timesPerWeek: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}times_per_week'],
+      ),
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}amount'],
+      ),
+      amountFieldId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount_field_id'],
+      ),
+      amountPeriod: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}amount_period'],
+      ),
+      restDays: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}rest_days'],
+      )!,
     );
   }
 
@@ -8275,10 +8417,26 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
 
   /// The first local day that counts.
   final String startDate;
+
+  /// How many successful periods (days, or weeks for weekly goals) complete it.
   final int targetDays;
   final int createdAt;
   final int updatedAt;
   final int? deletedAt;
+
+  /// v11: kinds of goal (ADR-047). 'daily': done every day. 'weekly': done
+  /// on times_per_week days of each week. 'amount': at least `amount` of
+  /// time (ms) or of a number field per day or week.
+  final String kind;
+  final int? timesPerWeek;
+  final double? amount;
+
+  /// Null with an amount: recorded time.
+  final int? amountFieldId;
+  final String? amountPeriod;
+
+  /// Daily goals: missed days per week that don't break the streak.
+  final int restDays;
   const ChallengeRow({
     required this.internalId,
     required this.publicId,
@@ -8289,6 +8447,12 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
     required this.createdAt,
     required this.updatedAt,
     this.deletedAt,
+    required this.kind,
+    this.timesPerWeek,
+    this.amount,
+    this.amountFieldId,
+    this.amountPeriod,
+    required this.restDays,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -8304,6 +8468,20 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
     if (!nullToAbsent || deletedAt != null) {
       map['deleted_at'] = Variable<int>(deletedAt);
     }
+    map['kind'] = Variable<String>(kind);
+    if (!nullToAbsent || timesPerWeek != null) {
+      map['times_per_week'] = Variable<int>(timesPerWeek);
+    }
+    if (!nullToAbsent || amount != null) {
+      map['amount'] = Variable<double>(amount);
+    }
+    if (!nullToAbsent || amountFieldId != null) {
+      map['amount_field_id'] = Variable<int>(amountFieldId);
+    }
+    if (!nullToAbsent || amountPeriod != null) {
+      map['amount_period'] = Variable<String>(amountPeriod);
+    }
+    map['rest_days'] = Variable<int>(restDays);
     return map;
   }
 
@@ -8320,6 +8498,20 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
       deletedAt: deletedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(deletedAt),
+      kind: Value(kind),
+      timesPerWeek: timesPerWeek == null && nullToAbsent
+          ? const Value.absent()
+          : Value(timesPerWeek),
+      amount: amount == null && nullToAbsent
+          ? const Value.absent()
+          : Value(amount),
+      amountFieldId: amountFieldId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(amountFieldId),
+      amountPeriod: amountPeriod == null && nullToAbsent
+          ? const Value.absent()
+          : Value(amountPeriod),
+      restDays: Value(restDays),
     );
   }
 
@@ -8338,6 +8530,12 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
       createdAt: serializer.fromJson<int>(json['created_at']),
       updatedAt: serializer.fromJson<int>(json['updated_at']),
       deletedAt: serializer.fromJson<int?>(json['deleted_at']),
+      kind: serializer.fromJson<String>(json['kind']),
+      timesPerWeek: serializer.fromJson<int?>(json['times_per_week']),
+      amount: serializer.fromJson<double?>(json['amount']),
+      amountFieldId: serializer.fromJson<int?>(json['amount_field_id']),
+      amountPeriod: serializer.fromJson<String?>(json['amount_period']),
+      restDays: serializer.fromJson<int>(json['rest_days']),
     );
   }
   @override
@@ -8353,6 +8551,12 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
       'created_at': serializer.toJson<int>(createdAt),
       'updated_at': serializer.toJson<int>(updatedAt),
       'deleted_at': serializer.toJson<int?>(deletedAt),
+      'kind': serializer.toJson<String>(kind),
+      'times_per_week': serializer.toJson<int?>(timesPerWeek),
+      'amount': serializer.toJson<double?>(amount),
+      'amount_field_id': serializer.toJson<int?>(amountFieldId),
+      'amount_period': serializer.toJson<String?>(amountPeriod),
+      'rest_days': serializer.toJson<int>(restDays),
     };
   }
 
@@ -8366,6 +8570,12 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
     int? createdAt,
     int? updatedAt,
     Value<int?> deletedAt = const Value.absent(),
+    String? kind,
+    Value<int?> timesPerWeek = const Value.absent(),
+    Value<double?> amount = const Value.absent(),
+    Value<int?> amountFieldId = const Value.absent(),
+    Value<String?> amountPeriod = const Value.absent(),
+    int? restDays,
   }) => ChallengeRow(
     internalId: internalId ?? this.internalId,
     publicId: publicId ?? this.publicId,
@@ -8376,6 +8586,14 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
     deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+    kind: kind ?? this.kind,
+    timesPerWeek: timesPerWeek.present ? timesPerWeek.value : this.timesPerWeek,
+    amount: amount.present ? amount.value : this.amount,
+    amountFieldId: amountFieldId.present
+        ? amountFieldId.value
+        : this.amountFieldId,
+    amountPeriod: amountPeriod.present ? amountPeriod.value : this.amountPeriod,
+    restDays: restDays ?? this.restDays,
   );
   ChallengeRow copyWithCompanion(ChallengesCompanion data) {
     return ChallengeRow(
@@ -8394,6 +8612,18 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      timesPerWeek: data.timesPerWeek.present
+          ? data.timesPerWeek.value
+          : this.timesPerWeek,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      amountFieldId: data.amountFieldId.present
+          ? data.amountFieldId.value
+          : this.amountFieldId,
+      amountPeriod: data.amountPeriod.present
+          ? data.amountPeriod.value
+          : this.amountPeriod,
+      restDays: data.restDays.present ? data.restDays.value : this.restDays,
     );
   }
 
@@ -8408,7 +8638,13 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
           ..write('targetDays: $targetDays, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('deletedAt: $deletedAt')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('kind: $kind, ')
+          ..write('timesPerWeek: $timesPerWeek, ')
+          ..write('amount: $amount, ')
+          ..write('amountFieldId: $amountFieldId, ')
+          ..write('amountPeriod: $amountPeriod, ')
+          ..write('restDays: $restDays')
           ..write(')'))
         .toString();
   }
@@ -8424,6 +8660,12 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
     createdAt,
     updatedAt,
     deletedAt,
+    kind,
+    timesPerWeek,
+    amount,
+    amountFieldId,
+    amountPeriod,
+    restDays,
   );
   @override
   bool operator ==(Object other) =>
@@ -8437,7 +8679,13 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
           other.targetDays == this.targetDays &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
-          other.deletedAt == this.deletedAt);
+          other.deletedAt == this.deletedAt &&
+          other.kind == this.kind &&
+          other.timesPerWeek == this.timesPerWeek &&
+          other.amount == this.amount &&
+          other.amountFieldId == this.amountFieldId &&
+          other.amountPeriod == this.amountPeriod &&
+          other.restDays == this.restDays);
 }
 
 class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
@@ -8450,6 +8698,12 @@ class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
   final Value<int> createdAt;
   final Value<int> updatedAt;
   final Value<int?> deletedAt;
+  final Value<String> kind;
+  final Value<int?> timesPerWeek;
+  final Value<double?> amount;
+  final Value<int?> amountFieldId;
+  final Value<String?> amountPeriod;
+  final Value<int> restDays;
   const ChallengesCompanion({
     this.internalId = const Value.absent(),
     this.publicId = const Value.absent(),
@@ -8460,6 +8714,12 @@ class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.timesPerWeek = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.amountFieldId = const Value.absent(),
+    this.amountPeriod = const Value.absent(),
+    this.restDays = const Value.absent(),
   });
   ChallengesCompanion.insert({
     this.internalId = const Value.absent(),
@@ -8471,6 +8731,12 @@ class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
     required int createdAt,
     required int updatedAt,
     this.deletedAt = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.timesPerWeek = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.amountFieldId = const Value.absent(),
+    this.amountPeriod = const Value.absent(),
+    this.restDays = const Value.absent(),
   }) : publicId = Value(publicId),
        activityTypeId = Value(activityTypeId),
        title = Value(title),
@@ -8488,6 +8754,12 @@ class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
     Expression<int>? createdAt,
     Expression<int>? updatedAt,
     Expression<int>? deletedAt,
+    Expression<String>? kind,
+    Expression<int>? timesPerWeek,
+    Expression<double>? amount,
+    Expression<int>? amountFieldId,
+    Expression<String>? amountPeriod,
+    Expression<int>? restDays,
   }) {
     return RawValuesInsertable({
       if (internalId != null) 'internal_id': internalId,
@@ -8499,6 +8771,12 @@ class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (deletedAt != null) 'deleted_at': deletedAt,
+      if (kind != null) 'kind': kind,
+      if (timesPerWeek != null) 'times_per_week': timesPerWeek,
+      if (amount != null) 'amount': amount,
+      if (amountFieldId != null) 'amount_field_id': amountFieldId,
+      if (amountPeriod != null) 'amount_period': amountPeriod,
+      if (restDays != null) 'rest_days': restDays,
     });
   }
 
@@ -8512,6 +8790,12 @@ class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
     Value<int>? createdAt,
     Value<int>? updatedAt,
     Value<int?>? deletedAt,
+    Value<String>? kind,
+    Value<int?>? timesPerWeek,
+    Value<double?>? amount,
+    Value<int?>? amountFieldId,
+    Value<String?>? amountPeriod,
+    Value<int>? restDays,
   }) {
     return ChallengesCompanion(
       internalId: internalId ?? this.internalId,
@@ -8523,6 +8807,12 @@ class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
+      kind: kind ?? this.kind,
+      timesPerWeek: timesPerWeek ?? this.timesPerWeek,
+      amount: amount ?? this.amount,
+      amountFieldId: amountFieldId ?? this.amountFieldId,
+      amountPeriod: amountPeriod ?? this.amountPeriod,
+      restDays: restDays ?? this.restDays,
     );
   }
 
@@ -8556,6 +8846,24 @@ class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
     if (deletedAt.present) {
       map['deleted_at'] = Variable<int>(deletedAt.value);
     }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (timesPerWeek.present) {
+      map['times_per_week'] = Variable<int>(timesPerWeek.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<double>(amount.value);
+    }
+    if (amountFieldId.present) {
+      map['amount_field_id'] = Variable<int>(amountFieldId.value);
+    }
+    if (amountPeriod.present) {
+      map['amount_period'] = Variable<String>(amountPeriod.value);
+    }
+    if (restDays.present) {
+      map['rest_days'] = Variable<int>(restDays.value);
+    }
     return map;
   }
 
@@ -8570,7 +8878,13 @@ class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
           ..write('targetDays: $targetDays, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('deletedAt: $deletedAt')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('kind: $kind, ')
+          ..write('timesPerWeek: $timesPerWeek, ')
+          ..write('amount: $amount, ')
+          ..write('amountFieldId: $amountFieldId, ')
+          ..write('amountPeriod: $amountPeriod, ')
+          ..write('restDays: $restDays')
           ..write(')'))
         .toString();
   }
@@ -10556,6 +10870,25 @@ final class $ActivityFieldsReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<Challenges, List<ChallengeRow>>
+  _challengesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.challenges,
+    aliasName: 'activity_fields__internal_id__challenges__amount_field_id',
+  );
+
+  $ChallengesProcessedTableManager get challengesRefs {
+    final manager = $ChallengesTableManager($_db, $_db.challenges).filter(
+      (f) => f.amountFieldId.internalId.sqlEquals(
+        $_itemColumn<int>('internal_id')!,
+      ),
+    );
+
+    final cache = $_typedResult.readTableOrNull(_challengesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $ActivityFieldsFilterComposer
@@ -10714,6 +11047,31 @@ class $ActivityFieldsFilterComposer
           }) => $LogValuesFilterComposer(
             $db: $db,
             $table: $db.logValues,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> challengesRefs(
+    Expression<bool> Function($ChallengesFilterComposer f) f,
+  ) {
+    final $ChallengesFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.internalId,
+      referencedTable: $db.challenges,
+      getReferencedColumn: (t) => t.amountFieldId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $ChallengesFilterComposer(
+            $db: $db,
+            $table: $db.challenges,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10986,6 +11344,31 @@ class $ActivityFieldsAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> challengesRefs<T extends Object>(
+    Expression<T> Function($ChallengesAnnotationComposer a) f,
+  ) {
+    final $ChallengesAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.internalId,
+      referencedTable: $db.challenges,
+      getReferencedColumn: (t) => t.amountFieldId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $ChallengesAnnotationComposer(
+            $db: $db,
+            $table: $db.challenges,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $ActivityFieldsTableManager
@@ -11006,6 +11389,7 @@ class $ActivityFieldsTableManager
             bool parentFieldId,
             bool logGroupItemsRefs,
             bool logValuesRefs,
+            bool challengesRefs,
           })
         > {
   $ActivityFieldsTableManager(_$AppDatabase db, ActivityFields table)
@@ -11097,12 +11481,14 @@ class $ActivityFieldsTableManager
                 parentFieldId = false,
                 logGroupItemsRefs = false,
                 logValuesRefs = false,
+                challengesRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (logGroupItemsRefs) db.logGroupItems,
                     if (logValuesRefs) db.logValues,
+                    if (challengesRefs) db.challenges,
                   ],
                   addJoins:
                       <
@@ -11189,6 +11575,27 @@ class $ActivityFieldsTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (challengesRefs)
+                        await $_getPrefetchedData<
+                          ActivityFieldRow,
+                          ActivityFields,
+                          ChallengeRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $ActivityFieldsReferences
+                              ._challengesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $ActivityFieldsReferences(
+                                db,
+                                table,
+                                p0,
+                              ).challengesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.amountFieldId == item.internalId,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -11214,6 +11621,7 @@ typedef $ActivityFieldsProcessedTableManager =
         bool parentFieldId,
         bool logGroupItemsRefs,
         bool logValuesRefs,
+        bool challengesRefs,
       })
     >;
 typedef $PlanSeriesCreateCompanionBuilder = PlanSeriesCompanion Function({
@@ -16010,6 +16418,12 @@ typedef $ChallengesCreateCompanionBuilder = ChallengesCompanion Function({
   required int createdAt,
   required int updatedAt,
   Value<int?> deletedAt,
+  Value<String> kind,
+  Value<int?> timesPerWeek,
+  Value<double?> amount,
+  Value<int?> amountFieldId,
+  Value<String?> amountPeriod,
+  Value<int> restDays,
 });
 typedef $ChallengesUpdateCompanionBuilder = ChallengesCompanion Function({
   Value<int> internalId,
@@ -16021,6 +16435,12 @@ typedef $ChallengesUpdateCompanionBuilder = ChallengesCompanion Function({
   Value<int> createdAt,
   Value<int> updatedAt,
   Value<int?> deletedAt,
+  Value<String> kind,
+  Value<int?> timesPerWeek,
+  Value<double?> amount,
+  Value<int?> amountFieldId,
+  Value<String?> amountPeriod,
+  Value<int> restDays,
 });
 
 final class $ChallengesReferences
@@ -16039,6 +16459,24 @@ final class $ChallengesReferences
       $_db.activityTypes,
     ).filter((f) => f.internalId.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_activityTypeIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static ActivityFields _amountFieldIdTable(_$AppDatabase db) => db
+      .activityFields
+      .createAlias('challenges__amount_field_id__activity_fields__internal_id');
+
+  $ActivityFieldsProcessedTableManager? get amountFieldId {
+    final $_column = $_itemColumn<int>('amount_field_id');
+    if ($_column == null) return null;
+    final manager = $ActivityFieldsTableManager(
+      $_db,
+      $_db.activityFields,
+    ).filter((f) => f.internalId.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_amountFieldIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -16094,6 +16532,31 @@ class $ChallengesFilterComposer extends Composer<_$AppDatabase, Challenges> {
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get timesPerWeek => $composableBuilder(
+    column: $table.timesPerWeek,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get amountPeriod => $composableBuilder(
+    column: $table.amountPeriod,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get restDays => $composableBuilder(
+    column: $table.restDays,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $ActivityTypesFilterComposer get activityTypeId {
     final $ActivityTypesFilterComposer composer = $composerBuilder(
       composer: this,
@@ -16108,6 +16571,29 @@ class $ChallengesFilterComposer extends Composer<_$AppDatabase, Challenges> {
           }) => $ActivityTypesFilterComposer(
             $db: $db,
             $table: $db.activityTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $ActivityFieldsFilterComposer get amountFieldId {
+    final $ActivityFieldsFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.amountFieldId,
+      referencedTable: $db.activityFields,
+      getReferencedColumn: (t) => t.internalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $ActivityFieldsFilterComposer(
+            $db: $db,
+            $table: $db.activityFields,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -16166,6 +16652,31 @@ class $ChallengesOrderingComposer extends Composer<_$AppDatabase, Challenges> {
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get timesPerWeek => $composableBuilder(
+    column: $table.timesPerWeek,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get amountPeriod => $composableBuilder(
+    column: $table.amountPeriod,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get restDays => $composableBuilder(
+    column: $table.restDays,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $ActivityTypesOrderingComposer get activityTypeId {
     final $ActivityTypesOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -16180,6 +16691,29 @@ class $ChallengesOrderingComposer extends Composer<_$AppDatabase, Challenges> {
           }) => $ActivityTypesOrderingComposer(
             $db: $db,
             $table: $db.activityTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $ActivityFieldsOrderingComposer get amountFieldId {
+    final $ActivityFieldsOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.amountFieldId,
+      referencedTable: $db.activityFields,
+      getReferencedColumn: (t) => t.internalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $ActivityFieldsOrderingComposer(
+            $db: $db,
+            $table: $db.activityFields,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -16227,6 +16761,25 @@ class $ChallengesAnnotationComposer
   GeneratedColumn<int> get deletedAt =>
       $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
+  GeneratedColumn<String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
+
+  GeneratedColumn<int> get timesPerWeek => $composableBuilder(
+    column: $table.timesPerWeek,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<String> get amountPeriod => $composableBuilder(
+    column: $table.amountPeriod,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get restDays =>
+      $composableBuilder(column: $table.restDays, builder: (column) => column);
+
   $ActivityTypesAnnotationComposer get activityTypeId {
     final $ActivityTypesAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -16241,6 +16794,29 @@ class $ChallengesAnnotationComposer
           }) => $ActivityTypesAnnotationComposer(
             $db: $db,
             $table: $db.activityTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $ActivityFieldsAnnotationComposer get amountFieldId {
+    final $ActivityFieldsAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.amountFieldId,
+      referencedTable: $db.activityFields,
+      getReferencedColumn: (t) => t.internalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $ActivityFieldsAnnotationComposer(
+            $db: $db,
+            $table: $db.activityFields,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -16264,7 +16840,7 @@ class $ChallengesTableManager
           $ChallengesUpdateCompanionBuilder,
           (ChallengeRow, $ChallengesReferences),
           ChallengeRow,
-          PrefetchHooks Function({bool activityTypeId})
+          PrefetchHooks Function({bool activityTypeId, bool amountFieldId})
         > {
   $ChallengesTableManager(_$AppDatabase db, Challenges table)
     : super(
@@ -16288,6 +16864,12 @@ class $ChallengesTableManager
                 Value<int> createdAt = const Value.absent(),
                 Value<int> updatedAt = const Value.absent(),
                 Value<int?> deletedAt = const Value.absent(),
+                Value<String> kind = const Value.absent(),
+                Value<int?> timesPerWeek = const Value.absent(),
+                Value<double?> amount = const Value.absent(),
+                Value<int?> amountFieldId = const Value.absent(),
+                Value<String?> amountPeriod = const Value.absent(),
+                Value<int> restDays = const Value.absent(),
               }) => ChallengesCompanion(
                 internalId: internalId,
                 publicId: publicId,
@@ -16298,6 +16880,12 @@ class $ChallengesTableManager
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 deletedAt: deletedAt,
+                kind: kind,
+                timesPerWeek: timesPerWeek,
+                amount: amount,
+                amountFieldId: amountFieldId,
+                amountPeriod: amountPeriod,
+                restDays: restDays,
               ),
           createCompanionCallback:
               ({
@@ -16310,6 +16898,12 @@ class $ChallengesTableManager
                 required int createdAt,
                 required int updatedAt,
                 Value<int?> deletedAt = const Value.absent(),
+                Value<String> kind = const Value.absent(),
+                Value<int?> timesPerWeek = const Value.absent(),
+                Value<double?> amount = const Value.absent(),
+                Value<int?> amountFieldId = const Value.absent(),
+                Value<String?> amountPeriod = const Value.absent(),
+                Value<int> restDays = const Value.absent(),
               }) => ChallengesCompanion.insert(
                 internalId: internalId,
                 publicId: publicId,
@@ -16320,6 +16914,12 @@ class $ChallengesTableManager
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 deletedAt: deletedAt,
+                kind: kind,
+                timesPerWeek: timesPerWeek,
+                amount: amount,
+                amountFieldId: amountFieldId,
+                amountPeriod: amountPeriod,
+                restDays: restDays,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -16329,45 +16929,57 @@ class $ChallengesTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({activityTypeId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (activityTypeId) {
-                      state = state.withJoin(
-                        currentTable: table,
-                        currentColumn: table.activityTypeId,
-                        referencedTable: $ChallengesReferences
-                            ._activityTypeIdTable(db),
-                        referencedColumn: $ChallengesReferences
-                            ._activityTypeIdTable(db)
-                            .internalId,
-                      ) as T;
-                    }
+          prefetchHooksCallback:
+              ({activityTypeId = false, amountFieldId = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (activityTypeId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.activityTypeId,
+                            referencedTable: $ChallengesReferences
+                                ._activityTypeIdTable(db),
+                            referencedColumn: $ChallengesReferences
+                                ._activityTypeIdTable(db)
+                                .internalId,
+                          ) as T;
+                        }
+                        if (amountFieldId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.amountFieldId,
+                            referencedTable: $ChallengesReferences
+                                ._amountFieldIdTable(db),
+                            referencedColumn: $ChallengesReferences
+                                ._amountFieldIdTable(db)
+                                .internalId,
+                          ) as T;
+                        }
 
-                    return state;
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [];
                   },
-              getPrefetchedDataCallback: (items) async {
-                return [];
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -16384,7 +16996,7 @@ typedef $ChallengesProcessedTableManager =
       $ChallengesUpdateCompanionBuilder,
       (ChallengeRow, $ChallengesReferences),
       ChallengeRow,
-      PrefetchHooks Function({bool activityTypeId})
+      PrefetchHooks Function({bool activityTypeId, bool amountFieldId})
     >;
 typedef $$AppPreferencesTableCreateCompanionBuilder =
     AppPreferencesCompanion Function({

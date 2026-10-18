@@ -14,6 +14,7 @@ import 'package:daylog/features/settings/presentation/appearance_screen.dart';
 import 'package:daylog/features/today/presentation/today_screen.dart';
 import 'package:daylog/features/today/presentation/now_next_card.dart';
 import 'package:flutter/material.dart';
+import 'package:daylog/app/app_shell.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/fake_clock.dart';
@@ -57,16 +58,20 @@ void main() {
     await pumpTestApp(tester, preferences: _onboarded);
     await tester.tap(
       find.descendant(
-        of: find.byType(NavigationBar),
+        of: find.byKey(AppShell.tabBarKey),
         matching: find.text('Me'),
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('Lavender'), findsOneWidget, reason: 'the theme in use');
+    expect(
+      find.text('Electric Lavender'),
+      findsOneWidget,
+      reason: 'the theme in use',
+    );
 
     await scrollAndTap(tester, find.text('Appearance'));
     expect(find.byType(AppearanceScreen), findsOneWidget);
-    await scrollAndTap(tester, find.text('Papaya'));
+    await scrollAndTap(tester, find.text('Papaya Confection'));
     expect(_themeOf(tester), AppThemeId.papaya);
     expect(
       find.bySemanticsLabel(RegExp('^Papaya')),
@@ -76,7 +81,11 @@ void main() {
 
     await tester.pageBack();
     await tester.pumpAndSettle();
-    expect(find.text('Papaya'), findsOneWidget, reason: 'Me shows it');
+    expect(
+      find.text('Papaya Confection'),
+      findsOneWidget,
+      reason: 'Me shows it',
+    );
   });
 
   testAppWidgets('an empty day says so and offers a way in', (tester) async {
@@ -99,7 +108,7 @@ void main() {
 
     await scrollAndTap(
       tester,
-      find.descendant(of: next, matching: find.text('Start')),
+      find.descendant(of: next, matching: find.text('Start & record')),
     );
     expect(find.byType(ItemScreen), findsOneWidget);
     expect(find.text('LIVE'), findsOneWidget);
@@ -113,7 +122,7 @@ void main() {
       tester,
       find.descendant(
         of: find.byType(NowNextCard),
-        matching: find.text('Start'),
+        matching: find.text('Start & record'),
       ),
     );
     expect(find.byType(ItemScreen), findsOneWidget);
@@ -129,7 +138,11 @@ void main() {
 
     expect(find.byType(ItemScreen), findsNothing, reason: 'not A7');
     expect(find.byType(TodayScreen), findsOneWidget);
-    expect(find.text('All 1 done'), findsOneWidget, reason: 'the status');
+    expect(find.text('1 of 1 done'), findsOneWidget, reason: 'the status');
+    expect(
+      find.text('Everything done. Enjoy the rest of your day.'),
+      findsOneWidget,
+    );
   });
 
   testAppWidgets('Done on an open thing returns to Today; tapping the done '
@@ -176,7 +189,7 @@ void main() {
       tester,
       find.descendant(
         of: find.byType(NowNextCard),
-        matching: find.text('Start'),
+        matching: find.text('Start & record'),
       ),
     );
     await tester.pageBack();
@@ -213,7 +226,7 @@ void main() {
         tester,
         find.descendant(
           of: find.byType(NowNextCard),
-          matching: find.text('Start'),
+          matching: find.text('Start & record'),
         ),
       );
       expect(find.byType(ItemScreen), findsOneWidget);

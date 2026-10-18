@@ -21,6 +21,7 @@ import 'last_time_card.dart';
 /// without details.
 Future<void> showHowDidItGo(BuildContext context, ItemArgs args) =>
     showModalBottomSheet<void>(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
@@ -57,53 +58,80 @@ class _HowDidItGo extends ConsumerWidget {
               state.title,
               if (state.durationMs case final ms?) formatDuration(l10n, ms),
             ].join(' · ');
-            return ListView(
-              controller: scroll,
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.xl,
-                0,
-                AppSpacing.xl,
-                AppSpacing.xxl,
-              ),
+            // Save and Skip stay pinned above the system bar; the details
+            // scroll.
+            return Column(
               children: [
-                Text(
-                  l10n.howDidItGoTitle,
-                  style: context.textStyles.headlineSmall,
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  subtitle,
-                  style: context.textStyles.bodyLarge?.copyWith(
-                    color: context.colors.textSecondary,
+                Expanded(
+                  child: ListView(
+                    controller: scroll,
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.xl,
+                      0,
+                      AppSpacing.xl,
+                      AppSpacing.lg,
+                    ),
+                    children: [
+                      Text(
+                        l10n.howDidItGoTitle,
+                        style: context.textStyles.headlineSmall,
+                      ),
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        subtitle,
+                        style: context.textStyles.bodyLarge?.copyWith(
+                          color: context.colors.textSecondary,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.xl),
+                      LastTimeCard(args: args, state: state),
+                      if (type != null)
+                        RowMemoryScope(
+                          except: state.logId,
+                          child: ActivityLogFormFields(
+                            boxed: true,
+                            type: type,
+                            fields: state.visibleFields,
+                            values: state.values,
+                            issues: state.issues,
+                            onChanged: notifier.setValue,
+                          ),
+                        ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: AppSpacing.xl),
-                LastTimeCard(args: args, state: state),
-                if (type != null)
-                  RowMemoryScope(
-                    except: state.logId,
-                    child: ActivityLogFormFields(
-                      boxed: true,
-                      type: type,
-                      fields: state.visibleFields,
-                      values: state.values,
-                      issues: state.issues,
-                      onChanged: notifier.setValue,
+                SafeArea(
+                  top: false,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.xl,
+                      AppSpacing.sm,
+                      AppSpacing.xl,
+                      AppSpacing.sm,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: AppButton(
+                            label: l10n.howDidItGoSkip,
+                            variant: AppButtonVariant.tertiary,
+                            expand: true,
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
+                        ),
+                        const SizedBox(width: AppSpacing.sm),
+                        Expanded(
+                          flex: 2,
+                          child: AppButton(
+                            label: l10n.howDidItGoSave,
+                            variant: AppButtonVariant.action,
+                            expand: true,
+                            onPressed: () => unawaited(close()),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                const SizedBox(height: AppSpacing.md),
-                AppButton(
-                  label: l10n.howDidItGoSave,
-                  variant: AppButtonVariant.action,
-                  expand: true,
-                  onPressed: () => unawaited(close()),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                AppButton(
-                  label: l10n.howDidItGoSkip,
-                  variant: AppButtonVariant.tertiary,
-                  expand: true,
-                  onPressed: () => Navigator.of(context).pop(),
                 ),
               ],
             );

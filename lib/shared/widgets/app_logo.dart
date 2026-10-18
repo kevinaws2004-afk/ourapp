@@ -4,14 +4,13 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
 import '../../core/design/context_ext.dart';
-import '../../core/design/keys/activity_color_key.dart';
 import '../../core/design/tokens/color_tokens.dart';
 
 /// The app's name, in one place.
 const appBrandName = 'DayCraft';
 
-/// The logo's colors, taken from the current theme so the mark changes
-/// with it: the brand color flowing into teal, and coral into rose.
+/// The logo's colors, all taken from the current theme so the whole mark
+/// changes with it.
 @immutable
 class LogoColors {
   const LogoColors({
@@ -24,44 +23,34 @@ class LogoColors {
     required this.edge,
   });
 
-  /// From the theme's tokens ([BuildContext.colors] / activity palette).
-  factory LogoColors.of(BuildContext context) {
-    final c = context.colors;
-    Color activity(ActivityColorKey k) => context.tokens.activity(k).solid;
-    return LogoColors.from(
-      c,
-      teal: activity(ActivityColorKey.teal),
-      coral: activity(ActivityColorKey.coral),
-      rose: activity(ActivityColorKey.rose),
-      dark: Theme.of(context).brightness == Brightness.dark,
+  /// From the current theme's three colors (primary, accent, action), so
+  /// the whole mark changes with the theme.
+  factory LogoColors.of(BuildContext context) => LogoColors.from(
+    context.colors,
+    dark: Theme.of(context).brightness == Brightness.dark,
+  );
+
+  factory LogoColors.from(AppColors c, {bool dark = false}) {
+    Color lighter(Color color, double t) =>
+        Color.lerp(color, Colors.white, dark ? t * 0.5 : t)!;
+    return LogoColors(
+      // First loop: primary flowing into the accent.
+      flow: [c.brandPrimary, lighter(c.brandPrimary, 0.3), c.accent],
+      // Second loop: the action color into the accent and back to primary.
+      glow: [lighter(c.action, 0.15), lighter(c.accent, 0.2), c.brandPrimary],
+      // The travelling dot and the sparkle.
+      pulse: [c.action, lighter(c.action, 0.5)],
+      tile: dark
+          ? [
+              c.surfaceRaised,
+              Color.lerp(c.surfaceRaised, c.brandPrimary, 0.16)!,
+            ]
+          : [Color.lerp(c.surfaceCanvas, Colors.white, 0.6)!, c.brandPrimarySoft],
+      ring: c.brandPrimary,
+      node: Colors.white,
+      edge: Colors.white.withValues(alpha: dark ? 0.1 : 0.7),
     );
   }
-
-  factory LogoColors.from(
-    AppColors c, {
-    required Color teal,
-    required Color coral,
-    required Color rose,
-    bool dark = false,
-  }) => LogoColors(
-    flow: [
-      c.brandPrimary,
-      Color.lerp(c.brandPrimary, Colors.white, 0.3)!,
-      teal,
-    ],
-    glow: [
-      Color.lerp(coral, Colors.white, dark ? 0.1 : 0.18)!,
-      Color.lerp(rose, Colors.white, dark ? 0.1 : 0.22)!,
-      c.brandPrimary,
-    ],
-    pulse: [teal, Color.lerp(teal, Colors.white, 0.5)!],
-    tile: dark
-        ? [c.surfaceRaised, Color.lerp(c.surfaceRaised, c.brandPrimary, 0.16)!]
-        : [Color.lerp(c.surfaceCanvas, Colors.white, 0.6)!, c.brandPrimarySoft],
-    ring: c.brandPrimary,
-    node: Colors.white,
-    edge: Colors.white.withValues(alpha: dark ? 0.1 : 0.7),
-  );
 
   final List<Color> flow;
   final List<Color> glow;

@@ -88,10 +88,16 @@ class ItemCard extends StatelessWidget {
               if (hasTop)
                 Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.xxs + 1),
-                  child: Row(
+                  // The status chip moves under the time when the text
+                  // is large.
+                  child: Wrap(
+                    spacing: AppSpacing.sm,
+                    runSpacing: AppSpacing.xxs,
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       if (time != null)
-                        Flexible(
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(),
                           child: Text(
                             time,
                             maxLines: 1,
@@ -107,8 +113,6 @@ class ItemCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                      if (time != null && status != null)
-                        const SizedBox(width: AppSpacing.sm),
                       if (status case final s?)
                         StatusChip(label: s, tone: statusTone),
                     ],

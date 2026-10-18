@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../focus/domain/focus_session.dart';
+
 import '../../../core/design/app_icons.dart';
 import '../../../core/design/context_ext.dart';
 import '../../../core/design/icons/activity_icon_registry.dart';
@@ -12,6 +14,7 @@ import '../../../core/design/tokens/radius.dart';
 import '../../../core/design/tokens/spacing.dart';
 import '../../../core/time/clock_provider.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import '../../../shared/widgets/streak_badge.dart';
 import '../../../shared/widgets/app_card.dart';
 import '../../../shared/widgets/done_check.dart';
 import '../../../shared/widgets/status_chip.dart';
@@ -48,6 +51,7 @@ class TodayTimeline extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    ref.watch(minuteTickProvider);
     final now = ref.watch(clockProvider).nowUtc();
     final entries = overview.entries;
     bool untimed(DayEntry e) =>
@@ -221,10 +225,11 @@ class _TimelineRow extends ConsumerWidget {
         if (running) {
           ref.watch(focusTickProvider);
           final session = ref.watch(activeFocusSessionProvider).value;
-          final now = ref.watch(clockProvider).nowUtc();
+          ref.watch(minuteTickProvider);
+    final now = ref.watch(clockProvider).nowUtc();
           detail = session == null
               ? null
-              : l10n.itemRunning(formatTimer(session.elapsedMs(now)));
+              : sessionLine(l10n, session, now, short: true);
         } else if (done) {
           final result = formatItemResult(context, item);
           // When it was ticked off; without a planned time it goes in the
@@ -245,7 +250,7 @@ class _TimelineRow extends ConsumerWidget {
             StatusTone.done,
           ),
           EffectivePlanStatus.inProgress => (
-            l10n.planStatusInProgress,
+            _paused(ref) ? l10n.focusPaused : l10n.planStatusInProgress,
             StatusTone.active,
           ),
           EffectivePlanStatus.skipped => (
@@ -421,33 +426,29 @@ class _TimelineRow extends ConsumerWidget {
                           ],
                           if (d.streak case final s?) ...[
                             const SizedBox(width: AppSpacing.xs),
-                            Icon(AppIcons.streak, size: 13, color: c.warning),
-                            Text(
-                              '$s',
-                              style: context.textStyles.labelSmall?.copyWith(
-                                color: c.warning,
-                              ),
-                            ),
+                            StreakBadge(days: s, compact: true),
                           ],
                         ],
                       ),
                       if (d.detail != null || d.status != null)
                         Padding(
                           padding: const EdgeInsets.only(top: AppSpacing.xs),
-                          child: Row(
+                          // The detail moves under the chip on a narrow
+                          // row (large text).
+                          child: Wrap(
+                            spacing: AppSpacing.sm,
+                            runSpacing: AppSpacing.xxs,
+                            crossAxisAlignment: WrapCrossAlignment.center,
                             children: [
-                              if (d.status case final s?) ...[
+                              if (d.status case final s?)
                                 StatusChip(label: s, tone: d.tone),
-                                const SizedBox(width: AppSpacing.sm),
-                              ],
                               if (d.detail case final t?)
-                                Flexible(
-                                  child: Text(
-                                    t,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: context.textStyles.bodySmall
-                                        ?.copyWith(color: c.textSecondary),
+                                Text(
+                                  t,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: context.textStyles.bodySmall?.copyWith(
+                                    color: c.textSecondary,
                                   ),
                                 ),
                             ],
@@ -535,6 +536,11 @@ class _AnytimeRow extends ConsumerWidget {
               Icon(AppIcons.bellOn, size: 13, color: c.brandPrimary),
               const SizedBox(width: AppSpacing.sm),
             ],
+            if (item.status == EffectivePlanStatus.inProgress)
+              Padding(
+                padding: const EdgeInsets.only(right: AppSpacing.sm),
+                child: _RunningLabel(color: c.brandPrimary),
+              ),
             if (done)
               Padding(
                 padding: const EdgeInsets.only(right: AppSpacing.sm),
@@ -621,3 +627,31 @@ class _NowMarker extends StatelessWidget {
     );
   }
 }
+
+/// "Running · 12:04" for the item whose timer is on, ticking.
+class _RunningLabel extends ConsumerWidget {
+  const _RunningLabel({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(focusTickProvider);
+    final session = ref.watch(activeFocusSessionProvider).value;
+    if (session == null) return const SizedBox.shrink();
+    ref.watch(minuteTickProvider);
+    final now = ref.watch(clockProvider).nowUtc();
+    return Text(
+      sessionLine(AppLocalizations.of(context), session, now),
+      style: context.textStyles.labelSmall?.copyWith(
+        color: color,
+        fontWeight: FontWeight.w700,
+        fontFeatures: const [FontFeature.tabularFigures()],
+      ),
+    );
+  }
+}
+
+/// Whether the running thing's timer is paused (on a break).
+bool _paused(WidgetRef ref) =>
+    ref.watch(activeFocusSessionProvider).value?.state == FocusState.paused;

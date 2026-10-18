@@ -21,6 +21,8 @@ Future<FieldDefinition?> showAddToLogSheet(
   int depth = 0,
 }) async {
   final choice = await showModalBottomSheet<Object>(
+    useRootNavigator: true,
+    useSafeArea: true,
     context: context,
     isScrollControlled: true,
     builder: (_) => _AddToLogSheet(depth: depth),

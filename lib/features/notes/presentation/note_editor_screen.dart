@@ -104,6 +104,8 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
       ..showSnackBar(
         SnackBar(
           content: Text(l10n.notesDeleted),
+          // Undo stays offered for the usual few seconds, not until dismissed.
+          persist: false,
           action: SnackBarAction(
             label: l10n.actionUndo,
             onPressed: () => unawaited(repo.restore(widget.id)),
@@ -116,6 +118,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     final l10n = AppLocalizations.of(context);
     final picked = await showModalBottomSheet<({String? key})>(
       context: context,
+      useRootNavigator: true,
       useSafeArea: true,
       builder: (context) {
         final c = context.colors;
@@ -247,13 +250,19 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                       style: context.textStyles.headlineLarge?.copyWith(
                         fontWeight: FontWeight.w800,
                       ),
-                      decoration: InputDecoration.collapsed(
-                        hintText: l10n.notesTitleHint,
-                        hintStyle: context.textStyles.headlineLarge?.copyWith(
-                          color: c.textTertiary,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
+                      decoration:
+                          InputDecoration.collapsed(
+                            hintText: l10n.notesTitleHint,
+                            hintStyle: context.textStyles.headlineLarge
+                                ?.copyWith(
+                                  color: c.textTertiary,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                          ).copyWith(
+                            // Like a page: no box, even while typing.
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                          ),
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
@@ -277,12 +286,17 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                       style: context.textStyles.bodyLarge?.copyWith(
                         height: 1.55,
                       ),
-                      decoration: InputDecoration.collapsed(
-                        hintText: l10n.notesBodyHint,
-                        hintStyle: context.textStyles.bodyLarge?.copyWith(
-                          color: c.textTertiary,
-                        ),
-                      ),
+                      decoration:
+                          InputDecoration.collapsed(
+                            hintText: l10n.notesBodyHint,
+                            hintStyle: context.textStyles.bodyLarge?.copyWith(
+                              color: c.textTertiary,
+                            ),
+                          ).copyWith(
+                            // Like a page: no box, even while typing.
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                          ),
                     ),
                   ],
                 ),

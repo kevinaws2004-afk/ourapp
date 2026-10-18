@@ -81,7 +81,7 @@ class _BuilderBody extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final notifier = ref.read(activityBuilderProvider(args).notifier);
     final margin = WindowSizeClass.of(context).screenMargin;
-    return Align(
+    final form = Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: AppContentWidth.reading),
@@ -169,14 +169,38 @@ class _BuilderBody extends ConsumerWidget {
               SectionHeader(title: l10n.previewSectionTitle),
               _Preview(state: state),
             ],
-            const SizedBox(height: AppSpacing.xxl),
-            AppButton(
-              label: l10n.actionSave,
-              onPressed: state.isSaving ? null : () => _save(context, ref),
-            ),
           ],
         ),
       ),
+    );
+    // Save stays in reach: the form is long (fields, icons, colors).
+    return Column(
+      children: [
+        Expanded(child: form),
+        SafeArea(
+          top: false,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: AppContentWidth.reading,
+              ),
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                  margin,
+                  AppSpacing.sm,
+                  margin,
+                  AppSpacing.md,
+                ),
+                child: AppButton(
+                  label: l10n.actionSave,
+                  expand: true,
+                  onPressed: state.isSaving ? null : () => _save(context, ref),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -184,6 +208,9 @@ class _BuilderBody extends ConsumerWidget {
     BuildContext context,
     ActivityBuilderNotifier notifier,
   ) async {
+    // Otherwise the name field takes focus back when the sheets close and
+    // the keyboard pops up over the form.
+    FocusScope.of(context).unfocus();
     final type = await showFieldTypePicker(context);
     if (type == null || !context.mounted) return;
     final result = await showFieldEditor(
@@ -272,6 +299,7 @@ class _FieldList extends ConsumerWidget {
               ],
             ),
             onTap: () async {
+              FocusScope.of(context).unfocus();
               final result = await showFieldEditor(
                 context,
                 initial: field.definition,

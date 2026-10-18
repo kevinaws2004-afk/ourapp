@@ -13,6 +13,8 @@ Future<FieldType?> showFieldTypePicker(
   BuildContext context, {
   bool allowGroup = true,
 }) => showModalBottomSheet<FieldType>(
+  useRootNavigator: true,
+  useSafeArea: true,
   context: context,
   isScrollControlled: true,
   builder: (context) {

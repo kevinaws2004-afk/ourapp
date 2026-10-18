@@ -128,6 +128,10 @@ enum ValidationCode {
   focusNotActive,
   invalidChallengeTarget,
   challengeStartInFuture,
+
+  /// A weekly goal's times a week, or an amount goal's amount, is missing
+  /// or out of range (ADR-047).
+  invalidGoalAmount,
 }
 
 /// The result of pure domain validation: empty means valid.

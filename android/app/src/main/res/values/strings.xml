@@ -2,4 +2,11 @@
 <resources>
     <!-- Temporary display name; the product name is undecided (ADR-010). -->
     <string name="app_name">DayCraft</string>
+    <!-- Today widget and Quick Settings tile (English fallbacks; the app
+         writes the widget's text in the app's language). -->
+    <string name="widget_today">Today</string>
+    <string name="widget_open_app">Open to plan your day</string>
+    <string name="widget_start">Start</string>
+    <string name="widget_description">Today\'s progress, what\'s next, and a quick start</string>
+    <string name="tile_label">Start in DayCraft</string>
 </resources>

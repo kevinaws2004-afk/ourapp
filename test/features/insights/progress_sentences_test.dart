@@ -8,7 +8,7 @@ import 'package:daylog/features/activity_types/data/db_activity_type_repository.
 import 'package:daylog/features/activity_types/domain/activity_type_use_cases.dart';
 import 'package:daylog/features/plans/data/db_plan_repository.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
-import 'package:flutter/material.dart';
+import 'package:daylog/app/app_shell.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/fixtures.dart';
@@ -53,7 +53,7 @@ void main() {
     );
     await tester.tap(
       find.descendant(
-        of: find.byType(NavigationBar),
+        of: find.byKey(AppShell.tabBarKey),
         matching: find.text('Progress'),
       ),
     );

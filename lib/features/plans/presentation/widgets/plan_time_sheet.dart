@@ -26,6 +26,8 @@ Future<PlanTimeChoice?> showPlanTimeSheet(
   LocalTime? start,
   LocalTime? end,
 }) => showModalBottomSheet<PlanTimeChoice>(
+  useRootNavigator: true,
+  useSafeArea: true,
   context: context,
   isScrollControlled: true,
   builder: (_) =>

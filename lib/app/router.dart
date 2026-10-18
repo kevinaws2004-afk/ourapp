@@ -12,6 +12,7 @@ import '../features/activity_types/presentation/builder/activity_builder_screen.
 import '../features/activity_types/presentation/browse_activities_screen.dart';
 import '../features/insights/presentation/activity_insights_screen.dart';
 import '../features/insights/presentation/insights_screen.dart';
+import '../features/insights/presentation/weekly_recap_screen.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
 import '../features/plans/presentation/activity_chooser.dart';
 import '../features/plans/domain/plan.dart';
@@ -23,6 +24,7 @@ import '../features/plans/presentation/plan_date_notifier.dart';
 import '../features/plans/presentation/plan_providers.dart';
 import '../features/plans/presentation/plan_screen.dart';
 import '../features/settings/presentation/appearance_screen.dart';
+import '../features/settings/presentation/backup_screen.dart';
 import '../features/settings/presentation/me_screen.dart';
 import '../features/settings/presentation/preferences_providers.dart';
 import '../features/today/presentation/day_report_screen.dart';
@@ -36,6 +38,7 @@ import '../features/challenges/presentation/challenge_screen.dart';
 import '../features/challenges/presentation/challenges_screen.dart';
 import '../features/focus/presentation/focus_providers.dart';
 import '../features/focus/presentation/focus_screen.dart';
+import '../features/focus/presentation/focus_settings_screen.dart';
 import '../features/measurements/domain/measurement.dart';
 import '../features/measurements/presentation/measurement_type_screen.dart';
 import '../features/measurements/presentation/measurements_screen.dart';
@@ -83,6 +86,16 @@ abstract final class AppRoutes {
 
   /// Reminders and notifications, under Me.
   static const notifications = '/me/notifications';
+
+  /// Backup & restore, under Me.
+  static const backup = '/me/backup';
+
+  /// The weekly recap; [week] (a Monday) or the latest one.
+  static String recap([LocalDate? week]) =>
+      week == null ? '/recap' : '/recap?week=${week.toIso()}';
+
+  /// Focus settings (Pomodoro, Do Not Disturb), under Me.
+  static const focusSettings = '/me/focus';
 
   /// Body measurements, under Me (Phase 6).
   static const measurements = '/me/measurements';
@@ -343,6 +356,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                   onOpenGoal: (id) =>
                       unawaited(context.push(AppRoutes.challenge(id))),
                   onOpenGoals: () => context.go(AppRoutes.challenges),
+                  onOpenRecap: () => unawaited(context.push(AppRoutes.recap())),
                 ),
                 routes: [
                   GoRoute(
@@ -365,6 +379,9 @@ final routerProvider = Provider<GoRouter>((ref) {
                   onOpenAppearance: () => context.go(AppRoutes.appearance),
                   onOpenNotifications: () =>
                       context.go(AppRoutes.notifications),
+                  onOpenBackup: () => context.go(AppRoutes.backup),
+                  onOpenFocusSettings: () =>
+                      context.go(AppRoutes.focusSettings),
                   onOpenGoals: () => context.go(AppRoutes.challenges),
                   onOpenNotes: () => unawaited(context.push(AppRoutes.notes)),
                   onOpenTokenShowcase: devToolsEnabled
@@ -385,6 +402,14 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'notifications',
                     builder: (context, state) => const NotificationsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'backup',
+                    builder: (context, state) => const BackupScreen(),
+                  ),
+                  GoRoute(
+                    path: 'focus',
+                    builder: (context, state) => const FocusSettingsScreen(),
                   ),
                   GoRoute(
                     path: 'measurements',
@@ -449,6 +474,16 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => DayReportScreen(
           date: LocalDate.parse(state.pathParameters['date']!),
           onOpenItem: (id) => unawaited(context.push(AppRoutes.item(id))),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: rootNavigatorKey,
+        path: '/recap',
+        builder: (context, state) => WeeklyRecapScreen(
+          weekStart: switch (state.uri.queryParameters['week']) {
+            final week? => LocalDate.parse(week),
+            null => null,
+          },
         ),
       ),
       GoRoute(
@@ -519,21 +554,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         parentNavigatorKey: rootNavigatorKey,
         path: AppRoutes.focus,
-        builder: (context, state) => FocusScreen(
-          // Finishing fills the item's log with the timed span (ADR-035).
-          onFinish: (session) async {
-            final l10n = AppLocalizations.of(context);
-            try {
-              await ref.read(finishFocusSessionProvider)(session.id);
-            } catch (error) {
-              if (context.mounted) {
-                showMessageSnackBar(context, errorMessage(l10n, error));
-              }
-              return;
-            }
-            if (context.mounted) context.pop();
-          },
-        ),
+        builder: (context, state) => const FocusScreen(),
       ),
       if (devToolsEnabled)
         GoRoute(

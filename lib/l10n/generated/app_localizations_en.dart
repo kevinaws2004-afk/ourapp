@@ -196,13 +196,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fieldTypeDate => 'A date';
 
   @override
-  String get fieldTypeDateDescription => 'A calendar date';
+  String get fieldTypeDateDescription =>
+      'Like a due date or when something started';
 
   @override
   String get fieldTypeTime => 'A time of day';
 
   @override
-  String get fieldTypeTimeDescription => 'A time of day';
+  String get fieldTypeTimeDescription => 'Like when you woke up or took a pill';
 
   @override
   String get fieldTypeDuration => 'Time spent';
@@ -1179,7 +1180,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Add what you\'re doing or planning. Open it later to log how it went.';
 
   @override
-  String get itemAddToLog => 'Add to log';
+  String get itemAddToLog => 'Track more details';
 
   @override
   String get itemAddToLogTitle => 'What do you want to log?';
@@ -4510,14 +4511,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get challengesSubtitle =>
-      'Do an activity every day and keep your streak going.';
+      'Every day, a few times a week, or an amount — keep your streak going.';
 
   @override
   String get challengesEmptyTitle => 'No goals yet';
 
   @override
   String get challengesEmptyMessage =>
-      'Pick an activity and a number of days, like 75 days of Meditation. Recording it each day keeps your streak going.';
+      'Pick an activity and a goal: every day (75 days of Meditation), a few times a week (Gym 3× a week) or an amount (1h of Study a day). Recording it keeps your streak going.';
 
   @override
   String get newChallenge => 'New goal';
@@ -5340,7 +5341,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get goalsEmptyHint =>
-      'Pick an activity and a number of days. We will count your streak.';
+      'Every day, a few times a week, or an amount. We\'ll count your streak.';
 
   @override
   String get goalsNew => 'New goal';
@@ -5384,7 +5385,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get meGroupAbout => 'About';
 
   @override
-  String get meGoalsSubtitle => 'Streaks and day targets';
+  String get meGoalsSubtitle => 'Daily, weekly and amount goals with streaks';
 
   @override
   String get meDarkMode => 'Light & dark';
@@ -6159,4 +6160,834 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get planAddEnd => 'Add end time';
+
+  @override
+  String get validationInvalidGoalAmount =>
+      'Enter how much a day or week, more than zero.';
+
+  @override
+  String goalWeeks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count weeks',
+      one: '1 week',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String goalProgressWeeks(int done, int target) {
+    return '$done / $target weeks';
+  }
+
+  @override
+  String goalThisWeekDays(int done, int target) {
+    return 'This week: $done of $target days';
+  }
+
+  @override
+  String goalThisWeekAmount(String done, String target) {
+    return 'This week: $done of $target';
+  }
+
+  @override
+  String goalTodayAmount(String done, String target) {
+    return 'Today: $done of $target';
+  }
+
+  @override
+  String goalAutoTitleWeekly(String activity, int times) {
+    return '$activity $times× a week';
+  }
+
+  @override
+  String goalAutoTitleAmountDay(String amount, String activity) {
+    return '$amount of $activity a day';
+  }
+
+  @override
+  String goalAutoTitleAmountWeek(String amount, String activity) {
+    return '$amount of $activity a week';
+  }
+
+  @override
+  String get goalWeekDone => 'Done this week';
+
+  @override
+  String get goalWeekAtRisk => 'Keep going this week — streak at risk';
+
+  @override
+  String get goalWeekNotYet => 'Keep going this week';
+
+  @override
+  String get goalKindLabel => 'Goal';
+
+  @override
+  String get goalKindDaily => 'Every day';
+
+  @override
+  String get goalKindWeekly => 'A week';
+
+  @override
+  String get goalKindAmount => 'An amount';
+
+  @override
+  String get goalTimesPerWeekLabel => 'How many days a week';
+
+  @override
+  String goalTimesChip(int count) {
+    return '$count×';
+  }
+
+  @override
+  String get goalAmountWhatLabel => 'What to count';
+
+  @override
+  String get goalAmountTime => 'Time';
+
+  @override
+  String get goalAmountLabel => 'How much';
+
+  @override
+  String get goalMinutesSuffix => 'min';
+
+  @override
+  String get goalPerDay => 'a day';
+
+  @override
+  String get goalPerWeek => 'a week';
+
+  @override
+  String get goalWeeksLabel => 'Number of weeks';
+
+  @override
+  String goalWeeklyHelper(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Do it on $count days each week.',
+      one: 'Do it on 1 day each week.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get goalAmountHelper =>
+      'Each day or week that reaches the amount counts.';
+
+  @override
+  String get goalRestDaysLabel => 'Rest days';
+
+  @override
+  String get goalRestDaysNone => 'None';
+
+  @override
+  String goalRestDaysPerWeek(int count) {
+    return '$count a week';
+  }
+
+  @override
+  String get goalRestDaysHelper =>
+      'A missed rest day doesn\'t break your streak.';
+
+  @override
+  String goalRestDaysSummary(int count, int used) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rest days a week',
+      one: '1 rest day a week',
+    );
+    return '$_temp0 · $used used';
+  }
+
+  @override
+  String get goalWeeksDone => 'Weeks done';
+
+  @override
+  String get goalWeeksLeft => 'Weeks left';
+
+  @override
+  String get backupTitle => 'Backup & restore';
+
+  @override
+  String get backupSubtitle =>
+      'Your data lives only on this phone. Keep a copy somewhere safe, and bring it back any time.';
+
+  @override
+  String get backupMeSubtitle => 'Save, export or restore your data';
+
+  @override
+  String backupLast(String date) {
+    return 'Last backup $date';
+  }
+
+  @override
+  String get backupGroupSave => 'Save a copy';
+
+  @override
+  String get backupGroupRestore => 'Restore';
+
+  @override
+  String get backupGroupAuto => 'Automatic backups';
+
+  @override
+  String get csvTitle => 'Export to a spreadsheet';
+
+  @override
+  String get csvSubtitle => 'A CSV file per activity, plus body measurements';
+
+  @override
+  String get csvNothing => 'Nothing recorded yet to export.';
+
+  @override
+  String get csvShareSubject => 'DayCraft spreadsheets';
+
+  @override
+  String get csvDate => 'Date';
+
+  @override
+  String get csvStart => 'Start';
+
+  @override
+  String get csvEnd => 'End';
+
+  @override
+  String get csvMinutes => 'Minutes';
+
+  @override
+  String get csvNotes => 'Notes';
+
+  @override
+  String get csvMeasurement => 'Measurement';
+
+  @override
+  String get csvValue => 'Value';
+
+  @override
+  String get csvUnit => 'Unit';
+
+  @override
+  String get restoreFromFile => 'Restore from a backup file';
+
+  @override
+  String get restoreFromFileSubtitle =>
+      'Pick a DayCraft backup (.json) saved earlier';
+
+  @override
+  String get restoreNotABackup => 'That file isn\'t a DayCraft backup.';
+
+  @override
+  String get restoreNewerVersion =>
+      'That backup is from a newer version of DayCraft. Update the app, then try again.';
+
+  @override
+  String get restoreConfirmTitle => 'Replace everything with this backup?';
+
+  @override
+  String restoreFrom(String date) {
+    return 'Backup from $date';
+  }
+
+  @override
+  String restoreContents(
+    int activities,
+    int records,
+    int plans,
+    int goals,
+    int notes,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      activities,
+      locale: localeName,
+      other: '$activities activities',
+      one: '1 activity',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      records,
+      locale: localeName,
+      other: '$records records',
+      one: '1 record',
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      plans,
+      locale: localeName,
+      other: '$plans plans',
+      one: '1 plan',
+    );
+    String _temp3 = intl.Intl.pluralLogic(
+      goals,
+      locale: localeName,
+      other: '$goals goals',
+      one: '1 goal',
+    );
+    String _temp4 = intl.Intl.pluralLogic(
+      notes,
+      locale: localeName,
+      other: '$notes notes',
+      one: '1 note',
+    );
+    return '$_temp0 · $_temp1 · $_temp2 · $_temp3 · $_temp4';
+  }
+
+  @override
+  String get restoreReplaceWarning =>
+      'Everything on this phone now is replaced. A copy of it is kept under Automatic backups, so you can go back.';
+
+  @override
+  String get restoreAction => 'Restore';
+
+  @override
+  String get restoreDone => 'Restored';
+
+  @override
+  String get backupDaily => 'Back up every day';
+
+  @override
+  String backupDailySubtitle(int count) {
+    return 'Keeps the last $count days on this phone';
+  }
+
+  @override
+  String get backupNow => 'Back up now';
+
+  @override
+  String get backupMade => 'Backup made';
+
+  @override
+  String get backupBeforeRestore => 'Saved before a restore';
+
+  @override
+  String get backupAutomatic => 'Automatic backup';
+
+  @override
+  String get backupOptions => 'Backup options';
+
+  @override
+  String get backupSaveCopy => 'Save a copy…';
+
+  @override
+  String get backupDeviceNote =>
+      'With Android\'s device backup on (Settings → Google → Backup), these backups and your data move to your next phone with it. Nothing is ever uploaded by DayCraft itself.';
+
+  @override
+  String get appLockTitle => 'App lock';
+
+  @override
+  String get appLockSubtitle =>
+      'Ask for your fingerprint, face or screen lock to open DayCraft';
+
+  @override
+  String get appLockReason => 'Unlock DayCraft';
+
+  @override
+  String get appLockNoScreenLock => 'Set up a screen lock on your phone first.';
+
+  @override
+  String get appLockFailed =>
+      'Couldn\'t confirm it\'s you. App lock is still off.';
+
+  @override
+  String get appLockLockedTitle => 'DayCraft is locked';
+
+  @override
+  String get appLockLockedBody => 'Your plans and records stay private.';
+
+  @override
+  String get appLockUnlock => 'Unlock';
+
+  @override
+  String focusSummary(String session, String total) {
+    return '$session, $total today';
+  }
+
+  @override
+  String pomodoroRound(int round, String time) {
+    return 'Round $round · $time to a break';
+  }
+
+  @override
+  String pomodoroBreak(String time) {
+    return 'Break · $time left';
+  }
+
+  @override
+  String pomodoroBreakOver(int round) {
+    return 'Break\'s over — ready for round $round?';
+  }
+
+  @override
+  String pomodoroStartRound(int round) {
+    return 'Start round $round';
+  }
+
+  @override
+  String get pomodoroSkipBreak => 'Skip break';
+
+  @override
+  String pomodoroChip(int minutes) {
+    return 'Pomodoro $minutes′';
+  }
+
+  @override
+  String get dndChip => 'Do Not Disturb';
+
+  @override
+  String get focusSettingsTitle => 'Focus';
+
+  @override
+  String get focusSettingsSubtitle =>
+      'Pomodoro rounds and Do Not Disturb while a timer runs';
+
+  @override
+  String get pomodoroTitle => 'Pomodoro';
+
+  @override
+  String get pomodoroSwitch => 'Work in rounds';
+
+  @override
+  String pomodoroSwitchHint(int work, int rest) {
+    return '$work min of focus, then a $rest min break. Breaks don\'t count as focused time.';
+  }
+
+  @override
+  String get pomodoroWork => 'Focus round';
+
+  @override
+  String get pomodoroShortBreak => 'Short break';
+
+  @override
+  String get pomodoroLongBreak => 'Long break';
+
+  @override
+  String get pomodoroLongEvery => 'Long break every';
+
+  @override
+  String pomodoroRounds(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rounds',
+      one: '1 round',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get dndTitle => 'Do Not Disturb';
+
+  @override
+  String get dndSwitch => 'Silence the phone while focusing';
+
+  @override
+  String get dndSwitchHint =>
+      'Turns on Do Not Disturb while a timer runs and back off when it stops';
+
+  @override
+  String get dndNeedsAccess =>
+      'Allow DayCraft under Do Not Disturb access — tap to open it';
+
+  @override
+  String notifyPomodoroRoundDone(int round) {
+    return 'Round $round done';
+  }
+
+  @override
+  String notifyPomodoroRoundDoneBody(int minutes) {
+    return 'Take a $minutes-minute break.';
+  }
+
+  @override
+  String get notifyPomodoroBreakOver => 'Break\'s over';
+
+  @override
+  String notifyPomodoroBreakOverBody(int round) {
+    return 'Ready for round $round?';
+  }
+
+  @override
+  String get notifyTimerOnBreak => 'On a break';
+
+  @override
+  String get recapTitle => 'Your week';
+
+  @override
+  String get recapShare => 'Share your week';
+
+  @override
+  String get recapShareText => 'My week, planned and done — made with DayCraft';
+
+  @override
+  String get recapEmptyTitle => 'A quiet week';
+
+  @override
+  String get recapEmptyMessage =>
+      'Nothing was planned or recorded this week. Plan a few things and your recap fills in.';
+
+  @override
+  String get recapWhereTimeWent => 'Where the time went';
+
+  @override
+  String recapBestDay(String day, String time) {
+    return 'Best day: $day · $time';
+  }
+
+  @override
+  String get recapRecords => 'Personal bests this week';
+
+  @override
+  String recapHeadlineTracked(String time) {
+    return 'You recorded $time this week';
+  }
+
+  @override
+  String recapHeadlinePlanned(String planned, String actual) {
+    return 'You planned $planned and did $actual';
+  }
+
+  @override
+  String recapOverline(String period) {
+    return 'My week · $period';
+  }
+
+  @override
+  String get recapTimeTracked => 'Time recorded';
+
+  @override
+  String recapVsLastWeek(String change) {
+    return '$change vs last week';
+  }
+
+  @override
+  String get recapThingsDone => 'Things done';
+
+  @override
+  String get recapActiveDays => 'Active days';
+
+  @override
+  String get recapPlansKept => 'Plans kept';
+
+  @override
+  String recapCardTitle(String period) {
+    return 'Your week · $period';
+  }
+
+  @override
+  String get recapCardEmpty => 'Plan a few things to see your recap here';
+
+  @override
+  String recordNewBest(String value) {
+    return 'New best: $value';
+  }
+
+  @override
+  String get recordsSection => 'Personal bests';
+
+  @override
+  String get notifyRecap => 'Your week is ready';
+
+  @override
+  String get notifyRecapBody =>
+      'See what you planned, what you did, and your bests.';
+
+  @override
+  String get notificationsRecap => 'Weekly recap';
+
+  @override
+  String get notificationsRecapHint => 'Sunday evening, your week at a glance';
+
+  @override
+  String get dayToolsTooltip => 'Day options';
+
+  @override
+  String get dayToolsCopyYesterday => 'Copy yesterday here';
+
+  @override
+  String get dayToolsCopyTo => 'Copy this day to…';
+
+  @override
+  String get dayToolsSaveRoutine => 'Save as a routine';
+
+  @override
+  String get dayToolsApplyRoutine => 'Use a routine';
+
+  @override
+  String get dayToolsNothingToCopy => 'Nothing planned on that day to copy.';
+
+  @override
+  String get dayToolsNothingToSave =>
+      'Plan a few things on this day first, then save it as a routine.';
+
+  @override
+  String dayToolsCopied(int count, String date) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Copied $count things to $date',
+      one: 'Copied 1 thing to $date',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get routineNameTitle => 'Name this routine';
+
+  @override
+  String get routineNameHint => 'Weekday study, Gym day…';
+
+  @override
+  String routineItemCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count things',
+      one: '1 thing',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String routineSaved(String name) {
+    return 'Saved “$name”';
+  }
+
+  @override
+  String routineApplied(int count, String name) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name: $count things added',
+      one: '$name: 1 thing added',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get routinesTitle => 'Routines';
+
+  @override
+  String get routinesEmpty =>
+      'No routines yet. Plan a day you\'d like to repeat, then choose Save as a routine from its menu.';
+
+  @override
+  String get routineDelete => 'Delete routine';
+
+  @override
+  String get focusAreaTitle => 'What do you want to make time for?';
+
+  @override
+  String get focusAreaBody =>
+      'Pick any. We\'ll set you up with the right activities.';
+
+  @override
+  String get focusAreaStudy => 'Studying';
+
+  @override
+  String get focusAreaWork => 'Deep work';
+
+  @override
+  String get focusAreaFitness => 'Fitness';
+
+  @override
+  String get focusAreaReading => 'Reading & learning';
+
+  @override
+  String get focusAreaMind => 'Mind & mood';
+
+  @override
+  String get focusAreaHealth => 'Healthy habits';
+
+  @override
+  String get firstPlanTitle => 'What\'s first today?';
+
+  @override
+  String get firstPlanBody =>
+      'Add one thing to start with. You can plan the rest from Today.';
+
+  @override
+  String get firstPlanWhen => 'When';
+
+  @override
+  String get firstPlanNow => 'Right now';
+
+  @override
+  String get firstPlanInAnHour => 'In an hour';
+
+  @override
+  String get firstPlanEvening => 'This evening';
+
+  @override
+  String get firstPlanAnytime => 'Anytime today';
+
+  @override
+  String get firstPlanStartNow => 'Start now';
+
+  @override
+  String get firstPlanAdd => 'Add to today';
+
+  @override
+  String get firstPlanRemind => 'Remind me 10 minutes before';
+
+  @override
+  String get firstPlanRemindHint => 'DayCraft will ask to send notifications.';
+
+  @override
+  String get healthTitle => 'Health Connect';
+
+  @override
+  String get healthSubtitle =>
+      'Bring in weight, height and body fat from your other apps';
+
+  @override
+  String get healthImport => 'Import';
+
+  @override
+  String get healthUnavailable =>
+      'Health Connect isn\'t installed. Install it from the Play Store, then try again.';
+
+  @override
+  String get healthDenied =>
+      'DayCraft wasn\'t allowed to read from Health Connect.';
+
+  @override
+  String healthImported(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Imported $count measurements',
+      one: 'Imported 1 measurement',
+      zero: 'Nothing new to import',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get healthImportedNote => 'From Health Connect';
+
+  @override
+  String widgetTitle(String date) {
+    return 'TODAY · $date';
+  }
+
+  @override
+  String get widgetNothingPlanned => 'Nothing planned yet';
+
+  @override
+  String widgetStreak(int days) {
+    return '🔥 $days';
+  }
+
+  @override
+  String widgetRunning(String title, String time) {
+    return '▶ $title · $time';
+  }
+
+  @override
+  String widgetPaused(String title) {
+    return '⏸ $title · paused';
+  }
+
+  @override
+  String widgetNextAt(String title, String time) {
+    return 'Next: $title · $time';
+  }
+
+  @override
+  String widgetNext(String title) {
+    return 'Next: $title';
+  }
+
+  @override
+  String get widgetStartSomething => 'Start something';
+
+  @override
+  String get meRate => 'Rate DayCraft';
+
+  @override
+  String get meRateSubtitle => 'A review on Google Play helps others find it';
+
+  @override
+  String get meFeedback => 'Send feedback';
+
+  @override
+  String get meFeedbackSubtitle => 'Ideas, problems, anything';
+
+  @override
+  String get feedbackIntro =>
+      'Every message is read. Nothing is sent until you choose to send it.';
+
+  @override
+  String get feedbackWrite => 'Write a message';
+
+  @override
+  String get feedbackWriteSubtitle =>
+      'Your app and phone version are added for you';
+
+  @override
+  String get feedbackSubject => 'DayCraft feedback';
+
+  @override
+  String get feedbackDiagnostics => 'Share a problem report';
+
+  @override
+  String get feedbackDiagnosticsSubject => 'DayCraft problem report';
+
+  @override
+  String get feedbackDiagnosticsNone => 'No problems recorded on this phone';
+
+  @override
+  String feedbackDiagnosticsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count recent problems, no personal data',
+      one: '1 recent problem, no personal data',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get feedbackFailed => 'Couldn\'t open that. Try again in a moment.';
+
+  @override
+  String itemPausedLine(String time) {
+    return 'Paused · $time';
+  }
+
+  @override
+  String heroPaused(String title) {
+    return '$title is paused';
+  }
+
+  @override
+  String get nowNextPaused => 'Paused';
+
+  @override
+  String get todayReportShort => 'Report';
+
+  @override
+  String get insightChartShort => 'Chart';
+
+  @override
+  String get goalActivityHelperWeekly =>
+      'Each day you record it counts toward the week.';
+
+  @override
+  String get goalActivityHelperAmount =>
+      'The time or amount you record adds up.';
+
+  @override
+  String get goalAmountHint => 'e.g. 45';
+
+  @override
+  String durationHours(int hours) {
+    return '${hours}h';
+  }
+
+  @override
+  String get durationUnderMinute => '<1 min';
+
+  @override
+  String get measurementNoneShort => 'Not yet';
 }

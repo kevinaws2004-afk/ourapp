@@ -7,6 +7,8 @@ import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/features/plans/presentation/item/item_screen.dart';
 import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:flutter/material.dart';
+import 'package:daylog/app/app_shell.dart';
+import 'package:daylog/shared/widgets/settings_group.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../support/fake_clock.dart';
@@ -23,10 +25,14 @@ const _onboarded = PreferencesSnapshot(
 /// Me → Activities (ADR-028).
 Future<void> openActivities(WidgetTester tester) async {
   await tester.tap(
-    find.descendant(of: find.byType(NavigationBar), matching: find.text('Me')),
+    find.descendant(
+      of: find.byKey(AppShell.tabBarKey),
+      matching: find.text('Me'),
+    ),
   );
   await tester.pumpAndSettle();
-  await tester.tap(find.text('Activities'));
+  // The settings row (Me also shows an "Activities" count at the top).
+  await tester.tap(find.widgetWithText(SettingsTile, 'Activities'));
   await tester.pumpAndSettle();
 }
 
@@ -47,11 +53,13 @@ Future<void> findActivity(
 }
 
 Future<void> scrollAndTap(WidgetTester tester, Finder finder) async {
-  await tester.scrollUntilVisible(
-    finder,
-    200,
-    scrollable: find.byType(Scrollable).hitTestable().first,
-  );
+  final scrollable = find.byType(Scrollable).hitTestable().first;
+  try {
+    await tester.scrollUntilVisible(finder, 200, scrollable: scrollable);
+  } on StateError {
+    // Not further down: it's above (e.g. a section just added higher up).
+    await tester.scrollUntilVisible(finder, -200, scrollable: scrollable);
+  }
   // Fully in view, not just peeking at the edge.
   await tester.ensureVisible(finder);
   await tester.pumpAndSettle();
@@ -89,7 +97,7 @@ void main() {
     await pumpTestApp(tester, preferences: _onboarded);
     await openActivities(tester);
 
-    expect(find.text('New activity'), findsOneWidget);
+    expect(find.byTooltip('New activity'), findsOneWidget);
     expect(find.text('Sleep & self-care'), findsOneWidget, reason: 'heading');
     expect(find.text('Yours'), findsNothing);
     expect(find.textContaining('emplate'), findsNothing, reason: 'one word');
@@ -150,7 +158,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Yours'), findsOneWidget);
     expect(find.text('Walking'), findsOneWidget, reason: 'listed once');
-    expect(find.text('Record'), findsOneWidget);
+    expect(find.byTooltip('Record'), findsOneWidget);
   });
 
   testAppWidgets('an activity of yours replaces the built-in one with its '
@@ -182,7 +190,7 @@ void main() {
     await pumpTestApp(tester, preferences: _onboarded);
     await openActivities(tester);
 
-    await tester.tap(find.text('New activity'));
+    await tester.tap(find.byTooltip('New activity'));
     await tester.pumpAndSettle();
     await tester.enterText(
       find.widgetWithText(TextFormField, 'Name'),
@@ -219,7 +227,7 @@ void main() {
     final semantics = tester.ensureSemantics();
     await pumpTestApp(tester, preferences: _onboarded);
     await openActivities(tester);
-    await tester.tap(find.text('New activity'));
+    await tester.tap(find.byTooltip('New activity'));
     await tester.pumpAndSettle();
 
     await tester.scrollUntilVisible(
@@ -248,7 +256,7 @@ void main() {
     await pumpTestApp(tester, preferences: _onboarded);
     await openActivities(tester);
 
-    await tester.tap(find.text('New activity'));
+    await tester.tap(find.byTooltip('New activity'));
     await tester.pumpAndSettle();
     await scrollAndTap(tester, find.widgetWithText(FilledButton, 'Save'));
 
@@ -297,9 +305,15 @@ void main() {
 
     await tester.tap(find.text('Antifragile'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Item options'));
-    await tester.pumpAndSettle();
-    await scrollAndTap(tester, find.text('Delete'));
+    // Delete sits with the item's other actions at the bottom (a record
+    // without a plan has it in the top bar).
+    final inBar = find.byTooltip('Delete');
+    if (inBar.evaluate().isNotEmpty) {
+      await tester.tap(inBar);
+      await tester.pumpAndSettle();
+    } else {
+      await scrollAndTap(tester, find.widgetWithText(TextButton, 'Delete'));
+    }
 
     expect(find.text('Antifragile'), findsNothing);
     expect(find.text('Deleted'), findsOneWidget);

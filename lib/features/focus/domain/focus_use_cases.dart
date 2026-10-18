@@ -87,10 +87,17 @@ class PauseFocusSession {
   final FocusSessionRepository _sessions;
   final Clock _clock;
 
-  Future<void> call(FocusSessionId id) async {
+  /// Pauses now, or at [at] (a Pomodoro round that ended while the app was
+  /// closed): never before the session last started running, never later
+  /// than now.
+  Future<void> call(FocusSessionId id, {DateTime? at}) async {
     final session = await _active(_sessions, id, 'PauseFocus');
     if (session.state == FocusState.paused) return;
-    await _sessions.updatePause(session.paused(_clock.nowUtc()));
+    final now = _clock.nowUtc();
+    var when = at ?? now;
+    if (when.isAfter(now)) when = now;
+    if (when.isBefore(session.updatedAt)) when = session.updatedAt;
+    await _sessions.updatePause(session.paused(when));
   }
 }
 

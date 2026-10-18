@@ -8,6 +8,7 @@ import '../../../core/design/window_size_class.dart';
 import '../../../core/time/clock.dart';
 import '../../../core/time/clock_provider.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import '../../focus/domain/focus_session.dart';
 import '../../activity_logs/domain/activity_log.dart';
 import '../../challenges/domain/challenge.dart';
 import '../../focus/presentation/focus_banner.dart';
@@ -92,6 +93,9 @@ class TodayScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final margin = WindowSizeClass.of(context).screenMargin;
+    // Rebuilt each minute: the hero line, Next card and evening state follow
+    // the time of day.
+    ref.watch(minuteTickProvider);
     final clock = ref.watch(clockProvider);
     final today = currentLocalDate(clock);
     final overview = ref.watch(dayOverviewProvider(today)).value;
@@ -152,11 +156,13 @@ class TodayScreen extends ConsumerWidget {
                     HeaderIconButton(
                       icon: AppIcons.bars,
                       tooltip: l10n.dayReportTitle,
+                      label: l10n.todayReportShort,
                       onPressed: () => onOpenDayReport(today),
                     ),
                     HeaderIconButton(
                       icon: AppIcons.notes.outline,
                       tooltip: l10n.notesTitle,
+                      label: l10n.notesTitle,
                       onPressed: onOpenNotes,
                     ),
                     UserAvatar(
@@ -171,7 +177,14 @@ class TodayScreen extends ConsumerWidget {
                   greeting: name.isEmpty
                       ? greeting
                       : l10n.greetingNamed(greeting, name),
-                  statusLine: heroLine(context, progress, running),
+                  statusLine: heroLine(
+                    context,
+                    progress,
+                    running,
+                    paused:
+                        ref.watch(activeFocusSessionProvider).value?.state ==
+                        FocusState.paused,
+                  ),
                   progress: progress,
                   bestStreak: bestStreak,
                 ),
@@ -204,10 +217,13 @@ class TodayScreen extends ConsumerWidget {
                 ] else ...[
                   SectionHeader(
                     title: l10n.todayYourDay,
-                    trailing: TextButton.icon(
-                      onPressed: add,
-                      icon: const Icon(AppIcons.add, size: 18),
-                      label: Text(l10n.todayAddShort),
+                    trailing: Tooltip(
+                      message: l10n.todayAdd,
+                      child: TextButton.icon(
+                        onPressed: add,
+                        icon: const Icon(AppIcons.add, size: 18),
+                        label: Text(l10n.todayAddShort),
+                      ),
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xs),

@@ -49,6 +49,8 @@ Future<PlanSheetAction?> showPlanEditor(
   PlannedItem? item,
   ActivityChooser? chooser,
 }) => showModalBottomSheet<PlanSheetAction>(
+  useRootNavigator: true,
+  useSafeArea: true,
   context: context,
   isScrollControlled: true,
   builder: (_) => _PlanEditorSheet(date: date, item: item, chooser: chooser),

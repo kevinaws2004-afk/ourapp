@@ -34,7 +34,12 @@ void testAppWidgets(String description, WidgetTesterCallback body) {
       _openDatabases.clear();
       await tester.runAsync(() async {
         for (final db in databases) {
-          await db.close();
+          // A query left queued on the test's fake clock can keep close()
+          // waiting forever; don't let that hang the whole run.
+          await db.close().timeout(
+            const Duration(seconds: 5),
+            onTimeout: () {},
+          );
         }
       });
     }
@@ -80,4 +85,34 @@ Future<AppDatabase> pumpTestApp(
   );
   await tester.pumpAndSettle();
   return db;
+}
+
+/// Goes through first-run onboarding the quickest way: Get started, skip
+/// the name, start with whatever is picked.
+Future<void> completeOnboarding(WidgetTester tester) async {
+  await tester.ensureVisible(find.text('Get started'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Get started'));
+  await tester.pumpAndSettle();
+  await tester.ensureVisible(find.text('Skip for now'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Skip for now'));
+  await tester.pumpAndSettle();
+  final start = find.textContaining('Start with');
+  await tester.ensureVisible(start.first);
+  await tester.pumpAndSettle();
+  await tester.tap(start.first);
+  await tester.pumpAndSettle();
+}
+
+/// Scrolls the current screen until [text] shows, then taps it.
+Future<void> scrollToAndTap(WidgetTester tester, String text) async {
+  await tester.scrollUntilVisible(
+    find.text(text),
+    300,
+    scrollable: find.byType(Scrollable).first,
+  );
+  await tester.pumpAndSettle();
+  await tester.tap(find.text(text));
+  await tester.pumpAndSettle();
 }

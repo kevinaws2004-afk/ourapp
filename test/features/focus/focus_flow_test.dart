@@ -70,7 +70,7 @@ void main() {
     await openItem(tester, find.text('Read'));
     expect(find.text('Not done'), findsOneWidget, reason: 'A7');
     await tester.scrollUntilVisible(
-      find.text('Minutes'),
+      find.text('Minutes').last,
       200,
       scrollable: find.byType(Scrollable).hitTestable().first,
     );

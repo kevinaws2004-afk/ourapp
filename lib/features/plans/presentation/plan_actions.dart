@@ -16,9 +16,16 @@ import '../../activity_logs/domain/activity_log.dart';
 import '../../activity_logs/presentation/activity_log_providers.dart';
 import '../../activity_types/domain/activity_ids.dart';
 import '../../activity_types/domain/activity_type.dart';
+import '../../activity_types/domain/field_type.dart';
 import '../../challenges/presentation/challenge_providers.dart';
 import '../../focus/domain/focus_session.dart';
+import '../../focus/domain/focus_use_cases.dart';
 import '../../focus/presentation/focus_providers.dart';
+import '../../activity_logs/presentation/value_formatting.dart';
+import '../../../core/time/clock_provider.dart';
+import '../domain/day_progress.dart';
+import 'plan_date_notifier.dart';
+import '../../settings/presentation/review_prompt.dart';
 import '../domain/plan.dart';
 import '../domain/watch_day_overview.dart';
 import 'item/how_did_it_go_sheet.dart';
@@ -117,8 +124,16 @@ class PlanActions {
         if (created case final log?) await deleteLog(log);
       },
     );
-    if (ok && (type?.hasMeaningfulDetails ?? false) && _context.mounted) {
+    if (ok && _context.mounted && await _needsDetails(id, type)) {
       await _howDidItGo(id);
+    }
+    if (ok) _celebrate(streak);
+  }
+
+  /// A streak milestone is a good moment to ask for a rating.
+  void _celebrate(ActivityStreak? streak) {
+    if (streak != null && reviewStreaks.contains(streak.afterToday)) {
+      unawaited(maybeAskForReview(_ref));
     }
   }
 
@@ -135,17 +150,55 @@ class PlanActions {
         ? null
         : _ref.read(activityStreaksProvider)[type.id];
     var ok = false;
+    final l10n = _l10n;
+    // The app-wide messenger: the summary stays up after this screen closes.
+    final messenger = ScaffoldMessenger.of(_context);
+    final clock = _ref.read(clockProvider);
+    final (_, sessionMs) = FinishFocusSession.endOf(session, clock.nowUtc());
     await _run(() async {
       await _ref.read(finishFocusSessionProvider)(session.id);
       ok = true;
-    }, message: doneMessage(_l10n, title, streak));
+    });
+    if (!ok) return;
     final planId = session.planId;
-    if (ok &&
-        planId != null &&
-        (type?.hasMeaningfulDetails ?? false) &&
-        _context.mounted) {
+    if (planId != null &&
+        _context.mounted &&
+        await _needsDetails(planId, type)) {
       await _howDidItGo(planId);
     }
+    // "Reading done · 🔥 13 · 45 min, 2h 15m today" (session summary), once
+    // "How did it go?" is answered, so it's seen.
+    final summary = await focusSummary(
+      l10n,
+      sessionMs,
+      _ref.read(dayOverviewProvider(currentLocalDate(clock)).future),
+    );
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text('${doneMessage(l10n, title, streak)} · $summary'),
+        ),
+      );
+    _celebrate(streak);
+  }
+
+  /// Whether to ask "How did it go?": the activity has details worth
+  /// recording (a list like sets, or a number shown in Progress) and none
+  /// of them is filled in yet. Already logged on the item: no need to ask.
+  Future<bool> _needsDetails(PlanId planId, ActivityType? type) async {
+    if (type == null || !type.hasMeaningfulDetails) return false;
+    final log = await _ref
+        .read(activityLogRepositoryProvider)
+        .getLogForPlan(planId);
+    if (log == null) return true;
+    final meaningful = [
+      for (final f in type.activeFields)
+        if (f.type == FieldType.repeatingGroup ||
+            (f.type == FieldType.number && f.measurable))
+          f.id,
+    ];
+    return !meaningful.any(log.values.containsKey);
   }
 
   /// "How did it go?" for a just-done plan. An open item (the one it was
@@ -156,6 +209,23 @@ class PlanActions {
       await _ref.read(itemProvider(args).notifier).reload();
     }
     if (_context.mounted) await showHowDidItGo(_context, args);
+  }
+
+  /// The end of a timed session: "45 min, 2h 15m today" (today's total
+  /// includes it). Just the session's time if the day can't be read.
+  static Future<String> focusSummary(
+    AppLocalizations l10n,
+    int sessionMs,
+    Future<DayOverview> today,
+  ) async {
+    final session = formatDuration(l10n, sessionMs);
+    try {
+      final total = DayProgress.of(await today).recordedMs;
+      if (total <= sessionMs) return session;
+      return l10n.focusSummary(session, formatDuration(l10n, total));
+    } catch (_) {
+      return session;
+    }
   }
 
   /// "Meditation done", or "Meditation done · 🔥 13" when it keeps a streak.
@@ -196,6 +266,20 @@ class PlanActions {
       to,
       _l10n.planMovedTo(
         MaterialLocalizations.of(_context).formatMediumDate(picked),
+      ),
+    );
+  }
+
+  /// Moves [item] to [to] (dropped on a day of the week strip), with Undo.
+  Future<void> moveToDate(PlannedItem item, LocalDate to) async {
+    if (to == item.plan.planDate) return;
+    unawaited(HapticFeedback.mediumImpact());
+    await _moveTo(
+      item,
+      to,
+      _l10n.planMovedTo(
+        MaterialLocalizations.of(_context)
+            .formatMediumDate(DateTime(to.year, to.month, to.day)),
       ),
     );
   }
@@ -291,6 +375,7 @@ class PlanActions {
     final l10n = _l10n;
     final isOpen = item.isOpen;
     final action = await showModalBottomSheet<_QuickAction>(
+      useRootNavigator: true,
       context: _context,
       isScrollControlled: true,
       useSafeArea: true,

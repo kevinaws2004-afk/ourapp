@@ -6,7 +6,7 @@ import 'package:daylog/features/activity_types/domain/activity_type_use_cases.da
 import 'package:daylog/features/plans/data/db_plan_repository.dart';
 import 'package:daylog/features/plans/domain/plan.dart';
 import 'package:daylog/features/plans/domain/plan_use_cases.dart';
-import 'package:daylog/features/plans/presentation/widgets/plan_item_tile.dart';
+import 'package:daylog/features/today/presentation/today_timeline.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +17,7 @@ import '../../../support/fixtures.dart';
 import '../../../support/test_app.dart';
 import '../../activity_types/presentation/activities_flow_test.dart'
     show scrollAndTap;
+
 import 'plans_flow_test.dart' show closeItem, openItem, waitForSave;
 
 const _onboarded = PreferencesSnapshot(
@@ -50,6 +51,12 @@ Future<void> enterAt(
   await tester.pumpAndSettle();
 }
 
+/// The Gym row on Today's timeline.
+final _gymRow = find.descendant(
+  of: find.byType(TodayTimeline),
+  matching: find.text('Gym'),
+);
+
 /// ADR-035: plan → open it at the gym → log sets as you go (saved as you
 /// type) → leave mid-workout, come back, add another set → one linked log.
 void main() {
@@ -61,7 +68,7 @@ void main() {
       seed: seedGymPlan,
     );
 
-    await openItem(tester, find.byType(PlanItemTile));
+    await openItem(tester, _gymRow);
     await scrollAndTap(tester, find.text('Add Exercise'));
     final exercise = find.descendant(
       of: find.widgetWithText(FieldEditorShell, 'Exercise *'),
@@ -70,11 +77,19 @@ void main() {
     await tester.ensureVisible(exercise);
     await tester.enterText(exercise, 'Chest Press');
     await tester.pumpAndSettle();
-    // Only the set being filled in has inputs; earlier ones fold (ADR-045).
-    for (final (kg, reps) in [('60', '10'), ('65', '8'), ('70', '6')]) {
+    FocusManager.instance.primaryFocus?.unfocus(); // closes the suggestions
+    await tester.pumpAndSettle();
+    // Only the set being filled in has inputs; ✓ folds it, then the next
+    // can be added (ADR-045).
+    for (final (i, (kg, reps)) in [
+      ('60', '10'),
+      ('65', '8'),
+      ('70', '6'),
+    ].indexed) {
       await scrollAndTap(tester, find.text('Add Set'));
       await enterAt(tester, 'Weight', 0, kg);
       await enterAt(tester, 'Reps', 0, reps);
+      await scrollAndTap(tester, find.byTooltip('Finish Set ${i + 1}'));
     }
     FocusManager.instance.primaryFocus?.unfocus();
     await waitForSave(tester);
@@ -86,7 +101,7 @@ void main() {
     );
 
     // Back at the gym: the sets are there; one more.
-    await openItem(tester, find.byType(PlanItemTile));
+    await openItem(tester, _gymRow);
     await scrollAndTap(tester, find.text('Add Set'));
     expect(find.text('Set 4'), findsOneWidget);
     await enterAt(tester, 'Weight', 0, '70');

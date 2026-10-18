@@ -20,6 +20,9 @@ import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:daylog/app/app_shell.dart';
+import 'package:daylog/shared/widgets/section_header.dart';
+import 'package:daylog/features/insights/presentation/insight_overview.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/fake_clock.dart';
@@ -56,15 +59,31 @@ Future<void> seedWeights(AppDatabase db, FakeClock clock) async {
 
 Future<void> openTab(WidgetTester tester, String label) async {
   await tester.tap(
-    find.descendant(of: find.byType(NavigationBar), matching: find.text(label)),
+    find.descendant(
+      of: find.byKey(AppShell.tabBarKey),
+      matching: find.text(label),
+    ),
   );
   await tester.pumpAndSettle();
 }
 
-/// Scrolls the Insights tab down to its list of activities.
-Future<void> scrollToActivities(WidgetTester tester) =>
+/// Scrolls the Insights tab down to its list of activities (just past its
+/// header, so the rows under it are on screen).
+Future<void> scrollToActivities(WidgetTester tester) async {
+  final scrollable = find.byType(Scrollable).hitTestable().first;
+  await tester.scrollUntilVisible(
+    find.widgetWithText(SectionHeader, 'Activities'),
+    200,
+    scrollable: scrollable,
+  );
+  await tester.drag(scrollable, const Offset(0, -250));
+  await tester.pumpAndSettle();
+}
+
+/// Scrolls the Insights tab until [finder] shows.
+Future<void> scrollTo(WidgetTester tester, Finder finder) =>
     tester.scrollUntilVisible(
-      find.text('Activities'),
+      finder,
       200,
       scrollable: find.byType(Scrollable).hitTestable().first,
     );
@@ -76,7 +95,8 @@ void main() {
     await pumpTestApp(tester, preferences: _onboarded);
     await openTab(tester, 'Progress');
 
-    expect(find.text('Nothing recorded in this period.'), findsOneWidget);
+    await scrollTo(tester, find.text('Nothing recorded in this period.'));
+    await scrollTo(tester, find.text('Build your first chart'));
     expect(find.text('Build your first chart'), findsOneWidget);
   });
 
@@ -104,10 +124,8 @@ void main() {
   testAppWidgets('recording a body measurement from Me', (tester) async {
     await pumpTestApp(tester, preferences: _onboarded);
     await openTab(tester, 'Me');
-    await tester.tap(find.text('Body measurements'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Weight'));
-    await tester.pumpAndSettle();
+    await scrollAndTap(tester, find.text('Body measurements'));
+    await scrollAndTap(tester, find.text('Weight').first);
 
     await tester.tap(find.text('Add measurement'));
     await tester.pumpAndSettle();
@@ -164,7 +182,7 @@ void main() {
     // The activities come after the period's overview.
     await scrollToActivities(tester);
     expect(find.textContaining('1 day ·'), findsOneWidget);
-    await tester.tap(find.widgetWithText(ListTile, 'Gym'));
+    await tester.tap(find.widgetWithText(ActivityTotalsTile, 'Gym'));
     await tester.pumpAndSettle();
 
     expect(find.byType(ActivityInsightsScreen), findsOneWidget);
@@ -186,8 +204,9 @@ void main() {
     expect(find.text('Sep 4 – Oct 3'), findsOneWidget);
     expect(find.text('best this period'), findsWidgets);
     expect(find.text('All-time best 60 kg · Oct 2'), findsOneWidget);
+    // Sets, not a weight × reps "volume".
     await tester.scrollUntilVisible(
-      find.text('Best day 480 kg · Oct 2'),
+      find.text('Chest Press · sets'),
       200,
       scrollable: find
           .descendant(
@@ -196,7 +215,7 @@ void main() {
           )
           .first,
     );
-    expect(find.text('Best Set 480 kg · Oct 2'), findsOneWidget, reason: 'A21');
+    expect(find.textContaining('volume'), findsNothing);
   });
 
   group('one period, live and clear (A20–A24)', () {
@@ -290,7 +309,7 @@ void main() {
       );
       await openTab(tester, 'Progress');
       await scrollToActivities(tester);
-      await tester.tap(find.widgetWithText(ListTile, 'Reading'));
+      await tester.tap(find.widgetWithText(ActivityTotalsTile, 'Reading'));
       await tester.pumpAndSettle();
 
       expect(find.text('Times done'), findsOneWidget);
@@ -352,16 +371,19 @@ void main() {
 
     // Two days with anything done so far: early (PR3).
     expect(find.text('Progress builds as you go.'), findsOneWidget);
-    expect(find.text('Consistency'), findsOneWidget);
+    await scrollTo(tester, find.text('Consistency'));
     expect(find.text('1 of 30 days'), findsOneWidget);
     await tester.scrollUntilVisible(
       find.textContaining('Not done this'),
       200,
       scrollable: find.byType(Scrollable).hitTestable().first,
     );
-    expect(find.widgetWithText(ListTile, 'Painting'), findsOneWidget);
+    expect(find.widgetWithText(ActivityTotalsTile, 'Painting'), findsOneWidget);
     expect(find.textContaining('Best run 1 week'), findsOneWidget);
-    await scrollAndTap(tester, find.widgetWithText(ListTile, 'Painting'));
+    await scrollAndTap(
+      tester,
+      find.widgetWithText(ActivityTotalsTile, 'Painting'),
+    );
     expect(find.byType(ActivityInsightsScreen), findsOneWidget);
     expect(
       find.textContaining('Pick a longer period above'),
@@ -434,7 +456,7 @@ void main() {
     );
     await openTab(tester, 'Progress');
     await scrollToActivities(tester);
-    await scrollAndTap(tester, find.widgetWithText(ListTile, 'Meds'));
+    await scrollAndTap(tester, find.widgetWithText(ActivityTotalsTile, 'Meds'));
 
     final page = find
         .descendant(

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_today">आज</string>
+    <string name="widget_open_app">दिन की योजना के लिए खोलें</string>
+    <string name="widget_start">शुरू करें</string>
+    <string name="widget_description">आज की प्रगति, आगे क्या है, और झटपट शुरुआत</string>
+    <string name="tile_label">DayCraft में शुरू करें</string>
+</resources>

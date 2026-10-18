@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,6 +31,8 @@ import '../domain/challenge_use_cases.dart';
 import 'challenge_card.dart';
 import 'challenge_providers.dart';
 import 'challenge_sheet.dart';
+import 'goal_copy.dart';
+import '../../settings/presentation/review_prompt.dart';
 
 enum _Menu { edit, restart, end }
 
@@ -107,6 +111,8 @@ class ChallengeScreen extends ConsumerWidget {
             ..showSnackBar(
               SnackBar(
                 content: Text(l10n.challengeRestarted),
+                // Undo stays offered for the usual few seconds, not until dismissed.
+                persist: false,
                 action: SnackBarAction(
                   label: l10n.actionUndo,
                   onPressed: () => setStart(challenge.id, previous),
@@ -123,6 +129,8 @@ class ChallengeScreen extends ConsumerWidget {
             ..showSnackBar(
               SnackBar(
                 content: Text(l10n.challengeEnded),
+                // Undo stays offered for the usual few seconds, not until dismissed.
+                persist: false,
                 action: SnackBarAction(
                   label: l10n.actionUndo,
                   onPressed: () => restore(challenge.id),
@@ -140,6 +148,9 @@ class ChallengeScreen extends ConsumerWidget {
 
 class _Body extends ConsumerWidget {
   const _Body({required this.view, required this.onOpenItem});
+
+  /// Goals already celebrated this run.
+  static final _askedFor = <String>{};
 
   final ChallengeView view;
   final ValueChanged<PlanId> onOpenItem;
@@ -185,7 +196,15 @@ class _Body extends ConsumerWidget {
     final quiet = context.textStyles.bodyMedium?.copyWith(
       color: context.colors.textSecondary,
     );
-    String days(int n) => l10n.insightDaysDone(n);
+    // A goal completed today is a good moment to ask for a rating.
+    if (progress.completedOn == today && _askedFor.add(challenge.id.value)) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => unawaited(maybeAskForReview(ref)),
+      );
+    }
+    String days(int n) => goalPeriods(l10n, n, progress.period);
+    final periodLine = goalPeriodLine(l10n, challenge, progress, type);
+    final week = progress.period == GoalPeriod.week;
     return Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
@@ -236,13 +255,30 @@ class _Body extends ConsumerWidget {
             AppProgressBar(
               fraction: progress.fraction,
               color: accent,
-              semanticLabel: l10n.challengeProgressDays(
-                progress.progress,
-                progress.targetDays,
-              ),
+              semanticLabel: goalProgressText(l10n, progress),
             ),
+            if (periodLine != null) ...[
+              const SizedBox(height: AppSpacing.md),
+              Text(periodLine, style: context.textStyles.titleSmall),
+              const SizedBox(height: AppSpacing.xs),
+              AppProgressBar(
+                fraction: progress.periodFraction,
+                color: accent,
+                semanticLabel: periodLine,
+              ),
+            ],
             const SizedBox(height: AppSpacing.md),
-            ChallengeStateLine(state: progress.today),
+            ChallengeStateLine(state: progress.today, period: progress.period),
+            if (challenge.restDays > 0) ...[
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                l10n.goalRestDaysSummary(
+                  challenge.restDays,
+                  progress.restedDays.length,
+                ),
+                style: quiet,
+              ),
+            ],
             if (progress.today == ChallengeToday.notYet ||
                 progress.today == ChallengeToday.atRisk) ...[
               const SizedBox(height: AppSpacing.md),
@@ -284,14 +320,14 @@ class _Body extends ConsumerWidget {
               children: [
                 Expanded(
                   child: StatTile(
-                    label: l10n.challengeDaysDone,
+                    label: week ? l10n.goalWeeksDone : l10n.challengeDaysDone,
                     value: days(progress.daysDone),
                   ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: StatTile(
-                    label: l10n.challengeDaysLeft,
+                    label: week ? l10n.goalWeeksLeft : l10n.challengeDaysLeft,
                     value: days(progress.daysLeft),
                   ),
                 ),
@@ -305,10 +341,7 @@ class _Body extends ConsumerWidget {
                 to: today,
                 counts: {for (final d in progress.doneDays) d: 1},
                 color: accent,
-                semanticLabel: l10n.challengeProgressDays(
-                  progress.daysDone,
-                  progress.targetDays,
-                ),
+                semanticLabel: goalProgressText(l10n, progress),
               ),
             ),
           ],

@@ -175,6 +175,8 @@ void showUndoSnackBar(
     ..showSnackBar(
       SnackBar(
         content: Text(message),
+        // Undo stays offered for the usual few seconds, not until dismissed.
+        persist: false,
         action: SnackBarAction(label: l10n.actionUndo, onPressed: onUndo),
       ),
     );

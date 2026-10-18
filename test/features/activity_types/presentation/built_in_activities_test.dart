@@ -69,7 +69,7 @@ void main() {
         'Money',
         'Family & care',
         'Work',
-        'Learning',
+        'Study & learning',
         'Exercise & sport',
         'Mind & wellbeing',
         'Faith & spirituality',

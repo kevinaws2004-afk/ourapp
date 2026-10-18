@@ -7,9 +7,12 @@ import '../../l10n/generated/app_localizations.dart';
 /// 🔥 and a streak's days ("13"), on an activity that's in a running
 /// challenge (ADR-046). Read as "13 day streak".
 class StreakBadge extends StatelessWidget {
-  const StreakBadge({super.key, required this.days});
+  const StreakBadge({super.key, required this.days, this.compact = false});
 
   final int days;
+
+  /// Smaller, in the warm streak color (next to a title on a row).
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -20,14 +23,22 @@ class StreakBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(AppIcons.streak, size: 16, color: c.accentDawn),
+          Icon(
+            AppIcons.streak,
+            size: compact ? 13 : 16,
+            color: compact ? c.warning : c.accentDawn,
+          ),
           const SizedBox(width: 2),
           Text(
             '$days',
-            style: context.textStyles.labelMedium?.copyWith(
-              color: c.textPrimary,
-              fontFeatures: const [FontFeature.tabularFigures()],
-            ),
+            style:
+                (compact
+                        ? context.textStyles.labelSmall
+                        : context.textStyles.labelMedium)
+                    ?.copyWith(
+                      color: compact ? c.warning : c.textPrimary,
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                    ),
           ),
         ],
       ),

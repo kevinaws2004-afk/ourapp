@@ -7,7 +7,6 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:daylog/core/design/keys/activity_color_key.dart';
 import 'package:daylog/core/design/themes/lavender_theme.dart';
 import 'package:daylog/shared/widgets/app_logo.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +14,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-final _colors = LogoColors.from(
-  lavenderTokens.colors,
-  teal: lavenderTokens.activity(ActivityColorKey.teal).solid,
-  coral: lavenderTokens.activity(ActivityColorKey.coral).solid,
-  rose: lavenderTokens.activity(ActivityColorKey.rose).solid,
-);
+final _colors = LogoColors.from(lavenderTokens.colors);
 
 /// Every part in one flat color (monochrome and notification icons).
 LogoColors _flat(Color c) => LogoColors(

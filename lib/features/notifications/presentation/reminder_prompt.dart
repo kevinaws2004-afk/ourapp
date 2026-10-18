@@ -43,6 +43,7 @@ Future<({bool cancelled, PlanReminder? reminder})> showReminderSheet(
 }) async {
   final result = await showModalBottomSheet<({PlanReminder? reminder})>(
     context: context,
+    useRootNavigator: true,
     useSafeArea: true,
     isScrollControlled: true,
     builder: (context) =>

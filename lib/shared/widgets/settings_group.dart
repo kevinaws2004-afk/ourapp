@@ -76,6 +76,7 @@ class SettingsTile extends StatelessWidget {
     this.iconColor,
     this.iconBackground,
     this.destructive = false,
+    this.enabled = true,
   });
 
   final IconData icon;
@@ -90,6 +91,10 @@ class SettingsTile extends StatelessWidget {
   final Color? iconBackground;
   final bool destructive;
 
+  /// Off: shown dimmed, as a setting that doesn't apply right now (its
+  /// switch or parent is off).
+  final bool enabled;
+
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
@@ -97,8 +102,18 @@ class SettingsTile extends StatelessWidget {
     final bg = destructive
         ? c.dangerContainer
         : (iconBackground ?? c.brandPrimarySoft);
-    return InkWell(
-      onTap: onTap,
+    // Each row is its own node for screen readers, even without a tap
+    // action, and reads as one ("Focus round, 25 min").
+    // A row with only a switch flips it when tapped anywhere.
+    var tap = onTap;
+    final toggle = trailing;
+    if (tap == null && toggle is Switch) {
+      if (toggle.onChanged case final changed?) {
+        tap = () => changed(!toggle.value);
+      }
+    }
+    final row = InkWell(
+      onTap: enabled ? tap : null,
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 64),
         child: Padding(
@@ -142,13 +157,20 @@ class SettingsTile extends StatelessWidget {
                   ],
                 ),
               ),
+              // A long value shares the row instead of squeezing the title
+              // away.
               if (value case final v?)
-                Padding(
-                  padding: const EdgeInsets.only(left: AppSpacing.sm),
-                  child: Text(
-                    v,
-                    style: context.textStyles.bodyMedium?.copyWith(
-                      color: c.textSecondary,
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: AppSpacing.sm),
+                    child: Text(
+                      v,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.end,
+                      style: context.textStyles.bodyMedium?.copyWith(
+                        color: c.textSecondary,
+                      ),
                     ),
                   ),
                 ),
@@ -166,6 +188,13 @@ class SettingsTile extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+    return MergeSemantics(
+      child: Semantics(
+        container: true,
+        enabled: enabled,
+        child: enabled ? row : Opacity(opacity: 0.45, child: row),
       ),
     );
   }

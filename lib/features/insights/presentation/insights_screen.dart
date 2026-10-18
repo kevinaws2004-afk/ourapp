@@ -24,6 +24,9 @@ import 'chart_builder_sheet.dart';
 import 'insight_chart_card.dart';
 import 'insight_formatting.dart';
 import 'insight_providers.dart';
+import 'recap_providers.dart';
+import 'personal_records.dart';
+import '../../../core/design/tokens/radius.dart';
 import 'activity_insights_screen.dart';
 import 'insight_overview.dart';
 import 'progress_sentences.dart';
@@ -48,7 +51,11 @@ class InsightsScreen extends ConsumerWidget {
     required this.chooser,
     required this.onOpenGoal,
     required this.onOpenGoals,
+    required this.onOpenRecap,
   });
+
+  /// Opens the weekly recap.
+  final VoidCallback onOpenRecap;
 
   /// Opens one goal (a challenge).
   final ValueChanged<ChallengeId> onOpenGoal;
@@ -89,10 +96,13 @@ class InsightsScreen extends ConsumerWidget {
                   HeaderIconButton(
                     icon: AppIcons.add,
                     tooltip: l10n.insightAddChart,
+                    label: l10n.insightChartShort,
                     onPressed: () => showChartBuilder(context),
                   ),
                 ],
               ),
+              _YourWeekCard(onOpen: onOpenRecap),
+              const SizedBox(height: AppSpacing.lg),
               const ProgressRangeTabs(),
               Padding(
                 padding: const EdgeInsets.only(
@@ -128,6 +138,7 @@ class InsightsScreen extends ConsumerWidget {
                 onOpenGoals: onOpenGoals,
                 margin: margin,
               ),
+              const _RecentRecords(),
               SectionHeader(title: l10n.insightActivitySection),
               _ActivityTotals(onOpenActivity: onOpenActivity, chooser: chooser),
               const SizedBox(height: AppSpacing.lg),
@@ -152,6 +163,92 @@ class InsightsScreen extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// "Your week": the latest week's planned vs recorded time, opening the
+/// recap.
+class _YourWeekCard extends ConsumerWidget {
+  const _YourWeekCard({required this.onOpen});
+
+  final VoidCallback onOpen;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final c = context.colors;
+    final today = currentLocalDate(ref.watch(clockProvider));
+    final week = defaultRecapWeek(today);
+    final recap = ref.watch(weekRecapProvider(week)).value;
+    final line = switch (recap) {
+      null => '',
+      final r when r.isEmpty => l10n.recapCardEmpty,
+      final r when r.plannedShare != null => l10n.recapHeadlinePlanned(
+        formatDuration(l10n, r.plannedMs),
+        formatDuration(l10n, r.actualMs),
+      ),
+      final r => l10n.recapHeadlineTracked(formatDuration(l10n, r.trackedMs)),
+    };
+    return Material(
+      color: c.brandPrimarySoft,
+      borderRadius: AppRadius.lgAll,
+      child: InkWell(
+        borderRadius: AppRadius.lgAll,
+        onTap: onOpen,
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: Row(
+            children: [
+              Icon(AppIcons.recap, color: c.brandPrimary),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.recapCardTitle(
+                        formatPeriod(context, week, week.addDays(6)),
+                      ),
+                      style: context.textStyles.titleSmall,
+                    ),
+                    if (line.isNotEmpty)
+                      Text(
+                        line,
+                        style: context.textStyles.bodySmall?.copyWith(
+                          color: c.textSecondary,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              Icon(AppIcons.chevron, color: c.textSecondary),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Personal bests of the last 30 days (up to three).
+class _RecentRecords extends ConsumerWidget {
+  const _RecentRecords();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final today = currentLocalDate(ref.watch(clockProvider));
+    final records =
+        ref.watch(personalRecordsProvider(today.addDays(-29))).value ??
+        const [];
+    if (records.isEmpty) return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SectionHeader(title: l10n.recordsSection),
+        for (final r in records.take(3)) PersonalRecordTile(record: r),
+      ],
     );
   }
 }

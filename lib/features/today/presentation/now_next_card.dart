@@ -64,7 +64,10 @@ class NowNextCard extends ConsumerWidget {
     final start = formatPlanStart(context, plan);
 
     final label = switch (kind) {
-      NowNextKind.running => l10n.nowNextRunning,
+      NowNextKind.running =>
+        session?.state == FocusState.paused
+            ? l10n.nowNextPaused
+            : l10n.nowNextRunning,
       NowNextKind.now => l10n.nowNextNow,
       NowNextKind.next => l10n.nowNextNext(start!),
       NowNextKind.anytime => l10n.nowNextAnytime,
@@ -120,27 +123,32 @@ class NowNextCard extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
+          // Wraps onto two lines when the text is large.
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: AppSpacing.sm,
+            runSpacing: AppSpacing.xs,
             children: [
-              StatusChip(
-                label: label.toUpperCase(),
-                tone: StatusTone.active,
-                filled: true,
-              ),
-              if (soon != null) ...[
-                const SizedBox(width: AppSpacing.sm),
-                Flexible(
-                  child: Text(
-                    soon,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.textStyles.labelMedium?.copyWith(
-                      color: c.textSecondary,
-                    ),
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: AppSpacing.sm,
+                runSpacing: AppSpacing.xs,
+                children: [
+                  StatusChip(
+                    label: label.toUpperCase(),
+                    tone: StatusTone.active,
+                    filled: true,
                   ),
-                ),
-              ],
-              const Spacer(),
+                  if (soon != null)
+                    Text(
+                      soon,
+                      style: context.textStyles.labelMedium?.copyWith(
+                        color: c.textSecondary,
+                      ),
+                    ),
+                ],
+              ),
               if (streak != null)
                 StreakBadge(days: streak.days)
               else if (type != null &&
@@ -198,34 +206,47 @@ class NowNextCard extends ConsumerWidget {
             _LiveTime(session: session),
           ] else if (start != null || length != null) ...[
             const SizedBox(height: AppSpacing.sm),
-            Row(
+            Wrap(
+              spacing: AppSpacing.md,
+              runSpacing: AppSpacing.xs,
               children: [
-                if (start != null) ...[
-                  Icon(AppIcons.time, size: 14, color: c.textSecondary),
-                  const SizedBox(width: 4),
-                  Text(
-                    switch (formatPlanEnd(context, plan)) {
-                      final end? => l10n.planTimeRange(start, end),
-                      null => start,
-                    },
-                    style: context.textStyles.labelMedium?.copyWith(
-                      color: c.textSecondary,
-                      fontWeight: FontWeight.w600,
-                    ),
+                if (start != null)
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(AppIcons.time, size: 14, color: c.textSecondary),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          switch (formatPlanEnd(context, plan)) {
+                            final end? => l10n.planTimeRange(start, end),
+                            null => start,
+                          },
+                          style: context.textStyles.labelMedium?.copyWith(
+                            color: c.textSecondary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: AppSpacing.md),
-                ],
-                if (length != null) ...[
-                  Icon(AppIcons.timer, size: 14, color: c.textSecondary),
-                  const SizedBox(width: 4),
-                  Text(
-                    formatDuration(l10n, length),
-                    style: context.textStyles.labelMedium?.copyWith(
-                      color: c.textSecondary,
-                      fontWeight: FontWeight.w600,
-                    ),
+                if (length != null)
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(AppIcons.timer, size: 14, color: c.textSecondary),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          formatDuration(l10n, length),
+                          style: context.textStyles.labelMedium?.copyWith(
+                            color: c.textSecondary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
               ],
             ),
           ],

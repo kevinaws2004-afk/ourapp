@@ -10,6 +10,10 @@ abstract final class ChallengeValidator {
     required int targetDays,
     required LocalDate startDate,
     required LocalDate today,
+    GoalKind kind = GoalKind.daily,
+    int? timesPerWeek,
+    double? amount,
+    int restDays = 0,
   }) {
     final issues = <ValidationIssue>[];
     final name = title.trim();
@@ -35,6 +39,20 @@ abstract final class ChallengeValidator {
         const ValidationIssue(
           ValidationCode.challengeStartInFuture,
           target: 'start',
+        ),
+      );
+    }
+    final amountOk = switch (kind) {
+      GoalKind.daily => restDays >= 0 && restDays <= Challenge.maxRestDays,
+      GoalKind.weekly =>
+        timesPerWeek != null && timesPerWeek >= 1 && timesPerWeek <= 7,
+      GoalKind.amount => amount != null && amount.isFinite && amount > 0,
+    };
+    if (!amountOk) {
+      issues.add(
+        const ValidationIssue(
+          ValidationCode.invalidGoalAmount,
+          target: 'amount',
         ),
       );
     }

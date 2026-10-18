@@ -14,16 +14,30 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/errors/error_copy.dart';
 import '../../../shared/widgets/activity_badge.dart';
 import '../../../shared/widgets/app_button.dart';
+import '../../../shared/widgets/app_logo.dart';
 import '../../../shared/widgets/state_views.dart';
+import '../../../core/time/clock.dart';
+import '../../../core/time/clock_provider.dart';
+import '../../activity_types/domain/activity_type.dart';
 import '../../activity_types/domain/activity_type_definition.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
 import '../../activity_types/presentation/starter_activities.dart';
+import '../../focus/presentation/focus_providers.dart';
+import '../../notifications/domain/plan_reminder.dart';
+import '../../notifications/presentation/notification_providers.dart';
+import '../../notifications/presentation/reminder_prompt.dart';
+import '../../plans/domain/plan.dart';
 import '../../plans/domain/plan_title_match.dart';
+import '../../plans/presentation/plan_date_notifier.dart';
+import '../../plans/presentation/plan_providers.dart';
 import '../../settings/presentation/preferences_providers.dart';
 
-/// First run, three short steps: what Daylog is, what to call you, and what
-/// you want to track (your first activities, installed in one tap). Finishing
-/// sets the onboarding flag, and the router moves to Today.
+/// First run, five short steps: what Daylog is, what to call you, what you
+/// want to make time for (which picks your starting activities), the
+/// activities themselves (installed in one tap), and your first thing for
+/// today — so Today never opens empty. Notification permission is asked
+/// only when that first thing gets a reminder. Finishing sets the
+/// onboarding flag, and the router moves to Today.
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -35,12 +49,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final _pages = PageController();
   final _name = TextEditingController();
   int _page = 0;
+  final Set<FocusArea> _areas = {};
   Set<String>? _picked;
   bool _busy = false;
 
-  static const _steps = 3;
+  static const _steps = 5;
 
-  /// Chosen for you to start with; change them freely.
+  /// Chosen for you to start with when no area is picked; change them
+  /// freely.
   static const _defaultPicks = 3;
 
   @override
@@ -62,13 +78,27 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     );
   }
 
-  Future<void> _finish(List<ActivityTypeDefinition> options) async {
+  /// The areas picked decide the activities picked for you.
+  void _areasChosen(List<ActivityTypeDefinition> options) {
+    final l10n = AppLocalizations.of(context);
+    if (_areas.isNotEmpty) {
+      final names = {for (final a in _areas) ...a.starters(l10n)};
+      _picked = {
+        for (final d in options)
+          if (names.contains(d.name)) d.name,
+      };
+    }
+    _go(3);
+  }
+
+  /// Installs the picked activities (skipping ones already there), then
+  /// moves on to the first thing for today.
+  Future<void> _install(List<ActivityTypeDefinition> options) async {
     if (_busy) return;
     final l10n = AppLocalizations.of(context);
     setState(() => _busy = true);
     try {
-      final prefs = ref.read(preferencesNotifierProvider.notifier);
-      await prefs.setName(_name.text);
+      await ref.read(preferencesNotifierProvider.notifier).setName(_name.text);
       final picked = _picked ?? const <String>{};
       final existing = await ref
           .read(activityTypeRepositoryProvider)
@@ -82,7 +112,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         await install(definition);
       }
       unawaited(HapticFeedback.mediumImpact());
-      await prefs.completeOnboarding();
+      if (!mounted) return;
+      setState(() => _busy = false);
+      if (picked.isEmpty) {
+        await _complete();
+      } else {
+        _go(4);
+      }
     } catch (error) {
       if (mounted) {
         showMessageSnackBar(context, errorMessage(l10n, error));
@@ -91,12 +127,60 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     }
   }
 
+  /// Adds the first thing to today: started now (with its timer), at a
+  /// time (with a reminder, asking for permission only then), or anytime.
+  Future<void> _firstPlan(
+    ActivityType type,
+    FirstPlanTime when, {
+    required bool remind,
+  }) async {
+    if (_busy) return;
+    final l10n = AppLocalizations.of(context);
+    setState(() => _busy = true);
+    try {
+      final clock = ref.read(clockProvider);
+      final now = clock.nowUtc();
+      final start = when.startFrom(now, clock);
+      final id = await ref.read(createPlanProvider)(
+        PlanDraft(
+          planDate: currentLocalDate(clock),
+          title: '',
+          activityTypeId: type.id,
+          plannedStartAt: start,
+        ),
+      );
+      if (when == FirstPlanTime.now && type.supportsTimer) {
+        await ref.read(startFocusSessionProvider)(type.id, planId: id);
+      } else if (remind && start != null && start.isAfter(now)) {
+        await ref.read(notificationServiceProvider).requestPermission();
+        await setRemindersFor(ref, id, const [ReminderBefore(10)]);
+      }
+      await _complete();
+    } catch (error) {
+      if (mounted) {
+        showMessageSnackBar(context, errorMessage(l10n, error));
+        setState(() => _busy = false);
+      }
+    }
+  }
+
+  Future<void> _complete() async {
+    unawaited(HapticFeedback.mediumImpact());
+    await ref.read(preferencesNotifierProvider.notifier).completeOnboarding();
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final c = context.colors;
     final options = starterActivities(l10n);
     _picked ??= {for (final d in options.take(_defaultPicks)) d.name};
+    final installed = [
+      for (final t
+          in ref.watch(activeActivityTypesProvider).value ??
+              const <ActivityType>[])
+        if (_picked!.contains(t.name)) t,
+    ];
 
     return Scaffold(
       body: SafeArea(
@@ -105,7 +189,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             constraints: const BoxConstraints(maxWidth: 520),
             child: Column(
               children: [
-                // Progress and Skip.
+                // Progress and Back.
                 Padding(
                   padding: const EdgeInsets.fromLTRB(
                     AppSpacing.xl,
@@ -129,10 +213,18 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           ),
                         ),
                       const Spacer(),
-                      if (_page > 0)
+                      // Activities are installed by step 4: no going back.
+                      if (_page > 0 && _page < 4)
                         TextButton(
                           onPressed: _busy ? null : () => _go(_page - 1),
                           child: Text(l10n.onboardingBack),
+                        ),
+                      if (_page == 4)
+                        TextButton(
+                          onPressed: _busy
+                              ? null
+                              : () => unawaited(_complete()),
+                          child: Text(l10n.onboardingSkip),
                         ),
                     ],
                   ),
@@ -145,6 +237,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     children: [
                       _Welcome(onNext: () => _go(1)),
                       _NameStep(controller: _name, onNext: () => _go(2)),
+                      _AreaStep(
+                        picked: _areas,
+                        onToggle: (area) => setState(() {
+                          unawaited(HapticFeedback.selectionClick());
+                          _areas.contains(area)
+                              ? _areas.remove(area)
+                              : _areas.add(area);
+                        }),
+                        onNext: () => _areasChosen(options),
+                      ),
                       _PickStep(
                         options: options,
                         picked: _picked!,
@@ -154,7 +256,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           final p = _picked!;
                           p.contains(name) ? p.remove(name) : p.add(name);
                         }),
-                        onFinish: () => unawaited(_finish(options)),
+                        onFinish: () => unawaited(_install(options)),
+                      ),
+                      _FirstPlanStep(
+                        types: installed,
+                        busy: _busy,
+                        onDone: (type, when, {required remind}) =>
+                            unawaited(_firstPlan(type, when, remind: remind)),
                       ),
                     ],
                   ),
@@ -274,15 +382,19 @@ class _NameStep extends StatelessWidget {
       ),
       children: [
         const SizedBox(height: AppSpacing.giant),
-        Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            color: c.brandPrimarySoft,
-            borderRadius: AppRadius.lgAll,
+        // A square tile on the left (a ListView would stretch it).
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Container(
+            width: 64,
+            height: 64,
+            decoration: BoxDecoration(
+              color: c.brandPrimarySoft,
+              borderRadius: AppRadius.lgAll,
+            ),
+            alignment: Alignment.center,
+            child: Icon(AppIcons.wave, color: c.brandPrimary, size: 32),
           ),
-          alignment: Alignment.center,
-          child: Icon(AppIcons.wave, color: c.brandPrimary, size: 32),
         ),
         const SizedBox(height: AppSpacing.xl),
         Text(l10n.meNameTitle, style: context.textStyles.displayMedium),
@@ -430,13 +542,19 @@ class _PickTile extends StatelessWidget {
                         size: 48,
                       ),
                       const SizedBox(height: AppSpacing.sm),
-                      Text(
-                        definition.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: context.textStyles.labelMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
+                      // Room for two lines on every tile, so they line up.
+                      SizedBox(
+                        height: 36,
+                        child: Center(
+                          child: Text(
+                            definition.name,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: context.textStyles.labelMedium?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -466,6 +584,321 @@ class _PickTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// What someone wants to make time for (step 3): each brings its starting
+/// activities.
+enum FocusArea {
+  study('graduation-cap', 'sky'),
+  work('laptop', 'lilac'),
+  fitness('barbell', 'coral'),
+  reading('book-open', 'teal'),
+  mind('flower-lotus', 'rose'),
+  health('drop', 'slate');
+
+  const FocusArea(this.iconId, this.colorKey);
+
+  final String iconId;
+  final String colorKey;
+
+  String label(AppLocalizations l10n) => switch (this) {
+    study => l10n.focusAreaStudy,
+    work => l10n.focusAreaWork,
+    fitness => l10n.focusAreaFitness,
+    reading => l10n.focusAreaReading,
+    mind => l10n.focusAreaMind,
+    health => l10n.focusAreaHealth,
+  };
+
+  /// The starter activities it picks (by their localized names).
+  List<String> starters(AppLocalizations l10n) => switch (this) {
+    study => [l10n.builtInStudy, l10n.builtInFocusedWork],
+    work => [l10n.builtInFocusedWork, l10n.builtInMeeting],
+    fitness => [l10n.builtInGym, l10n.builtInWalking, l10n.builtInRunning],
+    reading => [l10n.builtInReading, l10n.builtInLanguage],
+    mind => [l10n.builtInMeditation, l10n.builtInMood],
+    health => [l10n.builtInWater, l10n.builtInSleep, l10n.builtInWalking],
+  };
+}
+
+/// When the first thing happens (step 5).
+enum FirstPlanTime {
+  now,
+  inAnHour,
+  evening,
+  anytime;
+
+  /// Its start, or null for anytime. "This evening" is 19:00, or an hour
+  /// from now once that has passed.
+  DateTime? startFrom(DateTime nowUtc, Clock clock) {
+    final offset = clock.offsetAt(nowUtc);
+    final local = nowUtc.add(offset);
+    DateTime atLocal(int hour, int minute) => DateTime.utc(
+      local.year,
+      local.month,
+      local.day,
+      hour,
+      minute,
+    ).subtract(offset);
+    switch (this) {
+      case now:
+        return nowUtc;
+      case inAnHour:
+        // The next quarter hour after an hour from now.
+        final inHour = local.add(const Duration(hours: 1));
+        final quarter = (inHour.minute / 15).ceil() * 15;
+        return DateTime.utc(
+          inHour.year,
+          inHour.month,
+          inHour.day,
+          inHour.hour,
+        ).add(Duration(minutes: quarter)).subtract(offset);
+      case evening:
+        final seven = atLocal(19, 0);
+        return seven.isAfter(nowUtc)
+            ? seven
+            : FirstPlanTime.inAnHour.startFrom(nowUtc, clock);
+      case anytime:
+        return null;
+    }
+  }
+
+  String label(AppLocalizations l10n) => switch (this) {
+    now => l10n.firstPlanNow,
+    inAnHour => l10n.firstPlanInAnHour,
+    evening => l10n.firstPlanEvening,
+    anytime => l10n.firstPlanAnytime,
+  };
+}
+
+class _AreaStep extends StatelessWidget {
+  const _AreaStep({
+    required this.picked,
+    required this.onToggle,
+    required this.onNext,
+  });
+
+  final Set<FocusArea> picked;
+  final ValueChanged<FocusArea> onToggle;
+  final VoidCallback onNext;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final c = context.colors;
+    return _Step(
+      action: AppButton(
+        label: picked.isEmpty ? l10n.onboardingSkip : l10n.onboardingContinue,
+        icon: AppIcons.arrowRight,
+        expand: true,
+        onPressed: onNext,
+      ),
+      children: [
+        const SizedBox(height: AppSpacing.xl),
+        Text(l10n.focusAreaTitle, style: context.textStyles.displayMedium),
+        const SizedBox(height: AppSpacing.sm),
+        Text(
+          l10n.focusAreaBody,
+          style: context.textStyles.bodyLarge?.copyWith(color: c.textSecondary),
+        ),
+        const SizedBox(height: AppSpacing.xl),
+        for (final area in FocusArea.values)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+            child: Semantics(
+              selected: picked.contains(area),
+              button: true,
+              child: Material(
+                color: picked.contains(area)
+                    ? c.brandPrimarySoft
+                    : c.surfaceBase,
+                borderRadius: AppRadius.lgAll,
+                child: InkWell(
+                  borderRadius: AppRadius.lgAll,
+                  onTap: () => onToggle(area),
+                  child: Container(
+                    padding: const EdgeInsets.all(AppSpacing.md),
+                    decoration: BoxDecoration(
+                      borderRadius: AppRadius.lgAll,
+                      border: Border.all(
+                        color: picked.contains(area)
+                            ? c.brandPrimary
+                            : c.borderSubtle,
+                        width: picked.contains(area) ? 2 : 1,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        ActivityBadge(
+                          iconId: area.iconId,
+                          colorKey: area.colorKey,
+                        ),
+                        const SizedBox(width: AppSpacing.md),
+                        Expanded(
+                          child: Text(
+                            area.label(l10n),
+                            style: context.textStyles.titleMedium,
+                          ),
+                        ),
+                        Icon(
+                          picked.contains(area)
+                              ? AppIcons.taskDone
+                              : AppIcons.taskOpen,
+                          color: picked.contains(area)
+                              ? c.brandPrimary
+                              : c.textTertiary,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+/// Step 5: the first thing for today — which activity and when — so Today
+/// opens with something on it.
+class _FirstPlanStep extends StatefulWidget {
+  const _FirstPlanStep({
+    required this.types,
+    required this.busy,
+    required this.onDone,
+  });
+
+  final List<ActivityType> types;
+  final bool busy;
+  final void Function(
+    ActivityType type,
+    FirstPlanTime when, {
+    required bool remind,
+  })
+  onDone;
+
+  @override
+  State<_FirstPlanStep> createState() => _FirstPlanStepState();
+}
+
+class _FirstPlanStepState extends State<_FirstPlanStep> {
+  /// Times that still fall today and say something different: no "In an
+  /// hour" past midnight, no "This evening" once the evening has begun.
+  bool _fitsToday(FirstPlanTime when) {
+    final now = DateTime.now();
+    return switch (when) {
+      FirstPlanTime.inAnHour =>
+        now.add(const Duration(minutes: 75)).day == now.day,
+      FirstPlanTime.evening => now.hour < 18,
+      _ => true,
+    };
+  }
+
+  /// "In an hour · 7:15 PM": the time it will be planned for.
+  String _chipLabel(
+    BuildContext context,
+    AppLocalizations l10n,
+    FirstPlanTime when,
+  ) {
+    if (when != FirstPlanTime.inAnHour && when != FirstPlanTime.evening) {
+      return when.label(l10n);
+    }
+    final start = when.startFrom(DateTime.now().toUtc(), const SystemClock());
+    if (start == null) return when.label(l10n);
+    final time = MaterialLocalizations.of(context)
+        .formatTimeOfDay(TimeOfDay.fromDateTime(start.toLocal()));
+    return '${when.label(l10n)} · $time';
+  }
+
+  ActivityType? _type;
+  late FirstPlanTime _when = _fitsToday(FirstPlanTime.inAnHour)
+      ? FirstPlanTime.inAnHour
+      : FirstPlanTime.anytime;
+  bool _remind = true;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final c = context.colors;
+    final type =
+        _type ??
+        widget.types.where((t) => t.supportsTimer).firstOrNull ??
+        widget.types.firstOrNull;
+    final timed =
+        _when == FirstPlanTime.inAnHour || _when == FirstPlanTime.evening;
+    return _Step(
+      action: AppButton(
+        label: _when == FirstPlanTime.now
+            ? l10n.firstPlanStartNow
+            : l10n.firstPlanAdd,
+        icon: _when == FirstPlanTime.now ? AppIcons.start : AppIcons.check,
+        variant: AppButtonVariant.action,
+        expand: true,
+        onPressed: widget.busy || type == null
+            ? null
+            : () => widget.onDone(type, _when, remind: timed && _remind),
+      ),
+      children: [
+        const SizedBox(height: AppSpacing.xl),
+        Text(l10n.firstPlanTitle, style: context.textStyles.displayMedium),
+        const SizedBox(height: AppSpacing.sm),
+        Text(
+          l10n.firstPlanBody,
+          style: context.textStyles.bodyLarge?.copyWith(color: c.textSecondary),
+        ),
+        const SizedBox(height: AppSpacing.xl),
+        Wrap(
+          spacing: AppSpacing.sm,
+          runSpacing: AppSpacing.sm,
+          children: [
+            for (final t in widget.types)
+              ChoiceChip(
+                avatar: ActivityBadge(
+                  iconId: t.iconId,
+                  colorKey: t.colorKey,
+                  size: 24,
+                ),
+                label: Text(t.name),
+                // Keep the activity's icon; the chip's own color shows it's
+                // chosen.
+                showCheckmark: false,
+                selected: t.id == type?.id,
+                onSelected: (_) => setState(() => _type = t),
+              ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.xl),
+        Text(l10n.firstPlanWhen, style: context.textStyles.titleMedium),
+        const SizedBox(height: AppSpacing.sm),
+        Wrap(
+          spacing: AppSpacing.sm,
+          runSpacing: AppSpacing.sm,
+          children: [
+            for (final when in FirstPlanTime.values)
+              if ((when != FirstPlanTime.now ||
+                      (type?.supportsTimer ?? false)) &&
+                  _fitsToday(when))
+                ChoiceChip(
+                  label: Text(_chipLabel(context, l10n, when)),
+                  selected: _when == when,
+                  onSelected: (_) => setState(() => _when = when),
+                ),
+          ],
+        ),
+        if (timed) ...[
+          const SizedBox(height: AppSpacing.lg),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            value: _remind,
+            onChanged: (v) => setState(() => _remind = v),
+            title: Text(l10n.firstPlanRemind),
+            subtitle: Text(l10n.firstPlanRemindHint),
+          ),
+        ],
+      ],
     );
   }
 }
@@ -531,16 +964,13 @@ class _Orbit extends StatelessWidget {
                 border: Border.all(color: c.borderSubtle, width: 1.5),
               ),
             ),
-          Container(
-            width: 96,
-            height: 96,
+          // The app's own mark, in the current theme.
+          DecoratedBox(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
-              color: c.brandPrimary,
               boxShadow: context.tokens.shadows.glow(c.brandPrimary),
             ),
-            alignment: Alignment.center,
-            child: Icon(AppIcons.dayDone, size: 46, color: c.onBrandPrimary),
+            child: const AppLogo(size: 104),
           ),
           for (final (i, (icon, color)) in _badges.indexed)
             Transform.translate(

@@ -436,10 +436,10 @@ abstract class AppLocalizations {
   /// **'A date'**
   String get fieldTypeDate;
 
-  /// Field type description for Date.
+  /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'A calendar date'**
+  /// **'Like a due date or when something started'**
   String get fieldTypeDateDescription;
 
   /// Field type name: Time.
@@ -448,10 +448,10 @@ abstract class AppLocalizations {
   /// **'A time of day'**
   String get fieldTypeTime;
 
-  /// Field type description for Time.
+  /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'A time of day'**
+  /// **'Like when you woke up or took a pill'**
   String get fieldTypeTimeDescription;
 
   /// Field type name: Duration.
@@ -2242,10 +2242,10 @@ abstract class AppLocalizations {
   /// **'Add what you\'re doing or planning. Open it later to log how it went.'**
   String get todayEmptyMessageItems;
 
-  /// Button in an item: add something new to log (a number, a list, …).
+  /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Add to log'**
+  /// **'Track more details'**
   String get itemAddToLog;
 
   /// Title of the sheet for adding something to log.
@@ -8704,10 +8704,10 @@ abstract class AppLocalizations {
   /// **'Goals'**
   String get challengesTitle;
 
-  /// Challenges screen subtitle.
+  /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Do an activity every day and keep your streak going.'**
+  /// **'Every day, a few times a week, or an amount — keep your streak going.'**
   String get challengesSubtitle;
 
   /// Challenges empty state title.
@@ -8716,10 +8716,10 @@ abstract class AppLocalizations {
   /// **'No goals yet'**
   String get challengesEmptyTitle;
 
-  /// Challenges empty state message.
+  /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Pick an activity and a number of days, like 75 days of Meditation. Recording it each day keeps your streak going.'**
+  /// **'Pick an activity and a goal: every day (75 days of Meditation), a few times a week (Gym 3× a week) or an amount (1h of Study a day). Recording it keeps your streak going.'**
   String get challengesEmptyMessage;
 
   /// Button: start a new challenge.
@@ -9873,10 +9873,10 @@ abstract class AppLocalizations {
   /// **'Set your first goal'**
   String get goalsEmptyCta;
 
-  /// No description provided for @goalsEmptyHint.
+  /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Pick an activity and a number of days. We will count your streak.'**
+  /// **'Every day, a few times a week, or an amount. We\'ll count your streak.'**
   String get goalsEmptyHint;
 
   /// No description provided for @goalsNew.
@@ -9957,10 +9957,10 @@ abstract class AppLocalizations {
   /// **'About'**
   String get meGroupAbout;
 
-  /// No description provided for @meGoalsSubtitle.
+  /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Streaks and day targets'**
+  /// **'Daily, weekly and amount goals with streaks'**
   String get meGoalsSubtitle;
 
   /// No description provided for @meDarkMode.
@@ -11294,6 +11294,1242 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add end time'**
   String get planAddEnd;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter how much a day or week, more than zero.'**
+  String get validationInvalidGoalAmount;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 week} other{{count} weeks}}'**
+  String goalWeeks(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} / {target} weeks'**
+  String goalProgressWeeks(int done, int target);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'This week: {done} of {target} days'**
+  String goalThisWeekDays(int done, int target);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'This week: {done} of {target}'**
+  String goalThisWeekAmount(String done, String target);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Today: {done} of {target}'**
+  String goalTodayAmount(String done, String target);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{activity} {times}× a week'**
+  String goalAutoTitleWeekly(String activity, int times);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} of {activity} a day'**
+  String goalAutoTitleAmountDay(String amount, String activity);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} of {activity} a week'**
+  String goalAutoTitleAmountWeek(String amount, String activity);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Done this week'**
+  String get goalWeekDone;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep going this week — streak at risk'**
+  String get goalWeekAtRisk;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep going this week'**
+  String get goalWeekNotYet;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal'**
+  String get goalKindLabel;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day'**
+  String get goalKindDaily;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'A week'**
+  String get goalKindWeekly;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'An amount'**
+  String get goalKindAmount;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'How many days a week'**
+  String get goalTimesPerWeekLabel;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}×'**
+  String goalTimesChip(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'What to count'**
+  String get goalAmountWhatLabel;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get goalAmountTime;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'How much'**
+  String get goalAmountLabel;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'min'**
+  String get goalMinutesSuffix;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'a day'**
+  String get goalPerDay;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'a week'**
+  String get goalPerWeek;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of weeks'**
+  String get goalWeeksLabel;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Do it on 1 day each week.} other{Do it on {count} days each week.}}'**
+  String goalWeeklyHelper(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Each day or week that reaches the amount counts.'**
+  String get goalAmountHelper;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest days'**
+  String get goalRestDaysLabel;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get goalRestDaysNone;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} a week'**
+  String goalRestDaysPerWeek(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'A missed rest day doesn\'t break your streak.'**
+  String get goalRestDaysHelper;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 rest day a week} other{{count} rest days a week}} · {used} used'**
+  String goalRestDaysSummary(int count, int used);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Weeks done'**
+  String get goalWeeksDone;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Weeks left'**
+  String get goalWeeksLeft;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup & restore'**
+  String get backupTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data lives only on this phone. Keep a copy somewhere safe, and bring it back any time.'**
+  String get backupSubtitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Save, export or restore your data'**
+  String get backupMeSubtitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Last backup {date}'**
+  String backupLast(String date);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Save a copy'**
+  String get backupGroupSave;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get backupGroupRestore;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic backups'**
+  String get backupGroupAuto;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Export to a spreadsheet'**
+  String get csvTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'A CSV file per activity, plus body measurements'**
+  String get csvSubtitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing recorded yet to export.'**
+  String get csvNothing;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'DayCraft spreadsheets'**
+  String get csvShareSubject;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get csvDate;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get csvStart;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get csvEnd;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get csvMinutes;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get csvNotes;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Measurement'**
+  String get csvMeasurement;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get csvValue;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get csvUnit;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore from a backup file'**
+  String get restoreFromFile;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a DayCraft backup (.json) saved earlier'**
+  String get restoreFromFileSubtitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'That file isn\'t a DayCraft backup.'**
+  String get restoreNotABackup;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'That backup is from a newer version of DayCraft. Update the app, then try again.'**
+  String get restoreNewerVersion;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace everything with this backup?'**
+  String get restoreConfirmTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup from {date}'**
+  String restoreFrom(String date);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{activities, plural, =1{1 activity} other{{activities} activities}} · {records, plural, =1{1 record} other{{records} records}} · {plans, plural, =1{1 plan} other{{plans} plans}} · {goals, plural, =1{1 goal} other{{goals} goals}} · {notes, plural, =1{1 note} other{{notes} notes}}'**
+  String restoreContents(
+    int activities,
+    int records,
+    int plans,
+    int goals,
+    int notes,
+  );
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything on this phone now is replaced. A copy of it is kept under Automatic backups, so you can go back.'**
+  String get restoreReplaceWarning;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get restoreAction;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Restored'**
+  String get restoreDone;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Back up every day'**
+  String get backupDaily;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Keeps the last {count} days on this phone'**
+  String backupDailySubtitle(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Back up now'**
+  String get backupNow;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup made'**
+  String get backupMade;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved before a restore'**
+  String get backupBeforeRestore;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic backup'**
+  String get backupAutomatic;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup options'**
+  String get backupOptions;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Save a copy…'**
+  String get backupSaveCopy;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'With Android\'s device backup on (Settings → Google → Backup), these backups and your data move to your next phone with it. Nothing is ever uploaded by DayCraft itself.'**
+  String get backupDeviceNote;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'App lock'**
+  String get appLockTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask for your fingerprint, face or screen lock to open DayCraft'**
+  String get appLockSubtitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock DayCraft'**
+  String get appLockReason;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up a screen lock on your phone first.'**
+  String get appLockNoScreenLock;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t confirm it\'s you. App lock is still off.'**
+  String get appLockFailed;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'DayCraft is locked'**
+  String get appLockLockedTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your plans and records stay private.'**
+  String get appLockLockedBody;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock'**
+  String get appLockUnlock;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{session}, {total} today'**
+  String focusSummary(String session, String total);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Round {round} · {time} to a break'**
+  String pomodoroRound(int round, String time);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Break · {time} left'**
+  String pomodoroBreak(String time);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Break\'s over — ready for round {round}?'**
+  String pomodoroBreakOver(int round);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Start round {round}'**
+  String pomodoroStartRound(int round);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip break'**
+  String get pomodoroSkipBreak;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro {minutes}′'**
+  String pomodoroChip(int minutes);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Do Not Disturb'**
+  String get dndChip;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus'**
+  String get focusSettingsTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro rounds and Do Not Disturb while a timer runs'**
+  String get focusSettingsSubtitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Pomodoro'**
+  String get pomodoroTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Work in rounds'**
+  String get pomodoroSwitch;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{work} min of focus, then a {rest} min break. Breaks don\'t count as focused time.'**
+  String pomodoroSwitchHint(int work, int rest);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus round'**
+  String get pomodoroWork;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Short break'**
+  String get pomodoroShortBreak;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Long break'**
+  String get pomodoroLongBreak;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Long break every'**
+  String get pomodoroLongEvery;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 round} other{{count} rounds}}'**
+  String pomodoroRounds(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Do Not Disturb'**
+  String get dndTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Silence the phone while focusing'**
+  String get dndSwitch;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Turns on Do Not Disturb while a timer runs and back off when it stops'**
+  String get dndSwitchHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow DayCraft under Do Not Disturb access — tap to open it'**
+  String get dndNeedsAccess;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Round {round} done'**
+  String notifyPomodoroRoundDone(int round);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a {minutes}-minute break.'**
+  String notifyPomodoroRoundDoneBody(int minutes);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Break\'s over'**
+  String get notifyPomodoroBreakOver;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready for round {round}?'**
+  String notifyPomodoroBreakOverBody(int round);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'On a break'**
+  String get notifyTimerOnBreak;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your week'**
+  String get recapTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your week'**
+  String get recapShare;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'My week, planned and done — made with DayCraft'**
+  String get recapShareText;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'A quiet week'**
+  String get recapEmptyTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing was planned or recorded this week. Plan a few things and your recap fills in.'**
+  String get recapEmptyMessage;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Where the time went'**
+  String get recapWhereTimeWent;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Best day: {day} · {time}'**
+  String recapBestDay(String day, String time);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal bests this week'**
+  String get recapRecords;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'You recorded {time} this week'**
+  String recapHeadlineTracked(String time);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'You planned {planned} and did {actual}'**
+  String recapHeadlinePlanned(String planned, String actual);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'My week · {period}'**
+  String recapOverline(String period);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Time recorded'**
+  String get recapTimeTracked;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{change} vs last week'**
+  String recapVsLastWeek(String change);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Things done'**
+  String get recapThingsDone;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Active days'**
+  String get recapActiveDays;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Plans kept'**
+  String get recapPlansKept;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your week · {period}'**
+  String recapCardTitle(String period);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan a few things to see your recap here'**
+  String get recapCardEmpty;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'New best: {value}'**
+  String recordNewBest(String value);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal bests'**
+  String get recordsSection;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your week is ready'**
+  String get notifyRecap;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'See what you planned, what you did, and your bests.'**
+  String get notifyRecapBody;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly recap'**
+  String get notificationsRecap;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday evening, your week at a glance'**
+  String get notificationsRecapHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Day options'**
+  String get dayToolsTooltip;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy yesterday here'**
+  String get dayToolsCopyYesterday;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy this day to…'**
+  String get dayToolsCopyTo;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Save as a routine'**
+  String get dayToolsSaveRoutine;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a routine'**
+  String get dayToolsApplyRoutine;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing planned on that day to copy.'**
+  String get dayToolsNothingToCopy;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan a few things on this day first, then save it as a routine.'**
+  String get dayToolsNothingToSave;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Copied 1 thing to {date}} other{Copied {count} things to {date}}}'**
+  String dayToolsCopied(int count, String date);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Name this routine'**
+  String get routineNameTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekday study, Gym day…'**
+  String get routineNameHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 thing} other{{count} things}}'**
+  String routineItemCount(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved “{name}”'**
+  String routineSaved(String name);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{{name}: 1 thing added} other{{name}: {count} things added}}'**
+  String routineApplied(int count, String name);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Routines'**
+  String get routinesTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'No routines yet. Plan a day you\'d like to repeat, then choose Save as a routine from its menu.'**
+  String get routinesEmpty;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete routine'**
+  String get routineDelete;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you want to make time for?'**
+  String get focusAreaTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick any. We\'ll set you up with the right activities.'**
+  String get focusAreaBody;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Studying'**
+  String get focusAreaStudy;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep work'**
+  String get focusAreaWork;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitness'**
+  String get focusAreaFitness;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading & learning'**
+  String get focusAreaReading;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Mind & mood'**
+  String get focusAreaMind;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Healthy habits'**
+  String get focusAreaHealth;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s first today?'**
+  String get firstPlanTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Add one thing to start with. You can plan the rest from Today.'**
+  String get firstPlanBody;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'When'**
+  String get firstPlanWhen;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Right now'**
+  String get firstPlanNow;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'In an hour'**
+  String get firstPlanInAnHour;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'This evening'**
+  String get firstPlanEvening;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Anytime today'**
+  String get firstPlanAnytime;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Start now'**
+  String get firstPlanStartNow;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to today'**
+  String get firstPlanAdd;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me 10 minutes before'**
+  String get firstPlanRemind;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'DayCraft will ask to send notifications.'**
+  String get firstPlanRemindHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Health Connect'**
+  String get healthTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Bring in weight, height and body fat from your other apps'**
+  String get healthSubtitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get healthImport;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Health Connect isn\'t installed. Install it from the Play Store, then try again.'**
+  String get healthUnavailable;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'DayCraft wasn\'t allowed to read from Health Connect.'**
+  String get healthDenied;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Nothing new to import} =1{Imported 1 measurement} other{Imported {count} measurements}}'**
+  String healthImported(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'From Health Connect'**
+  String get healthImportedNote;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'TODAY · {date}'**
+  String widgetTitle(String date);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing planned yet'**
+  String get widgetNothingPlanned;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'🔥 {days}'**
+  String widgetStreak(int days);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'▶ {title} · {time}'**
+  String widgetRunning(String title, String time);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'⏸ {title} · paused'**
+  String widgetPaused(String title);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Next: {title} · {time}'**
+  String widgetNextAt(String title, String time);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Next: {title}'**
+  String widgetNext(String title);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Start something'**
+  String get widgetStartSomething;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate DayCraft'**
+  String get meRate;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'A review on Google Play helps others find it'**
+  String get meRateSubtitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Send feedback'**
+  String get meFeedback;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Ideas, problems, anything'**
+  String get meFeedbackSubtitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Every message is read. Nothing is sent until you choose to send it.'**
+  String get feedbackIntro;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a message'**
+  String get feedbackWrite;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your app and phone version are added for you'**
+  String get feedbackWriteSubtitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'DayCraft feedback'**
+  String get feedbackSubject;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Share a problem report'**
+  String get feedbackDiagnostics;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'DayCraft problem report'**
+  String get feedbackDiagnosticsSubject;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'No problems recorded on this phone'**
+  String get feedbackDiagnosticsNone;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 recent problem, no personal data} other{{count} recent problems, no personal data}}'**
+  String feedbackDiagnosticsCount(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open that. Try again in a moment.'**
+  String get feedbackFailed;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused · {time}'**
+  String itemPausedLine(String time);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} is paused'**
+  String heroPaused(String title);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get nowNextPaused;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get todayReportShort;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Chart'**
+  String get insightChartShort;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Each day you record it counts toward the week.'**
+  String get goalActivityHelperWeekly;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'The time or amount you record adds up.'**
+  String get goalActivityHelperAmount;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 45'**
+  String get goalAmountHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours}h'**
+  String durationHours(int hours);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'<1 min'**
+  String get durationUnderMinute;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet'**
+  String get measurementNoneShort;
 }
 
 class _AppLocalizationsDelegate

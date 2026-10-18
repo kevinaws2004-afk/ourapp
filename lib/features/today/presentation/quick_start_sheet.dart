@@ -39,6 +39,7 @@ Future<void> showQuickStartSheet(
 ) {
   unawaited(HapticFeedback.selectionClick());
   return showModalBottomSheet<void>(
+    useRootNavigator: true,
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
@@ -167,7 +168,7 @@ class _ActivityTile extends StatelessWidget {
         borderRadius: AppRadius.lgAll,
         onTap: onTap,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             ActivityBadge(
               iconId: type.iconId,

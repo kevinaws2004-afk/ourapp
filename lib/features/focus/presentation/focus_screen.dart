@@ -15,7 +15,10 @@ import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
 import '../domain/focus_session.dart';
+import '../../plans/presentation/plan_actions.dart';
 import 'focus_providers.dart';
+import 'focus_settings_screen.dart';
+import 'pomodoro_line.dart';
 
 /// `1:02:05` / `42:07`: hours only when needed, digits in DM Mono (ADR-032).
 String formatTimer(int milliseconds) {
@@ -27,13 +30,28 @@ String formatTimer(int milliseconds) {
   return h > 0 ? '$h:${two(m)}:${two(s)}' : '${two(m)}:${two(s)}';
 }
 
+/// A session's line on a row: "Running · 12:04", or "Paused · 15:00".
+/// With [short] (next to a "Running" chip), a running session is just its
+/// time.
+String sessionLine(
+  AppLocalizations l10n,
+  FocusSession session,
+  DateTime now, {
+  bool short = false,
+}) {
+  final time = formatTimer(session.elapsedMs(now));
+  // Short lines sit next to a Paused / In progress chip that says the rest.
+  if (short) return time;
+  if (session.state == FocusState.paused) return l10n.itemPausedLine(time);
+  return l10n.itemRunning(time);
+}
+
 /// The full-screen focus timer (§16, §17; FR-FO-01…06). It reads the active
 /// session from SQLite, so it shows the right time after the app was killed.
-/// [onFinish] finishes the session into its item (ADR-035).
+/// Finish records the session into its item (ADR-035), with the session
+/// summary, then closes.
 class FocusScreen extends ConsumerWidget {
-  const FocusScreen({super.key, required this.onFinish});
-
-  final Future<void> Function(FocusSession session) onFinish;
+  const FocusScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,17 +67,16 @@ class FocusScreen extends ConsumerWidget {
                 title: l10n.focusNoneTitle,
                 message: l10n.focusNoneMessage,
               )
-            : _FocusBody(session: session, onFinish: onFinish),
+            : _FocusBody(session: session),
       ),
     );
   }
 }
 
 class _FocusBody extends ConsumerWidget {
-  const _FocusBody({required this.session, required this.onFinish});
+  const _FocusBody({required this.session});
 
   final FocusSession session;
-  final Future<void> Function(FocusSession session) onFinish;
 
   Future<void> _run(
     BuildContext context,
@@ -156,9 +173,14 @@ class _FocusBody extends ConsumerWidget {
                 color: context.colors.textSecondary,
               ),
             ),
+            PomodoroLine(session: session, textAlign: TextAlign.center),
+            const SizedBox(height: AppSpacing.lg),
+            const Center(child: FocusQuickToggles()),
             const Spacer(),
             AppButton(
-              label: paused ? l10n.focusResume : l10n.focusPause,
+              label: paused
+                  ? resumeLabel(l10n, currentPomodoroView(ref, session))
+                  : l10n.focusPause,
               icon: paused ? AppIcons.start : AppIcons.pause,
               onPressed: () => _run(
                 context,
@@ -175,7 +197,12 @@ class _FocusBody extends ConsumerWidget {
               onPressed: () => _run(context, () async {
                 // Freeze the time while the user fills in the record.
                 await ref.read(pauseFocusSessionProvider)(session.id);
-                await onFinish(session);
+                if (!context.mounted) return;
+                await PlanActions(
+                  context,
+                  ref,
+                ).finish(session, title: type?.name ?? '', type: type);
+                if (context.mounted) Navigator.of(context).maybePop();
               }),
             ),
             const SizedBox(height: AppSpacing.sm),

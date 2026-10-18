@@ -35,26 +35,36 @@ class WatchChallenges {
   final ChallengeRepository _challenges;
   final Clock _clock;
 
-  ChallengeView _view(
-    Challenge challenge,
-    Map<ActivityTypeId, Set<LocalDate>> days,
-    LocalDate today,
-  ) => ChallengeView(
-    challenge,
-    ChallengeProgress.compute(
-      doneDays: days[challenge.activityTypeId] ?? const {},
-      startDate: challenge.startDate,
-      today: today,
-      targetDays: challenge.targetDays,
-    ),
+  ChallengeView _view(Challenge challenge, _Facts facts, LocalDate today) =>
+      ChallengeView(
+        challenge,
+        ChallengeProgress.compute(
+          doneDays: facts.days[challenge.activityTypeId] ?? const {},
+          startDate: challenge.startDate,
+          today: today,
+          targetDays: challenge.targetDays,
+          kind: challenge.kind,
+          timesPerWeek: challenge.timesPerWeek,
+          amount: challenge.amount,
+          amountPeriod: challenge.amountPeriod,
+          amounts: facts.amounts[challenge.id] ?? const {},
+          restDays: challenge.restDays,
+        ),
+      );
+
+  /// The days each activity was done, and each amount goal's daily amounts.
+  Stream<_Facts> _facts() => combineLatest2(
+    _challenges.watchDoneDays(),
+    _challenges.watchAmounts(),
+    _Facts.new,
   );
 
   Stream<List<ChallengeView>> call() => combineLatest2(
     _challenges.watchChallenges(),
-    _challenges.watchDoneDays(),
-    (challenges, days) {
+    _facts(),
+    (challenges, facts) {
       final today = _today(_clock);
-      final views = [for (final c in challenges) _view(c, days, today)];
+      final views = [for (final c in challenges) _view(c, facts, today)];
       return [
         ...views.where((v) => !v.progress.isCompleted),
         ...views.where((v) => v.progress.isCompleted),
@@ -65,10 +75,17 @@ class WatchChallenges {
   /// One challenge, or null once it has ended.
   Stream<ChallengeView?> one(ChallengeId id) => combineLatest2(
     _challenges.watchChallenge(id),
-    _challenges.watchDoneDays(),
-    (challenge, days) =>
-        challenge == null ? null : _view(challenge, days, _today(_clock)),
+    _facts(),
+    (challenge, facts) =>
+        challenge == null ? null : _view(challenge, facts, _today(_clock)),
   );
+}
+
+class _Facts {
+  const _Facts(this.days, this.amounts);
+
+  final Map<ActivityTypeId, Set<LocalDate>> days;
+  final Map<ChallengeId, Map<LocalDate, double>> amounts;
 }
 
 class CreateChallenge {
@@ -91,6 +108,10 @@ class CreateChallenge {
       targetDays: draft.targetDays,
       startDate: draft.startDate,
       today: _today(_clock),
+      kind: draft.kind,
+      timesPerWeek: draft.timesPerWeek,
+      amount: draft.amount,
+      restDays: draft.restDays,
     ).throwIfInvalid(debugContext: 'CreateChallenge');
     final now = _clock.nowUtc();
     final id = ChallengeId(_ids.newId());
@@ -103,14 +124,25 @@ class CreateChallenge {
         targetDays: draft.targetDays,
         createdAt: now,
         updatedAt: now,
+        kind: draft.kind,
+        timesPerWeek: draft.kind == GoalKind.weekly ? draft.timesPerWeek : null,
+        amount: draft.kind == GoalKind.amount ? draft.amount : null,
+        amountFieldId: draft.kind == GoalKind.amount
+            ? draft.amountFieldId
+            : null,
+        amountPeriod: draft.kind == GoalKind.amount
+            ? draft.amountPeriod ?? GoalPeriod.day
+            : null,
+        restDays: draft.kind == GoalKind.daily ? draft.restDays : 0,
       ),
     );
     return id;
   }
 }
 
-/// Renames a challenge or changes its number of days. The activity and the
-/// start are fixed (to count from a new day, restart it).
+/// Renames a goal or changes its target: the number of days or weeks, times
+/// a week, the amount, or rest days. The activity, the kind and the start
+/// are fixed (to count from a new day, restart it).
 class UpdateChallenge {
   const UpdateChallenge(this._challenges, this._clock);
 
@@ -121,24 +153,37 @@ class UpdateChallenge {
     ChallengeId id, {
     required String title,
     required int targetDays,
+    int? timesPerWeek,
+    double? amount,
+    int? restDays,
   }) async {
     final challenge = await _challenges.getChallenge(id);
     if (challenge == null) {
       throw NotFoundException(debugContext: 'UpdateChallenge ${id.value}');
     }
+    final next = challenge.copyWith(
+      title: title.trim(),
+      targetDays: targetDays,
+      updatedAt: _clock.nowUtc(),
+      timesPerWeek: challenge.kind == GoalKind.weekly && timesPerWeek != null
+          ? () => timesPerWeek
+          : null,
+      amount: challenge.kind == GoalKind.amount && amount != null
+          ? () => amount
+          : null,
+      restDays: challenge.kind == GoalKind.daily ? restDays : null,
+    );
     ChallengeValidator.validate(
       title: title,
       targetDays: targetDays,
       startDate: challenge.startDate,
       today: _today(_clock),
+      kind: next.kind,
+      timesPerWeek: next.timesPerWeek,
+      amount: next.amount,
+      restDays: next.restDays,
     ).throwIfInvalid(debugContext: 'UpdateChallenge');
-    await _challenges.update(
-      challenge.copyWith(
-        title: title.trim(),
-        targetDays: targetDays,
-        updatedAt: _clock.nowUtc(),
-      ),
-    );
+    await _challenges.update(next);
   }
 }
 

@@ -102,6 +102,8 @@ class ActivityTypeScreen extends ConsumerWidget {
       ..showSnackBar(
         SnackBar(
           content: Text(l10n.activityArchived(type.name)),
+          // Undo stays offered for the usual few seconds, not until dismissed.
+          persist: false,
           action: SnackBarAction(
             label: l10n.actionUndo,
             onPressed: () => unawaited(restore(type.id)),

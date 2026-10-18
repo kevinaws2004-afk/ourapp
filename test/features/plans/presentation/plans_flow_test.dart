@@ -12,6 +12,7 @@ import 'package:daylog/features/plans/presentation/widgets/plan_item_tile.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/core/design/themes/app_theme_id.dart';
 import 'package:daylog/core/design/app_icons.dart';
+import 'package:daylog/features/today/presentation/today_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:daylog/shared/widgets/app_button.dart';
 import 'package:daylog/shared/widgets/item_card.dart';
@@ -51,7 +52,15 @@ Future<void> seedReadingPlan(AppDatabase db, FakeClock clock) async {
 /// Today's "Up next" card; the list's row is the one tapped).
 Future<void> openItem(WidgetTester tester, Finder item) async {
   final inList = find.descendant(of: find.byType(ItemCard), matching: item);
-  final target = inList.evaluate().isNotEmpty ? inList.first : item;
+  final inTimeline = find.descendant(
+    of: find.byType(TodayTimeline),
+    matching: item,
+  );
+  final target = inList.evaluate().isNotEmpty
+      ? inList.first
+      : inTimeline.evaluate().isNotEmpty
+      ? inTimeline.first
+      : item.first;
   await tester.ensureVisible(target);
   await tester.pumpAndSettle();
   await tester.tap(target);
@@ -65,16 +74,31 @@ Future<void> waitForSave(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-/// An item's row on the day (its name is also a "Recent" chip).
-Finder itemRow(String name) =>
-    find.descendant(of: find.byType(PlanItemTile), matching: find.text(name));
+/// An item's row on the day: Plan's list or Today's timeline (its name is
+/// also a "Recent" chip).
+Finder itemRow(String name) {
+  final plan = find.descendant(
+    of: find.byType(PlanItemTile),
+    matching: find.text(name),
+  );
+  return plan.evaluate().isNotEmpty
+      ? plan
+      : find.descendant(
+          of: find.byType(TodayTimeline),
+          matching: find.text(name),
+        );
+}
 
 /// Opens the + sheet for the day on screen (Today or Plan's selected day).
 Future<void> openAddSheet(WidgetTester tester) async {
-  final plan = find.byTooltip('Add to this day');
-  await tester.tap(
-    plan.evaluate().isNotEmpty ? plan : find.byTooltip('Add to today'),
-  );
+  // Plan's selected day, Today's "Add", or an empty Today's own button.
+  final candidates = [
+    find.byTooltip('Add to this day'),
+    find.byTooltip('Add to today'),
+    find.widgetWithText(AppButton, 'Add to today'),
+    find.widgetWithText(AppButton, 'Add something'),
+  ];
+  await tester.tap(candidates.firstWhere((f) => f.evaluate().isNotEmpty).first);
   await tester.pumpAndSettle();
 }
 
@@ -268,8 +292,7 @@ void main() {
     );
 
     expect(find.text('Good morning'), findsOneWidget);
-    await tester.tap(find.byTooltip('Add to today'));
-    await tester.pumpAndSettle();
+    await openAddSheet(tester);
     await tester.enterText(
       find.widgetWithText(TextField, 'What are you doing?'),
       'Reading',
@@ -293,7 +316,11 @@ void main() {
     await pumpTestApp(tester, preferences: _onboarded);
 
     expect(find.text('Your day is empty.'), findsOneWidget);
-    expect(find.byTooltip('Add to today'), findsOneWidget, reason: 'the +');
+    expect(
+      find.widgetWithText(AppButton, 'Add to today'),
+      findsOneWidget,
+      reason: 'one obvious way in',
+    );
   });
 
   group('the + sheet (AD1–AD6)', () {
@@ -406,10 +433,11 @@ void main() {
       await tester.tap(find.widgetWithText(AppButton, 'Add'));
       await tester.pumpAndSettle();
       expect(itemRow('Bath'), findsOneWidget);
+      // The row shows the time with its end ("9:00 AM–9:30 AM").
       expect(
         find.descendant(
           of: find.byType(PlanItemTile),
-          matching: find.text('9:00 AM'),
+          matching: find.textContaining('9:00 AM'),
         ),
         findsOneWidget,
       );
@@ -520,6 +548,9 @@ void main() {
 
       await scrollAndTap(tester, find.text('Add Exercise'));
       await enterField(tester, 'Exercise', 'Squat');
+      // Done typing: the name suggestions close.
+      FocusManager.instance.primaryFocus?.unfocus();
+      await tester.pumpAndSettle();
       await scrollAndTap(tester, find.text('Add Set'));
       final weight = find.widgetWithText(TextField, 'Weight').first;
       await tester.ensureVisible(weight);
@@ -630,13 +661,13 @@ void main() {
         },
       );
 
-      expect(find.text('Anytime'), findsOneWidget);
+      expect(find.text('ANYTIME'), findsOneWidget);
       expect(
         tester.getTopLeft(itemRow('Standup')).dy,
-        lessThan(tester.getTopLeft(find.text('Anytime')).dy),
+        lessThan(tester.getTopLeft(find.text('ANYTIME')).dy),
       );
       expect(
-        tester.getTopLeft(find.text('Anytime')).dy,
+        tester.getTopLeft(find.text('ANYTIME')).dy,
         lessThan(tester.getTopLeft(find.text('Buy milk')).dy),
       );
     });
@@ -671,12 +702,13 @@ void main() {
       await openPlan(tester);
       await openItem(tester, find.text('Read'));
       await tester.scrollUntilVisible(
-        find.text('Hours'),
+        find.text('Hours').first,
         200,
         scrollable: find.byType(Scrollable).hitTestable().first,
       );
-      expect(find.text('Hours'), findsOneWidget);
-      expect(find.text('Minutes'), findsOneWidget);
+      // How long it's planned for, and the time spent.
+      expect(find.text('Hours'), findsNWidgets(2));
+      expect(find.text('Minutes'), findsNWidgets(2));
     });
   });
 

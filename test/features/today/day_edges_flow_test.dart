@@ -11,7 +11,7 @@ import 'package:daylog/features/plans/presentation/plan_screen.dart';
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/features/today/presentation/now_next_card.dart';
 import 'package:daylog/shared/widgets/app_button.dart';
-import 'package:daylog/shared/widgets/item_card.dart';
+import 'package:daylog/features/today/presentation/today_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -56,7 +56,7 @@ Future<ActivityTypeId> _seedReading(
 }
 
 Finder _row(String title) =>
-    find.descendant(of: find.byType(ItemCard), matching: find.text(title));
+    find.descendant(of: find.byType(TodayTimeline), matching: find.text(title));
 
 void main() {
   group('From yesterday (T2)', () {
@@ -138,7 +138,7 @@ void main() {
     ) async {
       await pumpTestApp(tester, preferences: _onboarded, seed: evening);
 
-      expect(find.text('0 of 2 done'), findsOneWidget);
+      expect(find.text('0 of 2 done'), findsWidgets, reason: 'hero + review');
       expect(find.text('Not done'), findsOneWidget);
       expect(find.byType(NowNextCard), findsNothing, reason: 'replaced');
 
@@ -200,7 +200,7 @@ void main() {
       expect(_row('Reading'), findsOneWidget);
       expect(
         find.descendant(
-          of: find.byType(ItemCard),
+          of: find.byType(TodayTimeline),
           matching: find.text('10:00 AM'),
         ),
         findsOneWidget,
@@ -210,7 +210,13 @@ void main() {
 
   group('the + sheet (AD1–AD5)', () {
     Future<void> openAdd(WidgetTester tester) async {
-      await tester.tap(find.byTooltip('Add to today'));
+      // First use offers "Add to today"; a returning user "Add something".
+      final first = find.widgetWithText(AppButton, 'Add to today');
+      await tester.tap(
+        first.evaluate().isNotEmpty
+            ? first
+            : find.widgetWithText(AppButton, 'Add something'),
+      );
       await tester.pumpAndSettle();
       expect(find.text('Add to today'), findsWidgets);
     }

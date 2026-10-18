@@ -32,11 +32,16 @@ class DbChallengeRepository implements ChallengeRepository {
           _db.activityTypes,
           _db.activityTypes.internalId.equalsExp(_db.challenges.activityTypeId),
         ),
+        leftOuterJoin(
+          _db.activityFields,
+          _db.activityFields.internalId.equalsExp(_db.challenges.amountFieldId),
+        ),
       ]);
 
   Challenge _toDomain(TypedResult joined) {
     final row = joined.readTable(_db.challenges);
     final type = joined.readTable(_db.activityTypes);
+    final field = joined.readTableOrNull(_db.activityFields);
     return Challenge(
       id: ChallengeId(row.publicId),
       activityTypeId: ActivityTypeId(type.publicId),
@@ -45,6 +50,12 @@ class DbChallengeRepository implements ChallengeRepository {
       targetDays: row.targetDays,
       createdAt: _instant(row.createdAt),
       updatedAt: _instant(row.updatedAt),
+      kind: GoalKind.fromStorageKey(row.kind),
+      timesPerWeek: row.timesPerWeek,
+      amount: row.amount,
+      amountFieldId: field == null ? null : ActivityFieldId(field.publicId),
+      amountPeriod: GoalPeriod.fromStorageKey(row.amountPeriod),
+      restDays: row.restDays,
     );
   }
 
@@ -53,6 +64,7 @@ class DbChallengeRepository implements ChallengeRepository {
       TableUpdateQuery.onAllTables([
         _db.challenges,
         _db.activityTypes,
+        _db.activityFields,
         _db.activityLogs,
         _db.logValues,
         _db.plans,
@@ -129,6 +141,61 @@ class DbChallengeRepository implements ChallengeRepository {
       );
 
   @override
+  Stream<Map<ChallengeId, Map<LocalDate, double>>>
+  watchAmounts() => guardStorageStream(
+    'watchAmounts',
+    _watch(() async {
+      // Time: the done records' durations. A field: its values (numbers
+      // in their canonical unit, or durations), list rows included.
+      final rows = await _db
+          .customSelect(
+            'SELECT c.public_id AS id, l.local_date AS d, '
+            'SUM(l.duration_ms) AS v '
+            'FROM challenges c '
+            'JOIN activity_logs l ON l.activity_type_id = c.activity_type_id '
+            "WHERE c.kind = 'amount' AND c.amount_field_id IS NULL "
+            'AND c.deleted_at IS NULL AND l.deleted_at IS NULL '
+            'AND l.duration_ms IS NOT NULL '
+            'GROUP BY c.public_id, l.local_date '
+            'UNION ALL '
+            'SELECT c.public_id AS id, l.local_date AS d, '
+            'SUM(COALESCE(v.normalized_value, v.duration_ms)) AS v '
+            'FROM challenges c '
+            'JOIN activity_logs l ON l.activity_type_id = c.activity_type_id '
+            'JOIN log_values v ON v.log_id = l.internal_id '
+            'AND v.field_id = c.amount_field_id '
+            "WHERE c.kind = 'amount' AND c.amount_field_id IS NOT NULL "
+            'AND c.deleted_at IS NULL AND l.deleted_at IS NULL '
+            'GROUP BY c.public_id, l.local_date',
+            readsFrom: {_db.challenges, _db.activityLogs, _db.logValues},
+          )
+          .get();
+      final amounts = <ChallengeId, Map<LocalDate, double>>{};
+      for (final r in rows) {
+        final value = r.readNullable<double>('v');
+        if (value == null) continue;
+        amounts.putIfAbsent(
+          ChallengeId(r.read<String>('id')),
+          () => {},
+        )[LocalDate.parse(r.read<String>('d'))] = value;
+      }
+      return amounts;
+    }),
+  );
+
+  /// The internal ID of the field [id], or null.
+  Future<int?> _fieldInternalId(ActivityFieldId? id) async {
+    if (id == null) return null;
+    final row = await (_db.select(
+      _db.activityFields,
+    )..where((f) => f.publicId.equals(id.value))).getSingleOrNull();
+    if (row == null) {
+      throw const NotFoundException(debugContext: 'challenge amount field');
+    }
+    return row.internalId;
+  }
+
+  @override
   Future<void> create(Challenge challenge) =>
       guardStorage('createChallenge', () async {
         final type =
@@ -152,6 +219,14 @@ class DbChallengeRepository implements ChallengeRepository {
                 targetDays: challenge.targetDays,
                 createdAt: challenge.createdAt.millisecondsSinceEpoch,
                 updatedAt: challenge.updatedAt.millisecondsSinceEpoch,
+                kind: Value(challenge.kind.storageKey),
+                timesPerWeek: Value(challenge.timesPerWeek),
+                amount: Value(challenge.amount),
+                amountFieldId: Value(
+                  await _fieldInternalId(challenge.amountFieldId),
+                ),
+                amountPeriod: Value(challenge.amountPeriod?.storageKey),
+                restDays: Value(challenge.restDays),
               ),
             );
       });
@@ -171,6 +246,9 @@ class DbChallengeRepository implements ChallengeRepository {
                 startDate: Value(challenge.startDate.toIso()),
                 targetDays: Value(challenge.targetDays),
                 updatedAt: Value(challenge.updatedAt.millisecondsSinceEpoch),
+                timesPerWeek: Value(challenge.timesPerWeek),
+                amount: Value(challenge.amount),
+                restDays: Value(challenge.restDays),
               ),
             );
     if (updated == 0) {

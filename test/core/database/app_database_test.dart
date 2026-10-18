@@ -4,62 +4,61 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test(
-    'a fresh database is created at schema v9 with the activity engine',
-    () async {
-      final db = AppDatabase(NativeDatabase.memory());
-      addTearDown(db.close);
+  test('a fresh database is created at schema v11 with the activity engine and notes', () async {
+    final db = AppDatabase(NativeDatabase.memory());
+    addTearDown(db.close);
 
-      final version = await db.customSelect('PRAGMA user_version').getSingle();
-      final objects = await db
-          .customSelect(
-            "SELECT type, name FROM sqlite_master WHERE name NOT LIKE 'sqlite_%' ORDER BY type, name",
-          )
-          .get();
-      final byType = <String, List<String>>{};
-      for (final row in objects) {
-        byType
-            .putIfAbsent(row.read<String>('type'), () => [])
-            .add(row.read<String>('name'));
-      }
+    final version = await db.customSelect('PRAGMA user_version').getSingle();
+    final objects = await db
+        .customSelect(
+          "SELECT type, name FROM sqlite_master WHERE name NOT LIKE 'sqlite_%' ORDER BY type, name",
+        )
+        .get();
+    final byType = <String, List<String>>{};
+    for (final row in objects) {
+      byType
+          .putIfAbsent(row.read<String>('type'), () => [])
+          .add(row.read<String>('name'));
+    }
 
-      expect(version.read<int>('user_version'), 9);
-      expect(byType['table'], [
-        'activity_fields',
-        'activity_logs',
-        'activity_types',
-        'app_preferences',
-        'challenges',
-        'focus_sessions',
-        'insight_charts',
-        'log_group_items',
-        'log_values',
-        'measurements',
-        'plan_series',
-        'plans',
-      ]);
-      expect(byType['index'], [
-        'idx_activity_fields_parent',
-        'idx_activity_fields_type_position',
-        'idx_activity_logs_day',
-        'idx_activity_logs_plan',
-        'idx_activity_logs_type_day',
-        'idx_challenges_type',
-        'idx_focus_sessions_plan',
-        'idx_log_group_items_log',
-        'idx_log_values_field_normalized',
-        'idx_log_values_log',
-        'idx_measurements_type_day',
-        'idx_plans_day',
-        'idx_plans_type_day',
-        'ux_focus_sessions_one_active',
-        'ux_log_values_item',
-        'ux_log_values_top_level',
-        'ux_plans_series_date',
-      ]);
-      expect(byType['trigger'], hasLength(21));
-    },
-  );
+    expect(version.read<int>('user_version'), 11);
+    expect(byType['table'], [
+      'activity_fields',
+      'activity_logs',
+      'activity_types',
+      'app_preferences',
+      'challenges',
+      'focus_sessions',
+      'insight_charts',
+      'log_group_items',
+      'log_values',
+      'measurements',
+      'notes',
+      'plan_series',
+      'plans',
+    ]);
+    expect(byType['index'], [
+      'idx_activity_fields_parent',
+      'idx_activity_fields_type_position',
+      'idx_activity_logs_day',
+      'idx_activity_logs_plan',
+      'idx_activity_logs_type_day',
+      'idx_challenges_type',
+      'idx_focus_sessions_plan',
+      'idx_log_group_items_log',
+      'idx_log_values_field_normalized',
+      'idx_log_values_log',
+      'idx_measurements_type_day',
+      'idx_notes_updated',
+      'idx_plans_day',
+      'idx_plans_type_day',
+      'ux_focus_sessions_one_active',
+      'ux_log_values_item',
+      'ux_log_values_top_level',
+      'ux_plans_series_date',
+    ]);
+    expect(byType['trigger'], hasLength(22), reason: '21 + notes');
+  });
 
   test('activity engine tables are STRICT', () async {
     final db = AppDatabase(NativeDatabase.memory());
@@ -103,7 +102,7 @@ void main() {
     () async {
       final db = AppDatabase(
         NativeDatabase.memory(
-          setup: (raw) => raw.execute('PRAGMA user_version = 10'),
+          setup: (raw) => raw.execute('PRAGMA user_version = 12'),
         ),
       );
       addTearDown(db.close);

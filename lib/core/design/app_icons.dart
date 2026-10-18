@@ -101,6 +101,27 @@ abstract final class AppIcons {
   static const pinned = PhosphorFillGlyphs.pushPin;
   static const search = PhosphorGlyphs.magnifyingGlass;
 
+  // Backup, focus, platform and feedback.
+  static const backup = PhosphorGlyphs.cloudCheck;
+  static const restore = PhosphorGlyphs.clockCounterClockwise;
+  static const importFile = PhosphorGlyphs.trayArrowDown;
+  static const spreadsheet = PhosphorGlyphs.table;
+  static const appLock = PhosphorGlyphs.fingerprint;
+  static const share = PhosphorGlyphs.shareNetwork;
+  static const doNotDisturb = PhosphorGlyphs.bellSlash;
+  static const breakTime = PhosphorGlyphs.coffee;
+  static const health = PhosphorGlyphs.heartbeat;
+  static const feedback = PhosphorGlyphs.chatText;
+  static const diagnostics = PhosphorGlyphs.bug;
+  static const copy = PhosphorGlyphs.copy;
+  static const routine = PhosphorGlyphs.stack;
+  static const sync = PhosphorGlyphs.arrowsClockwise;
+  static const recap = PhosphorGlyphs.calendarStar;
+  static const rate = PhosphorGlyphs.star;
+  static const widget = PhosphorGlyphs.squaresFour;
+  static const personalRecord = PhosphorGlyphs.crown;
+  static const language = PhosphorGlyphs.translate;
+
   /// Daylog's mark (the app icon's glyph).
   static const logo = PhosphorFillGlyphs.calendarCheck;
 

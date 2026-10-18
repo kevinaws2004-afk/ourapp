@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,8 +18,11 @@ import '../../activity_logs/domain/activity_log.dart';
 import '../../activity_types/domain/activity_type.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
 import '../domain/plan.dart';
+import '../domain/watch_day_overview.dart';
 import 'activity_chooser.dart';
 import 'plan_date_notifier.dart';
+import 'day_tools.dart';
+import 'plan_actions.dart';
 import 'plan_providers.dart';
 import '../../../shared/widgets/app_card.dart';
 import '../../../shared/widgets/progress_ring.dart';
@@ -41,12 +46,11 @@ class PlanViewNotifier extends Notifier<PlanView> {
   void show(PlanView view) => state = view;
 }
 
-/// The first day of [date]'s week, by the locale's first day of the week.
-LocalDate weekStartOf(BuildContext context, LocalDate date) {
-  // firstDayOfWeekIndex: 0 = Sunday; LocalDate.weekday: Monday = 1 … 7.
-  final first = MaterialLocalizations.of(context).firstDayOfWeekIndex;
-  return date.addDays(-((date.weekday % 7 - first) % 7));
-}
+/// The Monday of [date]'s week. Weeks run Monday to Sunday everywhere in
+/// the app (Plan, goals, the recap, consistency), so a "week" always means
+/// the same days.
+LocalDate weekStartOf(BuildContext context, LocalDate date) =>
+    date.addDays(-(date.weekday - 1));
 
 /// Week | Month.
 class PlanViewSwitch extends ConsumerWidget {
@@ -217,6 +221,7 @@ class PlanWeekView extends ConsumerWidget {
               icon: const Icon(AppIcons.add, size: 18),
               label: Text(l10n.todayAddShort),
             ),
+            DayToolsButton(date: selected),
           ],
         ),
         // A past day: how it went (P3).
@@ -240,6 +245,7 @@ class PlanWeekView extends ConsumerWidget {
             emptyMessage: l10n.planPlannedEmpty,
             showSummary: false,
             timeline: selected == today,
+            dragToDays: true,
             onOpenItem: onOpenItem,
             onOpenRecord: onOpenRecord,
             chooser: chooser,
@@ -276,7 +282,7 @@ class _DayPill extends ConsumerWidget {
     final isToday = date == today;
     final foreground = selected ? c.onBrandPrimary : c.textPrimary;
     final full = MaterialLocalizations.of(context).formatFullDate(day);
-    final label = future || progress == null
+    final label = future || progress == null || progress.total == 0
         ? l10n.weekStripDayPlanned(full, progress?.total ?? 0)
         : l10n.weekStripDayDone(full, progress.done, progress.total);
     final Widget mark;
@@ -292,6 +298,21 @@ class _DayPill extends ConsumerWidget {
           ),
         ),
       );
+    } else if (progress.fraction >= 1) {
+      // All done: a check, not a full ring that reads as empty.
+      mark = Container(
+        width: AppSizes.dayMark,
+        height: AppSizes.dayMark,
+        decoration: BoxDecoration(
+          color: selected ? foreground : c.success,
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          AppIcons.check,
+          size: AppSizes.dayMark * 0.62,
+          color: selected ? c.brandPrimary : c.surfaceBase,
+        ),
+      );
     } else {
       mark = ProgressRing(
         fraction: progress.fraction,
@@ -302,6 +323,34 @@ class _DayPill extends ConsumerWidget {
         semanticLabel: '',
       );
     }
+    return DragTarget<PlannedItem>(
+      onWillAcceptWithDetails: (d) => d.data.plan.planDate != date,
+      onAcceptWithDetails: (d) =>
+          unawaited(PlanActions(context, ref).moveToDate(d.data, date)),
+      builder: (context, candidates, _) => _pill(
+        context,
+        label: label,
+        hovered: candidates.isNotEmpty,
+        foreground: foreground,
+        isToday: isToday,
+        locale: locale,
+        day: day,
+        mark: mark,
+      ),
+    );
+  }
+
+  Widget _pill(
+    BuildContext context, {
+    required String label,
+    required bool hovered,
+    required Color foreground,
+    required bool isToday,
+    required String locale,
+    required DateTime day,
+    required Widget mark,
+  }) {
+    final c = context.colors;
     return Semantics(
       button: true,
       selected: selected,
@@ -311,16 +360,22 @@ class _DayPill extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
         child: Material(
           type: MaterialType.transparency,
+          // Clipped to the pill, so no square highlight shows behind it.
+          shape: const StadiumBorder(),
+          clipBehavior: Clip.antiAlias,
           child: InkWell(
-            borderRadius: AppRadius.pillAll,
+            customBorder: const StadiumBorder(),
             onTap: onTap,
             child: Ink(
               padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm + 2),
               decoration: BoxDecoration(
                 color: selected
                     ? c.brandPrimary
-                    : isToday
+                    : isToday || hovered
                     ? c.brandPrimarySoft
+                    : null,
+                border: hovered
+                    ? Border.all(color: c.brandPrimary, width: 2)
                     : null,
                 borderRadius: AppRadius.pillAll,
                 boxShadow: selected

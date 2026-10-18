@@ -2,21 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
-import '../../../core/database/database_provider.dart';
 import '../../../core/design/app_icons.dart';
 import '../../../core/design/context_ext.dart';
 import '../../../core/design/tokens/radius.dart';
 import '../../../core/design/tokens/spacing.dart';
 import '../../../core/design/tokens/typography.dart';
 import '../../../core/design/window_size_class.dart';
-import '../../../core/time/clock_provider.dart';
 import '../../../core/time/local_date.dart';
 import '../../../l10n/generated/app_localizations.dart';
-import '../../../shared/errors/error_copy.dart';
 import '../../../shared/widgets/app_card.dart';
 import '../../../shared/widgets/settings_group.dart';
-import '../../../shared/widgets/state_views.dart';
 import '../../../shared/widgets/user_avatar.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
 import '../../challenges/presentation/challenge_providers.dart';
@@ -24,13 +21,25 @@ import '../../insights/presentation/insight_providers.dart';
 import '../../measurements/domain/measurement.dart';
 import '../../measurements/presentation/measurement_formatting.dart';
 import '../../measurements/presentation/measurement_providers.dart';
-import '../data/data_export.dart';
 import '../domain/preferences_snapshot.dart';
+import 'app_lock.dart';
 import 'appearance_screen.dart';
+import 'backup_providers.dart';
+import 'feedback_sheet.dart';
 import 'preferences_providers.dart';
+import 'review_prompt.dart';
+import '../../../shared/widgets/text_input_dialog.dart';
 
-/// The version shown in Me → About. Keep in step with pubspec.yaml.
-const appVersion = '1.0.0';
+/// The installed version ("1.2.0 (14)"), read from the app itself, so it
+/// always matches pubspec.yaml.
+final appVersionProvider = FutureProvider<String>((ref) async {
+  try {
+    final info = await PackageInfo.fromPlatform();
+    return '${info.version} (${info.buildNumber})';
+  } catch (_) {
+    return '';
+  }
+});
 
 /// Me: you (your name, what you've done so far), your setup (activities,
 /// body, goals), your preferences (appearance), and your data (export,
@@ -45,6 +54,8 @@ class MeScreen extends ConsumerWidget {
     required this.onOpenGoals,
     required this.onOpenNotifications,
     required this.onOpenNotes,
+    required this.onOpenBackup,
+    required this.onOpenFocusSettings,
     this.onOpenTokenShowcase,
     this.onLoadDemoData,
     this.onLoadRecentDemoData,
@@ -64,6 +75,12 @@ class MeScreen extends ConsumerWidget {
 
   /// Your notes.
   final VoidCallback onOpenNotes;
+
+  /// Backup & restore.
+  final VoidCallback onOpenBackup;
+
+  /// Focus: Pomodoro and Do Not Disturb.
+  final VoidCallback onOpenFocusSettings;
 
   /// Debug-only entry point; ignored in release builds.
   final VoidCallback? onOpenTokenShowcase;
@@ -87,6 +104,12 @@ class MeScreen extends ConsumerWidget {
       for (final set in activeDays?.values ?? const <Set<LocalDate>>[]) ...set,
     };
     final appearance = ref.watch(effectiveAppearanceProvider);
+    final version = ref.watch(appVersionProvider).value ?? '';
+    final lastBackup = ref
+        .watch(backupSnapshotsProvider)
+        .value
+        ?.firstOrNull
+        ?.madeAt;
     final dev =
         onOpenTokenShowcase != null ||
         onLoadDemoData != null ||
@@ -217,6 +240,14 @@ class MeScreen extends ConsumerWidget {
                     onTap: onOpenNotifications,
                   ),
                   SettingsTile(
+                    icon: AppIcons.timer,
+                    iconColor: c.brandPrimary,
+                    iconBackground: c.brandPrimarySoft,
+                    title: l10n.focusSettingsTitle,
+                    subtitle: l10n.focusSettingsSubtitle,
+                    onTap: onOpenFocusSettings,
+                  ),
+                  SettingsTile(
                     icon: AppIcons.appearance,
                     title: l10n.appearanceTitle,
                     value: themeName(l10n, ref.watch(effectiveThemeProvider)),
@@ -249,12 +280,30 @@ class MeScreen extends ConsumerWidget {
                 title: l10n.meGroupData,
                 children: [
                   SettingsTile(
-                    icon: AppIcons.export,
+                    icon: AppIcons.backup,
                     iconColor: c.action,
                     iconBackground: c.actionSoft,
-                    title: l10n.meExport,
-                    subtitle: l10n.meExportSubtitle,
-                    onTap: () => unawaited(_export(context, ref)),
+                    title: l10n.backupTitle,
+                    subtitle: switch (lastBackup) {
+                      final at? => l10n.backupLast(
+                        MaterialLocalizations.of(context)
+                            .formatMediumDate(at.toLocal()),
+                      ),
+                      null => l10n.backupMeSubtitle,
+                    },
+                    onTap: onOpenBackup,
+                  ),
+                  SettingsTile(
+                    icon: AppIcons.appLock,
+                    iconColor: c.accent,
+                    iconBackground: c.accentSoft,
+                    title: l10n.appLockTitle,
+                    subtitle: l10n.appLockSubtitle,
+                    trailing: Switch(
+                      value: ref.watch(appLockEnabledProvider).value ?? false,
+                      onChanged: (v) =>
+                          unawaited(setAppLock(context, ref, enabled: v)),
+                    ),
                   ),
                   SettingsTile(
                     icon: AppIcons.privacy,
@@ -271,15 +320,31 @@ class MeScreen extends ConsumerWidget {
                 title: l10n.meGroupAbout,
                 children: [
                   SettingsTile(
+                    icon: AppIcons.rate,
+                    iconColor: c.warning,
+                    iconBackground: c.warningContainer,
+                    title: l10n.meRate,
+                    subtitle: l10n.meRateSubtitle,
+                    onTap: () => unawaited(openStoreListing()),
+                  ),
+                  SettingsTile(
+                    icon: AppIcons.feedback,
+                    iconColor: c.accent,
+                    iconBackground: c.accentSoft,
+                    title: l10n.meFeedback,
+                    subtitle: l10n.meFeedbackSubtitle,
+                    onTap: () => unawaited(showFeedbackSheet(context, ref)),
+                  ),
+                  SettingsTile(
                     icon: AppIcons.info,
                     iconColor: c.textSecondary,
                     iconBackground: c.surfaceSunken,
                     title: l10n.appTitle,
-                    value: l10n.meVersion(appVersion),
+                    value: l10n.meVersion(version),
                     onTap: () => showAboutDialog(
                       context: context,
                       applicationName: l10n.appTitle,
-                      applicationVersion: appVersion,
+                      applicationVersion: version,
                       applicationLegalese: l10n.meAboutLegal,
                     ),
                   ),
@@ -329,22 +394,10 @@ class MeScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _export(BuildContext context, WidgetRef ref) async {
-    final l10n = AppLocalizations.of(context);
-    try {
-      await DataExport(
-        ref.read(appDatabaseProvider),
-      ).share(ref.read(clockProvider).nowUtc(), subject: l10n.meExportSubject);
-    } catch (error) {
-      if (context.mounted) {
-        showMessageSnackBar(context, errorMessage(l10n, error));
-      }
-    }
-  }
-
   Future<void> _showPrivacy(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return showModalBottomSheet<void>(
+      useRootNavigator: true,
       context: context,
       useSafeArea: true,
       builder: (context) {
@@ -389,34 +442,14 @@ class MeScreen extends ConsumerWidget {
 /// Edits the name the app calls you.
 Future<void> editName(BuildContext context, WidgetRef ref) async {
   final l10n = AppLocalizations.of(context);
-  final controller = TextEditingController(
-    text: ref.read(effectiveUserNameProvider),
+  final result = await showTextInputDialog(
+    context,
+    title: l10n.meNameTitle,
+    initial: ref.read(effectiveUserNameProvider),
+    hint: l10n.meNameHint,
+    maxLength: 40,
+    capitalization: TextCapitalization.words,
   );
-  final result = await showDialog<String>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text(l10n.meNameTitle),
-      content: TextField(
-        controller: controller,
-        autofocus: true,
-        maxLength: 40,
-        textCapitalization: TextCapitalization.words,
-        decoration: InputDecoration(hintText: l10n.meNameHint),
-        onSubmitted: (v) => Navigator.of(context).pop(v),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(l10n.actionCancel),
-        ),
-        FilledButton(
-          onPressed: () => Navigator.of(context).pop(controller.text),
-          child: Text(l10n.actionSave),
-        ),
-      ],
-    ),
-  );
-  controller.dispose();
   if (result == null) return;
   await ref.read(preferencesNotifierProvider.notifier).setName(result);
 }
@@ -432,6 +465,7 @@ String appearanceName(AppLocalizations l10n, AppearanceMode mode) =>
 Future<void> pickAppearance(BuildContext context, WidgetRef ref) {
   final l10n = AppLocalizations.of(context);
   return showModalBottomSheet<void>(
+    useRootNavigator: true,
     context: context,
     useSafeArea: true,
     builder: (context) => Padding(
@@ -516,10 +550,14 @@ class _PrivateBadge extends StatelessWidget {
         children: [
           Icon(AppIcons.lock, size: 14, color: c.success),
           const SizedBox(width: AppSpacing.xs),
-          Text(
-            label,
-            style: context.textStyles.labelSmall?.copyWith(
-              color: c.textPrimary,
+          // A long label wraps rather than running off a narrow screen.
+          Flexible(
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              style: context.textStyles.labelSmall?.copyWith(
+                color: c.textPrimary,
+              ),
             ),
           ),
         ],

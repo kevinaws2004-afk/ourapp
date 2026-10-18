@@ -1,22 +1,24 @@
 import 'dart:async';
 
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/database/database_provider.dart';
+import '../../../core/database/json_preferences.dart';
 import '../../../core/notifications/notification_service.dart';
 import '../../../core/time/clock_provider.dart';
 import '../../../core/time/local_date.dart';
-import '../../../l10n/generated/app_localizations.dart';
+import '../../../l10n/device_localizations.dart';
 import '../../activity_types/domain/activity_type.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
 import '../../challenges/presentation/challenge_providers.dart';
 import '../../focus/domain/focus_session.dart';
+import '../../focus/presentation/focus_controller.dart';
 import '../../focus/presentation/focus_providers.dart';
 import '../../plans/domain/plan.dart';
 import '../../plans/presentation/plan_date_notifier.dart';
 import '../../plans/presentation/plan_providers.dart';
+import '../../challenges/domain/challenge.dart';
 import '../../challenges/domain/challenge_use_cases.dart';
 import '../data/reminder_store.dart';
 import '../domain/notification_settings.dart';
@@ -57,16 +59,16 @@ final scheduledNotesProvider = Provider.autoDispose<List<ScheduledNote>>((ref) {
   final clock = ref.watch(clockProvider);
   final nowUtc = clock.nowUtc();
   final today = currentLocalDate(clock);
-  final l10n = lookupAppLocalizations(const Locale('en'));
+  final l10n = deviceLocalizations();
   final reminders = ref.watch(remindersProvider).value ?? const {};
   final plans =
       ref
           .watch(plansInRangeProvider((today, today.addDays(_horizonDays))))
           .value ??
       const <Plan>[];
-  String time(DateTime utc) => DateFormat.jm().format(
-    utc.add(clock.offsetAt(utc)).copyWith(isUtc: false),
-  );
+  String time(DateTime utc) =>
+      DateFormat.jm(l10n.localeName)
+          .format(utc.add(clock.offsetAt(utc)).copyWith(isUtc: false));
   DateTime at(LocalDate date, int minute) => DateTime.utc(
     date.year,
     date.month,
@@ -142,6 +144,48 @@ final scheduledNotesProvider = Provider.autoDispose<List<ScheduledNote>>((ref) {
     }
   }
 
+  // 2b. Pomodoro: the end of the round, or of the break.
+  final focus = ref.watch(focusSettingsProvider).value;
+  if (settings.timerAlerts &&
+      session != null &&
+      focus != null &&
+      focus.pomodoro) {
+    final view = pomodoroViewOf(
+      session,
+      focus,
+      ref.watch(pomodoroStateProvider).value,
+      nowUtc,
+    );
+    switch (view) {
+      case PomodoroWorking(:final round, :final leftMs) when leftMs > 0:
+        notes.add(
+          ScheduledNote(
+            key: 'pomodoro:${session.id.value}:$round',
+            at: nowUtc.add(Duration(milliseconds: leftMs)),
+            title: l10n.notifyPomodoroRoundDone(round),
+            body: l10n.notifyPomodoroRoundDoneBody(
+              focus.breakAfter(round).inMinutes,
+            ),
+            channel: NotificationChannel.timer,
+            payload: 'focus',
+          ),
+        );
+      case PomodoroOnBreak(:final round, :final leftMs) when leftMs > 0:
+        notes.add(
+          ScheduledNote(
+            key: 'pomodoro-break:${session.id.value}:$round',
+            at: nowUtc.add(Duration(milliseconds: leftMs)),
+            title: l10n.notifyPomodoroBreakOver,
+            body: l10n.notifyPomodoroBreakOverBody(round + 1),
+            channel: NotificationChannel.timer,
+            payload: 'focus',
+          ),
+        );
+      default:
+        break;
+    }
+  }
+
   // 3. Morning plan, for today (if still ahead) and tomorrow.
   if (settings.morningPlan) {
     for (final date in [today, today.addDays(1)]) {
@@ -186,6 +230,23 @@ final scheduledNotesProvider = Provider.autoDispose<List<ScheduledNote>>((ref) {
     }
   }
 
+  // 4b. The weekly recap, the next Sunday evening.
+  if (settings.weeklyRecap) {
+    final sunday = today.addDays((DateTime.sunday - today.weekday) % 7);
+    for (final date in [sunday, sunday.addDays(7)]) {
+      notes.add(
+        ScheduledNote(
+          key: 'recap:$date',
+          at: at(date, NotificationSettings.weeklyRecapMinute),
+          title: l10n.notifyRecap,
+          body: l10n.notifyRecapBody,
+          channel: NotificationChannel.daily,
+          payload: 'recap',
+        ),
+      );
+    }
+  }
+
   // 5. Goal streaks not done yet today, at 20:00.
   if (settings.goalStreaks) {
     final types = {
@@ -197,6 +258,7 @@ final scheduledNotesProvider = Provider.autoDispose<List<ScheduledNote>>((ref) {
     for (final view
         in ref.watch(challengesProvider).value ?? const <ChallengeView>[]) {
       final p = view.progress;
+      if (view.challenge.kind != GoalKind.daily) continue;
       if (p.isCompleted || p.doneToday || p.currentStreak == 0) continue;
       final name =
           types[view.challenge.activityTypeId]?.name ?? view.challenge.title;
@@ -214,6 +276,8 @@ final scheduledNotesProvider = Provider.autoDispose<List<ScheduledNote>>((ref) {
   }
   return notes;
 });
+
+const _askedForTimerKey = 'asked_notifications_for_timer';
 
 /// Keeps the system's notifications in step with [scheduledNotesProvider]
 /// and the running timer. Watched once by the app.
@@ -237,8 +301,22 @@ final notificationSyncProvider = Provider<void>((ref) {
   );
 
   // The ongoing "timer running" notification.
-  final l10n = lookupAppLocalizations(const Locale('en'));
-  void timer() {
+  final l10n = deviceLocalizations();
+  late void Function() timer;
+
+  // The first timer asks for permission to notify (once), so its live
+  // notification and the round and break alerts can show.
+  Future<void> askOnceForTimer() async {
+    final prefs = ref.read(jsonPreferencesProvider);
+    if (await prefs.read(_askedForTimerKey) == true) return;
+    await prefs.write(_askedForTimerKey, true);
+    if (!await service.isPermitted() && await service.requestPermission()) {
+      // Allowed now: show the timer that's already running.
+      timer();
+    }
+  }
+
+  timer = () {
     final settings =
         ref.read(notificationSettingsProvider).value ??
         NotificationSettings.defaults;
@@ -249,6 +327,7 @@ final notificationSyncProvider = Provider<void>((ref) {
         session != null &&
         session.state != FocusState.finished &&
         session.state != FocusState.discarded;
+    if (running) unawaited(askOnceForTimer());
     if (!running) {
       unawaited(
         service.showOngoingTimer(
@@ -264,21 +343,37 @@ final notificationSyncProvider = Provider<void>((ref) {
         .value
         ?.where((t) => t.id == session.activityTypeId)
         .firstOrNull;
+    final paused = session.state == FocusState.paused;
+    final focus = ref.read(focusSettingsProvider).value;
+    final onBreak =
+        focus != null &&
+        pomodoroViewOf(
+          session,
+          focus,
+          ref.read(pomodoroStateProvider).value,
+          clock.nowUtc(),
+        ) is PomodoroOnBreak;
     unawaited(
       service.showOngoingTimer(
         title: type?.name ?? l10n.notifyTimerFallback,
-        body: session.state == FocusState.paused
+        body: onBreak
+            ? l10n.notifyTimerOnBreak
+            : paused
             ? l10n.notifyTimerPaused
             : l10n.notifyTimerRunning,
         startedAt: clock.nowUtc().subtract(
           Duration(milliseconds: session.elapsedMs(clock.nowUtc())),
         ),
+        paused: paused,
+        pauseLabel: paused ? l10n.focusResume : l10n.focusPause,
+        finishLabel: l10n.focusFinish,
       ),
     );
-  }
+  };
 
   ref.listen(activeFocusSessionProvider, (_, _) => timer());
   ref.listen(notificationSettingsProvider, (_, _) => timer());
+  ref.listen(pomodoroStateProvider, (_, _) => timer());
   timer();
 });
 

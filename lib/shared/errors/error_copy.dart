@@ -64,6 +64,7 @@ String validationMessage(
     l10n.validationInvalidChallengeTarget,
   ValidationCode.challengeStartInFuture =>
     l10n.validationChallengeStartInFuture,
+  ValidationCode.invalidGoalAmount => l10n.validationInvalidGoalAmount,
 };
 
 /// The first message for [target] in [issues], if any.

@@ -238,17 +238,17 @@
   "@fieldTypeDate": {
     "description": "Field type name: Date."
   },
-  "fieldTypeDateDescription": "A calendar date",
+  "fieldTypeDateDescription": "Like a due date or when something started",
   "@fieldTypeDateDescription": {
-    "description": "Field type description for Date."
+    "description": "UI copy."
   },
   "fieldTypeTime": "A time of day",
   "@fieldTypeTime": {
     "description": "Field type name: Time."
   },
-  "fieldTypeTimeDescription": "A time of day",
+  "fieldTypeTimeDescription": "Like when you woke up or took a pill",
   "@fieldTypeTimeDescription": {
-    "description": "Field type description for Time."
+    "description": "UI copy."
   },
   "fieldTypeDuration": "Time spent",
   "@fieldTypeDuration": {
@@ -1566,9 +1566,9 @@
   "@todayEmptyMessageItems": {
     "description": "Today empty state message."
   },
-  "itemAddToLog": "Add to log",
+  "itemAddToLog": "Track more details",
   "@itemAddToLog": {
-    "description": "Button in an item: add something new to log (a number, a list, …)."
+    "description": "UI copy."
   },
   "itemAddToLogTitle": "What do you want to log?",
   "@itemAddToLogTitle": {
@@ -6072,17 +6072,17 @@
   "@challengesTitle": {
     "description": "Title of the challenges list under Me and the section on Today (ADR-044)."
   },
-  "challengesSubtitle": "Do an activity every day and keep your streak going.",
+  "challengesSubtitle": "Every day, a few times a week, or an amount — keep your streak going.",
   "@challengesSubtitle": {
-    "description": "Challenges screen subtitle."
+    "description": "UI copy."
   },
   "challengesEmptyTitle": "No goals yet",
   "@challengesEmptyTitle": {
     "description": "Challenges empty state title."
   },
-  "challengesEmptyMessage": "Pick an activity and a number of days, like 75 days of Meditation. Recording it each day keeps your streak going.",
+  "challengesEmptyMessage": "Pick an activity and a goal: every day (75 days of Meditation), a few times a week (Gym 3× a week) or an amount (1h of Study a day). Recording it keeps your streak going.",
   "@challengesEmptyMessage": {
-    "description": "Challenges empty state message."
+    "description": "UI copy."
   },
   "newChallenge": "New goal",
   "@newChallenge": {
@@ -7236,8 +7236,10 @@
   "@seeAll": {},
   "goalsEmptyCta": "Set your first goal",
   "@goalsEmptyCta": {},
-  "goalsEmptyHint": "Pick an activity and a number of days. We will count your streak.",
-  "@goalsEmptyHint": {},
+  "goalsEmptyHint": "Every day, a few times a week, or an amount. We'll count your streak.",
+  "@goalsEmptyHint": {
+    "description": "UI copy."
+  },
   "goalsNew": "New goal",
   "@goalsNew": {},
   "goalProgress": "{done} of {target} days",
@@ -7273,8 +7275,10 @@
   "@meGroupData": {},
   "meGroupAbout": "About",
   "@meGroupAbout": {},
-  "meGoalsSubtitle": "Streaks and day targets",
-  "@meGoalsSubtitle": {},
+  "meGoalsSubtitle": "Daily, weekly and amount goals with streaks",
+  "@meGoalsSubtitle": {
+    "description": "UI copy."
+  },
   "meDarkMode": "Light & dark",
   "@meDarkMode": {},
   "meName": "Your name",
@@ -7916,5 +7920,1133 @@
     }
   },
   "planAddEnd": "Add end time",
-  "@planAddEnd": {}
+  "@planAddEnd": {},
+  "validationInvalidGoalAmount": "Enter how much a day or week, more than zero.",
+  "@validationInvalidGoalAmount": {
+    "description": "UI copy."
+  },
+  "goalWeeks": "{count, plural, =1{1 week} other{{count} weeks}}",
+  "@goalWeeks": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "goalProgressWeeks": "{done} / {target} weeks",
+  "@goalProgressWeeks": {
+    "description": "UI copy.",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "goalThisWeekDays": "This week: {done} of {target} days",
+  "@goalThisWeekDays": {
+    "description": "UI copy.",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "goalThisWeekAmount": "This week: {done} of {target}",
+  "@goalThisWeekAmount": {
+    "description": "UI copy.",
+    "placeholders": {
+      "done": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "goalTodayAmount": "Today: {done} of {target}",
+  "@goalTodayAmount": {
+    "description": "UI copy.",
+    "placeholders": {
+      "done": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "goalAutoTitleWeekly": "{activity} {times}× a week",
+  "@goalAutoTitleWeekly": {
+    "description": "UI copy.",
+    "placeholders": {
+      "activity": {
+        "type": "String"
+      },
+      "times": {
+        "type": "int"
+      }
+    }
+  },
+  "goalAutoTitleAmountDay": "{amount} of {activity} a day",
+  "@goalAutoTitleAmountDay": {
+    "description": "UI copy.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "activity": {
+        "type": "String"
+      }
+    }
+  },
+  "goalAutoTitleAmountWeek": "{amount} of {activity} a week",
+  "@goalAutoTitleAmountWeek": {
+    "description": "UI copy.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "activity": {
+        "type": "String"
+      }
+    }
+  },
+  "goalWeekDone": "Done this week",
+  "@goalWeekDone": {
+    "description": "UI copy."
+  },
+  "goalWeekAtRisk": "Keep going this week — streak at risk",
+  "@goalWeekAtRisk": {
+    "description": "UI copy."
+  },
+  "goalWeekNotYet": "Keep going this week",
+  "@goalWeekNotYet": {
+    "description": "UI copy."
+  },
+  "goalKindLabel": "Goal",
+  "@goalKindLabel": {
+    "description": "UI copy."
+  },
+  "goalKindDaily": "Every day",
+  "@goalKindDaily": {
+    "description": "UI copy."
+  },
+  "goalKindWeekly": "A week",
+  "@goalKindWeekly": {
+    "description": "UI copy."
+  },
+  "goalKindAmount": "An amount",
+  "@goalKindAmount": {
+    "description": "UI copy."
+  },
+  "goalTimesPerWeekLabel": "How many days a week",
+  "@goalTimesPerWeekLabel": {
+    "description": "UI copy."
+  },
+  "goalTimesChip": "{count}×",
+  "@goalTimesChip": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "goalAmountWhatLabel": "What to count",
+  "@goalAmountWhatLabel": {
+    "description": "UI copy."
+  },
+  "goalAmountTime": "Time",
+  "@goalAmountTime": {
+    "description": "UI copy."
+  },
+  "goalAmountLabel": "How much",
+  "@goalAmountLabel": {
+    "description": "UI copy."
+  },
+  "goalMinutesSuffix": "min",
+  "@goalMinutesSuffix": {
+    "description": "UI copy."
+  },
+  "goalPerDay": "a day",
+  "@goalPerDay": {
+    "description": "UI copy."
+  },
+  "goalPerWeek": "a week",
+  "@goalPerWeek": {
+    "description": "UI copy."
+  },
+  "goalWeeksLabel": "Number of weeks",
+  "@goalWeeksLabel": {
+    "description": "UI copy."
+  },
+  "goalWeeklyHelper": "{count, plural, =1{Do it on 1 day each week.} other{Do it on {count} days each week.}}",
+  "@goalWeeklyHelper": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "goalAmountHelper": "Each day or week that reaches the amount counts.",
+  "@goalAmountHelper": {
+    "description": "UI copy."
+  },
+  "goalRestDaysLabel": "Rest days",
+  "@goalRestDaysLabel": {
+    "description": "UI copy."
+  },
+  "goalRestDaysNone": "None",
+  "@goalRestDaysNone": {
+    "description": "UI copy."
+  },
+  "goalRestDaysPerWeek": "{count} a week",
+  "@goalRestDaysPerWeek": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "goalRestDaysHelper": "A missed rest day doesn't break your streak.",
+  "@goalRestDaysHelper": {
+    "description": "UI copy."
+  },
+  "goalRestDaysSummary": "{count, plural, =1{1 rest day a week} other{{count} rest days a week}} · {used} used",
+  "@goalRestDaysSummary": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "used": {
+        "type": "int"
+      }
+    }
+  },
+  "goalWeeksDone": "Weeks done",
+  "@goalWeeksDone": {
+    "description": "UI copy."
+  },
+  "goalWeeksLeft": "Weeks left",
+  "@goalWeeksLeft": {
+    "description": "UI copy."
+  },
+  "backupTitle": "Backup & restore",
+  "@backupTitle": {
+    "description": "UI copy."
+  },
+  "backupSubtitle": "Your data lives only on this phone. Keep a copy somewhere safe, and bring it back any time.",
+  "@backupSubtitle": {
+    "description": "UI copy."
+  },
+  "backupMeSubtitle": "Save, export or restore your data",
+  "@backupMeSubtitle": {
+    "description": "UI copy."
+  },
+  "backupLast": "Last backup {date}",
+  "@backupLast": {
+    "description": "UI copy.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "backupGroupSave": "Save a copy",
+  "@backupGroupSave": {
+    "description": "UI copy."
+  },
+  "backupGroupRestore": "Restore",
+  "@backupGroupRestore": {
+    "description": "UI copy."
+  },
+  "backupGroupAuto": "Automatic backups",
+  "@backupGroupAuto": {
+    "description": "UI copy."
+  },
+  "csvTitle": "Export to a spreadsheet",
+  "@csvTitle": {
+    "description": "UI copy."
+  },
+  "csvSubtitle": "A CSV file per activity, plus body measurements",
+  "@csvSubtitle": {
+    "description": "UI copy."
+  },
+  "csvNothing": "Nothing recorded yet to export.",
+  "@csvNothing": {
+    "description": "UI copy."
+  },
+  "csvShareSubject": "DayCraft spreadsheets",
+  "@csvShareSubject": {
+    "description": "UI copy."
+  },
+  "csvDate": "Date",
+  "@csvDate": {
+    "description": "UI copy."
+  },
+  "csvStart": "Start",
+  "@csvStart": {
+    "description": "UI copy."
+  },
+  "csvEnd": "End",
+  "@csvEnd": {
+    "description": "UI copy."
+  },
+  "csvMinutes": "Minutes",
+  "@csvMinutes": {
+    "description": "UI copy."
+  },
+  "csvNotes": "Notes",
+  "@csvNotes": {
+    "description": "UI copy."
+  },
+  "csvMeasurement": "Measurement",
+  "@csvMeasurement": {
+    "description": "UI copy."
+  },
+  "csvValue": "Value",
+  "@csvValue": {
+    "description": "UI copy."
+  },
+  "csvUnit": "Unit",
+  "@csvUnit": {
+    "description": "UI copy."
+  },
+  "restoreFromFile": "Restore from a backup file",
+  "@restoreFromFile": {
+    "description": "UI copy."
+  },
+  "restoreFromFileSubtitle": "Pick a DayCraft backup (.json) saved earlier",
+  "@restoreFromFileSubtitle": {
+    "description": "UI copy."
+  },
+  "restoreNotABackup": "That file isn't a DayCraft backup.",
+  "@restoreNotABackup": {
+    "description": "UI copy."
+  },
+  "restoreNewerVersion": "That backup is from a newer version of DayCraft. Update the app, then try again.",
+  "@restoreNewerVersion": {
+    "description": "UI copy."
+  },
+  "restoreConfirmTitle": "Replace everything with this backup?",
+  "@restoreConfirmTitle": {
+    "description": "UI copy."
+  },
+  "restoreFrom": "Backup from {date}",
+  "@restoreFrom": {
+    "description": "UI copy.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreContents": "{activities, plural, =1{1 activity} other{{activities} activities}} · {records, plural, =1{1 record} other{{records} records}} · {plans, plural, =1{1 plan} other{{plans} plans}} · {goals, plural, =1{1 goal} other{{goals} goals}} · {notes, plural, =1{1 note} other{{notes} notes}}",
+  "@restoreContents": {
+    "description": "UI copy.",
+    "placeholders": {
+      "activities": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      },
+      "plans": {
+        "type": "int"
+      },
+      "goals": {
+        "type": "int"
+      },
+      "notes": {
+        "type": "int"
+      }
+    }
+  },
+  "restoreReplaceWarning": "Everything on this phone now is replaced. A copy of it is kept under Automatic backups, so you can go back.",
+  "@restoreReplaceWarning": {
+    "description": "UI copy."
+  },
+  "restoreAction": "Restore",
+  "@restoreAction": {
+    "description": "UI copy."
+  },
+  "restoreDone": "Restored",
+  "@restoreDone": {
+    "description": "UI copy."
+  },
+  "backupDaily": "Back up every day",
+  "@backupDaily": {
+    "description": "UI copy."
+  },
+  "backupDailySubtitle": "Keeps the last {count} days on this phone",
+  "@backupDailySubtitle": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupNow": "Back up now",
+  "@backupNow": {
+    "description": "UI copy."
+  },
+  "backupMade": "Backup made",
+  "@backupMade": {
+    "description": "UI copy."
+  },
+  "backupBeforeRestore": "Saved before a restore",
+  "@backupBeforeRestore": {
+    "description": "UI copy."
+  },
+  "backupAutomatic": "Automatic backup",
+  "@backupAutomatic": {
+    "description": "UI copy."
+  },
+  "backupOptions": "Backup options",
+  "@backupOptions": {
+    "description": "UI copy."
+  },
+  "backupSaveCopy": "Save a copy…",
+  "@backupSaveCopy": {
+    "description": "UI copy."
+  },
+  "backupDeviceNote": "With Android's device backup on (Settings → Google → Backup), these backups and your data move to your next phone with it. Nothing is ever uploaded by DayCraft itself.",
+  "@backupDeviceNote": {
+    "description": "UI copy."
+  },
+  "appLockTitle": "App lock",
+  "@appLockTitle": {
+    "description": "UI copy."
+  },
+  "appLockSubtitle": "Ask for your fingerprint, face or screen lock to open DayCraft",
+  "@appLockSubtitle": {
+    "description": "UI copy."
+  },
+  "appLockReason": "Unlock DayCraft",
+  "@appLockReason": {
+    "description": "UI copy."
+  },
+  "appLockNoScreenLock": "Set up a screen lock on your phone first.",
+  "@appLockNoScreenLock": {
+    "description": "UI copy."
+  },
+  "appLockFailed": "Couldn't confirm it's you. App lock is still off.",
+  "@appLockFailed": {
+    "description": "UI copy."
+  },
+  "appLockLockedTitle": "DayCraft is locked",
+  "@appLockLockedTitle": {
+    "description": "UI copy."
+  },
+  "appLockLockedBody": "Your plans and records stay private.",
+  "@appLockLockedBody": {
+    "description": "UI copy."
+  },
+  "appLockUnlock": "Unlock",
+  "@appLockUnlock": {
+    "description": "UI copy."
+  },
+  "focusSummary": "{session}, {total} today",
+  "@focusSummary": {
+    "description": "UI copy.",
+    "placeholders": {
+      "session": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "pomodoroRound": "Round {round} · {time} to a break",
+  "@pomodoroRound": {
+    "description": "UI copy.",
+    "placeholders": {
+      "round": {
+        "type": "int"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "pomodoroBreak": "Break · {time} left",
+  "@pomodoroBreak": {
+    "description": "UI copy.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "pomodoroBreakOver": "Break's over — ready for round {round}?",
+  "@pomodoroBreakOver": {
+    "description": "UI copy.",
+    "placeholders": {
+      "round": {
+        "type": "int"
+      }
+    }
+  },
+  "pomodoroStartRound": "Start round {round}",
+  "@pomodoroStartRound": {
+    "description": "UI copy.",
+    "placeholders": {
+      "round": {
+        "type": "int"
+      }
+    }
+  },
+  "pomodoroSkipBreak": "Skip break",
+  "@pomodoroSkipBreak": {
+    "description": "UI copy."
+  },
+  "pomodoroChip": "Pomodoro {minutes}′",
+  "@pomodoroChip": {
+    "description": "UI copy.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "dndChip": "Do Not Disturb",
+  "@dndChip": {
+    "description": "UI copy."
+  },
+  "focusSettingsTitle": "Focus",
+  "@focusSettingsTitle": {
+    "description": "UI copy."
+  },
+  "focusSettingsSubtitle": "Pomodoro rounds and Do Not Disturb while a timer runs",
+  "@focusSettingsSubtitle": {
+    "description": "UI copy."
+  },
+  "pomodoroTitle": "Pomodoro",
+  "@pomodoroTitle": {
+    "description": "UI copy."
+  },
+  "pomodoroSwitch": "Work in rounds",
+  "@pomodoroSwitch": {
+    "description": "UI copy."
+  },
+  "pomodoroSwitchHint": "{work} min of focus, then a {rest} min break. Breaks don't count as focused time.",
+  "@pomodoroSwitchHint": {
+    "description": "UI copy.",
+    "placeholders": {
+      "work": {
+        "type": "int"
+      },
+      "rest": {
+        "type": "int"
+      }
+    }
+  },
+  "pomodoroWork": "Focus round",
+  "@pomodoroWork": {
+    "description": "UI copy."
+  },
+  "pomodoroShortBreak": "Short break",
+  "@pomodoroShortBreak": {
+    "description": "UI copy."
+  },
+  "pomodoroLongBreak": "Long break",
+  "@pomodoroLongBreak": {
+    "description": "UI copy."
+  },
+  "pomodoroLongEvery": "Long break every",
+  "@pomodoroLongEvery": {
+    "description": "UI copy."
+  },
+  "pomodoroRounds": "{count, plural, =1{1 round} other{{count} rounds}}",
+  "@pomodoroRounds": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dndTitle": "Do Not Disturb",
+  "@dndTitle": {
+    "description": "UI copy."
+  },
+  "dndSwitch": "Silence the phone while focusing",
+  "@dndSwitch": {
+    "description": "UI copy."
+  },
+  "dndSwitchHint": "Turns on Do Not Disturb while a timer runs and back off when it stops",
+  "@dndSwitchHint": {
+    "description": "UI copy."
+  },
+  "dndNeedsAccess": "Allow DayCraft under Do Not Disturb access — tap to open it",
+  "@dndNeedsAccess": {
+    "description": "UI copy."
+  },
+  "notifyPomodoroRoundDone": "Round {round} done",
+  "@notifyPomodoroRoundDone": {
+    "description": "UI copy.",
+    "placeholders": {
+      "round": {
+        "type": "int"
+      }
+    }
+  },
+  "notifyPomodoroRoundDoneBody": "Take a {minutes}-minute break.",
+  "@notifyPomodoroRoundDoneBody": {
+    "description": "UI copy.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "notifyPomodoroBreakOver": "Break's over",
+  "@notifyPomodoroBreakOver": {
+    "description": "UI copy."
+  },
+  "notifyPomodoroBreakOverBody": "Ready for round {round}?",
+  "@notifyPomodoroBreakOverBody": {
+    "description": "UI copy.",
+    "placeholders": {
+      "round": {
+        "type": "int"
+      }
+    }
+  },
+  "notifyTimerOnBreak": "On a break",
+  "@notifyTimerOnBreak": {
+    "description": "UI copy."
+  },
+  "recapTitle": "Your week",
+  "@recapTitle": {
+    "description": "UI copy."
+  },
+  "recapShare": "Share your week",
+  "@recapShare": {
+    "description": "UI copy."
+  },
+  "recapShareText": "My week, planned and done — made with DayCraft",
+  "@recapShareText": {
+    "description": "UI copy."
+  },
+  "recapEmptyTitle": "A quiet week",
+  "@recapEmptyTitle": {
+    "description": "UI copy."
+  },
+  "recapEmptyMessage": "Nothing was planned or recorded this week. Plan a few things and your recap fills in.",
+  "@recapEmptyMessage": {
+    "description": "UI copy."
+  },
+  "recapWhereTimeWent": "Where the time went",
+  "@recapWhereTimeWent": {
+    "description": "UI copy."
+  },
+  "recapBestDay": "Best day: {day} · {time}",
+  "@recapBestDay": {
+    "description": "UI copy.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "recapRecords": "Personal bests this week",
+  "@recapRecords": {
+    "description": "UI copy."
+  },
+  "recapHeadlineTracked": "You recorded {time} this week",
+  "@recapHeadlineTracked": {
+    "description": "UI copy.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "recapHeadlinePlanned": "You planned {planned} and did {actual}",
+  "@recapHeadlinePlanned": {
+    "description": "UI copy.",
+    "placeholders": {
+      "planned": {
+        "type": "String"
+      },
+      "actual": {
+        "type": "String"
+      }
+    }
+  },
+  "recapOverline": "My week · {period}",
+  "@recapOverline": {
+    "description": "UI copy.",
+    "placeholders": {
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "recapTimeTracked": "Time recorded",
+  "@recapTimeTracked": {
+    "description": "UI copy."
+  },
+  "recapVsLastWeek": "{change} vs last week",
+  "@recapVsLastWeek": {
+    "description": "UI copy.",
+    "placeholders": {
+      "change": {
+        "type": "String"
+      }
+    }
+  },
+  "recapThingsDone": "Things done",
+  "@recapThingsDone": {
+    "description": "UI copy."
+  },
+  "recapActiveDays": "Active days",
+  "@recapActiveDays": {
+    "description": "UI copy."
+  },
+  "recapPlansKept": "Plans kept",
+  "@recapPlansKept": {
+    "description": "UI copy."
+  },
+  "recapCardTitle": "Your week · {period}",
+  "@recapCardTitle": {
+    "description": "UI copy.",
+    "placeholders": {
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "recapCardEmpty": "Plan a few things to see your recap here",
+  "@recapCardEmpty": {
+    "description": "UI copy."
+  },
+  "recordNewBest": "New best: {value}",
+  "@recordNewBest": {
+    "description": "UI copy.",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "recordsSection": "Personal bests",
+  "@recordsSection": {
+    "description": "UI copy."
+  },
+  "notifyRecap": "Your week is ready",
+  "@notifyRecap": {
+    "description": "UI copy."
+  },
+  "notifyRecapBody": "See what you planned, what you did, and your bests.",
+  "@notifyRecapBody": {
+    "description": "UI copy."
+  },
+  "notificationsRecap": "Weekly recap",
+  "@notificationsRecap": {
+    "description": "UI copy."
+  },
+  "notificationsRecapHint": "Sunday evening, your week at a glance",
+  "@notificationsRecapHint": {
+    "description": "UI copy."
+  },
+  "dayToolsTooltip": "Day options",
+  "@dayToolsTooltip": {
+    "description": "UI copy."
+  },
+  "dayToolsCopyYesterday": "Copy yesterday here",
+  "@dayToolsCopyYesterday": {
+    "description": "UI copy."
+  },
+  "dayToolsCopyTo": "Copy this day to…",
+  "@dayToolsCopyTo": {
+    "description": "UI copy."
+  },
+  "dayToolsSaveRoutine": "Save as a routine",
+  "@dayToolsSaveRoutine": {
+    "description": "UI copy."
+  },
+  "dayToolsApplyRoutine": "Use a routine",
+  "@dayToolsApplyRoutine": {
+    "description": "UI copy."
+  },
+  "dayToolsNothingToCopy": "Nothing planned on that day to copy.",
+  "@dayToolsNothingToCopy": {
+    "description": "UI copy."
+  },
+  "dayToolsNothingToSave": "Plan a few things on this day first, then save it as a routine.",
+  "@dayToolsNothingToSave": {
+    "description": "UI copy."
+  },
+  "dayToolsCopied": "{count, plural, =1{Copied 1 thing to {date}} other{Copied {count} things to {date}}}",
+  "@dayToolsCopied": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "routineNameTitle": "Name this routine",
+  "@routineNameTitle": {
+    "description": "UI copy."
+  },
+  "routineNameHint": "Weekday study, Gym day…",
+  "@routineNameHint": {
+    "description": "UI copy."
+  },
+  "routineItemCount": "{count, plural, =1{1 thing} other{{count} things}}",
+  "@routineItemCount": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "routineSaved": "Saved “{name}”",
+  "@routineSaved": {
+    "description": "UI copy.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "routineApplied": "{count, plural, =1{{name}: 1 thing added} other{{name}: {count} things added}}",
+  "@routineApplied": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "routinesTitle": "Routines",
+  "@routinesTitle": {
+    "description": "UI copy."
+  },
+  "routinesEmpty": "No routines yet. Plan a day you'd like to repeat, then choose Save as a routine from its menu.",
+  "@routinesEmpty": {
+    "description": "UI copy."
+  },
+  "routineDelete": "Delete routine",
+  "@routineDelete": {
+    "description": "UI copy."
+  },
+  "focusAreaTitle": "What do you want to make time for?",
+  "@focusAreaTitle": {
+    "description": "UI copy."
+  },
+  "focusAreaBody": "Pick any. We'll set you up with the right activities.",
+  "@focusAreaBody": {
+    "description": "UI copy."
+  },
+  "focusAreaStudy": "Studying",
+  "@focusAreaStudy": {
+    "description": "UI copy."
+  },
+  "focusAreaWork": "Deep work",
+  "@focusAreaWork": {
+    "description": "UI copy."
+  },
+  "focusAreaFitness": "Fitness",
+  "@focusAreaFitness": {
+    "description": "UI copy."
+  },
+  "focusAreaReading": "Reading & learning",
+  "@focusAreaReading": {
+    "description": "UI copy."
+  },
+  "focusAreaMind": "Mind & mood",
+  "@focusAreaMind": {
+    "description": "UI copy."
+  },
+  "focusAreaHealth": "Healthy habits",
+  "@focusAreaHealth": {
+    "description": "UI copy."
+  },
+  "firstPlanTitle": "What's first today?",
+  "@firstPlanTitle": {
+    "description": "UI copy."
+  },
+  "firstPlanBody": "Add one thing to start with. You can plan the rest from Today.",
+  "@firstPlanBody": {
+    "description": "UI copy."
+  },
+  "firstPlanWhen": "When",
+  "@firstPlanWhen": {
+    "description": "UI copy."
+  },
+  "firstPlanNow": "Right now",
+  "@firstPlanNow": {
+    "description": "UI copy."
+  },
+  "firstPlanInAnHour": "In an hour",
+  "@firstPlanInAnHour": {
+    "description": "UI copy."
+  },
+  "firstPlanEvening": "This evening",
+  "@firstPlanEvening": {
+    "description": "UI copy."
+  },
+  "firstPlanAnytime": "Anytime today",
+  "@firstPlanAnytime": {
+    "description": "UI copy."
+  },
+  "firstPlanStartNow": "Start now",
+  "@firstPlanStartNow": {
+    "description": "UI copy."
+  },
+  "firstPlanAdd": "Add to today",
+  "@firstPlanAdd": {
+    "description": "UI copy."
+  },
+  "firstPlanRemind": "Remind me 10 minutes before",
+  "@firstPlanRemind": {
+    "description": "UI copy."
+  },
+  "firstPlanRemindHint": "DayCraft will ask to send notifications.",
+  "@firstPlanRemindHint": {
+    "description": "UI copy."
+  },
+  "healthTitle": "Health Connect",
+  "@healthTitle": {
+    "description": "UI copy."
+  },
+  "healthSubtitle": "Bring in weight, height and body fat from your other apps",
+  "@healthSubtitle": {
+    "description": "UI copy."
+  },
+  "healthImport": "Import",
+  "@healthImport": {
+    "description": "UI copy."
+  },
+  "healthUnavailable": "Health Connect isn't installed. Install it from the Play Store, then try again.",
+  "@healthUnavailable": {
+    "description": "UI copy."
+  },
+  "healthDenied": "DayCraft wasn't allowed to read from Health Connect.",
+  "@healthDenied": {
+    "description": "UI copy."
+  },
+  "healthImported": "{count, plural, =0{Nothing new to import} =1{Imported 1 measurement} other{Imported {count} measurements}}",
+  "@healthImported": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "healthImportedNote": "From Health Connect",
+  "@healthImportedNote": {
+    "description": "UI copy."
+  },
+  "widgetTitle": "TODAY · {date}",
+  "@widgetTitle": {
+    "description": "UI copy.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "widgetNothingPlanned": "Nothing planned yet",
+  "@widgetNothingPlanned": {
+    "description": "UI copy."
+  },
+  "widgetStreak": "🔥 {days}",
+  "@widgetStreak": {
+    "description": "UI copy.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "widgetRunning": "▶ {title} · {time}",
+  "@widgetRunning": {
+    "description": "UI copy.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "widgetPaused": "⏸ {title} · paused",
+  "@widgetPaused": {
+    "description": "UI copy.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "widgetNextAt": "Next: {title} · {time}",
+  "@widgetNextAt": {
+    "description": "UI copy.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "widgetNext": "Next: {title}",
+  "@widgetNext": {
+    "description": "UI copy.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "widgetStartSomething": "Start something",
+  "@widgetStartSomething": {
+    "description": "UI copy."
+  },
+  "meRate": "Rate DayCraft",
+  "@meRate": {
+    "description": "UI copy."
+  },
+  "meRateSubtitle": "A review on Google Play helps others find it",
+  "@meRateSubtitle": {
+    "description": "UI copy."
+  },
+  "meFeedback": "Send feedback",
+  "@meFeedback": {
+    "description": "UI copy."
+  },
+  "meFeedbackSubtitle": "Ideas, problems, anything",
+  "@meFeedbackSubtitle": {
+    "description": "UI copy."
+  },
+  "feedbackIntro": "Every message is read. Nothing is sent until you choose to send it.",
+  "@feedbackIntro": {
+    "description": "UI copy."
+  },
+  "feedbackWrite": "Write a message",
+  "@feedbackWrite": {
+    "description": "UI copy."
+  },
+  "feedbackWriteSubtitle": "Your app and phone version are added for you",
+  "@feedbackWriteSubtitle": {
+    "description": "UI copy."
+  },
+  "feedbackSubject": "DayCraft feedback",
+  "@feedbackSubject": {
+    "description": "UI copy."
+  },
+  "feedbackDiagnostics": "Share a problem report",
+  "@feedbackDiagnostics": {
+    "description": "UI copy."
+  },
+  "feedbackDiagnosticsSubject": "DayCraft problem report",
+  "@feedbackDiagnosticsSubject": {
+    "description": "UI copy."
+  },
+  "feedbackDiagnosticsNone": "No problems recorded on this phone",
+  "@feedbackDiagnosticsNone": {
+    "description": "UI copy."
+  },
+  "feedbackDiagnosticsCount": "{count, plural, =1{1 recent problem, no personal data} other{{count} recent problems, no personal data}}",
+  "@feedbackDiagnosticsCount": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "feedbackFailed": "Couldn't open that. Try again in a moment.",
+  "@feedbackFailed": {
+    "description": "UI copy."
+  },
+  "itemPausedLine": "Paused · {time}",
+  "@itemPausedLine": {
+    "description": "UI copy.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "heroPaused": "{title} is paused",
+  "@heroPaused": {
+    "description": "UI copy.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "nowNextPaused": "Paused",
+  "@nowNextPaused": {
+    "description": "UI copy."
+  },
+  "todayReportShort": "Report",
+  "@todayReportShort": {
+    "description": "UI copy."
+  },
+  "insightChartShort": "Chart",
+  "@insightChartShort": {
+    "description": "UI copy."
+  },
+  "goalActivityHelperWeekly": "Each day you record it counts toward the week.",
+  "@goalActivityHelperWeekly": {
+    "description": "UI copy."
+  },
+  "goalActivityHelperAmount": "The time or amount you record adds up.",
+  "@goalActivityHelperAmount": {
+    "description": "UI copy."
+  },
+  "goalAmountHint": "e.g. 45",
+  "@goalAmountHint": {
+    "description": "UI copy."
+  },
+  "durationHours": "{hours}h",
+  "@durationHours": {
+    "description": "UI copy.",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "durationUnderMinute": "<1 min",
+  "@durationUnderMinute": {
+    "description": "UI copy."
+  },
+  "measurementNoneShort": "Not yet",
+  "@measurementNoneShort": {
+    "description": "UI copy."
+  }
 }

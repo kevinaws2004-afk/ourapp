@@ -26,6 +26,7 @@ class NotificationSettings {
     this.eveningReview = false,
     this.eveningMinute = 21 * 60,
     this.goalStreaks = true,
+    this.weeklyRecap = true,
   });
 
   static const defaults = NotificationSettings();
@@ -51,6 +52,12 @@ class NotificationSettings {
   /// An evening nudge when a running goal's activity isn't done yet today.
   final bool goalStreaks;
 
+  /// Sunday evening: the week's recap is ready.
+  final bool weeklyRecap;
+
+  /// When the weekly recap arrives on Sundays (local minute of the day).
+  static const weeklyRecapMinute = 19 * 60;
+
   /// The reminder a new timed item starts with (Me → Notifications →
   /// Default reminder); null for none.
   int? get defaultBefore =>
@@ -66,6 +73,7 @@ class NotificationSettings {
     bool? eveningReview,
     int? eveningMinute,
     bool? goalStreaks,
+    bool? weeklyRecap,
   }) => NotificationSettings(
     enabled: enabled ?? this.enabled,
     newItems: newItems ?? this.newItems,
@@ -76,6 +84,7 @@ class NotificationSettings {
     eveningReview: eveningReview ?? this.eveningReview,
     eveningMinute: eveningMinute ?? this.eveningMinute,
     goalStreaks: goalStreaks ?? this.goalStreaks,
+    weeklyRecap: weeklyRecap ?? this.weeklyRecap,
   );
 
   Map<String, Object> toJson() => {
@@ -88,6 +97,7 @@ class NotificationSettings {
     'eveningReview': eveningReview,
     'eveningMinute': eveningMinute,
     'goalStreaks': goalStreaks,
+    'weeklyRecap': weeklyRecap,
   };
 
   factory NotificationSettings.fromJson(Object? json) {
@@ -107,6 +117,7 @@ class NotificationSettings {
       eveningReview: read('eveningReview', d.eveningReview),
       eveningMinute: read('eveningMinute', d.eveningMinute),
       goalStreaks: read('goalStreaks', d.goalStreaks),
+      weeklyRecap: read('weeklyRecap', d.weeklyRecap),
     );
   }
 }

@@ -21,6 +21,10 @@ UI_ICONS = [
     'toggle-left', 'text-aa', 'hash', 'list-checks', 'list-bullets', 'hourglass-medium',
     'rows', 'radio-button', 'caret-left', 'circle', 'play', 'skip-forward', 'arrow-bend-up-right', 'pause', 'ruler', 'repeat', 'calendar-plus', 'arrow-right',
     'moon', 'export', 'shield-check', 'lightning', 'bell', 'trophy', 'flag', 'chart-bar', 'gear-six', 'arrow-up-right', 'trend-up', 'trend-down', 'calendar-check', 'hand-waving', 'circle-half', 'note-pencil', 'seal-check', 'house', 'medal', 'file-arrow-down', 'question', 'device-mobile', 'lock-key', 'plus-circle', 'quotes',
+    'note', 'push-pin', 'magnifying-glass',
+    'clock-counter-clockwise', 'cloud-check', 'table', 'fingerprint', 'share-network', 'bell-slash',
+    'heartbeat', 'chat-text', 'bug', 'copy', 'tray-arrow-down', 'stack', 'arrows-clockwise',
+    'calendar-star', 'hand-tap', 'app-window', 'crown',
 ]
 FILL_ICONS = ['fire', 'sun', 'calendar-dots', 'squares-four', 'chart-line-up', 'user', 'star', 'check-circle', 'target', 'lightning', 'trophy', 'seal-check', 'moon', 'circle-half', 'flag', 'heart', 'sparkle']
 ACTIVITY_ICONS = [

@@ -22,6 +22,16 @@ class AppLogger {
 
   final String name;
 
+  /// Where warnings and errors are also kept for a later report (set at
+  /// startup; see `DiagnosticsLog`).
+  static void Function(
+    String level,
+    String message,
+    Object? error,
+    StackTrace? stackTrace,
+  )?
+  sink;
+
   /// Release builds keep warnings and errors only.
   LogLevel get minimumLevel => kReleaseMode ? LogLevel.warning : LogLevel.debug;
 
@@ -41,6 +51,9 @@ class AppLogger {
     Object? error,
     StackTrace? stackTrace,
   }) {
+    if (level.value >= LogLevel.warning.value) {
+      sink?.call(level.name, message, error, stackTrace);
+    }
     if (level.value < minimumLevel.value) return;
     developer.log(
       message,

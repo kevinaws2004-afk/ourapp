@@ -2,4 +2,10 @@
 <resources>
     <color name="splash_background">#F8F9FE</color>
     <color name="splash_icon_background">#F4F0FF</color>
+    <!-- Today widget (Electric Lavender). -->
+    <color name="widget_surface">#FFFFFF</color>
+    <color name="widget_text">#1B1A23</color>
+    <color name="widget_text_secondary">#6B6880</color>
+    <color name="widget_accent">#7C5CFC</color>
+    <color name="widget_on_accent">#FFFFFF</color>
 </resources>

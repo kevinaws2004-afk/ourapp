@@ -8,6 +8,7 @@ import 'package:daylog/features/settings/data/db_app_preferences_repository.dart
 import 'package:daylog/features/settings/domain/preferences_snapshot.dart';
 import 'package:daylog/features/today/presentation/today_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:daylog/app/app_shell.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../support/fake_clock.dart';
@@ -26,10 +27,9 @@ void main() {
         await pumpTestApp(tester);
 
         expect(find.byType(OnboardingScreen), findsOneWidget);
-        expect(find.byType(NavigationBar), findsNothing);
+        expect(find.byKey(AppShell.tabBarKey), findsNothing);
 
-        await tester.tap(find.text('Get started'));
-        await tester.pumpAndSettle();
+        await completeOnboarding(tester);
 
         expect(find.byType(TodayScreen), findsOneWidget);
         expect(find.byType(OnboardingScreen), findsNothing);
@@ -49,19 +49,19 @@ void main() {
       (tester) async {
         await pumpTestApp(tester, preferences: _onboarded);
 
-        expect(find.byType(NavigationBar), findsOneWidget);
+        expect(find.byKey(AppShell.tabBarKey), findsOneWidget);
         expect(find.byType(NavigationRail), findsNothing);
         expect(
           find.descendant(
-            of: find.byType(NavigationBar),
+            of: find.byKey(AppShell.tabBarKey),
             matching: find.text('Track'),
           ),
           findsNothing,
         );
-        for (final label in ['Today', 'Plan', 'Challenges', 'Progress', 'Me']) {
+        for (final label in ['Today', 'Plan', 'Progress', 'Me']) {
           expect(
             find.descendant(
-              of: find.byType(NavigationBar),
+              of: find.byKey(AppShell.tabBarKey),
               matching: find.text(label),
             ),
             findsOneWidget,
@@ -78,7 +78,7 @@ void main() {
       );
 
       expect(find.byType(NavigationRail), findsOneWidget);
-      expect(find.byType(NavigationBar), findsNothing);
+      expect(find.byKey(AppShell.tabBarKey), findsNothing);
     });
 
     testAppWidgets('selecting a tab shows its screen', (tester) async {
@@ -86,7 +86,7 @@ void main() {
 
       await tester.tap(
         find.descendant(
-          of: find.byType(NavigationBar),
+          of: find.byKey(AppShell.tabBarKey),
           matching: find.text('Plan'),
         ),
       );
@@ -132,13 +132,12 @@ void main() {
 
       await tester.tap(
         find.descendant(
-          of: find.byType(NavigationBar),
+          of: find.byKey(AppShell.tabBarKey),
           matching: find.text('Me'),
         ),
       );
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Design tokens'));
-      await tester.pumpAndSettle();
+      await scrollToAndTap(tester, 'Design tokens');
 
       expect(find.byType(TokenShowcaseScreen), findsOneWidget);
 
@@ -166,13 +165,12 @@ void main() {
           );
           await tester.tap(
             find.descendant(
-              of: find.byType(NavigationBar),
+              of: find.byKey(AppShell.tabBarKey),
               matching: find.text('Me'),
             ),
           );
           await tester.pumpAndSettle();
-          await tester.tap(find.text('Design tokens'));
-          await tester.pumpAndSettle();
+          await scrollToAndTap(tester, 'Design tokens');
 
           await tester.scrollUntilVisible(
             find.text('Show onboarding again'),
@@ -195,10 +193,7 @@ void main() {
       await pumpTestApp(tester, size: const Size(360, 780));
       expect(tester.takeException(), isNull);
 
-      await tester.ensureVisible(find.text('Get started'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Get started'));
-      await tester.pumpAndSettle();
+      await completeOnboarding(tester);
 
       expect(find.byType(TodayScreen), findsOneWidget);
       expect(tester.takeException(), isNull);
@@ -213,9 +208,9 @@ void main() {
       final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
       expect(
         app.onGenerateTitle!(tester.element(find.byType(TodayScreen))),
-        'OurApp',
+        'DayCraft',
       );
-      expect(find.byTooltip('Add to today'), findsOneWidget);
+      expect(find.text('Today'), findsWidgets);
     },
   );
 }

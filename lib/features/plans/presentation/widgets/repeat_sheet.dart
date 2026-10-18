@@ -15,6 +15,8 @@ Future<RepeatRule?> showRepeatSheet(
   BuildContext context, {
   required LocalDate date,
 }) => showModalBottomSheet<RepeatRule>(
+  useRootNavigator: true,
+  useSafeArea: true,
   context: context,
   isScrollControlled: true,
   builder: (_) => _RepeatSheet(date: date),
