@@ -131,20 +131,39 @@ class _DayReportScreenState extends ConsumerState<DayReportScreen> {
     final untracked = (window - tracked).clamp(0, fullDay);
 
     // What got done, in the order it was done.
-    final done = <(String, DateTime, ActivityType?, PlanId?)>[
-      for (final item in overview.planned)
-        if (item.status == EffectivePlanStatus.completed)
-          (
-            item.plan.title,
-            item.records.lastOrNull?.endedAt ??
-                item.records.lastOrNull?.startedAt ??
-                item.plan.updatedAt,
-            item.type,
-            item.plan.id,
-          ),
-      for (final r in overview.unplanned)
-        (r.type.name, r.log.endedAt ?? r.log.startedAt, r.type, null),
-    ]..sort((a, b) => a.$2.compareTo(b.$2));
+    // (title, start, end, plan time, type, plan): planned → did.
+    final done =
+        <(String, DateTime?, DateTime, DateTime?, ActivityType?, PlanId?)>[
+          for (final item in overview.planned)
+            if (item.status == EffectivePlanStatus.completed)
+              (
+                item.plan.title,
+                item.records.firstOrNull?.startedAt,
+                item.records.lastOrNull?.endedAt ??
+                    item.records.lastOrNull?.startedAt ??
+                    item.plan.updatedAt,
+                item.plan.plannedStartAt,
+                item.type,
+                item.plan.id,
+              ),
+          for (final r in overview.unplanned)
+            (
+              r.type.name,
+              r.log.startedAt,
+              r.log.endedAt ?? r.log.startedAt,
+              null,
+              r.type,
+              null,
+            ),
+        ]..sort((a, b) => a.$3.compareTo(b.$3));
+    String didAt(DateTime? start, DateTime end) =>
+        start == null || end.difference(start).inMinutes < 1
+        ? timeOf(end)
+        : '${timeOf(start)}–${timeOf(end)}';
+    final plannedMs = overview.planned.fold(
+      0,
+      (sum, i) => sum + (i.plan.plannedLengthMs ?? 0),
+    );
     final notDone = [
       for (final item in overview.planned)
         if (item.status != EffectivePlanStatus.completed) item,
@@ -247,7 +266,7 @@ class _DayReportScreenState extends ConsumerState<DayReportScreen> {
                         flex: times.isEmpty
                             ? 1
                             : (untracked * 1000 ~/ scale).clamp(1, 1000),
-                        child: ColoredBox(color: c.borderStrong),
+                        child: ColoredBox(color: c.surfaceSunken),
                       ),
                   ],
                 ),
@@ -263,18 +282,22 @@ class _DayReportScreenState extends ConsumerState<DayReportScreen> {
                       : l10n.dayReportDoneOf(plannedDone, planned),
                   dot: c.success,
                 ),
-                stat(
-                  l10n.dayReportUntracked,
-                  formatDuration(l10n, untracked),
-                  dot: c.borderStrong,
-                ),
+                if (plannedMs > 0)
+                  stat(
+                    l10n.dayReportPlannedTime,
+                    formatDuration(l10n, plannedMs),
+                  ),
               ],
             ),
             const SizedBox(height: AppSpacing.sm),
+            // Quiet, not a score: the rest of the day isn't a failure.
             Text(
-              _date == today
-                  ? l10n.dayReportUntrackedHintToday
-                  : l10n.dayReportUntrackedHint(_wakingHours),
+              l10n.dayReportUntrackedLine(
+                formatDuration(l10n, untracked),
+                _date == today
+                    ? l10n.dayReportUntrackedHintToday
+                    : l10n.dayReportUntrackedHint(_wakingHours),
+              ),
               style: context.textStyles.bodySmall?.copyWith(
                 color: c.textTertiary,
               ),
@@ -358,7 +381,7 @@ class _DayReportScreenState extends ConsumerState<DayReportScreen> {
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
           child: Column(
             children: [
-              for (final (title, at, type, planId) in done)
+              for (final (title, start, end, plannedAt, type, planId) in done)
                 ListTile(
                   leading: Icon(AppIcons.check, color: colorOf(type)),
                   title: Text(
@@ -366,8 +389,11 @@ class _DayReportScreenState extends ConsumerState<DayReportScreen> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
+                  subtitle: plannedAt == null
+                      ? null
+                      : Text(l10n.dayReportPlannedAt(timeOf(plannedAt))),
                   trailing: Text(
-                    timeOf(at),
+                    didAt(start, end),
                     style: context.textStyles.labelLarge?.copyWith(
                       color: c.textSecondary,
                     ),

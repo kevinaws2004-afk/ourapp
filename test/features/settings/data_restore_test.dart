@@ -150,7 +150,9 @@ void main() {
       ),
     );
     expect(
-      () => restore.parse(jsonEncode({'app': 'Other', 'tables': <String, Object?>{}})),
+      () => restore.parse(
+        jsonEncode({'app': 'Other', 'tables': <String, Object?>{}}),
+      ),
       throwsA(isA<RestoreException>()),
     );
     expect(

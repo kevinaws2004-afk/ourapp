@@ -226,7 +226,7 @@ class _TimelineRow extends ConsumerWidget {
           ref.watch(focusTickProvider);
           final session = ref.watch(activeFocusSessionProvider).value;
           ref.watch(minuteTickProvider);
-    final now = ref.watch(clockProvider).nowUtc();
+          final now = ref.watch(clockProvider).nowUtc();
           detail = session == null
               ? null
               : sessionLine(l10n, session, now, short: true);

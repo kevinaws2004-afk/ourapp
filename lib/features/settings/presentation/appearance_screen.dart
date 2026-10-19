@@ -12,6 +12,7 @@ import '../../../core/design/tokens/spacing.dart';
 import '../../../core/design/window_size_class.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/widgets/settings_group.dart';
+import '../../../shared/widgets/state_views.dart';
 import '../domain/preferences_snapshot.dart';
 import 'preferences_providers.dart';
 
@@ -91,11 +92,24 @@ class AppearanceScreen extends ConsumerWidget {
                           child: _ThemeSwatch(
                             id: id,
                             selected: id == current,
-                            onSelect: () => unawaited(
-                              ref
-                                  .read(preferencesNotifierProvider.notifier)
-                                  .setTheme(id),
-                            ),
+                            onSelect: () {
+                              if (id == current) return;
+                              final notifier = ref.read(
+                                preferencesNotifierProvider.notifier,
+                              );
+                              final before = current;
+                              unawaited(notifier.setTheme(id));
+                              // A stray tap restyles the whole app: offer
+                              // the way back.
+                              showUndoSnackBar(
+                                context,
+                                message: l10n.appearanceThemeChanged(
+                                  themeName(l10n, id),
+                                ),
+                                onUndo: () =>
+                                    unawaited(notifier.setTheme(before)),
+                              );
+                            },
                           ),
                         ),
                     ],

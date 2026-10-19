@@ -24,11 +24,16 @@ import '../../focus/presentation/focus_providers.dart';
 import '../../activity_logs/presentation/value_formatting.dart';
 import '../../../core/time/clock_provider.dart';
 import '../domain/day_progress.dart';
+import '../../insights/presentation/recap_providers.dart';
+import '../../insights/presentation/personal_records.dart';
+import '../../insights/presentation/insight_formatting.dart';
 import 'plan_date_notifier.dart';
 import '../../settings/presentation/review_prompt.dart';
 import '../domain/plan.dart';
+import '../domain/plan_series.dart';
 import '../domain/watch_day_overview.dart';
 import 'item/how_did_it_go_sheet.dart';
+import 'item/how_long_sheet.dart';
 import 'item/item_notifier.dart';
 import 'plan_editor_sheet.dart';
 import 'plan_providers.dart';
@@ -124,17 +129,117 @@ class PlanActions {
         if (created case final log?) await deleteLog(log);
       },
     );
-    if (ok && _context.mounted && await _needsDetails(id, type)) {
-      await _howDidItGo(id);
+    // Ticked without its timer: record how long, so time stats stay true.
+    // The planned length if it has one; otherwise ask, unless "How did it
+    // go?" follows (one sheet after Done, not two).
+    final details = ok && _context.mounted && await _needsDetails(id, type);
+    if (ok && _context.mounted && (type?.supportsTimer ?? false)) {
+      await _recordLength(item, ask: !details);
     }
-    if (ok) _celebrate(streak);
+    if (details && _context.mounted) await _howDidItGo(id);
+    if (ok) _celebrate(streak, type);
+  }
+
+  Future<void> _recordLength(PlannedItem item, {required bool ask}) async {
+    final logs = _ref.read(activityLogRepositoryProvider);
+    final clock = _ref.read(clockProvider);
+    final log = await logs.getLogForPlan(item.plan.id);
+    if (log == null || log.durationMs != null || !_context.mounted) return;
+    final planned = item.plan.plannedLengthMs;
+    final ms = planned != null && planned > 0
+        ? planned
+        : ask
+        ? await showHowLongSheet(_context, title: item.plan.title)
+        : null;
+    if (ms == null) return;
+    // It ended when it was ticked; it started that long before.
+    await logs.update(
+      ActivityLog(
+        id: log.id,
+        activityTypeId: log.activityTypeId,
+        startedAt: log.startedAt.subtract(Duration(milliseconds: ms)),
+        endedAt: log.startedAt,
+        durationMs: ms,
+        tzOffsetMinutes: log.tzOffsetMinutes,
+        localDate: log.localDate,
+        notes: log.notes,
+        values: log.values,
+        planId: log.planId,
+        createdAt: log.createdAt,
+        updatedAt: clock.nowUtc(),
+      ),
+    );
   }
 
   /// A streak milestone is a good moment to ask for a rating.
-  void _celebrate(ActivityStreak? streak) {
+  void _celebrate(ActivityStreak? streak, [ActivityType? type]) {
     if (streak != null && reviewStreaks.contains(streak.afterToday)) {
       unawaited(maybeAskForReview(_ref));
     }
+    unawaited(_moments(type));
+  }
+
+  /// After the "done" snackbar has had its turn: a personal best set just
+  /// now, or a perfect day (everything planned done, nothing let go).
+  Future<void> _moments(ActivityType? type) async {
+    final messenger = ScaffoldMessenger.maybeOf(_context);
+    final l10n = _l10n;
+    final material = MaterialLocalizations.of(_context);
+    // The screen may close meanwhile (Done returns to the day): read from
+    // the app's container, not this widget's ref.
+    final container = ProviderScope.containerOf(_context, listen: false);
+    final today = currentLocalDate(container.read(clockProvider));
+    String? message;
+    if (type != null) {
+      final sub = container.listen(
+        personalRecordsProvider(today).future,
+        (_, _) {},
+      );
+      try {
+        final records = await sub.read().timeout(const Duration(seconds: 3));
+        final best = records
+            .where((r) => r.type.id == type.id && r.point.date == today)
+            .firstOrNull;
+        if (best != null) {
+          final display = InsightDisplay.of(
+            l10n,
+            best.chart.config.source,
+            best.type,
+            material: material,
+          );
+          message = l10n.momentNewBest(
+            recordSubject(best),
+            display.format(best.point.value),
+          );
+        }
+      } catch (_) {
+        // No record to show.
+      } finally {
+        sub.close();
+      }
+    }
+    // The app (or a test) may have closed meanwhile.
+    if (message == null) {
+      final DayOverview? day;
+      try {
+        day = container.read(dayOverviewProvider(today)).value;
+      } on StateError {
+        return;
+      }
+      final progress = day == null ? null : DayProgress.of(day);
+      if (progress != null &&
+          progress.allDone &&
+          progress.letGo == 0 &&
+          progress.total >= 2) {
+        message = l10n.momentPerfectDay(progress.total);
+      }
+    }
+    if (message == null || messenger == null) return;
+    await Future<void>.delayed(const Duration(seconds: 4));
+    unawaited(HapticFeedback.heavyImpact());
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 
   /// Finish (ADR-046): stops [session]'s timer, which marks its thing done
@@ -180,7 +285,7 @@ class PlanActions {
           content: Text('${doneMessage(l10n, title, streak)} · $summary'),
         ),
       );
-    _celebrate(streak);
+    _celebrate(streak, type);
   }
 
   /// Whether to ask "How did it go?": the activity has details worth
@@ -284,7 +389,25 @@ class PlanActions {
     );
   }
 
-  Future<void> _moveTo(PlannedItem item, LocalDate to, String message) {
+  /// Whether [item] repeats and its series already happens on [date]:
+  /// moving it there would double it.
+  Future<bool> _repeatsOn(PlannedItem item, LocalDate date) async {
+    final seriesId = item.plan.seriesId;
+    if (seriesId == null) return false;
+    final series = await _ref.read(planRepositoryProvider).getSeries(seriesId);
+    return series?.occursOn(date) ?? false;
+  }
+
+  Future<void> _moveTo(PlannedItem item, LocalDate to, String message) async {
+    // Already on that day's plan (it repeats): skip this one where it is,
+    // so it isn't doubled there and its own day stays honest.
+    if (await _repeatsOn(item, to)) {
+      return _run(
+        () => _setStatus(item.plan.id, PlanStatus.skipped),
+        message: _l10n.planAlreadyThatDay,
+        undo: () => _setStatus(item.plan.id, item.plan.status),
+      );
+    }
     final id = item.plan.id;
     final from = item.plan.planDate;
     final move = _ref.read(movePlanProvider);
@@ -314,6 +437,11 @@ class PlanActions {
     return _run(
       () async {
         for (final item in items) {
+          // Repeats today anyway: today's own occurrence is the one to do.
+          if (await _repeatsOn(item, today)) {
+            await _setStatus(item.plan.id, PlanStatus.skipped);
+            continue;
+          }
           moved[item.plan.id] = await move(
             item.plan.id,
             today,
@@ -326,7 +454,10 @@ class PlanActions {
         for (final item in items) {
           final id = item.plan.id;
           final copy = moved[id];
-          if (copy == null) continue;
+          if (copy == null) {
+            await _setStatus(id, item.plan.status);
+            continue;
+          }
           if (copy == id) {
             await update(id, item.plan.toDraft());
           } else {
@@ -475,8 +606,12 @@ class PlanActions {
   }
 
   /// Makes the plan repeat on chosen days (ADR-036).
-  Future<void> repeat(PlannedItem item) async {
-    final rule = await showRepeatSheet(_context, date: item.plan.planDate);
+  Future<void> repeat(PlannedItem item, {RepeatRule? current}) async {
+    final rule = await showRepeatSheet(
+      _context,
+      date: item.plan.planDate,
+      initial: current,
+    );
     if (rule == null || !_context.mounted) return;
     final days = formatWeekdays(_context, rule.weekdays);
     await _run(

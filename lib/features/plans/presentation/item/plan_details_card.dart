@@ -1,3 +1,6 @@
+import '../widgets/repeat_sheet.dart';
+import '../../domain/plan_series.dart';
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -283,13 +286,33 @@ class _PlanDetailsCardState extends ConsumerState<PlanDetailsCard> {
     );
   }
 
-  Future<void> _repeat() async {
-    final actions = PlanActions(context, ref);
-    if (_plan.isRepeating) {
-      await actions.stopRepeating(_item());
-    } else {
-      await actions.repeat(_item());
-    }
+  /// Sets the days it repeats on (or changes them, from this one on).
+  Future<void> _repeat(RepeatRule? current) async {
+    await PlanActions(context, ref).repeat(_item(), current: current);
+    await ref.read(itemProvider(widget.args).notifier).reload();
+  }
+
+  /// Stopping removes the later ones: asked first.
+  Future<void> _stopRepeating() async {
+    final l10n = AppLocalizations.of(context);
+    final sure = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: Text(l10n.repeatStopConfirm),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.actionCancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l10n.repeatStop),
+          ),
+        ],
+      ),
+    );
+    if (sure != true || !mounted) return;
+    await PlanActions(context, ref).stopRepeating(_item());
     await ref.read(itemProvider(widget.args).notifier).reload();
   }
 
@@ -305,6 +328,10 @@ class _PlanDetailsCardState extends ConsumerState<PlanDetailsCard> {
       plan,
       ref.watch(remindersProvider).value ?? const {},
     );
+    final rule = switch (plan.seriesId) {
+      final id? => ref.watch(planSeriesProvider(id)).value?.rule,
+      null => null,
+    };
     final d = plan.planDate;
 
     Widget pill({
@@ -433,15 +460,21 @@ class _PlanDetailsCardState extends ConsumerState<PlanDetailsCard> {
           ),
           FieldEditorShell(
             label: l10n.planRepeatLabel,
-            onClear: plan.isRepeating ? () => unawaited(_repeat()) : null,
+            onClear: plan.isRepeating
+                ? () => unawaited(_stopRepeating())
+                : null,
             child: Align(
               alignment: Alignment.centerLeft,
               child: pill(
                 icon: AppIcons.repeat,
-                label: plan.isRepeating
-                    ? l10n.planRepeatsOn
-                    : l10n.planRepeatOff,
-                onPressed: () => unawaited(_repeat()),
+                label: switch (rule) {
+                  final r? => l10n.repeatsLabel(
+                    formatWeekdays(context, r.weekdays),
+                  ),
+                  null when plan.isRepeating => l10n.planRepeatLabel,
+                  null => l10n.planRepeatOff,
+                },
+                onPressed: () => unawaited(_repeat(rule)),
               ),
             ),
           ),

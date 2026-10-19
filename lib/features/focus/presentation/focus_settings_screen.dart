@@ -11,6 +11,7 @@ import '../../../core/design/window_size_class.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/widgets/screen_header.dart';
 import '../../../shared/widgets/settings_group.dart';
+import '../../../core/platform/app_blocker.dart';
 import '../domain/pomodoro.dart';
 import 'focus_controller.dart';
 
@@ -26,6 +27,7 @@ class FocusSettingsScreen extends ConsumerStatefulWidget {
 
 class _FocusSettingsScreenState extends ConsumerState<FocusSettingsScreen> {
   bool? _dndAccess;
+  bool? _blockerOn;
   late final AppLifecycleListener _lifecycle;
 
   @override
@@ -42,11 +44,71 @@ class _FocusSettingsScreenState extends ConsumerState<FocusSettingsScreen> {
     super.dispose();
   }
 
-  void _checkAccess() => unawaited(
-    ref.read(doNotDisturbProvider).hasAccess().then((ok) {
-      if (mounted) setState(() => _dndAccess = ok);
-    }),
-  );
+  void _checkAccess() {
+    unawaited(
+      ref.read(doNotDisturbProvider).hasAccess().then((ok) {
+        if (mounted) setState(() => _dndAccess = ok);
+      }),
+    );
+    unawaited(
+      ref.read(appBlockerProvider).isEnabled().then((on) {
+        if (!mounted) return;
+        final justTurnedOn = on && _blockerOn == false;
+        setState(() => _blockerOn = on);
+        // Back from Accessibility settings with it on: choose the apps.
+        final s = ref.read(focusSettingsProvider).value;
+        if (justTurnedOn && s != null && s.blockApps && s.blockedApps.isEmpty) {
+          unawaited(_pickApps(s));
+        }
+      }),
+    );
+  }
+
+  /// Turning blocking on: the Accessibility service needs the person's
+  /// informed consent first (prominent disclosure), then the system switch.
+  Future<void> _turnBlockingOn(FocusSettings s) async {
+    final l10n = AppLocalizations.of(context);
+    if (_blockerOn != true) {
+      final agreed = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(l10n.blockDisclosureTitle),
+          content: SingleChildScrollView(child: Text(l10n.blockDisclosureBody)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l10n.blockDisclosureCancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(l10n.blockDisclosureAgree),
+            ),
+          ],
+        ),
+      );
+      if (agreed != true || !mounted) return;
+      await ref.read(appBlockerProvider).openSettings();
+    }
+    await saveFocusSettings(ref, s.copyWith(blockApps: true));
+    if (s.blockedApps.isEmpty && mounted && _blockerOn == true) {
+      await _pickApps(s.copyWith(blockApps: true));
+    }
+  }
+
+  Future<void> _pickApps(FocusSettings s) async {
+    final apps = await ref.read(appBlockerProvider).apps();
+    if (!mounted) return;
+    final chosen = await showModalBottomSheet<List<String>>(
+      useRootNavigator: true,
+      useSafeArea: true,
+      isScrollControlled: true,
+      context: context,
+      builder: (context) =>
+          _AppPicker(apps: apps, initial: s.blockedApps.toSet()),
+    );
+    if (chosen == null) return;
+    await saveFocusSettings(ref, s.copyWith(blockedApps: chosen));
+  }
 
   Future<void> _pickMinutes(
     String title,
@@ -206,6 +268,42 @@ class _FocusSettingsScreenState extends ConsumerState<FocusSettingsScreen> {
                 ],
               ),
               SettingsGroup(
+                title: l10n.blockTitle,
+                children: [
+                  SettingsTile(
+                    icon: AppIcons.locked,
+                    iconColor: c.danger,
+                    iconBackground: c.dangerContainer,
+                    title: l10n.blockSwitch,
+                    subtitle: s.blockApps && _blockerOn == false
+                        ? l10n.blockNeedsService
+                        : l10n.blockSwitchHint,
+                    trailing: Switch(
+                      value: s.blockApps,
+                      onChanged: (v) => v
+                          ? unawaited(_turnBlockingOn(s))
+                          : save(s.copyWith(blockApps: false)),
+                    ),
+                    onTap: s.blockApps && _blockerOn == false
+                        ? () => unawaited(
+                            ref.read(appBlockerProvider).openSettings(),
+                          )
+                        : null,
+                  ),
+                  SettingsTile(
+                    icon: AppIcons.activities,
+                    iconColor: c.textSecondary,
+                    iconBackground: c.surfaceSunken,
+                    title: l10n.blockApps,
+                    enabled: s.blockApps,
+                    value: s.blockedApps.isEmpty
+                        ? l10n.blockAppsNone
+                        : l10n.blockAppsCount(s.blockedApps.length),
+                    onTap: s.blockApps ? () => unawaited(_pickApps(s)) : null,
+                  ),
+                ],
+              ),
+              SettingsGroup(
                 title: l10n.dndTitle,
                 children: [
                   SettingsTile(
@@ -272,6 +370,94 @@ class FocusQuickToggles extends ConsumerWidget {
           },
         ),
       ],
+    );
+  }
+}
+
+/// Choosing the apps to block: every app with an icon, searchable.
+class _AppPicker extends StatefulWidget {
+  const _AppPicker({required this.apps, required this.initial});
+
+  final List<LaunchableApp> apps;
+  final Set<String> initial;
+
+  @override
+  State<_AppPicker> createState() => _AppPickerState();
+}
+
+class _AppPickerState extends State<_AppPicker> {
+  late final Set<String> _chosen = {...widget.initial};
+  String _query = '';
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final q = _query.trim().toLowerCase();
+    final shown =
+        [
+          for (final a in widget.apps)
+            if (q.isEmpty || a.label.toLowerCase().contains(q)) a,
+        ]..sort((a, b) {
+          // Chosen first, so they're easy to review.
+          final ca = _chosen.contains(a.package) ? 0 : 1;
+          final cb = _chosen.contains(b.package) ? 0 : 1;
+          return ca != cb ? ca - cb : a.label.compareTo(b.label);
+        });
+    return SizedBox(
+      height: MediaQuery.sizeOf(context).height * 0.85,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.xl,
+              AppSpacing.lg,
+              AppSpacing.md,
+              AppSpacing.sm,
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    l10n.blockApps,
+                    style: context.textStyles.headlineSmall,
+                  ),
+                ),
+                FilledButton(
+                  onPressed: () => Navigator.pop(context, _chosen.toList()),
+                  child: Text(l10n.blockAppsDone),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: l10n.blockAppsSearch,
+                prefixIcon: const Icon(AppIcons.search),
+              ),
+              onChanged: (v) => setState(() => _query = v),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Expanded(
+            child: ListView(
+              children: [
+                for (final a in shown)
+                  CheckboxListTile(
+                    value: _chosen.contains(a.package),
+                    title: Text(a.label),
+                    onChanged: (v) => setState(
+                      () => v == true
+                          ? _chosen.add(a.package)
+                          : _chosen.remove(a.package),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

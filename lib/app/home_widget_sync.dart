@@ -107,6 +107,9 @@ final homeWidgetSyncProvider = Provider<void>((ref) {
               .format(DateTime(today.year, today.month, today.day)),
         ),
       );
+      // The day this is about: the widget shows a fresh day after midnight
+      // even before the app runs again.
+      await HomeWidget.saveWidgetData<String>('day', today.toIso());
       await HomeWidget.saveWidgetData<String>('progress', headline);
       await HomeWidget.saveWidgetData<String>('detail', detail);
       await HomeWidget.saveWidgetData<String>('next', next);

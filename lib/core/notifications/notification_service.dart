@@ -1,3 +1,6 @@
+import '../../l10n/device_localizations.dart';
+import '../../l10n/generated/app_localizations.dart';
+
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -145,9 +148,40 @@ class NotificationService {
   /// (the running timer's Pause/Resume and Finish).
   static String? _payloadOf(NotificationResponse response) =>
       switch (response.actionId) {
+        // A reminder's buttons carry which plan they're about.
+        final action? when action.startsWith('remind_') =>
+          'action:$action|${response.payload ?? ''}',
         final action? when action.isNotEmpty => 'action:$action',
         _ => response.payload,
       };
+
+  /// Reminder buttons.
+  static const actionRemindStart = 'remind_start';
+  static const actionRemindSnooze = 'remind_snooze';
+  static const actionRemindSkip = 'remind_skip';
+
+  /// Shows [title] again at [at] (Snooze), outside the scheduled set.
+  Future<void> remindAgain({
+    required String title,
+    required String body,
+    required String payload,
+    required DateTime at,
+  }) async {
+    final plugin = _plugin;
+    if (plugin == null) return;
+    final exact = await canRemindOnTime();
+    await plugin.zonedSchedule(
+      id: notificationId('snooze:$payload'),
+      scheduledDate: tz.TZDateTime.from(at, tz.local),
+      notificationDetails: _details(NotificationChannel.reminders),
+      androidScheduleMode: exact
+          ? AndroidScheduleMode.exactAllowWhileIdle
+          : AndroidScheduleMode.inexactAllowWhileIdle,
+      title: title,
+      body: body,
+      payload: payload,
+    );
+  }
 
   /// Ongoing timer buttons.
   static const actionPauseResume = 'pause_resume';
@@ -194,6 +228,33 @@ class NotificationService {
 
   final Map<int, ScheduledNote> _scheduled = {};
 
+  /// Whether reminders were last scheduled to the minute.
+  bool? _exactScheduled;
+
+  AndroidFlutterLocalNotificationsPlugin? get _android => _plugin
+      ?.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin
+      >();
+
+  /// Whether reminders can fire on the minute ("Alarms & reminders" on
+  /// Android 12+). Without it Android may deliver them up to an hour late.
+  Future<bool> canRemindOnTime() async {
+    try {
+      return await _android?.canScheduleExactNotifications() ?? true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Opens the system page to allow on-time reminders.
+  Future<void> requestOnTimeReminders() async {
+    try {
+      await _android?.requestExactAlarmsPermission();
+    } catch (_) {
+      // Older Android: nothing to ask.
+    }
+  }
+
   /// Makes the scheduled notifications exactly [notes]: cancels the ones no
   /// longer wanted or changed, schedules new ones. Past times are skipped.
   Future<void> apply(
@@ -206,6 +267,16 @@ class NotificationService {
       for (final n in notes)
         if (n.at.isAfter(nowUtc)) n.id: n,
     };
+    // On time when allowed. When that changes, everything is scheduled
+    // again in the new mode.
+    final exact = await canRemindOnTime();
+    if (exact != _exactScheduled) {
+      for (final id in _scheduled.keys) {
+        if (!wanted.containsKey(id)) await plugin.cancel(id: id);
+      }
+      _scheduled.clear();
+      _exactScheduled = exact;
+    }
     for (final id in [..._scheduled.keys]) {
       if (wanted[id] != _scheduled[id]) {
         await plugin.cancel(id: id);
@@ -219,7 +290,9 @@ class NotificationService {
           id: note.id,
           scheduledDate: tz.TZDateTime.from(note.at, tz.local),
           notificationDetails: _details(note.channel),
-          androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+          androidScheduleMode: exact
+              ? AndroidScheduleMode.exactAllowWhileIdle
+              : AndroidScheduleMode.inexactAllowWhileIdle,
           title: note.title,
           body: note.body,
           payload: note.payload,
@@ -298,6 +371,8 @@ class NotificationService {
 
   static const _accent = Color(0xFF7C5CFC);
 
+  AppLocalizations get _l10n => deviceLocalizations();
+
   NotificationDetails _details(NotificationChannel channel) =>
       NotificationDetails(
         android: AndroidNotificationDetails(
@@ -313,6 +388,32 @@ class NotificationService {
           icon: 'ic_notification',
           color: _accent,
           category: AndroidNotificationCategory.reminder,
+          // "Gym in 30 min" means nothing the next morning: reminders clear
+          // themselves after a few hours.
+          actions: channel == NotificationChannel.reminders
+              ? [
+                  AndroidNotificationAction(
+                    actionRemindStart,
+                    _l10n.notifyActionStart,
+                    showsUserInterface: true,
+                  ),
+                  AndroidNotificationAction(
+                    actionRemindSnooze,
+                    _l10n.notifyActionSnooze,
+                    showsUserInterface: true,
+                  ),
+                  AndroidNotificationAction(
+                    actionRemindSkip,
+                    _l10n.notifyActionSkip,
+                    showsUserInterface: true,
+                  ),
+                ]
+              : null,
+          timeoutAfter: switch (channel) {
+            NotificationChannel.reminders || NotificationChannel.goals =>
+              const Duration(hours: 3).inMilliseconds,
+            _ => null,
+          },
         ),
         iOS: const DarwinNotificationDetails(),
       );

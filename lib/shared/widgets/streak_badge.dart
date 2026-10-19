@@ -16,6 +16,8 @@ class StreakBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // No streak yet (or it broke): nothing to show, not a "0".
+    if (days <= 0) return const SizedBox.shrink();
     final c = context.colors;
     return Semantics(
       label: AppLocalizations.of(context).streakBadgeLabel(days),

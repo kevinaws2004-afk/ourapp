@@ -30,6 +30,7 @@ class NotificationsScreen extends ConsumerStatefulWidget {
 class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
     with WidgetsBindingObserver {
   bool? _permitted;
+  bool? _onTime;
 
   @override
   void initState() {
@@ -54,7 +55,14 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
     final service = ref.read(notificationServiceProvider);
     if (!service.isEnabled) return;
     final ok = await service.isPermitted();
-    if (mounted) setState(() => _permitted = ok);
+    final onTime = await service.canRemindOnTime();
+    if (!mounted) return;
+    // Just allowed in the system settings: schedule again, on time.
+    if (onTime && _onTime == false) ref.invalidate(notificationSyncProvider);
+    setState(() {
+      _permitted = ok;
+      _onTime = onTime;
+    });
   }
 
   Future<void> _save(NotificationSettings next, {bool turnedOn = false}) async {
@@ -240,6 +248,27 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
                     title: l10n.notificationsNewItems,
                     value: newItems,
                     onTap: s.enabled ? () => unawaited(_pickNewItems(s)) : null,
+                  ),
+                  SettingsTile(
+                    icon: AppIcons.bell,
+                    iconColor: _onTime == false ? c.warning : c.success,
+                    iconBackground: _onTime == false
+                        ? c.warningContainer
+                        : c.successContainer,
+                    title: l10n.notificationsOnTime,
+                    subtitle: _onTime == false
+                        ? l10n.notificationsOnTimeOff
+                        : l10n.notificationsOnTimeOn,
+                    value: _onTime == false
+                        ? l10n.notificationsOnTimeAllow
+                        : null,
+                    onTap: _onTime == false && s.enabled
+                        ? () => unawaited(
+                            ref
+                                .read(notificationServiceProvider)
+                                .requestOnTimeReminders(),
+                          )
+                        : null,
                   ),
                   SettingsTile(
                     icon: AppIcons.timer,

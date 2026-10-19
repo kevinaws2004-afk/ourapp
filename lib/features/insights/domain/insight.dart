@@ -503,7 +503,12 @@ double? periodValue(
 ], aggregation);
 
 /// Relative change from [previous] to [current], or null when undefined.
-double? relativeChange(double? current, double? previous) =>
-    current == null || previous == null || previous == 0
-    ? null
-    : (current - previous) / previous;
+double? relativeChange(double? current, double? previous) {
+  if (current == null || previous == null || previous == 0) return null;
+  final change = (current - previous) / previous;
+  // Against a nearly empty period ("+23246 %") a percentage says nothing.
+  return change.abs() > maxShownChange ? null : change;
+}
+
+/// The largest change shown as a percentage (+500 %).
+const maxShownChange = 5.0;

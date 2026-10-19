@@ -45,7 +45,10 @@ class LogoColors {
               c.surfaceRaised,
               Color.lerp(c.surfaceRaised, c.brandPrimary, 0.16)!,
             ]
-          : [Color.lerp(c.surfaceCanvas, Colors.white, 0.6)!, c.brandPrimarySoft],
+          : [
+              Color.lerp(c.surfaceCanvas, Colors.white, 0.6)!,
+              c.brandPrimarySoft,
+            ],
       ring: c.brandPrimary,
       node: Colors.white,
       edge: Colors.white.withValues(alpha: dark ? 0.1 : 0.7),

@@ -19,23 +19,38 @@ abstract final class PlanTimeSuggestions {
     LocalTime.hm(20, 0),
   ];
 
-  /// Start times to offer: on today, the next half hours after [now] (none
-  /// past midnight); on other days, [otherDayStarts]. The first one is the
-  /// default.
+  /// Later in the day, offered after the next few slots (so 10 PM reading
+  /// doesn't need the clock dialog in the morning).
+  static final laterToday = [
+    LocalTime.hm(12, 0),
+    LocalTime.hm(18, 0),
+    LocalTime.hm(20, 0),
+    LocalTime.hm(22, 0),
+  ];
+
+  /// Start times to offer: on today, the next [count] half hours after
+  /// [now], then the later anchors still ahead (none past midnight); on
+  /// other days, [otherDayStarts]. The first one is the default.
   static List<LocalTime> starts({
     required bool isToday,
     required LocalTime now,
-    int count = 5,
+    int count = 3,
   }) {
     if (!isToday) return otherDayStarts;
     final first = (now.minuteOfDay ~/ _slotMinutes + 1) * _slotMinutes;
-    return [
+    final next = [
       for (
         var m = first;
         m < _minutesPerDay && m < first + count * _slotMinutes;
         m += _slotMinutes
       )
         LocalTime(m),
+    ];
+    final last = next.isEmpty ? now.minuteOfDay : next.last.minuteOfDay;
+    return [
+      ...next,
+      for (final t in laterToday)
+        if (t.minuteOfDay > last) t,
     ];
   }
 

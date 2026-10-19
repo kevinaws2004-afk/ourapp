@@ -127,11 +127,7 @@ class HeaderIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colors;
     // Its own node, so a reader never folds it into the title.
-    return Semantics(
-      container: true,
-      button: true,
-      child: _button(context, c),
-    );
+    return Semantics(container: true, button: true, child: _button(context, c));
   }
 
   Widget _button(BuildContext context, AppColors c) {

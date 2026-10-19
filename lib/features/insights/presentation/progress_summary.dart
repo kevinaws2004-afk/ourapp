@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../challenges/presentation/goal_copy.dart';
 import '../../../core/design/app_icons.dart';
 import '../../../core/design/context_ext.dart';
 import '../../../core/design/tokens/activity_palette.dart';
@@ -395,10 +396,7 @@ class _GoalCard extends StatelessWidget {
               children: [
                 ProgressRing(
                   fraction: p.fraction.clamp(0, 1),
-                  semanticLabel: l10n.goalProgress(
-                    p.daysDone.clamp(0, p.targetDays),
-                    p.targetDays,
-                  ),
+                  semanticLabel: goalProgressText(l10n, p),
                   size: 52,
                   stroke: 6,
                   color: color,
@@ -435,10 +433,8 @@ class _GoalCard extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.xxs),
             Text(
-              l10n.goalProgress(
-                p.daysDone.clamp(0, p.targetDays),
-                p.targetDays,
-              ),
+              // "3 / 8 weeks" for a weekly goal, not days.
+              goalProgressText(l10n, p),
               style: context.textStyles.bodySmall?.copyWith(
                 color: c.textSecondary,
               ),

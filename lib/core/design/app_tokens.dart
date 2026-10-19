@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'contrast.dart';
 import 'themes/app_theme_id.dart';
 import 'themes/dark_theme.dart';
 import 'themes/lavender_theme.dart';
@@ -26,35 +27,41 @@ class AppTokens extends ThemeExtension<AppTokens> {
   });
 
   static final Map<(AppThemeId, bool), AppTokens> _dark = {};
+  static final Map<AppThemeId, AppTokens> _light = {};
 
   static AppTokens of(
     AppThemeId id, {
     Brightness brightness = Brightness.light,
     bool trueBlack = false,
   }) {
-    final light = switch (id) {
-      AppThemeId.rose => roseTokens,
-      AppThemeId.lavender => lavenderTokens,
-      AppThemeId.papaya => papayaTokens,
-      AppThemeId.ocean => oceanTokens,
-      AppThemeId.matcha => matchaTokens,
-      AppThemeId.lilac => lilacTokens,
-      AppThemeId.sky => skyTokens,
-      AppThemeId.honey => honeyTokens,
-      AppThemeId.slate => slateTokens,
-      AppThemeId.mint => mintTokens,
-      AppThemeId.cherry => cherryTokens,
-      AppThemeId.forest => forestTokens,
-      AppThemeId.midnight => midnightTokens,
-      AppThemeId.mocha => mochaTokens,
-      AppThemeId.roseGold => roseGoldTokens,
-    };
+    final light = _light.putIfAbsent(
+      id,
+      () => withAccessibleContrast(switch (id) {
+        AppThemeId.rose => roseTokens,
+        AppThemeId.lavender => lavenderTokens,
+        AppThemeId.papaya => papayaTokens,
+        AppThemeId.ocean => oceanTokens,
+        AppThemeId.matcha => matchaTokens,
+        AppThemeId.lilac => lilacTokens,
+        AppThemeId.sky => skyTokens,
+        AppThemeId.honey => honeyTokens,
+        AppThemeId.slate => slateTokens,
+        AppThemeId.mint => mintTokens,
+        AppThemeId.cherry => cherryTokens,
+        AppThemeId.forest => forestTokens,
+        AppThemeId.midnight => midnightTokens,
+        AppThemeId.mocha => mochaTokens,
+        AppThemeId.roseGold => roseGoldTokens,
+      }),
+    );
     return brightness == Brightness.light
         ? light
-        : _dark.putIfAbsent((
-            id,
-            trueBlack,
-          ), () => darkTokensFrom(light, trueBlack: trueBlack));
+        : _dark.putIfAbsent(
+            (id, trueBlack),
+            () => withAccessibleContrast(
+              darkTokensFrom(light, trueBlack: trueBlack),
+            ),
+          );
   }
 
   final AppThemeId id;

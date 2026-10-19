@@ -14,6 +14,7 @@ import '../domain/item_use_cases.dart';
 import '../domain/day_edges.dart';
 import '../domain/plan.dart';
 import '../domain/plan_repository.dart';
+import '../domain/plan_series.dart';
 import '../domain/series_use_cases.dart';
 import '../domain/plan_use_cases.dart';
 import '../domain/watch_day_overview.dart';
@@ -145,13 +146,23 @@ final ensureSeriesOccurrencesProvider = Provider(
   ),
 );
 
-final repeatPlanProvider = Provider(
-  (ref) => RepeatPlan(
-    ref.watch(planRepositoryProvider),
-    ref.watch(idGeneratorProvider),
-    ref.watch(clockProvider),
-  ),
-);
+/// Makes a plan repeat, then reloads open days and weeks: they generate a
+/// series' occurrences when they load, so the new ones show at once.
+final repeatPlanProvider =
+    Provider<Future<PlanSeriesId> Function(PlanId, RepeatRule)>((ref) {
+      final repeat = RepeatPlan(
+        ref.watch(planRepositoryProvider),
+        ref.watch(idGeneratorProvider),
+        ref.watch(clockProvider),
+      );
+      return (id, rule) async {
+        final series = await repeat(id, rule);
+        ref
+          ..invalidate(dayOverviewProvider)
+          ..invalidate(plansInRangeProvider);
+        return series;
+      };
+    });
 
 final stopRepeatingProvider = Provider(
   (ref) => StopRepeating(
@@ -214,3 +225,9 @@ final usualActivitiesProvider = Provider.autoDispose
         return local.hour * 60 + local.minute;
       });
     });
+
+/// A repeating plan's series (its rule), to show and edit its days.
+final planSeriesProvider = FutureProvider.autoDispose
+    .family<PlanSeries?, PlanSeriesId>(
+      (ref, id) => ref.watch(planRepositoryProvider).getSeries(id),
+    );

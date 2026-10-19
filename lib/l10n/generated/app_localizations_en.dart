@@ -708,7 +708,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planEndLabel => 'End';
 
   @override
-  String get planDurationLabel => 'How long';
+  String get planDurationLabel => 'Planned length';
 
   @override
   String get planNewTitle => 'New plan';
@@ -865,7 +865,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get focusPaused => 'Paused';
 
   @override
-  String get focusRunning => 'Focusing';
+  String get focusRunning => 'In progress';
 
   @override
   String get focusElapsedLabel => 'Focused time';
@@ -4920,12 +4920,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String eveningStreakKept(String name, int days) {
-    return '$name $days';
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    return '$name $_temp0';
   }
 
   @override
   String eveningStreaksKept(String streaks) {
-    return '$streaks kept today';
+    return 'Streaks kept: $streaks';
   }
 
   @override
@@ -5522,7 +5528,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get goalsIdeas => 'IDEAS TO START WITH';
 
   @override
-  String get statusScheduled => 'Scheduled';
+  String get statusScheduled => 'Planned';
 
   @override
   String get statusRecorded => 'Recorded';
@@ -6059,7 +6065,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get itemTimeSpent => 'Time spent';
+  String get itemTimeSpent => 'Actual time';
 
   @override
   String get itemRename => 'Rename';
@@ -6131,11 +6137,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dayReportUntrackedHintToday =>
-      'Untracked: waking time since 7 AM with nothing recorded.';
+      'waking time since 7 AM with nothing recorded.';
 
   @override
   String dayReportUntrackedHint(int hours) {
-    return 'Untracked: time out of $hours waking hours with nothing recorded.';
+    return 'time out of $hours waking hours with nothing recorded.';
   }
 
   @override
@@ -6990,4 +6996,236 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get measurementNoneShort => 'Not yet';
+
+  @override
+  String get notificationsOnTime => 'On-time reminders';
+
+  @override
+  String get notificationsOnTimeOn => 'Reminders arrive at the exact minute';
+
+  @override
+  String get notificationsOnTimeOff =>
+      'Off: Android may send reminders up to an hour late. Tap to allow.';
+
+  @override
+  String get notificationsOnTimeAllow => 'Allow';
+
+  @override
+  String get planAlreadyThatDay => 'Already planned that day · skipped here';
+
+  @override
+  String pomodoroRoundsOffFor(String activity) {
+    return 'Rounds off for $activity';
+  }
+
+  @override
+  String pomodoroRoundsOnFor(int minutes, String activity) {
+    return 'Use $minutes-min rounds for $activity';
+  }
+
+  @override
+  String appearanceThemeChanged(String name) {
+    return 'Theme: $name';
+  }
+
+  @override
+  String get blockTitle => 'Block distracting apps';
+
+  @override
+  String get blockSwitch => 'Block apps while focusing';
+
+  @override
+  String get blockSwitchHint =>
+      'Opening a chosen app during a session brings you back here. Breaks are free.';
+
+  @override
+  String get blockNeedsService =>
+      'Turn on \"DayCraft focus blocking\" in Accessibility settings. Tap to open.';
+
+  @override
+  String get blockApps => 'Apps to block';
+
+  @override
+  String get blockAppsNone => 'None chosen';
+
+  @override
+  String blockAppsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count apps',
+      one: '1 app',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get blockAppsSearch => 'Search apps';
+
+  @override
+  String get blockAppsDone => 'Done';
+
+  @override
+  String get blockDisclosureTitle => 'Use Accessibility to block apps?';
+
+  @override
+  String get blockDisclosureBody =>
+      'To block apps while you focus, DayCraft uses Android\'s Accessibility service.\n\n• It only notices which app comes to the front while a focus session is running.\n• It never reads what\'s on your screen, what you type, or anything else.\n• Nothing is collected, stored about other apps, or sent anywhere.\n\nOn the next screen, open \"DayCraft focus blocking\" and turn it on. You can turn it off there at any time.';
+
+  @override
+  String get blockDisclosureAgree => 'Agree and continue';
+
+  @override
+  String get blockDisclosureCancel => 'Not now';
+
+  @override
+  String get addYourActivities => 'Your activities';
+
+  @override
+  String get repeatEveryDay => 'Every day';
+
+  @override
+  String get repeatWeekdays => 'Weekdays';
+
+  @override
+  String get repeatWeekends => 'Weekends';
+
+  @override
+  String repeatsLabel(String days) {
+    return 'Repeats $days';
+  }
+
+  @override
+  String get repeatStop => 'Stop repeating';
+
+  @override
+  String get repeatStopConfirm =>
+      'Stop repeating? This one stays; later ones are removed.';
+
+  @override
+  String get firstPlanRepeat => 'Repeat';
+
+  @override
+  String get firstPlanJustToday => 'Just today';
+
+  @override
+  String heroDoneLetGo(int done, int letGo) {
+    return '$done done, $letGo let go. Tomorrow is a fresh start.';
+  }
+
+  @override
+  String statusDoneLetGo(int done, int letGo) {
+    return '$done done · $letGo let go';
+  }
+
+  @override
+  String get heroWrapUp =>
+      'Wrap up your day: finish, move or let go what\'s left.';
+
+  @override
+  String get eveningWrapUp => 'Wrap up today';
+
+  @override
+  String get howLongTitle => 'How long did it take?';
+
+  @override
+  String get howLongSkip => 'Skip';
+
+  @override
+  String get notifyActionStart => 'Start';
+
+  @override
+  String get notifyActionSnooze => 'Snooze 10 min';
+
+  @override
+  String get notifyActionSkip => 'Skip';
+
+  @override
+  String get reminderSnoozed => 'Reminder again in 10 minutes';
+
+  @override
+  String timerLeft(String time, String total) {
+    return '$time left of $total';
+  }
+
+  @override
+  String timerOver(String time, String total) {
+    return '$time over $total';
+  }
+
+  @override
+  String groupRowTarget(String title) {
+    return '$title: last times numbers. Tick when done.';
+  }
+
+  @override
+  String get numberLooksOff => 'Thats a lot more than last time. Check it?';
+
+  @override
+  String momentNewBest(String what, String value) {
+    return '🏆 New best! $what: $value';
+  }
+
+  @override
+  String momentPerfectDay(int count) {
+    return '🎉 Perfect day: all $count done';
+  }
+
+  @override
+  String get goalRestDayUsed => 'Rest day used yesterday · streak safe';
+
+  @override
+  String noPlanCopyYesterday(int count) {
+    return 'Copy yesterday\'s plan ($count)';
+  }
+
+  @override
+  String get welcomeBack => 'Welcome back';
+
+  @override
+  String welcomeBackNamed(String name) {
+    return 'Welcome back, $name';
+  }
+
+  @override
+  String get heroWelcomeBack =>
+      'Pick up where you left off. One thing is enough today.';
+
+  @override
+  String get todayLoading => 'Loading your day…';
+
+  @override
+  String get habitHintTitle => 'Make it a habit';
+
+  @override
+  String habitHintBody(String name) {
+    return 'Repeat $name on the days you want, or set a goal to build a streak.';
+  }
+
+  @override
+  String get habitHintRepeat => 'Repeat it';
+
+  @override
+  String get habitHintGoal => 'Set a goal';
+
+  @override
+  String dayReportPlannedAt(String time) {
+    return 'Planned $time';
+  }
+
+  @override
+  String get dayReportPlannedTime => 'Planned time';
+
+  @override
+  String dayReportUntrackedLine(String duration, String hint) {
+    return 'Untracked $duration: $hint';
+  }
+
+  @override
+  String itemStartedAt(String time) {
+    return 'Started $time';
+  }
+
+  @override
+  String get itemPlanSettings => 'Time, repeat and reminder';
 }

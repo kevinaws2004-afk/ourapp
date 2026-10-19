@@ -326,7 +326,9 @@ class _ChallengeSheetState extends ConsumerState<_ChallengeSheet> {
                           children: [
                             // Your own activities first: one tap.
                             for (final t
-                                in ref.watch(activeActivityTypesProvider).value ??
+                                in ref
+                                        .watch(activeActivityTypesProvider)
+                                        .value ??
                                     const <ActivityType>[])
                               ActionChip(
                                 avatar: ActivityBadge(

@@ -21,6 +21,8 @@ import '../../../activity_types/presentation/built_in_activities.dart';
 import '../../domain/day_edges.dart';
 import '../../../notifications/presentation/reminder_prompt.dart';
 import '../../domain/plan.dart';
+import '../../domain/watch_day_overview.dart';
+import '../day_tools.dart';
 import '../plan_date_notifier.dart';
 import '../plan_providers.dart';
 import 'plan_time_sheet.dart';
@@ -56,6 +58,12 @@ class NoPlanCard extends ConsumerWidget {
         ? const <UsualActivity>[]
         : ref.watch(usualActivitiesProvider(date));
     final byId = {for (final t in types) t.id: t};
+    final copyable = firstUse
+        ? 0
+        : (ref.watch(dayOverviewProvider(date.addDays(-1))).value?.planned ??
+                  const <PlannedItem>[])
+              .where((i) => i.plan.seriesId == null)
+              .length;
     final weekday = DateFormat.EEEE(Localizations.localeOf(context).toString())
         .format(DateTime(date.year, date.month, date.day));
 
@@ -140,6 +148,18 @@ class NoPlanCard extends ConsumerWidget {
           ],
           if (!firstUse) ...[
             const SizedBox(height: AppSpacing.lg),
+            if (copyable > 0) ...[
+              AppButton(
+                label: l10n.noPlanCopyYesterday(copyable),
+                icon: AppIcons.copy,
+                variant: AppButtonVariant.secondary,
+                expand: true,
+                onPressed: () => unawaited(
+                  copyDayPlans(context, ref, from: date.addDays(-1), to: date),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+            ],
             AppButton(
               label: l10n.noPlanAddSomething,
               icon: AppIcons.add,

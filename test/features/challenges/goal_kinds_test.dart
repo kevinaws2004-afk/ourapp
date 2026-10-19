@@ -33,6 +33,18 @@ void main() {
       expect(p.currentStreak, 1);
     });
 
+    test('started mid-week, the whole first week counts', () {
+      final p = ChallengeProgress.compute(
+        doneDays: [monday, monday.addDays(2), monday.addDays(4)],
+        startDate: monday.addDays(1),
+        today: monday.addDays(5),
+        targetDays: 8,
+        kind: GoalKind.weekly,
+        timesPerWeek: 3,
+      );
+      expect(p.daysDone, 1, reason: "Monday's session counts");
+    });
+
     test('the current week still open keeps last week\'s streak', () {
       final days = [
         for (var i = 0; i < 3; i++) monday.addDays(i), // week 1 done
@@ -78,11 +90,7 @@ void main() {
         kind: GoalKind.amount,
         amount: 20, // pages
         amountPeriod: GoalPeriod.day,
-        amounts: {
-          monday: 25,
-          monday.addDays(1): 12,
-          monday.addDays(2): 8,
-        },
+        amounts: {monday: 25, monday.addDays(1): 12, monday.addDays(2): 8},
       );
       expect(p.daysDone, 1, reason: '12 pages is short of 20');
       expect(p.periodValue, 8, reason: 'today so far');
@@ -154,5 +162,17 @@ void main() {
       expect(p.currentStreak, 1);
       expect(p.bestStreak, 2);
     });
+  });
+
+  test('a goal started late in the day doesn\'t begin with a miss', () {
+    final tue = LocalDate(2026, 10, 20);
+    final p = ChallengeProgress.compute(
+      doneDays: [tue.addDays(1), tue.addDays(3)],
+      startDate: tue,
+      today: tue.addDays(3),
+      targetDays: 30,
+      restDays: 1,
+    );
+    expect(p.currentStreak, 2, reason: 'Thu is the rest day, Tue is free');
   });
 }

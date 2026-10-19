@@ -224,7 +224,7 @@ Features don't bring users; distribution does.
 | 5.2 Today: daily score, evening wrap-up, Plan tomorrow | ✅ Already existed (hero ring, evening review card, From yesterday) |
 | 5.3 Plan: routines (save / use), copy a day, drag to another day in week view | ✅ Done |
 | 5.4 Focus: Pomodoro, notification Pause/Resume/Finish, Do Not Disturb, session summary | ✅ Done |
-| 5.4 Focus: app blocking | ⏭ Left for v2 as planned (needs extra Play policy review) |
+| 5.4 Focus: app blocking | ✅ Done (Me → Focus → Block distracting apps): opt-in Accessibility service with a prominent disclosure; blocks chosen apps only while a session runs, not on breaks. Needs the Play Accessibility declaration (text in `store/listing.md`) |
 | 5.5 Insights: weekly recap screen, Sunday notification, share card, personal bests | ✅ Done |
 | 5.6 Goals: weekly goals, amount goals (time or a number), rest days | ✅ Done (database v11) |
 | 5.7 Data: restore, CSV export, daily automatic backups, app lock | ✅ Done. Google Drive *direct* upload is not built (needs a Google Cloud project/OAuth); backups travel with Android's device backup instead |
@@ -233,4 +233,23 @@ Features don't bring users; distribution does.
 | 6 Crash reporting (on-phone problem log + share), in-app review, Rate, Send feedback | ✅ Done |
 | 6 Release checklist + `tool/release_check.sh` | ✅ Done (`docs/RELEASE_CHECKLIST.md`) |
 | 6 Migration safety: v10→v11 test, backup→restore tests | ✅ Done |
-| 6 Accessibility | ⚠️ Partial: tabs scale with large text; contrast test fails on most themes because the brand colors are below 4.5:1 (left as designed) |
+| 6 Accessibility | ✅ Done: every theme now meets WCAG contrast (text 4.5:1, graphics 3:1), applied centrally; all 75 contrast tests pass. Header buttons collapse to icons at 200% text |
+
+## 11. Implementation status: sections 2, 3 and 7 (2026-10-19)
+
+Monetization (§4) and Drive backup are left out on purpose.
+
+| Item | Status |
+|---|---|
+| 2.1–2.3 Restore, Android backup rules, running-timer notification | ✅ Done earlier |
+| 2.4 Closed test (12 testers × 14 days) | 📋 Your action: step-by-step plan, tester message in `docs/LAUNCH_PLAYBOOK.md` |
+| 2.5 Privacy policy URL | ✅ Ready for GitHub Pages: `docs/privacy-policy.md` (turn on Pages, folder `/docs`). Updated for DayCraft and app blocking. **Add your support email** |
+| 2.5 Screenshots | ✅ 7 screenshots in `store/screenshots/` (emulator, clean status bar), captions in `store/listing.md` |
+| 2.5 Release signing | ✅ `tool/make_upload_key.sh` creates the upload key + `key.properties` (you run it; back up the `.jks`). Release `.aab` builds (75 MB bundle, ~28 MB per phone); cold start ~1 s |
+| 2.5 `applicationId` | ✅ Decided: keep `com.ourapp.daylog` |
+| 2.5 Name check | ⚠️ Found: an iOS app "DayCraft: ToDo List & Tasks" (planner with time tracking) and "DayCraft" stationery trademarks. Search Play and decide before the first upload |
+| 2.5 Rate / Feedback | ✅ Done earlier |
+| 3 Positioning | ✅ Listing rewritten as "DayCraft: Study Planner & Focus" with study keywords; onboarding is study-first (Study preselected, one activity per chosen area, picked ones shown first) |
+| 7 Growth & distribution | 📋 Your action: playbook with video ideas, Reddit drafts, review asks and weekly metrics in `docs/LAUNCH_PLAYBOOK.md` |
+| 8 Roadmap v1.0 items 1–4, 6 and v1.1–v1.2 | ✅ Done, except Pro unlock (monetization) and Drive backup (left out) |
+

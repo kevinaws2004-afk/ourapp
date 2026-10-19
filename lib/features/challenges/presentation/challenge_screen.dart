@@ -268,7 +268,13 @@ class _Body extends ConsumerWidget {
               ),
             ],
             const SizedBox(height: AppSpacing.md),
-            ChallengeStateLine(state: progress.today, period: progress.period),
+            ChallengeStateLine(
+              state: progress.today,
+              period: progress.period,
+              restUsedYesterday: progress.restedDays.contains(
+                currentLocalDate(ref.watch(clockProvider)).addDays(-1),
+              ),
+            ),
             if (challenge.restDays > 0) ...[
               const SizedBox(height: AppSpacing.xs),
               Text(

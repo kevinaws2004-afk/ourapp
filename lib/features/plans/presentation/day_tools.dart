@@ -104,12 +104,6 @@ class DayToolsButton extends ConsumerWidget {
     );
   }
 
-  /// The plans of [day], with repeating ones made first.
-  Future<List<Plan>> _plansOf(WidgetRef ref, LocalDate day) async {
-    final overview = await ref.read(dayOverviewProvider(day).future);
-    return [for (final item in overview.planned) item.plan];
-  }
-
   Future<void> _copyTo(BuildContext context, WidgetRef ref) async {
     final picked = await showDatePicker(
       context: context,
@@ -126,49 +120,12 @@ class DayToolsButton extends ConsumerWidget {
     );
   }
 
-  /// Copies [from]'s plans onto [to]. Repeating plans that also repeat on
-  /// [to] are left out: they're already there.
   Future<void> _copy(
     BuildContext context,
     WidgetRef ref, {
     required LocalDate from,
     required LocalDate to,
-  }) async {
-    final l10n = AppLocalizations.of(context);
-    if (from == to) return;
-    try {
-      final source = await _plansOf(ref, from);
-      final there = {for (final p in await _plansOf(ref, to)) ?p.seriesId};
-      final plans = [
-        for (final p in source)
-          if (p.seriesId == null || !there.contains(p.seriesId)) p,
-      ];
-      final items = routineItemsFrom(plans, ref.read(clockProvider));
-      if (items.isEmpty) {
-        if (context.mounted) {
-          showMessageSnackBar(context, l10n.dayToolsNothingToCopy);
-        }
-        return;
-      }
-      final created = await ref.read(applyRoutineItemsProvider)(items, to);
-      if (context.mounted) {
-        _undoable(
-          context,
-          ref,
-          l10n.dayToolsCopied(
-            created.length,
-            MaterialLocalizations.of(context)
-                .formatMediumDate(DateTime(to.year, to.month, to.day)),
-          ),
-          created,
-        );
-      }
-    } catch (error) {
-      if (context.mounted) {
-        showMessageSnackBar(context, errorMessage(l10n, error));
-      }
-    }
-  }
+  }) => copyDayPlans(context, ref, from: from, to: to);
 
   Future<void> _saveRoutine(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context);
@@ -233,23 +190,72 @@ class DayToolsButton extends ConsumerWidget {
       }
     }
   }
+}
 
-  void _undoable(
-    BuildContext context,
-    WidgetRef ref,
-    String message,
-    List<PlanId> created,
-  ) {
-    final delete = ref.read(deleteItemProvider);
-    showUndoSnackBar(
-      context,
-      message: message,
-      onUndo: () async {
-        for (final id in created) {
-          await delete(id);
-        }
-      },
-    );
+/// The plans of [day], with repeating ones made first.
+Future<List<Plan>> _plansOf(WidgetRef ref, LocalDate day) async {
+  final overview = await ref.read(dayOverviewProvider(day).future);
+  return [for (final item in overview.planned) item.plan];
+}
+
+void _undoable(
+  BuildContext context,
+  WidgetRef ref,
+  String message,
+  List<PlanId> created,
+) {
+  final delete = ref.read(deleteItemProvider);
+  showUndoSnackBar(
+    context,
+    message: message,
+    onUndo: () async {
+      for (final id in created) {
+        await delete(id);
+      }
+    },
+  );
+}
+
+/// Copies [from]'s plans onto [to], with Undo. Repeating plans are left
+/// out: they follow their own days (Gym on Mon/Wed/Fri isn't copied onto a
+/// Tuesday).
+Future<void> copyDayPlans(
+  BuildContext context,
+  WidgetRef ref, {
+  required LocalDate from,
+  required LocalDate to,
+}) async {
+  final l10n = AppLocalizations.of(context);
+  if (from == to) return;
+  try {
+    final plans = [
+      for (final p in await _plansOf(ref, from))
+        if (p.seriesId == null) p,
+    ];
+    final items = routineItemsFrom(plans, ref.read(clockProvider));
+    if (items.isEmpty) {
+      if (context.mounted) {
+        showMessageSnackBar(context, l10n.dayToolsNothingToCopy);
+      }
+      return;
+    }
+    final created = await ref.read(applyRoutineItemsProvider)(items, to);
+    if (context.mounted) {
+      _undoable(
+        context,
+        ref,
+        l10n.dayToolsCopied(
+          created.length,
+          MaterialLocalizations.of(context)
+              .formatMediumDate(DateTime(to.year, to.month, to.day)),
+        ),
+        created,
+      );
+    }
+  } catch (error) {
+    if (context.mounted) {
+      showMessageSnackBar(context, errorMessage(l10n, error));
+    }
   }
 }
 

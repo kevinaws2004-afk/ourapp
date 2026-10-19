@@ -11,6 +11,8 @@ import '../../../shared/widgets/activity_badge.dart';
 import '../../../shared/widgets/progress_bar.dart';
 import '../../../shared/widgets/streak_badge.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
+import '../../../core/time/clock_provider.dart';
+import '../../plans/presentation/plan_date_notifier.dart';
 import '../domain/challenge.dart';
 import '../domain/challenge_progress.dart';
 import '../domain/challenge_use_cases.dart';
@@ -31,9 +33,14 @@ class ChallengeStateLine extends StatelessWidget {
     super.key,
     required this.state,
     this.period = GoalPeriod.day,
+    this.restUsedYesterday = false,
   });
 
   final ChallengeToday state;
+
+  /// Yesterday was missed and a rest day covered it: say so, so a kept
+  /// streak isn't a mystery.
+  final bool restUsedYesterday;
 
   /// A daily goal's day, or a weekly goal's week.
   final GoalPeriod period;
@@ -55,7 +62,10 @@ class ChallengeStateLine extends StatelessWidget {
         const SizedBox(width: AppSpacing.xs),
         Flexible(
           child: Text(
-            challengeTodayText(l10n, state, period: period),
+            restUsedYesterday && state != ChallengeToday.done
+                ? '${challengeTodayText(l10n, state, period: period)}'
+                      ' · ${l10n.goalRestDayUsed}'
+                : challengeTodayText(l10n, state, period: period),
             style: context.textStyles.labelLarge?.copyWith(
               color: colors.textPrimary,
             ),
@@ -144,6 +154,10 @@ class ChallengeCard extends ConsumerWidget {
                         child: ChallengeStateLine(
                           state: progress.today,
                           period: progress.period,
+                          restUsedYesterday: progress.restedDays.contains(
+                            currentLocalDate(ref.watch(clockProvider))
+                                .addDays(-1),
+                          ),
                         ),
                       ),
                     ],

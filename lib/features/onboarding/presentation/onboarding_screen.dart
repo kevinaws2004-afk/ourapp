@@ -29,6 +29,7 @@ import '../../notifications/presentation/reminder_prompt.dart';
 import '../../plans/domain/plan.dart';
 import '../../plans/domain/plan_title_match.dart';
 import '../../plans/presentation/plan_date_notifier.dart';
+import '../../plans/domain/plan_series.dart';
 import '../../plans/presentation/plan_providers.dart';
 import '../../settings/presentation/preferences_providers.dart';
 
@@ -51,6 +52,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   int _page = 0;
   final Set<FocusArea> _areas = {};
   Set<String>? _picked;
+
+  /// The order the activities show in, fixed when the step opens (ticking
+  /// one doesn't move it).
+  List<String>? _shownFirst;
   bool _busy = false;
 
   static const _steps = 5;
@@ -82,11 +87,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   void _areasChosen(List<ActivityTypeDefinition> options) {
     final l10n = AppLocalizations.of(context);
     if (_areas.isNotEmpty) {
-      final names = {for (final a in _areas) ...a.starters(l10n)};
+      // In the areas' order (study first), so the first thing for today is
+      // the first area's activity.
       _picked = {
-        for (final d in options)
-          if (names.contains(d.name)) d.name,
+        for (final a in FocusArea.values)
+          if (_areas.contains(a)) ...a.starters(l10n),
       };
+      _shownFirst = _picked!.toList();
     }
     _go(3);
   }
@@ -133,6 +140,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     ActivityType type,
     FirstPlanTime when, {
     required bool remind,
+    Set<int>? repeat,
   }) async {
     if (_busy) return;
     final l10n = AppLocalizations.of(context);
@@ -149,6 +157,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           plannedStartAt: start,
         ),
       );
+      // A habit, not a one-off: it's there again tomorrow.
+      if (repeat != null && repeat.isNotEmpty) {
+        await ref.read(repeatPlanProvider)(id, RepeatRule(weekdays: repeat));
+      }
       if (when == FirstPlanTime.now && type.supportsTimer) {
         await ref.read(startFocusSessionProvider)(type.id, planId: id);
       } else if (remind && start != null && start.isAfter(now)) {
@@ -173,14 +185,34 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final c = context.colors;
-    final options = starterActivities(l10n);
-    _picked ??= {for (final d in options.take(_defaultPicks)) d.name};
-    final installed = [
-      for (final t
-          in ref.watch(activeActivityTypesProvider).value ??
-              const <ActivityType>[])
-        if (_picked!.contains(t.name)) t,
+    final all = starterActivities(l10n);
+    // Nothing chosen yet (or the areas were skipped): study first, the
+    // app's main use, then two everyday ones.
+    _picked ??= {
+      l10n.builtInStudy,
+      l10n.builtInFocusedWork,
+      l10n.builtInReading,
+    }.where((n) => all.any((d) => d.name == n)).take(_defaultPicks).toSet();
+    // What was picked for you shows first, in its order; the rest after.
+    final order = _shownFirst ??= _picked!.toList();
+    final options = [
+      for (final name in order) ...all.where((d) => d.name == name),
+      ...all.where((d) => !order.contains(d.name)),
     ];
+    final installed =
+        [
+          for (final t
+              in ref.watch(activeActivityTypesProvider).value ??
+                  const <ActivityType>[])
+            if (_picked!.contains(t.name)) t,
+        ]..sort((a, b) {
+          int rank(String n) {
+            final i = order.indexOf(n);
+            return i < 0 ? order.length : i;
+          }
+
+          return rank(a.name).compareTo(rank(b.name));
+        });
 
     return Scaffold(
       body: SafeArea(
@@ -199,6 +231,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   ),
                   child: Row(
                     children: [
+                      // Back where people look for it: top left. Activities
+                      // are installed by step 4: no going back from there.
+                      if (_page > 0 && _page < 4)
+                        IconButton(
+                          tooltip: l10n.onboardingBack,
+                          onPressed: _busy ? null : () => _go(_page - 1),
+                          icon: const Icon(AppIcons.previous),
+                        ),
                       for (var i = 0; i < _steps; i++)
                         AnimatedContainer(
                           duration: AppMotion.standard,
@@ -213,12 +253,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           ),
                         ),
                       const Spacer(),
-                      // Activities are installed by step 4: no going back.
-                      if (_page > 0 && _page < 4)
-                        TextButton(
-                          onPressed: _busy ? null : () => _go(_page - 1),
-                          child: Text(l10n.onboardingBack),
-                        ),
                       if (_page == 4)
                         TextButton(
                           onPressed: _busy
@@ -261,8 +295,15 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       _FirstPlanStep(
                         types: installed,
                         busy: _busy,
-                        onDone: (type, when, {required remind}) =>
-                            unawaited(_firstPlan(type, when, remind: remind)),
+                        onDone: (type, when, {required remind, repeat}) =>
+                            unawaited(
+                              _firstPlan(
+                                type,
+                                when,
+                                remind: remind,
+                                repeat: repeat,
+                              ),
+                            ),
                       ),
                     ],
                   ),
@@ -371,10 +412,10 @@ class _NameStep extends StatelessWidget {
     return _Step(
       action: ValueListenableBuilder(
         valueListenable: controller,
+        // "Continue" either way: the name is optional, and the main
+        // button shouldn't read "Skip".
         builder: (context, value, _) => AppButton(
-          label: value.text.trim().isEmpty
-              ? l10n.onboardingSkip
-              : l10n.onboardingContinue,
+          label: l10n.onboardingContinue,
           icon: AppIcons.arrowRight,
           expand: true,
           onPressed: onNext,
@@ -406,6 +447,7 @@ class _NameStep extends StatelessWidget {
         const SizedBox(height: AppSpacing.xxl),
         TextField(
           controller: controller,
+          autofocus: true,
           maxLength: 40,
           textCapitalization: TextCapitalization.words,
           textInputAction: TextInputAction.next,
@@ -613,13 +655,15 @@ enum FocusArea {
   };
 
   /// The starter activities it picks (by their localized names).
+  /// One per area: the obvious one, so nobody has to untick things they
+  /// didn't ask for (the rest stay one tap away on the same step).
   List<String> starters(AppLocalizations l10n) => switch (this) {
-    study => [l10n.builtInStudy, l10n.builtInFocusedWork],
-    work => [l10n.builtInFocusedWork, l10n.builtInMeeting],
-    fitness => [l10n.builtInGym, l10n.builtInWalking, l10n.builtInRunning],
-    reading => [l10n.builtInReading, l10n.builtInLanguage],
-    mind => [l10n.builtInMeditation, l10n.builtInMood],
-    health => [l10n.builtInWater, l10n.builtInSleep, l10n.builtInWalking],
+    study => [l10n.builtInStudy],
+    work => [l10n.builtInFocusedWork],
+    fitness => [l10n.builtInGym],
+    reading => [l10n.builtInReading],
+    mind => [l10n.builtInMeditation],
+    health => [l10n.builtInWater],
   };
 }
 
@@ -646,9 +690,9 @@ enum FirstPlanTime {
       case now:
         return nowUtc;
       case inAnHour:
-        // The next quarter hour after an hour from now.
+        // About an hour from now, on the nearest half hour (7:32 → 8:30).
         final inHour = local.add(const Duration(hours: 1));
-        final quarter = (inHour.minute / 15).ceil() * 15;
+        final quarter = (inHour.minute / 30).round() * 30;
         return DateTime.utc(
           inHour.year,
           inHour.month,
@@ -777,6 +821,7 @@ class _FirstPlanStep extends StatefulWidget {
     ActivityType type,
     FirstPlanTime when, {
     required bool remind,
+    Set<int>? repeat,
   })
   onDone;
 
@@ -819,6 +864,9 @@ class _FirstPlanStepState extends State<_FirstPlanStep> {
       : FirstPlanTime.anytime;
   bool _remind = true;
 
+  /// Weekdays by default: the first thing is meant to become a habit.
+  Set<int>? _repeat = const {1, 2, 3, 4, 5};
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -839,7 +887,12 @@ class _FirstPlanStepState extends State<_FirstPlanStep> {
         expand: true,
         onPressed: widget.busy || type == null
             ? null
-            : () => widget.onDone(type, _when, remind: timed && _remind),
+            : () => widget.onDone(
+                type,
+                _when,
+                remind: timed && _remind,
+                repeat: _repeat,
+              ),
       ),
       children: [
         const SizedBox(height: AppSpacing.xl),
@@ -886,6 +939,25 @@ class _FirstPlanStepState extends State<_FirstPlanStep> {
                   selected: _when == when,
                   onSelected: (_) => setState(() => _when = when),
                 ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.xl),
+        Text(l10n.firstPlanRepeat, style: context.textStyles.titleMedium),
+        const SizedBox(height: AppSpacing.sm),
+        Wrap(
+          spacing: AppSpacing.sm,
+          runSpacing: AppSpacing.sm,
+          children: [
+            for (final (label, days) in <(String, Set<int>?)>[
+              (l10n.repeatWeekdays, const {1, 2, 3, 4, 5}),
+              (l10n.repeatEveryDay, const {1, 2, 3, 4, 5, 6, 7}),
+              (l10n.firstPlanJustToday, null),
+            ])
+              ChoiceChip(
+                label: Text(label),
+                selected: _repeat?.length == days?.length,
+                onSelected: (_) => setState(() => _repeat = days),
+              ),
           ],
         ),
         if (timed) ...[

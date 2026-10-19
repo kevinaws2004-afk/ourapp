@@ -69,16 +69,21 @@ class ChallengeProgress {
     Map<LocalDate, double> amounts = const {},
     int restDays = 0,
   }) {
-    bool inRange(LocalDate d) =>
-        d.compareTo(startDate) >= 0 && d.compareTo(today) <= 0;
-    final days = {
-      for (final d in doneDays)
-        if (inRange(d)) d,
-    };
     final period = switch (kind) {
       GoalKind.daily => GoalPeriod.day,
       GoalKind.weekly => GoalPeriod.week,
       GoalKind.amount => amountPeriod ?? GoalPeriod.day,
+    };
+    // A weekly goal counts its whole first week: started on a Tuesday after
+    // a Monday session, that session still counts toward the week.
+    final countFrom = period == GoalPeriod.week
+        ? weekStartOf(startDate)
+        : startDate;
+    bool inRange(LocalDate d) =>
+        d.compareTo(countFrom) >= 0 && d.compareTo(today) <= 0;
+    final days = {
+      for (final d in doneDays)
+        if (inRange(d)) d,
     };
     final threshold = switch (kind) {
       GoalKind.daily => 1.0,
@@ -112,11 +117,19 @@ class ChallengeProgress {
 
     // Rest days: a daily goal's first misses each week, up to restDays, keep
     // the streak (today is still open, so it's never one).
+    // The start day is free: a goal set up in the evening, after the day's
+    // chance has gone, doesn't begin with a miss (or use up a rest day).
+    final free = <LocalDate>{
+      if (period == GoalPeriod.day &&
+          periods.isNotEmpty &&
+          !periods.first.success)
+        periods.first.start,
+    };
     final rested = <LocalDate>{};
     if (kind == GoalKind.daily && restDays > 0) {
       final usedByWeek = <LocalDate, int>{};
       for (final p in periods) {
-        if (p.success || p.start == today) continue;
+        if (p.success || p.start == today || free.contains(p.start)) continue;
         final week = weekStartOf(p.start);
         final used = usedByWeek[week] ?? 0;
         if (used < restDays) {
@@ -132,7 +145,7 @@ class ChallengeProgress {
       final open = i == periods.length - 1;
       if (p.success) {
         run++;
-      } else if (rested.contains(p.start) || open) {
+      } else if (rested.contains(p.start) || free.contains(p.start) || open) {
         // Neither counts nor breaks.
       } else {
         run = 0;
@@ -146,6 +159,7 @@ class ChallengeProgress {
       if (p.success) {
         current++;
       } else if (rested.contains(p.start) ||
+          free.contains(p.start) ||
           i == periods.length - 1 && !p.success) {
         continue;
       } else {

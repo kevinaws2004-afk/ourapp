@@ -19,17 +19,24 @@ Plan _plan(String typeId, LocalDate date) => Plan(
 
 void main() {
   group('time sheet suggestions (A5)', () {
-    test('today offers the next half hours after now, the first being the '
-        'default', () {
+    test('today offers the next half hours after now, then later anchors; '
+        'the first is the default', () {
       expect(
         PlanTimeSuggestions.starts(isToday: true, now: LocalTime.hm(21, 8)),
+        [LocalTime.hm(21, 30), LocalTime.hm(22, 0), LocalTime.hm(22, 30)],
+      );
+      expect(
+        PlanTimeSuggestions.starts(isToday: true, now: LocalTime.hm(7, 32)),
         [
-          LocalTime.hm(21, 30),
+          LocalTime.hm(8, 0),
+          LocalTime.hm(8, 30),
+          LocalTime.hm(9, 0),
+          LocalTime.hm(12, 0),
+          LocalTime.hm(18, 0),
+          LocalTime.hm(20, 0),
           LocalTime.hm(22, 0),
-          LocalTime.hm(22, 30),
-          LocalTime.hm(23, 0),
-          LocalTime.hm(23, 30),
         ],
+        reason: 'evening times without the clock dialog',
       );
       expect(
         PlanTimeSuggestions.starts(

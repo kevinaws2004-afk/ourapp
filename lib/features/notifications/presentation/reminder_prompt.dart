@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/database/json_preferences.dart';
 import '../../../core/design/app_icons.dart';
 import '../../../core/design/context_ext.dart';
 import '../../../core/design/tokens/radius.dart';
@@ -261,8 +262,25 @@ Future<void> setRemindersFor(
     await store.setSeriesReminders(series, unique);
   }
   if (unique.isNotEmpty) {
-    await ref.read(notificationServiceProvider).requestPermission();
+    final service = ref.read(notificationServiceProvider);
+    if (await service.requestPermission()) {
+      await askOnceForOnTimeReminders(ref);
+    }
   }
+}
+
+const _askedOnTimeKey = 'asked_on_time_reminders';
+
+/// The first reminder (or Pomodoro): Android may send alerts up to an hour
+/// late unless "Alarms & reminders" is allowed, so ask once (Me →
+/// Notifications can ask again).
+Future<void> askOnceForOnTimeReminders(WidgetRef ref) async {
+  final service = ref.read(notificationServiceProvider);
+  if (await service.canRemindOnTime()) return;
+  final prefs = ref.read(jsonPreferencesProvider);
+  if (await prefs.read(_askedOnTimeKey) == true) return;
+  await prefs.write(_askedOnTimeKey, true);
+  await service.requestOnTimeReminders();
 }
 
 /// The reminder a new item starts with: the default (Me → Notifications)

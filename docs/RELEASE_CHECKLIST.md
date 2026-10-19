@@ -3,6 +3,26 @@
 Run through this for every upload to Google Play. `tool/release_check.sh`
 does the automatic parts (steps 1–4) and stops at the first failure.
 
+## First release (one time)
+
+1. **Upload key**: `bash tool/make_upload_key.sh`. Back up the `.jks` and
+   its password off this computer (password manager + a second copy).
+2. **Privacy policy URL**: push to GitHub, then repo → Settings → Pages →
+   "Deploy from a branch", branch `master`, folder `/docs`. The policy is at
+   `https://<user>.github.io/<repo>/privacy-policy`. Put your support email
+   in `store/privacy-policy.md` and `docs/privacy-policy.md` first.
+3. **Name check**: search Play for "DayCraft" (an iOS planner with that
+   name exists, and it is a stationery trademark). Rename before the first
+   upload if it clashes; the app ID `com.ourapp.daylog` stays.
+4. **Play Console → App content**: privacy policy URL, Data safety ("no
+   data collected"), content rating, target audience, and the
+   **Accessibility API declaration** (text in `store/listing.md`, plus a
+   short screen recording of turning blocking on).
+5. **Closed test**: new personal accounts need **12+ testers for 14
+   days** before production. See `docs/LAUNCH_PLAYBOOK.md`.
+6. **Store listing**: copy from `store/listing.md`; screenshots in
+   `store/screenshots/` (captions listed in the listing file).
+
 ## Before building
 
 1. **Version bumped** in `pubspec.yaml` (`version: 1.2.0+14`). The part

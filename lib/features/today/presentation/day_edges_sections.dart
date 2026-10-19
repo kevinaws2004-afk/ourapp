@@ -15,7 +15,6 @@ import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/app_card.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../../../shared/widgets/streak_badge.dart';
-import '../../activity_logs/presentation/value_formatting.dart';
 import '../../activity_types/domain/activity_ids.dart';
 import '../../activity_types/domain/activity_type.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
@@ -48,7 +47,18 @@ class FromYesterdaySection extends ConsumerWidget {
     final today = currentLocalDate(clock);
     final yesterday = ref.watch(dayOverviewProvider(today.addDays(-1))).value;
     if (yesterday == null) return const SizedBox.shrink();
-    final left = leftFromYesterday(yesterday, _localHour(clock));
+    // A repeating thing is on today's list anyway: don't offer to bring
+    // yesterday's copy too.
+    final todaySeries = {
+      for (final i
+          in ref.watch(dayOverviewProvider(today)).value?.planned ??
+              const <PlannedItem>[])
+        ?i.plan.seriesId,
+    };
+    final left = [
+      for (final i in leftFromYesterday(yesterday, _localHour(clock)))
+        if (!todaySeries.contains(i.plan.seriesId)) i,
+    ];
     if (left.isEmpty) return const SizedBox.shrink();
     final actions = PlanActions(context, ref);
     return Padding(
@@ -217,15 +227,12 @@ class EveningReviewCard extends ConsumerWidget {
         if (!value.doneToday && value.days > 0 && types[key] != null)
           (types[key]!, value.days),
     ];
-    final headline = progress.allDone
+    final headline = progress.allDone && progress.letGo > 0
+        ? l10n.statusDoneLetGo(progress.done, progress.letGo)
+        : progress.allDone
         ? l10n.eveningAllDone(progress.total)
-        : progress.recordedMs > 0
-        ? l10n.eveningSummaryTime(
-            progress.done,
-            progress.total,
-            formatDuration(l10n, progress.recordedMs),
-          )
-        : l10n.eveningSummary(progress.done, progress.total);
+        // The counts are right above in the hero: say what to do instead.
+        : l10n.eveningWrapUp;
     final actions = PlanActions(context, ref);
     return Padding(
       padding: const EdgeInsets.only(top: AppSpacing.lg),

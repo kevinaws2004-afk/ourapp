@@ -382,20 +382,48 @@ class _CompactRowsState extends State<_CompactRows> {
   /// Whether the newest row was ticked done. Saved rows start done.
   late bool _newestDone = widget.items.isNotEmpty;
 
+  /// Rows that are done: saved ones, and ones ticked here. Rows copied in
+  /// (Use last time) are targets until ticked.
+  late final Set<GroupItemId> _confirmed = {for (final i in widget.items) i.id};
+
   @override
   void didUpdateWidget(_CompactRows old) {
     super.didUpdateWidget(old);
-    // A new row is the one to fill in.
-    if (widget.items.length > old.items.length) {
+    final added = widget.items.length - old.items.length;
+    if (added == 1) {
+      // A new row is the one to fill in.
       _active = null;
       _newestDone = false;
+    } else if (added > 1) {
+      // Several at once (last time's sets): targets to tick one by one.
+      _active = null;
+      _newestDone = true;
     }
   }
 
-  void _done() => setState(() {
+  void _done(GroupItemId id) => setState(() {
+    _confirmed.add(id);
     _active = null;
     _newestDone = true;
   });
+
+  /// ✓ on a row: empty number boxes take the row before's values (the
+  /// hints they show), so a set repeated as-is is one tap. Null while
+  /// there's nothing to save.
+  VoidCallback? _doneFor(int index, GroupItem item) {
+    final previous = index > 0 ? widget.items[index - 1] : null;
+    final hinted = <ActivityFieldId, FieldValue>{
+      if (previous != null)
+        for (final MapEntry(:key, :value) in previous.values.entries)
+          if (value is NumberValue && !item.values.containsKey(key)) key: value,
+    };
+    if (item.values.isEmpty && hinted.isEmpty) return null;
+    if (hinted.isEmpty) return () => _done(item.id);
+    return () {
+      widget.onReplace(index, item.withValues({...hinted, ...item.values}));
+      _done(item.id);
+    };
+  }
 
   bool _hasIssue(GroupItem item) => widget.issues.any(
     (i) => i.target?.startsWith('${item.id.value}/') ?? false,
@@ -416,7 +444,7 @@ class _CompactRowsState extends State<_CompactRows> {
             _ActiveRow(
               key: ValueKey(item.id),
               previous: index > 0 ? items[index - 1] : null,
-              onDone: item.values.isEmpty ? null : _done,
+              onDone: _doneFor(index, item),
               title: l10n.groupItemTitle(widget.itemLabel, index + 1),
               removeLabel: l10n.removeGroupItem(widget.itemLabel),
               fields: widget.fields,
@@ -437,6 +465,8 @@ class _CompactRowsState extends State<_CompactRows> {
                 RepeatingGroupValue([item]),
               ),
               onTap: () => setState(() => _active = item.id),
+              done: _confirmed.contains(item.id),
+              onConfirm: () => setState(() => _confirmed.add(item.id)),
             ),
         widget.actions(showAdd: active == null),
       ],
@@ -452,6 +482,8 @@ class _FoldedRow extends StatelessWidget {
     required this.title,
     required this.summary,
     required this.onTap,
+    this.done = true,
+    this.onConfirm,
   });
 
   final int number;
@@ -459,18 +491,26 @@ class _FoldedRow extends StatelessWidget {
   final String summary;
   final VoidCallback onTap;
 
+  /// False for a target (copied from last time, not lifted yet).
+  final bool done;
+  final VoidCallback? onConfirm;
+
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: Semantics(
         button: true,
-        label: '$title: $summary',
-        excludeSemantics: true,
+        label: done ? '$title: $summary' : l10n.groupRowTarget(title),
+        excludeSemantics: done,
         child: Material(
-          color: c.surfaceSunken,
-          borderRadius: AppRadius.pillAll,
+          color: done ? c.surfaceSunken : c.surfaceBase,
+          shape: done
+              ? null
+              : StadiumBorder(side: BorderSide(color: c.borderSubtle)),
+          borderRadius: done ? AppRadius.pillAll : null,
           child: InkWell(
             borderRadius: AppRadius.pillAll,
             onTap: onTap,
@@ -494,10 +534,20 @@ class _FoldedRow extends StatelessWidget {
                     child: Text(
                       summary,
                       overflow: TextOverflow.ellipsis,
-                      style: context.textStyles.titleMedium,
+                      style: context.textStyles.titleMedium?.copyWith(
+                        color: done ? null : c.textSecondary,
+                      ),
                     ),
                   ),
-                  Icon(AppIcons.check, color: c.success, size: 20),
+                  if (done)
+                    Icon(AppIcons.check, color: c.success, size: 20)
+                  else
+                    IconButton.outlined(
+                      tooltip: l10n.groupRowDone(title),
+                      visualDensity: VisualDensity.compact,
+                      icon: Icon(AppIcons.check, color: c.success, size: 18),
+                      onPressed: onConfirm,
+                    ),
                 ],
               ),
             ),
@@ -567,10 +617,12 @@ class _ActiveRow extends StatelessWidget {
                   const Spacer(),
                   IconButton(
                     tooltip: removeLabel,
+                    visualDensity: VisualDensity.compact,
                     icon: const Icon(AppIcons.close),
                     onPressed: onRemove,
                   ),
                   IconButton.filled(
+                    visualDensity: VisualDensity.compact,
                     tooltip: l10n.groupRowDone(title),
                     style: IconButton.styleFrom(
                       backgroundColor: c.success,
@@ -631,7 +683,7 @@ class _ActiveRow extends StatelessWidget {
   }
 
   /// The narrowest a stepper is laid out beside another.
-  static const double _stepperWidth = 150;
+  static const double _stepperWidth = 132;
 }
 
 Map<ActivityFieldId, FieldValue> _withValue(

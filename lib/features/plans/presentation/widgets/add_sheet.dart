@@ -422,7 +422,7 @@ class _AddToDayState extends ConsumerState<AddToDay> {
         if (recent.isNotEmpty || common.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.md),
           Text(
-            recent.isNotEmpty ? l10n.planRecent : l10n.addCommon,
+            recent.isNotEmpty ? l10n.addYourActivities : l10n.addCommon,
             style: context.textStyles.labelMedium?.copyWith(
               color: c.textSecondary,
             ),
@@ -436,11 +436,9 @@ class _AddToDayState extends ConsumerState<AddToDay> {
                 ChoiceChip(
                   label: Text(type.name),
                   selected: _typeId == type.id,
-                  onSelected: (_) {
-                    _select(type);
-                    // One tap adds it (AD1), as chosen in When.
-                    if (_when != _When.now) unawaited(_add());
-                  },
+                  // Selects it; When / Repeat / Reminder below can still
+                  // be set before Add.
+                  onSelected: (_) => _select(type),
                 ),
               for (final definition in common)
                 ChoiceChip(
@@ -470,6 +468,7 @@ class _AddToDayState extends ConsumerState<AddToDay> {
                 onSelected: (_) => setState(() => _when = _When.now),
               ),
             ChoiceChip(
+              showCheckmark: false,
               avatar: const Icon(AppIcons.time, size: 18),
               label: Text(timeLabel),
               selected: _when == _When.time,
@@ -477,6 +476,7 @@ class _AddToDayState extends ConsumerState<AddToDay> {
             ),
             if (_when != _When.now)
               ChoiceChip(
+                showCheckmark: false,
                 avatar: const Icon(AppIcons.repeat, size: 18),
                 label: Text(
                   _repeat == null
@@ -488,6 +488,7 @@ class _AddToDayState extends ConsumerState<AddToDay> {
               ),
             if (_when != _When.now)
               ChoiceChip(
+                showCheckmark: false,
                 avatar: Icon(
                   _effectiveReminder(
                             timed: _when == _When.time && _start != null,

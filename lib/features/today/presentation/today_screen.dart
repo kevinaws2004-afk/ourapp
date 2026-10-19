@@ -37,6 +37,8 @@ import '../../plans/domain/day_edges.dart';
 import '../../plans/presentation/widgets/no_plan_card.dart';
 import 'day_edges_sections.dart';
 import 'day_hero.dart';
+import 'habit_hint_card.dart';
+import '../../insights/presentation/insight_providers.dart';
 import 'now_next_card.dart';
 import 'today_status.dart';
 
@@ -134,6 +136,20 @@ class TodayScreen extends ConsumerWidget {
         ? null
         : streaks.map((s) => s.days).reduce((a, b) => a > b ? a : b);
     final greeting = _greeting(l10n, clock);
+    // Back after two or more days with nothing done (not on day one).
+    final activeDays = ref.watch(activeDaysProvider).value;
+    final lastActive = activeDays == null
+        ? null
+        : ({
+            for (final set in activeDays.values) ...set,
+          }..removeWhere((d) => d == today)).fold<LocalDate?>(
+            null,
+            (a, b) => a == null || b.compareTo(a) > 0 ? b : a,
+          );
+    final welcomeBack =
+        lastActive != null &&
+        lastActive.daysUntil(today) >= 3 &&
+        (progress?.done ?? 0) == 0;
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SafeArea(
@@ -174,17 +190,29 @@ class TodayScreen extends ConsumerWidget {
                   ],
                 ),
                 DayHero(
-                  greeting: name.isEmpty
-                      ? greeting
-                      : l10n.greetingNamed(greeting, name),
-                  statusLine: heroLine(
-                    context,
-                    progress,
-                    running,
-                    paused:
-                        ref.watch(activeFocusSessionProvider).value?.state ==
-                        FocusState.paused,
-                  ),
+                  greeting: switch ((welcomeBack, name.isEmpty)) {
+                    (true, true) => l10n.welcomeBack,
+                    (true, false) => l10n.welcomeBackNamed(name),
+                    (false, true) => greeting,
+                    (false, false) => l10n.greetingNamed(greeting, name),
+                  },
+                  statusLine: welcomeBack && running == null
+                      ? l10n.heroWelcomeBack
+                      : heroLine(
+                          context,
+                          progress,
+                          running,
+                          paused:
+                              ref
+                                  .watch(activeFocusSessionProvider)
+                                  .value
+                                  ?.state ==
+                              FocusState.paused,
+                          localHour: clock
+                              .nowUtc()
+                              .add(clock.offsetAt(clock.nowUtc()))
+                              .hour,
+                        ),
                   progress: progress,
                   bestStreak: bestStreak,
                 ),
@@ -206,7 +234,24 @@ class TodayScreen extends ConsumerWidget {
                     onStart: (item) => unawaited(start(item)),
                   ),
                 ],
-                if (empty) ...[
+                if (overview == null)
+                  // Cold start: not "nothing planned" before the day loads.
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.xxl,
+                    ),
+                    child: Column(
+                      children: [
+                        const SizedBox.square(
+                          dimension: 28,
+                          child: CircularProgressIndicator(strokeWidth: 3),
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        Text(l10n.todayLoading),
+                      ],
+                    ),
+                  )
+                else if (empty) ...[
                   const SizedBox(height: AppSpacing.xl),
                   NoPlanCard(
                     date: today,
@@ -227,12 +272,12 @@ class TodayScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xs),
-                  if (overview != null)
-                    TodayTimeline(
-                      overview: overview,
-                      onOpenItem: onOpenItem,
-                      onOpenRecord: onOpenRecord,
-                    ),
+                  TodayTimeline(
+                    overview: overview,
+                    onOpenItem: onOpenItem,
+                    onOpenRecord: onOpenRecord,
+                  ),
+                  HabitHintCard(overview: overview, chooser: chooser),
                 ],
               ],
             ),

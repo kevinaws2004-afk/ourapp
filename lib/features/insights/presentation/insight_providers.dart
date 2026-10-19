@@ -27,7 +27,8 @@ final insightRangeProvider =
 
 class InsightRangeNotifier extends Notifier<InsightRange> {
   @override
-  InsightRange build() => InsightRange.month;
+  // A week: early on, a month of mostly empty days reads as failure.
+  InsightRange build() => InsightRange.week;
 
   void select(InsightRange range) => state = range;
 }

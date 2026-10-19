@@ -35,16 +35,49 @@ class TextValueEditor extends ConsumerStatefulWidget {
   ConsumerState<TextValueEditor> createState() => _TextValueEditorState();
 }
 
-class _TextValueEditorState extends ConsumerState<TextValueEditor> {
+class _TextValueEditorState extends ConsumerState<TextValueEditor>
+    with WidgetsBindingObserver {
   static const _maxSuggestions = 8;
 
   late final _controller = TextEditingController(
     text: widget.value?.text ?? '',
   );
   final _focusNode = FocusNode();
+  bool _keyboardWasOpen = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  // Keyboard closed while typing a name (Back): let the field go, so its
+  // suggestions don't stay open over the rows below and catch taps meant
+  // for them. The window's own inset: a Scaffold hides it from widgets.
+  @override
+  void didChangeMetrics() {
+    if (!mounted) return;
+    final open = View.of(context).viewInsets.bottom > 0;
+    if (_keyboardWasOpen && !open && _focusNode.hasFocus) {
+      _focusNode.unfocus();
+    }
+    _keyboardWasOpen = open;
+  }
+
+  @override
+  void didUpdateWidget(TextValueEditor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Filled from outside ("Use last time", Undo): show it, unless the
+    // person is typing here.
+    final text = widget.value?.text ?? '';
+    if (!_focusNode.hasFocus && text != _controller.text) {
+      _controller.text = text;
+    }
+  }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _controller.dispose();
     _focusNode.dispose();
     super.dispose();
@@ -197,6 +230,32 @@ class _NumberValueEditorState extends State<NumberValueEditor> {
       widget.hint?.unitCode ??
       _config.defaultUnitCode;
   bool _invalid = false;
+
+  /// A likely typo: far above the hint (last time / the row before), e.g.
+  /// 40910 kg after 40.
+  bool get _looksOff {
+    final hint = widget.hint?.value;
+    final value = widget.value?.value;
+    if (hint == null || value == null || hint <= 0) return false;
+    return value > hint * 3 && value - hint > 20;
+  }
+
+  @override
+  void didUpdateWidget(NumberValueEditor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Filled from outside ("Use last time", Undo): show it. While typing,
+    // the value is what's shown, so nothing changes.
+    final value = widget.value;
+    final shown = double.tryParse(_controller.text.trim().replaceAll(',', '.'));
+    if (value?.value != shown && !(value == null && _invalid)) {
+      _controller.text = value == null
+          ? ''
+          : formatNumber(value.value, _config.decimals);
+    }
+    if (value?.unitCode case final unit? when unit != _unitCode) {
+      _unitCode = unit;
+    }
+  }
 
   @override
   void dispose() {
@@ -354,6 +413,11 @@ class _NumberValueEditorState extends State<NumberValueEditor> {
                 errorText: _invalid
                     ? l10n.validationNotANumber
                     : widget.errorText,
+                helperText: _looksOff ? l10n.numberLooksOff : null,
+                helperMaxLines: 2,
+                helperStyle: context.textStyles.labelSmall?.copyWith(
+                  color: context.colors.warning,
+                ),
               ),
               onChanged: (_) => _emit(),
             ),
@@ -362,7 +426,9 @@ class _NumberValueEditorState extends State<NumberValueEditor> {
               children: [
                 nudge(-1),
                 if (unitPicker != null)
-                  Flexible(child: Center(child: unitPicker)),
+                  Flexible(
+                    child: FittedBox(fit: BoxFit.scaleDown, child: unitPicker),
+                  ),
                 nudge(1),
               ],
             ),

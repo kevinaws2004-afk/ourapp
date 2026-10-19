@@ -96,6 +96,20 @@ void main() {
       expect(upNext(overview([missed, evening, running]), now), running);
     });
 
+    test('a timed item without a length stays next for an hour', () {
+      final gym = item(
+        EffectivePlanStatus.planned,
+        start: DateTime.utc(2026, 10, 3, 18),
+      );
+      final reading = item(
+        EffectivePlanStatus.planned,
+        start: DateTime.utc(2026, 10, 3, 22),
+      );
+      final list = overview([gym, reading]);
+      expect(upNext(list, DateTime.utc(2026, 10, 3, 18, 5)), gym);
+      expect(upNext(list, DateTime.utc(2026, 10, 3, 19, 5)), reading);
+    });
+
     test('then the first untimed item', () {
       final missed = item(
         EffectivePlanStatus.planned,

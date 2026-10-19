@@ -123,8 +123,12 @@ class WeekRecap {
 
   bool get isEmpty => done == 0 && plansCounted == 0;
 
-  /// Recorded of planned time, 0–1+ (null with nothing planned).
-  double? get plannedShare => plannedMs <= 0 ? null : actualMs / plannedMs;
+  /// Recorded of planned time, 0–1+ (null with nothing planned). Also null
+  /// when lengths were planned for only a small part of what was done
+  /// (2h planned on a 30-min reading, 8h done in all): "392% of plan"
+  /// would say nothing true.
+  double? get plannedShare =>
+      plannedMs <= 0 || plannedMs * 2 < actualMs ? null : actualMs / plannedMs;
 
   /// Plans done of those that counted, 0–1 (null with none).
   double? get plansShare => plansCounted <= 0 ? null : plansDone / plansCounted;

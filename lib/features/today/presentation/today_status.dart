@@ -22,6 +22,9 @@ String todayStatusLine(
   }
   if (total == 0) return l10n.todayStatusEmpty;
   final time = recordedMs > 0 ? formatDuration(l10n, recordedMs) : null;
+  if (progress.allDone && progress.letGo > 0) {
+    return l10n.statusDoneLetGo(done, progress.letGo);
+  }
   if (progress.allDone) {
     return time == null
         ? l10n.todayStatusAllDone(total)
@@ -49,6 +52,7 @@ String heroLine(
   DayProgress? progress,
   PlannedItem? running, {
   bool paused = false,
+  int localHour = 12,
 }) {
   final l10n = AppLocalizations.of(context);
   if (progress == null) return '';
@@ -58,8 +62,13 @@ String heroLine(
         : l10n.heroRunning(running.plan.title);
   }
   if (progress.total == 0) return l10n.heroEmpty;
+  if (progress.allDone && progress.letGo > 0) {
+    return l10n.heroDoneLetGo(progress.done, progress.letGo);
+  }
   if (progress.allDone) return l10n.heroAllDone;
   final left = progress.total - progress.done;
+  // Late at night, "keep it up" is the wrong tone.
+  if (left > 0 && localHour >= 21) return l10n.heroWrapUp;
   if (progress.done == 0) {
     return switch (progress.firstStart) {
       final first? => l10n.heroFirstAt(

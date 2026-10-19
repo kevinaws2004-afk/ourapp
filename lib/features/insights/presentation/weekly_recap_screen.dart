@@ -215,7 +215,15 @@ class _RecapBody extends ConsumerWidget {
       children: [
         RepaintBoundary(
           key: cardKey,
-          child: _RecapCard(recap: recap),
+          child: _RecapCard(
+            recap: recap,
+            // The current week: only the days so far count.
+            daysSoFar:
+                recap.weekStart
+                    .daysUntil(currentLocalDate(ref.watch(clockProvider)))
+                    .clamp(0, 6) +
+                1,
+          ),
         ),
         if (top.isNotEmpty) ...[
           SectionHeader(title: l10n.recapWhereTimeWent),
@@ -350,7 +358,10 @@ String _weekdayName(BuildContext context, LocalDate date) =>
 /// ring, and four numbers against the week before. Drawn on its own
 /// surface with the app's mark so the image stands alone.
 class _RecapCard extends StatelessWidget {
-  const _RecapCard({required this.recap});
+  const _RecapCard({required this.recap, this.daysSoFar = 7});
+
+  /// Days of the week that have begun (7 for a past week).
+  final int daysSoFar;
 
   final WeekRecap recap;
 
@@ -462,7 +473,7 @@ class _RecapCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.lg),
           Row(
             children: [
-              stat('${recap.activeDays}/7', l10n.recapActiveDays),
+              stat('${recap.activeDays}/$daysSoFar', l10n.recapActiveDays),
               stat(
                 recap.plansCounted == 0
                     ? '—'

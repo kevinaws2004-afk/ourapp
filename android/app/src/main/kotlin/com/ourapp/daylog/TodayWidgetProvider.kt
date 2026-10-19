@@ -35,24 +35,28 @@ class TodayWidgetProvider : HomeWidgetProvider() {
         appWidgetIds: IntArray,
         widgetData: SharedPreferences,
     ) {
+        // Written for another day (midnight passed, the app hasn't run
+        // since): show a fresh day instead of yesterday's numbers.
+        val day = widgetData.getString("day", null)
+        val stale = day != null && day != java.time.LocalDate.now().toString()
+        fun text(key: String): String? = if (stale) null else widgetData.getString(key, null)
         for (id in appWidgetIds) {
             val views = RemoteViews(context.packageName, R.layout.today_widget).apply {
                 setTextViewText(
                     R.id.widget_title,
-                    widgetData.getString("title", null) ?: context.getString(R.string.widget_today),
+                    text("title") ?: context.getString(R.string.widget_today),
                 )
                 setTextViewText(
                     R.id.widget_progress,
-                    widgetData.getString("progress", null)
-                        ?: context.getString(R.string.widget_open_app),
+                    text("progress") ?: context.getString(R.string.widget_open_app),
                 )
-                val detail = widgetData.getString("detail", null)
+                val detail = text("detail")
                 setTextViewText(R.id.widget_detail, detail ?: "")
                 setViewVisibility(
                     R.id.widget_detail,
                     if (detail.isNullOrEmpty()) View.GONE else View.VISIBLE,
                 )
-                val next = widgetData.getString("next", null)
+                val next = text("next")
                 setTextViewText(R.id.widget_next, next ?: "")
                 setViewVisibility(
                     R.id.widget_next,

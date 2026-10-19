@@ -8,6 +8,7 @@ class DayProgress {
   const DayProgress({
     required this.done,
     required this.total,
+    this.letGo = 0,
     this.recordedMs = 0,
     this.firstStart,
   });
@@ -21,9 +22,12 @@ class DayProgress {
     }
     var done = overview.unplanned.length;
     var total = overview.unplanned.length;
+    var letGo = 0;
     for (final item in overview.planned) {
       switch (item.status) {
-        case EffectivePlanStatus.skipped || EffectivePlanStatus.cancelled:
+        case EffectivePlanStatus.skipped:
+          letGo++;
+        case EffectivePlanStatus.cancelled:
           continue;
         case EffectivePlanStatus.completed:
           done++;
@@ -35,6 +39,7 @@ class DayProgress {
     return DayProgress(
       done: done,
       total: total,
+      letGo: letGo,
       recordedMs: overview.recordedMs,
       firstStart: first,
     );
@@ -42,6 +47,10 @@ class DayProgress {
 
   final int done;
   final int total;
+
+  /// Things let go (skipped) today: they don't count against the day, but
+  /// a day with some isn't "everything done".
+  final int letGo;
 
   /// Time recorded on the day, in ms.
   final int recordedMs;
@@ -56,10 +65,14 @@ class DayProgress {
   bool get allDone => total > 0 && done == total;
 }
 
+/// How long an item with a start time but no length stays Today's "now".
+const openEndedNow = Duration(hours: 1);
+
 /// The item to do next on a day (Today's "Up next", ADR-045), or null when
 /// nothing is open:
 /// 1. one in progress (you're doing it),
-/// 2. else the earliest timed one that hasn't ended by [nowUtc],
+/// 2. else the earliest timed one that hasn't ended by [nowUtc] (one
+///    without a length counts as [openEndedNow] long),
 /// 3. else the first untimed one.
 ///
 /// Timed items whose time has passed without being done are left to the list;
@@ -73,8 +86,11 @@ PlannedItem? upNext(DayOverview overview, DateTime nowUtc) {
   for (final item in open) {
     final start = item.plan.plannedStartAt;
     if (start == null) continue;
+    // Without a length it stays "now" for a while: a 6:00 PM gym session
+    // is still the thing to do at 6:05.
+    final length = item.plan.plannedLengthMs;
     final end = start.add(
-      Duration(milliseconds: item.plan.plannedLengthMs ?? 0),
+      length == null ? openEndedNow : Duration(milliseconds: length),
     );
     if (end.isBefore(nowUtc)) continue;
     if (nextTimed == null || start.isBefore(nextTimed.plan.plannedStartAt!)) {

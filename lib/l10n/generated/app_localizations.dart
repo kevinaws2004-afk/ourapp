@@ -1390,10 +1390,10 @@ abstract class AppLocalizations {
   /// **'End'**
   String get planEndLabel;
 
-  /// Plan sheet: planned duration without fixed times, e.g. read for 45 minutes.
+  /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'How long'**
+  /// **'Planned length'**
   String get planDurationLabel;
 
   /// Plan sheet title when creating a plan; also the tooltip of the add button.
@@ -1678,10 +1678,10 @@ abstract class AppLocalizations {
   /// **'Paused'**
   String get focusPaused;
 
-  /// Focus timer state.
+  /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Focusing'**
+  /// **'In progress'**
   String get focusRunning;
 
   /// Screen reader label of the timer.
@@ -9307,13 +9307,13 @@ abstract class AppLocalizations {
   /// One streak kept today in the evening review, e.g. 'Meditation 13'.
   ///
   /// In en, this message translates to:
-  /// **'{name} {days}'**
+  /// **'{name} {days, plural, =1{1 day} other{{days} days}}'**
   String eveningStreakKept(String name, int days);
 
-  /// Evening review: the streaks kept today, e.g. 'Meditation 13 · Reading 5 kept today'.
+  /// Evening review: the streaks kept today, e.g. 'Streaks kept: Meditation 13 days · Reading 1 day'.
   ///
   /// In en, this message translates to:
-  /// **'{streaks} kept today'**
+  /// **'Streaks kept: {streaks}'**
   String eveningStreaksKept(String streaks);
 
   /// Evening review: a running challenge's activity isn't done today.
@@ -10191,10 +10191,10 @@ abstract class AppLocalizations {
   /// **'IDEAS TO START WITH'**
   String get goalsIdeas;
 
-  /// No description provided for @statusScheduled.
+  /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Scheduled'**
+  /// **'Planned'**
   String get statusScheduled;
 
   /// No description provided for @statusRecorded.
@@ -11115,10 +11115,10 @@ abstract class AppLocalizations {
   /// **'Edit what {name} records'**
   String planEditActivityFields(String name);
 
-  /// No description provided for @itemTimeSpent.
+  /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Time spent'**
+  /// **'Actual time'**
   String get itemTimeSpent;
 
   /// No description provided for @itemRename.
@@ -11244,13 +11244,13 @@ abstract class AppLocalizations {
   /// No description provided for @dayReportUntrackedHintToday.
   ///
   /// In en, this message translates to:
-  /// **'Untracked: waking time since 7 AM with nothing recorded.'**
+  /// **'waking time since 7 AM with nothing recorded.'**
   String get dayReportUntrackedHintToday;
 
   /// No description provided for @dayReportUntrackedHint.
   ///
   /// In en, this message translates to:
-  /// **'Untracked: time out of {hours} waking hours with nothing recorded.'**
+  /// **'time out of {hours} waking hours with nothing recorded.'**
   String dayReportUntrackedHint(int hours);
 
   /// No description provided for @dayReportByActivity.
@@ -12530,6 +12530,372 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not yet'**
   String get measurementNoneShort;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'On-time reminders'**
+  String get notificationsOnTime;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders arrive at the exact minute'**
+  String get notificationsOnTimeOn;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Off: Android may send reminders up to an hour late. Tap to allow.'**
+  String get notificationsOnTimeOff;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow'**
+  String get notificationsOnTimeAllow;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Already planned that day · skipped here'**
+  String get planAlreadyThatDay;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Rounds off for {activity}'**
+  String pomodoroRoundsOffFor(String activity);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Use {minutes}-min rounds for {activity}'**
+  String pomodoroRoundsOnFor(int minutes, String activity);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme: {name}'**
+  String appearanceThemeChanged(String name);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Block distracting apps'**
+  String get blockTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Block apps while focusing'**
+  String get blockSwitch;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening a chosen app during a session brings you back here. Breaks are free.'**
+  String get blockSwitchHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on \"DayCraft focus blocking\" in Accessibility settings. Tap to open.'**
+  String get blockNeedsService;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Apps to block'**
+  String get blockApps;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'None chosen'**
+  String get blockAppsNone;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 app} other{{count} apps}}'**
+  String blockAppsCount(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Search apps'**
+  String get blockAppsSearch;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get blockAppsDone;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Accessibility to block apps?'**
+  String get blockDisclosureTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'To block apps while you focus, DayCraft uses Android\'s Accessibility service.\n\n• It only notices which app comes to the front while a focus session is running.\n• It never reads what\'s on your screen, what you type, or anything else.\n• Nothing is collected, stored about other apps, or sent anywhere.\n\nOn the next screen, open \"DayCraft focus blocking\" and turn it on. You can turn it off there at any time.'**
+  String get blockDisclosureBody;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Agree and continue'**
+  String get blockDisclosureAgree;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get blockDisclosureCancel;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your activities'**
+  String get addYourActivities;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day'**
+  String get repeatEveryDay;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekdays'**
+  String get repeatWeekdays;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekends'**
+  String get repeatWeekends;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeats {days}'**
+  String repeatsLabel(String days);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop repeating'**
+  String get repeatStop;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop repeating? This one stays; later ones are removed.'**
+  String get repeatStopConfirm;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat'**
+  String get firstPlanRepeat;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Just today'**
+  String get firstPlanJustToday;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} done, {letGo} let go. Tomorrow is a fresh start.'**
+  String heroDoneLetGo(int done, int letGo);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} done · {letGo} let go'**
+  String statusDoneLetGo(int done, int letGo);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrap up your day: finish, move or let go what\'s left.'**
+  String get heroWrapUp;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrap up today'**
+  String get eveningWrapUp;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'How long did it take?'**
+  String get howLongTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get howLongSkip;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get notifyActionStart;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze 10 min'**
+  String get notifyActionSnooze;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get notifyActionSkip;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder again in 10 minutes'**
+  String get reminderSnoozed;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{time} left of {total}'**
+  String timerLeft(String time, String total);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{time} over {total}'**
+  String timerOver(String time, String total);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}: last times numbers. Tick when done.'**
+  String groupRowTarget(String title);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Thats a lot more than last time. Check it?'**
+  String get numberLooksOff;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'🏆 New best! {what}: {value}'**
+  String momentNewBest(String what, String value);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'🎉 Perfect day: all {count} done'**
+  String momentPerfectDay(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest day used yesterday · streak safe'**
+  String get goalRestDayUsed;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy yesterday\'s plan ({count})'**
+  String noPlanCopyYesterday(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back'**
+  String get welcomeBack;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back, {name}'**
+  String welcomeBackNamed(String name);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick up where you left off. One thing is enough today.'**
+  String get heroWelcomeBack;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading your day…'**
+  String get todayLoading;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Make it a habit'**
+  String get habitHintTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat {name} on the days you want, or set a goal to build a streak.'**
+  String habitHintBody(String name);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat it'**
+  String get habitHintRepeat;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a goal'**
+  String get habitHintGoal;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Planned {time}'**
+  String dayReportPlannedAt(String time);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Planned time'**
+  String get dayReportPlannedTime;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Untracked {duration}: {hint}'**
+  String dayReportUntrackedLine(String duration, String hint);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Started {time}'**
+  String itemStartedAt(String time);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Time, repeat and reminder'**
+  String get itemPlanSettings;
 }
 
 class _AppLocalizationsDelegate

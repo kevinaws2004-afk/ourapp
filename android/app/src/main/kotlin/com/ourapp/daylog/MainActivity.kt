@@ -30,6 +30,27 @@ class MainActivity : FlutterFragmentActivity() {
                     else -> result.notImplemented()
                 }
             }
+        // Focus-mode app blocking (AppBlockerService).
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "daylog/blocker")
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "isEnabled" -> result.success(AppBlocker.isEnabled(this))
+                    "openSettings" -> {
+                        startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                        result.success(null)
+                    }
+                    "apps" -> result.success(AppBlocker.launchableApps(this))
+                    "setBlocked" -> {
+                        AppBlocker.setBlocked(this, call.argument<List<String>>("packages") ?: emptyList())
+                        result.success(null)
+                    }
+                    "setActive" -> {
+                        AppBlocker.setActive(this, call.argument<Boolean>("active") == true)
+                        result.success(null)
+                    }
+                    else -> result.notImplemented()
+                }
+            }
         // With app lock on, the recents thumbnail mustn't show your day.
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "daylog/privacy")
             .setMethodCallHandler { call, result ->

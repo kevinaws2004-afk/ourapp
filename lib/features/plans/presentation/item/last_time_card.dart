@@ -13,6 +13,8 @@ import '../../../activity_logs/presentation/activity_log_providers.dart';
 import '../../../activity_logs/presentation/value_formatting.dart';
 import '../../../activity_types/domain/activity_ids.dart';
 import '../../../activity_types/domain/activity_type.dart';
+import '../../../activity_logs/domain/field_value.dart';
+import '../../../activity_types/domain/field_type.dart';
 import 'item_notifier.dart';
 
 /// The activity's most recent log with something in it, other than this
@@ -21,6 +23,26 @@ final lastLogProvider = FutureProvider.autoDispose
     .family<ActivityLog?, (ActivityTypeId, ActivityLogId?)>(
       (ref, key) => ref.watch(lastLogOfTypeProvider)(key.$1, except: key.$2),
     );
+
+/// The most recent log with the same choices as [chosen] (the last *Push*
+/// workout once Push is picked), other than this item's own.
+final lastMatchingLogProvider = FutureProvider.autoDispose
+    .family<ActivityLog?, (ActivityTypeId, ActivityLogId?, Choices)>((
+      ref,
+      key,
+    ) async {
+      final (typeId, except, Choices(values: chosen)) = key;
+      final logs = await ref
+          .watch(activityLogRepositoryProvider)
+          .recentLogsForType(typeId, limit: 60);
+      for (final log in logs) {
+        if (log.id == except || log.values.length <= chosen.length) continue;
+        if (chosen.entries.every((e) => log.values[e.key] == e.value)) {
+          return log;
+        }
+      }
+      return null;
+    });
 
 /// "Last time · Tue, Sep 30: Bench press 60 kg × 8 (×2)" with **Use last
 /// time** (B1, ADR-041): an empty item starts from what was logged before,
@@ -34,10 +56,27 @@ class LastTimeCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final type = state.type;
-    if (type == null || type.activeFields.isEmpty || state.values.isNotEmpty) {
+    if (type == null || type.activeFields.isEmpty) {
       return const SizedBox.shrink();
     }
-    final last = ref.watch(lastLogProvider((type.id, state.logId))).value;
+    // Only choices picked so far (Push / Pull / Legs): offer the last time
+    // with the same ones. Anything else entered: it's underway, no card.
+    bool isChoice(ActivityFieldId id) => switch (type.fieldById(id)?.type) {
+      FieldType.singleSelect || FieldType.multiSelect => true,
+      _ => false,
+    };
+    if (!state.values.keys.every(isChoice)) return const SizedBox.shrink();
+    final last = state.values.isEmpty
+        ? ref.watch(lastLogProvider((type.id, state.logId))).value
+        : ref
+              .watch(
+                lastMatchingLogProvider((
+                  type.id,
+                  state.logId,
+                  Choices(state.values),
+                )),
+              )
+              .value;
     if (last == null) return const SizedBox.shrink();
     final l10n = AppLocalizations.of(context);
     final material = MaterialLocalizations.of(context);
@@ -88,9 +127,29 @@ class LastTimeCard extends ConsumerWidget {
     final notifier = ref.read(itemProvider(args).notifier);
     final values = copyValues(last.values, ref.read(idGeneratorProvider));
     for (final field in type.activeFields) {
+      if (state.values.containsKey(field.id)) continue;
       if (values[field.id] case final value?) {
         notifier.setValue(field.id, value);
       }
     }
   }
+}
+
+/// Choices picked on an item, compared by what they are (a provider key).
+@immutable
+class Choices {
+  const Choices(this.values);
+
+  final Map<ActivityFieldId, FieldValue> values;
+
+  @override
+  bool operator ==(Object other) =>
+      other is Choices &&
+      other.values.length == values.length &&
+      values.entries.every((e) => other.values[e.key] == e.value);
+
+  @override
+  int get hashCode => Object.hashAllUnordered(
+    values.entries.map((e) => Object.hash(e.key, e.value)),
+  );
 }

@@ -9,4 +9,7 @@
     <string name="widget_start">Start</string>
     <string name="widget_description">Today\'s progress, what\'s next, and a quick start</string>
     <string name="tile_label">Start in DayCraft</string>
+    <string name="blocker_label">DayCraft focus blocking</string>
+    <string name="blocker_description">Blocks the apps you choose while a DayCraft focus session is running. It only notices which app opens; it never reads your screen, and nothing leaves your phone.</string>
+    <string name="blocker_blocked">%1$s is paused while you focus</string>
 </resources>

@@ -20,6 +20,7 @@ import '../../challenges/presentation/challenge_providers.dart';
 import '../../focus/domain/focus_session.dart';
 import '../../focus/presentation/focus_providers.dart';
 import '../../focus/presentation/focus_screen.dart';
+import '../../focus/presentation/pomodoro_line.dart';
 import '../../plans/domain/day_progress.dart';
 import '../../plans/domain/plan.dart';
 import '../../plans/domain/watch_day_overview.dart';
@@ -273,11 +274,19 @@ class _LiveTime extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(focusTickProvider);
     final now = ref.watch(clockProvider).nowUtc();
-    return Text(
-      formatTimer(session.elapsedMs(now)),
-      style: AppTypography.numericLarge.copyWith(
-        color: context.colors.textPrimary,
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          formatTimer(session.elapsedMs(now)),
+          style: AppTypography.numericLarge.copyWith(
+            color: context.colors.textPrimary,
+          ),
+        ),
+        // "Round 2 · 12:30 to a break", "Break · 3:20 left".
+        PomodoroLine(session: session, showToggle: false),
+      ],
     );
   }
 }

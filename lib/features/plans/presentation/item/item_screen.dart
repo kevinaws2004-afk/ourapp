@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/design/app_icons.dart';
 import '../../../../core/design/context_ext.dart';
 import '../../../../core/design/tokens/sizes.dart';
+import '../../../../core/design/tokens/radius.dart';
 import '../../../../core/design/tokens/spacing.dart';
 import '../../../../core/design/tokens/typography.dart';
 import '../../../../core/design/window_size_class.dart';
@@ -35,6 +36,7 @@ import '../../../activity_types/domain/activity_type.dart';
 import '../../../focus/domain/focus_session.dart';
 import '../../../focus/presentation/focus_providers.dart';
 import '../../../focus/presentation/focus_screen.dart';
+import '../../../focus/presentation/focus_controller.dart';
 import '../../../focus/presentation/pomodoro_line.dart';
 import '../../domain/plan.dart';
 import '../../domain/watch_day_overview.dart';
@@ -260,7 +262,7 @@ class _SaveStatusLabel extends StatelessWidget {
   }
 }
 
-class _ItemBody extends ConsumerWidget {
+class _ItemBody extends ConsumerStatefulWidget {
   const _ItemBody({
     required this.args,
     required this.state,
@@ -274,7 +276,31 @@ class _ItemBody extends ConsumerWidget {
   final ValueChanged<PlanId>? onOpenItem;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_ItemBody> createState() => _ItemBodyState();
+}
+
+class _ItemBodyState extends ConsumerState<_ItemBody> {
+  /// The plan's time, repeat and reminder, below the log: the header's time
+  /// scrolls to it.
+  final _detailsKey = GlobalKey();
+
+  ItemArgs get args => widget.args;
+  ItemState get state => widget.state;
+
+  void _openDetails() {
+    final target = _detailsKey.currentContext;
+    if (target == null) return;
+    unawaited(
+      Scrollable.ensureVisible(
+        target,
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeOutCubic,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final notifier = ref.read(itemProvider(args).notifier);
     final margin = WindowSizeClass.of(context).screenMargin;
@@ -301,7 +327,8 @@ class _ItemBody extends ConsumerWidget {
               args: args,
               state: state,
               planTime: planTime,
-              onOpenTimer: onOpenTimer,
+              onOpenTimer: widget.onOpenTimer,
+              onOpenDetails: _openDetails,
             ),
             if (state.saveStatus == SaveStatus.failed) ...[
               const SizedBox(height: AppSpacing.sm),
@@ -379,7 +406,7 @@ class _ItemBody extends ConsumerWidget {
             const SizedBox(height: AppSpacing.lg),
             // Everything about the item, edited right here.
             if (plan != null)
-              PlanDetailsCard(args: args, state: state)
+              PlanDetailsCard(key: _detailsKey, args: args, state: state)
             else
               AppCard(
                 child: Column(
@@ -426,8 +453,9 @@ class _ItemBody extends ConsumerWidget {
                 child: TextButton.icon(
                   icon: const Icon(AppIcons.planNext),
                   label: Text(l10n.planNextAction),
-                  onPressed: () =>
-                      unawaited(_planNext(context, ref, plan, onOpenItem)),
+                  onPressed: () => unawaited(
+                    _planNext(context, ref, plan, widget.onOpenItem),
+                  ),
                 ),
               ),
             if (plan != null) ...[
@@ -458,12 +486,16 @@ class _ItemActions extends ConsumerWidget {
     required this.state,
     required this.planTime,
     required this.onOpenTimer,
+    required this.onOpenDetails,
   });
 
   final ItemArgs args;
   final ItemState state;
   final String? planTime;
   final VoidCallback onOpenTimer;
+
+  /// Scrolls to the plan's time, repeat and reminder.
+  final VoidCallback onOpenDetails;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -494,11 +526,23 @@ class _ItemActions extends ConsumerWidget {
                 tone: StatusTone.active,
                 filled: true,
               ),
-              planTime: planTime,
+              // When it really started, not the planned time.
+              planTime: l10n.itemStartedAt(
+                MaterialLocalizations.of(context).formatTimeOfDay(
+                  TimeOfDay.fromDateTime(
+                    session.startedAt
+                        .add(
+                          ref.watch(clockProvider).offsetAt(session.startedAt),
+                        )
+                        .copyWith(isUtc: false),
+                  ),
+                ),
+              ),
             ),
             const SizedBox(height: AppSpacing.lg),
             _ItemTimer(
               session: session,
+              plannedMs: plan.plannedLengthMs,
               onFinish: () => _finish(context, ref, session),
               onOpenTimer: onOpenTimer,
             ),
@@ -520,6 +564,7 @@ class _ItemActions extends ConsumerWidget {
                 tone: StatusTone.neutral,
               ),
               planTime: planTime,
+              onTap: onOpenDetails,
             ),
             const SizedBox(height: AppSpacing.lg),
             AppButton(
@@ -557,6 +602,7 @@ class _ItemActions extends ConsumerWidget {
                     tone: StatusTone.scheduled,
                   ),
             planTime: planTime,
+            onTap: plan == null ? null : onOpenDetails,
           ),
           if (plan?.notes case final notes? when notes.trim().isNotEmpty) ...[
             const SizedBox(height: AppSpacing.sm),
@@ -701,10 +747,13 @@ class _ItemActions extends ConsumerWidget {
 
 /// The status chip and planned time at the top of a thing.
 class _Meta extends StatelessWidget {
-  const _Meta({required this.chip, required this.planTime});
+  const _Meta({required this.chip, required this.planTime, this.onTap});
 
   final Widget? chip;
   final String? planTime;
+
+  /// Opens the plan's settings (time, repeat, reminder).
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) => Wrap(
@@ -714,12 +763,44 @@ class _Meta extends StatelessWidget {
     children: [
       ?chip,
       if (planTime case final time?)
-        Text(
-          time,
-          style: context.textStyles.labelMedium?.copyWith(
-            color: context.colors.textSecondary,
+        if (onTap case final tap?)
+          Tooltip(
+            message: AppLocalizations.of(context).itemPlanSettings,
+            child: InkWell(
+              onTap: tap,
+              borderRadius: AppRadius.pillAll,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.xs,
+                  vertical: AppSpacing.xxs,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      time,
+                      style: context.textStyles.labelMedium?.copyWith(
+                        color: context.colors.textSecondary,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.xxs),
+                    Icon(
+                      AppIcons.settings,
+                      size: 14,
+                      color: context.colors.textTertiary,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
+        else
+          Text(
+            time,
+            style: context.textStyles.labelMedium?.copyWith(
+              color: context.colors.textSecondary,
+            ),
           ),
-        ),
     ],
   );
 }
@@ -793,7 +874,7 @@ class _DoneHeader extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           Text(result, style: context.textStyles.headlineSmall),
-          if (streak != null) ...[
+          if (streak != null && streak.days > 0) ...[
             const SizedBox(height: AppSpacing.sm),
             Row(
               children: [
@@ -876,9 +957,13 @@ class _ItemTimer extends ConsumerWidget {
     required this.session,
     required this.onFinish,
     required this.onOpenTimer,
+    this.plannedMs,
   });
 
   final FocusSession session;
+
+  /// The planned length: shown as time left (or over) under the clock.
+  final int? plannedMs;
   final VoidCallback onFinish;
   final VoidCallback onOpenTimer;
 
@@ -911,43 +996,84 @@ class _ItemTimer extends ConsumerWidget {
             ),
           ),
         ),
+        if (plannedMs case final total?)
+          Padding(
+            padding: const EdgeInsets.only(top: AppSpacing.xxs),
+            child: Text(
+              () {
+                final left = total - session.elapsedMs(now);
+                final totalText = formatDuration(l10n, total);
+                return left >= 0
+                    ? l10n.timerLeft(formatTimer(left), totalText)
+                    : l10n.timerOver(formatTimer(-left), totalText);
+              }(),
+              style: context.textStyles.labelLarge?.copyWith(
+                color: total - session.elapsedMs(now) >= 0
+                    ? c.textSecondary
+                    : c.warning,
+              ),
+            ),
+          ),
         PomodoroLine(session: session),
         const SizedBox(height: AppSpacing.md),
-        Row(
-          children: [
-            IconButton.filledTonal(
-              style: IconButton.styleFrom(
-                backgroundColor: c.brandPrimarySoft,
-                foregroundColor: c.onBrandPrimarySoft,
-              ),
-              tooltip: paused
-                  ? resumeLabel(l10n, currentPomodoroView(ref, session))
-                  : l10n.focusPause,
-              icon: Icon(paused ? AppIcons.start : AppIcons.pause),
-              onPressed: () => unawaited(
-                paused
-                    ? ref.read(resumeFocusSessionProvider)(session.id)
-                    : ref.read(pauseFocusSessionProvider)(session.id),
-              ),
+        // On a Pomodoro break, the next round is the main action.
+        if (currentPomodoroView(ref, session) is PomodoroOnBreak) ...[
+          FilledButton.icon(
+            style: FilledButton.styleFrom(
+              backgroundColor: c.action,
+              foregroundColor: c.onAction,
+              minimumSize: const Size.fromHeight(52),
             ),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: FilledButton.icon(
-                style: FilledButton.styleFrom(
-                  backgroundColor: c.textPrimary,
-                  foregroundColor: c.surfaceBase,
+            icon: const Icon(AppIcons.start),
+            label: Text(resumeLabel(l10n, currentPomodoroView(ref, session))),
+            onPressed: () =>
+                unawaited(ref.read(resumeFocusSessionProvider)(session.id)),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          OutlinedButton.icon(
+            icon: const Icon(AppIcons.check),
+            label: Text(l10n.focusFinish),
+            onPressed: onFinish,
+          ),
+        ] else
+          Row(
+            children: [
+              IconButton.filledTonal(
+                style: IconButton.styleFrom(
+                  backgroundColor: c.brandPrimarySoft,
+                  foregroundColor: c.onBrandPrimarySoft,
                 ),
-                icon: const Icon(AppIcons.check),
-                label: Text(l10n.focusFinish),
-                onPressed: onFinish,
+                tooltip: paused
+                    ? resumeLabel(l10n, currentPomodoroView(ref, session))
+                    : l10n.focusPause,
+                icon: Icon(paused ? AppIcons.start : AppIcons.pause),
+                onPressed: () => unawaited(
+                  paused
+                      ? ref.read(resumeFocusSessionProvider)(session.id)
+                      : ref.read(pauseFocusSessionProvider)(session.id),
+                ),
               ),
-            ),
-            IconButton(
-              tooltip: l10n.itemTimerFullScreen,
-              icon: const Icon(AppIcons.timer),
-              onPressed: onOpenTimer,
-            ),
-          ],
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: c.textPrimary,
+                    foregroundColor: c.surfaceBase,
+                  ),
+                  icon: const Icon(AppIcons.check),
+                  label: Text(l10n.focusFinish),
+                  onPressed: onFinish,
+                ),
+              ),
+            ],
+          ),
+        // Labelled: a bare ⏱ didn't say what it opens.
+        Center(
+          child: TextButton.icon(
+            icon: const Icon(AppIcons.timer, size: 18),
+            label: Text(l10n.itemTimerFullScreen),
+            onPressed: onOpenTimer,
+          ),
         ),
       ],
     );

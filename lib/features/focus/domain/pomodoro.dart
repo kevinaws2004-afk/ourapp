@@ -8,6 +8,9 @@ class FocusSettings {
     this.longBreakMinutes = 15,
     this.longBreakEvery = 4,
     this.doNotDisturb = false,
+    this.roundsByActivity = const {},
+    this.blockApps = false,
+    this.blockedApps = const [],
   });
 
   static const defaults = FocusSettings();
@@ -34,6 +37,37 @@ class FocusSettings {
   /// Silence the phone (Do Not Disturb, priority only) while a timer runs.
   final bool doNotDisturb;
 
+  /// Block [blockedApps] (package names) while a session runs.
+  final bool blockApps;
+  final List<String> blockedApps;
+
+  /// Rounds turned on or off for an activity (by its id), over the default
+  /// ([focusIcons]).
+  final Map<String, bool> roundsByActivity;
+
+  /// Activities that are focus work by default (study, work, reading,
+  /// languages, writing, code): rounds suit them. A workout or a walk isn't
+  /// cut into focus rounds unless asked.
+  static const focusIcons = {
+    'graduation-cap',
+    'laptop',
+    'book-open',
+    'translate',
+    'code',
+    'pencil-simple',
+    'briefcase',
+    'brain',
+    'notebook',
+  };
+
+  /// Whether rounds apply to an activity with [activityId] and [iconId]
+  /// (when Pomodoro is on).
+  bool roundsFor(String activityId, String? iconId) =>
+      roundsByActivity[activityId] ?? focusIcons.contains(iconId);
+
+  FocusSettings withRoundsFor(String activityId, {required bool on}) =>
+      copyWith(roundsByActivity: {...roundsByActivity, activityId: on});
+
   int get workMs => workMinutes * Duration.millisecondsPerMinute;
 
   /// The break after round [round] (1-based).
@@ -48,6 +82,9 @@ class FocusSettings {
     int? longBreakMinutes,
     int? longBreakEvery,
     bool? doNotDisturb,
+    Map<String, bool>? roundsByActivity,
+    bool? blockApps,
+    List<String>? blockedApps,
   }) => FocusSettings(
     pomodoro: pomodoro ?? this.pomodoro,
     workMinutes: workMinutes ?? this.workMinutes,
@@ -55,6 +92,9 @@ class FocusSettings {
     longBreakMinutes: longBreakMinutes ?? this.longBreakMinutes,
     longBreakEvery: longBreakEvery ?? this.longBreakEvery,
     doNotDisturb: doNotDisturb ?? this.doNotDisturb,
+    roundsByActivity: roundsByActivity ?? this.roundsByActivity,
+    blockApps: blockApps ?? this.blockApps,
+    blockedApps: blockedApps ?? this.blockedApps,
   );
 
   Map<String, Object> toJson() => {
@@ -64,6 +104,9 @@ class FocusSettings {
     'longBreakMinutes': longBreakMinutes,
     'longBreakEvery': longBreakEvery,
     'doNotDisturb': doNotDisturb,
+    'roundsByActivity': roundsByActivity,
+    'blockApps': blockApps,
+    'blockedApps': blockedApps,
   };
 
   factory FocusSettings.fromJson(Object? json) {
@@ -80,6 +123,21 @@ class FocusSettings {
       longBreakMinutes: minutes('longBreakMinutes', d.longBreakMinutes),
       longBreakEvery: minutes('longBreakEvery', d.longBreakEvery),
       doNotDisturb: json['doNotDisturb'] == true,
+      roundsByActivity: switch (json['roundsByActivity']) {
+        final Map<Object?, Object?> m => {
+          for (final MapEntry(:key, :value) in m.entries)
+            if (key is String && value is bool) key: value,
+        },
+        _ => const {},
+      },
+      blockApps: json['blockApps'] == true,
+      blockedApps: switch (json['blockedApps']) {
+        final List<Object?> l => [
+          for (final p in l)
+            if (p is String) p,
+        ],
+        _ => const [],
+      },
     );
   }
 }

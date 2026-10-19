@@ -150,11 +150,20 @@ final scheduledNotesProvider = Provider.autoDispose<List<ScheduledNote>>((ref) {
       session != null &&
       focus != null &&
       focus.pomodoro) {
+    final sessionType = ref
+        .watch(activeActivityTypesProvider)
+        .value
+        ?.where((t) => t.id == session.activityTypeId)
+        .firstOrNull;
     final view = pomodoroViewOf(
       session,
       focus,
       ref.watch(pomodoroStateProvider).value,
       nowUtc,
+      usesRounds: focus.roundsFor(
+        session.activityTypeId.value,
+        sessionType?.iconId,
+      ),
     );
     switch (view) {
       case PomodoroWorking(:final round, :final leftMs) when leftMs > 0:
@@ -247,7 +256,7 @@ final scheduledNotesProvider = Provider.autoDispose<List<ScheduledNote>>((ref) {
     }
   }
 
-  // 5. Goal streaks not done yet today, at 20:00.
+  // 5. Goal streaks not done yet today, in the evening after their plan.
   if (settings.goalStreaks) {
     final types = {
       for (final t
@@ -262,10 +271,27 @@ final scheduledNotesProvider = Provider.autoDispose<List<ScheduledNote>>((ref) {
       if (p.isCompleted || p.doneToday || p.currentStreak == 0) continue;
       final name =
           types[view.challenge.activityTypeId]?.name ?? view.challenge.title;
+      // Not before its planned time: 20:00, or half an hour after today's
+      // plan for it ends (by 23:00 at the latest).
+      var minute = 20 * 60;
+      for (final plan in plans) {
+        if (plan.planDate != today ||
+            plan.activityTypeId != view.challenge.activityTypeId) {
+          continue;
+        }
+        final start = plan.plannedStartAt;
+        if (start == null) continue;
+        final end = start
+            .add(Duration(milliseconds: plan.plannedLengthMs ?? 0))
+            .add(clock.offsetAt(start));
+        final endMinute = end.hour * 60 + end.minute + 30;
+        if (endMinute > minute) minute = endMinute;
+      }
+      if (minute > 23 * 60) minute = 23 * 60;
       notes.add(
         ScheduledNote(
           key: 'goal:${view.challenge.id.value}:$today',
-          at: at(today, 20 * 60),
+          at: at(today, minute),
           title: l10n.notifyStreak(p.currentStreak, name),
           body: l10n.notifyStreakBody,
           channel: NotificationChannel.goals,
@@ -352,6 +378,10 @@ final notificationSyncProvider = Provider<void>((ref) {
           focus,
           ref.read(pomodoroStateProvider).value,
           clock.nowUtc(),
+          usesRounds: focus.roundsFor(
+            session.activityTypeId.value,
+            type?.iconId,
+          ),
         ) is PomodoroOnBreak;
     unawaited(
       service.showOngoingTimer(

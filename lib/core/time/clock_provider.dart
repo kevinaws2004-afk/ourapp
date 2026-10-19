@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'clock.dart';
@@ -22,7 +23,16 @@ final minuteTickProvider = StreamProvider.autoDispose<DateTime>((ref) {
   }
 
   tick();
+  // Back in the app: timers don't count time the phone slept, so catch up
+  // at once (a new day, "Now" moved on).
+  final lifecycle = AppLifecycleListener(
+    onResume: () {
+      timer?.cancel();
+      tick();
+    },
+  );
   ref.onDispose(() {
+    lifecycle.dispose();
     timer?.cancel();
     unawaited(ticks.close());
   });

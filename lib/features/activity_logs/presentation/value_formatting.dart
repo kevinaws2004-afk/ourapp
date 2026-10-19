@@ -158,7 +158,11 @@ String summarizeLog(
     if (value == null) continue;
     parts.add(switch (value) {
       RepeatingGroupValue() => formatGroupSummary(context, type, field, value),
-      // A bare "3" says nothing; "Glasses: 3" does (a unit says it already).
+      // A bare "3" says nothing; "3 glasses" does (a unit says it already).
+      // A count reads number first ("25 pages"), anything else by name
+      // ("Mood: 4").
+      NumberValue(unitCode: null) when _isCount(field.name) =>
+        '${formatFieldValue(context, field, value)} ${field.name.toLowerCase()}',
       NumberValue(unitCode: null) =>
         '${field.name}: ${formatFieldValue(context, field, value)}',
       _ => formatFieldValue(context, field, value),
@@ -167,3 +171,8 @@ String summarizeLog(
   }
   return parts.join(' · ');
 }
+
+/// A plural noun like "Pages", "Glasses" or "Reps" (one word ending in s).
+bool _isCount(String name) =>
+    RegExp(r'^[A-Za-z]+s$').hasMatch(name.trim()) &&
+    !name.toLowerCase().endsWith('ss');

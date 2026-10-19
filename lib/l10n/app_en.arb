@@ -918,9 +918,9 @@
   "@planEndLabel": {
     "description": "Plan sheet: planned end time label."
   },
-  "planDurationLabel": "How long",
+  "planDurationLabel": "Planned length",
   "@planDurationLabel": {
-    "description": "Plan sheet: planned duration without fixed times, e.g. read for 45 minutes."
+    "description": "UI copy."
   },
   "planNewTitle": "New plan",
   "@planNewTitle": {
@@ -1136,9 +1136,9 @@
   "@focusPaused": {
     "description": "Focus timer state."
   },
-  "focusRunning": "Focusing",
+  "focusRunning": "In progress",
   "@focusRunning": {
-    "description": "Focus timer state."
+    "description": "UI copy."
   },
   "focusElapsedLabel": "Focused time",
   "@focusElapsedLabel": {
@@ -6675,7 +6675,7 @@
       }
     }
   },
-  "eveningStreakKept": "{name} {days}",
+  "eveningStreakKept": "{name} {days, plural, =1{1 day} other{{days} days}}",
   "@eveningStreakKept": {
     "description": "One streak kept today in the evening review, e.g. 'Meditation 13'.",
     "placeholders": {
@@ -6687,9 +6687,9 @@
       }
     }
   },
-  "eveningStreaksKept": "{streaks} kept today",
+  "eveningStreaksKept": "Streaks kept: {streaks}",
   "@eveningStreaksKept": {
-    "description": "Evening review: the streaks kept today, e.g. 'Meditation 13 · Reading 5 kept today'.",
+    "description": "Evening review: the streaks kept today, e.g. 'Streaks kept: Meditation 13 days · Reading 1 day'.",
     "placeholders": {
       "streaks": {
         "type": "String"
@@ -7367,8 +7367,10 @@
   "@planOverline": {},
   "goalsIdeas": "IDEAS TO START WITH",
   "@goalsIdeas": {},
-  "statusScheduled": "Scheduled",
-  "@statusScheduled": {},
+  "statusScheduled": "Planned",
+  "@statusScheduled": {
+    "description": "UI copy."
+  },
   "statusRecorded": "Recorded",
   "@statusRecorded": {},
   "heroRhythm": "Today's rhythm",
@@ -7822,8 +7824,10 @@
       }
     }
   },
-  "itemTimeSpent": "Time spent",
-  "@itemTimeSpent": {},
+  "itemTimeSpent": "Actual time",
+  "@itemTimeSpent": {
+    "description": "UI copy."
+  },
   "itemRename": "Rename",
   "@itemRename": {},
   "itemEditActivity": "Edit activity (icon, name, what it records)",
@@ -7891,9 +7895,9 @@
   },
   "dayReportUntracked": "Untracked",
   "@dayReportUntracked": {},
-  "dayReportUntrackedHintToday": "Untracked: waking time since 7 AM with nothing recorded.",
+  "dayReportUntrackedHintToday": "waking time since 7 AM with nothing recorded.",
   "@dayReportUntrackedHintToday": {},
-  "dayReportUntrackedHint": "Untracked: time out of {hours} waking hours with nothing recorded.",
+  "dayReportUntrackedHint": "time out of {hours} waking hours with nothing recorded.",
   "@dayReportUntrackedHint": {
     "placeholders": {
       "hours": {
@@ -9047,6 +9051,361 @@
   },
   "measurementNoneShort": "Not yet",
   "@measurementNoneShort": {
+    "description": "UI copy."
+  },
+  "notificationsOnTime": "On-time reminders",
+  "@notificationsOnTime": {
+    "description": "UI copy."
+  },
+  "notificationsOnTimeOn": "Reminders arrive at the exact minute",
+  "@notificationsOnTimeOn": {
+    "description": "UI copy."
+  },
+  "notificationsOnTimeOff": "Off: Android may send reminders up to an hour late. Tap to allow.",
+  "@notificationsOnTimeOff": {
+    "description": "UI copy."
+  },
+  "notificationsOnTimeAllow": "Allow",
+  "@notificationsOnTimeAllow": {
+    "description": "UI copy."
+  },
+  "planAlreadyThatDay": "Already planned that day · skipped here",
+  "@planAlreadyThatDay": {
+    "description": "UI copy."
+  },
+  "pomodoroRoundsOffFor": "Rounds off for {activity}",
+  "@pomodoroRoundsOffFor": {
+    "description": "UI copy.",
+    "placeholders": {
+      "activity": {
+        "type": "String"
+      }
+    }
+  },
+  "pomodoroRoundsOnFor": "Use {minutes}-min rounds for {activity}",
+  "@pomodoroRoundsOnFor": {
+    "description": "UI copy.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "activity": {
+        "type": "String"
+      }
+    }
+  },
+  "appearanceThemeChanged": "Theme: {name}",
+  "@appearanceThemeChanged": {
+    "description": "UI copy.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "blockTitle": "Block distracting apps",
+  "@blockTitle": {
+    "description": "UI copy."
+  },
+  "blockSwitch": "Block apps while focusing",
+  "@blockSwitch": {
+    "description": "UI copy."
+  },
+  "blockSwitchHint": "Opening a chosen app during a session brings you back here. Breaks are free.",
+  "@blockSwitchHint": {
+    "description": "UI copy."
+  },
+  "blockNeedsService": "Turn on \"DayCraft focus blocking\" in Accessibility settings. Tap to open.",
+  "@blockNeedsService": {
+    "description": "UI copy."
+  },
+  "blockApps": "Apps to block",
+  "@blockApps": {
+    "description": "UI copy."
+  },
+  "blockAppsNone": "None chosen",
+  "@blockAppsNone": {
+    "description": "UI copy."
+  },
+  "blockAppsCount": "{count, plural, =1{1 app} other{{count} apps}}",
+  "@blockAppsCount": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "blockAppsSearch": "Search apps",
+  "@blockAppsSearch": {
+    "description": "UI copy."
+  },
+  "blockAppsDone": "Done",
+  "@blockAppsDone": {
+    "description": "UI copy."
+  },
+  "blockDisclosureTitle": "Use Accessibility to block apps?",
+  "@blockDisclosureTitle": {
+    "description": "UI copy."
+  },
+  "blockDisclosureBody": "To block apps while you focus, DayCraft uses Android's Accessibility service.\n\n• It only notices which app comes to the front while a focus session is running.\n• It never reads what's on your screen, what you type, or anything else.\n• Nothing is collected, stored about other apps, or sent anywhere.\n\nOn the next screen, open \"DayCraft focus blocking\" and turn it on. You can turn it off there at any time.",
+  "@blockDisclosureBody": {
+    "description": "UI copy."
+  },
+  "blockDisclosureAgree": "Agree and continue",
+  "@blockDisclosureAgree": {
+    "description": "UI copy."
+  },
+  "blockDisclosureCancel": "Not now",
+  "@blockDisclosureCancel": {
+    "description": "UI copy."
+  },
+  "addYourActivities": "Your activities",
+  "@addYourActivities": {
+    "description": "UI copy."
+  },
+  "repeatEveryDay": "Every day",
+  "@repeatEveryDay": {
+    "description": "UI copy."
+  },
+  "repeatWeekdays": "Weekdays",
+  "@repeatWeekdays": {
+    "description": "UI copy."
+  },
+  "repeatWeekends": "Weekends",
+  "@repeatWeekends": {
+    "description": "UI copy."
+  },
+  "repeatsLabel": "Repeats {days}",
+  "@repeatsLabel": {
+    "description": "UI copy.",
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "repeatStop": "Stop repeating",
+  "@repeatStop": {
+    "description": "UI copy."
+  },
+  "repeatStopConfirm": "Stop repeating? This one stays; later ones are removed.",
+  "@repeatStopConfirm": {
+    "description": "UI copy."
+  },
+  "firstPlanRepeat": "Repeat",
+  "@firstPlanRepeat": {
+    "description": "UI copy."
+  },
+  "firstPlanJustToday": "Just today",
+  "@firstPlanJustToday": {
+    "description": "UI copy."
+  },
+  "heroDoneLetGo": "{done} done, {letGo} let go. Tomorrow is a fresh start.",
+  "@heroDoneLetGo": {
+    "description": "UI copy.",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "letGo": {
+        "type": "int"
+      }
+    }
+  },
+  "statusDoneLetGo": "{done} done · {letGo} let go",
+  "@statusDoneLetGo": {
+    "description": "UI copy.",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "letGo": {
+        "type": "int"
+      }
+    }
+  },
+  "heroWrapUp": "Wrap up your day: finish, move or let go what's left.",
+  "@heroWrapUp": {
+    "description": "UI copy."
+  },
+  "eveningWrapUp": "Wrap up today",
+  "@eveningWrapUp": {
+    "description": "UI copy."
+  },
+  "howLongTitle": "How long did it take?",
+  "@howLongTitle": {
+    "description": "UI copy."
+  },
+  "howLongSkip": "Skip",
+  "@howLongSkip": {
+    "description": "UI copy."
+  },
+  "notifyActionStart": "Start",
+  "@notifyActionStart": {
+    "description": "UI copy."
+  },
+  "notifyActionSnooze": "Snooze 10 min",
+  "@notifyActionSnooze": {
+    "description": "UI copy."
+  },
+  "notifyActionSkip": "Skip",
+  "@notifyActionSkip": {
+    "description": "UI copy."
+  },
+  "reminderSnoozed": "Reminder again in 10 minutes",
+  "@reminderSnoozed": {
+    "description": "UI copy."
+  },
+  "timerLeft": "{time} left of {total}",
+  "@timerLeft": {
+    "description": "UI copy.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "timerOver": "{time} over {total}",
+  "@timerOver": {
+    "description": "UI copy.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "groupRowTarget": "{title}: last times numbers. Tick when done.",
+  "@groupRowTarget": {
+    "description": "UI copy.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "numberLooksOff": "Thats a lot more than last time. Check it?",
+  "@numberLooksOff": {
+    "description": "UI copy."
+  },
+  "momentNewBest": "🏆 New best! {what}: {value}",
+  "@momentNewBest": {
+    "description": "UI copy.",
+    "placeholders": {
+      "what": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "momentPerfectDay": "🎉 Perfect day: all {count} done",
+  "@momentPerfectDay": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "goalRestDayUsed": "Rest day used yesterday · streak safe",
+  "@goalRestDayUsed": {
+    "description": "UI copy."
+  },
+  "noPlanCopyYesterday": "Copy yesterday's plan ({count})",
+  "@noPlanCopyYesterday": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "welcomeBack": "Welcome back",
+  "@welcomeBack": {
+    "description": "UI copy."
+  },
+  "welcomeBackNamed": "Welcome back, {name}",
+  "@welcomeBackNamed": {
+    "description": "UI copy.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "heroWelcomeBack": "Pick up where you left off. One thing is enough today.",
+  "@heroWelcomeBack": {
+    "description": "UI copy."
+  },
+  "todayLoading": "Loading your day…",
+  "@todayLoading": {
+    "description": "UI copy."
+  },
+  "habitHintTitle": "Make it a habit",
+  "@habitHintTitle": {
+    "description": "UI copy."
+  },
+  "habitHintBody": "Repeat {name} on the days you want, or set a goal to build a streak.",
+  "@habitHintBody": {
+    "description": "UI copy.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "habitHintRepeat": "Repeat it",
+  "@habitHintRepeat": {
+    "description": "UI copy."
+  },
+  "habitHintGoal": "Set a goal",
+  "@habitHintGoal": {
+    "description": "UI copy."
+  },
+  "dayReportPlannedAt": "Planned {time}",
+  "@dayReportPlannedAt": {
+    "description": "UI copy.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "dayReportPlannedTime": "Planned time",
+  "@dayReportPlannedTime": {
+    "description": "UI copy."
+  },
+  "dayReportUntrackedLine": "Untracked {duration}: {hint}",
+  "@dayReportUntrackedLine": {
+    "description": "UI copy.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      },
+      "hint": {
+        "type": "String"
+      }
+    }
+  },
+  "itemStartedAt": "Started {time}",
+  "@itemStartedAt": {
+    "description": "UI copy.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "itemPlanSettings": "Time, repeat and reminder",
+  "@itemPlanSettings": {
     "description": "UI copy."
   }
 }

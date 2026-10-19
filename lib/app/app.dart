@@ -9,6 +9,7 @@ import 'package:home_widget/home_widget.dart';
 
 import '../core/design/app_theme.dart';
 import '../core/time/clock_provider.dart';
+import '../core/time/local_date.dart';
 import '../features/settings/domain/preferences_snapshot.dart';
 import '../features/settings/presentation/app_lock.dart';
 import '../features/settings/presentation/backup_providers.dart';
@@ -21,6 +22,7 @@ import '../features/notifications/presentation/notification_providers.dart';
 import '../core/notifications/notification_service.dart';
 import '../features/focus/domain/focus_session.dart';
 import '../features/plans/domain/plan.dart';
+import '../features/plans/presentation/plan_providers.dart';
 import 'home_widget_sync.dart';
 import 'launch_theme_cache.dart';
 import 'router.dart';
@@ -44,7 +46,13 @@ class _AppState extends ConsumerState<App> {
   @override
   void initState() {
     super.initState();
-    _lifecycle = AppLifecycleListener(onResume: _runDailyTasks);
+    _lifecycle = AppLifecycleListener(
+      onHide: () => _leftAt = ref.read(clockProvider).nowUtc(),
+      onResume: () {
+        _backToTodayAfterAWhile();
+        _runDailyTasks();
+      },
+    );
     WidgetsBinding.instance.addPostFrameCallback((_) => _runDailyTasks());
     final service = ref.read(notificationServiceProvider);
     _taps = service.taps.listen(_open);
@@ -77,6 +85,25 @@ class _AppState extends ConsumerState<App> {
     super.dispose();
   }
 
+  DateTime? _leftAt;
+
+  /// Back after a while (a new day, or hours away): start on Today, not on
+  /// whatever screen was left open last night. A notification or widget tap
+  /// opens its own place afterwards.
+  void _backToTodayAfterAWhile() {
+    final left = _leftAt;
+    _leftAt = null;
+    if (left == null) return;
+    final clock = ref.read(clockProvider);
+    final now = clock.nowUtc();
+    final newDay =
+        LocalDate.ofInstant(left, clock.offsetAt(left)) !=
+        LocalDate.ofInstant(now, clock.offsetAt(now));
+    if (newDay || now.difference(left) > const Duration(hours: 4)) {
+      ref.read(routerProvider).go(AppRoutes.today);
+    }
+  }
+
   /// Work that runs when the app opens or comes back: the daily backup,
   /// and the widget catching up (it may be a new day).
   void _runDailyTasks() {
@@ -105,11 +132,18 @@ class _AppState extends ConsumerState<App> {
   /// Opens what a tapped notification is about.
   void _open(String payload) {
     final router = ref.read(routerProvider);
+    if (payload.startsWith('action:remind_')) {
+      unawaited(_reminderAction(payload.substring(7)));
+      return;
+    }
     if (payload.startsWith('action:')) {
       unawaited(_timerAction(payload.substring(7)));
       return;
     }
     if (payload.startsWith('plan:')) {
+      // Over Today, so finishing it lands there, not on whatever tab was
+      // left open.
+      router.go(AppRoutes.today);
       unawaited(router.push(AppRoutes.item(PlanId(payload.substring(5)))));
     } else if (payload == 'recap') {
       unawaited(router.push(AppRoutes.recap()));
@@ -120,6 +154,47 @@ class _AppState extends ConsumerState<App> {
       );
     } else {
       router.go(AppRoutes.today);
+    }
+  }
+
+  /// A reminder's buttons: Start (its timer, opening it), Snooze 10 min,
+  /// or Skip. [action] is `remind_x|plan:ID`.
+  Future<void> _reminderAction(String action) async {
+    final [name, payload] = action.split('|');
+    if (!payload.startsWith('plan:')) return;
+    final id = PlanId(payload.substring(5));
+    final plan = await ref.read(planRepositoryProvider).getPlan(id);
+    if (plan == null) return;
+    final router = ref.read(routerProvider);
+    try {
+      switch (name) {
+        case NotificationService.actionRemindStart:
+          if (plan.activityTypeId case final type?) {
+            await ref.read(startFocusSessionProvider)(type, planId: id);
+          }
+          router.go(AppRoutes.today);
+          unawaited(router.push(AppRoutes.item(id)));
+        case NotificationService.actionRemindSnooze:
+          final l10n = lookupAppLocalizations(const Locale('en'));
+          await ref
+              .read(notificationServiceProvider)
+              .remindAgain(
+                title: l10n.notifyStartsNow(plan.title),
+                body: l10n.reminderSnoozed,
+                payload: payload,
+                at: ref
+                    .read(clockProvider)
+                    .nowUtc()
+                    .add(const Duration(minutes: 10)),
+              );
+          // Out of the way again: back to the home screen.
+          await SystemNavigator.pop();
+        case NotificationService.actionRemindSkip:
+          await ref.read(setPlanStatusProvider)(id, PlanStatus.skipped);
+          router.go(AppRoutes.today);
+      }
+    } catch (_) {
+      // Gone or already started: nothing to do.
     }
   }
 

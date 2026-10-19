@@ -13,6 +13,7 @@ import '../../../shared/widgets/empty_state_card.dart';
 import '../../../shared/widgets/screen_header.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../../plans/presentation/activity_chooser.dart';
+import '../../plans/presentation/plan_providers.dart';
 import '../../../shared/errors/error_copy.dart';
 import '../../../shared/widgets/section_header.dart';
 import '../../activity_types/domain/activity_ids.dart';
@@ -28,12 +29,25 @@ import 'challenge_sheet.dart';
 /// The Challenges tab (ADR-044): every challenge, running ones first, and
 /// **New challenge**. Tapping one opens it ([onOpenChallenge]).
 class ChallengesScreen extends ConsumerWidget {
-  /// Examples offered when there are none yet (C1).
-  static List<(String, int)> _examples(AppLocalizations l10n) => [
-    (l10n.builtInMeditation, 21),
-    (l10n.builtInReading, 30),
-    (l10n.builtInStudy, 30),
-  ];
+  /// Examples offered when there are none yet (C1): your most used
+  /// activities, or common ones before you have any.
+  static List<(String, int)> _examples(
+    AppLocalizations l10n,
+    List<ActivityType> yours,
+  ) {
+    const days = [21, 30, 30];
+    if (yours.isNotEmpty) {
+      return [
+        for (final (i, type) in yours.take(days.length).indexed)
+          (type.name, days[i]),
+      ];
+    }
+    return [
+      (l10n.builtInMeditation, 21),
+      (l10n.builtInReading, 30),
+      (l10n.builtInStudy, 30),
+    ];
+  }
 
   /// An example: its activity (yours, or the built-in one saved as yours)
   /// and days, prefilled in the new challenge sheet.
@@ -105,7 +119,8 @@ class ChallengesScreen extends ConsumerWidget {
                 leading: switch (onBack) {
                   final back? => HeaderIconButton(
                     icon: AppIcons.previous,
-                    tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                    tooltip: MaterialLocalizations.of(context)
+                        .backButtonTooltip,
                     onPressed: back,
                   ),
                   null => null,
@@ -156,7 +171,10 @@ class ChallengesScreen extends ConsumerWidget {
                           spacing: AppSpacing.sm,
                           runSpacing: AppSpacing.sm,
                           children: [
-                            for (final (name, days) in _examples(l10n))
+                            for (final (name, days) in _examples(
+                              l10n,
+                              ref.watch(recentActivityTypesProvider),
+                            ))
                               ActionChip(
                                 avatar: const Icon(AppIcons.goal, size: 16),
                                 label: Text(

@@ -14,12 +14,13 @@ import '../../domain/plan_series.dart';
 Future<RepeatRule?> showRepeatSheet(
   BuildContext context, {
   required LocalDate date,
+  RepeatRule? initial,
 }) => showModalBottomSheet<RepeatRule>(
   useRootNavigator: true,
   useSafeArea: true,
   context: context,
   isScrollControlled: true,
-  builder: (_) => _RepeatSheet(date: date),
+  builder: (_) => _RepeatSheet(date: date, initial: initial),
 );
 
 /// Short weekday names ("Mon" …), Monday first, in the user's locale.
@@ -29,8 +30,18 @@ List<String> weekdayNames(BuildContext context) {
   return [for (var d = 0; d < 7; d++) format.format(DateTime(2024, 1, 1 + d))];
 }
 
-/// "Mon, Wed, Fri" for [weekdays], Monday first.
+const _everyDay = {1, 2, 3, 4, 5, 6, 7};
+const _weekdaysOnly = {1, 2, 3, 4, 5};
+const _weekendsOnly = {6, 7};
+
+bool _same(Set<int> a, Set<int> b) => a.length == b.length && a.containsAll(b);
+
+/// "Every day", "Weekdays", "Weekends", or "Mon, Wed, Fri", Monday first.
 String formatWeekdays(BuildContext context, Set<int> weekdays) {
+  final l10n = AppLocalizations.of(context);
+  if (_same(weekdays, _everyDay)) return l10n.repeatEveryDay;
+  if (_same(weekdays, _weekdaysOnly)) return l10n.repeatWeekdays;
+  if (_same(weekdays, _weekendsOnly)) return l10n.repeatWeekends;
   final names = weekdayNames(context);
   return [
     for (var d = 1; d <= 7; d++)
@@ -39,18 +50,29 @@ String formatWeekdays(BuildContext context, Set<int> weekdays) {
 }
 
 class _RepeatSheet extends StatefulWidget {
-  const _RepeatSheet({required this.date});
+  const _RepeatSheet({required this.date, this.initial});
 
   final LocalDate date;
+
+  /// Editing an existing repeat: its days, interval and end.
+  final RepeatRule? initial;
 
   @override
   State<_RepeatSheet> createState() => _RepeatSheetState();
 }
 
 class _RepeatSheetState extends State<_RepeatSheet> {
-  late final Set<int> _weekdays = {widget.date.weekday};
-  int _interval = 1;
-  LocalDate? _endDate;
+  late final Set<int> _weekdays = {
+    ...(widget.initial?.weekdays ?? {widget.date.weekday}),
+  };
+  late int _interval = widget.initial?.intervalWeeks ?? 1;
+  late LocalDate? _endDate = widget.initial?.endDate;
+
+  void _use(Set<int> days) => setState(() {
+    _weekdays
+      ..clear()
+      ..addAll(days);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +89,23 @@ class _RepeatSheetState extends State<_RepeatSheet> {
           children: [
             Text(l10n.planRepeatTitle, style: context.textStyles.titleLarge),
             const SizedBox(height: AppSpacing.lg),
+            Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.xs,
+              children: [
+                for (final (label, days) in [
+                  (l10n.repeatEveryDay, _everyDay),
+                  (l10n.repeatWeekdays, _weekdaysOnly),
+                  (l10n.repeatWeekends, _weekendsOnly),
+                ])
+                  ChoiceChip(
+                    label: Text(label),
+                    selected: _same(_weekdays, days),
+                    onSelected: (_) => _use(days),
+                  ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
             Wrap(
               spacing: AppSpacing.xs,
               runSpacing: AppSpacing.xs,

@@ -1,13 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/database/json_preferences.dart';
+import '../../../core/platform/app_blocker.dart';
 import '../../../core/platform/do_not_disturb.dart';
 import '../../../core/time/clock_provider.dart';
 import '../domain/focus_session.dart';
 import '../domain/pomodoro.dart';
+import '../../activity_types/presentation/activity_type_providers.dart';
+import '../../notifications/presentation/reminder_prompt.dart';
 import 'focus_providers.dart';
 import '../../../core/logging/logger_provider.dart';
 
@@ -30,13 +34,20 @@ final pomodoroStateProvider = StreamProvider<PomodoroState?>(
       .map(PomodoroState.fromJson),
 );
 
+final appBlockerProvider = Provider<AppBlocker>((ref) => const AppBlocker());
+
 final doNotDisturbProvider = Provider<DoNotDisturb>(
   (ref) => const DoNotDisturb(),
 );
 
-Future<void> saveFocusSettings(WidgetRef ref, FocusSettings settings) => ref
-    .read(jsonPreferencesProvider)
-    .write(focusSettingsKey, settings.toJson());
+Future<void> saveFocusSettings(WidgetRef ref, FocusSettings settings) async {
+  await ref
+      .read(jsonPreferencesProvider)
+      .write(focusSettingsKey, settings.toJson());
+  // Break alerts need to come on time.
+  if (settings.pomodoro) await askOnceForOnTimeReminders(ref);
+  await ref.read(appBlockerProvider).setBlocked(settings.blockedApps);
+}
 
 /// What a timer screen shows under the time when Pomodoro is on.
 sealed class PomodoroView {
@@ -67,9 +78,10 @@ PomodoroView? pomodoroViewOf(
   FocusSession session,
   FocusSettings settings,
   PomodoroState? state,
-  DateTime now,
-) {
-  if (!settings.pomodoro) return null;
+  DateTime now, {
+  bool usesRounds = true,
+}) {
+  if (!settings.pomodoro || !usesRounds) return null;
   final mine = state?.sessionId == session.id.value ? state : null;
   if (session.state == FocusState.paused) {
     final ends = mine?.breakEndsAt;
@@ -85,6 +97,9 @@ PomodoroView? pomodoroViewOf(
   return PomodoroWorking(done + 1, left < 0 ? 0 : left);
 }
 
+/// The longest a timer runs without a break before it pauses itself.
+const maxRunning = Duration(hours: 12);
+
 /// Keeps Pomodoro rounds and Do Not Disturb in step with the active
 /// session. Watched once by the app.
 ///
@@ -94,6 +109,7 @@ PomodoroView? pomodoroViewOf(
 final focusControllerProvider = Provider<void>((ref) {
   Timer? timer;
   bool? dndOn;
+  bool? blocking;
   var queue = Future<void>.value();
   var disposed = false;
   ref.onDispose(() {
@@ -124,6 +140,16 @@ final focusControllerProvider = Provider<void>((ref) {
     // The first "off" also puts back a Do Not Disturb left on by a session
     // the app was closed during (the native side only restores what it
     // changed).
+    // Chosen apps are blocked only while focusing (not on a break).
+    final wantBlock =
+        settings.blockApps &&
+        settings.blockedApps.isNotEmpty &&
+        session != null &&
+        session.state == FocusState.running;
+    if (wantBlock != blocking) {
+      blocking = wantBlock;
+      unawaited(ref.read(appBlockerProvider).setActive(active: wantBlock));
+    }
     if (wantDnd != dndOn) {
       dndOn = wantDnd;
       unawaited(ref.read(doNotDisturbProvider).set(on: wantDnd));
@@ -133,7 +159,27 @@ final focusControllerProvider = Provider<void>((ref) {
       if (state != null) await prefs.write(pomodoroStateKey, null);
       return;
     }
+    // A timer left running (forgotten overnight, for days) stops counting
+    // at [maxRunning]: paused then, so it can't add hours nobody worked.
+    if (session.state == FocusState.running) {
+      final over = session.elapsedMs(now) - maxRunning.inMilliseconds;
+      if (over > 0) {
+        await ref.read(pauseFocusSessionProvider)(
+          session.id,
+          at: now.subtract(Duration(milliseconds: over)),
+        );
+        return;
+      }
+      timer = Timer(Duration(milliseconds: 1 - over + 250), schedule);
+    }
     if (!settings.pomodoro) return;
+    // Rounds are for focus work: not a workout, unless turned on for it.
+    final type = await ref
+        .read(activityTypeRepositoryProvider)
+        .getType(session.activityTypeId);
+    if (!settings.roundsFor(session.activityTypeId.value, type?.iconId)) {
+      return;
+    }
     final elapsed = session.elapsedMs(now);
     if (state == null || state.sessionId != session.id.value) {
       // First seen (or Pomodoro just turned on): a round starts from the
@@ -195,6 +241,11 @@ final focusControllerProvider = Provider<void>((ref) {
           .error('Pomodoro step failed', error: error, stackTrace: stack);
     });
   };
+
+  // Back in the app: a round may have ended while it was away (timers
+  // don't run while Android has the app paused).
+  final lifecycle = AppLifecycleListener(onResume: () => schedule());
+  ref.onDispose(lifecycle.dispose);
 
   ref.listen(activeFocusSessionProvider, (_, _) => schedule());
   ref.listen(pomodoroStateProvider, (_, _) => schedule());
