@@ -15,7 +15,6 @@ import '../../../core/design/tokens/spacing.dart';
 import '../../../core/time/clock_provider.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/widgets/streak_badge.dart';
-import '../../../shared/widgets/app_card.dart';
 import '../../../shared/widgets/done_check.dart';
 import '../../../shared/widgets/status_chip.dart';
 import '../../activity_logs/domain/activity_log.dart';
@@ -31,12 +30,19 @@ import '../../plans/domain/plan.dart';
 import '../../plans/domain/watch_day_overview.dart';
 import '../../plans/presentation/plan_actions.dart';
 import '../../plans/presentation/plan_formatting.dart';
+import '../../plans/presentation/widgets/planned_list.dart';
 
 /// Today's day as a timeline: the time on the left, each thing as a colored
 /// node on one line (filled once done), its name, a detail line and a
 /// status chip; a NOW marker where the present falls. Things without a
-/// time follow as one checklist card ("Anytime").
-class TodayTimeline extends ConsumerWidget {
+/// time follow as a checklist ("Anytime").
+///
+/// Hold an open thing and drag it to move it: between timed things it
+/// takes the time that fits (asked first), into Anytime it loses its time
+/// (asked first), among Anytime ones it just takes its place
+/// ([handlePlanDrop]). Held and let go without moving, it shows the quick
+/// actions.
+class TodayTimeline extends ConsumerStatefulWidget {
   const TodayTimeline({
     super.key,
     required this.overview,
@@ -49,11 +55,20 @@ class TodayTimeline extends ConsumerWidget {
   final ValueChanged<ActivityLog> onOpenRecord;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TodayTimeline> createState() => _TodayTimelineState();
+}
+
+class _TodayTimelineState extends ConsumerState<TodayTimeline> {
+  /// The plan picked up, and where from.
+  PlannedItem? _held;
+  int _heldAt = -1;
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     ref.watch(minuteTickProvider);
     final now = ref.watch(clockProvider).nowUtc();
-    final entries = overview.entries;
+    final entries = widget.overview.entries;
     bool untimed(DayEntry e) =>
         e is PlanEntry &&
         e.item.plan.plannedStartAt == null &&
@@ -71,60 +86,112 @@ class TodayTimeline extends ConsumerWidget {
       final i => i,
     };
 
-    final rows = <Widget>[];
-    for (final (i, entry) in timed.indexed) {
-      if (i == nowAt) rows.add(_NowMarker(now: now));
-      rows.add(
-        _TimelineRow(
-          entry: entry,
-          first: i == 0,
-          last: i == timed.length - 1,
-          onOpenItem: onOpenItem,
-          onOpenRecord: onOpenRecord,
-        ),
-      );
-    }
-    if (nowAt == timed.length && timed.isNotEmpty) {
-      rows.add(_NowMarker(now: now));
-    }
+    final rows = <Object>[
+      for (final (i, entry) in timed.indexed) ...[
+        if (i == nowAt) const DropNowRow(),
+        entry,
+      ],
+      if (nowAt == timed.length && timed.isNotEmpty) const DropNowRow(),
+      if (anytime.isNotEmpty) const DropHeadingRow(),
+      ...anytime,
+    ];
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    Widget draggable(int index, PlannedItem item, Widget child) => item.isOpen
+        ? ReorderableDelayedDragStartListener(index: index, child: child)
+        : child;
+
+    return ReorderableListView(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      buildDefaultDragHandles: false,
+      onReorderStart: (index) {
+        final row = rows[index];
+        _held = row is PlanEntry ? row.item : null;
+        _heldAt = index;
+      },
+      onReorderEnd: (index) {
+        final held = _held;
+        // Held and let go where it was: the quick actions, as a long-press
+        // does everywhere else. (Dropped next to itself counts as there.)
+        if (held != null && (index == _heldAt || index == _heldAt + 1)) {
+          unawaited(PlanActions(context, ref).quickActions(held));
+        }
+        _held = null;
+      },
+      onReorderItem: (oldIndex, newIndex) {
+        if (oldIndex == newIndex) return;
+        unawaited(
+          handlePlanDrop(context, ref, rows, oldIndex, newIndex, timeOf),
+        );
+      },
+      proxyDecorator: (child, _, _) => Material(
+        color: Colors.transparent,
+        elevation: 6,
+        borderRadius: AppRadius.mdAll,
+        child: child,
+      ),
       children: [
-        ...rows,
-        if (anytime.isNotEmpty) ...[
-          Padding(
-            padding: EdgeInsets.only(
-              top: timed.isEmpty ? 0 : AppSpacing.lg,
-              bottom: AppSpacing.sm,
-              left: AppSpacing.xs,
-            ),
-            child: Text(
-              l10n.planAnytime.toUpperCase(),
-              style: context.textStyles.labelSmall?.copyWith(
-                color: context.colors.textTertiary,
-                letterSpacing: 1.1,
+        for (final (index, row) in rows.indexed)
+          switch (row) {
+            DropNowRow() => _NowMarker(key: const ValueKey('now'), now: now),
+            DropHeadingRow() => Padding(
+              key: const ValueKey('anytime'),
+              padding: EdgeInsets.only(
+                top: timed.isEmpty ? 0 : AppSpacing.lg,
+                bottom: AppSpacing.sm,
+                left: AppSpacing.xs,
+              ),
+              child: Text(
+                l10n.planAnytime.toUpperCase(),
+                style: context.textStyles.labelSmall?.copyWith(
+                  color: context.colors.textTertiary,
+                  letterSpacing: 1.1,
+                ),
               ),
             ),
-          ),
-          AppCard(
-            padding: EdgeInsets.zero,
-            flat: true,
-            child: Column(
-              children: [
-                for (final (i, e) in anytime.indexed) ...[
-                  if (i > 0)
-                    Divider(
-                      height: 1,
-                      indent: 56,
-                      color: context.colors.borderSubtle,
-                    ),
-                  _AnytimeRow(item: e.item, onOpen: onOpenItem),
-                ],
-              ],
+            final PlanEntry e when untimed(e) => Padding(
+              key: ValueKey(e.item.plan.id),
+              padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+              child: Material(
+                color: context.colors.surfaceBase,
+                borderRadius: AppRadius.mdAll,
+                clipBehavior: Clip.antiAlias,
+                child: draggable(
+                  index,
+                  e.item,
+                  _AnytimeRow(item: e.item, onOpen: widget.onOpenItem),
+                ),
+              ),
             ),
-          ),
-        ],
+            final DayEntry e => KeyedSubtree(
+              key: switch (e) {
+                PlanEntry(:final item) => ValueKey(item.plan.id),
+                RecordEntry(:final record) => ValueKey(record.log.id),
+              },
+              child: switch (e) {
+                PlanEntry(:final item) => draggable(
+                  index,
+                  item,
+                  _TimelineRow(
+                    entry: e,
+                    first: e == timed.first,
+                    last: e == timed.last,
+                    onOpenItem: widget.onOpenItem,
+                    onOpenRecord: widget.onOpenRecord,
+                    dragging: item.isOpen,
+                  ),
+                ),
+                RecordEntry() => _TimelineRow(
+                  entry: e,
+                  first: e == timed.first,
+                  last: e == timed.last,
+                  onOpenItem: widget.onOpenItem,
+                  onOpenRecord: widget.onOpenRecord,
+                ),
+              },
+            ),
+            _ => SizedBox.shrink(key: ValueKey('row$index')),
+          },
       ],
     );
   }
@@ -174,7 +241,11 @@ class _TimelineRow extends ConsumerWidget {
     required this.last,
     required this.onOpenItem,
     required this.onOpenRecord,
+    this.dragging = false,
   });
+
+  /// Held to drag: the hold no longer opens the quick actions itself.
+  final bool dragging;
 
   final DayEntry entry;
   final bool first;
@@ -307,7 +378,7 @@ class _TimelineRow extends ConsumerWidget {
       child: InkWell(
         borderRadius: AppRadius.lgAll,
         onTap: d.onTap,
-        onLongPress: d.onLongPress,
+        onLongPress: dragging ? null : d.onLongPress,
         child: IntrinsicHeight(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -496,7 +567,10 @@ class _AnytimeRow extends ConsumerWidget {
     );
     return InkWell(
       onTap: () => onOpen(item.plan.id),
-      onLongPress: () => unawaited(actions.quickActions(item)),
+      // Open ones are held to drag (the quick actions show when let go).
+      onLongPress: item.isOpen
+          ? null
+          : () => unawaited(actions.quickActions(item)),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
           AppSpacing.xs,
@@ -568,7 +642,7 @@ class _AnytimeRow extends ConsumerWidget {
 
 /// "NOW 5:00 PM": a line across the timeline at the present.
 class _NowMarker extends StatelessWidget {
-  const _NowMarker({required this.now});
+  const _NowMarker({super.key, required this.now});
 
   final DateTime now;
 
