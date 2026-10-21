@@ -3,6 +3,9 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import '../core/platform/app_icon.dart';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_widget/home_widget.dart';
@@ -47,7 +50,14 @@ class _AppState extends ConsumerState<App> {
   void initState() {
     super.initState();
     _lifecycle = AppLifecycleListener(
-      onHide: () => _leftAt = ref.read(clockProvider).nowUtc(),
+      onHide: () {
+        _leftAt = ref.read(clockProvider).nowUtc();
+        // The home-screen icon takes the theme's colors once you leave, not
+        // on every tap while trying themes (the launcher redraws on a change).
+        unawaited(
+          const AppIconSwitcher().set(ref.read(effectiveThemeProvider)),
+        );
+      },
       onResume: () {
         _backToTodayAfterAWhile();
         _runDailyTasks();

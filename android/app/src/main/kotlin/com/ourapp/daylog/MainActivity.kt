@@ -80,6 +80,17 @@ class MainActivity : FlutterFragmentActivity() {
                     else -> result.notImplemented()
                 }
             }
+        // The home-screen icon follows the color theme (IconSwitcher).
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "daylog/icon")
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "set" -> {
+                        IconSwitcher.set(applicationContext, call.argument<String>("theme") ?: "lavender")
+                        result.success(null)
+                    }
+                    else -> result.notImplemented()
+                }
+            }
         // With app lock on, the recents thumbnail mustn't show your day.
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "daylog/privacy")
             .setMethodCallHandler { call, result ->
