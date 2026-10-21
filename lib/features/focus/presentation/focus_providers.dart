@@ -17,9 +17,19 @@ final focusSessionRepositoryProvider = Provider<FocusSessionRepository>(
 );
 
 /// The running or paused session, if any (survives restarts: it's in SQLite).
-final activeFocusSessionProvider = StreamProvider<FocusSession?>(
-  (ref) => ref.watch(focusSessionRepositoryProvider).watchActive(),
-);
+/// One left running on an item that was deleted is stopped, not shown.
+final activeFocusSessionProvider = StreamProvider<FocusSession?>((ref) {
+  final sessions = ref.watch(focusSessionRepositoryProvider);
+  final plans = ref.watch(planRepositoryProvider);
+  final clock = ref.watch(clockProvider);
+  return sessions.watchActive().asyncMap((session) async {
+    final planId = session?.planId;
+    if (session == null || planId == null) return session;
+    if (await plans.getPlan(planId) != null) return session;
+    await sessions.discard(session.id, clock.nowUtc());
+    return null;
+  });
+});
 
 /// Ticks once a second while something shows a live timer. The elapsed time
 /// itself is always derived from timestamps and the clock (ADR-031).

@@ -9,6 +9,7 @@ import '../../activity_types/domain/activity_ids.dart';
 import '../../activity_types/domain/activity_type_definition.dart';
 import '../../activity_types/domain/activity_type_repository.dart';
 import '../../activity_types/domain/activity_type_use_cases.dart';
+import '../../focus/domain/focus_session_repository.dart';
 import 'plan.dart';
 import 'plan_repository.dart';
 import 'plan_title_match.dart';
@@ -109,12 +110,23 @@ class MarkItemDone {
 /// Deletes an item: the plan and what was logged into it (ADR-022 soft
 /// delete). Returns the deleted logs, for [RestoreItem].
 class DeleteItem {
-  const DeleteItem(this._plans, this._logs);
+  const DeleteItem(this._plans, this._logs, [this._focus, this._clock]);
 
   final PlanRepository _plans;
   final ActivityLogRepository _logs;
 
+  /// A timer running on the item stops with it (not left counting for
+  /// something that's gone).
+  final FocusSessionRepository? _focus;
+  final Clock? _clock;
+
   Future<List<ActivityLogId>> call(PlanId id) async {
+    if ((_focus, _clock) case (final focus?, final clock?)) {
+      final session = await focus.getActive();
+      if (session != null && session.planId == id) {
+        await focus.discard(session.id, clock.nowUtc());
+      }
+    }
     final log = await _logs.getLogForPlan(id);
     if (log != null) await _logs.softDelete(log.id);
     await _plans.softDelete(id);

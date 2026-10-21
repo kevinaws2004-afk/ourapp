@@ -120,6 +120,8 @@ final deleteItemProvider = Provider(
   (ref) => DeleteItem(
     ref.watch(planRepositoryProvider),
     ref.watch(activityLogRepositoryProvider),
+    ref.watch(focusSessionRepositoryProvider),
+    ref.watch(clockProvider),
   ),
 );
 
