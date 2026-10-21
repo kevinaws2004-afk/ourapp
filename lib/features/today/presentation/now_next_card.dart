@@ -41,7 +41,12 @@ class NowNextCard extends ConsumerWidget {
     required this.item,
     required this.onOpenItem,
     required this.onStart,
+    this.onFocusMode,
   });
+
+  /// Focus mode for [item]: its timer (started if needed) full screen, the
+  /// phone kept on it.
+  final ValueChanged<PlannedItem>? onFocusMode;
 
   final PlannedItem item;
   final ValueChanged<PlanId> onOpenItem;
@@ -259,6 +264,15 @@ class NowNextCard extends ConsumerWidget {
             expand: true,
             onPressed: action.onPressed,
           ),
+          if (onFocusMode case final focus?
+              when timed && (running || session == null))
+            Center(
+              child: TextButton.icon(
+                icon: const Icon(AppIcons.lock, size: 18),
+                label: Text(l10n.focusModeAction),
+                onPressed: () => focus(item),
+              ),
+            ),
         ],
       ),
     );

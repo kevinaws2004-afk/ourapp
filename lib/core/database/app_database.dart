@@ -28,7 +28,7 @@ class AppDatabase extends _$AppDatabase {
   /// helpers with `dart run drift_dev make-migrations`, and adds migration
   /// tests (docs/architecture/database.md §7).
   @override
-  int get schemaVersion => 11;
+  int get schemaVersion => 12;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -205,6 +205,16 @@ class AppDatabase extends _$AppDatabase {
       ]) {
         await m.addColumn(schema.challenges, column);
       }
+    },
+    from11To12: (m, schema) async {
+      // Target goals: the kind's CHECK changes, so the table is rebuilt
+      // (rows, its index and trigger kept), with the new start_value column.
+      await m.alterTable(
+        TableMigration(
+          schema.challenges,
+          newColumns: [schema.challenges.startValue],
+        ),
+      );
     },
   );
 }

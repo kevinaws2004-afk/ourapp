@@ -17,6 +17,12 @@ import '../../domain/watch_day_overview.dart';
 import '../plan_actions.dart';
 import '../plan_providers.dart';
 import 'plan_item_tile.dart';
+import '../../../activity_logs/presentation/value_formatting.dart';
+import 'plan_time_sheet.dart';
+import '../plan_date_notifier.dart';
+import '../../domain/plan.dart';
+import '../../domain/drop_slot.dart';
+import '../../../../core/time/local_date.dart';
 
 /// A day's items (Today, Plan tab; ADR-035): plans and records made without
 /// a plan as one list, in time order, then untimed plans in manual order.
@@ -82,11 +88,8 @@ class PlannedList extends ConsumerWidget {
       ),
     };
 
-    // Untimed plans sit at the end of [entries]; only they can be dragged.
-    bool untimedPlan(DayEntry e) =>
-        e is PlanEntry &&
-        e.item.plan.plannedStartAt == null &&
-        e.item.records.isEmpty;
+    // Untimed plans sit at the end of [entries], under "Anytime".
+    bool untimedPlan(DayEntry e) => _untimed(e);
     final timed = entries.where((e) => !untimedPlan(e)).toList();
     final untimed = entries.where(untimedPlan).cast<PlanEntry>().toList();
     final l10n = AppLocalizations.of(context);
@@ -115,7 +118,13 @@ class PlannedList extends ConsumerWidget {
       ],
       if (nowAt == timed.length && timed.isNotEmpty) NowLine(now: now),
     ];
-    if (!reorderable || untimed.length < 2) {
+    // Something to drag: an open plan. Timed ones too: dropped between
+    // two timed things they take the time that fits there (asked first).
+    final draggable = [
+      for (final e in [...timed, ...untimed])
+        if (e is PlanEntry && e.item.isOpen) e,
+    ];
+    if (!reorderable || draggable.isEmpty || entries.length < 2) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -125,46 +134,302 @@ class PlannedList extends ConsumerWidget {
         ],
       );
     }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    final rows = <Object>[
+      for (final (i, entry) in timed.indexed) ...[
+        if (i == nowAt) const _NowRow(),
+        entry,
+      ],
+      if (nowAt == timed.length && timed.isNotEmpty) const _NowRow(),
+      if (anytime.isNotEmpty) const _HeadingRow(),
+      ...untimed,
+    ];
+    return ReorderableListView(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      buildDefaultDragHandles: false,
+      onReorderItem: (oldIndex, newIndex) =>
+          unawaited(_onDrop(context, ref, rows, oldIndex, newIndex, timeOf)),
       children: [
-        ...timedTiles,
-        ...anytime,
-        ReorderableListView(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          buildDefaultDragHandles: false,
-          onReorderItem: (oldIndex, newIndex) async {
-            final order = [for (final e in untimed) e.item.plan.id];
-            order.insert(newIndex, order.removeAt(oldIndex));
-            try {
-              await ref.read(reorderPlansProvider)(order);
-            } catch (error) {
-              if (context.mounted) {
-                showMessageSnackBar(context, errorMessage(l10n, error));
-              }
-            }
+        for (final (index, row) in rows.indexed)
+          switch (row) {
+            _HeadingRow() => KeyedSubtree(
+              key: const ValueKey('anytime-heading'),
+              child: _AnytimeHeading(),
+            ),
+            _NowRow() => NowLine(key: const ValueKey('now-line'), now: now),
+            final DayEntry entry => tile(
+              entry,
+              dragHandle: entry is PlanEntry && entry.item.isOpen
+                  ? ReorderableDragStartListener(
+                      index: index,
+                      child: Semantics(
+                        label: l10n.planReorderHandle,
+                        child: const Padding(
+                          padding: EdgeInsets.all(AppSpacing.md),
+                          child: Icon(AppIcons.dragHandle),
+                        ),
+                      ),
+                    )
+                  : null,
+            ),
+            _ => const SizedBox.shrink(),
           },
-          children: [
-            for (final (index, entry) in untimed.indexed)
-              tile(
-                entry,
-                dragHandle: ReorderableDragStartListener(
-                  index: index,
-                  child: Semantics(
-                    label: l10n.planReorderHandle,
-                    child: const Padding(
-                      padding: EdgeInsets.all(AppSpacing.md),
-                      child: Icon(AppIcons.dragHandle),
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
       ],
     );
   }
+
+  /// A plan dropped at [newIndex] (after it was taken out of [rows]).
+  /// Among the Anytime ones it just takes its place (a timed one asks to
+  /// lose its time first). Among the timed ones it gets the time that fits
+  /// between its new neighbours, asked first, or is told it doesn't fit.
+  Future<void> _onDrop(
+    BuildContext context,
+    WidgetRef ref,
+    List<Object> rows,
+    int oldIndex,
+    int newIndex,
+    DateTime Function(DayEntry) timeOf,
+  ) async {
+    final l10n = AppLocalizations.of(context);
+    final order = [...rows];
+    final moved = order.removeAt(oldIndex);
+    order.insert(newIndex, moved);
+    if (moved is! PlanEntry || oldIndex == newIndex) return;
+    order.removeWhere((r) => r is _NowRow);
+    newIndex = order.indexOf(moved);
+    final plan = moved.item.plan;
+    final heading = order.indexWhere((r) => r is _HeadingRow);
+    final hasTimed = rows.any((r) => r is DayEntry && !_untimed(r));
+    final toAnytime = heading == -1 ? !hasTimed : newIndex > heading;
+    final clock = ref.read(clockProvider);
+    final material = MaterialLocalizations.of(context);
+    String timeText(DateTime utc) => material.formatTimeOfDay(
+      TimeOfDay.fromDateTime(
+        utc.add(clock.offsetAt(utc)).copyWith(isUtc: false),
+      ),
+    );
+    String nameOf(DayEntry e) => switch (e) {
+      PlanEntry(:final item) => item.plan.title,
+      RecordEntry(:final record) => record.type.name,
+    };
+    Future<void> update(PlanDraft draft) =>
+        ref.read(updatePlanProvider)(plan.id, draft);
+
+    try {
+      if (toAnytime) {
+        if (plan.plannedStartAt case final start?) {
+          final ok = await _confirm(
+            context,
+            title: l10n.planDropAnytimeTitle(plan.title),
+            body: l10n.planDropAnytimeBody(timeText(start)),
+            action: l10n.planDropAnytime,
+          );
+          if (ok != true) return;
+          final length = plan.plannedLengthMs;
+          await update(
+            plan.toDraft().copyWithTime(
+              start: null,
+              end: null,
+              duration: length,
+            ),
+          );
+        }
+        final ids = [
+          for (final r in order.skip(heading + 1))
+            if (r is PlanEntry) r.item.plan.id,
+        ];
+        await ref.read(reorderPlansProvider)(ids);
+        return;
+      }
+
+      // Among the timed ones: its neighbours where it was dropped.
+      DayEntry? before;
+      DayEntry? after;
+      for (var i = newIndex - 1; i >= 0; i--) {
+        if (order[i] case final DayEntry e) {
+          before = e;
+          break;
+        }
+      }
+      for (var i = newIndex + 1; i < order.length; i++) {
+        final r = order[i];
+        if (r is _HeadingRow) break;
+        if (r case final DayEntry e) {
+          after = e;
+          break;
+        }
+      }
+      DateTime endOf(DayEntry e) => switch (e) {
+        PlanEntry(:final item) => timeOf(e).add(
+          Duration(milliseconds: item.plan.plannedLengthMs ?? _defaultLength),
+        ),
+        RecordEntry(:final record) =>
+          record.log.endedAt ??
+              record.log.startedAt.add(
+                Duration(milliseconds: record.log.durationMs ?? 0),
+              ),
+      };
+      final length = Duration(
+        milliseconds: plan.plannedLengthMs ?? _defaultLength,
+      );
+      final date = plan.planDate;
+      final dayStart = DateTime(date.year, date.month, date.day).toUtc();
+      final slot = DropSlot.between(
+        previousEnd: before == null ? null : endOf(before),
+        nextStart: after == null ? null : timeOf(after),
+        length: length,
+        dayStart: dayStart,
+        dayEnd: DateTime(date.year, date.month, date.day + 1).toUtc(),
+      );
+      // Already where it belongs: nothing to ask.
+      if (plan.plannedStartAt case final current?
+          when slot.fits &&
+              (before == null || !current.isBefore(endOf(before))) &&
+              (after == null || !current.add(length).isAfter(timeOf(after)))) {
+        return;
+      }
+      if (!context.mounted) return;
+      String neighbor(DayEntry e) =>
+          l10n.planDropNeighbor(nameOf(e), timeText(timeOf(e)));
+      final where = switch ((before, after)) {
+        (final b?, final a?) => l10n.planDropBetween(neighbor(b), neighbor(a)),
+        (final b?, null) => l10n.planDropAfter(neighbor(b)),
+        (null, final a?) => l10n.planDropBefore(neighbor(a)),
+        _ => '',
+      };
+      final choice = await showDialog<_DropChoice>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(
+            slot.fits
+                ? l10n.planDropMoveTitle(plan.title, timeText(slot.start))
+                : l10n.planDropNoFitTitle(plan.title),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                slot.fits
+                    ? where
+                    : '$where ${slot.free < const Duration(minutes: 1) ? l10n.planDropNoFitNone(formatDuration(l10n, length.inMilliseconds)) : l10n.planDropNoFitBody(formatDuration(l10n, slot.free.inMilliseconds), formatDuration(l10n, length.inMilliseconds))}',
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              TextButton.icon(
+                style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                icon: const Icon(AppIcons.time, size: 18),
+                label: Text(l10n.planDropPickTime),
+                onPressed: () => Navigator.pop(context, _DropChoice.pick),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+            ),
+            if (slot.fits)
+              FilledButton(
+                onPressed: () => Navigator.pop(context, _DropChoice.move),
+                child: Text(l10n.planDropMove),
+              ),
+          ],
+        ),
+      );
+      if (choice == null || !context.mounted) return;
+      DateTime? start = slot.start;
+      DateTime? end;
+      if (choice == _DropChoice.pick) {
+        final nowUtc = clock.nowUtc();
+        LocalTime local(DateTime utc) {
+          final t = utc.add(clock.offsetAt(utc));
+          return LocalTime.hm(t.hour, t.minute);
+        }
+
+        final picked = await showPlanTimeSheet(
+          context,
+          isToday: date == currentLocalDate(clock),
+          now: local(nowUtc),
+          start: local(slot.start),
+          end: plan.plannedEndAt == null ? null : local(slot.start.add(length)),
+        );
+        if (picked == null) return;
+        DateTime? instant(LocalTime? t) => t == null
+            ? null
+            : DateTime(
+                date.year,
+                date.month,
+                date.day,
+                t.hour,
+                t.minute,
+              ).toUtc();
+        start = instant(picked.start);
+        end = instant(picked.end);
+      } else if (plan.plannedEndAt != null) {
+        end = slot.start.add(length);
+      }
+      await update(
+        plan.toDraft().copyWithTime(
+          start: start,
+          end: end,
+          duration: end == null ? plan.plannedLengthMs : null,
+        ),
+      );
+      if (start != null && context.mounted) {
+        showMessageSnackBar(
+          context,
+          l10n.planDropMoved(plan.title, timeText(start)),
+        );
+      }
+    } catch (error) {
+      if (context.mounted) {
+        showMessageSnackBar(context, errorMessage(l10n, error));
+      }
+    }
+  }
+
+  /// A plan's length when it has none, for fitting it in.
+  static const _defaultLength = 30 * Duration.millisecondsPerMinute;
+
+  static bool _untimed(DayEntry e) =>
+      e is PlanEntry &&
+      e.item.plan.plannedStartAt == null &&
+      e.item.records.isEmpty;
+
+  static Future<bool?> _confirm(
+    BuildContext context, {
+    required String title,
+    required String body,
+    required String action,
+  }) => showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(title),
+      content: Text(body),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.pop(context, true),
+          child: Text(action),
+        ),
+      ],
+    ),
+  );
+}
+
+enum _DropChoice { move, pick }
+
+/// The Anytime heading's place in the draggable list.
+class _HeadingRow {
+  const _HeadingRow();
+}
+
+/// The now line's place in the draggable list.
+class _NowRow {
+  const _NowRow();
 }
 
 /// A plan that can be held and dropped on a day of the week strip (P6).

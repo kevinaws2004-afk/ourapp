@@ -11,7 +11,7 @@ import '../features/settings/domain/preferences_snapshot.dart';
 class LaunchTheme {
   const LaunchTheme({
     this.theme = AppThemeId.fallback,
-    this.appearance = AppearanceMode.system,
+    this.appearance = AppearanceMode.fallback,
     this.trueBlack = false,
   });
 

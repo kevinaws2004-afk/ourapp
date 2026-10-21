@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/design/app_icons.dart';
 import '../../../core/design/context_ext.dart';
 import '../../../core/design/tokens/sizes.dart';
 import '../../../core/design/tokens/spacing.dart';
@@ -50,7 +51,14 @@ class ActivityCatalog extends ConsumerStatefulWidget {
 }
 
 class _ActivityCatalogState extends ConsumerState<ActivityCatalog> {
+  final _search = TextEditingController();
   String _query = '';
+
+  @override
+  void dispose() {
+    _search.dispose();
+    super.dispose();
+  }
 
   bool _matches(String name, Iterable<String> details, [String group = '']) {
     final query = _query.trim().toLowerCase();
@@ -98,7 +106,24 @@ class _ActivityCatalogState extends ConsumerState<ActivityCatalog> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         TextField(
-          decoration: InputDecoration(hintText: l10n.activitiesSearchHint),
+          controller: _search,
+          textInputAction: TextInputAction.search,
+          decoration: InputDecoration(
+            hintText: l10n.activitiesSearchHint,
+            prefixIcon: const Icon(AppIcons.search),
+            suffixIcon: _query.isEmpty
+                ? null
+                : IconButton(
+                    tooltip: MaterialLocalizations.of(
+                      context,
+                    ).deleteButtonTooltip,
+                    icon: const Icon(AppIcons.close),
+                    onPressed: () => setState(() {
+                      _search.clear();
+                      _query = '';
+                    }),
+                  ),
+          ),
           onChanged: (text) => setState(() => _query = text),
         ),
         if (types.hasError)

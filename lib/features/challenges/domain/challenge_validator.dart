@@ -46,7 +46,8 @@ abstract final class ChallengeValidator {
       GoalKind.daily => restDays >= 0 && restDays <= Challenge.maxRestDays,
       GoalKind.weekly =>
         timesPerWeek != null && timesPerWeek >= 1 && timesPerWeek <= 7,
-      GoalKind.amount => amount != null && amount.isFinite && amount > 0,
+      GoalKind.amount ||
+      GoalKind.target => amount != null && amount.isFinite && amount > 0,
     };
     if (!amountOk) {
       issues.add(

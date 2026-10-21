@@ -50,6 +50,12 @@ class ChallengeProgress {
     required this.periodValue,
     required this.periodTarget,
     required this.restedDays,
+    this.kind = GoalKind.daily,
+    this.startValue,
+    this.latestValue,
+    this.targetValue,
+    this.values = const {},
+    this.daysToDeadline,
   });
 
   /// Works out the progress as of [today]. [doneDays] are the local days
@@ -68,11 +74,23 @@ class ChallengeProgress {
     GoalPeriod? amountPeriod,
     Map<LocalDate, double> amounts = const {},
     int restDays = 0,
+    double? startValue,
   }) {
+    if (kind == GoalKind.target) {
+      return ChallengeProgress._target(
+        values: amounts,
+        startDate: startDate,
+        today: today,
+        targetDays: targetDays,
+        target: amount ?? 0,
+        startValue: startValue,
+      );
+    }
     final period = switch (kind) {
       GoalKind.daily => GoalPeriod.day,
       GoalKind.weekly => GoalPeriod.week,
       GoalKind.amount => amountPeriod ?? GoalPeriod.day,
+      GoalKind.target => GoalPeriod.day,
     };
     // A weekly goal counts its whole first week: started on a Tuesday after
     // a Monday session, that session still counts toward the week.
@@ -88,7 +106,7 @@ class ChallengeProgress {
     final threshold = switch (kind) {
       GoalKind.daily => 1.0,
       GoalKind.weekly => (timesPerWeek ?? 1).toDouble(),
-      GoalKind.amount => amount ?? 1,
+      GoalKind.amount || GoalKind.target => amount ?? 1,
     };
     double valueOn(LocalDate d) => switch (kind) {
       GoalKind.amount => amounts[d] ?? 0,
@@ -189,6 +207,77 @@ class ChallengeProgress {
     );
   }
 
+  /// A target goal (from 80 kg down to 72 kg): no periods or streaks, just
+  /// the latest value against the start and the target. [values] are the
+  /// value recorded each day (the day's last), any date.
+  factory ChallengeProgress._target({
+    required Map<LocalDate, double> values,
+    required LocalDate startDate,
+    required LocalDate today,
+    required int targetDays,
+    required double target,
+    double? startValue,
+  }) {
+    final dates = values.keys.where((d) => d.compareTo(today) <= 0).toList()
+      ..sort();
+    final before = dates.where((d) => d.compareTo(startDate) <= 0).lastOrNull;
+    final since = [
+      for (final d in dates)
+        if (d.compareTo(startDate) >= 0) d,
+    ];
+    final start =
+        startValue ??
+        (before != null ? values[before] : null) ??
+        (since.isEmpty ? null : values[since.first]);
+    final latest = since.isEmpty ? start : values[since.last];
+    final down = start != null && target < start;
+    bool reached(double v) => down ? v <= target : v >= target;
+    final completedOn = since.where((d) => reached(values[d]!)).firstOrNull;
+    final deadline = startDate.addDays(targetDays - 1);
+    return ChallengeProgress._(
+      targetDays: targetDays,
+      daysDone: since.length,
+      currentStreak: 0,
+      bestStreak: 0,
+      doneToday: values.containsKey(today),
+      completedOn: completedOn,
+      doneDays: Set.unmodifiable(since),
+      period: GoalPeriod.day,
+      periodValue: latest ?? 0,
+      periodTarget: target,
+      restedDays: const {},
+      kind: GoalKind.target,
+      startValue: start,
+      latestValue: latest,
+      targetValue: target,
+      values: Map.unmodifiable({for (final d in since) d: values[d]!}),
+      daysToDeadline: math.max(0, today.daysUntil(deadline) + 1),
+    );
+  }
+
+  final GoalKind kind;
+
+  /// Target goals: where it started, where it is now and where it's going
+  /// (the field's canonical unit). Null until anything is known.
+  final double? startValue;
+  final double? latestValue;
+  final double? targetValue;
+
+  /// Target goals: the value recorded each day since the start.
+  final Map<LocalDate, double> values;
+
+  /// Target goals: days left until the date it's meant to be reached by,
+  /// today included.
+  final int? daysToDeadline;
+
+  bool get isTarget => kind == GoalKind.target;
+
+  /// Target goals: how far from the target still (always positive).
+  double? get toGo => switch ((latestValue, targetValue)) {
+    (final now?, final target?) => (now - target).abs(),
+    _ => null,
+  };
+
   /// Successful periods (days or weeks) that complete the goal.
   final int targetDays;
 
@@ -223,20 +312,33 @@ class ChallengeProgress {
   /// Successful periods toward the target: "21 / 75" (capped).
   int get progress => math.min(daysDone, targetDays);
 
-  int get daysLeft => math.max(0, targetDays - daysDone);
+  int get daysLeft => daysToDeadline ?? math.max(0, targetDays - daysDone);
 
-  /// 0 to 1, for a progress bar.
-  double get fraction => targetDays == 0 ? 0 : progress / targetDays;
+  /// 0 to 1, for a progress bar. A target goal: how much of the way from
+  /// the start to the target.
+  double get fraction {
+    if (isTarget) {
+      final (start, now, target) = (startValue, latestValue, targetValue);
+      if (completedOn != null) return 1;
+      if (start == null || now == null || target == null) return 0;
+      if (start == target) return 1;
+      return ((start - now) / (start - target)).clamp(0, 1).toDouble();
+    }
+    return targetDays == 0 ? 0 : progress / targetDays;
+  }
 
   /// 0 to 1: how far the current period is.
   double get periodFraction =>
       periodTarget <= 0 ? 0 : math.min(1, periodValue / periodTarget);
 
-  bool get isCompleted => daysDone >= targetDays;
+  bool get isCompleted =>
+      isTarget ? completedOn != null : daysDone >= targetDays;
 
   ChallengeToday get today {
     if (isCompleted) return ChallengeToday.completed;
     if (doneToday) return ChallengeToday.done;
+    // A target goal is checked in on now and then, never "at risk".
+    if (isTarget) return ChallengeToday.notYet;
     return currentStreak > 0 ? ChallengeToday.atRisk : ChallengeToday.notYet;
   }
 }

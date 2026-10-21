@@ -175,4 +175,74 @@ void main() {
     );
     expect(p.currentStreak, 2, reason: 'Thu is the rest day, Tue is free');
   });
+
+  group('target goals', () {
+    ChallengeProgress target(
+      Map<LocalDate, double> values, {
+      required LocalDate today,
+      double goal = 72,
+      double? start,
+      int days = 84,
+    }) => ChallengeProgress.compute(
+      doneDays: values.keys,
+      startDate: monday,
+      today: today,
+      targetDays: days,
+      kind: GoalKind.target,
+      amount: goal,
+      amounts: values,
+      startValue: start,
+    );
+
+    test('progress is how far the latest value is from start to target', () {
+      final p = target(
+        {monday.addDays(3): 79, monday.addDays(10): 76},
+        today: monday.addDays(12),
+        start: 80,
+      );
+      expect(p.isTarget, isTrue);
+      expect(p.latestValue, 76);
+      expect(p.toGo, 4);
+      expect(p.fraction, closeTo(0.5, 1e-9));
+      expect(p.isCompleted, isFalse);
+      expect(p.currentStreak, 0, reason: 'no streaks for a target');
+      expect(p.today, ChallengeToday.notYet, reason: 'never "at risk"');
+    });
+
+    test('without a start value, the last one before the start is used', () {
+      final p = target({
+        monday.addDays(-2): 82,
+        monday.addDays(5): 77,
+      }, today: monday.addDays(6));
+      expect(p.startValue, 82);
+      expect(p.fraction, closeTo(0.5, 1e-9));
+      expect(p.values.keys, [monday.addDays(5)], reason: 'only since start');
+    });
+
+    test('reaching the target completes it, going up works too', () {
+      final down = target(
+        {monday.addDays(20): 71.8},
+        today: monday.addDays(21),
+        start: 80,
+      );
+      expect(down.isCompleted, isTrue);
+      expect(down.completedOn, monday.addDays(20));
+      expect(down.fraction, 1);
+
+      final up = target(
+        {monday.addDays(3): 55},
+        today: monday.addDays(3),
+        start: 50,
+        goal: 60,
+      );
+      expect(up.fraction, closeTo(0.5, 1e-9));
+      expect(up.doneToday, isTrue, reason: 'logged today');
+    });
+
+    test('days left count down to the end of the time given', () {
+      final p = target(const {}, today: monday.addDays(10), start: 80);
+      expect(p.daysLeft, 74);
+      expect(p.fraction, 0);
+    });
+  });
 }

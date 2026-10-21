@@ -49,6 +49,7 @@ class WatchChallenges {
           amountPeriod: challenge.amountPeriod,
           amounts: facts.amounts[challenge.id] ?? const {},
           restDays: challenge.restDays,
+          startValue: challenge.startValue,
         ),
       );
 
@@ -113,7 +114,15 @@ class CreateChallenge {
       amount: draft.amount,
       restDays: draft.restDays,
     ).throwIfInvalid(debugContext: 'CreateChallenge');
+    // A target follows one number field.
+    if (draft.kind == GoalKind.target && draft.amountFieldId == null) {
+      throw const ValidationException([
+        ValidationIssue(ValidationCode.required, target: 'field'),
+      ], debugContext: 'CreateChallenge target field');
+    }
     final now = _clock.nowUtc();
+    final measured =
+        draft.kind == GoalKind.amount || draft.kind == GoalKind.target;
     final id = ChallengeId(_ids.newId());
     await _challenges.create(
       Challenge(
@@ -126,14 +135,13 @@ class CreateChallenge {
         updatedAt: now,
         kind: draft.kind,
         timesPerWeek: draft.kind == GoalKind.weekly ? draft.timesPerWeek : null,
-        amount: draft.kind == GoalKind.amount ? draft.amount : null,
-        amountFieldId: draft.kind == GoalKind.amount
-            ? draft.amountFieldId
-            : null,
+        amount: measured ? draft.amount : null,
+        amountFieldId: measured ? draft.amountFieldId : null,
         amountPeriod: draft.kind == GoalKind.amount
             ? draft.amountPeriod ?? GoalPeriod.day
             : null,
         restDays: draft.kind == GoalKind.daily ? draft.restDays : 0,
+        startValue: draft.kind == GoalKind.target ? draft.startValue : null,
       ),
     );
     return id;
@@ -156,6 +164,7 @@ class UpdateChallenge {
     int? timesPerWeek,
     double? amount,
     int? restDays,
+    double? startValue,
   }) async {
     final challenge = await _challenges.getChallenge(id);
     if (challenge == null) {
@@ -168,10 +177,16 @@ class UpdateChallenge {
       timesPerWeek: challenge.kind == GoalKind.weekly && timesPerWeek != null
           ? () => timesPerWeek
           : null,
-      amount: challenge.kind == GoalKind.amount && amount != null
+      amount:
+          (challenge.kind == GoalKind.amount ||
+                  challenge.kind == GoalKind.target) &&
+              amount != null
           ? () => amount
           : null,
       restDays: challenge.kind == GoalKind.daily ? restDays : null,
+      startValue: challenge.kind == GoalKind.target && startValue != null
+          ? () => startValue
+          : null,
     );
     ChallengeValidator.validate(
       title: title,

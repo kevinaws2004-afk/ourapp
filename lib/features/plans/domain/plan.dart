@@ -174,6 +174,22 @@ class PlanDraft {
   final DateTime? plannedStartAt;
   final DateTime? plannedEndAt;
   final int? plannedDurationMs;
+
+  /// The same draft at another time: [start] and [end] (both null for
+  /// Anytime), or a length without an end ([duration]).
+  PlanDraft copyWithTime({
+    required DateTime? start,
+    required DateTime? end,
+    int? duration,
+  }) => PlanDraft(
+    planDate: planDate,
+    title: title,
+    activityTypeId: activityTypeId,
+    notes: notes,
+    plannedStartAt: start,
+    plannedEndAt: start == null ? null : end,
+    plannedDurationMs: end == null ? duration : null,
+  );
 }
 
 /// Default start of a record fulfilling [plan] (ADR-030): its planned start

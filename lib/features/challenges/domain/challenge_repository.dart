@@ -21,7 +21,8 @@ abstract interface class ChallengeRepository {
 
   /// How much was done per day for each amount goal: milliseconds of
   /// recorded time, or the total of its number field (canonical unit) or
-  /// duration field (ms). Only days with something count.
+  /// duration field (ms). Only days with something count. Target goals:
+  /// the value recorded each day (the day's last), any date.
   Stream<Map<ChallengeId, Map<LocalDate, double>>> watchAmounts();
 
   Future<void> create(Challenge challenge);

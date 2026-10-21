@@ -130,6 +130,9 @@ abstract final class AppRoutes {
   /// The active focus session (full screen, ADR-031).
   static const focus = '/focus';
 
+  /// The timer in focus mode: the phone stays on it until it's ended.
+  static const focusMode = '/focus?mode=lock';
+
   /// Debug builds only.
   static const tokenShowcase = '/dev/tokens';
 }
@@ -310,6 +313,8 @@ final routerProvider = Provider<GoRouter>((ref) {
                   chooser: chooser(context),
                   onOpenMe: () => context.go(AppRoutes.me),
                   onOpenNotes: () => unawaited(context.push(AppRoutes.notes)),
+                  onOpenFocusMode: () =>
+                      unawaited(context.push(AppRoutes.focusMode)),
                   onOpenDayReport: (date) =>
                       unawaited(context.push(AppRoutes.dayReport(date))),
                   onStartActivity: (type) => unawaited(
@@ -534,7 +539,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/item/log/:logId',
         builder: (context, state) => ItemScreen(
           args: ItemArgs.log(ActivityLogId(state.pathParameters['logId']!)),
-          onOpenTimer: () => unawaited(context.push(AppRoutes.focus)),
+          onOpenTimer: () => unawaited(context.push(AppRoutes.focusMode)),
           onEditFields: (typeId) =>
               context.push<ActivityTypeId>(AppRoutes.editActivity(typeId)),
           onOpenItem: (id) => unawaited(context.push(AppRoutes.item(id))),
@@ -545,7 +550,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/item/:planId',
         builder: (context, state) => ItemScreen(
           args: ItemArgs.plan(PlanId(state.pathParameters['planId']!)),
-          onOpenTimer: () => unawaited(context.push(AppRoutes.focus)),
+          onOpenTimer: () => unawaited(context.push(AppRoutes.focusMode)),
           onEditFields: (typeId) =>
               context.push<ActivityTypeId>(AppRoutes.editActivity(typeId)),
           onOpenItem: (id) => unawaited(context.push(AppRoutes.item(id))),
@@ -554,7 +559,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         parentNavigatorKey: rootNavigatorKey,
         path: AppRoutes.focus,
-        builder: (context, state) => const FocusScreen(),
+        builder: (context, state) =>
+            FocusScreen(focusMode: state.uri.queryParameters['mode'] == 'lock'),
       ),
       if (devToolsEnabled)
         GoRoute(

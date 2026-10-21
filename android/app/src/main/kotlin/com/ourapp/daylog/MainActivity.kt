@@ -51,6 +51,35 @@ class MainActivity : FlutterFragmentActivity() {
                     else -> result.notImplemented()
                 }
             }
+        // Focus mode: the phone stays on the timer (Android's app pinning,
+        // which the person can always leave), with the screen kept on.
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "daylog/focusmode")
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "start" -> {
+                        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                        try {
+                            startLockTask()
+                            result.success(true)
+                        } catch (_: Exception) {
+                            result.success(false)
+                        }
+                    }
+                    "stop" -> {
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                        try {
+                            stopLockTask()
+                        } catch (_: Exception) {
+                        }
+                        result.success(null)
+                    }
+                    "isPinned" -> {
+                        val am = getSystemService(Context.ACTIVITY_SERVICE) as android.app.ActivityManager
+                        result.success(am.lockTaskModeState != android.app.ActivityManager.LOCK_TASK_MODE_NONE)
+                    }
+                    else -> result.notImplemented()
+                }
+            }
         // With app lock on, the recents thumbnail mustn't show your day.
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "daylog/privacy")
             .setMethodCallHandler { call, result ->

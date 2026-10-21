@@ -47,7 +47,8 @@ class DayItems extends ConsumerWidget {
   /// "3 done · 1 h 20 min" above the items; Today shows it in its hero.
   final bool showSummary;
 
-  /// Today's timeline (ADR-046): a now line, no dragging.
+  /// Today's timeline (ADR-046): a now line between what's passed and
+  /// what's next.
   final bool timeline;
 
   /// Opens a plan's item screen.
@@ -153,7 +154,7 @@ class _Entries extends StatelessWidget {
           entries: entries,
           onOpenItem: (item) => onOpenItem(item.plan.id),
           onOpenRecord: onOpenRecord,
-          reorderable: !timeline,
+          reorderable: true,
           nowLine: timeline,
           dragToDays: dragToDays,
         ),

@@ -16,6 +16,9 @@ import 'package:daylog/features/challenges/domain/challenge_use_cases.dart';
 import 'package:daylog/features/plans/data/db_plan_repository.dart';
 import 'package:daylog/features/plans/domain/plan.dart';
 import 'package:daylog/features/plans/domain/plan_use_cases.dart';
+import 'package:daylog/features/activity_logs/domain/field_value.dart';
+import 'package:daylog/features/activity_types/domain/field_config.dart';
+import 'package:daylog/features/activity_types/domain/field_type.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/fake_clock.dart';
@@ -392,5 +395,58 @@ void main() {
         expect(p.progress, 1);
       },
     );
+  });
+
+  test('a target goal follows the latest value of its field: the day\'s '
+      'last weigh-in, from the start value to the target', () async {
+    final id = await CreateActivityType(types, ids)(
+      const ActivityTypeDefinition(
+        name: 'Weight loss',
+        iconId: 'sparkle',
+        colorKey: 'rose',
+        fields: [
+          FieldDefinition(
+            name: 'Weight',
+            type: FieldType.number,
+            config: NumberFieldConfig(),
+          ),
+        ],
+      ),
+    );
+    final weight = (await types.getType(id))!.fields.single.id;
+    Future<void> weigh(LocalDate day, int hour, double kg) => logActivity(
+      id,
+      ActivityLogDraft(
+        startedAt: DateTime.utc(day.year, day.month, day.day, hour),
+        values: {weight: NumberValue(kg)},
+      ),
+    );
+    await createChallenge(
+      ChallengeDraft(
+        activityTypeId: id,
+        title: 'Weight to 72',
+        startDate: LocalDate(2026, 9, 10),
+        targetDays: 84,
+        kind: GoalKind.target,
+        amount: 72,
+        amountFieldId: weight,
+        startValue: 80,
+      ),
+    );
+    await weigh(LocalDate(2026, 9, 15), 8, 78);
+    // Two on one day: the evening one is where you are.
+    await weigh(LocalDate(2026, 9, 20), 8, 77);
+    await weigh(LocalDate(2026, 9, 20), 21, 76);
+
+    final view = await only();
+    expect(view.challenge.startValue, 80);
+    final p = view.progress;
+    expect(p.latestValue, 76);
+    expect(p.values[LocalDate(2026, 9, 20)], 76, reason: 'not summed');
+    expect(p.fraction, closeTo(0.5, 1e-9));
+    expect(p.isCompleted, isFalse);
+
+    await weigh(LocalDate(2026, 9, 22), 8, 71);
+    expect((await only()).progress.isCompleted, isTrue);
   });
 }

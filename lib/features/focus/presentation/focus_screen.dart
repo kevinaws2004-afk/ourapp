@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/design/app_icons.dart';
+import '../../../core/platform/focus_mode.dart';
 import '../../../core/design/tokens/sizes.dart';
 import '../../../core/design/context_ext.dart';
 import '../../../core/design/tokens/spacing.dart';
@@ -50,33 +54,152 @@ String sessionLine(
 /// session from SQLite, so it shows the right time after the app was killed.
 /// Finish records the session into its item (ADR-035), with the session
 /// summary, then closes.
-class FocusScreen extends ConsumerWidget {
-  const FocusScreen({super.key});
+///
+/// In **focus mode** ([focusMode]) the phone stays on this screen: the app
+/// is pinned (Android's app pinning), the system bars are hidden, the
+/// screen stays on, and Back asks first. **End focus mode** unpins (the
+/// timer keeps running); Finish and Discard end it too.
+class FocusScreen extends ConsumerStatefulWidget {
+  const FocusScreen({super.key, this.focusMode = false});
+
+  final bool focusMode;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<FocusScreen> createState() => _FocusScreenState();
+}
+
+class _FocusScreenState extends ConsumerState<FocusScreen> {
+  static const _platform = FocusModePlatform();
+  late bool _locked = widget.focusMode;
+  bool _pinned = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_locked) unawaited(_lock());
+  }
+
+  Future<void> _lock() async {
+    unawaited(
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky),
+    );
+    final pinned = await _platform.start();
+    if (mounted) setState(() => _pinned = pinned);
+  }
+
+  Future<void> _unlock() async {
+    if (!_locked) return;
+    _locked = false;
+    await _platform.stop();
+    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    if (!mounted) return;
+    setState(() => _pinned = false);
+    // Let Back through (PopScope) before anything closes this screen.
+    await WidgetsBinding.instance.endOfFrame;
+  }
+
+  @override
+  void dispose() {
+    if (_locked) {
+      unawaited(_platform.stop());
+      unawaited(SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge));
+    }
+    super.dispose();
+  }
+
+  /// Asks, then leaves focus mode (and this screen).
+  Future<void> _end() async {
     final l10n = AppLocalizations.of(context);
-    return Scaffold(
-      appBar: AppBar(),
-      body: AsyncValueView<FocusSession?>(
-        value: ref.watch(activeFocusSessionProvider),
-        onRetry: () => ref.invalidate(activeFocusSessionProvider),
-        data: (session) => session == null
-            ? AppEmptyState(
-                icon: AppIcons.timer,
-                title: l10n.focusNoneTitle,
-                message: l10n.focusNoneMessage,
-              )
-            : _FocusBody(session: session),
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.focusModeEndTitle),
+        content: Text(l10n.focusModeEndBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l10n.focusModeEnd),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.focusModeKeepGoing),
+          ),
+        ],
+      ),
+    );
+    if (ok != true || !mounted) return;
+    await _unlock();
+    if (mounted) Navigator.of(context).maybePop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final session = ref.watch(activeFocusSessionProvider);
+    // Finished or discarded (here or from the notification): unlock.
+    if (_locked && session.hasValue && session.value == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => unawaited(_unlock()));
+    }
+    return PopScope(
+      canPop: !_locked,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) unawaited(_end());
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: !_locked,
+          title: _locked
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      AppIcons.lock,
+                      size: 18,
+                      color: context.colors.brandPrimary,
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Flexible(
+                      child: Text(
+                        _pinned
+                            ? l10n.focusModeBadge
+                            : l10n.focusModeBadgeUnpinned,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.textStyles.labelLarge?.copyWith(
+                          color: context.colors.brandPrimary,
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : null,
+          actions: [
+            if (_locked)
+              TextButton(onPressed: _end, child: Text(l10n.focusModeEnd)),
+          ],
+        ),
+        body: AsyncValueView<FocusSession?>(
+          value: session,
+          onRetry: () => ref.invalidate(activeFocusSessionProvider),
+          data: (session) => session == null
+              ? AppEmptyState(
+                  icon: AppIcons.timer,
+                  title: l10n.focusNoneTitle,
+                  message: l10n.focusNoneMessage,
+                )
+              : _FocusBody(session: session, onLeave: _unlock),
+        ),
       ),
     );
   }
 }
 
 class _FocusBody extends ConsumerWidget {
-  const _FocusBody({required this.session});
+  const _FocusBody({required this.session, required this.onLeave});
 
   final FocusSession session;
+
+  /// Ends focus mode before the screen closes (Finish, Discard).
+  final Future<void> Function() onLeave;
 
   Future<void> _run(
     BuildContext context,
@@ -117,6 +240,7 @@ class _FocusBody extends ConsumerWidget {
       context,
       () => ref.read(discardFocusSessionProvider)(session.id),
     );
+    await onLeave();
     if (context.mounted) Navigator.of(context).maybePop();
   }
 
@@ -197,6 +321,8 @@ class _FocusBody extends ConsumerWidget {
               onPressed: () => _run(context, () async {
                 // Freeze the time while the user fills in the record.
                 await ref.read(pauseFocusSessionProvider)(session.id);
+                if (!context.mounted) return;
+                await onLeave();
                 if (!context.mounted) return;
                 await PlanActions(
                   context,

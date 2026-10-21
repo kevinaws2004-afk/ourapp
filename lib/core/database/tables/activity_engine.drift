@@ -489,14 +489,18 @@ CREATE TABLE challenges (
   -- v11: kinds of goal (ADR-047). 'daily': done every day. 'weekly': done
   -- on times_per_week days of each week. 'amount': at least `amount` of
   -- time (ms) or of a number field per day or week.
-  kind             TEXT NOT NULL DEFAULT 'daily' CHECK (kind IN ('daily', 'weekly', 'amount')),
+  -- v12: 'target': reach `amount` on a number field (a weight to get down
+  -- to), from `start_value`; progress is the latest value recorded.
+  kind             TEXT NOT NULL DEFAULT 'daily' CHECK (kind IN ('daily', 'weekly', 'amount', 'target')),
   times_per_week   INTEGER CHECK (times_per_week IS NULL OR times_per_week BETWEEN 1 AND 7),
   amount           REAL CHECK (amount IS NULL OR amount > 0),
   -- Null with an amount: recorded time.
   amount_field_id  INTEGER REFERENCES activity_fields (internal_id) ON DELETE RESTRICT,
   amount_period    TEXT CHECK (amount_period IS NULL OR amount_period IN ('day', 'week')),
   -- Daily goals: missed days per week that don't break the streak.
-  rest_days        INTEGER NOT NULL DEFAULT 0 CHECK (rest_days BETWEEN 0 AND 2)
+  rest_days        INTEGER NOT NULL DEFAULT 0 CHECK (rest_days BETWEEN 0 AND 2),
+  -- v12, target goals: where it started (the field's canonical unit).
+  start_value      REAL
 ) STRICT AS ChallengeRow;
 
 -- The active challenges of an activity (done-day query, Today).

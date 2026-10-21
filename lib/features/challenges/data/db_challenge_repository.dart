@@ -56,6 +56,7 @@ class DbChallengeRepository implements ChallengeRepository {
       amountFieldId: field == null ? null : ActivityFieldId(field.publicId),
       amountPeriod: GoalPeriod.fromStorageKey(row.amountPeriod),
       restDays: row.restDays,
+      startValue: row.startValue,
     );
   }
 
@@ -179,6 +180,31 @@ class DbChallengeRepository implements ChallengeRepository {
           () => {},
         )[LocalDate.parse(r.read<String>('d'))] = value;
       }
+      // Target goals: the value recorded each day (the day's last, so a
+      // morning and an evening weigh-in don't add up), any date: one from
+      // before the start is where it started.
+      final targets = await _db
+          .customSelect(
+            'SELECT c.public_id AS id, l.local_date AS d, '
+            'v.normalized_value AS v '
+            'FROM challenges c '
+            'JOIN activity_logs l ON l.activity_type_id = c.activity_type_id '
+            'JOIN log_values v ON v.log_id = l.internal_id '
+            'AND v.field_id = c.amount_field_id '
+            "WHERE c.kind = 'target' AND c.deleted_at IS NULL "
+            'AND l.deleted_at IS NULL AND v.normalized_value IS NOT NULL '
+            'ORDER BY l.started_at, l.internal_id',
+            readsFrom: {_db.challenges, _db.activityLogs, _db.logValues},
+          )
+          .get();
+      for (final r in targets) {
+        amounts.putIfAbsent(
+          ChallengeId(r.read<String>('id')),
+          () => {},
+        )[LocalDate.parse(r.read<String>('d'))] = r.read<double>(
+          'v',
+        );
+      }
       return amounts;
     }),
   );
@@ -227,6 +253,7 @@ class DbChallengeRepository implements ChallengeRepository {
                 ),
                 amountPeriod: Value(challenge.amountPeriod?.storageKey),
                 restDays: Value(challenge.restDays),
+                startValue: Value(challenge.startValue),
               ),
             );
       });
@@ -249,6 +276,7 @@ class DbChallengeRepository implements ChallengeRepository {
                 timesPerWeek: Value(challenge.timesPerWeek),
                 amount: Value(challenge.amount),
                 restDays: Value(challenge.restDays),
+                startValue: Value(challenge.startValue),
               ),
             );
     if (updated == 0) {

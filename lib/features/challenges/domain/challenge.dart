@@ -14,7 +14,12 @@ enum GoalKind {
 
   /// Do at least [Challenge.amount] of time or of a number field per day or
   /// week.
-  amount('amount');
+  amount('amount'),
+
+  /// Reach [Challenge.amount] on a number field (down to 72 kg, up to
+  /// 100 kg), from [Challenge.startValue], within [Challenge.targetDays]
+  /// days. Recorded whenever you like: the latest value is where you are.
+  target('target');
 
   const GoalKind(this.storageKey);
 
@@ -39,7 +44,7 @@ enum GoalPeriod {
 
 /// A goal for one activity (ADR-044, ADR-047): "every day for 30 days",
 /// "3 times a week for 8 weeks", "20 pages a day for 30 days", "10 h a week
-/// for 12 weeks".
+/// for 12 weeks", "from 80 kg down to 72 kg in 12 weeks".
 ///
 /// A challenge only points at an Activity Type; recording that activity is
 /// what counts. Nothing about the days is stored here: progress and
@@ -60,6 +65,7 @@ class Challenge {
     this.amountFieldId,
     this.amountPeriod,
     this.restDays = 0,
+    this.startValue,
   });
 
   static const maxTitleLength = 60;
@@ -89,11 +95,16 @@ class Challenge {
   final int? timesPerWeek;
 
   /// Amount goals: the target per period, in milliseconds for time or in
-  /// the field's canonical unit (ADR-020).
+  /// the field's canonical unit (ADR-020). Target goals: the value to
+  /// reach.
   final double? amount;
 
   /// Amount goals: the number field summed; null for recorded time.
+  /// Target goals: the number field followed.
   final ActivityFieldId? amountFieldId;
+
+  /// Target goals: where it started, in the field's canonical unit.
+  final double? startValue;
 
   /// Amount goals: per day or per week.
   final GoalPeriod? amountPeriod;
@@ -105,6 +116,7 @@ class Challenge {
     GoalKind.daily => GoalPeriod.day,
     GoalKind.weekly => GoalPeriod.week,
     GoalKind.amount => amountPeriod ?? GoalPeriod.day,
+    GoalKind.target => GoalPeriod.day,
   };
 
   Challenge copyWith({
@@ -115,6 +127,7 @@ class Challenge {
     int? Function()? timesPerWeek,
     double? Function()? amount,
     int? restDays,
+    double? Function()? startValue,
   }) => Challenge(
     id: id,
     activityTypeId: activityTypeId,
@@ -129,6 +142,7 @@ class Challenge {
     amountFieldId: amountFieldId,
     amountPeriod: amountPeriod,
     restDays: restDays ?? this.restDays,
+    startValue: startValue != null ? startValue() : this.startValue,
   );
 }
 
@@ -145,6 +159,7 @@ class ChallengeDraft {
     this.amountFieldId,
     this.amountPeriod,
     this.restDays = 0,
+    this.startValue,
   });
 
   final ActivityTypeId activityTypeId;
@@ -157,4 +172,5 @@ class ChallengeDraft {
   final ActivityFieldId? amountFieldId;
   final GoalPeriod? amountPeriod;
   final int restDays;
+  final double? startValue;
 }

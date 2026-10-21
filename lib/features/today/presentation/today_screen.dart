@@ -59,7 +59,11 @@ class TodayScreen extends ConsumerWidget {
     required this.onStartActivity,
     required this.onOpenNotes,
     required this.onOpenDayReport,
+    this.onOpenFocusMode,
   });
+
+  /// Opens the running timer in focus mode.
+  final VoidCallback? onOpenFocusMode;
 
   /// Opens Notes.
   final VoidCallback onOpenNotes;
@@ -232,6 +236,11 @@ class TodayScreen extends ConsumerWidget {
                     item: next,
                     onOpenItem: onOpenItem,
                     onStart: (item) => unawaited(start(item)),
+                    onFocusMode: onOpenFocusMode == null
+                        ? null
+                        : (item) => unawaited(
+                            _focusMode(context, ref, item, onOpenFocusMode!),
+                          ),
                   ),
                 ],
                 if (overview == null)
@@ -285,6 +294,32 @@ class TodayScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// Focus mode on [item]: starts its timer unless it's the one running,
+  /// then opens the timer locked.
+  Future<void> _focusMode(
+    BuildContext context,
+    WidgetRef ref,
+    PlannedItem item,
+    VoidCallback open,
+  ) async {
+    final l10n = AppLocalizations.of(context);
+    final running = await ref.read(focusSessionRepositoryProvider).getActive();
+    if (running?.planId != item.plan.id) {
+      try {
+        final type =
+            item.type?.id ??
+            await ref.read(ensureItemActivityProvider)(item.plan.id);
+        await ref.read(startFocusSessionProvider)(type, planId: item.plan.id);
+      } catch (error) {
+        if (context.mounted) {
+          showMessageSnackBar(context, errorMessage(l10n, error));
+        }
+        return;
+      }
+    }
+    open();
   }
 
   /// Starts [item]'s timer, then opens it running (ADR-046).

@@ -8120,7 +8120,7 @@ class Challenges extends Table with TableInfo<Challenges, ChallengeRow> {
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    $customConstraints: 'NOT NULL DEFAULT \'daily\' CHECK (kind IN (\'daily\', \'weekly\', \'amount\'))',
+    $customConstraints: 'NOT NULL DEFAULT \'daily\' CHECK (kind IN (\'daily\', \'weekly\', \'amount\', \'target\'))',
     defaultValue: const CustomExpression('\'daily\''),
   );
   static const VerificationMeta _timesPerWeekMeta = const VerificationMeta(
@@ -8180,6 +8180,17 @@ class Challenges extends Table with TableInfo<Challenges, ChallengeRow> {
     $customConstraints: 'NOT NULL DEFAULT 0 CHECK (rest_days BETWEEN 0 AND 2)',
     defaultValue: const CustomExpression('0'),
   );
+  static const VerificationMeta _startValueMeta = const VerificationMeta(
+    'startValue',
+  );
+  late final GeneratedColumn<double> startValue = GeneratedColumn<double>(
+    'start_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    $customConstraints: '',
+  );
   @override
   List<GeneratedColumn> get $columns => [
     internalId,
@@ -8197,6 +8208,7 @@ class Challenges extends Table with TableInfo<Challenges, ChallengeRow> {
     amountFieldId,
     amountPeriod,
     restDays,
+    startValue,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -8326,6 +8338,12 @@ class Challenges extends Table with TableInfo<Challenges, ChallengeRow> {
         restDays.isAcceptableOrUnknown(data['rest_days']!, _restDaysMeta),
       );
     }
+    if (data.containsKey('start_value')) {
+      context.handle(
+        _startValueMeta,
+        startValue.isAcceptableOrUnknown(data['start_value']!, _startValueMeta),
+      );
+    }
     return context;
   }
 
@@ -8395,6 +8413,10 @@ class Challenges extends Table with TableInfo<Challenges, ChallengeRow> {
         DriftSqlType.int,
         data['${effectivePrefix}rest_days'],
       )!,
+      startValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}start_value'],
+      ),
     );
   }
 
@@ -8427,6 +8449,8 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
   /// v11: kinds of goal (ADR-047). 'daily': done every day. 'weekly': done
   /// on times_per_week days of each week. 'amount': at least `amount` of
   /// time (ms) or of a number field per day or week.
+  /// v12: 'target': reach `amount` on a number field (a weight to get down
+  /// to), from `start_value`; progress is the latest value recorded.
   final String kind;
   final int? timesPerWeek;
   final double? amount;
@@ -8437,6 +8461,9 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
 
   /// Daily goals: missed days per week that don't break the streak.
   final int restDays;
+
+  /// v12, target goals: where it started (the field's canonical unit).
+  final double? startValue;
   const ChallengeRow({
     required this.internalId,
     required this.publicId,
@@ -8453,6 +8480,7 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
     this.amountFieldId,
     this.amountPeriod,
     required this.restDays,
+    this.startValue,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -8482,6 +8510,9 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
       map['amount_period'] = Variable<String>(amountPeriod);
     }
     map['rest_days'] = Variable<int>(restDays);
+    if (!nullToAbsent || startValue != null) {
+      map['start_value'] = Variable<double>(startValue);
+    }
     return map;
   }
 
@@ -8512,6 +8543,9 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
           ? const Value.absent()
           : Value(amountPeriod),
       restDays: Value(restDays),
+      startValue: startValue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startValue),
     );
   }
 
@@ -8536,6 +8570,7 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
       amountFieldId: serializer.fromJson<int?>(json['amount_field_id']),
       amountPeriod: serializer.fromJson<String?>(json['amount_period']),
       restDays: serializer.fromJson<int>(json['rest_days']),
+      startValue: serializer.fromJson<double?>(json['start_value']),
     );
   }
   @override
@@ -8557,6 +8592,7 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
       'amount_field_id': serializer.toJson<int?>(amountFieldId),
       'amount_period': serializer.toJson<String?>(amountPeriod),
       'rest_days': serializer.toJson<int>(restDays),
+      'start_value': serializer.toJson<double?>(startValue),
     };
   }
 
@@ -8576,6 +8612,7 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
     Value<int?> amountFieldId = const Value.absent(),
     Value<String?> amountPeriod = const Value.absent(),
     int? restDays,
+    Value<double?> startValue = const Value.absent(),
   }) => ChallengeRow(
     internalId: internalId ?? this.internalId,
     publicId: publicId ?? this.publicId,
@@ -8594,6 +8631,7 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
         : this.amountFieldId,
     amountPeriod: amountPeriod.present ? amountPeriod.value : this.amountPeriod,
     restDays: restDays ?? this.restDays,
+    startValue: startValue.present ? startValue.value : this.startValue,
   );
   ChallengeRow copyWithCompanion(ChallengesCompanion data) {
     return ChallengeRow(
@@ -8624,6 +8662,9 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
           ? data.amountPeriod.value
           : this.amountPeriod,
       restDays: data.restDays.present ? data.restDays.value : this.restDays,
+      startValue: data.startValue.present
+          ? data.startValue.value
+          : this.startValue,
     );
   }
 
@@ -8644,7 +8685,8 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
           ..write('amount: $amount, ')
           ..write('amountFieldId: $amountFieldId, ')
           ..write('amountPeriod: $amountPeriod, ')
-          ..write('restDays: $restDays')
+          ..write('restDays: $restDays, ')
+          ..write('startValue: $startValue')
           ..write(')'))
         .toString();
   }
@@ -8666,6 +8708,7 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
     amountFieldId,
     amountPeriod,
     restDays,
+    startValue,
   );
   @override
   bool operator ==(Object other) =>
@@ -8685,7 +8728,8 @@ class ChallengeRow extends DataClass implements Insertable<ChallengeRow> {
           other.amount == this.amount &&
           other.amountFieldId == this.amountFieldId &&
           other.amountPeriod == this.amountPeriod &&
-          other.restDays == this.restDays);
+          other.restDays == this.restDays &&
+          other.startValue == this.startValue);
 }
 
 class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
@@ -8704,6 +8748,7 @@ class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
   final Value<int?> amountFieldId;
   final Value<String?> amountPeriod;
   final Value<int> restDays;
+  final Value<double?> startValue;
   const ChallengesCompanion({
     this.internalId = const Value.absent(),
     this.publicId = const Value.absent(),
@@ -8720,6 +8765,7 @@ class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
     this.amountFieldId = const Value.absent(),
     this.amountPeriod = const Value.absent(),
     this.restDays = const Value.absent(),
+    this.startValue = const Value.absent(),
   });
   ChallengesCompanion.insert({
     this.internalId = const Value.absent(),
@@ -8737,6 +8783,7 @@ class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
     this.amountFieldId = const Value.absent(),
     this.amountPeriod = const Value.absent(),
     this.restDays = const Value.absent(),
+    this.startValue = const Value.absent(),
   }) : publicId = Value(publicId),
        activityTypeId = Value(activityTypeId),
        title = Value(title),
@@ -8760,6 +8807,7 @@ class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
     Expression<int>? amountFieldId,
     Expression<String>? amountPeriod,
     Expression<int>? restDays,
+    Expression<double>? startValue,
   }) {
     return RawValuesInsertable({
       if (internalId != null) 'internal_id': internalId,
@@ -8777,6 +8825,7 @@ class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
       if (amountFieldId != null) 'amount_field_id': amountFieldId,
       if (amountPeriod != null) 'amount_period': amountPeriod,
       if (restDays != null) 'rest_days': restDays,
+      if (startValue != null) 'start_value': startValue,
     });
   }
 
@@ -8796,6 +8845,7 @@ class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
     Value<int?>? amountFieldId,
     Value<String?>? amountPeriod,
     Value<int>? restDays,
+    Value<double?>? startValue,
   }) {
     return ChallengesCompanion(
       internalId: internalId ?? this.internalId,
@@ -8813,6 +8863,7 @@ class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
       amountFieldId: amountFieldId ?? this.amountFieldId,
       amountPeriod: amountPeriod ?? this.amountPeriod,
       restDays: restDays ?? this.restDays,
+      startValue: startValue ?? this.startValue,
     );
   }
 
@@ -8864,6 +8915,9 @@ class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
     if (restDays.present) {
       map['rest_days'] = Variable<int>(restDays.value);
     }
+    if (startValue.present) {
+      map['start_value'] = Variable<double>(startValue.value);
+    }
     return map;
   }
 
@@ -8884,7 +8938,8 @@ class ChallengesCompanion extends UpdateCompanion<ChallengeRow> {
           ..write('amount: $amount, ')
           ..write('amountFieldId: $amountFieldId, ')
           ..write('amountPeriod: $amountPeriod, ')
-          ..write('restDays: $restDays')
+          ..write('restDays: $restDays, ')
+          ..write('startValue: $startValue')
           ..write(')'))
         .toString();
   }
@@ -16424,6 +16479,7 @@ typedef $ChallengesCreateCompanionBuilder = ChallengesCompanion Function({
   Value<int?> amountFieldId,
   Value<String?> amountPeriod,
   Value<int> restDays,
+  Value<double?> startValue,
 });
 typedef $ChallengesUpdateCompanionBuilder = ChallengesCompanion Function({
   Value<int> internalId,
@@ -16441,6 +16497,7 @@ typedef $ChallengesUpdateCompanionBuilder = ChallengesCompanion Function({
   Value<int?> amountFieldId,
   Value<String?> amountPeriod,
   Value<int> restDays,
+  Value<double?> startValue,
 });
 
 final class $ChallengesReferences
@@ -16554,6 +16611,11 @@ class $ChallengesFilterComposer extends Composer<_$AppDatabase, Challenges> {
 
   ColumnFilters<int> get restDays => $composableBuilder(
     column: $table.restDays,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get startValue => $composableBuilder(
+    column: $table.startValue,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -16677,6 +16739,11 @@ class $ChallengesOrderingComposer extends Composer<_$AppDatabase, Challenges> {
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get startValue => $composableBuilder(
+    column: $table.startValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $ActivityTypesOrderingComposer get activityTypeId {
     final $ActivityTypesOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -16780,6 +16847,11 @@ class $ChallengesAnnotationComposer
   GeneratedColumn<int> get restDays =>
       $composableBuilder(column: $table.restDays, builder: (column) => column);
 
+  GeneratedColumn<double> get startValue => $composableBuilder(
+    column: $table.startValue,
+    builder: (column) => column,
+  );
+
   $ActivityTypesAnnotationComposer get activityTypeId {
     final $ActivityTypesAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -16870,6 +16942,7 @@ class $ChallengesTableManager
                 Value<int?> amountFieldId = const Value.absent(),
                 Value<String?> amountPeriod = const Value.absent(),
                 Value<int> restDays = const Value.absent(),
+                Value<double?> startValue = const Value.absent(),
               }) => ChallengesCompanion(
                 internalId: internalId,
                 publicId: publicId,
@@ -16886,6 +16959,7 @@ class $ChallengesTableManager
                 amountFieldId: amountFieldId,
                 amountPeriod: amountPeriod,
                 restDays: restDays,
+                startValue: startValue,
               ),
           createCompanionCallback:
               ({
@@ -16904,6 +16978,7 @@ class $ChallengesTableManager
                 Value<int?> amountFieldId = const Value.absent(),
                 Value<String?> amountPeriod = const Value.absent(),
                 Value<int> restDays = const Value.absent(),
+                Value<double?> startValue = const Value.absent(),
               }) => ChallengesCompanion.insert(
                 internalId: internalId,
                 publicId: publicId,
@@ -16920,6 +16995,7 @@ class $ChallengesTableManager
                 amountFieldId: amountFieldId,
                 amountPeriod: amountPeriod,
                 restDays: restDays,
+                startValue: startValue,
               ),
           withReferenceMapper: (p0) => p0
               .map(

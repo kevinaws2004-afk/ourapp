@@ -6,11 +6,14 @@ enum AppearanceMode {
   light,
   dark;
 
+  /// Light until the person chooses otherwise.
+  static const fallback = light;
+
   static AppearanceMode fromName(Object? name) {
     for (final m in values) {
       if (m.name == name) return m;
     }
-    return system;
+    return fallback;
   }
 }
 
@@ -20,7 +23,7 @@ class PreferencesSnapshot {
   const PreferencesSnapshot({
     required this.theme,
     required this.onboardingCompleted,
-    this.appearance = AppearanceMode.system,
+    this.appearance = AppearanceMode.fallback,
     this.name = '',
     this.trueBlack = false,
   });

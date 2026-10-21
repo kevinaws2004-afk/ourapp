@@ -627,6 +627,38 @@ class _ItemActions extends ConsumerWidget {
                     ? _startAfterOther(context, ref, plan, session)
                     : _startTimer(context, ref, plan),
               ),
+              const SizedBox(height: AppSpacing.sm),
+              // Start, straight into focus mode: the phone stays on the
+              // timer until it's ended.
+              AppButton(
+                label: l10n.focusModeAction,
+                icon: AppIcons.lock,
+                variant: AppButtonVariant.secondary,
+                expand: true,
+                onPressed: () async {
+                  if (otherRunning) {
+                    await _startAfterOther(context, ref, plan, session);
+                  } else {
+                    await _startTimer(context, ref, plan);
+                  }
+                  // Only once its timer really runs (it may have failed,
+                  // or the other one was kept).
+                  final running = await ref
+                      .read(focusSessionRepositoryProvider)
+                      .getActive();
+                  if (running?.planId == plan.id) onOpenTimer();
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.xxs),
+                child: Text(
+                  l10n.focusModeHint,
+                  textAlign: TextAlign.center,
+                  style: context.textStyles.bodySmall?.copyWith(
+                    color: c.textTertiary,
+                  ),
+                ),
+              ),
               const SizedBox(height: AppSpacing.xs),
               AppButton(
                 label: l10n.itemDone,
@@ -1067,11 +1099,11 @@ class _ItemTimer extends ConsumerWidget {
               ),
             ],
           ),
-        // Labelled: a bare ⏱ didn't say what it opens.
+        // Focus mode: the timer full screen, the phone kept on it.
         Center(
           child: TextButton.icon(
-            icon: const Icon(AppIcons.timer, size: 18),
-            label: Text(l10n.itemTimerFullScreen),
+            icon: const Icon(AppIcons.lock, size: 18),
+            label: Text(l10n.focusModeAction),
             onPressed: onOpenTimer,
           ),
         ),

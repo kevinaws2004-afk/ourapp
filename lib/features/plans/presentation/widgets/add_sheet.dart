@@ -11,33 +11,33 @@ import '../../../../core/time/clock_provider.dart';
 import '../../../../core/time/local_date.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../shared/errors/error_copy.dart';
+import '../../../../shared/widgets/activity_badge.dart';
 import '../../../../shared/widgets/app_button.dart';
+import '../../../../shared/widgets/section_header.dart';
 import '../../../../shared/widgets/state_views.dart';
 import '../../../activity_types/domain/activity_ids.dart';
 import '../../../activity_types/domain/activity_type.dart';
 import '../../../activity_types/domain/activity_type_definition.dart';
+import '../../../activity_types/domain/activity_type_use_cases.dart';
 import '../../../activity_types/presentation/activity_type_providers.dart';
 import '../../../activity_types/presentation/built_in_activities.dart';
-import '../../../activity_types/presentation/starter_activities.dart';
 import '../../../notifications/presentation/reminder_prompt.dart';
 import '../../../notifications/domain/plan_reminder.dart';
 import '../../domain/plan.dart';
 import '../../domain/plan_series.dart';
-import '../../domain/plan_title_match.dart';
 import '../activity_chooser.dart';
 import '../plan_date_notifier.dart';
 import '../plan_providers.dart';
-import 'activity_suggestions.dart';
 import 'plan_time_sheet.dart';
 import 'repeat_sheet.dart';
 
-/// The **+** sheet (ADR-046, AD1–AD6): adding to a day lives here, out of
-/// the day's way. Type what it is (your activities, then built-in ones; a
-/// new name becomes yours with nothing to set up), or tap a Recent one;
-/// choose **When** (Anytime, Now for today, or a time and length) and
-/// optionally **Repeat**; **Add** (or **Start**, with Now). It closes once
-/// something is added. [onStartNow] gets a thing added with Now, to start
-/// it; [startNow] opens with Now chosen.
+/// The **+** sheet (ADR-046): adding to a day, with every activity right
+/// here. Your activities come first, then the built-in ones by category,
+/// all searchable; typing something new offers it as a new activity. Tick
+/// one or several. With one, choose **When** (Anytime, Now for today, or a
+/// time and length), **Repeat** and **Reminder** before adding; several
+/// are added as Anytime and can share a repeat. [onStartNow] gets a thing
+/// added with Now, to start it; [startNow] opens with Now chosen.
 Future<void> showAddSheet(
   BuildContext context, {
   required LocalDate date,
@@ -54,13 +54,11 @@ Future<void> showAddSheet(
   builder: (sheetContext) {
     void close() => Navigator.of(sheetContext).pop();
     return Padding(
-      padding: EdgeInsets.fromLTRB(
-        AppSpacing.xl,
-        0,
-        AppSpacing.xl,
-        MediaQuery.viewInsetsOf(sheetContext).bottom + AppSpacing.xl,
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.viewInsetsOf(sheetContext).bottom,
       ),
-      child: SingleChildScrollView(
+      child: SizedBox(
+        height: MediaQuery.sizeOf(sheetContext).height * 0.9,
         child: AddToDay(
           date: date,
           dayName: dayName,
@@ -82,7 +80,50 @@ Future<void> showAddSheet(
 
 enum _When { anytime, now, time }
 
-/// The add sheet's content (AD1–AD5).
+/// Something ticked to add: one of your activities, a built-in one (saved
+/// as yours when added), or a new name.
+sealed class _Pick {
+  const _Pick();
+
+  String get key;
+  String get name;
+}
+
+class _Yours extends _Pick {
+  const _Yours(this.type);
+
+  final ActivityType type;
+
+  @override
+  String get key => 'y:${type.id.value}';
+
+  @override
+  String get name => type.name;
+}
+
+class _BuiltIn extends _Pick {
+  const _BuiltIn(this.definition);
+
+  final ActivityTypeDefinition definition;
+
+  @override
+  String get key => 'b:${definition.name.toLowerCase()}';
+
+  @override
+  String get name => definition.name;
+}
+
+class _NewName extends _Pick {
+  const _NewName(this.name);
+
+  @override
+  final String name;
+
+  @override
+  String get key => 'n:${name.toLowerCase()}';
+}
+
+/// The add sheet's content.
 class AddToDay extends ConsumerStatefulWidget {
   const AddToDay({
     super.key,
@@ -95,12 +136,6 @@ class AddToDay extends ConsumerStatefulWidget {
     this.initialType,
   });
 
-  /// Recent (or common) activities shown.
-  static const maxChips = 8;
-
-  /// Common activities offered on first use.
-  static const maxCommon = 6;
-
   final LocalDate date;
   final String dayName;
   final ActivityChooser chooser;
@@ -110,7 +145,7 @@ class AddToDay extends ConsumerStatefulWidget {
   final ValueChanged<PlanId>? onStartNow;
   final bool startNow;
 
-  /// Chosen up front ("Plan it" from Progress).
+  /// Ticked up front ("Plan it" from Progress).
   final ActivityType? initialType;
 
   @override
@@ -118,21 +153,11 @@ class AddToDay extends ConsumerStatefulWidget {
 }
 
 class _AddToDayState extends ConsumerState<AddToDay> {
-  final _title = TextEditingController();
-  ActivityTypeId? _typeId;
-  bool _matchedByName = false;
+  final _search = TextEditingController();
 
-  /// The chosen activity's name, while the title still starts with it.
-  String? get _chosenName {
-    final id = _typeId;
-    if (id == null) return null;
-    final types = ref.read(activeActivityTypesProvider).value ?? const [];
-    return types.where((t) => t.id == id).firstOrNull?.name ??
-        widget.initialType?.name;
-  }
+  /// What's ticked, in the order it was ticked.
+  final _picked = <_Pick>[];
 
-  /// A new name chosen to become an activity of yours (AD3).
-  bool _makeYours = false;
   late _When _when = widget.startNow ? _When.now : _When.anytime;
   LocalTime? _start;
   LocalTime? _end;
@@ -146,65 +171,42 @@ class _AddToDayState extends ConsumerState<AddToDay> {
   @override
   void initState() {
     super.initState();
-    if (widget.initialType case final type?) {
-      _title.text = type.name;
-      _typeId = type.id;
-      _matchedByName = true;
-    }
+    if (widget.initialType case final type?) _picked.add(_Yours(type));
   }
 
   @override
   void dispose() {
-    _title.dispose();
+    _search.dispose();
     super.dispose();
   }
 
-  bool get _hasInput => _title.text.trim().isNotEmpty || _typeId != null;
+  String get _query => _search.text.trim();
 
-  void _onTitleChanged(String text) {
-    _makeYours = false;
-    if (_typeId != null && !_matchedByName) {
-      setState(() {});
-      return;
+  bool get _single => _picked.length == 1;
+
+  bool _isPicked(_Pick pick) => _picked.any((p) => p.key == pick.key);
+
+  void _toggle(_Pick pick) => setState(() {
+    if (_isPicked(pick)) {
+      _picked.removeWhere((p) => p.key == pick.key);
+    } else {
+      _picked.add(pick);
     }
-    // "Meeting with Sam": a chosen activity stays while its name is
-    // extended, so a day can hold several meetings with their own names.
-    if (_chosenName case final name?
-        when text.trim().toLowerCase().startsWith(name.toLowerCase())) {
-      setState(() {});
-      return;
+    // A time, Now and a reminder are for one thing at a time.
+    if (!_single) {
+      if (_when != _When.anytime) _when = _When.anytime;
+      _start = null;
+      _end = null;
+      _reminder = null;
+      _reminderTouched = false;
     }
-    final match = matchByName(
-      text,
-      ref.read(recentActivityTypesProvider),
-      (t) => t.name,
-    );
-    setState(() {
-      _typeId = match?.id;
-      _matchedByName = match != null;
-    });
-  }
+  });
 
-  void _useName(String name) {
-    _title.value = TextEditingValue(
-      text: name,
-      selection: TextSelection.collapsed(offset: name.length),
-    );
-    _typeId = null;
-    _matchedByName = false;
-    _onTitleChanged(name);
-  }
-
-  void _select(ActivityType type) {
-    _title.value = TextEditingValue(
-      text: type.name,
-      selection: TextSelection.collapsed(offset: type.name.length),
-    );
-    setState(() {
-      _typeId = type.id;
-      _matchedByName = true;
-      _makeYours = false;
-    });
+  bool _matches(String name, Iterable<String> details, [String group = '']) {
+    final query = _query.toLowerCase();
+    if (query.isEmpty) return true;
+    bool has(String text) => text.toLowerCase().contains(query);
+    return has(name) || has(group) || details.any(has);
   }
 
   DateTime? _instant(LocalTime? time) {
@@ -220,71 +222,65 @@ class _AddToDayState extends ConsumerState<AddToDay> {
           ).toUtc();
   }
 
-  /// The chosen activity, one of yours with the typed name, or a built-in
-  /// one with it (saved as yours now). Null for a new name.
-  Future<ActivityTypeId?> _resolveActivity(AppLocalizations l10n) async {
-    if (_typeId case final id?) return id;
-    final active = ref.read(activeActivityTypesProvider).value ?? const [];
-    if (matchByName(_title.text, active, (t) => t.name) case final type?) {
-      return type.id;
-    }
-    final builtIn = matchByName<ActivityTypeDefinition>(
-      _title.text,
-      builtInActivities(l10n),
-      (t) => t.name,
-    );
-    if (builtIn == null) return null;
-    return ref.read(addBuiltInActivityProvider)(builtIn);
-  }
-
-  String _titleFor(ActivityTypeId? typeId) {
-    final title = _title.text.trim();
-    if (typeId == null) return title;
-    final name = _chosenName;
-    return name == null || title.toLowerCase() == name.toLowerCase()
-        ? ''
-        : title;
-  }
+  /// The activity [pick] is added as; null for a new name (made one of
+  /// yours from the plan, with nothing to set up).
+  Future<ActivityTypeId?> _activityOf(_Pick pick) async => switch (pick) {
+    _Yours(:final type) => type.id,
+    _BuiltIn(:final definition) => ref.read(addBuiltInActivityProvider)(
+      definition,
+    ),
+    _NewName() => null,
+  };
 
   Future<void> _add() async {
-    if (!_hasInput || _busy) return;
+    if (_picked.isEmpty || _busy) return;
     final l10n = AppLocalizations.of(context);
-    final now = _when == _When.now;
+    final messenger = ScaffoldMessenger.of(context);
+    final single = _single;
+    final now = single && _when == _When.now;
+    final timed = single && _when == _When.time && _start != null;
     setState(() => _busy = true);
     try {
-      final typeId = await _resolveActivity(l10n);
-      final timed = _when == _When.time && _start != null;
-      final id = await ref.read(createPlanProvider)(
-        PlanDraft(
-          planDate: widget.date,
-          // With an activity, the plan takes its name unless one was
-          // typed ("Meeting with Sam").
-          title: _titleFor(typeId),
-          activityTypeId: typeId,
-          plannedStartAt: now
-              ? ref.read(clockProvider).nowUtc()
-              : timed
-              ? _instant(_start)
-              : null,
-          plannedEndAt: timed ? _instant(_end) : null,
-        ),
-      );
-      // A new name becomes an activity of yours, with nothing to set up
-      // (AD3); what it records can be added later.
-      if (typeId == null) await ref.read(ensureItemActivityProvider)(id);
-      if (_repeat case final rule? when !now) {
-        await ref.read(repeatPlanProvider)(id, rule);
+      PlanId? last;
+      for (final pick in List.of(_picked)) {
+        final typeId = await _activityOf(pick);
+        final id = await ref.read(createPlanProvider)(
+          PlanDraft(
+            planDate: widget.date,
+            // With an activity, the plan takes its name.
+            title: typeId == null ? pick.name : '',
+            activityTypeId: typeId,
+            plannedStartAt: now
+                ? ref.read(clockProvider).nowUtc()
+                : timed
+                ? _instant(_start)
+                : null,
+            plannedEndAt: timed ? _instant(_end) : null,
+          ),
+        );
+        if (typeId == null) await ref.read(ensureItemActivityProvider)(id);
+        if (_repeat case final rule? when !now) {
+          await ref.read(repeatPlanProvider)(id, rule);
+        }
+        if (single && !now) {
+          if (_effectiveReminder(timed: timed) case final reminder?) {
+            await setReminderFor(ref, id, reminder);
+          }
+        }
+        last = id;
       }
-      // The reminder chosen in the sheet (an offset needs a time).
-      final reminder = _effectiveReminder(timed: timed);
-      if (reminder != null && !now) {
-        await setReminderFor(ref, id, reminder);
-      }
-      if (!mounted) return;
+      if (!mounted || last == null) return;
       if (now) {
-        widget.onStartNow?.call(id);
+        widget.onStartNow?.call(last);
       } else {
-        widget.onAdded(id);
+        if (!single) {
+          messenger.showSnackBar(
+            SnackBar(
+              content: Text(l10n.addedCount(_picked.length, widget.dayName)),
+            ),
+          );
+        }
+        widget.onAdded(last);
       }
     } on ValidationException catch (e) {
       if (mounted) {
@@ -331,9 +327,9 @@ class _AddToDayState extends ConsumerState<AddToDay> {
     final timed = _when == _When.time && _start != null;
     final choice = await showReminderSheet(
       context,
-      title: _title.text.trim().isEmpty
-          ? AppLocalizations.of(context).reminderTitle
-          : _title.text.trim(),
+      title:
+          _picked.firstOrNull?.name ??
+          AppLocalizations.of(context).reminderTitle,
       start: timed ? _instant(_start) : null,
       current: _effectiveReminder(timed: timed),
     );
@@ -345,187 +341,470 @@ class _AddToDayState extends ConsumerState<AddToDay> {
   }
 
   Future<void> _pickRepeat() async {
-    final rule = await showRepeatSheet(context, date: widget.date);
+    final rule = await showRepeatSheet(
+      context,
+      date: widget.date,
+      initial: _repeat,
+    );
     if (rule == null || !mounted) return;
     setState(() => _repeat = rule);
   }
 
-  Future<void> _browse() async {
-    final id = await widget.chooser.browse();
+  /// Opens the builder for a new activity (named [name]); the one made is
+  /// ticked.
+  Future<void> _makeOwn(String name) async {
+    final id = await widget.chooser.makeOwn(name);
     if (id == null || !mounted) return;
     final type = await readActivityType(ref, id);
-    if (type != null && mounted) _select(type);
+    if (type == null || !mounted) return;
+    _search.clear();
+    _toggle(_Yours(type));
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final c = context.colors;
-    final recent = ref.watch(recentActivityTypesProvider);
-    final active =
-        ref.watch(activeActivityTypesProvider).value ?? const <ActivityType>[];
-    final start = _start;
-    final end = _end;
-    final timeLabel = switch ((_when, start, end)) {
-      (_When.time, final s?, null) => formatLocalTime(context, s),
-      (_When.time, final s?, final e?) => l10n.planTimeRange(
-        formatLocalTime(context, s),
-        formatLocalTime(context, e),
-      ),
-      _ => l10n.addTimeChoose,
-    };
-    final common = recent.isEmpty
-        ? [
-            for (final d in starterActivities(l10n))
-              if (matchByName(d.name, active, (a) => a.name) == null) d,
-          ].take(AddToDay.maxCommon).toList()
-        : const <ActivityTypeDefinition>[];
-    final label = TextStyle(color: c.textSecondary);
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          l10n.addSheetTitle(widget.dayName),
-          style: context.textStyles.headlineSmall,
-        ),
-        const SizedBox(height: AppSpacing.lg),
-        TextField(
-          controller: _title,
-          autofocus: true,
-          textCapitalization: TextCapitalization.sentences,
-          textInputAction: TextInputAction.done,
-          decoration: InputDecoration(hintText: l10n.addWhatHint),
-          onChanged: _onTitleChanged,
-          onSubmitted: (_) => _add(),
-        ),
-        if (_typeId == null && !_makeYours)
-          ActivitySuggestions(
-            text: _title.text,
-            types: recent,
-            builtIns: [
-              for (final d in builtInActivities(l10n))
-                if (matchByName(d.name, active, (a) => a.name) == null) d,
-            ],
-            onType: _select,
-            onBuiltIn: (definition) => _useName(definition.name),
-            onMakeOwn: () => setState(() => _makeYours = true),
-            makeOwnLabel: l10n.addMakeYoursNamed,
-            makeOwnHint: l10n.addMakeYoursHint,
-          ),
-        if (_makeYours)
-          Padding(
-            padding: const EdgeInsets.only(top: AppSpacing.xs),
-            child: Text(l10n.addMakeYoursHint, style: label),
-          ),
-        if (recent.isNotEmpty || common.isNotEmpty) ...[
-          const SizedBox(height: AppSpacing.md),
-          Text(
-            recent.isNotEmpty ? l10n.addYourActivities : l10n.addCommon,
-            style: context.textStyles.labelMedium?.copyWith(
-              color: c.textSecondary,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Wrap(
-            spacing: AppSpacing.sm,
-            runSpacing: AppSpacing.xs,
-            children: [
-              for (final type in recent.take(AddToDay.maxChips))
-                ChoiceChip(
-                  label: Text(type.name),
-                  selected: _typeId == type.id,
-                  // Selects it; When / Repeat / Reminder below can still
-                  // be set before Add.
-                  onSelected: (_) => _select(type),
-                ),
-              for (final definition in common)
-                ChoiceChip(
-                  label: Text(definition.name),
-                  selected: false,
-                  onSelected: (_) => _useName(definition.name),
-                ),
-            ],
-          ),
-        ],
-        const SizedBox(height: AppSpacing.lg),
-        Text(l10n.addWhen, style: context.textStyles.labelMedium?.merge(label)),
-        const SizedBox(height: AppSpacing.xs),
-        Wrap(
-          spacing: AppSpacing.sm,
-          runSpacing: AppSpacing.xs,
-          children: [
-            ChoiceChip(
-              label: Text(l10n.planAnytime),
-              selected: _when == _When.anytime,
-              onSelected: (_) => setState(() => _when = _When.anytime),
-            ),
-            if (widget.onStartNow != null)
-              ChoiceChip(
-                label: Text(l10n.addNow),
-                selected: _when == _When.now,
-                onSelected: (_) => setState(() => _when = _When.now),
-              ),
-            ChoiceChip(
-              showCheckmark: false,
-              avatar: const Icon(AppIcons.time, size: 18),
-              label: Text(timeLabel),
-              selected: _when == _When.time,
-              onSelected: (_) => _pickTime(),
-            ),
-            if (_when != _When.now)
-              ChoiceChip(
-                showCheckmark: false,
-                avatar: const Icon(AppIcons.repeat, size: 18),
-                label: Text(
-                  _repeat == null
-                      ? l10n.addRepeat
-                      : formatWeekdays(context, _repeat!.weekdays),
-                ),
-                selected: _repeat != null,
-                onSelected: (_) => _pickRepeat(),
-              ),
-            if (_when != _When.now)
-              ChoiceChip(
-                showCheckmark: false,
-                avatar: Icon(
-                  _effectiveReminder(
-                            timed: _when == _When.time && _start != null,
-                          ) ==
-                          null
-                      ? AppIcons.bell
-                      : AppIcons.bellOn,
-                  size: 18,
-                ),
-                label: Text(switch (_effectiveReminder(
-                  timed: _when == _When.time && _start != null,
-                )) {
-                  null => l10n.reminderLabel,
-                  final r => reminderLabel(context, r),
-                }),
-                selected:
-                    _effectiveReminder(
-                      timed: _when == _When.time && _start != null,
-                    ) !=
-                    null,
-                onSelected: (_) => _pickReminder(),
-              ),
+    final yours = ref.watch(recentActivityTypesProvider);
+    bool taken(ActivityTypeDefinition d) =>
+        yours.any((a) => sameActivityName(a.name, d.name)) ||
+        (ref.watch(activeActivityTypesProvider).value ?? const []).any(
+          (a) => sameActivityName(a.name, d.name),
+        );
+    final shownYours = [
+      for (final type in yours)
+        if (_matches(type.name, type.activeFields.map((f) => f.name))) type,
+    ];
+    final categories = [
+      for (final category in activityCategories(l10n))
+        (
+          category.name,
+          [
+            for (final d in category.activities)
+              if (!taken(d) &&
+                  _matches(d.name, d.fields.map((f) => f.name), category.name))
+                d,
           ],
         ),
-        const SizedBox(height: AppSpacing.xl),
-        AppButton(
-          label: _when == _When.now ? l10n.addStartAction : l10n.addAction,
-          icon: _when == _When.now ? AppIcons.start : AppIcons.add,
-          variant: AppButtonVariant.action,
-          expand: true,
-          onPressed: _hasInput && !_busy ? _add : null,
+    ].where((c) => c.$2.isNotEmpty).toList();
+    final query = _query;
+    // Something typed that isn't an activity yet: offer it as one.
+    final exact =
+        yours.any((t) => sameActivityName(t.name, query)) ||
+        builtInActivities(l10n).any((d) => sameActivityName(d.name, query));
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.xl,
+            0,
+            AppSpacing.xl,
+            AppSpacing.sm,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                l10n.addSheetTitle(widget.dayName),
+                style: context.textStyles.headlineSmall,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              TextField(
+                controller: _search,
+                textCapitalization: TextCapitalization.sentences,
+                textInputAction: TextInputAction.search,
+                decoration: InputDecoration(
+                  hintText: l10n.addSearchHint,
+                  prefixIcon: const Icon(AppIcons.search),
+                  suffixIcon: query.isEmpty
+                      ? null
+                      : IconButton(
+                          tooltip: MaterialLocalizations.of(context)
+                              .deleteButtonTooltip,
+                          icon: const Icon(AppIcons.close),
+                          onPressed: () => setState(_search.clear),
+                        ),
+                ),
+                onChanged: (_) => setState(() {}),
+                // Enter ticks what was typed: the activity with that name
+                // (yours, then a built-in one), or it as a new one.
+                onSubmitted: (_) {
+                  if (query.isEmpty) return;
+                  final l10n = AppLocalizations.of(context);
+                  final mine = ref
+                      .read(recentActivityTypesProvider)
+                      .where((t) => sameActivityName(t.name, query))
+                      .firstOrNull;
+                  final builtIn = builtInActivities(l10n)
+                      .where((d) => sameActivityName(d.name, query))
+                      .firstOrNull;
+                  final pick = mine != null
+                      ? _Yours(mine)
+                      : builtIn != null
+                      ? _BuiltIn(builtIn)
+                      : _NewName(query) as _Pick;
+                  if (!_isPicked(pick)) _toggle(pick);
+                  setState(_search.clear);
+                },
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: AppSpacing.xs),
-        Center(
-          child: TextButton(onPressed: _browse, child: Text(l10n.addBrowseAll)),
+        Expanded(
+          child: ListView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              0,
+              AppSpacing.lg,
+              AppSpacing.lg,
+            ),
+            children: [
+              if (query.isNotEmpty && !exact) ...[
+                _PickRow(
+                  leading: const _IconBadge(AppIcons.add),
+                  name: l10n.addNewNamed(query),
+                  details: l10n.addNewNamedHint,
+                  picked: _isPicked(_NewName(query)),
+                  onTap: () => _toggle(_NewName(query)),
+                ),
+                _PickRow(
+                  leading: const _IconBadge(AppIcons.edit),
+                  name: l10n.addSetUpNamed(query),
+                  onTap: () => unawaited(_makeOwn(query)),
+                ),
+              ],
+              // Ticked things that are new names stay visible.
+              for (final pick in _picked.whereType<_NewName>())
+                if (pick.name.toLowerCase() != query.toLowerCase())
+                  _PickRow(
+                    leading: const _IconBadge(AppIcons.add),
+                    name: pick.name,
+                    details: l10n.addNewNamedHint,
+                    picked: true,
+                    onTap: () => _toggle(pick),
+                  ),
+              if (shownYours.isNotEmpty) ...[
+                SectionHeader(title: l10n.addYourActivities),
+                for (final type in shownYours)
+                  _PickRow(
+                    leading: ActivityBadge(
+                      iconId: type.iconId,
+                      colorKey: type.colorKey,
+                    ),
+                    name: type.name,
+                    details: type.activeFields.map((f) => f.name).join(' · '),
+                    picked: _isPicked(_Yours(type)),
+                    onTap: () => _toggle(_Yours(type)),
+                  ),
+              ],
+              for (final (name, definitions) in categories) ...[
+                SectionHeader(title: name),
+                for (final d in definitions)
+                  _PickRow(
+                    leading: ActivityBadge(
+                      iconId: d.iconId,
+                      colorKey: d.colorKey,
+                    ),
+                    name: d.name,
+                    details: d.fields.map((f) => f.name).join(' · '),
+                    picked: _isPicked(_BuiltIn(d)),
+                    onTap: () => _toggle(_BuiltIn(d)),
+                  ),
+              ],
+              if (query.isEmpty)
+                _PickRow(
+                  leading: const _IconBadge(AppIcons.edit),
+                  name: l10n.addSetUpOwn,
+                  onTap: () => unawaited(_makeOwn('')),
+                ),
+            ],
+          ),
+        ),
+        _Footer(
+          picked: _picked,
+          busy: _busy,
+          when: _when,
+          canStartNow: widget.onStartNow != null,
+          timeLabel: switch ((_when, _start, _end)) {
+            (_When.time, final s?, null) => formatLocalTime(context, s),
+            (_When.time, final s?, final e?) => l10n.planTimeRange(
+              formatLocalTime(context, s),
+              formatLocalTime(context, e),
+            ),
+            _ => l10n.addTimeChoose,
+          },
+          repeatLabel: switch (_repeat) {
+            final rule? => formatWeekdays(context, rule.weekdays),
+            null => null,
+          },
+          reminder: _effectiveReminder(
+            timed: _when == _When.time && _start != null,
+          ),
+          onAnytime: () => setState(() => _when = _When.anytime),
+          onNow: () => setState(() => _when = _When.now),
+          onTime: _pickTime,
+          onRepeat: _pickRepeat,
+          onReminder: _pickReminder,
+          onRemove: _toggle,
+          onAdd: _add,
+          divider: c.borderSubtle,
         ),
       ],
     );
   }
+}
+
+/// The bottom of the sheet: what's ticked, its settings and **Add**.
+class _Footer extends StatelessWidget {
+  const _Footer({
+    required this.picked,
+    required this.busy,
+    required this.when,
+    required this.canStartNow,
+    required this.timeLabel,
+    required this.repeatLabel,
+    required this.reminder,
+    required this.onAnytime,
+    required this.onNow,
+    required this.onTime,
+    required this.onRepeat,
+    required this.onReminder,
+    required this.onRemove,
+    required this.onAdd,
+    required this.divider,
+  });
+
+  final List<_Pick> picked;
+  final bool busy;
+  final _When when;
+  final bool canStartNow;
+  final String timeLabel;
+  final String? repeatLabel;
+  final PlanReminder? reminder;
+  final VoidCallback onAnytime;
+  final VoidCallback onNow;
+  final VoidCallback onTime;
+  final VoidCallback onRepeat;
+  final VoidCallback onReminder;
+  final ValueChanged<_Pick> onRemove;
+  final VoidCallback onAdd;
+  final Color divider;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final c = context.colors;
+    final single = picked.length == 1;
+    final now = single && when == _When.now;
+    final label = context.textStyles.labelMedium?.copyWith(
+      color: c.textSecondary,
+    );
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: c.surfaceBase,
+        border: Border(top: BorderSide(color: divider)),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.xl,
+            AppSpacing.md,
+            AppSpacing.xl,
+            AppSpacing.lg,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (picked.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                  child: Text(l10n.addPickHint, style: label),
+                )
+              else ...[
+                // What's ticked, each removable.
+                SizedBox(
+                  height: 36,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      for (final pick in picked)
+                        Padding(
+                          padding: const EdgeInsets.only(right: AppSpacing.xs),
+                          child: InputChip(
+                            label: Text(pick.name),
+                            visualDensity: VisualDensity.compact,
+                            deleteButtonTooltipMessage: l10n.addSelectedRemove(
+                              pick.name,
+                            ),
+                            onDeleted: () => onRemove(pick),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.xs,
+                  children: [
+                    if (single) ...[
+                      ChoiceChip(
+                        label: Text(l10n.planAnytime),
+                        selected: when == _When.anytime,
+                        onSelected: (_) => onAnytime(),
+                      ),
+                      if (canStartNow)
+                        ChoiceChip(
+                          label: Text(l10n.addNow),
+                          selected: when == _When.now,
+                          onSelected: (_) => onNow(),
+                        ),
+                      ChoiceChip(
+                        showCheckmark: false,
+                        avatar: const Icon(AppIcons.time, size: 18),
+                        label: Text(timeLabel),
+                        selected: when == _When.time,
+                        onSelected: (_) => onTime(),
+                      ),
+                    ],
+                    if (!now)
+                      ChoiceChip(
+                        showCheckmark: false,
+                        avatar: const Icon(AppIcons.repeat, size: 18),
+                        label: Text(repeatLabel ?? l10n.addRepeat),
+                        selected: repeatLabel != null,
+                        onSelected: (_) => onRepeat(),
+                      ),
+                    if (single && !now)
+                      ChoiceChip(
+                        showCheckmark: false,
+                        avatar: Icon(
+                          reminder == null ? AppIcons.bell : AppIcons.bellOn,
+                          size: 18,
+                        ),
+                        label: Text(switch (reminder) {
+                          null => l10n.reminderLabel,
+                          final r => reminderLabel(context, r),
+                        }),
+                        selected: reminder != null,
+                        onSelected: (_) => onReminder(),
+                      ),
+                  ],
+                ),
+                if (!single) ...[
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(l10n.addManyNote, style: label),
+                ],
+                const SizedBox(height: AppSpacing.md),
+              ],
+              AppButton(
+                label: now
+                    ? l10n.addStartAction
+                    : l10n.addCountAction(picked.length),
+                icon: now ? AppIcons.start : AppIcons.add,
+                variant: AppButtonVariant.action,
+                expand: true,
+                onPressed: picked.isNotEmpty && !busy ? onAdd : null,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// One activity in the list: badge, name, what it logs, and a tick.
+class _PickRow extends StatelessWidget {
+  const _PickRow({
+    required this.leading,
+    required this.name,
+    required this.onTap,
+    this.details = '',
+    this.picked,
+  });
+
+  final Widget leading;
+  final String name;
+  final String details;
+
+  /// Null for an action row (no tick).
+  final bool? picked;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    final on = picked ?? false;
+    return Semantics(
+      selected: picked == null ? null : on,
+      button: true,
+      child: Material(
+        color: on ? c.brandPrimarySoft : Colors.transparent,
+        borderRadius: BorderRadius.circular(AppSpacing.md),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(AppSpacing.md),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.sm,
+              vertical: AppSpacing.sm,
+            ),
+            child: Row(
+              children: [
+                leading,
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(name, style: context.textStyles.titleMedium),
+                      if (details.isNotEmpty)
+                        Text(
+                          details,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.textStyles.bodySmall?.copyWith(
+                            color: c.textSecondary,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                if (picked != null)
+                  Icon(
+                    on ? AppIcons.taskDone : AppIcons.taskOpen,
+                    color: on ? c.brandPrimary : c.borderStrong,
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A plain icon in a badge's place (new name, make your own).
+class _IconBadge extends StatelessWidget {
+  const _IconBadge(this.icon);
+
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) => SizedBox.square(
+    dimension: 40,
+    child: DecoratedBox(
+      decoration: BoxDecoration(
+        color: context.colors.surfaceSunken,
+        shape: BoxShape.circle,
+      ),
+      child: Icon(icon, size: 20, color: context.colors.textSecondary),
+    ),
+  );
 }

@@ -4,7 +4,7 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('a fresh database is created at schema v11 with the activity engine and notes', () async {
+  test('a fresh database is created at schema v12 with the activity engine and notes', () async {
     final db = AppDatabase(NativeDatabase.memory());
     addTearDown(db.close);
 
@@ -21,7 +21,7 @@ void main() {
           .add(row.read<String>('name'));
     }
 
-    expect(version.read<int>('user_version'), 11);
+    expect(version.read<int>('user_version'), 12);
     expect(byType['table'], [
       'activity_fields',
       'activity_logs',
@@ -102,7 +102,7 @@ void main() {
     () async {
       final db = AppDatabase(
         NativeDatabase.memory(
-          setup: (raw) => raw.execute('PRAGMA user_version = 12'),
+          setup: (raw) => raw.execute('PRAGMA user_version = 13'),
         ),
       );
       addTearDown(db.close);

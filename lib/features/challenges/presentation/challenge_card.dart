@@ -23,7 +23,8 @@ String challengeTodayText(
   AppLocalizations l10n,
   ChallengeToday state, {
   GoalPeriod period = GoalPeriod.day,
-}) => goalStateText(l10n, state, period);
+  bool target = false,
+}) => goalStateText(l10n, state, period, target: target);
 
 /// The state with an icon: a check once done or completed, a clock while
 /// today is still open. The text stays in the normal text colors; only the
@@ -34,9 +35,13 @@ class ChallengeStateLine extends StatelessWidget {
     required this.state,
     this.period = GoalPeriod.day,
     this.restUsedYesterday = false,
+    this.target = false,
   });
 
   final ChallengeToday state;
+
+  /// A target goal: checked in on now and then, so no "today" pressure.
+  final bool target;
 
   /// Yesterday was missed and a rest day covered it: say so, so a kept
   /// streak isn't a mystery.
@@ -65,7 +70,12 @@ class ChallengeStateLine extends StatelessWidget {
             restUsedYesterday && state != ChallengeToday.done
                 ? '${challengeTodayText(l10n, state, period: period)}'
                       ' · ${l10n.goalRestDayUsed}'
-                : challengeTodayText(l10n, state, period: period),
+                : challengeTodayText(
+                    l10n,
+                    state,
+                    period: period,
+                    target: target,
+                  ),
             style: context.textStyles.labelLarge?.copyWith(
               color: colors.textPrimary,
             ),
@@ -100,7 +110,12 @@ class ChallengeCard extends ConsumerWidget {
     final quiet = context.textStyles.bodyMedium?.copyWith(
       color: context.colors.textSecondary,
     );
-    final summary = goalProgressText(l10n, progress);
+    final summary = goalProgressText(
+      l10n,
+      progress,
+      formatValue: (v) =>
+          formatGoalAmount(l10n, challenge.amountFieldId, type, v),
+    );
     final periodLine = goalPeriodLine(l10n, challenge, progress, type);
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
@@ -154,6 +169,7 @@ class ChallengeCard extends ConsumerWidget {
                         child: ChallengeStateLine(
                           state: progress.today,
                           period: progress.period,
+                          target: progress.isTarget,
                           restUsedYesterday: progress.restedDays.contains(
                             currentLocalDate(ref.watch(clockProvider))
                                 .addDays(-1),

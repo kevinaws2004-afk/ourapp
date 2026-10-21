@@ -17,6 +17,13 @@ List<ActivityField> goalAmountFields(ActivityType type) => [
       f,
 ]..sort((a, b) => (b.measurable ? 1 : 0).compareTo(a.measurable ? 1 : 0));
 
+/// What a target goal can follow for [type]: its number fields, not list
+/// rows (a weight, a waist size; not one set's reps).
+List<ActivityField> goalTargetFields(ActivityType type) => [
+  for (final f in type.fields)
+    if (!f.isRemoved && f.parentId == null && f.type == FieldType.number) f,
+]..sort((a, b) => (b.measurable ? 1 : 0).compareTo(a.measurable ? 1 : 0));
+
 /// The unit an amount goal on [field] is entered and shown in: the field's
 /// default unit, or none for a plain number.
 Unit? goalFieldUnit(ActivityField field) {
@@ -57,8 +64,25 @@ String goalPeriods(AppLocalizations l10n, int count, GoalPeriod period) =>
       GoalPeriod.week => l10n.goalWeeks(count),
     };
 
-/// "21 / 75 days", "3 / 8 weeks".
-String goalProgressText(AppLocalizations l10n, ChallengeProgress progress) =>
+/// "21 / 75 days", "3 / 8 weeks". A target goal: "78.5 kg → 72 kg" with
+/// [formatValue], else "40% of the way".
+String goalProgressText(
+  AppLocalizations l10n,
+  ChallengeProgress progress, {
+  String Function(double value)? formatValue,
+}) {
+  if (progress.isTarget) {
+    if (progress.isCompleted) return l10n.goalTargetReached;
+    final (now, target) = (progress.latestValue, progress.targetValue);
+    if (formatValue != null && now != null && target != null) {
+      return l10n.goalTargetProgress(formatValue(now), formatValue(target));
+    }
+    return l10n.goalTargetPercent((progress.fraction * 100).round());
+  }
+  return _periodProgressText(l10n, progress);
+}
+
+String _periodProgressText(AppLocalizations l10n, ChallengeProgress progress) =>
     switch (progress.period) {
       GoalPeriod.day => l10n.challengeProgressDays(
         progress.progress,
@@ -82,6 +106,12 @@ String? goalPeriodLine(
   switch (challenge.kind) {
     case GoalKind.daily:
       return null;
+    case GoalKind.target:
+      final toGo = progress.toGo;
+      if (progress.isCompleted || toGo == null) return null;
+      return l10n.goalTargetToGo(
+        formatGoalAmount(l10n, challenge.amountFieldId, type, toGo),
+      );
     case GoalKind.weekly:
       return l10n.goalThisWeekDays(
         progress.periodValue.round(),
@@ -123,19 +153,27 @@ String goalAutoTitle(
     period == GoalPeriod.week
         ? l10n.goalAutoTitleAmountWeek(amount ?? '', activity)
         : l10n.goalAutoTitleAmountDay(amount ?? '', activity),
+  GoalKind.target => l10n.goalAutoTitleTarget(activity, amount ?? ''),
 };
 
 /// Today's state in words for a goal counted per [period].
 String goalStateText(
   AppLocalizations l10n,
   ChallengeToday state,
-  GoalPeriod period,
-) => switch ((state, period)) {
-  (ChallengeToday.completed, _) => l10n.challengeCompleted,
-  (ChallengeToday.done, GoalPeriod.day) => l10n.challengeTodayDone,
-  (ChallengeToday.atRisk, GoalPeriod.day) => l10n.challengeTodayAtRisk,
-  (ChallengeToday.notYet, GoalPeriod.day) => l10n.challengeTodayNotYet,
-  (ChallengeToday.done, GoalPeriod.week) => l10n.goalWeekDone,
-  (ChallengeToday.atRisk, GoalPeriod.week) => l10n.goalWeekAtRisk,
-  (ChallengeToday.notYet, GoalPeriod.week) => l10n.goalWeekNotYet,
-};
+  GoalPeriod period, {
+  bool target = false,
+}) => target
+    ? switch (state) {
+        ChallengeToday.completed => l10n.goalTargetReached,
+        ChallengeToday.done => l10n.goalTargetLoggedToday,
+        _ => l10n.goalTargetLogHint,
+      }
+    : switch ((state, period)) {
+        (ChallengeToday.completed, _) => l10n.challengeCompleted,
+        (ChallengeToday.done, GoalPeriod.day) => l10n.challengeTodayDone,
+        (ChallengeToday.atRisk, GoalPeriod.day) => l10n.challengeTodayAtRisk,
+        (ChallengeToday.notYet, GoalPeriod.day) => l10n.challengeTodayNotYet,
+        (ChallengeToday.done, GoalPeriod.week) => l10n.goalWeekDone,
+        (ChallengeToday.atRisk, GoalPeriod.week) => l10n.goalWeekAtRisk,
+        (ChallengeToday.notYet, GoalPeriod.week) => l10n.goalWeekNotYet,
+      };

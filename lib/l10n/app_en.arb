@@ -9407,5 +9407,356 @@
   "itemPlanSettings": "Time, repeat and reminder",
   "@itemPlanSettings": {
     "description": "UI copy."
+  },
+  "goalKindTarget": "Target",
+  "@goalKindTarget": {
+    "description": "UI copy."
+  },
+  "goalActivityHelperTarget": "Log it whenever you measure. The latest value counts.",
+  "@goalActivityHelperTarget": {
+    "description": "UI copy."
+  },
+  "goalTargetFieldLabel": "Track",
+  "@goalTargetFieldLabel": {
+    "description": "UI copy."
+  },
+  "goalTargetNowLabel": "Where you are now",
+  "@goalTargetNowLabel": {
+    "description": "UI copy."
+  },
+  "goalTargetLabel": "Target",
+  "@goalTargetLabel": {
+    "description": "UI copy."
+  },
+  "goalTargetWeeksLabel": "Weeks to get there",
+  "@goalTargetWeeksLabel": {
+    "description": "UI copy."
+  },
+  "goalTargetWeeksHelper": "An aim, not a rule: log it on any day you measure.",
+  "@goalTargetWeeksHelper": {
+    "description": "UI copy."
+  },
+  "goalTargetNoField": "{activity} has nothing to measure yet. Add a number to it (like Weight) first.",
+  "@goalTargetNoField": {
+    "description": "UI copy.",
+    "placeholders": {
+      "activity": {
+        "type": "String"
+      }
+    }
+  },
+  "goalAutoTitleTarget": "{field} to {amount}",
+  "@goalAutoTitleTarget": {
+    "description": "UI copy.",
+    "placeholders": {
+      "field": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "goalTargetProgress": "{now} → {target}",
+  "@goalTargetProgress": {
+    "description": "UI copy.",
+    "placeholders": {
+      "now": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "goalTargetPercent": "{percent}% of the way",
+  "@goalTargetPercent": {
+    "description": "UI copy.",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "goalTargetToGo": "{amount} to go",
+  "@goalTargetToGo": {
+    "description": "UI copy.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "goalTargetReached": "Target reached",
+  "@goalTargetReached": {
+    "description": "UI copy."
+  },
+  "goalTargetLoggedToday": "Logged today",
+  "@goalTargetLoggedToday": {
+    "description": "UI copy."
+  },
+  "goalTargetLogHint": "Log it whenever you measure",
+  "@goalTargetLogHint": {
+    "description": "UI copy."
+  },
+  "goalTargetStart": "Start",
+  "@goalTargetStart": {
+    "description": "UI copy."
+  },
+  "goalTargetNow": "Now",
+  "@goalTargetNow": {
+    "description": "UI copy."
+  },
+  "goalTargetToGoLabel": "To go",
+  "@goalTargetToGoLabel": {
+    "description": "UI copy."
+  },
+  "goalTargetChart": "Your progress",
+  "@goalTargetChart": {
+    "description": "UI copy."
+  },
+  "goalTargetLogAction": "Log {field}",
+  "@goalTargetLogAction": {
+    "description": "UI copy.",
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "goalTargetFirstLog": "Log your first {field} to see your progress here.",
+  "@goalTargetFirstLog": {
+    "description": "UI copy.",
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "addSearchHint": "Search, or type something new",
+  "@addSearchHint": {
+    "description": "UI copy."
+  },
+  "addNewNamed": "Add “{name}”",
+  "@addNewNamed": {
+    "description": "UI copy.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "addNewNamedHint": "New activity, nothing to set up",
+  "@addNewNamedHint": {
+    "description": "UI copy."
+  },
+  "addSetUpNamed": "Set up “{name}” with what to log",
+  "@addSetUpNamed": {
+    "description": "UI copy.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "addSetUpOwn": "Make your own activity",
+  "@addSetUpOwn": {
+    "description": "UI copy."
+  },
+  "addPickHint": "Pick one, or several at once",
+  "@addPickHint": {
+    "description": "UI copy."
+  },
+  "addCountAction": "{count, plural, =0{Add} =1{Add} other{Add {count}}}",
+  "@addCountAction": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "addedCount": "{count, plural, =1{1 thing} other{{count} things}} added to {day}",
+  "@addedCount": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "addManyNote": "Added as Anytime. Set a time on each one later.",
+  "@addManyNote": {
+    "description": "UI copy."
+  },
+  "addSelectedRemove": "Remove {name}",
+  "@addSelectedRemove": {
+    "description": "UI copy.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "planDropMoveTitle": "Move {name} to {time}?",
+  "@planDropMoveTitle": {
+    "description": "UI copy.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "planDropBetween": "Between {before} and {after}.",
+  "@planDropBetween": {
+    "description": "UI copy.",
+    "placeholders": {
+      "before": {
+        "type": "String"
+      },
+      "after": {
+        "type": "String"
+      }
+    }
+  },
+  "planDropAfter": "After {before}.",
+  "@planDropAfter": {
+    "description": "UI copy.",
+    "placeholders": {
+      "before": {
+        "type": "String"
+      }
+    }
+  },
+  "planDropBefore": "Before {after}.",
+  "@planDropBefore": {
+    "description": "UI copy.",
+    "placeholders": {
+      "after": {
+        "type": "String"
+      }
+    }
+  },
+  "planDropNeighbor": "{name} ({time})",
+  "@planDropNeighbor": {
+    "description": "UI copy.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "planDropMove": "Move",
+  "@planDropMove": {
+    "description": "UI copy."
+  },
+  "planDropPickTime": "Pick a time…",
+  "@planDropPickTime": {
+    "description": "UI copy."
+  },
+  "planDropNoFitTitle": "{name} doesn't fit there",
+  "@planDropNoFitTitle": {
+    "description": "UI copy.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "planDropNoFitBody": "There's {free} free there and it needs {length}. Pick another time, or drop it somewhere else.",
+  "@planDropNoFitBody": {
+    "description": "UI copy.",
+    "placeholders": {
+      "free": {
+        "type": "String"
+      },
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "planDropAnytimeTitle": "Make {name} Anytime?",
+  "@planDropAnytimeTitle": {
+    "description": "UI copy.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "planDropAnytimeBody": "It won't be at {time} any more. You can set a time again later.",
+  "@planDropAnytimeBody": {
+    "description": "UI copy.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "planDropAnytime": "Make it Anytime",
+  "@planDropAnytime": {
+    "description": "UI copy."
+  },
+  "planDropMoved": "{name} moved to {time}",
+  "@planDropMoved": {
+    "description": "UI copy.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "planDropNoFitNone": "There's no free time there and it needs {length}. Pick another time, or drop it somewhere else.",
+  "@planDropNoFitNone": {
+    "description": "UI copy.",
+    "placeholders": {
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "focusModeAction": "Focus mode",
+  "@focusModeAction": {
+    "description": "UI copy."
+  },
+  "focusModeHint": "Timer full screen, other apps locked until you end it",
+  "@focusModeHint": {
+    "description": "UI copy."
+  },
+  "focusModeBadge": "Focus mode · locked",
+  "@focusModeBadge": {
+    "description": "UI copy."
+  },
+  "focusModeBadgeUnpinned": "Focus mode",
+  "@focusModeBadgeUnpinned": {
+    "description": "UI copy."
+  },
+  "focusModeEnd": "End focus mode",
+  "@focusModeEnd": {
+    "description": "UI copy."
+  },
+  "focusModeEndTitle": "End focus mode?",
+  "@focusModeEndTitle": {
+    "description": "UI copy."
+  },
+  "focusModeEndBody": "Your phone unlocks. The timer keeps running, and you can come back to it from Today.",
+  "@focusModeEndBody": {
+    "description": "UI copy."
+  },
+  "focusModeKeepGoing": "Keep focusing",
+  "@focusModeKeepGoing": {
+    "description": "UI copy."
   }
 }

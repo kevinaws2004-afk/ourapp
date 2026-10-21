@@ -32,6 +32,9 @@ import 'challenge_card.dart';
 import 'challenge_providers.dart';
 import 'challenge_sheet.dart';
 import 'goal_copy.dart';
+import '../../activity_types/domain/activity_type.dart';
+import '../../../core/time/local_date.dart';
+import '../../../shared/widgets/charts/app_chart.dart';
 import '../../settings/presentation/review_prompt.dart';
 
 enum _Menu { edit, restart, end }
@@ -202,6 +205,14 @@ class _Body extends ConsumerWidget {
         (_) => unawaited(maybeAskForReview(ref)),
       );
     }
+    if (progress.isTarget) {
+      return _TargetBody(
+        view: view,
+        type: type,
+        accent: accent,
+        onLog: () => _doItToday(context, ref),
+      );
+    }
     String days(int n) => goalPeriods(l10n, n, progress.period);
     final periodLine = goalPeriodLine(l10n, challenge, progress, type);
     final week = progress.period == GoalPeriod.week;
@@ -349,6 +360,225 @@ class _Body extends ConsumerWidget {
                 color: accent,
                 semanticLabel: goalProgressText(l10n, progress),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// A target goal (from 80 kg down to 72 kg): where you are against where
+/// you started and where you're going, the values logged so far on a
+/// graph with the target as a line, and **Log Weight**. No streaks: it's
+/// checked in on whenever you measure.
+class _TargetBody extends StatelessWidget {
+  const _TargetBody({
+    required this.view,
+    required this.type,
+    required this.accent,
+    required this.onLog,
+  });
+
+  final ChallengeView view;
+  final ActivityType? type;
+  final Color accent;
+  final VoidCallback onLog;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final margin = WindowSizeClass.of(context).screenMargin;
+    final challenge = view.challenge;
+    final progress = view.progress;
+    final c = context.colors;
+    final quiet = context.textStyles.bodyMedium?.copyWith(
+      color: c.textSecondary,
+    );
+    String format(double? v) => v == null
+        ? '–'
+        : formatGoalAmount(l10n, challenge.amountFieldId, type, v);
+    final fieldName = switch (challenge.amountFieldId) {
+      final id? => type?.fieldById(id)?.name ?? '',
+      null => '',
+    };
+    final toGo = goalPeriodLine(l10n, challenge, progress, type);
+
+    // The graph: where it started (on the start day), then each value
+    // logged, with the target alongside.
+    final points = <(LocalDate, double)>[
+      if (progress.startValue case final start?
+          when !progress.values.containsKey(challenge.startDate))
+        (challenge.startDate, start),
+      for (final e in progress.values.entries) (e.key, e.value),
+    ]..sort((a, b) => a.$1.compareTo(b.$1));
+    final unit = switch (challenge.amountFieldId) {
+      final id? => switch (type?.fieldById(id)) {
+        final field? => goalFieldUnit(field),
+        null => null,
+      },
+      null => null,
+    };
+    double shown(double canonical) =>
+        unit?.fromCanonical(canonical) ?? canonical;
+    final material = MaterialLocalizations.of(context);
+
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: AppContentWidth.chart),
+        child: ListView(
+          padding: EdgeInsets.fromLTRB(
+            margin,
+            AppSpacing.sm,
+            margin,
+            AppSpacing.giant,
+          ),
+          children: [
+            Row(
+              children: [
+                ActivityBadge(
+                  iconId: type?.iconId ?? 'sparkle',
+                  colorKey: type?.colorKey ?? 'slate',
+                  size: AppSizes.badgeLarge,
+                ),
+                const SizedBox(width: AppSpacing.lg),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        challenge.title,
+                        style: context.textStyles.headlineSmall,
+                      ),
+                      Text(
+                        l10n.challengeStartsOn(
+                          formatDate(context, challenge.startDate),
+                        ),
+                        style: quiet,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            Text(
+              format(progress.latestValue),
+              style: AppTypography.numericHero.copyWith(color: c.textPrimary),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            AppProgressBar(
+              fraction: progress.fraction,
+              color: accent,
+              semanticLabel: goalProgressText(l10n, progress),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              [
+                ?toGo,
+                if (!progress.isCompleted)
+                  l10n.goalTargetPercent((progress.fraction * 100).round()),
+              ].join(' · '),
+              style: context.textStyles.titleSmall,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            ChallengeStateLine(
+              state: progress.today,
+              period: progress.period,
+              target: true,
+            ),
+            if (progress.completedOn case final on?) ...[
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                l10n.challengeCompletedOn(formatDate(context, on)),
+                style: quiet,
+              ),
+            ],
+            if (!progress.isCompleted && fieldName.isNotEmpty) ...[
+              const SizedBox(height: AppSpacing.md),
+              AppButton(
+                label: l10n.goalTargetLogAction(fieldName),
+                icon: AppIcons.add,
+                variant: AppButtonVariant.action,
+                expand: true,
+                onPressed: onLog,
+              ),
+            ],
+            const SizedBox(height: AppSpacing.xl),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: StatTile(
+                    label: l10n.goalTargetStart,
+                    value: format(progress.startValue),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: StatTile(
+                    label: l10n.goalTargetLabel,
+                    value: format(progress.targetValue),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: StatTile(
+                    label: l10n.goalTargetToGoLabel,
+                    value: progress.isCompleted ? '✓' : format(progress.toGo),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: StatTile(
+                    label: l10n.challengeDaysLeft,
+                    value: l10n.insightDaysDone(progress.daysLeft),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            PanelCard(
+              title: l10n.goalTargetChart,
+              child: points.length < 2
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppSpacing.lg,
+                      ),
+                      child: Text(
+                        l10n.goalTargetFirstLog(
+                          fieldName.isEmpty ? challenge.title : fieldName,
+                        ),
+                        style: quiet,
+                      ),
+                    )
+                  : AppChart(
+                      kind: AppChartKind.line,
+                      labels: [
+                        for (final (d, _) in points)
+                          material.formatShortMonthDay(
+                            DateTime(d.year, d.month, d.day),
+                          ),
+                      ],
+                      series: [
+                        ChartSeries(
+                          values: [for (final (_, v) in points) shown(v)],
+                          color: accent,
+                        ),
+                        if (progress.targetValue case final target?)
+                          ChartSeries(
+                            values: [for (final _ in points) shown(target)],
+                            color: c.success,
+                          ),
+                      ],
+                      formatValue: (v) => formatNumber(v, 1),
+                    ),
             ),
           ],
         ),

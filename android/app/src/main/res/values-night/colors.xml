@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="splash_background">#0F0E17</color>
-    <color name="splash_icon_background">#F4F0FF</color>
     <!-- Today widget (Electric Lavender, dark). -->
     <color name="widget_surface">#1B1A23</color>
     <color name="widget_text">#F4F2FB</color>

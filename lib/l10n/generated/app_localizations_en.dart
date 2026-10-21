@@ -7228,4 +7228,226 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get itemPlanSettings => 'Time, repeat and reminder';
+
+  @override
+  String get goalKindTarget => 'Target';
+
+  @override
+  String get goalActivityHelperTarget =>
+      'Log it whenever you measure. The latest value counts.';
+
+  @override
+  String get goalTargetFieldLabel => 'Track';
+
+  @override
+  String get goalTargetNowLabel => 'Where you are now';
+
+  @override
+  String get goalTargetLabel => 'Target';
+
+  @override
+  String get goalTargetWeeksLabel => 'Weeks to get there';
+
+  @override
+  String get goalTargetWeeksHelper =>
+      'An aim, not a rule: log it on any day you measure.';
+
+  @override
+  String goalTargetNoField(String activity) {
+    return '$activity has nothing to measure yet. Add a number to it (like Weight) first.';
+  }
+
+  @override
+  String goalAutoTitleTarget(String field, String amount) {
+    return '$field to $amount';
+  }
+
+  @override
+  String goalTargetProgress(String now, String target) {
+    return '$now → $target';
+  }
+
+  @override
+  String goalTargetPercent(int percent) {
+    return '$percent% of the way';
+  }
+
+  @override
+  String goalTargetToGo(String amount) {
+    return '$amount to go';
+  }
+
+  @override
+  String get goalTargetReached => 'Target reached';
+
+  @override
+  String get goalTargetLoggedToday => 'Logged today';
+
+  @override
+  String get goalTargetLogHint => 'Log it whenever you measure';
+
+  @override
+  String get goalTargetStart => 'Start';
+
+  @override
+  String get goalTargetNow => 'Now';
+
+  @override
+  String get goalTargetToGoLabel => 'To go';
+
+  @override
+  String get goalTargetChart => 'Your progress';
+
+  @override
+  String goalTargetLogAction(String field) {
+    return 'Log $field';
+  }
+
+  @override
+  String goalTargetFirstLog(String field) {
+    return 'Log your first $field to see your progress here.';
+  }
+
+  @override
+  String get addSearchHint => 'Search, or type something new';
+
+  @override
+  String addNewNamed(String name) {
+    return 'Add “$name”';
+  }
+
+  @override
+  String get addNewNamedHint => 'New activity, nothing to set up';
+
+  @override
+  String addSetUpNamed(String name) {
+    return 'Set up “$name” with what to log';
+  }
+
+  @override
+  String get addSetUpOwn => 'Make your own activity';
+
+  @override
+  String get addPickHint => 'Pick one, or several at once';
+
+  @override
+  String addCountAction(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Add $count',
+      one: 'Add',
+      zero: 'Add',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String addedCount(int count, String day) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count things',
+      one: '1 thing',
+    );
+    return '$_temp0 added to $day';
+  }
+
+  @override
+  String get addManyNote => 'Added as Anytime. Set a time on each one later.';
+
+  @override
+  String addSelectedRemove(String name) {
+    return 'Remove $name';
+  }
+
+  @override
+  String planDropMoveTitle(String name, String time) {
+    return 'Move $name to $time?';
+  }
+
+  @override
+  String planDropBetween(String before, String after) {
+    return 'Between $before and $after.';
+  }
+
+  @override
+  String planDropAfter(String before) {
+    return 'After $before.';
+  }
+
+  @override
+  String planDropBefore(String after) {
+    return 'Before $after.';
+  }
+
+  @override
+  String planDropNeighbor(String name, String time) {
+    return '$name ($time)';
+  }
+
+  @override
+  String get planDropMove => 'Move';
+
+  @override
+  String get planDropPickTime => 'Pick a time…';
+
+  @override
+  String planDropNoFitTitle(String name) {
+    return '$name doesn\'t fit there';
+  }
+
+  @override
+  String planDropNoFitBody(String free, String length) {
+    return 'There\'s $free free there and it needs $length. Pick another time, or drop it somewhere else.';
+  }
+
+  @override
+  String planDropAnytimeTitle(String name) {
+    return 'Make $name Anytime?';
+  }
+
+  @override
+  String planDropAnytimeBody(String time) {
+    return 'It won\'t be at $time any more. You can set a time again later.';
+  }
+
+  @override
+  String get planDropAnytime => 'Make it Anytime';
+
+  @override
+  String planDropMoved(String name, String time) {
+    return '$name moved to $time';
+  }
+
+  @override
+  String planDropNoFitNone(String length) {
+    return 'There\'s no free time there and it needs $length. Pick another time, or drop it somewhere else.';
+  }
+
+  @override
+  String get focusModeAction => 'Focus mode';
+
+  @override
+  String get focusModeHint =>
+      'Timer full screen, other apps locked until you end it';
+
+  @override
+  String get focusModeBadge => 'Focus mode · locked';
+
+  @override
+  String get focusModeBadgeUnpinned => 'Focus mode';
+
+  @override
+  String get focusModeEnd => 'End focus mode';
+
+  @override
+  String get focusModeEndTitle => 'End focus mode?';
+
+  @override
+  String get focusModeEndBody =>
+      'Your phone unlocks. The timer keeps running, and you can come back to it from Today.';
+
+  @override
+  String get focusModeKeepGoing => 'Keep focusing';
 }

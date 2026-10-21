@@ -12896,6 +12896,324 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Time, repeat and reminder'**
   String get itemPlanSettings;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Target'**
+  String get goalKindTarget;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Log it whenever you measure. The latest value counts.'**
+  String get goalActivityHelperTarget;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Track'**
+  String get goalTargetFieldLabel;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Where you are now'**
+  String get goalTargetNowLabel;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Target'**
+  String get goalTargetLabel;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Weeks to get there'**
+  String get goalTargetWeeksLabel;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'An aim, not a rule: log it on any day you measure.'**
+  String get goalTargetWeeksHelper;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{activity} has nothing to measure yet. Add a number to it (like Weight) first.'**
+  String goalTargetNoField(String activity);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{field} to {amount}'**
+  String goalAutoTitleTarget(String field, String amount);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{now} → {target}'**
+  String goalTargetProgress(String now, String target);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% of the way'**
+  String goalTargetPercent(int percent);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} to go'**
+  String goalTargetToGo(String amount);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Target reached'**
+  String get goalTargetReached;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Logged today'**
+  String get goalTargetLoggedToday;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Log it whenever you measure'**
+  String get goalTargetLogHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get goalTargetStart;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Now'**
+  String get goalTargetNow;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'To go'**
+  String get goalTargetToGoLabel;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your progress'**
+  String get goalTargetChart;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Log {field}'**
+  String goalTargetLogAction(String field);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Log your first {field} to see your progress here.'**
+  String goalTargetFirstLog(String field);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Search, or type something new'**
+  String get addSearchHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Add “{name}”'**
+  String addNewNamed(String name);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'New activity, nothing to set up'**
+  String get addNewNamedHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up “{name}” with what to log'**
+  String addSetUpNamed(String name);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Make your own activity'**
+  String get addSetUpOwn;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick one, or several at once'**
+  String get addPickHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Add} =1{Add} other{Add {count}}}'**
+  String addCountAction(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 thing} other{{count} things}} added to {day}'**
+  String addedCount(int count, String day);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Added as Anytime. Set a time on each one later.'**
+  String get addManyNote;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {name}'**
+  String addSelectedRemove(String name);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Move {name} to {time}?'**
+  String planDropMoveTitle(String name, String time);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Between {before} and {after}.'**
+  String planDropBetween(String before, String after);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'After {before}.'**
+  String planDropAfter(String before);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Before {after}.'**
+  String planDropBefore(String after);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} ({time})'**
+  String planDropNeighbor(String name, String time);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Move'**
+  String get planDropMove;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a time…'**
+  String get planDropPickTime;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} doesn\'t fit there'**
+  String planDropNoFitTitle(String name);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'There\'s {free} free there and it needs {length}. Pick another time, or drop it somewhere else.'**
+  String planDropNoFitBody(String free, String length);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Make {name} Anytime?'**
+  String planDropAnytimeTitle(String name);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'It won\'t be at {time} any more. You can set a time again later.'**
+  String planDropAnytimeBody(String time);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Make it Anytime'**
+  String get planDropAnytime;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} moved to {time}'**
+  String planDropMoved(String name, String time);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'There\'s no free time there and it needs {length}. Pick another time, or drop it somewhere else.'**
+  String planDropNoFitNone(String length);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus mode'**
+  String get focusModeAction;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer full screen, other apps locked until you end it'**
+  String get focusModeHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus mode · locked'**
+  String get focusModeBadge;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus mode'**
+  String get focusModeBadgeUnpinned;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'End focus mode'**
+  String get focusModeEnd;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'End focus mode?'**
+  String get focusModeEndTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your phone unlocks. The timer keeps running, and you can come back to it from Today.'**
+  String get focusModeEndBody;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep focusing'**
+  String get focusModeKeepGoing;
 }
 
 class _AppLocalizationsDelegate
