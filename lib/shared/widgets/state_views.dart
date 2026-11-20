@@ -28,7 +28,9 @@ class AsyncValueView<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => switch (value) {
-    AsyncValue(:final value?, hasValue: true) => data(value),
+    // Has a value, even a null one ("no session", "no such goal"): that's
+    // the data, not still loading.
+    AsyncValue(hasValue: true) => data(value.requireValue),
     AsyncValue(:final error?) => AppErrorState(error: error, onRetry: onRetry),
     _ => const DelayedLoadingPlaceholder(),
   };

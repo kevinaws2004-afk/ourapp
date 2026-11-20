@@ -4511,14 +4511,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get challengesSubtitle =>
-      'Every day, a few times a week, or an amount — keep your streak going.';
+      'Something you want to keep doing. Record it as usual and we keep count.';
 
   @override
   String get challengesEmptyTitle => 'No goals yet';
 
   @override
   String get challengesEmptyMessage =>
-      'Pick an activity and a goal: every day (75 days of Meditation), a few times a week (Gym 3× a week) or an amount (1h of Study a day). Recording it keeps your streak going.';
+      'Pick an activity and how often. Recording it is what counts, there\'s nothing extra to tick.';
 
   @override
   String get newChallenge => 'New goal';
@@ -6917,24 +6917,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get meFeedback => 'Send feedback';
 
   @override
-  String get meFeedbackSubtitle => 'Ideas, problems, anything';
+  String get meFeedbackSubtitle => 'Email us an idea or a problem';
 
   @override
   String get feedbackIntro =>
       'Every message is read. Nothing is sent until you choose to send it.';
 
   @override
-  String get feedbackWrite => 'Write a message';
+  String get feedbackWrite => 'Email us';
 
   @override
   String get feedbackWriteSubtitle =>
-      'Your app and phone version are added for you';
+      'An idea, a problem, anything. Your app and phone version are added for you.';
 
   @override
   String get feedbackSubject => 'DayCraft feedback';
 
   @override
-  String get feedbackDiagnostics => 'Share a problem report';
+  String get feedbackDiagnostics => 'Send a problem report';
 
   @override
   String get feedbackDiagnosticsSubject => 'DayCraft problem report';
@@ -7450,4 +7450,148 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get focusModeKeepGoing => 'Keep focusing';
+
+  @override
+  String streakBadgeLabelWeeks(int weeks) {
+    return '$weeks-week streak';
+  }
+
+  @override
+  String get goalQWhat => 'What do you want to keep doing?';
+
+  @override
+  String get goalQHowOften => 'How often?';
+
+  @override
+  String get goalQHowLong => 'For how long?';
+
+  @override
+  String get goalOptDaily => 'Every day';
+
+  @override
+  String get goalOptDailyEx => 'Like reading every day';
+
+  @override
+  String get goalOptWeekly => 'Some days a week';
+
+  @override
+  String get goalOptWeeklyEx => 'Like the gym 3 days a week';
+
+  @override
+  String get goalOptAmount => 'An amount';
+
+  @override
+  String get goalOptAmountEx => 'Like 1 hour of study a day';
+
+  @override
+  String get goalOptTarget => 'Reach a number';
+
+  @override
+  String get goalOptTargetEx => 'Like your weight down to 72 kg';
+
+  @override
+  String goalDaysAWeek(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days a week',
+      one: '1 day a week',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get goalFewerDays => 'Fewer days';
+
+  @override
+  String get goalMoreDays => 'More days';
+
+  @override
+  String get goalLenOther => 'Other…';
+
+  @override
+  String get goalLenWeek => '1 week';
+
+  @override
+  String goalLenMonths(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count months',
+      one: '1 month',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String goalSummaryDaily(String activity, String length) {
+    return '$activity every day for $length.';
+  }
+
+  @override
+  String goalSummaryWeekly(String activity, int times, String length) {
+    String _temp0 = intl.Intl.pluralLogic(
+      times,
+      locale: localeName,
+      other: '$times days',
+      one: '1 day',
+    );
+    return '$activity, $_temp0 a week for $length.';
+  }
+
+  @override
+  String goalSummaryAmountDay(String amount, String activity, String length) {
+    return '$amount of $activity a day for $length.';
+  }
+
+  @override
+  String goalSummaryAmountWeek(String amount, String activity, String length) {
+    return '$amount of $activity a week for $length.';
+  }
+
+  @override
+  String goalSummaryTarget(
+    String field,
+    String from,
+    String to,
+    String length,
+  ) {
+    return '$field from $from to $to within $length.';
+  }
+
+  @override
+  String goalSummaryCounts(String activity) {
+    return 'It counts on its own when you record $activity. Nothing else to do.';
+  }
+
+  @override
+  String get goalPickActivityFirst => 'Pick an activity first.';
+
+  @override
+  String get goalMoreOptions => 'More options';
+
+  @override
+  String get goalMoreOptionsHint => 'Rest days, first day and name';
+
+  @override
+  String meMeasurementsLatest(String value) {
+    return 'Latest weight: $value';
+  }
+
+  @override
+  String get meAboutTitle => 'About DayCraft';
+
+  @override
+  String get meAboutBlurb =>
+      'Plan your day, focus, and see what you actually did. Everything stays on this phone: no account, no ads.';
+
+  @override
+  String get meLicenses => 'Open-source licenses';
+
+  @override
+  String get meLicensesSubtitle =>
+      'DayCraft is built with free, open software (like Flutter). Their authors ask that their names and terms are listed here.';
+
+  @override
+  String get notesSave => 'Save';
 }

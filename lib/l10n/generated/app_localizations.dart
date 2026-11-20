@@ -8707,7 +8707,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Every day, a few times a week, or an amount — keep your streak going.'**
+  /// **'Something you want to keep doing. Record it as usual and we keep count.'**
   String get challengesSubtitle;
 
   /// Challenges empty state title.
@@ -8719,7 +8719,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Pick an activity and a goal: every day (75 days of Meditation), a few times a week (Gym 3× a week) or an amount (1h of Study a day). Recording it keeps your streak going.'**
+  /// **'Pick an activity and how often. Recording it is what counts, there\'s nothing extra to tick.'**
   String get challengesEmptyMessage;
 
   /// Button: start a new challenge.
@@ -12408,7 +12408,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Ideas, problems, anything'**
+  /// **'Email us an idea or a problem'**
   String get meFeedbackSubtitle;
 
   /// UI copy.
@@ -12420,13 +12420,13 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Write a message'**
+  /// **'Email us'**
   String get feedbackWrite;
 
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Your app and phone version are added for you'**
+  /// **'An idea, a problem, anything. Your app and phone version are added for you.'**
   String get feedbackWriteSubtitle;
 
   /// UI copy.
@@ -12438,7 +12438,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Share a problem report'**
+  /// **'Send a problem report'**
   String get feedbackDiagnostics;
 
   /// UI copy.
@@ -13214,6 +13214,204 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Keep focusing'**
   String get focusModeKeepGoing;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{weeks}-week streak'**
+  String streakBadgeLabelWeeks(int weeks);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you want to keep doing?'**
+  String get goalQWhat;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'How often?'**
+  String get goalQHowOften;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'For how long?'**
+  String get goalQHowLong;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day'**
+  String get goalOptDaily;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Like reading every day'**
+  String get goalOptDailyEx;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Some days a week'**
+  String get goalOptWeekly;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Like the gym 3 days a week'**
+  String get goalOptWeeklyEx;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'An amount'**
+  String get goalOptAmount;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Like 1 hour of study a day'**
+  String get goalOptAmountEx;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Reach a number'**
+  String get goalOptTarget;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Like your weight down to 72 kg'**
+  String get goalOptTargetEx;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day a week} other{{count} days a week}}'**
+  String goalDaysAWeek(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Fewer days'**
+  String get goalFewerDays;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'More days'**
+  String get goalMoreDays;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Other…'**
+  String get goalLenOther;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'1 week'**
+  String get goalLenWeek;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 month} other{{count} months}}'**
+  String goalLenMonths(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{activity} every day for {length}.'**
+  String goalSummaryDaily(String activity, String length);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{activity}, {times, plural, =1{1 day} other{{times} days}} a week for {length}.'**
+  String goalSummaryWeekly(String activity, int times, String length);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} of {activity} a day for {length}.'**
+  String goalSummaryAmountDay(String amount, String activity, String length);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} of {activity} a week for {length}.'**
+  String goalSummaryAmountWeek(String amount, String activity, String length);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{field} from {from} to {to} within {length}.'**
+  String goalSummaryTarget(String field, String from, String to, String length);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'It counts on its own when you record {activity}. Nothing else to do.'**
+  String goalSummaryCounts(String activity);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick an activity first.'**
+  String get goalPickActivityFirst;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get goalMoreOptions;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest days, first day and name'**
+  String get goalMoreOptionsHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest weight: {value}'**
+  String meMeasurementsLatest(String value);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'About DayCraft'**
+  String get meAboutTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan your day, focus, and see what you actually did. Everything stays on this phone: no account, no ads.'**
+  String get meAboutBlurb;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Open-source licenses'**
+  String get meLicenses;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'DayCraft is built with free, open software (like Flutter). Their authors ask that their names and terms are listed here.'**
+  String get meLicensesSubtitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get notesSave;
 }
 
 class _AppLocalizationsDelegate

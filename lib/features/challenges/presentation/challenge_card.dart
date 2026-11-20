@@ -149,7 +149,10 @@ class ChallengeCard extends ConsumerWidget {
                           ),
                           if (progress.currentStreak > 0 &&
                               progress.completedOn == null)
-                            StreakBadge(days: progress.currentStreak),
+                            StreakBadge(
+                              days: progress.currentStreak,
+                              weeks: progress.period == GoalPeriod.week,
+                            ),
                         ],
                       ),
                       const SizedBox(height: AppSpacing.sm),

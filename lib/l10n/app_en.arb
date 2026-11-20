@@ -6072,7 +6072,7 @@
   "@challengesTitle": {
     "description": "Title of the challenges list under Me and the section on Today (ADR-044)."
   },
-  "challengesSubtitle": "Every day, a few times a week, or an amount — keep your streak going.",
+  "challengesSubtitle": "Something you want to keep doing. Record it as usual and we keep count.",
   "@challengesSubtitle": {
     "description": "UI copy."
   },
@@ -6080,7 +6080,7 @@
   "@challengesEmptyTitle": {
     "description": "Challenges empty state title."
   },
-  "challengesEmptyMessage": "Pick an activity and a goal: every day (75 days of Meditation), a few times a week (Gym 3× a week) or an amount (1h of Study a day). Recording it keeps your streak going.",
+  "challengesEmptyMessage": "Pick an activity and how often. Recording it is what counts, there's nothing extra to tick.",
   "@challengesEmptyMessage": {
     "description": "UI copy."
   },
@@ -8949,7 +8949,7 @@
   "@meFeedback": {
     "description": "UI copy."
   },
-  "meFeedbackSubtitle": "Ideas, problems, anything",
+  "meFeedbackSubtitle": "Email us an idea or a problem",
   "@meFeedbackSubtitle": {
     "description": "UI copy."
   },
@@ -8957,11 +8957,11 @@
   "@feedbackIntro": {
     "description": "UI copy."
   },
-  "feedbackWrite": "Write a message",
+  "feedbackWrite": "Email us",
   "@feedbackWrite": {
     "description": "UI copy."
   },
-  "feedbackWriteSubtitle": "Your app and phone version are added for you",
+  "feedbackWriteSubtitle": "An idea, a problem, anything. Your app and phone version are added for you.",
   "@feedbackWriteSubtitle": {
     "description": "UI copy."
   },
@@ -8969,7 +8969,7 @@
   "@feedbackSubject": {
     "description": "UI copy."
   },
-  "feedbackDiagnostics": "Share a problem report",
+  "feedbackDiagnostics": "Send a problem report",
   "@feedbackDiagnostics": {
     "description": "UI copy."
   },
@@ -9757,6 +9757,218 @@
   },
   "focusModeKeepGoing": "Keep focusing",
   "@focusModeKeepGoing": {
+    "description": "UI copy."
+  },
+  "streakBadgeLabelWeeks": "{weeks}-week streak",
+  "@streakBadgeLabelWeeks": {
+    "description": "UI copy.",
+    "placeholders": {
+      "weeks": {
+        "type": "int"
+      }
+    }
+  },
+  "goalQWhat": "What do you want to keep doing?",
+  "@goalQWhat": {
+    "description": "UI copy."
+  },
+  "goalQHowOften": "How often?",
+  "@goalQHowOften": {
+    "description": "UI copy."
+  },
+  "goalQHowLong": "For how long?",
+  "@goalQHowLong": {
+    "description": "UI copy."
+  },
+  "goalOptDaily": "Every day",
+  "@goalOptDaily": {
+    "description": "UI copy."
+  },
+  "goalOptDailyEx": "Like reading every day",
+  "@goalOptDailyEx": {
+    "description": "UI copy."
+  },
+  "goalOptWeekly": "Some days a week",
+  "@goalOptWeekly": {
+    "description": "UI copy."
+  },
+  "goalOptWeeklyEx": "Like the gym 3 days a week",
+  "@goalOptWeeklyEx": {
+    "description": "UI copy."
+  },
+  "goalOptAmount": "An amount",
+  "@goalOptAmount": {
+    "description": "UI copy."
+  },
+  "goalOptAmountEx": "Like 1 hour of study a day",
+  "@goalOptAmountEx": {
+    "description": "UI copy."
+  },
+  "goalOptTarget": "Reach a number",
+  "@goalOptTarget": {
+    "description": "UI copy."
+  },
+  "goalOptTargetEx": "Like your weight down to 72 kg",
+  "@goalOptTargetEx": {
+    "description": "UI copy."
+  },
+  "goalDaysAWeek": "{count, plural, =1{1 day a week} other{{count} days a week}}",
+  "@goalDaysAWeek": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "goalFewerDays": "Fewer days",
+  "@goalFewerDays": {
+    "description": "UI copy."
+  },
+  "goalMoreDays": "More days",
+  "@goalMoreDays": {
+    "description": "UI copy."
+  },
+  "goalLenOther": "Other…",
+  "@goalLenOther": {
+    "description": "UI copy."
+  },
+  "goalLenWeek": "1 week",
+  "@goalLenWeek": {
+    "description": "UI copy."
+  },
+  "goalLenMonths": "{count, plural, =1{1 month} other{{count} months}}",
+  "@goalLenMonths": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "goalSummaryDaily": "{activity} every day for {length}.",
+  "@goalSummaryDaily": {
+    "description": "UI copy.",
+    "placeholders": {
+      "activity": {
+        "type": "String"
+      },
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "goalSummaryWeekly": "{activity}, {times, plural, =1{1 day} other{{times} days}} a week for {length}.",
+  "@goalSummaryWeekly": {
+    "description": "UI copy.",
+    "placeholders": {
+      "activity": {
+        "type": "String"
+      },
+      "times": {
+        "type": "int"
+      },
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "goalSummaryAmountDay": "{amount} of {activity} a day for {length}.",
+  "@goalSummaryAmountDay": {
+    "description": "UI copy.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "activity": {
+        "type": "String"
+      },
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "goalSummaryAmountWeek": "{amount} of {activity} a week for {length}.",
+  "@goalSummaryAmountWeek": {
+    "description": "UI copy.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "activity": {
+        "type": "String"
+      },
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "goalSummaryTarget": "{field} from {from} to {to} within {length}.",
+  "@goalSummaryTarget": {
+    "description": "UI copy.",
+    "placeholders": {
+      "field": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "goalSummaryCounts": "It counts on its own when you record {activity}. Nothing else to do.",
+  "@goalSummaryCounts": {
+    "description": "UI copy.",
+    "placeholders": {
+      "activity": {
+        "type": "String"
+      }
+    }
+  },
+  "goalPickActivityFirst": "Pick an activity first.",
+  "@goalPickActivityFirst": {
+    "description": "UI copy."
+  },
+  "goalMoreOptions": "More options",
+  "@goalMoreOptions": {
+    "description": "UI copy."
+  },
+  "goalMoreOptionsHint": "Rest days, first day and name",
+  "@goalMoreOptionsHint": {
+    "description": "UI copy."
+  },
+  "meMeasurementsLatest": "Latest weight: {value}",
+  "@meMeasurementsLatest": {
+    "description": "UI copy.",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "meAboutTitle": "About DayCraft",
+  "@meAboutTitle": {
+    "description": "UI copy."
+  },
+  "meAboutBlurb": "Plan your day, focus, and see what you actually did. Everything stays on this phone: no account, no ads.",
+  "@meAboutBlurb": {
+    "description": "UI copy."
+  },
+  "meLicenses": "Open-source licenses",
+  "@meLicenses": {
+    "description": "UI copy."
+  },
+  "meLicensesSubtitle": "DayCraft is built with free, open software (like Flutter). Their authors ask that their names and terms are listed here.",
+  "@meLicensesSubtitle": {
+    "description": "UI copy."
+  },
+  "notesSave": "Save",
+  "@notesSave": {
     "description": "UI copy."
   }
 }

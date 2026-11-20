@@ -71,7 +71,19 @@ class FocusScreen extends ConsumerStatefulWidget {
 class _FocusScreenState extends ConsumerState<FocusScreen> {
   static const _platform = FocusModePlatform();
   late bool _locked = widget.focusMode;
+
+  /// Whether Android has really pinned the app. Asking isn't enough: the
+  /// person confirms (or declines) Android's prompt, and can unpin any time.
   bool _pinned = false;
+  Timer? _pinCheck;
+
+  /// The last session shown: kept on screen while Finish or Discard
+  /// completes (the session is gone by then), and to close afterwards.
+  FocusSession? _last;
+
+  /// Finish or Discard is running here; it closes the screen itself.
+  bool _busy = false;
+  bool _closing = false;
 
   @override
   void initState() {
@@ -83,13 +95,19 @@ class _FocusScreenState extends ConsumerState<FocusScreen> {
     unawaited(
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky),
     );
-    final pinned = await _platform.start();
-    if (mounted) setState(() => _pinned = pinned);
+    await _platform.start();
+    _pinCheck = Timer.periodic(const Duration(seconds: 1), (_) async {
+      final pinned = await _platform.isPinned();
+      if (mounted && _locked && pinned != _pinned) {
+        setState(() => _pinned = pinned);
+      }
+    });
   }
 
   Future<void> _unlock() async {
     if (!_locked) return;
     _locked = false;
+    _pinCheck?.cancel();
     await _platform.stop();
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     if (!mounted) return;
@@ -100,6 +118,7 @@ class _FocusScreenState extends ConsumerState<FocusScreen> {
 
   @override
   void dispose() {
+    _pinCheck?.cancel();
     if (_locked) {
       unawaited(_platform.stop());
       unawaited(SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge));
@@ -136,9 +155,19 @@ class _FocusScreenState extends ConsumerState<FocusScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final session = ref.watch(activeFocusSessionProvider);
-    // Finished or discarded (here or from the notification): unlock.
-    if (_locked && session.hasValue && session.value == null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => unawaited(_unlock()));
+    if (session.value case final current?) _last = current;
+    // Finished or discarded somewhere else (the notification, Today):
+    // unlock and close. Here, Finish and Discard close it themselves.
+    if (session.hasValue &&
+        session.value == null &&
+        _last != null &&
+        !_busy &&
+        !_closing) {
+      _closing = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await _unlock();
+        if (context.mounted) Navigator.of(context).maybePop();
+      });
     }
     return PopScope(
       canPop: !_locked,
@@ -180,13 +209,18 @@ class _FocusScreenState extends ConsumerState<FocusScreen> {
         body: AsyncValueView<FocusSession?>(
           value: session,
           onRetry: () => ref.invalidate(activeFocusSessionProvider),
-          data: (session) => session == null
-              ? AppEmptyState(
-                  icon: AppIcons.timer,
-                  title: l10n.focusNoneTitle,
-                  message: l10n.focusNoneMessage,
-                )
-              : _FocusBody(session: session, onLeave: _unlock),
+          data: (session) => switch (session ?? _last) {
+            null => AppEmptyState(
+              icon: AppIcons.timer,
+              title: l10n.focusNoneTitle,
+              message: l10n.focusNoneMessage,
+            ),
+            final shown => _FocusBody(
+              session: shown,
+              onLeave: _unlock,
+              onBusy: (busy) => _busy = busy,
+            ),
+          },
         ),
       ),
     );
@@ -194,9 +228,17 @@ class _FocusScreenState extends ConsumerState<FocusScreen> {
 }
 
 class _FocusBody extends ConsumerWidget {
-  const _FocusBody({required this.session, required this.onLeave});
+  const _FocusBody({
+    required this.session,
+    required this.onLeave,
+    required this.onBusy,
+  });
 
   final FocusSession session;
+
+  /// Finish or Discard started (true) or ended (false): the screen stays
+  /// up for it, showing this session, and is closed by it.
+  final ValueChanged<bool> onBusy;
 
   /// Ends focus mode before the screen closes (Finish, Discard).
   final Future<void> Function() onLeave;
@@ -236,12 +278,17 @@ class _FocusBody extends ConsumerWidget {
       ),
     );
     if (confirmed != true || !context.mounted) return;
-    await _run(
-      context,
-      () => ref.read(discardFocusSessionProvider)(session.id),
-    );
-    await onLeave();
-    if (context.mounted) Navigator.of(context).maybePop();
+    onBusy(true);
+    try {
+      await _run(
+        context,
+        () => ref.read(discardFocusSessionProvider)(session.id),
+      );
+      await onLeave();
+      if (context.mounted) Navigator.of(context).maybePop();
+    } finally {
+      onBusy(false);
+    }
   }
 
   @override
@@ -319,16 +366,21 @@ class _FocusBody extends ConsumerWidget {
               variant: AppButtonVariant.secondary,
               icon: AppIcons.check,
               onPressed: () => _run(context, () async {
-                // Freeze the time while the user fills in the record.
-                await ref.read(pauseFocusSessionProvider)(session.id);
-                if (!context.mounted) return;
-                await onLeave();
-                if (!context.mounted) return;
-                await PlanActions(
-                  context,
-                  ref,
-                ).finish(session, title: type?.name ?? '', type: type);
-                if (context.mounted) Navigator.of(context).maybePop();
+                onBusy(true);
+                try {
+                  // Freeze the time while the user fills in the record.
+                  await ref.read(pauseFocusSessionProvider)(session.id);
+                  if (!context.mounted) return;
+                  await onLeave();
+                  if (!context.mounted) return;
+                  await PlanActions(
+                    context,
+                    ref,
+                  ).finish(session, title: type?.name ?? '', type: type);
+                  if (context.mounted) Navigator.of(context).maybePop();
+                } finally {
+                  onBusy(false);
+                }
               }),
             ),
             const SizedBox(height: AppSpacing.sm),

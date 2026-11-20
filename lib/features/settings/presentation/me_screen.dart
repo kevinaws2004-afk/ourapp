@@ -204,7 +204,9 @@ class MeScreen extends ConsumerWidget {
                     subtitle: switch (ref
                         .watch(latestMeasurementsProvider)
                         .value?[MeasurementType.weight]) {
-                      final weight? => formatMeasurement(weight),
+                      final weight? => l10n.meMeasurementsLatest(
+                        formatMeasurement(weight),
+                      ),
                       null => l10n.meMeasurementsSubtitle,
                     },
                     onTap: onOpenMeasurements,
@@ -250,7 +252,10 @@ class MeScreen extends ConsumerWidget {
                   SettingsTile(
                     icon: AppIcons.appearance,
                     title: l10n.appearanceTitle,
-                    value: themeName(l10n, ref.watch(effectiveThemeProvider)),
+                    subtitle: themeName(
+                      l10n,
+                      ref.watch(effectiveThemeProvider),
+                    ),
                     onTap: onOpenAppearance,
                   ),
                   SettingsTile(
@@ -262,7 +267,7 @@ class MeScreen extends ConsumerWidget {
                     iconColor: c.textPrimary,
                     iconBackground: c.surfaceSunken,
                     title: l10n.meDarkMode,
-                    value: appearanceName(l10n, appearance),
+                    subtitle: appearanceName(l10n, appearance),
                     onTap: () => unawaited(pickAppearance(context, ref)),
                   ),
                   SettingsTile(
@@ -270,7 +275,7 @@ class MeScreen extends ConsumerWidget {
                     iconColor: c.action,
                     iconBackground: c.actionSoft,
                     title: l10n.meName,
-                    value: name.isEmpty ? l10n.meNotSet : name,
+                    subtitle: name.isEmpty ? l10n.meNotSet : name,
                     onTap: () => unawaited(editName(context, ref)),
                   ),
                 ],
@@ -339,14 +344,9 @@ class MeScreen extends ConsumerWidget {
                     icon: AppIcons.info,
                     iconColor: c.textSecondary,
                     iconBackground: c.surfaceSunken,
-                    title: l10n.appTitle,
-                    value: l10n.meVersion(version),
-                    onTap: () => showAboutDialog(
-                      context: context,
-                      applicationName: l10n.appTitle,
-                      applicationVersion: version,
-                      applicationLegalese: l10n.meAboutLegal,
-                    ),
+                    title: l10n.meAboutTitle,
+                    subtitle: l10n.meVersion(version),
+                    onTap: () => unawaited(_showAbout(context, version)),
                   ),
                 ],
               ),
@@ -391,6 +391,58 @@ class MeScreen extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+
+  /// About: what DayCraft is, its version, and the open-source licenses,
+  /// explained (Android's own dialog only says "View licenses").
+  Future<void> _showAbout(BuildContext context, String version) {
+    final l10n = AppLocalizations.of(context);
+    return showModalBottomSheet<void>(
+      useRootNavigator: true,
+      context: context,
+      useSafeArea: true,
+      builder: (sheet) {
+        final c = sheet.colors;
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.xl,
+            0,
+            AppSpacing.xl,
+            AppSpacing.xl,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l10n.appTitle, style: sheet.textStyles.headlineSmall),
+              Text(
+                l10n.meVersion(version),
+                style: sheet.textStyles.bodyMedium?.copyWith(
+                  color: c.textSecondary,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              Text(l10n.meAboutBlurb, style: sheet.textStyles.bodyLarge),
+              const SizedBox(height: AppSpacing.lg),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(AppIcons.info, color: c.textSecondary),
+                title: Text(l10n.meLicenses),
+                subtitle: Text(l10n.meLicensesSubtitle),
+                trailing: const Icon(AppIcons.chevron),
+                onTap: () => showLicensePage(
+                  context: context,
+                  applicationName: l10n.appTitle,
+                  applicationVersion: version,
+                  applicationLegalese: l10n.meAboutLegal,
+                  useRootNavigator: true,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

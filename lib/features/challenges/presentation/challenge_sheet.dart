@@ -28,12 +28,6 @@ import 'goal_copy.dart';
 import '../../activity_logs/domain/field_value.dart';
 import '../../plans/presentation/item/last_time_card.dart';
 
-/// The numbers of days offered as quick picks.
-const _dayPresets = [7, 21, 30, 75, 100];
-
-/// The numbers of weeks offered as quick picks.
-const _weekPresets = [4, 8, 12, 26, 52];
-
 /// Starts a goal ([initial] null; [chooser] picks its activity) or edits
 /// one's name and target ([initial]); ADR-044, ADR-047. A goal is done
 /// every day, a number of times a week, or an amount (time or a number
@@ -348,6 +342,93 @@ class _ChallengeSheetState extends ConsumerState<_ChallengeSheet> {
         ),
       );
 
+  /// Quick lengths for the goal, as people say them: (count, label). In
+  /// days for daily and amount-per-day goals, weeks otherwise.
+  List<(int, String)> _lengths(AppLocalizations l10n) =>
+      switch ((_kind, _period)) {
+        (GoalKind.target, _) => [
+          (4, l10n.goalLenMonths(1)),
+          (12, l10n.goalLenMonths(3)),
+          (26, l10n.goalLenMonths(6)),
+        ],
+        (_, GoalPeriod.week) => [
+          (4, l10n.goalLenMonths(1)),
+          (8, l10n.goalLenMonths(2)),
+          (12, l10n.goalLenMonths(3)),
+        ],
+        _ => [
+          (7, l10n.goalLenWeek),
+          (30, l10n.goalLenMonths(1)),
+          (90, l10n.goalLenMonths(3)),
+        ],
+      };
+
+  /// The goal's length as the chips say it ("2 months"), or in its own
+  /// unit for another number ("21 days", "10 weeks").
+  String _lengthText(AppLocalizations l10n) {
+    if (!_customLength) {
+      for (final (count, label) in _lengths(l10n)) {
+        if (count == _targetCount) return label.toLowerCase();
+      }
+    }
+    return _kind == GoalKind.target || _period == GoalPeriod.week
+        ? l10n.goalWeeks(_targetCount)
+        : l10n.insightDaysDone(_targetCount);
+  }
+
+  /// The goal in one sentence, from what's chosen so far.
+  String? _summary(AppLocalizations l10n, ActivityType? type) {
+    if (type == null || _targetCount <= 0) return null;
+    final length = _lengthText(l10n);
+    switch (_kind) {
+      case GoalKind.daily:
+        return l10n.goalSummaryDaily(type.name, length);
+      case GoalKind.weekly:
+        return l10n.goalSummaryWeekly(type.name, _timesPerWeek, length);
+      case GoalKind.amount:
+        final amount = _storedAmount(type);
+        if (amount == null) return null;
+        final text = formatGoalAmount(l10n, _amountField, type, amount);
+        return _amountPeriod == GoalPeriod.week
+            ? l10n.goalSummaryAmountWeek(text, type.name, length)
+            : l10n.goalSummaryAmountDay(text, type.name, length);
+      case GoalKind.target:
+        final from = _stored(_now.text, type);
+        final to = _storedAmount(type);
+        final field = _amountField == null
+            ? null
+            : type.fieldById(_amountField!);
+        if (from == null || to == null || field == null) return null;
+        return l10n.goalSummaryTarget(
+          field.name,
+          formatGoalAmount(l10n, _amountField, type, from),
+          formatGoalAmount(l10n, _amountField, type, to),
+          length,
+        );
+    }
+  }
+
+  // Editing is mostly renaming or changing the length: show it all.
+  late bool _moreOptions = _editing;
+  bool _customLength = false;
+
+  void _setKind(GoalKind k, ActivityType? type) => setState(() {
+    _kind = k;
+    _customLength = false;
+    _target.text = switch ((k, _period)) {
+      (GoalKind.target, _) => '12',
+      (_, GoalPeriod.week) => '8',
+      _ => '30',
+    };
+    if (k == GoalKind.target) {
+      _pickTargetField(type);
+    } else if (_amountField != null &&
+        type != null &&
+        !goalAmountFields(type).any((f) => f.id == _amountField)) {
+      _amountField = null;
+    }
+  });
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -363,12 +444,169 @@ class _ChallengeSheetState extends ConsumerState<_ChallengeSheet> {
     }
     String? issue(String target) => firstIssueMessage(l10n, _issues, target);
     final chooser = widget.chooser;
-    final presets = _kind == GoalKind.target
-        ? const [4, 8, 12, 26]
-        : _period == GoalPeriod.week
-        ? _weekPresets
-        : _dayPresets;
     final hint = context.textStyles.bodySmall?.copyWith(color: c.textSecondary);
+    final question = context.textStyles.titleMedium;
+    final lengths = _lengths(l10n);
+    final custom = _customLength || !lengths.any((l) => l.$1 == _targetCount);
+    final summary = _summary(l10n, type);
+    // "Reach a number" only for an activity with a number to follow.
+    final canTarget = type == null || goalTargetFields(type).isNotEmpty;
+
+    Widget section(String title, Widget child, {String? error}) => Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.xl),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(title, style: question),
+          const SizedBox(height: AppSpacing.sm),
+          child,
+          if (error != null) ...[
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              error,
+              style: context.textStyles.bodySmall?.copyWith(color: c.danger),
+            ),
+          ],
+        ],
+      ),
+    );
+
+    // What the chosen kind needs, right under it.
+    Widget kindDetails() => switch (_kind) {
+      GoalKind.daily => const SizedBox.shrink(),
+      GoalKind.weekly => Row(
+        children: [
+          IconButton.filledTonal(
+            tooltip: l10n.goalFewerDays,
+            onPressed: _timesPerWeek > 1
+                ? () => setState(() => _timesPerWeek--)
+                : null,
+            icon: const Icon(AppIcons.minus),
+          ),
+          Expanded(
+            child: Text(
+              l10n.goalDaysAWeek(_timesPerWeek),
+              textAlign: TextAlign.center,
+              style: context.textStyles.titleMedium,
+            ),
+          ),
+          IconButton.filledTonal(
+            tooltip: l10n.goalMoreDays,
+            onPressed: _timesPerWeek < 7
+                ? () => setState(() => _timesPerWeek++)
+                : null,
+            icon: const Icon(AppIcons.add),
+          ),
+        ],
+      ),
+      GoalKind.amount => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (!_editing && type != null && goalAmountFields(type).isNotEmpty)
+            Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.xs,
+              children: [
+                ChoiceChip(
+                  label: Text(l10n.goalAmountTime),
+                  selected: _amountField == null,
+                  onSelected: (_) => setState(() => _amountField = null),
+                ),
+                for (final f in goalAmountFields(type))
+                  ChoiceChip(
+                    label: Text(f.name),
+                    selected: _amountField == f.id,
+                    onSelected: (_) => setState(() => _amountField = f.id),
+                  ),
+              ],
+            ),
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            children: [
+              Expanded(child: _numberInput(_amount, _amountSuffix(l10n, type))),
+              if (!_editing) ...[
+                const SizedBox(width: AppSpacing.md),
+                SizedBox(
+                  width: 150,
+                  child: SegmentedTabs<GoalPeriod>(
+                    values: GoalPeriod.values,
+                    selected: _amountPeriod,
+                    label: (p) => p == GoalPeriod.day
+                        ? l10n.goalPerDay
+                        : l10n.goalPerWeek,
+                    onSelect: (p) => setState(() {
+                      _amountPeriod = p;
+                      _customLength = false;
+                      _target.text = '${p == GoalPeriod.week ? 8 : 30}';
+                    }),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ],
+      ),
+      GoalKind.target =>
+        type == null
+            ? const SizedBox.shrink()
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (!_editing && goalTargetFields(type).length > 1)
+                    Wrap(
+                      spacing: AppSpacing.sm,
+                      runSpacing: AppSpacing.xs,
+                      children: [
+                        for (final f in goalTargetFields(type))
+                          ChoiceChip(
+                            label: Text(f.name),
+                            selected: _amountField == f.id,
+                            onSelected: (_) => setState(() {
+                              _amountField = f.id;
+                              _nowPrefilled = false;
+                              _now.clear();
+                            }),
+                          ),
+                      ],
+                    ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(l10n.goalTargetNowLabel, style: hint),
+                            const SizedBox(height: AppSpacing.xs),
+                            _numberInput(_now, _amountSuffix(l10n, type)),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.md),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(l10n.goalTargetLabel, style: hint),
+                            const SizedBox(height: AppSpacing.xs),
+                            _numberInput(_amount, _amountSuffix(l10n, type)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+    };
+
+    final options = [
+      (GoalKind.daily, l10n.goalOptDaily, l10n.goalOptDailyEx),
+      (GoalKind.weekly, l10n.goalOptWeekly, l10n.goalOptWeeklyEx),
+      (GoalKind.amount, l10n.goalOptAmount, l10n.goalOptAmountEx),
+      if (canTarget)
+        (GoalKind.target, l10n.goalOptTarget, l10n.goalOptTargetEx),
+    ];
+
     return DiscardGuard(
       dirty: _dirty,
       child: Padding(
@@ -378,7 +616,7 @@ class _ChallengeSheetState extends ConsumerState<_ChallengeSheet> {
         child: SafeArea(
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxHeight: MediaQuery.sizeOf(context).height * 0.9,
+              maxHeight: MediaQuery.sizeOf(context).height * 0.92,
             ),
             child: ListView(
               shrinkWrap: true,
@@ -394,56 +632,56 @@ class _ChallengeSheetState extends ConsumerState<_ChallengeSheet> {
                   style: context.textStyles.titleLarge,
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                FieldEditorShell(
-                  label: l10n.challengeActivityLabel,
+                // 1. What.
+                section(
+                  l10n.goalQWhat,
                   error: issue('activity'),
-                  child: type != null
-                      ? ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          leading: ActivityBadge(
-                            iconId: type.iconId,
-                            colorKey: type.colorKey,
-                          ),
-                          title: Text(type.name),
-                          subtitle: Text(switch (_kind) {
-                            GoalKind.daily => l10n.challengeActivityHelper,
-                            GoalKind.weekly => l10n.goalActivityHelperWeekly,
-                            GoalKind.amount => l10n.goalActivityHelperAmount,
-                            GoalKind.target => l10n.goalActivityHelperTarget,
-                          }),
-                          onTap: _editing || chooser == null
-                              ? null
-                              : () => _choose(chooser.browse),
+                  _editing && type != null
+                      ? Row(
+                          children: [
+                            ActivityBadge(
+                              iconId: type.iconId,
+                              colorKey: type.colorKey,
+                            ),
+                            const SizedBox(width: AppSpacing.md),
+                            Text(
+                              type.name,
+                              style: context.textStyles.titleMedium,
+                            ),
+                          ],
                         )
                       : Wrap(
                           spacing: AppSpacing.sm,
                           runSpacing: AppSpacing.xs,
                           children: [
-                            // Your own activities first: one tap.
                             for (final t
                                 in ref
                                         .watch(activeActivityTypesProvider)
                                         .value ??
                                     const <ActivityType>[])
-                              ActionChip(
+                              ChoiceChip(
                                 avatar: ActivityBadge(
                                   iconId: t.iconId,
                                   colorKey: t.colorKey,
                                   size: 24,
                                 ),
+                                showCheckmark: false,
                                 label: Text(t.name),
-                                onPressed: () => setState(() {
+                                selected: _activityId == t.id,
+                                onSelected: (_) => setState(() {
                                   _activityId = t.id;
                                   _amountField = null;
                                   _nowPrefilled = false;
                                   if (_kind == GoalKind.target) {
-                                    _pickTargetField(t);
+                                    if (goalTargetFields(t).isEmpty) {
+                                      _setKind(GoalKind.daily, t);
+                                    } else {
+                                      _pickTargetField(t);
+                                    }
                                   }
                                 }),
                               ),
                             if (chooser != null) ...[
-                              // Same shape as the activities, so the row
-                              // reads as one set of choices.
                               ActionChip(
                                 avatar: const Icon(AppIcons.search, size: 18),
                                 label: Text(l10n.planBrowseActivities),
@@ -459,283 +697,295 @@ class _ChallengeSheetState extends ConsumerState<_ChallengeSheet> {
                           ],
                         ),
                 ),
-                if (!_editing)
-                  FieldEditorShell(
-                    label: l10n.goalKindLabel,
-                    child: SegmentedTabs<GoalKind>(
-                      values: GoalKind.values,
-                      selected: _kind,
-                      label: (k) => switch (k) {
-                        GoalKind.daily => l10n.goalKindDaily,
-                        GoalKind.weekly => l10n.goalKindWeekly,
-                        GoalKind.amount => l10n.goalKindAmount,
-                        GoalKind.target => l10n.goalKindTarget,
-                      },
-                      onSelect: (k) => setState(() {
-                        _kind = k;
-                        final week = _period == GoalPeriod.week;
-                        _target.text = k == GoalKind.target
-                            ? '12'
-                            : '${week ? 8 : 30}';
-                        if (k == GoalKind.target) {
-                          _pickTargetField(type);
-                        } else if (_amountField != null &&
-                            type != null &&
-                            !goalAmountFields(type)
-                                .any((f) => f.id == _amountField)) {
-                          _amountField = null;
-                        }
-                      }),
-                    ),
-                  ),
-                if (_kind == GoalKind.weekly)
-                  FieldEditorShell(
-                    label: l10n.goalTimesPerWeekLabel,
-                    error: issue('amount'),
-                    child: Wrap(
-                      spacing: AppSpacing.sm,
-                      runSpacing: AppSpacing.xs,
-                      children: [
-                        for (var n = 1; n <= 7; n++)
-                          ChoiceChip(
-                            label: Text(l10n.goalTimesChip(n)),
-                            selected: _timesPerWeek == n,
-                            onSelected: (_) =>
-                                setState(() => _timesPerWeek = n),
-                          ),
-                      ],
-                    ),
-                  ),
-                if (_kind == GoalKind.amount) ...[
-                  if (!_editing)
-                    FieldEditorShell(
-                      label: l10n.goalAmountWhatLabel,
-                      child: Wrap(
+                // 2. How often: plain choices, each with an example; what
+                // the chosen one needs shows right under it.
+                section(
+                  l10n.goalQHowOften,
+                  error: issue('amount') ?? issue('field'),
+                  _editing
+                      ? kindDetails()
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            for (final (kind, title, example) in options)
+                              _KindOption(
+                                title: title,
+                                example: example,
+                                selected: _kind == kind,
+                                onTap: () => _setKind(kind, type),
+                                details: _kind == kind && kind != GoalKind.daily
+                                    ? kindDetails()
+                                    : null,
+                              ),
+                          ],
+                        ),
+                ),
+                // 3. How long.
+                section(
+                  l10n.goalQHowLong,
+                  error: issue('target'),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Wrap(
                         spacing: AppSpacing.sm,
                         runSpacing: AppSpacing.xs,
                         children: [
-                          ChoiceChip(
-                            label: Text(l10n.goalAmountTime),
-                            selected: _amountField == null,
-                            onSelected: (_) =>
-                                setState(() => _amountField = null),
-                          ),
-                          if (type != null)
-                            for (final f in goalAmountFields(type))
-                              ChoiceChip(
-                                label: Text(f.name),
-                                selected: _amountField == f.id,
-                                onSelected: (_) =>
-                                    setState(() => _amountField = f.id),
-                              ),
-                        ],
-                      ),
-                    ),
-                  FieldEditorShell(
-                    label: l10n.goalAmountLabel,
-                    error: issue('amount'),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _amount,
-                            keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true,
-                            ),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                RegExp(r'[0-9.,]'),
-                              ),
-                            ],
-                            decoration: InputDecoration(
-                              hintText: l10n.goalAmountHint,
-                              // Always visible (suffixText only shows while
-                              // typing), so it's clear what the number is.
-                              suffixIcon: Padding(
-                                padding: const EdgeInsets.only(
-                                  right: AppSpacing.md,
-                                ),
-                                child: Align(
-                                  widthFactor: 1,
-                                  child: Text(
-                                    _amountSuffix(l10n, type),
-                                    style: context.textStyles.bodyLarge
-                                        ?.copyWith(color: c.textSecondary),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        if (!_editing) ...[
-                          const SizedBox(width: AppSpacing.md),
-                          SizedBox(
-                            width: 160,
-                            child: SegmentedTabs<GoalPeriod>(
-                              values: GoalPeriod.values,
-                              selected: _amountPeriod,
-                              label: (p) => p == GoalPeriod.day
-                                  ? l10n.goalPerDay
-                                  : l10n.goalPerWeek,
-                              onSelect: (p) => setState(() {
-                                _amountPeriod = p;
-                                _target.text =
-                                    '${p == GoalPeriod.week ? 8 : 30}';
+                          for (final (count, label) in lengths)
+                            ChoiceChip(
+                              label: Text(label),
+                              selected: !custom && _targetCount == count,
+                              onSelected: (_) => setState(() {
+                                _customLength = false;
+                                _target.text = '$count';
                               }),
                             ),
+                          ChoiceChip(
+                            label: Text(l10n.goalLenOther),
+                            selected: custom,
+                            onSelected: (_) =>
+                                setState(() => _customLength = true),
                           ),
                         ],
+                      ),
+                      if (custom) ...[
+                        const SizedBox(height: AppSpacing.sm),
+                        SizedBox(
+                          width: 200,
+                          child: TextField(
+                            controller: _target,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            decoration: InputDecoration(
+                              suffixText:
+                                  _kind == GoalKind.target ||
+                                      _period == GoalPeriod.week
+                                  ? l10n
+                                        .goalWeeks(_targetCount)
+                                        .replaceAll(RegExp(r'^\d+\s*'), '')
+                                  : l10n
+                                        .insightDaysDone(_targetCount)
+                                        .replaceAll(RegExp(r'^\d+\s*'), ''),
+                            ),
+                          ),
+                        ),
                       ],
-                    ),
-                  ),
-                ],
-                if (_kind == GoalKind.target && type != null) ...[
-                  if (goalTargetFields(type).isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: AppSpacing.lg),
-                      child: Text(
-                        l10n.goalTargetNoField(type.name),
-                        style: context.textStyles.bodyMedium?.copyWith(
-                          color: c.warning,
-                        ),
-                      ),
-                    )
-                  else ...[
-                    if (!_editing && goalTargetFields(type).length > 1)
-                      FieldEditorShell(
-                        label: l10n.goalTargetFieldLabel,
-                        error: issue('field'),
-                        child: Wrap(
-                          spacing: AppSpacing.sm,
-                          runSpacing: AppSpacing.xs,
-                          children: [
-                            for (final f in goalTargetFields(type))
-                              ChoiceChip(
-                                label: Text(f.name),
-                                selected: _amountField == f.id,
-                                onSelected: (_) => setState(() {
-                                  _amountField = f.id;
-                                  _nowPrefilled = false;
-                                  _now.clear();
-                                }),
-                              ),
-                          ],
-                        ),
-                      ),
-                    FieldEditorShell(
-                      label: l10n.goalTargetNowLabel,
-                      child: _numberInput(_now, _amountSuffix(l10n, type)),
-                    ),
-                    FieldEditorShell(
-                      label: l10n.goalTargetLabel,
-                      error: issue('amount'),
-                      child: _numberInput(_amount, _amountSuffix(l10n, type)),
-                    ),
-                  ],
-                ],
-                FieldEditorShell(
-                  label: _kind == GoalKind.target
-                      ? l10n.goalTargetWeeksLabel
-                      : _period == GoalPeriod.week
-                      ? l10n.goalWeeksLabel
-                      : l10n.challengeDaysLabel,
-                  error: issue('target'),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextField(
-                        controller: _target,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        decoration: InputDecoration(
-                          helperText: switch (_kind) {
-                            GoalKind.daily => l10n.challengeDaysHelper,
-                            GoalKind.weekly => l10n.goalWeeklyHelper(
-                              _timesPerWeek,
-                            ),
-                            GoalKind.amount => l10n.goalAmountHelper,
-                            GoalKind.target => l10n.goalTargetWeeksHelper,
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      Wrap(
-                        spacing: AppSpacing.sm,
-                        children: [
-                          for (final n in presets)
-                            ChoiceChip(
-                              label: Text('$n'),
-                              selected: _targetCount == n,
-                              onSelected: (_) => _target.text = '$n',
-                            ),
-                        ],
-                      ),
                     ],
                   ),
                 ),
-                if (_kind == GoalKind.daily)
-                  FieldEditorShell(
-                    label: l10n.goalRestDaysLabel,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Wrap(
-                          spacing: AppSpacing.sm,
-                          children: [
-                            for (var n = 0; n <= Challenge.maxRestDays; n++)
-                              ChoiceChip(
-                                label: Text(
-                                  n == 0
-                                      ? l10n.goalRestDaysNone
-                                      : l10n.goalRestDaysPerWeek(n),
-                                ),
-                                selected: _restDays == n,
-                                onSelected: (_) =>
-                                    setState(() => _restDays = n),
-                              ),
-                          ],
+                // The goal in a sentence, and how it counts.
+                Container(
+                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  decoration: BoxDecoration(
+                    color: c.brandPrimarySoft,
+                    borderRadius: BorderRadius.circular(AppSpacing.lg),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        summary ?? l10n.goalPickActivityFirst,
+                        style: context.textStyles.titleMedium?.copyWith(
+                          color: c.onBrandPrimarySoft,
                         ),
+                      ),
+                      if (type != null) ...[
                         const SizedBox(height: AppSpacing.xs),
-                        Text(l10n.goalRestDaysHelper, style: hint),
+                        Text(
+                          l10n.goalSummaryCounts(type.name),
+                          style: context.textStyles.bodyMedium?.copyWith(
+                            color: c.onBrandPrimarySoft,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                // The rest, with good defaults, out of the way.
+                InkWell(
+                  borderRadius: BorderRadius.circular(AppSpacing.sm),
+                  onTap: () => setState(() => _moreOptions = !_moreOptions),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.sm,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10n.goalMoreOptions,
+                                style: context.textStyles.titleSmall,
+                              ),
+                              Text(l10n.goalMoreOptionsHint, style: hint),
+                            ],
+                          ),
+                        ),
+                        AnimatedRotation(
+                          turns: _moreOptions ? 0.5 : 0,
+                          duration: const Duration(milliseconds: 200),
+                          child: Icon(AppIcons.expand, color: c.textSecondary),
+                        ),
                       ],
                     ),
                   ),
-                if (!_editing)
-                  FieldEditorShell(
-                    label: l10n.challengeStartLabel,
-                    error: issue('start'),
-                    child: OutlinedButton(
-                      onPressed: _pickStart,
-                      child: Text(formatDate(context, _start ?? _today)),
-                    ),
-                  ),
-                FieldEditorShell(
-                  label: l10n.challengeNameLabel,
-                  error: issue('title'),
-                  child: TextField(
-                    controller: _title,
-                    textCapitalization: TextCapitalization.sentences,
-                    decoration: InputDecoration(
-                      hintText:
-                          type == null ||
-                              (_kind == GoalKind.amount ||
-                                      _kind == GoalKind.target) &&
-                                  _storedAmount(type) == null
-                          ? null
-                          : _autoTitle(l10n, type),
-                    ),
-                  ),
                 ),
-                const SizedBox(height: AppSpacing.sm),
+                if (_moreOptions ||
+                    issue('title') != null ||
+                    issue('start') != null) ...[
+                  const SizedBox(height: AppSpacing.sm),
+                  if (_kind == GoalKind.daily)
+                    FieldEditorShell(
+                      label: l10n.goalRestDaysLabel,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Wrap(
+                            spacing: AppSpacing.sm,
+                            children: [
+                              for (var n = 0; n <= Challenge.maxRestDays; n++)
+                                ChoiceChip(
+                                  label: Text(
+                                    n == 0
+                                        ? l10n.goalRestDaysNone
+                                        : l10n.goalRestDaysPerWeek(n),
+                                  ),
+                                  selected: _restDays == n,
+                                  onSelected: (_) =>
+                                      setState(() => _restDays = n),
+                                ),
+                            ],
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          Text(l10n.goalRestDaysHelper, style: hint),
+                        ],
+                      ),
+                    ),
+                  if (!_editing)
+                    FieldEditorShell(
+                      label: l10n.challengeStartLabel,
+                      error: issue('start'),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: OutlinedButton(
+                          onPressed: _pickStart,
+                          child: Text(formatDate(context, _start ?? _today)),
+                        ),
+                      ),
+                    ),
+                  FieldEditorShell(
+                    label: l10n.challengeNameLabel,
+                    error: issue('title'),
+                    child: TextField(
+                      controller: _title,
+                      textCapitalization: TextCapitalization.sentences,
+                      decoration: InputDecoration(
+                        hintText:
+                            type == null ||
+                                (_kind == GoalKind.amount ||
+                                        _kind == GoalKind.target) &&
+                                    _storedAmount(type) == null
+                            ? null
+                            : _autoTitle(l10n, type),
+                      ),
+                    ),
+                  ),
+                ],
+                const SizedBox(height: AppSpacing.md),
                 FilledButton(
+                  style: FilledButton.styleFrom(
+                    minimumSize: const Size.fromHeight(52),
+                  ),
                   onPressed: _saving ? null : () => _save(type),
                   child: Text(
                     _editing ? l10n.actionSave : l10n.challengeStartAction,
                   ),
                 ),
               ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// One answer to "How often?": a radio, its name and an example; what it
+/// needs ([details]) opens under it once chosen.
+class _KindOption extends StatelessWidget {
+  const _KindOption({
+    required this.title,
+    required this.example,
+    required this.selected,
+    required this.onTap,
+    this.details,
+  });
+
+  final String title;
+  final String example;
+  final bool selected;
+  final VoidCallback onTap;
+  final Widget? details;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: Material(
+        color: selected ? c.brandPrimarySoft : Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.lg),
+          side: BorderSide(
+            color: selected ? c.brandPrimary : c.borderSubtle,
+            width: selected ? 2 : 1,
+          ),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Semantics(
+          selected: selected,
+          button: true,
+          child: InkWell(
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        selected ? AppIcons.taskDone : AppIcons.taskOpen,
+                        color: selected ? c.brandPrimary : c.borderStrong,
+                      ),
+                      const SizedBox(width: AppSpacing.md),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(title, style: context.textStyles.titleSmall),
+                            Text(
+                              example,
+                              style: context.textStyles.bodySmall?.copyWith(
+                                color: c.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (details case final d?) ...[
+                    const SizedBox(height: AppSpacing.md),
+                    d,
+                  ],
+                ],
+              ),
             ),
           ),
         ),

@@ -135,6 +135,7 @@ class SettingsTile extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.lg),
               Expanded(
+                flex: 3,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -158,9 +159,10 @@ class SettingsTile extends StatelessWidget {
                 ),
               ),
               // A long value shares the row instead of squeezing the title
-              // away.
+              // away; a short one sits flush right, by its chevron.
               if (value case final v?)
-                Flexible(
+                Expanded(
+                  flex: 2,
                   child: Padding(
                     padding: const EdgeInsets.only(left: AppSpacing.sm),
                     child: Text(

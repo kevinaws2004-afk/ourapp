@@ -255,6 +255,25 @@ class _Body extends ConsumerWidget {
                 ),
               ],
             ),
+            const SizedBox(height: AppSpacing.md),
+            // How it counts, so there's no guessing what to do.
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  AppIcons.info,
+                  size: 18,
+                  color: context.colors.textSecondary,
+                ),
+                const SizedBox(width: AppSpacing.xs),
+                Expanded(
+                  child: Text(
+                    l10n.goalSummaryCounts(type?.name ?? challenge.title),
+                    style: quiet,
+                  ),
+                ),
+              ],
+            ),
             const SizedBox(height: AppSpacing.xl),
             Text(
               '${progress.progress} / ${progress.targetDays}',
@@ -458,6 +477,25 @@ class _TargetBody extends StatelessWidget {
                         style: quiet,
                       ),
                     ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            // How it counts, so there's no guessing what to do.
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  AppIcons.info,
+                  size: 18,
+                  color: context.colors.textSecondary,
+                ),
+                const SizedBox(width: AppSpacing.xs),
+                Expanded(
+                  child: Text(
+                    l10n.goalSummaryCounts(type?.name ?? challenge.title),
+                    style: quiet,
                   ),
                 ),
               ],

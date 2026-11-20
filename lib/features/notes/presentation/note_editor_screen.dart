@@ -222,6 +222,18 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
             icon: const Icon(AppIcons.delete),
             onPressed: () => unawaited(_delete()),
           ),
+          // It saves as you type; Save says so, and closes the note.
+          Padding(
+            padding: const EdgeInsets.only(right: AppSpacing.sm),
+            child: FilledButton(
+              onPressed: () async {
+                _debounce?.cancel();
+                await _save();
+                if (context.mounted) Navigator.of(context).maybePop();
+              },
+              child: Text(l10n.notesSave),
+            ),
+          ),
         ],
       ),
       body: !_loaded
