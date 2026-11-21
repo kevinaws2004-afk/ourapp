@@ -39,8 +39,14 @@ class HealthConnectImport {
     HealthDataType.BODY_FAT_PERCENTAGE,
   ];
 
+  /// Off for the first release: reading health data needs Google Play's
+  /// Health Connect declaration and review. To turn it back on, set this to
+  /// true and restore the Health Connect entries in AndroidManifest.xml
+  /// (marked "Health Connect, off for the first release").
+  static const enabled = false;
+
   static bool get isSupported =>
-      !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+      enabled && !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
 
   Future<bool> isAvailable() async {
     if (!isSupported) return false;

@@ -10,7 +10,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Bonsday';
+  String get appTitle => 'DayMeter';
 
   @override
   String get navToday => 'Today';
@@ -5409,7 +5409,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get meExportSubtitle => 'A full backup as a JSON file';
 
   @override
-  String get meExportSubject => 'Bonsday backup';
+  String get meExportSubject => 'DayMeter backup';
 
   @override
   String get mePrivacy => 'Privacy';
@@ -5427,7 +5427,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Made for people who like to see their days add up.';
 
   @override
-  String get meFooter => 'Bonsday · Plan it. Do it. See it.';
+  String get meFooter => 'DayMeter · Plan it. Do it. See it.';
 
   @override
   String get meNameTitle => 'What should we call you?';
@@ -5664,7 +5664,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get notifyMorningBodyAnytime => 'Open Bonsday to plan your day.';
+  String get notifyMorningBodyAnytime => 'Open DayMeter to plan your day.';
 
   @override
   String get notifyEvening => 'How did today go?';
@@ -5691,11 +5691,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notificationsMaster => 'Allow notifications';
 
   @override
-  String get notificationsMasterHint => 'Off means Bonsday never notifies you.';
+  String get notificationsMasterHint =>
+      'Off means DayMeter never notifies you.';
 
   @override
   String get notificationsBlocked =>
-      'Notifications are blocked for Bonsday in your phone settings.';
+      'Notifications are blocked for DayMeter in your phone settings.';
 
   @override
   String get notificationsAllow => 'Allow';
@@ -6347,7 +6348,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get csvNothing => 'Nothing recorded yet to export.';
 
   @override
-  String get csvShareSubject => 'Bonsday spreadsheets';
+  String get csvShareSubject => 'DayMeter spreadsheets';
 
   @override
   String get csvDate => 'Date';
@@ -6378,14 +6379,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get restoreFromFileSubtitle =>
-      'Pick a Bonsday backup (.json) saved earlier';
+      'Pick a DayMeter backup (.json) saved earlier';
 
   @override
-  String get restoreNotABackup => 'That file isn\'t a Bonsday backup.';
+  String get restoreNotABackup => 'That file isn\'t a DayMeter backup.';
 
   @override
   String get restoreNewerVersion =>
-      'That backup is from a newer version of Bonsday. Update the app, then try again.';
+      'That backup is from a newer version of DayMeter. Update the app, then try again.';
 
   @override
   String get restoreConfirmTitle => 'Replace everything with this backup?';
@@ -6474,17 +6475,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backupDeviceNote =>
-      'With Android\'s device backup on (Settings → Google → Backup), these backups and your data move to your next phone with it. Nothing is ever uploaded by Bonsday itself.';
+      'With Android\'s device backup on (Settings → Google → Backup), these backups and your data move to your next phone with it. Nothing is ever uploaded by DayMeter itself.';
 
   @override
   String get appLockTitle => 'App lock';
 
   @override
   String get appLockSubtitle =>
-      'Ask for your fingerprint, face or screen lock to open Bonsday';
+      'Ask for your fingerprint, face or screen lock to open DayMeter';
 
   @override
-  String get appLockReason => 'Unlock Bonsday';
+  String get appLockReason => 'Unlock DayMeter';
 
   @override
   String get appLockNoScreenLock => 'Set up a screen lock on your phone first.';
@@ -6494,7 +6495,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Couldn\'t confirm it\'s you. App lock is still off.';
 
   @override
-  String get appLockLockedTitle => 'Bonsday is locked';
+  String get appLockLockedTitle => 'DayMeter is locked';
 
   @override
   String get appLockLockedBody => 'Your plans and records stay private.';
@@ -6591,7 +6592,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dndNeedsAccess =>
-      'Allow Bonsday under Do Not Disturb access — tap to open it';
+      'Allow DayMeter under Do Not Disturb access — tap to open it';
 
   @override
   String notifyPomodoroRoundDone(int round) {
@@ -6621,7 +6622,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recapShare => 'Share your week';
 
   @override
-  String get recapShareText => 'My week, planned and done — made with Bonsday';
+  String get recapShareText => 'My week, planned and done — made with DayMeter';
 
   @override
   String get recapEmptyTitle => 'A quiet week';
@@ -6835,7 +6836,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get firstPlanRemind => 'Remind me 10 minutes before';
 
   @override
-  String get firstPlanRemindHint => 'Bonsday will ask to send notifications.';
+  String get firstPlanRemindHint => 'DayMeter will ask to send notifications.';
 
   @override
   String get healthTitle => 'Health Connect';
@@ -6853,7 +6854,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get healthDenied =>
-      'Bonsday wasn\'t allowed to read from Health Connect.';
+      'DayMeter wasn\'t allowed to read from Health Connect.';
 
   @override
   String healthImported(int count) {
@@ -6907,53 +6908,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get widgetStartSomething => 'Start something';
 
   @override
-  String get meRate => 'Rate Bonsday';
+  String get meRate => 'Rate DayMeter';
 
   @override
   String get meRateSubtitle => 'A review on Google Play helps others find it';
-
-  @override
-  String get meFeedback => 'Send feedback';
-
-  @override
-  String get meFeedbackSubtitle => 'Email us an idea or a problem';
-
-  @override
-  String get feedbackIntro =>
-      'Every message is read. Nothing is sent until you choose to send it.';
-
-  @override
-  String get feedbackWrite => 'Email us';
-
-  @override
-  String get feedbackWriteSubtitle =>
-      'An idea, a problem, anything. Your app and phone version are added for you.';
-
-  @override
-  String get feedbackSubject => 'Bonsday feedback';
-
-  @override
-  String get feedbackDiagnostics => 'Send a problem report';
-
-  @override
-  String get feedbackDiagnosticsSubject => 'Bonsday problem report';
-
-  @override
-  String get feedbackDiagnosticsNone => 'No problems recorded on this phone';
-
-  @override
-  String feedbackDiagnosticsCount(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count recent problems, no personal data',
-      one: '1 recent problem, no personal data',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String get feedbackFailed => 'Couldn\'t open that. Try again in a moment.';
 
   @override
   String itemPausedLine(String time) {
@@ -7039,7 +6997,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get blockNeedsService =>
-      'Turn on \"Bonsday focus blocking\" in Accessibility settings. Tap to open.';
+      'Turn on \"DayMeter focus blocking\" in Accessibility settings. Tap to open.';
 
   @override
   String get blockApps => 'Apps to block';
@@ -7069,7 +7027,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get blockDisclosureBody =>
-      'To block apps while you focus, Bonsday uses Android\'s Accessibility service.\n\n• It only notices which app comes to the front while a focus session is running.\n• It never reads what\'s on your screen, what you type, or anything else.\n• Nothing is collected, stored about other apps, or sent anywhere.\n\nOn the next screen, turn on \"Bonsday focus blocking\". Android shows a strong warning about \"full control\" for every app that uses this; Bonsday only uses it as described above. Turn it off there any time, then press Back once to come back.';
+      'To block apps while you focus, DayMeter uses Android\'s Accessibility service.\n\n• It only notices which app comes to the front while a focus session is running.\n• It never reads what\'s on your screen, what you type, or anything else.\n• Nothing is collected, stored about other apps, or sent anywhere.\n\nOn the next screen, turn on \"DayMeter focus blocking\". Android shows a strong warning about \"full control\" for every app that uses this; DayMeter only uses it as described above. Turn it off there any time, then press Back once to come back.';
 
   @override
   String get blockDisclosureAgree => 'Agree and continue';
@@ -7578,7 +7536,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get meAboutTitle => 'About Bonsday';
+  String get meAboutTitle => 'About DayMeter';
 
   @override
   String get meAboutBlurb =>
@@ -7589,7 +7547,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get meLicensesSubtitle =>
-      'Bonsday is built with free, open software (like Flutter). Their authors ask that their names and terms are listed here.';
+      'DayMeter is built with free, open software (like Flutter). Their authors ask that their names and terms are listed here.';
 
   @override
   String get notesSave => 'Save';
@@ -7651,7 +7609,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get blockAppsOther => 'Other apps';
 
   @override
-  String get focusPinHeadsUpTitle => 'Your phone will ask to pin Bonsday';
+  String get focusPinHeadsUpTitle => 'Your phone will ask to pin DayMeter';
 
   @override
   String get focusPinHeadsUpBody =>

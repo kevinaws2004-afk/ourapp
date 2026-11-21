@@ -97,7 +97,7 @@ abstract class AppLocalizations {
   /// Temporary visible product name. The real name is undecided (ADR-010). Change together with Android strings.xml and iOS Info.plist.
   ///
   /// In en, this message translates to:
-  /// **'Bonsday'**
+  /// **'DayMeter'**
   String get appTitle;
 
   /// Primary navigation tab: today's plan and timeline.
@@ -9996,7 +9996,7 @@ abstract class AppLocalizations {
   /// No description provided for @meExportSubject.
   ///
   /// In en, this message translates to:
-  /// **'Bonsday backup'**
+  /// **'DayMeter backup'**
   String get meExportSubject;
 
   /// No description provided for @mePrivacy.
@@ -10026,7 +10026,7 @@ abstract class AppLocalizations {
   /// No description provided for @meFooter.
   ///
   /// In en, this message translates to:
-  /// **'Bonsday · Plan it. Do it. See it.'**
+  /// **'DayMeter · Plan it. Do it. See it.'**
   String get meFooter;
 
   /// No description provided for @meNameTitle.
@@ -10386,7 +10386,7 @@ abstract class AppLocalizations {
   /// No description provided for @notifyMorningBodyAnytime.
   ///
   /// In en, this message translates to:
-  /// **'Open Bonsday to plan your day.'**
+  /// **'Open DayMeter to plan your day.'**
   String get notifyMorningBodyAnytime;
 
   /// No description provided for @notifyEvening.
@@ -10434,13 +10434,13 @@ abstract class AppLocalizations {
   /// No description provided for @notificationsMasterHint.
   ///
   /// In en, this message translates to:
-  /// **'Off means Bonsday never notifies you.'**
+  /// **'Off means DayMeter never notifies you.'**
   String get notificationsMasterHint;
 
   /// No description provided for @notificationsBlocked.
   ///
   /// In en, this message translates to:
-  /// **'Notifications are blocked for Bonsday in your phone settings.'**
+  /// **'Notifications are blocked for DayMeter in your phone settings.'**
   String get notificationsBlocked;
 
   /// No description provided for @notificationsAllow.
@@ -11562,7 +11562,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Bonsday spreadsheets'**
+  /// **'DayMeter spreadsheets'**
   String get csvShareSubject;
 
   /// UI copy.
@@ -11622,19 +11622,19 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Pick a Bonsday backup (.json) saved earlier'**
+  /// **'Pick a DayMeter backup (.json) saved earlier'**
   String get restoreFromFileSubtitle;
 
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'That file isn\'t a Bonsday backup.'**
+  /// **'That file isn\'t a DayMeter backup.'**
   String get restoreNotABackup;
 
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'That backup is from a newer version of Bonsday. Update the app, then try again.'**
+  /// **'That backup is from a newer version of DayMeter. Update the app, then try again.'**
   String get restoreNewerVersion;
 
   /// UI copy.
@@ -11730,7 +11730,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'With Android\'s device backup on (Settings → Google → Backup), these backups and your data move to your next phone with it. Nothing is ever uploaded by Bonsday itself.'**
+  /// **'With Android\'s device backup on (Settings → Google → Backup), these backups and your data move to your next phone with it. Nothing is ever uploaded by DayMeter itself.'**
   String get backupDeviceNote;
 
   /// UI copy.
@@ -11742,13 +11742,13 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Ask for your fingerprint, face or screen lock to open Bonsday'**
+  /// **'Ask for your fingerprint, face or screen lock to open DayMeter'**
   String get appLockSubtitle;
 
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Unlock Bonsday'**
+  /// **'Unlock DayMeter'**
   String get appLockReason;
 
   /// UI copy.
@@ -11766,7 +11766,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Bonsday is locked'**
+  /// **'DayMeter is locked'**
   String get appLockLockedTitle;
 
   /// UI copy.
@@ -11910,7 +11910,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Allow Bonsday under Do Not Disturb access — tap to open it'**
+  /// **'Allow DayMeter under Do Not Disturb access — tap to open it'**
   String get dndNeedsAccess;
 
   /// UI copy.
@@ -11958,7 +11958,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'My week, planned and done — made with Bonsday'**
+  /// **'My week, planned and done — made with DayMeter'**
   String get recapShareText;
 
   /// UI copy.
@@ -12294,7 +12294,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Bonsday will ask to send notifications.'**
+  /// **'DayMeter will ask to send notifications.'**
   String get firstPlanRemindHint;
 
   /// UI copy.
@@ -12324,7 +12324,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Bonsday wasn\'t allowed to read from Health Connect.'**
+  /// **'DayMeter wasn\'t allowed to read from Health Connect.'**
   String get healthDenied;
 
   /// UI copy.
@@ -12390,7 +12390,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Rate Bonsday'**
+  /// **'Rate DayMeter'**
   String get meRate;
 
   /// UI copy.
@@ -12398,72 +12398,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A review on Google Play helps others find it'**
   String get meRateSubtitle;
-
-  /// UI copy.
-  ///
-  /// In en, this message translates to:
-  /// **'Send feedback'**
-  String get meFeedback;
-
-  /// UI copy.
-  ///
-  /// In en, this message translates to:
-  /// **'Email us an idea or a problem'**
-  String get meFeedbackSubtitle;
-
-  /// UI copy.
-  ///
-  /// In en, this message translates to:
-  /// **'Every message is read. Nothing is sent until you choose to send it.'**
-  String get feedbackIntro;
-
-  /// UI copy.
-  ///
-  /// In en, this message translates to:
-  /// **'Email us'**
-  String get feedbackWrite;
-
-  /// UI copy.
-  ///
-  /// In en, this message translates to:
-  /// **'An idea, a problem, anything. Your app and phone version are added for you.'**
-  String get feedbackWriteSubtitle;
-
-  /// UI copy.
-  ///
-  /// In en, this message translates to:
-  /// **'Bonsday feedback'**
-  String get feedbackSubject;
-
-  /// UI copy.
-  ///
-  /// In en, this message translates to:
-  /// **'Send a problem report'**
-  String get feedbackDiagnostics;
-
-  /// UI copy.
-  ///
-  /// In en, this message translates to:
-  /// **'Bonsday problem report'**
-  String get feedbackDiagnosticsSubject;
-
-  /// UI copy.
-  ///
-  /// In en, this message translates to:
-  /// **'No problems recorded on this phone'**
-  String get feedbackDiagnosticsNone;
-
-  /// UI copy.
-  ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =1{1 recent problem, no personal data} other{{count} recent problems, no personal data}}'**
-  String feedbackDiagnosticsCount(int count);
-
-  /// UI copy.
-  ///
-  /// In en, this message translates to:
-  /// **'Couldn\'t open that. Try again in a moment.'**
-  String get feedbackFailed;
 
   /// UI copy.
   ///
@@ -12600,7 +12534,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Turn on \"Bonsday focus blocking\" in Accessibility settings. Tap to open.'**
+  /// **'Turn on \"DayMeter focus blocking\" in Accessibility settings. Tap to open.'**
   String get blockNeedsService;
 
   /// UI copy.
@@ -12642,7 +12576,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'To block apps while you focus, Bonsday uses Android\'s Accessibility service.\n\n• It only notices which app comes to the front while a focus session is running.\n• It never reads what\'s on your screen, what you type, or anything else.\n• Nothing is collected, stored about other apps, or sent anywhere.\n\nOn the next screen, turn on \"Bonsday focus blocking\". Android shows a strong warning about \"full control\" for every app that uses this; Bonsday only uses it as described above. Turn it off there any time, then press Back once to come back.'**
+  /// **'To block apps while you focus, DayMeter uses Android\'s Accessibility service.\n\n• It only notices which app comes to the front while a focus session is running.\n• It never reads what\'s on your screen, what you type, or anything else.\n• Nothing is collected, stored about other apps, or sent anywhere.\n\nOn the next screen, turn on \"DayMeter focus blocking\". Android shows a strong warning about \"full control\" for every app that uses this; DayMeter only uses it as described above. Turn it off there any time, then press Back once to come back.'**
   String get blockDisclosureBody;
 
   /// UI copy.
@@ -13386,7 +13320,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'About Bonsday'**
+  /// **'About DayMeter'**
   String get meAboutTitle;
 
   /// UI copy.
@@ -13404,7 +13338,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Bonsday is built with free, open software (like Flutter). Their authors ask that their names and terms are listed here.'**
+  /// **'DayMeter is built with free, open software (like Flutter). Their authors ask that their names and terms are listed here.'**
   String get meLicensesSubtitle;
 
   /// UI copy.
@@ -13518,7 +13452,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Your phone will ask to pin Bonsday'**
+  /// **'Your phone will ask to pin DayMeter'**
   String get focusPinHeadsUpTitle;
 
   /// UI copy.

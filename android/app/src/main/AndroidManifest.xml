@@ -5,10 +5,12 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <!-- On-time reminders (Me → Notifications asks; without it they may be late). -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <!-- Health Connect: read body measurements, only when asked to import. -->
+    <!-- Health Connect, off for the first release (needs Play's health
+         declaration). To turn it back on, restore:
     <uses-permission android:name="android.permission.health.READ_WEIGHT" />
     <uses-permission android:name="android.permission.health.READ_HEIGHT" />
     <uses-permission android:name="android.permission.health.READ_BODY_FAT" />
+    -->
     <!-- Do Not Disturb while a focus timer runs (only once allowed). -->
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <!-- Android's own device backup (when the person has it on) carries the
@@ -45,10 +47,11 @@
               android:value="false"
               />
             <!-- The launcher entry is one of the Icon* aliases below. -->
-            <!-- Health Connect's "why does Daylog need this?" link. -->
+            <!-- Health Connect, off for the first release. Restore with it:
             <intent-filter>
                 <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
             </intent-filter>
+            -->
         </activity>
         <!-- The home-screen icon follows the color theme (IconSwitcher.kt):
              one launcher alias per theme, only the current one enabled.
@@ -218,7 +221,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity-alias>
-        <!-- Android 14+: Health Connect's permission usage screen. -->
+        <!-- Health Connect, off for the first release. Restore with it:
         <activity-alias
             android:name="ViewPermissionUsageActivity"
             android:exported="true"
@@ -229,6 +232,7 @@
                 <category android:name="android.intent.category.HEALTH_PERMISSIONS" />
             </intent-filter>
         </activity-alias>
+        -->
         <!-- The Today home-screen widget. -->
         <receiver
             android:name=".TodayWidgetProvider"
@@ -301,10 +305,11 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
-        <!-- Whether Health Connect is installed. -->
+        <!-- Health Connect, off for the first release. Restore with it:
         <package android:name="com.google.android.apps.healthdata" />
         <intent>
             <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
         </intent>
+        -->
     </queries>
 </manifest>

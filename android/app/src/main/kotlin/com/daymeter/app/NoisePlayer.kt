@@ -1,4 +1,4 @@
-package com.bonsday.app
+package com.daymeter.app
 
 import android.media.AudioAttributes
 import android.media.AudioFormat

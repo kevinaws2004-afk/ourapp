@@ -21,7 +21,7 @@ import '../features/plans/presentation/plan_providers.dart';
 import '../l10n/device_localizations.dart';
 
 /// The Android widget's provider class (`TodayWidgetProvider.kt`).
-const _androidWidget = 'com.bonsday.app.TodayWidgetProvider';
+const _androidWidget = 'com.daymeter.app.TodayWidgetProvider';
 
 /// Asks the shell to open Quick start (from the widget's button or the
 /// Quick Settings tile). It stays pending until the shell takes it, so a

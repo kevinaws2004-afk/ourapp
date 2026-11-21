@@ -4,7 +4,7 @@ import 'package:path_provider/path_provider.dart';
 
 /// The last warnings and errors (crashes included), kept in a small file on
 /// the phone so a problem can be reported after it happened. Never sent
-/// anywhere by itself: Me → Send feedback shares it only when the person
+/// anywhere by itself; it only ever stays on this phone, unless the person
 /// chooses to. Entries hold error types, messages and stack traces, never
 /// what people write in the app (see `AppLogger`).
 class DiagnosticsLog {

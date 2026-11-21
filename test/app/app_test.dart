@@ -208,7 +208,7 @@ void main() {
       final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
       expect(
         app.onGenerateTitle!(tester.element(find.byType(TodayScreen))),
-        'Bonsday',
+        'DayMeter',
       );
       expect(find.text('Today'), findsWidgets);
     },

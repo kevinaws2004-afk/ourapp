@@ -101,7 +101,7 @@ abstract final class AppIcons {
   static const pinned = PhosphorFillGlyphs.pushPin;
   static const search = PhosphorGlyphs.magnifyingGlass;
 
-  // Backup, focus, platform and feedback.
+  // Backup, focus and platform.
   static const backup = PhosphorGlyphs.cloudCheck;
   static const restore = PhosphorGlyphs.clockCounterClockwise;
   static const importFile = PhosphorGlyphs.trayArrowDown;
@@ -111,7 +111,6 @@ abstract final class AppIcons {
   static const doNotDisturb = PhosphorGlyphs.bellSlash;
   static const breakTime = PhosphorGlyphs.coffee;
   static const health = PhosphorGlyphs.heartbeat;
-  static const feedback = PhosphorGlyphs.chatText;
   static const diagnostics = PhosphorGlyphs.bug;
   static const copy = PhosphorGlyphs.copy;
   static const routine = PhosphorGlyphs.stack;

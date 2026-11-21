@@ -33,7 +33,7 @@ const _minSplash = Duration(milliseconds: 900);
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
   const logger = AppLogger();
-  // Errors and crashes are kept on the phone for Send feedback.
+  // Errors and crashes are kept on the phone (never sent anywhere).
   final diagnostics = await DiagnosticsLog.open();
   if (diagnostics != null) AppLogger.sink = diagnostics.record;
 

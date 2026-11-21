@@ -7,7 +7,7 @@ import '../../core/design/context_ext.dart';
 import '../../core/design/tokens/color_tokens.dart';
 
 /// The app's name, in one place.
-const appBrandName = 'Bonsday';
+const appBrandName = 'DayMeter';
 
 /// The logo's colors, all taken from the current theme so the whole mark
 /// changes with it.
@@ -176,22 +176,18 @@ class LogoPainter extends CustomPainter {
   final double? travel;
   final double twinkle;
 
-  /// The trunk: a spine rising from the pot with two branches curving out
-  /// and back, a soft "B" (for Bonsday) that still reads as a tree.
+  /// The trunk: a spine rising from the pot with one branch curving out
+  /// and back down to it, a soft "D" (for DayMeter) that still reads as a
+  /// tree.
   static final Path _spine = Path()
     ..moveTo(228, 354)
     ..cubicTo(220, 300, 236, 250, 226, 200)
     ..cubicTo(220, 170, 224, 150, 230, 132);
 
-  static final Path _upperBranch = Path()
+  static final Path _bowl = Path()
     ..moveTo(228, 150)
-    ..cubicTo(286, 134, 330, 164, 314, 198)
-    ..cubicTo(302, 222, 266, 230, 230, 228);
-
-  static final Path _lowerBranch = Path()
-    ..moveTo(232, 232)
-    ..cubicTo(304, 226, 360, 256, 346, 300)
-    ..cubicTo(336, 332, 282, 344, 236, 338);
+    ..cubicTo(312, 140, 366, 190, 362, 244)
+    ..cubicTo(358, 302, 300, 342, 236, 338);
 
   /// A short branch out to the left pad, for balance.
   static final Path _leftBranch = Path()
@@ -199,15 +195,14 @@ class LogoPainter extends CustomPainter {
     ..quadraticBezierTo(196, 258, 170, 240);
 
   /// The leaf pads: wide leaves overlapping like a little cloud, on the top
-  /// of the B, on its two curves and on the left branch. Each with where it
-  /// grows from.
+  /// of the D, on the outside of its curve and on the left branch. Each
+  /// with where it grows from.
   static const List<(List<(double, double, double, double)>, Offset)> _pads = [
     (
       [(178, 136, 50, 32), (232, 114, 58, 40), (288, 132, 46, 30)],
       Offset(230, 150),
     ),
-    ([(330, 158, 36, 24), (368, 150, 40, 28)], Offset(310, 160)),
-    ([(330, 290, 42, 28), (374, 274, 46, 32)], Offset(346, 300)),
+    ([(354, 236, 40, 28), (396, 222, 42, 30)], Offset(362, 244)),
     ([(144, 236, 36, 24), (178, 226, 40, 28)], Offset(170, 240)),
   ];
 
@@ -290,8 +285,7 @@ class LogoPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round;
     canvas.drawPath(_spine, wood..strokeWidth = 30);
-    canvas.drawPath(_upperBranch, wood..strokeWidth = 20);
-    canvas.drawPath(_lowerBranch, wood..strokeWidth = 22);
+    canvas.drawPath(_bowl, wood..strokeWidth = 22);
     canvas.drawPath(_leftBranch, wood..strokeWidth = 14);
     canvas.restore();
 

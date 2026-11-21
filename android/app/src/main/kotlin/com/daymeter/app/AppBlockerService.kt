@@ -1,4 +1,4 @@
-package com.bonsday.app
+package com.daymeter.app
 
 import android.accessibilityservice.AccessibilityService
 import android.content.ComponentName
@@ -11,7 +11,7 @@ import android.widget.Toast
 
 /// Focus-mode app blocking (Me → Focus → Block distracting apps). While a
 /// focus session runs, opening an app the person chose to block sends them
-/// back to Bonsday with a short note. It only looks at which app came to
+/// back to DayMeter with a short note. It only looks at which app came to
 /// the front (the window-change event's package name); it never reads what's
 /// on the screen, and nothing leaves the phone.
 class AppBlockerService : AccessibilityService() {
@@ -28,7 +28,7 @@ class AppBlockerService : AccessibilityService() {
         } catch (_: PackageManager.NameNotFoundException) {
             app
         }
-        // Bonsday (the running timer) comes to the front over it. Going
+        // DayMeter (the running timer) comes to the front over it. Going
         // home first would land on the launcher instead.
         startActivity(
             Intent(this, MainActivity::class.java).addFlags(

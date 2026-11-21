@@ -1,4 +1,4 @@
-// Renders Bonsday's launcher icons and store artwork from the app's own
+// Renders DayMeter's launcher icons and store artwork from the app's own
 // logo painter, in the default (lavender) theme. Not part of the normal
 // test run:
 //   flutter test tool/screens/icon_test.dart
@@ -187,7 +187,7 @@ void main() {
                   ),
                   const SizedBox(height: 18),
                   Text(
-                    'Plan your day. Focus. Grow.',
+                    'Track your day. See it add up.',
                     style: TextStyle(
                       fontFamily: 'PlusJakartaSans',
                       fontWeight: FontWeight.w400,

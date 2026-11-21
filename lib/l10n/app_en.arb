@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "appTitle": "Bonsday",
+  "appTitle": "DayMeter",
   "@appTitle": {
     "description": "Temporary visible product name. The real name is undecided (ADR-010). Change together with Android strings.xml and iOS Info.plist."
   },
@@ -7289,7 +7289,7 @@
   "@meExport": {},
   "meExportSubtitle": "A full backup as a JSON file",
   "@meExportSubtitle": {},
-  "meExportSubject": "Bonsday backup",
+  "meExportSubject": "DayMeter backup",
   "@meExportSubject": {},
   "mePrivacy": "Privacy",
   "@mePrivacy": {},
@@ -7305,7 +7305,7 @@
   },
   "meAboutLegal": "Made for people who like to see their days add up.",
   "@meAboutLegal": {},
-  "meFooter": "Bonsday · Plan it. Do it. See it.",
+  "meFooter": "DayMeter · Plan it. Do it. See it.",
   "@meFooter": {},
   "meNameTitle": "What should we call you?",
   "@meNameTitle": {},
@@ -7529,7 +7529,7 @@
       }
     }
   },
-  "notifyMorningBodyAnytime": "Open Bonsday to plan your day.",
+  "notifyMorningBodyAnytime": "Open DayMeter to plan your day.",
   "@notifyMorningBodyAnytime": {},
   "notifyEvening": "How did today go?",
   "@notifyEvening": {},
@@ -7554,9 +7554,9 @@
   "@notificationsSubtitle": {},
   "notificationsMaster": "Allow notifications",
   "@notificationsMaster": {},
-  "notificationsMasterHint": "Off means Bonsday never notifies you.",
+  "notificationsMasterHint": "Off means DayMeter never notifies you.",
   "@notificationsMasterHint": {},
-  "notificationsBlocked": "Notifications are blocked for Bonsday in your phone settings.",
+  "notificationsBlocked": "Notifications are blocked for DayMeter in your phone settings.",
   "@notificationsBlocked": {},
   "notificationsAllow": "Allow",
   "@notificationsAllow": {},
@@ -8190,7 +8190,7 @@
   "@csvNothing": {
     "description": "UI copy."
   },
-  "csvShareSubject": "Bonsday spreadsheets",
+  "csvShareSubject": "DayMeter spreadsheets",
   "@csvShareSubject": {
     "description": "UI copy."
   },
@@ -8230,15 +8230,15 @@
   "@restoreFromFile": {
     "description": "UI copy."
   },
-  "restoreFromFileSubtitle": "Pick a Bonsday backup (.json) saved earlier",
+  "restoreFromFileSubtitle": "Pick a DayMeter backup (.json) saved earlier",
   "@restoreFromFileSubtitle": {
     "description": "UI copy."
   },
-  "restoreNotABackup": "That file isn't a Bonsday backup.",
+  "restoreNotABackup": "That file isn't a DayMeter backup.",
   "@restoreNotABackup": {
     "description": "UI copy."
   },
-  "restoreNewerVersion": "That backup is from a newer version of Bonsday. Update the app, then try again.",
+  "restoreNewerVersion": "That backup is from a newer version of DayMeter. Update the app, then try again.",
   "@restoreNewerVersion": {
     "description": "UI copy."
   },
@@ -8325,7 +8325,7 @@
   "@backupSaveCopy": {
     "description": "UI copy."
   },
-  "backupDeviceNote": "With Android's device backup on (Settings → Google → Backup), these backups and your data move to your next phone with it. Nothing is ever uploaded by Bonsday itself.",
+  "backupDeviceNote": "With Android's device backup on (Settings → Google → Backup), these backups and your data move to your next phone with it. Nothing is ever uploaded by DayMeter itself.",
   "@backupDeviceNote": {
     "description": "UI copy."
   },
@@ -8333,11 +8333,11 @@
   "@appLockTitle": {
     "description": "UI copy."
   },
-  "appLockSubtitle": "Ask for your fingerprint, face or screen lock to open Bonsday",
+  "appLockSubtitle": "Ask for your fingerprint, face or screen lock to open DayMeter",
   "@appLockSubtitle": {
     "description": "UI copy."
   },
-  "appLockReason": "Unlock Bonsday",
+  "appLockReason": "Unlock DayMeter",
   "@appLockReason": {
     "description": "UI copy."
   },
@@ -8349,7 +8349,7 @@
   "@appLockFailed": {
     "description": "UI copy."
   },
-  "appLockLockedTitle": "Bonsday is locked",
+  "appLockLockedTitle": "DayMeter is locked",
   "@appLockLockedTitle": {
     "description": "UI copy."
   },
@@ -8494,7 +8494,7 @@
   "@dndSwitchHint": {
     "description": "UI copy."
   },
-  "dndNeedsAccess": "Allow Bonsday under Do Not Disturb access — tap to open it",
+  "dndNeedsAccess": "Allow DayMeter under Do Not Disturb access — tap to open it",
   "@dndNeedsAccess": {
     "description": "UI copy."
   },
@@ -8541,7 +8541,7 @@
   "@recapShare": {
     "description": "UI copy."
   },
-  "recapShareText": "My week, planned and done — made with Bonsday",
+  "recapShareText": "My week, planned and done — made with DayMeter",
   "@recapShareText": {
     "description": "UI copy."
   },
@@ -8832,7 +8832,7 @@
   "@firstPlanRemind": {
     "description": "UI copy."
   },
-  "firstPlanRemindHint": "Bonsday will ask to send notifications.",
+  "firstPlanRemindHint": "DayMeter will ask to send notifications.",
   "@firstPlanRemindHint": {
     "description": "UI copy."
   },
@@ -8852,7 +8852,7 @@
   "@healthUnavailable": {
     "description": "UI copy."
   },
-  "healthDenied": "Bonsday wasn't allowed to read from Health Connect.",
+  "healthDenied": "DayMeter wasn't allowed to read from Health Connect.",
   "@healthDenied": {
     "description": "UI copy."
   },
@@ -8937,61 +8937,12 @@
   "@widgetStartSomething": {
     "description": "UI copy."
   },
-  "meRate": "Rate Bonsday",
+  "meRate": "Rate DayMeter",
   "@meRate": {
     "description": "UI copy."
   },
   "meRateSubtitle": "A review on Google Play helps others find it",
   "@meRateSubtitle": {
-    "description": "UI copy."
-  },
-  "meFeedback": "Send feedback",
-  "@meFeedback": {
-    "description": "UI copy."
-  },
-  "meFeedbackSubtitle": "Email us an idea or a problem",
-  "@meFeedbackSubtitle": {
-    "description": "UI copy."
-  },
-  "feedbackIntro": "Every message is read. Nothing is sent until you choose to send it.",
-  "@feedbackIntro": {
-    "description": "UI copy."
-  },
-  "feedbackWrite": "Email us",
-  "@feedbackWrite": {
-    "description": "UI copy."
-  },
-  "feedbackWriteSubtitle": "An idea, a problem, anything. Your app and phone version are added for you.",
-  "@feedbackWriteSubtitle": {
-    "description": "UI copy."
-  },
-  "feedbackSubject": "Bonsday feedback",
-  "@feedbackSubject": {
-    "description": "UI copy."
-  },
-  "feedbackDiagnostics": "Send a problem report",
-  "@feedbackDiagnostics": {
-    "description": "UI copy."
-  },
-  "feedbackDiagnosticsSubject": "Bonsday problem report",
-  "@feedbackDiagnosticsSubject": {
-    "description": "UI copy."
-  },
-  "feedbackDiagnosticsNone": "No problems recorded on this phone",
-  "@feedbackDiagnosticsNone": {
-    "description": "UI copy."
-  },
-  "feedbackDiagnosticsCount": "{count, plural, =1{1 recent problem, no personal data} other{{count} recent problems, no personal data}}",
-  "@feedbackDiagnosticsCount": {
-    "description": "UI copy.",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "feedbackFailed": "Couldn't open that. Try again in a moment.",
-  "@feedbackFailed": {
     "description": "UI copy."
   },
   "itemPausedLine": "Paused · {time}",
@@ -9115,7 +9066,7 @@
   "@blockSwitchHint": {
     "description": "UI copy."
   },
-  "blockNeedsService": "Turn on \"Bonsday focus blocking\" in Accessibility settings. Tap to open.",
+  "blockNeedsService": "Turn on \"DayMeter focus blocking\" in Accessibility settings. Tap to open.",
   "@blockNeedsService": {
     "description": "UI copy."
   },
@@ -9148,7 +9099,7 @@
   "@blockDisclosureTitle": {
     "description": "UI copy."
   },
-  "blockDisclosureBody": "To block apps while you focus, Bonsday uses Android's Accessibility service.\n\n• It only notices which app comes to the front while a focus session is running.\n• It never reads what's on your screen, what you type, or anything else.\n• Nothing is collected, stored about other apps, or sent anywhere.\n\nOn the next screen, turn on \"Bonsday focus blocking\". Android shows a strong warning about \"full control\" for every app that uses this; Bonsday only uses it as described above. Turn it off there any time, then press Back once to come back.",
+  "blockDisclosureBody": "To block apps while you focus, DayMeter uses Android's Accessibility service.\n\n• It only notices which app comes to the front while a focus session is running.\n• It never reads what's on your screen, what you type, or anything else.\n• Nothing is collected, stored about other apps, or sent anywhere.\n\nOn the next screen, turn on \"DayMeter focus blocking\". Android shows a strong warning about \"full control\" for every app that uses this; DayMeter only uses it as described above. Turn it off there any time, then press Back once to come back.",
   "@blockDisclosureBody": {
     "description": "UI copy."
   },
@@ -9951,7 +9902,7 @@
       }
     }
   },
-  "meAboutTitle": "About Bonsday",
+  "meAboutTitle": "About DayMeter",
   "@meAboutTitle": {
     "description": "UI copy."
   },
@@ -9963,7 +9914,7 @@
   "@meLicenses": {
     "description": "UI copy."
   },
-  "meLicensesSubtitle": "Bonsday is built with free, open software (like Flutter). Their authors ask that their names and terms are listed here.",
+  "meLicensesSubtitle": "DayMeter is built with free, open software (like Flutter). Their authors ask that their names and terms are listed here.",
   "@meLicensesSubtitle": {
     "description": "UI copy."
   },
@@ -10052,7 +10003,7 @@
   "@blockAppsOther": {
     "description": "UI copy."
   },
-  "focusPinHeadsUpTitle": "Your phone will ask to pin Bonsday",
+  "focusPinHeadsUpTitle": "Your phone will ask to pin DayMeter",
   "@focusPinHeadsUpTitle": {
     "description": "UI copy."
   },

@@ -11,9 +11,9 @@ does the automatic parts (steps 1–4) and stops at the first failure.
    "Deploy from a branch", branch `master`, folder `/docs`. The policy is at
    `https://<user>.github.io/<repo>/privacy-policy`. Put your support email
    in `store/privacy-policy.md` and `docs/privacy-policy.md` first.
-3. **Name check**: search Play for "Bonsday" (an iOS planner with that
+3. **Name check**: search Play for "DayMeter" (an iOS planner with that
    name exists, and it is a stationery trademark). Rename before the first
-   upload if it clashes; the app ID is `com.bonsday.app`.
+   upload if it clashes; the app ID is `com.daymeter.app`.
 4. **Play Console → App content**: privacy policy URL, Data safety ("no
    data collected"), content rating, target audience, and the
    **Accessibility API declaration** (text in `store/listing.md`, plus a
@@ -81,7 +81,6 @@ does the automatic parts (steps 1–4) and stops at the first failure.
 ## After release
 
 - Watch **Play Console → Android vitals** (crashes, ANRs) for the first
-  days. Problem reports people send from Me → Send feedback include the
-  last errors from their phone.
+  days.
 - Keep the upload keystore (`android/key.properties` and the `.jks` file)
   backed up somewhere safe. Losing it means you can't update the app.

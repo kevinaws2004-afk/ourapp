@@ -1,4 +1,4 @@
-# Bonsday: a day in the life, six people
+# DayMeter: a day in the life, six people
 
 _Tested 2026-11-20/21 on the Android emulator (API 37), current build, fresh installs, the phone clock moved through the day. Screenshots: the scratchpad `ht/` folder of this session._
 
@@ -10,7 +10,7 @@ _All bugs, all confusions and the suggestions below were worked through, then I 
 
 ### The new daily loop: why people will open it every day
 
-Research says people return for **something that grows, a streak they don't want to lose (with forgiveness), and a small reward right when they act**. Nagging doesn't work. Bonsday now has all three, kindly:
+Research says people return for **something that grows, a streak they don't want to lose (with forgiveness), and a small reward right when they act**. Nagging doesn't work. DayMeter now has all three, kindly:
 
 | What | How it works | Why it pulls people back |
 |---|---|---|
@@ -53,8 +53,8 @@ Research says people return for **something that grows, a streak they don't want
 | Routine steps are heavy | **Tick boxes.** Set the steps once ("Add step…", Enter for the next), tick daily; they come back unticked tomorrow. Ticking the last one completes it. Writing steps alone doesn't count as done ✔ |
 | Weight can't be a goal | **"My weight"** in New goal: a Body weight activity whose goal also follows the weights in Me → Body measurements; "where you are now" fills from your latest weight ✔ (goal created; measurement link in code) |
 | Focus counts up only | A ring that fills to the planned length, with "12 min left of 30 min", then "30 min done. Keep going or finish." Code; Study had no length in the test |
-| Scary Android dialogs | Our own heads-up first: "Your phone will ask to pin Bonsday… its standard wording…" ✔. The Accessibility disclosure now warns about "full control" wording too |
-| Back twice from Accessibility | Opens Bonsday's own switch (Android 13+), so one Back returns |
+| Scary Android dialogs | Our own heads-up first: "Your phone will ask to pin DayMeter… its standard wording…" ✔. The Accessibility disclosure now warns about "full control" wording too |
+| Back twice from Accessibility | Opens DayMeter's own switch (Android 13+), so one Back returns |
 | App picker | App icons; **Usual distractions** (games, social, video, plus a known list) first |
 | Search ranking | Exact name, then starts-with, then a word in the name, then contains, group, and fields last ("read" → Reading first) |
 | Notes are plain text | **Checklist** button on a note: tick boxes, Enter adds the next, "Clear ticked"; the text keeps ☐/☑ so nothing is lost ✔ |
@@ -109,7 +109,7 @@ Research says people return for **something that grows, a streak they don't want
 
 ## 1. Short version
 
-**Bonsday works.** Across six very different people, nothing crashed. Every main path worked end to end:
+**DayMeter works.** Across six very different people, nothing crashed. Every main path worked end to end:
 - planning, then reminder, then timer, then logging, then wrap-up, then the next morning
 - focus mode and app blocking
 - goals
@@ -122,7 +122,7 @@ The parts people will love:
 
 **What will lose people** is not bugs. It's four everyday habits that the app models awkwardly:
 
-1. **Routines.** A morning or skincare routine is a checklist you set up once and tick daily. In Bonsday each step is a heavy form card, re-entered every day.
+1. **Routines.** A morning or skincare routine is a checklist you set up once and tick daily. In DayMeter each step is a heavy form card, re-entered every day.
 2. **Counting.** Water ("+1 glass") becomes a new item each time, cluttering the day.
 3. **Weight loss.** Your weight lives in Body measurements, but a "reach a number" goal can't use it. The goal screen literally says "like your weight down to 72 kg", and there's no way to pick your weight.
 4. **Several times a day.** Prayer (5×), medicine (2×), water: one item a day with no partial progress shown.
@@ -144,9 +144,9 @@ Fix those four and the app covers what most people actually track. The details a
 
 ---
 
-## 3. Why should someone use Bonsday? (the pitch)
+## 3. Why should someone use DayMeter? (the pitch)
 
-Most apps do one of these: a to-do list, a habit tracker, a focus timer, a gym log, a journal. Bonsday is **one place for your day**: plan it, do it with a timer, log what actually happened, and see it add up.
+Most apps do one of these: a to-do list, a habit tracker, a focus timer, a gym log, a journal. DayMeter is **one place for your day**: plan it, do it with a timer, log what actually happened, and see it add up.
 
 | For… | The reason, in their words |
 |---|---|
@@ -234,11 +234,11 @@ Being honest with yourself (planned vs actual) is the real differentiator. Lead 
 
 ---
 
-## 7. What the research says about apps people come back to (and how Bonsday does)
+## 7. What the research says about apps people come back to (and how DayMeter does)
 
 Habit apps that keep users don't rely on tricks. They make the next step easy, reward it in the moment, and make progress visible. These ideas are well studied:
 
-| Idea | In short | Bonsday today | What to do |
+| Idea | In short | DayMeter today | What to do |
 |---|---|---|---|
 | **Fogg Behavior Model** (B = Motivation × Ability × Prompt) | People act when it's easy and they're prompted at the right moment | Strong on prompts (reminders with Start). Ability is weak for routines and water | Make the common action one tap: tick a routine step, +1 glass |
 | **Hook model** (Nir Eyal): trigger, action, reward, investment | Each use should end with something to look forward to and something saved | Triggers ✔, action ✔. Rewards are thin: goal met and perfect day get little or no moment | Small varied celebrations; "Use last time" is good investment |
@@ -314,7 +314,7 @@ All of these run on the phone, with no server and no paid service.
 
 ## 10. Overall feeling
 
-As a new user, Bonsday feels **calm, trustworthy and well made**. It respects you: no account, no ads, honest numbers, a gentle evening wrap-up. Some apps have plenty of features but tire people out; this one doesn't.
+As a new user, DayMeter feels **calm, trustworthy and well made**. It respects you: no account, no ads, honest numbers, a gentle evening wrap-up. Some apps have plenty of features but tire people out; this one doesn't.
 
 **Where it still frustrates:**
 - The everyday shapes of habits (routines as checklists, counts, several-times-a-day, weight) are missing.

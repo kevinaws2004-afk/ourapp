@@ -26,7 +26,6 @@ import '../domain/preferences_snapshot.dart';
 import 'app_lock.dart';
 import 'appearance_screen.dart';
 import 'backup_providers.dart';
-import 'feedback_sheet.dart';
 import 'preferences_providers.dart';
 import 'review_prompt.dart';
 import '../../../shared/widgets/text_input_dialog.dart';
@@ -336,14 +335,6 @@ class MeScreen extends ConsumerWidget {
                     onTap: () => unawaited(openStoreListing()),
                   ),
                   SettingsTile(
-                    icon: AppIcons.feedback,
-                    iconColor: c.accent,
-                    iconBackground: c.accentSoft,
-                    title: l10n.meFeedback,
-                    subtitle: l10n.meFeedbackSubtitle,
-                    onTap: () => unawaited(showFeedbackSheet(context, ref)),
-                  ),
-                  SettingsTile(
                     icon: AppIcons.info,
                     iconColor: c.textSecondary,
                     iconBackground: c.surfaceSunken,
@@ -397,7 +388,7 @@ class MeScreen extends ConsumerWidget {
     );
   }
 
-  /// About: what Bonsday is, its version, and the open-source licenses,
+  /// About: what DayMeter is, its version, and the open-source licenses,
   /// explained (Android's own dialog only says "View licenses").
   Future<void> _showAbout(BuildContext context, String version) {
     final l10n = AppLocalizations.of(context);

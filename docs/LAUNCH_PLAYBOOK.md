@@ -28,12 +28,12 @@ Where to find them:
 2. Upload the `.aab` (`flutter build appbundle --release`).
 3. Send testers the opt-in link. They must **opt in and install**.
 4. Ask each to open it a few times over the 14 days (Google looks at
-   engagement) and send one piece of feedback (Me → Send feedback).
+   engagement) and tell you (by message) what they liked or found hard.
 5. On day 15, apply for production access; answer the questions honestly
    (what you tested, what you changed from feedback).
 
 Message to testers (copy):
-> Hi! I built Bonsday, a study planner + focus timer. Google needs 12
+> Hi! I built DayMeter, a study planner + focus timer. Google needs 12
 > people to test it for 14 days before I can publish. Could you:
 > 1) open this link and tap "Become a tester": <link>
 > 2) install it from Play, and
