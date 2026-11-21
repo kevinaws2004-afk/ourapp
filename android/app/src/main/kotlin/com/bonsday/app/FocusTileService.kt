@@ -1,4 +1,4 @@
-package com.ourapp.daylog
+package com.bonsday.app
 
 import android.app.PendingIntent
 import android.content.Intent

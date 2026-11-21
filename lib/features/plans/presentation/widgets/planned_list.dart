@@ -57,6 +57,26 @@ class PlannedList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final actions = PlanActions(context, ref);
+    // The same activity more than once today (5 prayers): "2 of 5 today".
+    final parts = <String, ({int done, int total})>{};
+    for (final e in entries) {
+      if (e case PlanEntry(:final item)
+          when item.plan.activityTypeId != null &&
+              item.status != EffectivePlanStatus.skipped &&
+              item.status != EffectivePlanStatus.cancelled) {
+        final key = item.plan.activityTypeId!.value;
+        final p = parts[key] ?? (done: 0, total: 0);
+        parts[key] = (
+          done: p.done + (item.status == EffectivePlanStatus.completed ? 1 : 0),
+          total: p.total + 1,
+        );
+      }
+    }
+    ({int done, int total})? partOf(PlannedItem item) =>
+        switch (parts[item.plan.activityTypeId?.value]) {
+          final p? when p.total > 1 => p,
+          _ => null,
+        };
     Widget tile(DayEntry entry, {Widget? dragHandle}) => switch (entry) {
       PlanEntry(:final item) when dragToDays && item.isOpen => DayDraggable(
         key: ValueKey(item.plan.id),
@@ -64,6 +84,7 @@ class PlannedList extends ConsumerWidget {
         onHold: () => unawaited(actions.quickActions(item)),
         child: PlanItemTile(
           item: item,
+          partOf: partOf(item),
           onTap: () => onOpenItem(item),
           onToggleDone: PlanActions.canToggleDone(item)
               ? () => actions.toggleDone(item)
@@ -74,6 +95,7 @@ class PlannedList extends ConsumerWidget {
       PlanEntry(:final item) => PlanItemTile(
         key: ValueKey(item.plan.id),
         item: item,
+        partOf: partOf(item),
         onTap: () => onOpenItem(item),
         onToggleDone: PlanActions.canToggleDone(item)
             ? () => actions.toggleDone(item)
@@ -383,10 +405,12 @@ Future<void> handlePlanDrop(
 /// A plan's length when it has none, for fitting it in.
 const _defaultLength = 30 * Duration.millisecondsPerMinute;
 
+/// Under Anytime: no time, and nothing logged yet or still open (part-way
+/// stays put).
 bool _untimed(DayEntry e) =>
     e is PlanEntry &&
     e.item.plan.plannedStartAt == null &&
-    e.item.records.isEmpty;
+    (e.item.records.isEmpty || e.item.isOpen);
 
 Future<bool?> _confirm(
   BuildContext context, {

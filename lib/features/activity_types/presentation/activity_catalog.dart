@@ -23,6 +23,8 @@ import 'activity_type_providers.dart';
 import 'built_in_activities.dart';
 import 'preview_type.dart';
 
+import 'activity_search.dart';
+
 /// One list of activities (ADR-042: there is only one concept, the
 /// activity). The user's own come first ("Yours"), then the built-in ones
 /// by category, all in the same card and all searchable by name, category
@@ -60,13 +62,6 @@ class _ActivityCatalogState extends ConsumerState<ActivityCatalog> {
     super.dispose();
   }
 
-  bool _matches(String name, Iterable<String> details, [String group = '']) {
-    final query = _query.trim().toLowerCase();
-    if (query.isEmpty) return true;
-    bool has(String text) => text.toLowerCase().contains(query);
-    return has(name) || has(group) || details.any(has);
-  }
-
   Future<void> _preview(ActivityTypeDefinition definition) async {
     final id = await showModalBottomSheet<ActivityTypeId>(
       useRootNavigator: true,
@@ -85,22 +80,39 @@ class _ActivityCatalogState extends ConsumerState<ActivityCatalog> {
     final yours = types.value ?? const <ActivityType>[];
     bool taken(ActivityTypeDefinition d) =>
         yours.any((a) => sameActivityName(a.name, d.name));
-    final shownYours = [
-      for (final type in yours)
-        if (_matches(type.name, type.activeFields.map((f) => f.name))) type,
-    ];
-    final categories = [
-      for (final category in activityCategories(l10n))
-        (
-          category.name,
-          [
-            for (final d in category.activities)
-              if (!taken(d) &&
-                  _matches(d.name, d.fields.map((f) => f.name), category.name))
-                d,
-          ],
-        ),
-    ].where((c) => c.$2.isNotEmpty).toList();
+    final shownYours = rankBySearch(
+      _query,
+      yours,
+      (type) => activitySearchRank(
+        _query,
+        type.name,
+        type.activeFields.map((f) => f.name),
+      ),
+    );
+    int? rankOf(ActivityTypeDefinition d, String group) => taken(d)
+        ? null
+        : activitySearchRank(
+            _query,
+            d.name,
+            d.fields.map((f) => f.name),
+            group,
+          );
+    // Searching: the group with the best match first.
+    final categories = rankBySearch(
+      _query,
+      [
+        for (final category in activityCategories(l10n))
+          (
+            category.name,
+            rankBySearch(
+              _query,
+              category.activities,
+              (d) => rankOf(d, category.name),
+            ),
+          ),
+      ].where((c) => c.$2.isNotEmpty),
+      (c) => rankOf(c.$2.first, c.$1),
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -114,9 +126,8 @@ class _ActivityCatalogState extends ConsumerState<ActivityCatalog> {
             suffixIcon: _query.isEmpty
                 ? null
                 : IconButton(
-                    tooltip: MaterialLocalizations.of(
-                      context,
-                    ).deleteButtonTooltip,
+                    tooltip: MaterialLocalizations.of(context)
+                        .deleteButtonTooltip,
                     icon: const Icon(AppIcons.close),
                     onPressed: () => setState(() {
                       _search.clear();

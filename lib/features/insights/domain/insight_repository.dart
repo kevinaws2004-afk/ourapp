@@ -97,9 +97,13 @@ abstract interface class InsightRepository {
   );
 
   /// Plans per day from [from] to [today]: planned (not skipped or
-  /// cancelled; today's only once done) and done (marked done, or logged on
-  /// a day that has passed, ADR-040).
-  Stream<List<PlanDay>> watchPlanAdherence(LocalDate from, LocalDate today);
+  /// cancelled; today's once done, or once their time is over at [now]) and
+  /// done (marked done, or logged on a day that has passed, ADR-040).
+  Stream<List<PlanDay>> watchPlanAdherence(
+    LocalDate from,
+    LocalDate today, {
+    DateTime? now,
+  });
 
   /// Every day each activity was done on (streaks).
   Stream<Map<ActivityTypeId, Set<LocalDate>>> watchActiveDays();

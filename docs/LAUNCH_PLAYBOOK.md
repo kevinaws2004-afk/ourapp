@@ -33,7 +33,7 @@ Where to find them:
    (what you tested, what you changed from feedback).
 
 Message to testers (copy):
-> Hi! I built DayCraft, a study planner + focus timer. Google needs 12
+> Hi! I built Bonsday, a study planner + focus timer. Google needs 12
 > people to test it for 14 days before I can publish. Could you:
 > 1) open this link and tap "Become a tester": <link>
 > 2) install it from Play, and

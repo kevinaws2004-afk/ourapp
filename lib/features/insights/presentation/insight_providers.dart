@@ -190,11 +190,12 @@ final planAdherenceProvider = StreamProvider.autoDispose<List<PlanDay>>((
   ref,
 ) async* {
   final p = _periods(ref);
-  final today = currentLocalDate(ref.watch(clockProvider));
+  final clock = ref.watch(clockProvider);
+  final today = currentLocalDate(clock);
   await ref.read(ensureSeriesOccurrencesProvider)(p.prevFrom, today);
   yield* ref
       .watch(insightRepositoryProvider)
-      .watchPlanAdherence(p.prevFrom, today);
+      .watchPlanAdherence(p.prevFrom, today, now: clock.nowUtc());
 });
 
 /// Every day each activity was done on (streaks, and which activities have

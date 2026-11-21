@@ -23,6 +23,7 @@ import '../../challenges/domain/challenge_use_cases.dart';
 import '../data/reminder_store.dart';
 import '../domain/notification_settings.dart';
 import '../domain/plan_reminder.dart';
+import '../../garden/presentation/garden_providers.dart';
 
 /// The started notification service; `bootstrap()` overrides it. Disabled
 /// by default (tests, previews).
@@ -294,6 +295,26 @@ final scheduledNotesProvider = Provider.autoDispose<List<ScheduledNote>>((ref) {
           at: at(today, minute),
           title: l10n.notifyStreak(p.currentStreak, name),
           body: l10n.notifyStreakBody,
+          channel: NotificationChannel.goals,
+          payload: 'today',
+        ),
+      );
+    }
+  }
+  // 6. The day streak: nothing done yet by the evening, the plant needs
+  // water. Once, kindly; a saved rest day is mentioned as a way out.
+  if (settings.goalStreaks) {
+    final streak = ref.watch(dayStreakProvider);
+    if (streak != null && streak.atRisk) {
+      final name = ref.watch(plantNameProvider).value ?? l10n.gardenPlantName;
+      notes.add(
+        ScheduledNote(
+          key: 'plant:$today',
+          at: at(today, 19 * 60 + 30),
+          title: l10n.notifyPlantTitle(name),
+          body: streak.restDays > 0
+              ? l10n.notifyPlantBodyRest
+              : l10n.notifyPlantBody(streak.current),
           channel: NotificationChannel.goals,
           payload: 'today',
         ),

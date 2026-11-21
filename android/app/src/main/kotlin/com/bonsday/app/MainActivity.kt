@@ -1,4 +1,4 @@
-package com.ourapp.daylog
+package com.bonsday.app
 
 import android.app.NotificationManager
 import android.content.Context
@@ -36,7 +36,7 @@ class MainActivity : FlutterFragmentActivity() {
                 when (call.method) {
                     "isEnabled" -> result.success(AppBlocker.isEnabled(this))
                     "openSettings" -> {
-                        startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                        AppBlocker.openSettings(this)
                         result.success(null)
                     }
                     "apps" -> result.success(AppBlocker.launchableApps(this))
@@ -46,6 +46,21 @@ class MainActivity : FlutterFragmentActivity() {
                     }
                     "setActive" -> {
                         AppBlocker.setActive(this, call.argument<Boolean>("active") == true)
+                        result.success(null)
+                    }
+                    else -> result.notImplemented()
+                }
+            }
+        // Calm sounds while focusing (NoisePlayer).
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "daylog/sound")
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "play" -> {
+                        NoisePlayer.play(call.argument<String>("kind") ?: "rain")
+                        result.success(null)
+                    }
+                    "stop" -> {
+                        NoisePlayer.stop()
                         result.success(null)
                     }
                     else -> result.notImplemented()

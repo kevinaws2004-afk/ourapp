@@ -1,23 +1,21 @@
-# DayCraft: Google Play listing
+# Bonsday: Google Play listing
 
 > Positioning (PRODUCT_REVIEW §3): lead with **study & deep-work planning**
 > (plan → focus timer → planned vs. actual), keep "it grows with you" (gym,
 > reading, anything) as the second story.
 >
-> ⚠️ Name check (2026-10-18): an iOS app "DayCraft: ToDo List & Tasks"
-> (planner + time tracking) exists, and "DayCraft" is a registered trademark
-> for paper planners/diaries. Check Play for a clash before publishing and
-> consider a distinct name (e.g. "Studycraft", "Focusday", "PlanStudy"). If
-> you rename, change `android:label`, `appBrandName` and this file.
+> Name: **Bonsday** (2026-11-21). A bonsai grows from small daily care,
+> like your days. Checked: no app, brand or trademark by this name.
+> Before publishing, confirm it in the Play Store search and IP India.
 
 ## App name (30 chars max)
-DayCraft: Study Planner & Focus
+Bonsday: Plan, Focus, Grow
 
 ## Short description (80 chars max)
-Plan study sessions, focus with a timer, and see planned vs. actual hours.
+Plan your day, focus with a timer, and grow a little plant each day you show up.
 
 ## Full description (4000 chars max)
-DayCraft is a calm, private study planner and focus timer. Plan your day, focus on one thing at a time, and see how many hours you actually put in — not just how many you planned.
+Bonsday is a calm, private study planner and focus timer. Plan your day, focus on one thing at a time, and see how many hours you actually put in — not just how many you planned.
 
 PLAN YOUR STUDY DAY
 • Today shows what's next, what's done and how much time you've focused.
@@ -54,7 +52,7 @@ PRIVATE BY DESIGN
 
 15 hand-tuned themes, each in light and dark.
 
-DayCraft: plan it, focus, see it add up.
+Bonsday: plan it, focus, see it add up.
 
 ## Category
 Education (primary choice for the study niche) — or Productivity
@@ -79,7 +77,7 @@ Caption each in the Play Console with the quoted line.
 - Can users request data deletion? Users delete their data in the app or by uninstalling.
 
 ## Accessibility API declaration (Play Console → App content → Sensitive permissions)
-DayCraft uses the AccessibilityService API for one opt-in feature: focus-mode app blocking. While a focus session the user started is running, the service notices which app comes to the foreground (TYPE_WINDOW_STATE_CHANGED, package name only, `canRetrieveWindowContent="false"`); if it is an app the user chose to block, DayCraft returns to the front. It does not read screen content, collect data or send anything off the device. A prominent in-app disclosure is shown and must be accepted before the user is taken to Accessibility settings. Video for the declaration: record Me → Focus → Block apps → disclosure → enable → start a session → open a blocked app.
+Bonsday uses the AccessibilityService API for one opt-in feature: focus-mode app blocking. While a focus session the user started is running, the service notices which app comes to the foreground (TYPE_WINDOW_STATE_CHANGED, package name only, `canRetrieveWindowContent="false"`); if it is an app the user chose to block, Bonsday returns to the front. It does not read screen content, collect data or send anything off the device. A prominent in-app disclosure is shown and must be accepted before the user is taken to Accessibility settings. Video for the declaration: record Me → Focus → Block apps → disclosure → enable → start a session → open a blocked app.
 
 ## Content rating
 Questionnaire: no violence, no user-generated content shared with others, no ads → expected rating: Everyone / PEGI 3.

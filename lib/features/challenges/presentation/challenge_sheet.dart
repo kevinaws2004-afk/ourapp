@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,6 +29,9 @@ import 'challenge_providers.dart';
 import 'goal_copy.dart';
 import '../../activity_logs/domain/field_value.dart';
 import '../../plans/presentation/item/last_time_card.dart';
+import '../../measurements/domain/measurement.dart';
+import '../../measurements/presentation/body_weight_activity.dart';
+import '../../measurements/presentation/measurement_providers.dart';
 
 /// Starts a goal ([initial] null; [chooser] picks its activity) or edits
 /// one's name and target ([initial]); ADR-044, ADR-047. A goal is done
@@ -184,6 +189,13 @@ class _ChallengeSheetState extends ConsumerState<_ChallengeSheet> {
         canonical = v.normalized;
       }
     }
+    // Body weight: the latest weight from Body measurements.
+    if (canonical == null &&
+        (ref.watch(isBodyWeightActivityProvider(type.id)).value ?? false)) {
+      final latest = ref.watch(latestMeasurementsProvider);
+      if (latest.isLoading) return;
+      canonical = latest.value?[MeasurementType.weight]?.normalizedValue;
+    }
     _nowPrefilled = true;
     if (canonical == null) return;
     final shown = goalFieldUnit(field)?.fromCanonical(canonical) ?? canonical;
@@ -229,6 +241,23 @@ class _ChallengeSheetState extends ConsumerState<_ChallengeSheet> {
         _nowPrefilled = false;
       });
     }
+  }
+
+  /// "My weight": the body-weight activity (made the first time), as a
+  /// "Reach a number" goal.
+  Future<void> _chooseWeight() async {
+    final l10n = AppLocalizations.of(context);
+    final id = await ensureBodyWeightActivity(ref, l10n);
+    if (!mounted) return;
+    final type = await ref.read(activityTypeRepositoryProvider).getType(id);
+    if (!mounted) return;
+    setState(() {
+      _activityId = id;
+      _amountField = null;
+      _nowPrefilled = false;
+    });
+    _setKind(GoalKind.target, type);
+    _pickTargetField(type);
   }
 
   Future<void> _pickStart() async {
@@ -681,6 +710,27 @@ class _ChallengeSheetState extends ConsumerState<_ChallengeSheet> {
                                   }
                                 }),
                               ),
+                            if (!(ref
+                                        .watch(activeActivityTypesProvider)
+                                        .value ??
+                                    const <ActivityType>[])
+                                .any(
+                                  (t) =>
+                                      ref
+                                          .watch(
+                                            isBodyWeightActivityProvider(t.id),
+                                          )
+                                          .value ??
+                                      false,
+                                ))
+                              Tooltip(
+                                message: l10n.goalBodyWeightHint,
+                                child: ActionChip(
+                                  avatar: const Icon(AppIcons.goal, size: 18),
+                                  label: Text(l10n.goalBodyWeight),
+                                  onPressed: () => unawaited(_chooseWeight()),
+                                ),
+                              ),
                             if (chooser != null) ...[
                               ActionChip(
                                 avatar: const Icon(AppIcons.search, size: 18),
@@ -786,7 +836,13 @@ class _ChallengeSheetState extends ConsumerState<_ChallengeSheet> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        summary ?? l10n.goalPickActivityFirst,
+                        summary ??
+                            switch ((type, _kind)) {
+                              (null, _) => l10n.goalPickActivityFirst,
+                              (_, GoalKind.amount) => l10n.goalEnterAmount,
+                              (_, GoalKind.target) => l10n.goalEnterTarget,
+                              _ => l10n.goalPickActivityFirst,
+                            },
                         style: context.textStyles.titleMedium?.copyWith(
                           color: c.onBrandPrimarySoft,
                         ),

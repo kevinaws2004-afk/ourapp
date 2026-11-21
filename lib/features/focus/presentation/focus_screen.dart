@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/design/app_icons.dart';
+import '../../../core/database/json_preferences.dart';
 import '../../../core/platform/focus_mode.dart';
+import '../../../core/platform/focus_sound.dart';
 import '../../../core/design/tokens/sizes.dart';
 import '../../../core/design/context_ext.dart';
 import '../../../core/design/tokens/spacing.dart';
@@ -16,10 +19,14 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/errors/error_copy.dart';
 import '../../../shared/widgets/activity_badge.dart';
 import '../../../shared/widgets/app_button.dart';
+import '../../../shared/widgets/progress_ring.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
 import '../domain/focus_session.dart';
+import '../../activity_logs/presentation/value_formatting.dart';
 import '../../plans/presentation/plan_actions.dart';
+import '../../plans/presentation/plan_date_notifier.dart';
+import '../../plans/presentation/plan_providers.dart';
 import 'focus_providers.dart';
 import 'focus_settings_screen.dart';
 import 'pomodoro_line.dart';
@@ -88,7 +95,38 @@ class _FocusScreenState extends ConsumerState<FocusScreen> {
   @override
   void initState() {
     super.initState();
-    if (_locked) unawaited(_lock());
+    if (_locked) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => unawaited(_headsUpThenLock()),
+      );
+    }
+  }
+
+  /// The first time: says what Android's pinning prompt is about, so its
+  /// wording doesn't scare anyone off.
+  Future<void> _headsUpThenLock() async {
+    const key = 'focusPinHeadsUpSeen';
+    final prefs = ref.read(jsonPreferencesProvider);
+    if (await prefs.read(key) != true && mounted) {
+      final l10n = AppLocalizations.of(context);
+      await showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+          icon: const Icon(AppIcons.lock),
+          title: Text(l10n.focusPinHeadsUpTitle),
+          content: Text(l10n.focusPinHeadsUpBody),
+          actions: [
+            FilledButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(l10n.focusPinHeadsUpGo),
+            ),
+          ],
+        ),
+      );
+      await prefs.write(key, true);
+    }
+    if (mounted && _locked) await _lock();
   }
 
   Future<void> _lock() async {
@@ -116,8 +154,23 @@ class _FocusScreenState extends ConsumerState<FocusScreen> {
     await WidgetsBinding.instance.endOfFrame;
   }
 
+  /// The background sound playing now (null: none).
+  FocusSound? _playing;
+
+  /// Plays the chosen sound while the timer runs, silent when paused.
+  void _syncSound(FocusSession? session) {
+    final chosen = ref.watch(focusSoundProvider).value ?? FocusSound.off;
+    final want = session != null && session.state == FocusState.running
+        ? chosen
+        : FocusSound.off;
+    if (want == (_playing ?? FocusSound.off)) return;
+    _playing = want == FocusSound.off ? null : want;
+    unawaited(const FocusSoundPlayer().play(want));
+  }
+
   @override
   void dispose() {
+    if (_playing != null) unawaited(const FocusSoundPlayer().stop());
     _pinCheck?.cancel();
     if (_locked) {
       unawaited(_platform.stop());
@@ -156,6 +209,7 @@ class _FocusScreenState extends ConsumerState<FocusScreen> {
     final l10n = AppLocalizations.of(context);
     final session = ref.watch(activeFocusSessionProvider);
     if (session.value case final current?) _last = current;
+    _syncSound(session.value);
     // Finished or discarded somewhere else (the notification, Today):
     // unlock and close. Here, Finish and Discard close it themselves.
     if (session.hasValue &&
@@ -299,6 +353,15 @@ class _FocusBody extends ConsumerWidget {
     final now = ref.watch(clockProvider).nowUtc();
     final type = ref.watch(activityTypeProvider(session.activityTypeId)).value;
     final paused = session.state == FocusState.paused;
+    // Its plan's length, for the ring and the time left.
+    final plannedMs = ref
+        .watch(dayOverviewProvider(currentLocalDate(ref.watch(clockProvider))))
+        .value
+        ?.planned
+        .where((i) => i.plan.id == session.planId)
+        .firstOrNull
+        ?.plan
+        .plannedLengthMs;
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: margin),
@@ -321,21 +384,10 @@ class _FocusBody extends ConsumerWidget {
               style: context.textStyles.headlineSmall,
             ),
             const SizedBox(height: AppSpacing.xl),
-            Semantics(
-              liveRegion: false,
-              label: l10n.focusElapsedLabel,
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  formatTimer(session.elapsedMs(now)),
-                  textAlign: TextAlign.center,
-                  style: AppTypography.numericHero.copyWith(
-                    color: paused
-                        ? context.colors.textSecondary
-                        : context.colors.textPrimary,
-                  ),
-                ),
-              ),
+            _TimerWithRing(
+              elapsedMs: session.elapsedMs(now),
+              plannedMs: plannedMs,
+              paused: paused,
             ),
             Text(
               paused ? l10n.focusPaused : l10n.focusRunning,
@@ -393,6 +445,71 @@ class _FocusBody extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// The big timer. With a planned length: inside a ring that fills up, with
+/// the time left under it.
+class _TimerWithRing extends StatelessWidget {
+  const _TimerWithRing({
+    required this.elapsedMs,
+    required this.plannedMs,
+    required this.paused,
+  });
+
+  final int elapsedMs;
+  final int? plannedMs;
+  final bool paused;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final c = context.colors;
+    final time = Text(
+      formatTimer(elapsedMs),
+      textAlign: TextAlign.center,
+      style: AppTypography.numericHero.copyWith(
+        color: paused ? c.textSecondary : c.textPrimary,
+      ),
+    );
+    final planned = plannedMs;
+    if (planned == null || planned <= 0) {
+      return Semantics(
+        label: l10n.focusElapsedLabel,
+        child: FittedBox(fit: BoxFit.scaleDown, child: time),
+      );
+    }
+    final reached = elapsedMs >= planned;
+    final left = planned - elapsedMs;
+    final size = math.min(MediaQuery.sizeOf(context).width * 0.7, 280.0);
+    return Column(
+      children: [
+        Center(
+          child: ProgressRing(
+            fraction: elapsedMs / planned,
+            size: size,
+            stroke: 12,
+            color: reached ? c.action : null,
+            semanticLabel: l10n.focusElapsedLabel,
+            child: time,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        Text(
+          reached
+              ? l10n.focusPlannedReached(formatDuration(l10n, planned))
+              : l10n.focusTimeLeft(
+                  // Rounded up: "1 min left" until it's really over.
+                  formatDuration(l10n, ((left + 59999) ~/ 60000) * 60000),
+                  formatDuration(l10n, planned),
+                ),
+          textAlign: TextAlign.center,
+          style: context.textStyles.titleSmall?.copyWith(
+            color: reached ? c.action : c.textSecondary,
+          ),
+        ),
+      ],
     );
   }
 }

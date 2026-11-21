@@ -29,6 +29,7 @@ import '../../notifications/presentation/notification_providers.dart';
 import '../../plans/domain/plan.dart';
 import '../../plans/domain/watch_day_overview.dart';
 import '../../plans/presentation/plan_actions.dart';
+import '../../plans/presentation/widgets/plan_item_tile.dart';
 import '../../plans/presentation/plan_formatting.dart';
 import '../../plans/presentation/widgets/planned_list.dart';
 
@@ -69,10 +70,32 @@ class _TodayTimelineState extends ConsumerState<TodayTimeline> {
     ref.watch(minuteTickProvider);
     final now = ref.watch(clockProvider).nowUtc();
     final entries = widget.overview.entries;
+    // The same activity more than once today (5 prayers): "2 of 5 today".
+    final parts = <String, ({int done, int total})>{};
+    for (final item in widget.overview.planned) {
+      final id = item.plan.activityTypeId?.value;
+      if (id == null ||
+          item.status == EffectivePlanStatus.skipped ||
+          item.status == EffectivePlanStatus.cancelled) {
+        continue;
+      }
+      final p = parts[id] ?? (done: 0, total: 0);
+      parts[id] = (
+        done: p.done + (item.status == EffectivePlanStatus.completed ? 1 : 0),
+        total: p.total + 1,
+      );
+    }
+    ({int done, int total})? partOf(PlannedItem item) =>
+        switch (parts[item.plan.activityTypeId?.value]) {
+          final p? when p.total > 1 => p,
+          _ => null,
+        };
+    // An Anytime one stays under Anytime while it's open, even part-way
+    // (a glass of water, a step ticked): it doesn't jump into the timeline.
     bool untimed(DayEntry e) =>
         e is PlanEntry &&
         e.item.plan.plannedStartAt == null &&
-        e.item.records.isEmpty;
+        (e.item.records.isEmpty || e.item.isOpen);
     final timed = entries.where((e) => !untimed(e)).toList();
     final anytime = entries.where(untimed).cast<PlanEntry>().toList();
 
@@ -159,7 +182,11 @@ class _TodayTimelineState extends ConsumerState<TodayTimeline> {
                 child: draggable(
                   index,
                   e.item,
-                  _AnytimeRow(item: e.item, onOpen: widget.onOpenItem),
+                  _AnytimeRow(
+                    item: e.item,
+                    partOf: partOf(e.item),
+                    onOpen: widget.onOpenItem,
+                  ),
                 ),
               ),
             ),
@@ -174,6 +201,7 @@ class _TodayTimelineState extends ConsumerState<TodayTimeline> {
                   item,
                   _TimelineRow(
                     entry: e,
+                    partOf: partOf(item),
                     first: e == timed.first,
                     last: e == timed.last,
                     onOpenItem: widget.onOpenItem,
@@ -214,7 +242,11 @@ class _RowData {
     this.onLongPress,
     this.streak,
     this.reminder = false,
+    this.counter,
   });
+
+  /// A counter's item, for its +1.
+  final PlannedItem? counter;
 
   final String title;
   final ActivityType? type;
@@ -242,7 +274,11 @@ class _TimelineRow extends ConsumerWidget {
     required this.onOpenItem,
     required this.onOpenRecord,
     this.dragging = false,
+    this.partOf,
   });
+
+  /// Its activity's progress today when it's planned more than once.
+  final ({int done, int total})? partOf;
 
   /// Held to drag: the hold no longer opens the quick actions itself.
   final bool dragging;
@@ -310,10 +346,12 @@ class _TimelineRow extends ConsumerWidget {
               ? (result == l10n.planStatusDone ? null : result)
               : (result == l10n.planStatusDone ? at : '$result · $at');
         } else if (!inactive) {
-          detail = switch (plan.plannedLengthMs) {
-            final ms? => formatDuration(l10n, ms),
-            null => null,
-          };
+          detail =
+              openProgressLine(l10n, item, partOf: partOf) ??
+              switch (plan.plannedLengthMs) {
+                final ms? => formatDuration(l10n, ms),
+                null => null,
+              };
         }
         final (String?, StatusTone) chip = switch (status) {
           EffectivePlanStatus.completed => (
@@ -332,9 +370,15 @@ class _TimelineRow extends ConsumerWidget {
             l10n.planStatusCancelled,
             StatusTone.neutral,
           ),
+          // Its time is over and it's still open: say so, kindly (B6).
+          _ when _timeIsOver(ref, plan) => (
+            l10n.statusNotDoneYet,
+            StatusTone.neutral,
+          ),
           _ => (null, StatusTone.neutral),
         };
         return _RowData(
+          counter: showsCounter(item) ? item : null,
           title: plan.title,
           type: item.type,
           // Done without a planned time: when it was done.
@@ -360,6 +404,21 @@ class _TimelineRow extends ConsumerWidget {
           onLongPress: () => unawaited(actions.quickActions(item)),
         );
     }
+  }
+
+  /// Whether [plan]'s time (its end, or 15 minutes after a start without a
+  /// length) has passed.
+  static bool _timeIsOver(WidgetRef ref, Plan plan) {
+    final start = plan.plannedStartAt;
+    if (start == null) return false;
+    ref.watch(minuteTickProvider);
+    final end = start.add(
+      Duration(
+        milliseconds:
+            plan.plannedLengthMs ?? const Duration(minutes: 15).inMilliseconds,
+      ),
+    );
+    return !end.isAfter(ref.watch(clockProvider).nowUtc());
   }
 
   @override
@@ -529,6 +588,17 @@ class _TimelineRow extends ConsumerWidget {
                   ),
                 ),
               ),
+              if (d.counter case final item?)
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: AppSpacing.sm,
+                    right: AppSpacing.xs,
+                  ),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: CounterButton(item: item),
+                  ),
+                ),
               if (d.onToggle != null || d.done)
                 Padding(
                   padding: const EdgeInsets.only(top: AppSpacing.xxs),
@@ -551,9 +621,12 @@ class _TimelineRow extends ConsumerWidget {
 
 /// A task with no time: a checklist row.
 class _AnytimeRow extends ConsumerWidget {
-  const _AnytimeRow({required this.item, required this.onOpen});
+  const _AnytimeRow({required this.item, required this.onOpen, this.partOf});
 
   final PlannedItem item;
+
+  /// Its activity's progress today when it's planned more than once.
+  final ({int done, int total})? partOf;
   final ValueChanged<PlanId> onOpen;
 
   @override
@@ -589,18 +662,43 @@ class _AnytimeRow extends ConsumerWidget {
             ),
             const SizedBox(width: AppSpacing.xs),
             Expanded(
-              child: Text(
-                item.plan.title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: context.textStyles.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: done ? c.textTertiary : null,
-                  decoration: done ? TextDecoration.lineThrough : null,
-                  decorationColor: c.textTertiary,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.plan.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.textStyles.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: done ? c.textTertiary : null,
+                      decoration: done ? TextDecoration.lineThrough : null,
+                      decorationColor: c.textTertiary,
+                    ),
+                  ),
+                  // Part-way: "2 of 4 done", "3 glasses", "2 of 5 today".
+                  if (!done)
+                    if (openProgressLine(
+                          AppLocalizations.of(context),
+                          item,
+                          partOf: partOf,
+                        )
+                        case final line?)
+                      Text(
+                        line,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.textStyles.bodySmall?.copyWith(
+                          color: c.textSecondary,
+                        ),
+                      ),
+                ],
               ),
             ),
+            if (showsCounter(item)) ...[
+              CounterButton(item: item),
+              const SizedBox(width: AppSpacing.sm),
+            ],
             if (!done &&
                 reminderFor(
                       item.plan,

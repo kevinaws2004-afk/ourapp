@@ -13,6 +13,8 @@ import '../../notifications/presentation/notification_providers.dart';
 import '../../notifications/presentation/reminder_prompt.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../../activity_logs/domain/activity_log.dart';
+import '../../activity_logs/domain/checklist.dart';
+import '../../activity_logs/domain/field_value.dart';
 import '../../activity_logs/presentation/activity_log_providers.dart';
 import '../../activity_types/domain/activity_ids.dart';
 import '../../activity_types/domain/activity_type.dart';
@@ -38,6 +40,8 @@ import 'item/item_notifier.dart';
 import 'plan_editor_sheet.dart';
 import 'plan_providers.dart';
 import 'widgets/repeat_sheet.dart';
+import 'session_done_sheet.dart';
+import '../../garden/presentation/garden_providers.dart';
 
 /// Reversible plan actions shared by Today and the Plan tab: they act
 /// immediately and offer Undo (ui_guidelines.md: no confirmation dialogs).
@@ -107,6 +111,46 @@ class PlanActions {
   /// streak it keeps ("Meditation done · 🔥 13", Undo), then, if its activity
   /// has meaningful details, asks "How did it go?". Stays on the current
   /// screen: the row shows the result.
+  /// +1 on a counter (a glass of water): today's one row counts up, its
+  /// record made on the first tap.
+  Future<void> addOne(PlannedItem item) async {
+    final type = item.type;
+    final field = counterField(type);
+    if (type == null || field == null) return;
+    unawaited(HapticFeedback.lightImpact());
+    await _run(() async {
+      final logs = _ref.read(activityLogRepositoryProvider);
+      final log = await logs.getLogForPlan(item.plan.id);
+      if (log == null) {
+        await _ref.read(logActivityProvider)(
+          type.id,
+          ActivityLogDraft(
+            startedAt: recordStartFor(item.plan, _ref.read(clockProvider)),
+            values: {field.id: const NumberValue(1)},
+            planId: item.plan.id,
+          ),
+          partial: true,
+        );
+      } else {
+        await _ref.read(updateActivityLogProvider)(
+          log.id,
+          ActivityLogDraft(
+            startedAt: log.startedAt,
+            endedAt: log.endedAt,
+            durationMs: log.durationMs,
+            notes: log.notes,
+            planId: log.planId,
+            values: {
+              ...log.values,
+              field.id: NumberValue(counterValue(field, log.values) + 1),
+            },
+          ),
+          partial: true,
+        );
+      }
+    });
+  }
+
   Future<void> complete(PlannedItem item) async {
     unawaited(HapticFeedback.mediumImpact());
     final id = item.plan.id;
@@ -271,20 +315,41 @@ class PlanActions {
         await _needsDetails(planId, type)) {
       await _howDidItGo(planId);
     }
-    // "Reading done · 🔥 13 · 45 min, 2h 15m today" (session summary), once
-    // "How did it go?" is answered, so it's seen.
+    // The finish screen: the ring full, "+45 min", today's total and the
+    // streak, once "How did it go?" is answered, so it's seen. The first
+    // thing of the day gets the streak celebration instead.
+    final firstToday = !(_ref.read(dayStreakProvider)?.doneToday ?? true);
     final summary = await focusSummary(
       l10n,
       sessionMs,
       _ref.read(dayOverviewProvider(currentLocalDate(clock)).future),
     );
-    messenger
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text('${doneMessage(l10n, title, streak)} · $summary'),
-        ),
-      );
+    if (!firstToday && _context.mounted && sessionMs >= 60000) {
+      final total = (await _ref.read(
+        dayOverviewProvider(currentLocalDate(clock)).future,
+      )).recordedMs;
+      if (_context.mounted) {
+        unawaited(
+          showSessionDone(
+            _context,
+            title: title,
+            type: type,
+            sessionMs: sessionMs,
+            // The day may not have caught up with this session yet.
+            todayMs: total < sessionMs ? total + sessionMs : total,
+            streakDays: streak?.afterToday,
+          ),
+        );
+      }
+    } else {
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text('${doneMessage(l10n, title, streak)} · $summary'),
+          ),
+        );
+    }
     _celebrate(streak, type);
   }
 

@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/design/app_icons.dart';
@@ -14,6 +17,7 @@ import '../../../activity_types/domain/activity_ids.dart';
 import '../../../activity_types/domain/activity_type.dart';
 import '../../../activity_types/domain/field_config.dart';
 import '../../../activity_types/domain/field_type.dart';
+import '../../domain/checklist.dart';
 import '../../domain/field_value.dart';
 import '../../domain/log_memory.dart';
 import '../../domain/log_validator.dart';
@@ -80,6 +84,17 @@ class RepeatingGroupEditor extends ConsumerWidget {
     final compact =
         subFields.isNotEmpty &&
         subFields.every((f) => f.type == FieldType.number);
+    // A name and a tick per row (a routine's steps): tick boxes.
+    if (Checklist.forField(type, field.id) case final list?
+        when subFields.length == 2) {
+      return _ChecklistRows(
+        list: list,
+        itemLabel: _itemLabel,
+        items: _items,
+        newId: () => GroupItemId(ref.read(idGeneratorProvider).newId()),
+        onChanged: _emit,
+      );
+    }
 
     void add(BuildContext actionsContext) {
       final id = GroupItemId(ref.read(idGeneratorProvider).newId());
@@ -698,4 +713,231 @@ Map<ActivityFieldId, FieldValue> _withValue(
     next[fieldId] = value;
   }
   return next;
+}
+
+/// A checklist (ADR-027 list of a name and a tick): one line per step with
+/// a tick box and its name, editable in place, and "Add step…" at the end
+/// (Enter adds the next). "2 of 4 done" above.
+class _ChecklistRows extends StatelessWidget {
+  const _ChecklistRows({
+    required this.list,
+    required this.itemLabel,
+    required this.items,
+    required this.newId,
+    required this.onChanged,
+  });
+
+  final Checklist list;
+  final String itemLabel;
+  final List<GroupItem> items;
+  final GroupItemId Function() newId;
+  final ValueChanged<List<GroupItem>> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final c = context.colors;
+    final named = items.where((i) => list.nameOf(i).isNotEmpty);
+    final done = named.where(list.isTicked).length;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (named.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+            child: Row(
+              children: [
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: AppRadius.pillAll,
+                    child: LinearProgressIndicator(
+                      value: done / named.length,
+                      minHeight: 6,
+                      backgroundColor: c.surfaceSunken,
+                      color: c.action,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Text(
+                  l10n.checklistProgress(done, named.length),
+                  style: context.textStyles.labelMedium?.copyWith(
+                    color: done == named.length ? c.action : c.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        for (final (index, item) in items.indexed)
+          _ChecklistRow(
+            key: ValueKey(item.id),
+            list: list,
+            item: item,
+            removeLabel: l10n.removeGroupItem(itemLabel),
+            onChanged: (next) => onChanged([...items]..[index] = next),
+            onRemove: () => onChanged([...items]..removeAt(index)),
+          ),
+        _AddChecklistRow(
+          hint: l10n.checklistAdd(itemLabel.toLowerCase()),
+          onAdd: (name) => onChanged([
+            ...items,
+            GroupItem(id: newId(), values: {list.name: TextValue(name)}),
+          ]),
+        ),
+      ],
+    );
+  }
+}
+
+class _ChecklistRow extends StatefulWidget {
+  const _ChecklistRow({
+    super.key,
+    required this.list,
+    required this.item,
+    required this.removeLabel,
+    required this.onChanged,
+    required this.onRemove,
+  });
+
+  final Checklist list;
+  final GroupItem item;
+  final String removeLabel;
+  final ValueChanged<GroupItem> onChanged;
+  final VoidCallback onRemove;
+
+  @override
+  State<_ChecklistRow> createState() => _ChecklistRowState();
+}
+
+class _ChecklistRowState extends State<_ChecklistRow> {
+  late final _name = TextEditingController(
+    text: widget.list.nameOf(widget.item),
+  );
+  final _focus = FocusNode();
+
+  @override
+  void didUpdateWidget(_ChecklistRow old) {
+    super.didUpdateWidget(old);
+    final name = widget.list.nameOf(widget.item);
+    if (!_focus.hasFocus && _name.text.trim() != name) _name.text = name;
+  }
+
+  @override
+  void dispose() {
+    _name.dispose();
+    _focus.dispose();
+    super.dispose();
+  }
+
+  void _set(ActivityFieldId field, FieldValue? value) {
+    final values = Map.of(widget.item.values);
+    value == null ? values.remove(field) : values[field] = value;
+    widget.onChanged(widget.item.withValues(values));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    final ticked = widget.list.isTicked(widget.item);
+    return Row(
+      children: [
+        Checkbox(
+          value: ticked,
+          onChanged: (v) {
+            unawaited(HapticFeedback.selectionClick());
+            _set(widget.list.done, v == true ? const BooleanValue(true) : null);
+          },
+        ),
+        Expanded(
+          child: TextField(
+            controller: _name,
+            focusNode: _focus,
+            textCapitalization: TextCapitalization.sentences,
+            style: context.textStyles.bodyLarge?.copyWith(
+              decoration: ticked ? TextDecoration.lineThrough : null,
+              color: ticked ? c.textSecondary : c.textPrimary,
+            ),
+            decoration: const InputDecoration(
+              isDense: true,
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              filled: false,
+            ),
+            onChanged: (text) => _set(
+              widget.list.name,
+              text.trim().isEmpty ? null : TextValue(text),
+            ),
+          ),
+        ),
+        IconButton(
+          tooltip: widget.removeLabel,
+          visualDensity: VisualDensity.compact,
+          icon: Icon(AppIcons.close, size: 18, color: c.textTertiary),
+          onPressed: widget.onRemove,
+        ),
+      ],
+    );
+  }
+}
+
+/// "Add step…": Enter adds it and keeps the keyboard up for the next.
+class _AddChecklistRow extends StatefulWidget {
+  const _AddChecklistRow({required this.hint, required this.onAdd});
+
+  final String hint;
+  final ValueChanged<String> onAdd;
+
+  @override
+  State<_AddChecklistRow> createState() => _AddChecklistRowState();
+}
+
+class _AddChecklistRowState extends State<_AddChecklistRow> {
+  final _text = TextEditingController();
+  final _focus = FocusNode();
+
+  @override
+  void dispose() {
+    _text.dispose();
+    _focus.dispose();
+    super.dispose();
+  }
+
+  void _add() {
+    final name = _text.text.trim();
+    if (name.isEmpty) return;
+    widget.onAdd(name);
+    _text.clear();
+    _focus.requestFocus();
+  }
+
+  @override
+  Widget build(BuildContext context) => Row(
+    children: [
+      const SizedBox(width: 48, child: Icon(AppIcons.add, size: 20)),
+      Expanded(
+        child: TextField(
+          controller: _text,
+          focusNode: _focus,
+          textCapitalization: TextCapitalization.sentences,
+          textInputAction: TextInputAction.next,
+          decoration: InputDecoration(
+            hintText: widget.hint,
+            isDense: true,
+            border: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            filled: false,
+          ),
+          // Enter adds it and keeps the keyboard up for the next one (the
+          // default would move focus away).
+          onEditingComplete: _add,
+          onTapOutside: (_) {
+            _add();
+            _focus.unfocus();
+          },
+        ),
+      ),
+    ],
+  );
 }

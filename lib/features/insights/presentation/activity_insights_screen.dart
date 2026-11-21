@@ -230,7 +230,7 @@ class _Summary extends ConsumerWidget {
                 ].join(' · '),
                 style: context.textStyles.titleMedium,
               ),
-            if (streak.longest > 0)
+            if (streak.longest > 1)
               Text(
                 streak.current > 0
                     ? l10n.insightStreak(streak.current, streak.longest)

@@ -4,6 +4,10 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_widget/home_widget.dart';
+
+import '../features/garden/domain/day_streak.dart';
+import '../features/garden/presentation/garden_providers.dart';
+
 import 'package:intl/intl.dart';
 
 import '../core/time/clock_provider.dart';
@@ -17,7 +21,7 @@ import '../features/plans/presentation/plan_providers.dart';
 import '../l10n/device_localizations.dart';
 
 /// The Android widget's provider class (`TodayWidgetProvider.kt`).
-const _androidWidget = 'com.ourapp.daylog.TodayWidgetProvider';
+const _androidWidget = 'com.bonsday.app.TodayWidgetProvider';
 
 /// Asks the shell to open Quick start (from the widget's button or the
 /// Quick Settings tile). It stays pending until the shell takes it, so a
@@ -75,10 +79,23 @@ final homeWidgetSyncProvider = Provider<void>((ref) {
     } else {
       headline = l10n.heroDoneOf(progress.done, progress.total);
     }
+    // The day streak and the plant: watered, or still to do today.
+    final day = ref.read(dayStreakProvider);
+    final plant = switch (day) {
+      null => '',
+      DayStreak(doneToday: true) =>
+        PlantStage.of(day.totalDays).index >= PlantStage.blooming.index
+            ? '🌸'
+            : '🌿',
+      _ => '🌱',
+    };
     final detail = [
+      if (day != null && day.current > 0)
+        '$plant ${day.doneToday ? l10n.widgetWatered(l10n.gardenStreak(day.current)) : l10n.widgetThirsty(l10n.gardenStreak(day.current))}'
+      else if (best > 0)
+        l10n.widgetStreak(best),
       if (progress.recordedMs > 0)
         l10n.heroTrackedValue(formatDuration(l10n, progress.recordedMs)),
-      if (best > 0) l10n.widgetStreak(best),
     ].join(' · ');
 
     String? next;
@@ -133,6 +150,7 @@ final homeWidgetSyncProvider = Provider<void>((ref) {
 
   ref.listen(dayOverviewProvider(today), (_, _) => schedule());
   ref.listen(activeFocusSessionProvider, (_, _) => schedule());
+  ref.listen(dayStreakProvider, (_, _) => schedule());
   ref.listen(activityStreaksProvider, (_, _) => schedule());
   schedule();
 });

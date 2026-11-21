@@ -62,7 +62,7 @@ void main() {
     await tester.pump();
   }
 
-  bool locked() => find.text('DayCraft is locked').evaluate().isNotEmpty;
+  bool locked() => find.text('Bonsday is locked').evaluate().isNotEmpty;
 
   testWidgets('it opens locked and asks at once; passing unlocks', (
     tester,
@@ -120,7 +120,7 @@ void main() {
     await pumpGate(tester);
 
     expect(find.bySemanticsLabel('Private plans'), findsNothing);
-    expect(find.bySemanticsLabel(RegExp('DayCraft is locked')), findsOneWidget);
+    expect(find.bySemanticsLabel(RegExp('Bonsday is locked')), findsOneWidget);
     semantics.dispose();
   });
 

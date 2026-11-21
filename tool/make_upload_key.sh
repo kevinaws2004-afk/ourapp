@@ -12,7 +12,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-KEYSTORE="$HOME/daycraft-upload.jks"
+KEYSTORE="$HOME/bonsday-upload.jks"
 PROPS="android/key.properties"
 
 if [[ -f "$PROPS" ]]; then
@@ -40,7 +40,7 @@ keytool -genkeypair -v \
   -keystore "$KEYSTORE" -storetype JKS \
   -alias upload -keyalg RSA -keysize 2048 -validity 10000 \
   -storepass "$PASS" -keypass "$PASS" \
-  -dname "CN=${CN:-DayCraft}, O=DayCraft"
+  -dname "CN=${CN:-Bonsday}, O=Bonsday"
 
 cat > "$PROPS" <<EOF
 storePassword=$PASS

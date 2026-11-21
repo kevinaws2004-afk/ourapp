@@ -104,18 +104,22 @@ class FromYesterdaySection extends ConsumerWidget {
 }
 
 /// One unfinished thing with a way forward ([primary]) and **Let it go**.
+/// [note] replaces [primary] when there is nothing to decide (it already
+/// repeats tomorrow).
 class _DecideRow extends StatelessWidget {
   const _DecideRow({
     required this.item,
     required this.primary,
     required this.onPrimary,
     required this.onLetGo,
+    this.note,
   });
 
   final PlannedItem item;
   final String primary;
   final VoidCallback onPrimary;
   final VoidCallback onLetGo;
+  final String? note;
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +149,20 @@ class _DecideRow extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextButton(onPressed: onPrimary, child: Text(primary)),
+              if (note case final note?)
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                  ),
+                  child: Text(
+                    note,
+                    style: context.textStyles.bodyMedium?.copyWith(
+                      color: c.textSecondary,
+                    ),
+                  ),
+                )
+              else
+                TextButton(onPressed: onPrimary, child: Text(primary)),
               TextButton(
                 style: TextButton.styleFrom(foregroundColor: c.textSecondary),
                 onPressed: onLetGo,
@@ -297,6 +314,9 @@ class EveningReviewCard extends ConsumerWidget {
               for (final item in review.unfinished)
                 _DecideRow(
                   item: item,
+                  note: _repeatsOn(ref, item, tomorrow)
+                      ? l10n.wrapUpOnTomorrow
+                      : null,
                   primary: l10n.eveningTomorrow,
                   onPrimary: () => unawaited(actions.moveToTomorrow(item)),
                   onLetGo: () => unawaited(actions.letGo([item])),
@@ -308,6 +328,14 @@ class EveningReviewCard extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// Whether [item] repeats on [date] anyway, so moving it there would only
+  /// replace that day's own one.
+  static bool _repeatsOn(WidgetRef ref, PlannedItem item, LocalDate date) {
+    final id = item.plan.seriesId;
+    if (id == null) return false;
+    return ref.watch(planSeriesProvider(id)).value?.occursOn(date) ?? false;
   }
 
   /// Opens today's open thing for [type], adding one (Anytime) if there is

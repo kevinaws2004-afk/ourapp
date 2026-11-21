@@ -14,6 +14,8 @@ import '../../../shared/widgets/settings_group.dart';
 import '../../../core/platform/app_blocker.dart';
 import '../domain/pomodoro.dart';
 import 'focus_controller.dart';
+import '../../../core/platform/focus_sound.dart';
+import '../../../core/database/json_preferences.dart';
 
 /// Me → Focus: Pomodoro (work in rounds with breaks: lengths and how
 /// often the long break comes) and Do Not Disturb while a timer runs.
@@ -359,6 +361,22 @@ class FocusQuickToggles extends ConsumerWidget {
           onSelected: (v) =>
               unawaited(saveFocusSettings(ref, s.copyWith(pomodoro: v))),
         ),
+        // Calm sound while the timer runs.
+        Builder(
+          builder: (context) {
+            final sound = ref.watch(focusSoundProvider).value ?? FocusSound.off;
+            return FilterChip(
+              avatar: const Icon(AppIcons.wave, size: 18),
+              label: Text(
+                sound == FocusSound.off
+                    ? l10n.soundChip
+                    : focusSoundLabel(l10n, sound),
+              ),
+              selected: sound != FocusSound.off,
+              onSelected: (_) => unawaited(pickFocusSound(context, ref)),
+            );
+          },
+        ),
         FilterChip(
           avatar: const Icon(AppIcons.doNotDisturb, size: 18),
           label: Text(l10n.dndChip),
@@ -387,22 +405,32 @@ class _AppPicker extends StatefulWidget {
 
 class _AppPickerState extends State<_AppPicker> {
   late final Set<String> _chosen = {...widget.initial};
+
+  /// Chosen when the picker opened: they stay on top while ticking.
+  late final Set<String> _initial = {...widget.initial};
   String _query = '';
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final q = _query.trim().toLowerCase();
+    int group(LaunchableApp a) => _initial.contains(a.package)
+        ? 0
+        : a.distracting
+        ? 1
+        : 2;
     final shown =
         [
           for (final a in widget.apps)
             if (q.isEmpty || a.label.toLowerCase().contains(q)) a,
         ]..sort((a, b) {
-          // Chosen first, so they're easy to review.
-          final ca = _chosen.contains(a.package) ? 0 : 1;
-          final cb = _chosen.contains(b.package) ? 0 : 1;
-          return ca != cb ? ca - cb : a.label.compareTo(b.label);
+          // Chosen first (when it opened), so they're easy to review; then
+          // the usual distractions; then the rest by name.
+          final ga = group(a);
+          final gb = group(b);
+          return ga != gb ? ga - gb : a.label.compareTo(b.label);
         });
+    final common = shown.where((a) => group(a) == 1).isNotEmpty;
     return SizedBox(
       height: MediaQuery.sizeOf(context).height * 0.85,
       child: Column(
@@ -443,9 +471,25 @@ class _AppPickerState extends State<_AppPicker> {
           Expanded(
             child: ListView(
               children: [
-                for (final a in shown)
+                for (final (i, a) in shown.indexed) ...[
+                  if (common &&
+                      group(a) == 1 &&
+                      (i == 0 || group(shown[i - 1]) != 1))
+                    _PickerHeader(l10n.blockAppsCommon),
+                  if (common &&
+                      group(a) == 2 &&
+                      (i == 0 || group(shown[i - 1]) != 2))
+                    _PickerHeader(l10n.blockAppsOther),
                   CheckboxListTile(
                     value: _chosen.contains(a.package),
+                    secondary: a.icon == null
+                        ? const SizedBox(width: 36)
+                        : Image.memory(
+                            a.icon!,
+                            width: 36,
+                            height: 36,
+                            gaplessPlayback: true,
+                          ),
                     title: Text(a.label),
                     onChanged: (v) => setState(
                       () => v == true
@@ -453,6 +497,7 @@ class _AppPickerState extends State<_AppPicker> {
                           : _chosen.remove(a.package),
                     ),
                   ),
+                ],
               ],
             ),
           ),
@@ -460,4 +505,87 @@ class _AppPickerState extends State<_AppPicker> {
       ),
     );
   }
+}
+
+class _PickerHeader extends StatelessWidget {
+  const _PickerHeader(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.fromLTRB(
+      AppSpacing.xl,
+      AppSpacing.md,
+      AppSpacing.xl,
+      AppSpacing.xs,
+    ),
+    child: Text(
+      text,
+      style: context.textStyles.labelLarge?.copyWith(
+        color: context.colors.textSecondary,
+      ),
+    ),
+  );
+}
+
+const _focusSoundKey = 'focusSound';
+
+/// The sound chosen for focusing.
+final focusSoundProvider = StreamProvider.autoDispose<FocusSound>(
+  (ref) => ref
+      .watch(jsonPreferencesProvider)
+      .watch(_focusSoundKey)
+      .map(
+        (v) =>
+            FocusSound.values.where((s) => s.name == v).firstOrNull ??
+            FocusSound.off,
+      ),
+);
+
+String focusSoundLabel(AppLocalizations l10n, FocusSound s) => switch (s) {
+  FocusSound.off => l10n.soundOff,
+  FocusSound.rain => l10n.soundRain,
+  FocusSound.brown => l10n.soundBrown,
+  FocusSound.white => l10n.soundWhite,
+};
+
+/// Picks the background sound (a short sheet).
+Future<void> pickFocusSound(BuildContext context, WidgetRef ref) async {
+  final l10n = AppLocalizations.of(context);
+  final current = ref.read(focusSoundProvider).value ?? FocusSound.off;
+  final picked = await showModalBottomSheet<FocusSound>(
+    context: context,
+    useRootNavigator: true,
+    builder: (context) => SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.xl,
+              AppSpacing.lg,
+              AppSpacing.xl,
+              AppSpacing.sm,
+            ),
+            child: Text(
+              l10n.soundTitle,
+              style: context.textStyles.headlineSmall,
+            ),
+          ),
+          for (final s in FocusSound.values)
+            ListTile(
+              title: Text(focusSoundLabel(l10n, s)),
+              trailing: s == current
+                  ? Icon(AppIcons.check, color: context.colors.brandPrimary)
+                  : null,
+              onTap: () => Navigator.pop(context, s),
+            ),
+        ],
+      ),
+    ),
+  );
+  if (picked == null) return;
+  await ref.read(jsonPreferencesProvider).write(_focusSoundKey, picked.name);
 }

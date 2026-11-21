@@ -1,4 +1,4 @@
-package com.ourapp.daylog
+package com.bonsday.app
 
 import android.content.ComponentName
 import android.content.Context

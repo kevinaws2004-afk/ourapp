@@ -10,7 +10,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'DayCraft';
+  String get appTitle => 'Bonsday';
 
   @override
   String get navToday => 'Today';
@@ -1029,16 +1029,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get insightPlannedVsActualLegend => 'Grey: planned · Colour: recorded';
 
   @override
-  String get insightRangeWeek => 'Week';
+  String get insightRangeWeek => '7 days';
 
   @override
-  String get insightRangeMonth => 'Month';
+  String get insightRangeMonth => '30 days';
 
   @override
-  String get insightRangeQuarter => '3 months';
+  String get insightRangeQuarter => '90 days';
 
   @override
-  String get insightRangeYear => 'Year';
+  String get insightRangeYear => '12 months';
 
   @override
   String get insightTitleLabel => 'Title';
@@ -5409,7 +5409,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get meExportSubtitle => 'A full backup as a JSON file';
 
   @override
-  String get meExportSubject => 'DayCraft backup';
+  String get meExportSubject => 'Bonsday backup';
 
   @override
   String get mePrivacy => 'Privacy';
@@ -5427,7 +5427,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Made for people who like to see their days add up.';
 
   @override
-  String get meFooter => 'DayCraft · Plan it. Do it. See it.';
+  String get meFooter => 'Bonsday · Plan it. Do it. See it.';
 
   @override
   String get meNameTitle => 'What should we call you?';
@@ -5664,7 +5664,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get notifyMorningBodyAnytime => 'Open DayCraft to plan your day.';
+  String get notifyMorningBodyAnytime => 'Open Bonsday to plan your day.';
 
   @override
   String get notifyEvening => 'How did today go?';
@@ -5691,12 +5691,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notificationsMaster => 'Allow notifications';
 
   @override
-  String get notificationsMasterHint =>
-      'Off means DayCraft never notifies you.';
+  String get notificationsMasterHint => 'Off means Bonsday never notifies you.';
 
   @override
   String get notificationsBlocked =>
-      'Notifications are blocked for DayCraft in your phone settings.';
+      'Notifications are blocked for Bonsday in your phone settings.';
 
   @override
   String get notificationsAllow => 'Allow';
@@ -6348,7 +6347,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get csvNothing => 'Nothing recorded yet to export.';
 
   @override
-  String get csvShareSubject => 'DayCraft spreadsheets';
+  String get csvShareSubject => 'Bonsday spreadsheets';
 
   @override
   String get csvDate => 'Date';
@@ -6379,14 +6378,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get restoreFromFileSubtitle =>
-      'Pick a DayCraft backup (.json) saved earlier';
+      'Pick a Bonsday backup (.json) saved earlier';
 
   @override
-  String get restoreNotABackup => 'That file isn\'t a DayCraft backup.';
+  String get restoreNotABackup => 'That file isn\'t a Bonsday backup.';
 
   @override
   String get restoreNewerVersion =>
-      'That backup is from a newer version of DayCraft. Update the app, then try again.';
+      'That backup is from a newer version of Bonsday. Update the app, then try again.';
 
   @override
   String get restoreConfirmTitle => 'Replace everything with this backup?';
@@ -6475,17 +6474,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backupDeviceNote =>
-      'With Android\'s device backup on (Settings → Google → Backup), these backups and your data move to your next phone with it. Nothing is ever uploaded by DayCraft itself.';
+      'With Android\'s device backup on (Settings → Google → Backup), these backups and your data move to your next phone with it. Nothing is ever uploaded by Bonsday itself.';
 
   @override
   String get appLockTitle => 'App lock';
 
   @override
   String get appLockSubtitle =>
-      'Ask for your fingerprint, face or screen lock to open DayCraft';
+      'Ask for your fingerprint, face or screen lock to open Bonsday';
 
   @override
-  String get appLockReason => 'Unlock DayCraft';
+  String get appLockReason => 'Unlock Bonsday';
 
   @override
   String get appLockNoScreenLock => 'Set up a screen lock on your phone first.';
@@ -6495,7 +6494,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Couldn\'t confirm it\'s you. App lock is still off.';
 
   @override
-  String get appLockLockedTitle => 'DayCraft is locked';
+  String get appLockLockedTitle => 'Bonsday is locked';
 
   @override
   String get appLockLockedBody => 'Your plans and records stay private.';
@@ -6592,7 +6591,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dndNeedsAccess =>
-      'Allow DayCraft under Do Not Disturb access — tap to open it';
+      'Allow Bonsday under Do Not Disturb access — tap to open it';
 
   @override
   String notifyPomodoroRoundDone(int round) {
@@ -6622,7 +6621,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recapShare => 'Share your week';
 
   @override
-  String get recapShareText => 'My week, planned and done — made with DayCraft';
+  String get recapShareText => 'My week, planned and done — made with Bonsday';
 
   @override
   String get recapEmptyTitle => 'A quiet week';
@@ -6836,7 +6835,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get firstPlanRemind => 'Remind me 10 minutes before';
 
   @override
-  String get firstPlanRemindHint => 'DayCraft will ask to send notifications.';
+  String get firstPlanRemindHint => 'Bonsday will ask to send notifications.';
 
   @override
   String get healthTitle => 'Health Connect';
@@ -6854,7 +6853,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get healthDenied =>
-      'DayCraft wasn\'t allowed to read from Health Connect.';
+      'Bonsday wasn\'t allowed to read from Health Connect.';
 
   @override
   String healthImported(int count) {
@@ -6908,7 +6907,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get widgetStartSomething => 'Start something';
 
   @override
-  String get meRate => 'Rate DayCraft';
+  String get meRate => 'Rate Bonsday';
 
   @override
   String get meRateSubtitle => 'A review on Google Play helps others find it';
@@ -6931,13 +6930,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'An idea, a problem, anything. Your app and phone version are added for you.';
 
   @override
-  String get feedbackSubject => 'DayCraft feedback';
+  String get feedbackSubject => 'Bonsday feedback';
 
   @override
   String get feedbackDiagnostics => 'Send a problem report';
 
   @override
-  String get feedbackDiagnosticsSubject => 'DayCraft problem report';
+  String get feedbackDiagnosticsSubject => 'Bonsday problem report';
 
   @override
   String get feedbackDiagnosticsNone => 'No problems recorded on this phone';
@@ -7040,7 +7039,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get blockNeedsService =>
-      'Turn on \"DayCraft focus blocking\" in Accessibility settings. Tap to open.';
+      'Turn on \"Bonsday focus blocking\" in Accessibility settings. Tap to open.';
 
   @override
   String get blockApps => 'Apps to block';
@@ -7070,7 +7069,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get blockDisclosureBody =>
-      'To block apps while you focus, DayCraft uses Android\'s Accessibility service.\n\n• It only notices which app comes to the front while a focus session is running.\n• It never reads what\'s on your screen, what you type, or anything else.\n• Nothing is collected, stored about other apps, or sent anywhere.\n\nOn the next screen, open \"DayCraft focus blocking\" and turn it on. You can turn it off there at any time.';
+      'To block apps while you focus, Bonsday uses Android\'s Accessibility service.\n\n• It only notices which app comes to the front while a focus session is running.\n• It never reads what\'s on your screen, what you type, or anything else.\n• Nothing is collected, stored about other apps, or sent anywhere.\n\nOn the next screen, turn on \"Bonsday focus blocking\". Android shows a strong warning about \"full control\" for every app that uses this; Bonsday only uses it as described above. Turn it off there any time, then press Back once to come back.';
 
   @override
   String get blockDisclosureAgree => 'Agree and continue';
@@ -7579,7 +7578,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get meAboutTitle => 'About DayCraft';
+  String get meAboutTitle => 'About Bonsday';
 
   @override
   String get meAboutBlurb =>
@@ -7590,8 +7589,558 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get meLicensesSubtitle =>
-      'DayCraft is built with free, open software (like Flutter). Their authors ask that their names and terms are listed here.';
+      'Bonsday is built with free, open software (like Flutter). Their authors ask that their names and terms are listed here.';
 
   @override
   String get notesSave => 'Save';
+
+  @override
+  String get goalEnterAmount => 'Type the amount above.';
+
+  @override
+  String get goalEnterTarget => 'Type where you are now and your target above.';
+
+  @override
+  String goalTodayOf(String done, String target) {
+    return '$done of $target today';
+  }
+
+  @override
+  String get wrapUpOnTomorrow => 'On tomorrow already';
+
+  @override
+  String get statusNotDoneYet => 'Not done yet';
+
+  @override
+  String get statusNotDone => 'Not done';
+
+  @override
+  String habitHintBodyRepeating(String name) {
+    return '$name already repeats. Set a goal to count the days you keep it.';
+  }
+
+  @override
+  String get focusAreaSelfCare => 'Self-care & mornings';
+
+  @override
+  String get focusAreaHome => 'Home & chores';
+
+  @override
+  String get focusAreaFaith => 'Faith & prayer';
+
+  @override
+  String get onboardingMore => 'More…';
+
+  @override
+  String get onboardingMoreTitle => 'Find an activity';
+
+  @override
+  String get onboardingMoreHint => 'Skincare, prayer, cleaning, guitar…';
+
+  @override
+  String get onboardingMoreNone =>
+      'Nothing by that name. You can make your own later.';
+
+  @override
+  String get firstPlanPickDays => 'Pick days';
+
+  @override
+  String get blockAppsCommon => 'Usual distractions';
+
+  @override
+  String get blockAppsOther => 'Other apps';
+
+  @override
+  String get focusPinHeadsUpTitle => 'Your phone will ask to pin Bonsday';
+
+  @override
+  String get focusPinHeadsUpBody =>
+      'Pinning keeps you on the timer until you end focus mode. Android\'s message about personal data is its standard wording for any pinned app; nothing leaves your phone.\n\nTap \"Pin\" (or \"Got it\") on the next screen. To leave, tap End focus mode here.';
+
+  @override
+  String get focusPinHeadsUpGo => 'Continue';
+
+  @override
+  String focusTimeLeft(String time, String planned) {
+    return '$time left of $planned';
+  }
+
+  @override
+  String focusPlannedReached(String planned) {
+    return '$planned done. Keep going or finish.';
+  }
+
+  @override
+  String checklistProgress(int done, int total) {
+    return '$done of $total done';
+  }
+
+  @override
+  String checklistAdd(String item) {
+    return 'Add $item…';
+  }
+
+  @override
+  String get counterAddOne => '+1';
+
+  @override
+  String counterAddOneHint(String name) {
+    return 'Add one $name';
+  }
+
+  @override
+  String get bodyWeightActivity => 'Body weight';
+
+  @override
+  String get bodyWeightField => 'Weight';
+
+  @override
+  String get goalBodyWeight => 'My weight';
+
+  @override
+  String get goalBodyWeightHint =>
+      'Follows the weights you add in Me → Body measurements.';
+
+  @override
+  String get addAnotherTime => 'Another time';
+
+  @override
+  String partOfDay(int done, int total) {
+    return '$done of $total today';
+  }
+
+  @override
+  String get gardenPlantName => 'Pip';
+
+  @override
+  String gardenStreak(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count-day streak',
+      one: '1-day streak',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get gardenStartTitle => 'Grow your plant';
+
+  @override
+  String gardenWatered(String name) {
+    return '$name is watered for today. See you tomorrow!';
+  }
+
+  @override
+  String gardenAtRisk(String name) {
+    return 'Do one small thing today to water $name and keep your streak.';
+  }
+
+  @override
+  String gardenFirst(String name) {
+    return 'Do one thing today and $name sprouts.';
+  }
+
+  @override
+  String gardenRestart(String name) {
+    return 'Do one thing today to start a new streak. $name kept all its growth.';
+  }
+
+  @override
+  String gardenRestDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rest days saved',
+      one: '1 rest day saved',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String gardenNextRestDay(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Rest day in $count more days',
+      one: 'Rest day in 1 more day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get gardenOpenHint => 'Your plant and streak';
+
+  @override
+  String gardenSheetDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days of growing',
+      one: '1 day of growing',
+      zero: 'Not grown yet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String gardenToNext(int count, String stage) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count more days to become a $stage',
+      one: '1 more day to become a $stage',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get gardenTopStage =>
+      'Fully grown. It keeps thriving as long as you do.';
+
+  @override
+  String get gardenStatStreak => 'Streak';
+
+  @override
+  String get gardenStatBest => 'Best';
+
+  @override
+  String get gardenStatRest => 'Rest days';
+
+  @override
+  String get gardenHowTitle => 'How it works';
+
+  @override
+  String get gardenHow1 =>
+      'Do at least one thing a day (anything counts) to water your plant and grow your streak.';
+
+  @override
+  String get gardenHow2 =>
+      'Every 7 days in a row earns a rest day, up to 2. Miss a day and a rest day covers it, so your streak is safe.';
+
+  @override
+  String get gardenHow3 =>
+      'Missed with no rest day saved? The streak starts again, but your plant never loses what it has grown.';
+
+  @override
+  String get gardenRename => 'Name your plant';
+
+  @override
+  String get gardenRenameHint => 'Pip, Basil, Kiwi…';
+
+  @override
+  String get gardenRenameSave => 'Save';
+
+  @override
+  String get gardenBadges => 'Milestones';
+
+  @override
+  String gardenBadgesCount(int done, int total) {
+    return '$done of $total';
+  }
+
+  @override
+  String get gardenYear => 'Your year in pixels';
+
+  @override
+  String get stageSeed => 'seed';
+
+  @override
+  String get stageSprout => 'sprout';
+
+  @override
+  String get stageSeedling => 'seedling';
+
+  @override
+  String get stageYoung => 'young plant';
+
+  @override
+  String get stageBudding => 'budding plant';
+
+  @override
+  String get stageBlooming => 'flowering plant';
+
+  @override
+  String get stageTree => 'little tree';
+
+  @override
+  String get stageGrandTree => 'blossom tree';
+
+  @override
+  String get badgeFirstDay => 'First step';
+
+  @override
+  String get badgeFirstDayHint => 'Your first day done';
+
+  @override
+  String get badgeStreak3 => 'Warming up';
+
+  @override
+  String get badgeStreak3Hint => '3 days in a row';
+
+  @override
+  String get badgeStreak7 => 'One week strong';
+
+  @override
+  String get badgeStreak7Hint => '7 days in a row';
+
+  @override
+  String get badgeStreak30 => 'Month of momentum';
+
+  @override
+  String get badgeStreak30Hint => '30 days in a row';
+
+  @override
+  String get badgeStreak100 => 'Hundred club';
+
+  @override
+  String get badgeStreak100Hint => '100 days in a row';
+
+  @override
+  String get badgeDays10 => 'Ten good days';
+
+  @override
+  String get badgeDays10Hint => '10 days with something done';
+
+  @override
+  String get badgeDays50 => 'Fifty good days';
+
+  @override
+  String get badgeDays50Hint => '50 days with something done';
+
+  @override
+  String get badgeDays100 => 'Hundred good days';
+
+  @override
+  String get badgeDays100Hint => '100 days with something done';
+
+  @override
+  String get badgeGoal => 'Goal getter';
+
+  @override
+  String get badgeGoalHint => 'Finish a goal';
+
+  @override
+  String get badgeCheckIns => 'Know yourself';
+
+  @override
+  String get badgeCheckInsHint => '7 evening check-ins';
+
+  @override
+  String get badgeRestDay => 'Saved by a rest day';
+
+  @override
+  String get badgeRestDayHint => 'A rest day kept your streak';
+
+  @override
+  String get badgeBloom => 'In bloom';
+
+  @override
+  String get badgeBloomHint => 'Grow your plant to flowering';
+
+  @override
+  String streakCelebrateTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days in a row!',
+      one: 'Day 1. It begins!',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String streakCelebrateBody(String name) {
+    return '$name is watered. One thing a day is all it takes.';
+  }
+
+  @override
+  String streakCelebrateGrew(String name, String stage) {
+    return '$name grew into a $stage!';
+  }
+
+  @override
+  String get streakCelebrateRestDay =>
+      'You earned a rest day. Take a day off any time; your streak is safe.';
+
+  @override
+  String get streakCelebrateOk => 'Nice!';
+
+  @override
+  String get checkInTitle => 'How did today feel?';
+
+  @override
+  String get checkInHint => 'One line for future you (optional)';
+
+  @override
+  String get checkInSave => 'Save';
+
+  @override
+  String get checkInSaved => 'Saved. Sleep well.';
+
+  @override
+  String checkInDone(String mood) {
+    return 'Today felt $mood';
+  }
+
+  @override
+  String get checkInEdit => 'Change';
+
+  @override
+  String get mood1 => 'rough';
+
+  @override
+  String get mood2 => 'meh';
+
+  @override
+  String get mood3 => 'okay';
+
+  @override
+  String get mood4 => 'good';
+
+  @override
+  String get mood5 => 'great';
+
+  @override
+  String get yearTitle => 'Your year';
+
+  @override
+  String get yearSubtitle =>
+      'Each square is a day: colored by how it felt, or green when something got done.';
+
+  @override
+  String get yearLegendDone => 'Something done';
+
+  @override
+  String get yearLegendRest => 'Rest day';
+
+  @override
+  String get yearLegendNone => 'Nothing';
+
+  @override
+  String yearDays(int done, int checkIns) {
+    return '$done days done · $checkIns check-ins';
+  }
+
+  @override
+  String widgetWatered(String streak) {
+    return '$streak · watered';
+  }
+
+  @override
+  String widgetThirsty(String streak) {
+    return '$streak · do one thing to keep it';
+  }
+
+  @override
+  String notifyPlantTitle(String name) {
+    return '$name is thirsty 🌱';
+  }
+
+  @override
+  String notifyPlantBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'One small thing keeps your $count-day streak going.',
+      one: 'One small thing keeps your 1-day streak going.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notifyPlantBodyRest =>
+      'One small thing keeps your streak. Need a break? A saved rest day covers today.';
+
+  @override
+  String get soundChip => 'Sound';
+
+  @override
+  String get soundOff => 'No sound';
+
+  @override
+  String get soundRain => 'Rain';
+
+  @override
+  String get soundBrown => 'Deep noise';
+
+  @override
+  String get soundWhite => 'White noise';
+
+  @override
+  String get soundTitle => 'Background sound';
+
+  @override
+  String get notesChecklist => 'Checklist';
+
+  @override
+  String get notesPlainText => 'Plain text';
+
+  @override
+  String get notesAddItem => 'Add item…';
+
+  @override
+  String get notesRemoveItem => 'Remove item';
+
+  @override
+  String get notesClearTicked => 'Clear ticked';
+
+  @override
+  String sessionDoneTitle(String name) {
+    return '$name done';
+  }
+
+  @override
+  String sessionDoneTime(String time) {
+    return '+$time';
+  }
+
+  @override
+  String sessionDoneToday(String time) {
+    return '$time today';
+  }
+
+  @override
+  String get sessionDoneClose => 'Done';
+
+  @override
+  String get yearMonths => 'Month by month';
+
+  @override
+  String yearMonthLine(int days, String mood) {
+    return '$days days done$mood';
+  }
+
+  @override
+  String yearMonthMood(String mood) {
+    return ' · mostly $mood';
+  }
+
+  @override
+  String streakCelebrateSprouted(String name) {
+    return '$name sprouted! Come back tomorrow to help it grow.';
+  }
+
+  @override
+  String get nowNextAddOne => 'Add 1';
+
+  @override
+  String nowNextAddOneSoFar(int count) {
+    return 'Add 1 · $count so far';
+  }
+
+  @override
+  String get avatarTitle => 'Choose your picture';
+
+  @override
+  String get avatarPhoto => 'Use a photo';
+
+  @override
+  String get avatarRemove => 'Remove picture';
+
+  @override
+  String get avatarHint => 'Stays on this phone. Nothing is uploaded.';
+
+  @override
+  String get meEditPicture => 'Change picture';
 }

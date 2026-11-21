@@ -130,9 +130,15 @@ String? goalPeriodLine(
         type,
         progress.periodTarget,
       );
+      // "0 of 20 pages", not "0 pages of 20 pages".
+      final unit = target.indexOf(' ');
+      final shortDone =
+          unit > 0 && done.endsWith(target.substring(unit))
+          ? done.substring(0, done.length - (target.length - unit))
+          : done;
       return progress.period == GoalPeriod.week
-          ? l10n.goalThisWeekAmount(done, target)
-          : l10n.goalTodayAmount(done, target);
+          ? l10n.goalThisWeekAmount(shortDone, target)
+          : l10n.goalTodayAmount(shortDone, target);
   }
 }
 

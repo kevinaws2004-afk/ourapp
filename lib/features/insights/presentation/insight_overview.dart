@@ -355,7 +355,8 @@ class ActivityTotalsTile extends StatelessWidget {
   }
 }
 
-/// The streak line of an activity, or null without any history.
+/// The streak line of an activity, or null until it has run two weeks (one
+/// week "in a row" reads like a bug).
 String? streakText(
   AppLocalizations l10n,
   Set<LocalDate>? days,
@@ -363,6 +364,7 @@ String? streakText(
 ) {
   if (days == null || days.isEmpty) return null;
   final s = weekStreaks(days, today);
+  if (s.longest < 2) return null;
   return s.current > 0
       ? l10n.insightStreak(s.current, s.longest)
       : l10n.insightStreakEnded(s.longest);

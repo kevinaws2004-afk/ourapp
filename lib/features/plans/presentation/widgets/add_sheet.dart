@@ -31,6 +31,8 @@ import '../plan_providers.dart';
 import 'plan_time_sheet.dart';
 import 'repeat_sheet.dart';
 
+import '../../../activity_types/presentation/activity_search.dart';
+
 /// The **+** sheet (ADR-046): adding to a day, with every activity right
 /// here. Your activities come first, then the built-in ones by category,
 /// all searchable; typing something new offers it as a new activity. Tick
@@ -161,6 +163,10 @@ class _AddToDayState extends ConsumerState<AddToDay> {
   late _When _when = widget.startNow ? _When.now : _When.anytime;
   LocalTime? _start;
   LocalTime? _end;
+
+  /// More times the same day (prayers, medicine, meals): each its own item
+  /// with its own reminder.
+  final _moreTimes = <LocalTime>[];
   RepeatRule? _repeat;
 
   /// The reminder chosen here (or the default once a time is set).
@@ -195,19 +201,13 @@ class _AddToDayState extends ConsumerState<AddToDay> {
     // A time, Now and a reminder are for one thing at a time.
     if (!_single) {
       if (_when != _When.anytime) _when = _When.anytime;
+      _moreTimes.clear();
       _start = null;
       _end = null;
       _reminder = null;
       _reminderTouched = false;
     }
   });
-
-  bool _matches(String name, Iterable<String> details, [String group = '']) {
-    final query = _query.toLowerCase();
-    if (query.isEmpty) return true;
-    bool has(String text) => text.toLowerCase().contains(query);
-    return has(name) || has(group) || details.any(has);
-  }
 
   DateTime? _instant(LocalTime? time) {
     final date = widget.date;
@@ -268,6 +268,28 @@ class _AddToDayState extends ConsumerState<AddToDay> {
           }
         }
         last = id;
+        // The same thing at its other times today.
+        if (timed) {
+          for (final at in _moreTimes) {
+            final more = await ref.read(createPlanProvider)(
+              PlanDraft(
+                planDate: widget.date,
+                title: typeId == null ? pick.name : '',
+                activityTypeId: typeId,
+                plannedStartAt: _instant(at),
+              ),
+            );
+            if (typeId == null) {
+              await ref.read(ensureItemActivityProvider)(more);
+            }
+            if (_repeat case final rule?) {
+              await ref.read(repeatPlanProvider)(more, rule);
+            }
+            if (_effectiveReminder(timed: true) case final reminder?) {
+              await setReminderFor(ref, more, reminder);
+            }
+          }
+        }
       }
       if (!mounted || last == null) return;
       if (now) {
@@ -316,6 +338,26 @@ class _AddToDayState extends ConsumerState<AddToDay> {
       if (!_reminderTouched) {
         _reminder = defaultReminderFor(ref, timed: choice.start != null);
       }
+    });
+  }
+
+  /// Another time the same day.
+  Future<void> _addTime() async {
+    final clock = ref.read(clockProvider);
+    final nowUtc = clock.nowUtc();
+    final local = nowUtc.add(clock.offsetAt(nowUtc));
+    final choice = await showPlanTimeSheet(
+      context,
+      isToday: widget.date == currentLocalDate(clock),
+      now: LocalTime.hm(local.hour, local.minute),
+      start: null,
+      end: null,
+    );
+    final at = choice?.start;
+    if (at == null || !mounted) return;
+    setState(() {
+      if (at != _start && !_moreTimes.contains(at)) _moreTimes.add(at);
+      _moreTimes.sort((a, b) => a.minuteOfDay - b.minuteOfDay);
     });
   }
 
@@ -371,22 +413,39 @@ class _AddToDayState extends ConsumerState<AddToDay> {
         (ref.watch(activeActivityTypesProvider).value ?? const []).any(
           (a) => sameActivityName(a.name, d.name),
         );
-    final shownYours = [
-      for (final type in yours)
-        if (_matches(type.name, type.activeFields.map((f) => f.name))) type,
-    ];
-    final categories = [
-      for (final category in activityCategories(l10n))
-        (
-          category.name,
-          [
-            for (final d in category.activities)
-              if (!taken(d) &&
-                  _matches(d.name, d.fields.map((f) => f.name), category.name))
-                d,
-          ],
-        ),
-    ].where((c) => c.$2.isNotEmpty).toList();
+    final shownYours = rankBySearch(
+      _query,
+      yours,
+      (type) => activitySearchRank(
+        _query,
+        type.name,
+        type.activeFields.map((f) => f.name),
+      ),
+    );
+    int? rankOf(ActivityTypeDefinition d, String group) => taken(d)
+        ? null
+        : activitySearchRank(
+            _query,
+            d.name,
+            d.fields.map((f) => f.name),
+            group,
+          );
+    // Searching: the group with the best match first.
+    final categories = rankBySearch(
+      _query,
+      [
+        for (final category in activityCategories(l10n))
+          (
+            category.name,
+            rankBySearch(
+              _query,
+              category.activities,
+              (d) => rankOf(d, category.name),
+            ),
+          ),
+      ].where((c) => c.$2.isNotEmpty),
+      (c) => rankOf(c.$2.first, c.$1),
+    );
     final query = _query;
     // Something typed that isn't an activity yet: offer it as one.
     final exact =
@@ -543,9 +602,18 @@ class _AddToDayState extends ConsumerState<AddToDay> {
           reminder: _effectiveReminder(
             timed: _when == _When.time && _start != null,
           ),
-          onAnytime: () => setState(() => _when = _When.anytime),
-          onNow: () => setState(() => _when = _When.now),
+          onAnytime: () => setState(() {
+            _when = _When.anytime;
+            _moreTimes.clear();
+          }),
+          onNow: () => setState(() {
+            _when = _When.now;
+            _moreTimes.clear();
+          }),
           onTime: _pickTime,
+          moreTimes: [for (final t in _moreTimes) formatLocalTime(context, t)],
+          onAddTime: _when == _When.time && _start != null ? _addTime : null,
+          onRemoveTime: (i) => setState(() => _moreTimes.removeAt(i)),
           onRepeat: _pickRepeat,
           onReminder: _pickReminder,
           onRemove: _toggle,
@@ -570,6 +638,9 @@ class _Footer extends StatelessWidget {
     required this.onAnytime,
     required this.onNow,
     required this.onTime,
+    required this.moreTimes,
+    required this.onAddTime,
+    required this.onRemoveTime,
     required this.onRepeat,
     required this.onReminder,
     required this.onRemove,
@@ -587,6 +658,12 @@ class _Footer extends StatelessWidget {
   final VoidCallback onAnytime;
   final VoidCallback onNow;
   final VoidCallback onTime;
+
+  /// Other times the same day, and adding / removing one (null: no time
+  /// set yet).
+  final List<String> moreTimes;
+  final VoidCallback? onAddTime;
+  final ValueChanged<int> onRemoveTime;
   final VoidCallback onRepeat;
   final VoidCallback onReminder;
   final ValueChanged<_Pick> onRemove;
@@ -671,6 +748,20 @@ class _Footer extends StatelessWidget {
                         selected: when == _When.time,
                         onSelected: (_) => onTime(),
                       ),
+                      for (final (i, t) in moreTimes.indexed)
+                        InputChip(
+                          avatar: const Icon(AppIcons.time, size: 18),
+                          label: Text(t),
+                          selected: true,
+                          showCheckmark: false,
+                          onDeleted: () => onRemoveTime(i),
+                        ),
+                      if (onAddTime case final add?)
+                        ActionChip(
+                          avatar: const Icon(AppIcons.add, size: 18),
+                          label: Text(l10n.addAnotherTime),
+                          onPressed: add,
+                        ),
                     ],
                     if (!now)
                       ChoiceChip(

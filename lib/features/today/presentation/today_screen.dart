@@ -37,6 +37,9 @@ import '../../plans/domain/day_edges.dart';
 import '../../plans/presentation/widgets/no_plan_card.dart';
 import 'day_edges_sections.dart';
 import 'day_hero.dart';
+import '../../settings/presentation/avatar_picker.dart';
+import '../../garden/presentation/check_in_card.dart';
+import '../../garden/presentation/garden_card.dart';
 import 'habit_hint_card.dart';
 import '../../insights/presentation/insight_providers.dart';
 import 'now_next_card.dart';
@@ -58,6 +61,7 @@ class TodayScreen extends ConsumerWidget {
     required this.onOpenMe,
     required this.onStartActivity,
     required this.onOpenNotes,
+    this.onOpenYear,
     required this.onOpenDayReport,
     this.onOpenFocusMode,
   });
@@ -67,6 +71,9 @@ class TodayScreen extends ConsumerWidget {
 
   /// Opens Notes.
   final VoidCallback onOpenNotes;
+
+  /// Opens the year in pixels.
+  final VoidCallback? onOpenYear;
 
   /// Opens a day's report.
   final ValueChanged<LocalDate> onOpenDayReport;
@@ -188,6 +195,7 @@ class TodayScreen extends ConsumerWidget {
                     UserAvatar(
                       name: name,
                       size: 38,
+                      picture: ref.watch(avatarPictureProvider).value,
                       onTap: onOpenMe,
                       tooltip: l10n.navMe,
                     ),
@@ -220,6 +228,8 @@ class TodayScreen extends ConsumerWidget {
                   progress: progress,
                   bestStreak: bestStreak,
                 ),
+                // The plant and the day streak: the reason to come back.
+                GardenCard(onOpenYear: onOpenYear ?? () {}),
                 const SizedBox(height: AppSpacing.xs),
                 // A timer on something that isn't today's (e.g. another day).
                 if (running == null) FocusBanner(onOpen: onOpenFocus),
@@ -288,6 +298,10 @@ class TodayScreen extends ConsumerWidget {
                   ),
                   HabitHintCard(overview: overview, chooser: chooser),
                 ],
+                // The evening: how did today feel? (fills the year in
+                // pixels).
+                if (nowUtc.add(clock.offsetAt(nowUtc)).hour >= 18)
+                  CheckInCard(date: today),
               ],
             ),
           ),

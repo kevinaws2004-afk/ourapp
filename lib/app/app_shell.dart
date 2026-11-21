@@ -14,6 +14,11 @@ import '../core/design/tokens/spacing.dart';
 import '../core/design/window_size_class.dart';
 import '../features/focus/presentation/focus_banner.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../core/time/clock_provider.dart';
+import '../core/time/local_date.dart';
+import '../features/garden/presentation/garden_providers.dart';
+import '../features/plans/presentation/plan_date_notifier.dart';
+import '../features/garden/presentation/streak_celebration.dart';
 import 'home_widget_sync.dart';
 
 /// The tab shell: Today, Plan, **+**, Progress, Me. On phones a bottom bar
@@ -21,6 +26,9 @@ import 'home_widget_sync.dart';
 /// larger windows a rail with the same button on top. Goals (challenges)
 /// live inside Progress, so its branch lights the Progress tab. Each tab
 /// keeps its own navigation stack.
+/// The day the streak celebration last showed.
+LocalDate? _celebratedOn;
+
 class AppShell extends ConsumerWidget {
   const AppShell({
     super.key,
@@ -71,6 +79,30 @@ class AppShell extends ConsumerWidget {
       }
     }
 
+    // The first thing done today: the plant is watered, the streak grows.
+    ref.listen(dayStreakProvider, (before, after) {
+      if (before == null ||
+          after == null ||
+          before.doneToday ||
+          !after.doneToday ||
+          after.totalDays != before.totalDays + 1) {
+        return;
+      }
+      // Once a day, even if a done is undone and done again.
+      final today = currentLocalDate(ref.read(clockProvider));
+      if (_celebratedOn == today) return;
+      _celebratedOn = today;
+      // After the "done" message and any "How did it go?" have their turn.
+      unawaited(
+        Future<void>.delayed(const Duration(milliseconds: 1200), () {
+          if (context.mounted) {
+            unawaited(
+              showStreakCelebration(context, before: before, after: after),
+            );
+          }
+        }),
+      );
+    });
     ref.listen(quickStartRequestProvider, (_, pending) {
       if (pending) takeQuickStart();
     });

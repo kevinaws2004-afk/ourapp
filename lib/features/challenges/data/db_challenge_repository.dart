@@ -69,6 +69,8 @@ class DbChallengeRepository implements ChallengeRepository {
         _db.activityLogs,
         _db.logValues,
         _db.plans,
+        _db.measurements,
+        _db.appPreferences,
       ]),
     ),
     load,
@@ -197,13 +199,46 @@ class DbChallengeRepository implements ChallengeRepository {
             readsFrom: {_db.challenges, _db.activityLogs, _db.logValues},
           )
           .get();
-      for (final r in targets) {
-        amounts.putIfAbsent(
-          ChallengeId(r.read<String>('id')),
-          () => {},
-        )[LocalDate.parse(r.read<String>('d'))] = r.read<double>(
-          'v',
-        );
+      // A goal on the body-weight activity also follows Body
+      // measurements' weights (the activity is named in app_preferences).
+      final weights = await _db
+          .customSelect(
+            'SELECT c.public_id AS id, m.local_date AS d, '
+            'm.normalized_value AS v, m.recorded_at AS at '
+            'FROM challenges c '
+            'JOIN activity_types t ON t.internal_id = c.activity_type_id '
+            "JOIN app_preferences p ON p.key = 'bodyWeightActivity' "
+            "AND p.value_json = '\"' || t.public_id || '\"' "
+            "JOIN measurements m ON m.measurement_type = 'weight' "
+            'AND m.deleted_at IS NULL '
+            "WHERE c.kind = 'target' AND c.deleted_at IS NULL",
+            readsFrom: {
+              _db.challenges,
+              _db.activityTypes,
+              _db.appPreferences,
+              _db.measurements,
+            },
+          )
+          .get();
+      // Both sources, in time order: each day keeps its last value.
+      final all = [
+        for (final r in targets)
+          (r.read<String>('id'), r.read<String>('d'), r.read<double>('v'), 0),
+        for (final r in weights)
+          (
+            r.read<String>('id'),
+            r.read<String>('d'),
+            r.read<double>('v'),
+            r.read<int>('at'),
+          ),
+      ];
+      final ordered = [
+        ...all.where((r) => r.$4 == 0),
+        ...(all.where((r) => r.$4 != 0).toList()
+          ..sort((a, b) => a.$4.compareTo(b.$4))),
+      ];
+      for (final (id, d, v, _) in ordered) {
+        amounts.putIfAbsent(ChallengeId(id), () => {})[LocalDate.parse(d)] = v;
       }
       return amounts;
     }),

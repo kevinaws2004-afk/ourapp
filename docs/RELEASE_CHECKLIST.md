@@ -11,9 +11,9 @@ does the automatic parts (steps 1–4) and stops at the first failure.
    "Deploy from a branch", branch `master`, folder `/docs`. The policy is at
    `https://<user>.github.io/<repo>/privacy-policy`. Put your support email
    in `store/privacy-policy.md` and `docs/privacy-policy.md` first.
-3. **Name check**: search Play for "DayCraft" (an iOS planner with that
+3. **Name check**: search Play for "Bonsday" (an iOS planner with that
    name exists, and it is a stationery trademark). Rename before the first
-   upload if it clashes; the app ID `com.ourapp.daylog` stays.
+   upload if it clashes; the app ID is `com.bonsday.app`.
 4. **Play Console → App content**: privacy policy URL, Data safety ("no
    data collected"), content rating, target audience, and the
    **Accessibility API declaration** (text in `store/listing.md`, plus a

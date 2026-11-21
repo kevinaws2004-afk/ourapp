@@ -44,7 +44,11 @@ class HabitHintCard extends ConsumerWidget {
     final c = context.colors;
     final dismissed = ref.watch(_habitHintDismissedProvider).value ?? true;
     final goals = ref.watch(challengesProvider).value;
-    final item = overview.planned.where((i) => i.type != null).firstOrNull;
+    // One that doesn't repeat yet first: that's where "Repeat it" helps.
+    final typed = overview.planned.where((i) => i.type != null);
+    final item =
+        typed.where((i) => i.plan.seriesId == null).firstOrNull ??
+        typed.firstOrNull;
     // Only in the first week of use.
     final days = ref.watch(activeDaysProvider).value;
     final early =
@@ -84,7 +88,9 @@ class HabitHintCard extends ConsumerWidget {
               ],
             ),
             Text(
-              l10n.habitHintBody(type.name),
+              item.plan.seriesId == null
+                  ? l10n.habitHintBody(type.name)
+                  : l10n.habitHintBodyRepeating(type.name),
               style: context.textStyles.bodyMedium?.copyWith(
                 color: c.textSecondary,
               ),

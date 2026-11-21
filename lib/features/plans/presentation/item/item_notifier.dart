@@ -8,12 +8,17 @@ import '../../../../core/time/clock_provider.dart';
 import '../../../../core/time/local_date.dart';
 import '../../../activity_logs/domain/activity_log.dart';
 import '../../../activity_logs/domain/activity_log_use_cases.dart';
+import '../../../activity_logs/domain/checklist.dart';
+import '../../../activity_logs/domain/log_memory.dart';
+import '../../../../core/ids/id_generator_provider.dart';
+import '../../../../core/database/json_preferences.dart';
 import '../../../activity_logs/domain/field_value.dart';
 import '../../../activity_logs/presentation/activity_log_providers.dart';
 import '../../../activity_types/domain/activity_ids.dart';
 import '../../../activity_types/domain/activity_type.dart';
 import '../../../activity_types/presentation/activity_type_providers.dart';
 import '../../domain/item_use_cases.dart';
+import '../../domain/plan_use_cases.dart';
 import '../../domain/plan.dart';
 import '../plan_providers.dart';
 
@@ -137,6 +142,11 @@ class ItemNotifier extends AsyncNotifier<ItemState> {
   late LogActivity _logActivity;
   late UpdateActivityLog _updateLog;
   late EnsureItemActivity _ensureActivity;
+  late SetPlanStatus _setPlanStatus;
+  late JsonPreferences _prefs;
+
+  /// Every step just got ticked: the item is done once it's saved.
+  bool _completeAfterSave = false;
 
   ItemState get _state => state.requireValue;
 
@@ -145,6 +155,8 @@ class ItemNotifier extends AsyncNotifier<ItemState> {
     _logActivity = ref.read(logActivityProvider);
     _updateLog = ref.read(updateActivityLogProvider);
     _ensureActivity = ref.read(ensureItemActivityProvider);
+    _setPlanStatus = ref.read(setPlanStatusProvider);
+    _prefs = ref.read(jsonPreferencesProvider);
     ref.onDispose(() {
       _disposed = true;
       if (_version != _savedVersion) {
@@ -178,6 +190,7 @@ class ItemNotifier extends AsyncNotifier<ItemState> {
     }
     final typeId = log?.activityTypeId ?? plan?.activityTypeId;
     final type = typeId == null ? null : await types.getType(typeId);
+    final values = await _withLastSteps(type, log);
     if (log != null) {
       return ItemState(
         plan: plan,
@@ -186,15 +199,93 @@ class ItemNotifier extends AsyncNotifier<ItemState> {
         startedAt: log.startedAt.toLocal(),
         durationMs: log.durationMs,
         notes: log.notes ?? '',
-        values: log.values,
+        values: values,
       );
     }
     return ItemState(
       plan: plan,
       type: type,
       startedAt: _defaultStart(plan!, clock),
-      values: const {},
+      values: values,
     );
+  }
+
+  /// [log]'s values, with each empty checklist (a routine's steps) filled
+  /// with last time's steps, unticked: set them up once, tick them daily.
+  /// Only shown until something is ticked or typed; nothing is saved here.
+  Future<Map<ActivityFieldId, FieldValue>> _withLastSteps(
+    ActivityType? type,
+    ActivityLog? log,
+  ) async {
+    final values = log?.values ?? const <ActivityFieldId, FieldValue>{};
+    final lists = [
+      for (final list in Checklist.of(type))
+        if (!values.containsKey(list.group)) list,
+    ];
+    if (lists.isEmpty) return values;
+    final ids = ref.read(idGeneratorProvider);
+    final prefs = ref.read(jsonPreferencesProvider);
+    final steps = <ActivityFieldId, FieldValue>{};
+    ActivityLog? last;
+    var lastRead = false;
+    for (final list in lists) {
+      // The steps as last set up, else last time's.
+      final saved = await prefs.read(_stepsKey(type!, list));
+      if (saved is List && saved.isNotEmpty) {
+        steps[list.group] = RepeatingGroupValue([
+          for (final name in saved.whereType<String>())
+            GroupItem(
+              id: GroupItemId(ids.newId()),
+              values: {list.name: TextValue(name)},
+            ),
+        ]);
+        continue;
+      }
+      if (!lastRead) {
+        lastRead = true;
+        last = await LastLogOfType(ref.read(activityLogRepositoryProvider))(
+          type.id,
+          except: log?.id,
+        );
+      }
+      if (last?.values case final v?) {
+        if (list.fresh(v, ids) case final fresh?) steps[list.group] = fresh;
+      }
+    }
+    return {...values, ...steps};
+  }
+
+  static String _stepsKey(ActivityType type, Checklist list) =>
+      'steps:${type.id.value}:${list.group.value}';
+
+  /// Remembers [values]' checklist steps (names only) for next time.
+  Future<void> _rememberSteps(
+    ActivityType? type,
+    Map<ActivityFieldId, FieldValue> values,
+    JsonPreferences prefs,
+  ) async {
+    if (type == null) return;
+    for (final list in Checklist.of(type)) {
+      final rows = switch (values[list.group]) {
+        RepeatingGroupValue(:final items) => items,
+        _ => const <GroupItem>[],
+      };
+      await prefs.write(_stepsKey(type, list), [
+        for (final row in rows)
+          if (list.nameOf(row).isNotEmpty) list.nameOf(row),
+      ]);
+    }
+  }
+
+  /// Steps written but nothing ticked or logged yet: set up, not done, so
+  /// no record (and the day doesn't count) until something's ticked.
+  static bool _onlySteps(ItemState s) {
+    if (s.logId != null || s.notes.trim().isNotEmpty || s.durationMs != null) {
+      return false;
+    }
+    final groups = {for (final l in Checklist.of(s.type)) l.group};
+    if (groups.isEmpty || !s.values.keys.every(groups.contains)) return false;
+    return (checklistProgress(s.type, s.values)?.done ?? 0) == 0;
   }
 
   static DateTime _defaultStart(Plan plan, Clock clock) =>
@@ -211,6 +302,7 @@ class ItemNotifier extends AsyncNotifier<ItemState> {
   }
 
   void setValue(ActivityFieldId fieldId, FieldValue? value) {
+    final before = checklistProgress(_state.type, _state.values);
     final values = Map.of(_state.values);
     if (value == null) {
       values.remove(fieldId);
@@ -231,6 +323,16 @@ class ItemNotifier extends AsyncNotifier<ItemState> {
             .toList(),
       ),
     );
+    final after = checklistProgress(_state.type, values);
+    final plan = _state.plan;
+    if (plan != null &&
+        plan.status == PlanStatus.planned &&
+        after != null &&
+        after.done == after.total &&
+        (before == null || before.done < before.total)) {
+      _completeAfterSave = true;
+      unawaited(flush());
+    }
   }
 
   void setStartedAt(DateTime startedAt) =>
@@ -263,6 +365,14 @@ class ItemNotifier extends AsyncNotifier<ItemState> {
     if (_version == _savedVersion || !state.hasValue) return;
     final version = _version;
     final current = _state;
+    if (Checklist.of(current.type).isNotEmpty) {
+      await _rememberSteps(current.type, current.values, _prefs);
+    }
+    if (_onlySteps(current)) {
+      _savedVersion = version;
+      _setStatus(SaveStatus.saved);
+      return;
+    }
     _setStatus(SaveStatus.saving);
     try {
       var logId = current.logId;
@@ -284,6 +394,18 @@ class ItemNotifier extends AsyncNotifier<ItemState> {
         }
       }
       _savedVersion = version;
+      if (_completeAfterSave && current.plan != null) {
+        _completeAfterSave = false;
+        await _setPlanStatus(current.plan!.id, PlanStatus.completed);
+        if (!_disposed) {
+          final plan = await ref
+              .read(planRepositoryProvider)
+              .getPlan(current.plan!.id);
+          if (plan != null && !_disposed) {
+            state = AsyncData(_state.copyWith(plan: plan));
+          }
+        }
+      }
       if (_disposed) return;
       state = AsyncData(
         _state.copyWith(

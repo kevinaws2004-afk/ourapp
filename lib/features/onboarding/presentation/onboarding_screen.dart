@@ -21,6 +21,8 @@ import '../../../core/time/clock_provider.dart';
 import '../../activity_types/domain/activity_type.dart';
 import '../../activity_types/domain/activity_type_definition.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
+import '../../activity_types/presentation/activity_search.dart';
+import '../../activity_types/presentation/built_in_activities.dart';
 import '../../activity_types/presentation/starter_activities.dart';
 import '../../focus/presentation/focus_providers.dart';
 import '../../notifications/domain/plan_reminder.dart';
@@ -56,6 +58,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   /// The order the activities show in, fixed when the step opens (ticking
   /// one doesn't move it).
   List<String>? _shownFirst;
+
+  /// Found with More… (beyond the starter grid), shown after the first ones.
+  final List<String> _extra = [];
   bool _busy = false;
 
   static const _steps = 5;
@@ -176,6 +181,31 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     }
   }
 
+  /// More…: any built-in activity, searched by name; it's ticked and joins
+  /// the grid.
+  Future<void> _more(
+    Iterable<ActivityTypeDefinition> catalog,
+    List<ActivityTypeDefinition> shown,
+  ) async {
+    final name = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (_) => _MoreSheet(
+        catalog: [
+          for (final d in catalog)
+            if (!shown.any((s) => s.name == d.name)) d,
+        ],
+      ),
+    );
+    if (name == null || !mounted) return;
+    unawaited(HapticFeedback.selectionClick());
+    setState(() {
+      if (!_extra.contains(name)) _extra.insert(0, name);
+      _picked!.add(name);
+    });
+  }
+
   Future<void> _complete() async {
     unawaited(HapticFeedback.mediumImpact());
     await ref.read(preferencesNotifierProvider.notifier).completeOnboarding();
@@ -193,11 +223,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       l10n.builtInFocusedWork,
       l10n.builtInReading,
     }.where((n) => all.any((d) => d.name == n)).take(_defaultPicks).toSet();
-    // What was picked for you shows first, in its order; the rest after.
+    // What was picked for you shows first, in its order, then what was
+    // found with More…, then the rest of the starters.
     final order = _shownFirst ??= _picked!.toList();
+    final catalog = {
+      for (final d in builtInActivities(l10n)) d.name: d,
+      for (final d in all) d.name: d,
+    };
     final options = [
-      for (final name in order) ...all.where((d) => d.name == name),
-      ...all.where((d) => !order.contains(d.name)),
+      for (final name in {...order, ..._extra, ...all.map((d) => d.name)})
+        ?catalog[name],
     ];
     final installed =
         [
@@ -231,9 +266,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   ),
                   child: Row(
                     children: [
-                      // Back where people look for it: top left. Activities
-                      // are installed by step 4: no going back from there.
-                      if (_page > 0 && _page < 4)
+                      // Back where people look for it: top left. Going back
+                      // from step 5 keeps what was installed; installing
+                      // again skips it.
+                      if (_page > 0)
                         IconButton(
                           tooltip: l10n.onboardingBack,
                           onPressed: _busy ? null : () => _go(_page - 1),
@@ -291,6 +327,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           p.contains(name) ? p.remove(name) : p.add(name);
                         }),
                         onFinish: () => unawaited(_install(options)),
+                        onMore: () => unawaited(_more(catalog.values, options)),
                       ),
                       _FirstPlanStep(
                         types: installed,
@@ -470,6 +507,7 @@ class _PickStep extends StatelessWidget {
     required this.busy,
     required this.onToggle,
     required this.onFinish,
+    required this.onMore,
   });
 
   final List<ActivityTypeDefinition> options;
@@ -477,6 +515,9 @@ class _PickStep extends StatelessWidget {
   final bool busy;
   final ValueChanged<String> onToggle;
   final VoidCallback onFinish;
+
+  /// Searches every activity (skincare, prayer, cleaning…).
+  final VoidCallback onMore;
 
   @override
   Widget build(BuildContext context) {
@@ -520,6 +561,20 @@ class _PickStep extends StatelessWidget {
                       onTap: () => onToggle(d.name),
                     ),
                   ),
+                SizedBox(
+                  width: width,
+                  child: _PickTile(
+                    definition: ActivityTypeDefinition(
+                      name: l10n.onboardingMore,
+                      iconId: 'sparkle',
+                      colorKey: 'slate',
+                      fields: const [],
+                    ),
+                    icon: AppIcons.search,
+                    selected: false,
+                    onTap: onMore,
+                  ),
+                ),
               ],
             );
           },
@@ -540,11 +595,15 @@ class _PickTile extends StatelessWidget {
     required this.definition,
     required this.selected,
     required this.onTap,
+    this.icon,
   });
 
   final ActivityTypeDefinition definition;
   final bool selected;
   final VoidCallback onTap;
+
+  /// Shown instead of the activity's badge (More…).
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -578,11 +637,22 @@ class _PickTile extends StatelessWidget {
                 Center(
                   child: Column(
                     children: [
-                      ActivityBadge(
-                        iconId: definition.iconId,
-                        colorKey: definition.colorKey,
-                        size: 48,
-                      ),
+                      if (icon case final icon?)
+                        Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: c.brandPrimarySoft,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(icon, color: c.brandPrimary),
+                        )
+                      else
+                        ActivityBadge(
+                          iconId: definition.iconId,
+                          colorKey: definition.colorKey,
+                          size: 48,
+                        ),
                       const SizedBox(height: AppSpacing.sm),
                       // Room for two lines on every tile, so they line up.
                       SizedBox(
@@ -638,7 +708,10 @@ enum FocusArea {
   fitness('barbell', 'coral'),
   reading('book-open', 'teal'),
   mind('flower-lotus', 'rose'),
-  health('drop', 'slate');
+  health('drop', 'slate'),
+  selfCare('sparkle', 'rose'),
+  home('broom', 'teal'),
+  faith('star', 'slate');
 
   const FocusArea(this.iconId, this.colorKey);
 
@@ -652,6 +725,9 @@ enum FocusArea {
     reading => l10n.focusAreaReading,
     mind => l10n.focusAreaMind,
     health => l10n.focusAreaHealth,
+    selfCare => l10n.focusAreaSelfCare,
+    home => l10n.focusAreaHome,
+    faith => l10n.focusAreaFaith,
   };
 
   /// The starter activities it picks (by their localized names).
@@ -664,6 +740,9 @@ enum FocusArea {
     reading => [l10n.builtInReading],
     mind => [l10n.builtInMeditation],
     health => [l10n.builtInWater],
+    selfCare => [l10n.builtInMorningRoutine, l10n.builtInSkincare],
+    home => [l10n.builtInCleaning],
+    faith => [l10n.builtInPrayerAndWorship],
   };
 }
 
@@ -867,6 +946,9 @@ class _FirstPlanStepState extends State<_FirstPlanStep> {
   /// Weekdays by default: the first thing is meant to become a habit.
   Set<int>? _repeat = const {1, 2, 3, 4, 5};
 
+  /// Pick days: its own days (Mon, Wed, Fri…).
+  bool _pickDays = false;
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -955,11 +1037,55 @@ class _FirstPlanStepState extends State<_FirstPlanStep> {
             ])
               ChoiceChip(
                 label: Text(label),
-                selected: _repeat?.length == days?.length,
-                onSelected: (_) => setState(() => _repeat = days),
+                selected:
+                    !_pickDays &&
+                    _repeat?.length == days?.length &&
+                    (days ?? const {}).every((d) => _repeat!.contains(d)),
+                onSelected: (_) => setState(() {
+                  _pickDays = false;
+                  _repeat = days;
+                }),
               ),
+            ChoiceChip(
+              label: Text(l10n.firstPlanPickDays),
+              selected: _pickDays,
+              onSelected: (_) => setState(() {
+                _pickDays = true;
+                _repeat = {...?_repeat};
+              }),
+            ),
           ],
         ),
+        if (_pickDays) ...[
+          const SizedBox(height: AppSpacing.md),
+          Wrap(
+            spacing: AppSpacing.xs,
+            runSpacing: AppSpacing.xs,
+            children: [
+              for (var day = 1; day <= 7; day++)
+                FilterChip(
+                  showCheckmark: false,
+                  // Solid when on: the chosen days read at a glance.
+                  selectedColor: c.brandPrimary,
+                  labelStyle: TextStyle(
+                    color: (_repeat?.contains(day) ?? false)
+                        ? c.onBrandPrimary
+                        : c.textPrimary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  label: Text(
+                    MaterialLocalizations.of(context).narrowWeekdays[day % 7],
+                  ),
+                  selected: _repeat?.contains(day) ?? false,
+                  onSelected: (on) => setState(() {
+                    final days = {...?_repeat};
+                    on ? days.add(day) : days.remove(day);
+                    _repeat = days;
+                  }),
+                ),
+            ],
+          ),
+        ],
         if (timed) ...[
           const SizedBox(height: AppSpacing.lg),
           SwitchListTile(
@@ -1059,6 +1185,99 @@ class _Orbit extends StatelessWidget {
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+/// More…: every built-in activity, searched by name (best match first).
+class _MoreSheet extends StatefulWidget {
+  const _MoreSheet({required this.catalog});
+
+  final List<ActivityTypeDefinition> catalog;
+
+  @override
+  State<_MoreSheet> createState() => _MoreSheetState();
+}
+
+class _MoreSheetState extends State<_MoreSheet> {
+  String _query = '';
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final c = context.colors;
+    final shown = rankBySearch(
+      _query,
+      widget.catalog,
+      (d) => activitySearchRank(_query, d.name, d.fields.map((f) => f.name)),
+    );
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+      child: SizedBox(
+        height: MediaQuery.sizeOf(context).height * 0.85,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.xl,
+                AppSpacing.lg,
+                AppSpacing.xl,
+                AppSpacing.sm,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    l10n.onboardingMoreTitle,
+                    style: context.textStyles.headlineSmall,
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  TextField(
+                    autofocus: true,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      hintText: l10n.onboardingMoreHint,
+                      prefixIcon: const Icon(AppIcons.search),
+                    ),
+                    onChanged: (q) => setState(() => _query = q),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: shown.isEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.all(AppSpacing.xl),
+                      child: Text(
+                        l10n.onboardingMoreNone,
+                        textAlign: TextAlign.center,
+                        style: context.textStyles.bodyMedium?.copyWith(
+                          color: c.textSecondary,
+                        ),
+                      ),
+                    )
+                  : ListView.builder(
+                      keyboardDismissBehavior:
+                          ScrollViewKeyboardDismissBehavior.onDrag,
+                      itemCount: shown.length,
+                      itemBuilder: (context, i) {
+                        final d = shown[i];
+                        return ListTile(
+                          leading: ActivityBadge(
+                            iconId: d.iconId,
+                            colorKey: d.colorKey,
+                          ),
+                          title: Text(d.name),
+                          trailing: const Icon(AppIcons.add),
+                          onTap: () => Navigator.pop(context, d.name),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }

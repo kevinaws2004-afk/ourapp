@@ -7,7 +7,7 @@ import '../../core/design/context_ext.dart';
 import '../../core/design/tokens/color_tokens.dart';
 
 /// The app's name, in one place.
-const appBrandName = 'DayCraft';
+const appBrandName = 'Bonsday';
 
 /// The logo's colors, all taken from the current theme so the whole mark
 /// changes with it.
@@ -36,9 +36,9 @@ class LogoColors {
     return LogoColors(
       // First loop: primary flowing into the accent.
       flow: [c.brandPrimary, lighter(c.brandPrimary, 0.3), c.accent],
-      // Second loop: the action color into the accent and back to primary.
+      // The leaves: the action color into the accent and back to primary.
       glow: [lighter(c.action, 0.15), lighter(c.accent, 0.2), c.brandPrimary],
-      // The travelling dot and the sparkle.
+      // Accents (unused by the bonsai; kept for the flat icon variants).
       pulse: [c.action, lighter(c.action, 0.5)],
       tile: dark
           ? [
@@ -66,12 +66,11 @@ class LogoColors {
   final Color edge;
 }
 
-/// The infinity mark (plan → do → log → understand, round again) in the
-/// theme's colors. [tile] draws it on its rounded app-icon square.
+/// The bonsai mark in the theme's colors. [tile] draws it on its rounded
+/// app-icon square.
 ///
-/// [draw] (0–1) draws the two strands in; [travel] (0–1) moves the pulse
-/// dot along the loop; [twinkle] (0–1) pulses the sparkle. Still, it's the
-/// finished logo.
+/// [draw] (0–1) grows it in: pot and trunk, then the leaf pads; [travel]
+/// (0–1) sways the tree. Still, it's the finished logo.
 class AppLogo extends StatelessWidget {
   const AppLogo({
     super.key,
@@ -107,9 +106,8 @@ class AppLogo extends StatelessWidget {
   );
 }
 
-/// [AppLogo] while something loads: the strands draw in, then the pulse
-/// travels round the loop and the sparkle twinkles, for as long as it's
-/// shown. Still when animations are turned off.
+/// [AppLogo] while something loads: the bonsai grows in, then sways gently
+/// for as long as it's shown. Still when animations are turned off.
 class AnimatedAppLogo extends StatefulWidget {
   const AnimatedAppLogo({super.key, required this.size, this.tile = true});
 
@@ -157,8 +155,12 @@ class _AnimatedAppLogoState extends State<AnimatedAppLogo>
   }
 }
 
-/// Paints the mark in a 512×512 design space (the source artwork's),
-/// scaled to the canvas.
+/// Paints the mark, a bonsai, in a 512×512 design space scaled to the
+/// canvas: three cloud-shaped leaf pads on a curved trunk, in a pot. Small
+/// daily care, grown into something beautiful, which
+/// is what the app is about. While loading ([draw] < 1) the pot and trunk
+/// come first and the pads grow in one by one; [travel] sways the tree
+/// gently. [twinkle] isn't drawn any more (kept so callers don't change).
 class LogoPainter extends CustomPainter {
   LogoPainter({
     required this.colors,
@@ -174,50 +176,59 @@ class LogoPainter extends CustomPainter {
   final double? travel;
   final double twinkle;
 
-  static final Path _back = Path()
-    ..moveTo(190, 206)
-    ..cubicTo(150, 160, 90, 190, 90, 256)
-    ..cubicTo(90, 322, 152, 350, 200, 306)
-    ..lineTo(312, 206)
-    ..cubicTo(360, 162, 422, 190, 422, 256)
-    ..cubicTo(422, 322, 362, 352, 322, 306);
+  /// The trunk: a spine rising from the pot with two branches curving out
+  /// and back, a soft "B" (for Bonsday) that still reads as a tree.
+  static final Path _spine = Path()
+    ..moveTo(228, 354)
+    ..cubicTo(220, 300, 236, 250, 226, 200)
+    ..cubicTo(220, 170, 224, 150, 230, 132);
 
-  static final Path _front = Path()
-    ..moveTo(210, 216)
-    ..lineTo(302, 296)
-    ..cubicTo(346, 336, 404, 316, 414, 266)
-    ..cubicTo(424, 216, 384, 184, 340, 196)
-    ..cubicTo(304, 206, 270, 236, 256, 256);
+  static final Path _upperBranch = Path()
+    ..moveTo(228, 150)
+    ..cubicTo(286, 134, 330, 164, 314, 198)
+    ..cubicTo(302, 222, 266, 230, 230, 228);
 
-  static final Path _sparkle = Path()
-    ..moveTo(388, 126)
-    ..quadraticBezierTo(396, 142, 412, 150)
-    ..quadraticBezierTo(396, 158, 388, 174)
-    ..quadraticBezierTo(380, 158, 364, 150)
-    ..quadraticBezierTo(380, 142, 388, 126)
+  static final Path _lowerBranch = Path()
+    ..moveTo(232, 232)
+    ..cubicTo(304, 226, 360, 256, 346, 300)
+    ..cubicTo(336, 332, 282, 344, 236, 338);
+
+  /// A short branch out to the left pad, for balance.
+  static final Path _leftBranch = Path()
+    ..moveTo(226, 262)
+    ..quadraticBezierTo(196, 258, 170, 240);
+
+  /// The leaf pads: wide leaves overlapping like a little cloud, on the top
+  /// of the B, on its two curves and on the left branch. Each with where it
+  /// grows from.
+  static const List<(List<(double, double, double, double)>, Offset)> _pads = [
+    (
+      [(178, 136, 50, 32), (232, 114, 58, 40), (288, 132, 46, 30)],
+      Offset(230, 150),
+    ),
+    ([(330, 158, 36, 24), (368, 150, 40, 28)], Offset(310, 160)),
+    ([(330, 290, 42, 28), (374, 274, 46, 32)], Offset(346, 300)),
+    ([(144, 236, 36, 24), (178, 226, 40, 28)], Offset(170, 240)),
+  ];
+
+  static final Path _pot = Path()
+    ..moveTo(166, 370)
+    ..lineTo(346, 370)
+    ..lineTo(326, 416)
+    ..quadraticBezierTo(322, 426, 310, 426)
+    ..lineTo(202, 426)
+    ..quadraticBezierTo(190, 426, 186, 416)
     ..close();
 
-  static Path _partial(Path path, double t) {
-    if (t >= 1) return path;
-    final out = Path();
-    for (final m in path.computeMetrics()) {
-      out.addPath(m.extractPath(0, m.length * t), Offset.zero);
-    }
-    return out;
-  }
+  Shader _linear(Rect r, List<Color> c) => ui.Gradient.linear(
+    r.topLeft,
+    r.bottomRight,
+    c,
+    c.length == 3 ? const [0, 0.5, 1] : null,
+  );
 
-  static Offset _pointAt(Path path, double t) {
-    final m = path.computeMetrics().first;
-    return m.getTangentForOffset(m.length * t)!.position;
-  }
-
-  Shader _linear(Rect r, List<Color> c, {bool reverse = false}) =>
-      ui.Gradient.linear(
-        reverse ? r.topRight : r.topLeft,
-        reverse ? r.bottomLeft : r.bottomRight,
-        c,
-        c.length == 3 ? const [0, 0.48, 1] : null,
-      );
+  Color _deeper(Color c, double t) =>
+      Color.lerp(c, const Color(0xFF1B1030), t)!;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -245,99 +256,97 @@ class LogoPainter extends CustomPainter {
           ..strokeWidth = 4
           ..color = colors.edge,
       );
-      // Ambient rings.
+      // A soft sun behind the tree.
       canvas.drawCircle(
-        const Offset(256, 256),
-        160,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 32
-          ..color = colors.ring.withValues(alpha: 0.06),
+        const Offset(256, 224),
+        150,
+        Paint()..color = colors.ring.withValues(alpha: 0.07),
       );
-      final dashed = Path()
-        ..addOval(Rect.fromCircle(center: const Offset(256, 256), radius: 120));
-      final ring = Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.5
-        ..color = colors.pulse.first.withValues(alpha: 0.14);
-      for (final m in dashed.computeMetrics()) {
-        for (double d = 0; d < m.length; d += 14) {
-          canvas.drawPath(m.extractPath(d, d + 6), ring);
-        }
-      }
     }
 
-    Paint strand(List<Color> c, {bool reverse = false}) => Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 38
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round
-      ..shader = _linear(
-        const Rect.fromLTWH(90, 160, 332, 192),
-        c,
-        reverse: reverse,
-      );
-
-    // A soft colored shadow under the strands.
-    final shadow = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 38
-      ..strokeCap = StrokeCap.round
-      ..color = colors.ring.withValues(alpha: 0.18)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 14);
-    canvas.drawPath(_partial(_back, draw).shift(const Offset(0, 10)), shadow);
-
-    canvas.drawPath(_partial(_back, draw), strand(colors.flow));
-    final glow = strand(colors.glow, reverse: true)
-      ..color = Colors.white.withValues(alpha: 0.95);
-    canvas.drawPath(_partial(_front, draw), glow);
-
-    // The pulse: at the crossing, or travelling round the loop.
-    final pulseAt = travel == null
-        ? const Offset(256, 256)
-        : _pointAt(_back, travel!);
     final appear = draw.clamp(0.0, 1.0);
-    if (appear > 0.6) {
-      final k = (appear - 0.6) / 0.4;
-      canvas.drawCircle(pulseAt, 18 * k, Paint()..color = colors.node);
-      canvas.drawCircle(
-        pulseAt,
-        11 * k,
-        Paint()
-          ..shader = ui.Gradient.linear(
-            pulseAt.translate(-11, 11),
-            pulseAt.translate(11, -11),
-            colors.pulse,
-          ),
-      );
+    final base = Curves.easeOut.transform((appear / 0.3).clamp(0.0, 1.0));
+    final potColor = colors.flow.first;
+    final trunkColor = _deeper(colors.flow.first, 0.55);
 
-      // Sparkle and the small dot.
+    // A soft shadow under the pot.
+    canvas.drawOval(
+      Rect.fromCenter(center: const Offset(256, 432), width: 210, height: 18),
+      Paint()
+        ..color = colors.ring.withValues(alpha: 0.16 * base)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
+    );
+
+    // The tree sways a little around the trunk's foot.
+    final sway = travel == null ? 0.0 : math.sin(travel! * 2 * math.pi) * 0.025;
+    canvas.save();
+    canvas.translate(250, 344);
+    canvas.rotate(sway);
+    canvas.scale(1, base);
+    canvas.translate(-250, -344);
+    final wood = Paint()
+      ..color = trunkColor.withValues(alpha: base)
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+    canvas.drawPath(_spine, wood..strokeWidth = 30);
+    canvas.drawPath(_upperBranch, wood..strokeWidth = 20);
+    canvas.drawPath(_lowerBranch, wood..strokeWidth = 22);
+    canvas.drawPath(_leftBranch, wood..strokeWidth = 14);
+    canvas.restore();
+
+    canvas.save();
+    canvas.translate(250, 344);
+    canvas.rotate(sway * 1.6);
+    canvas.translate(-250, -344);
+    final leaves = _linear(const Rect.fromLTWH(140, 70, 280, 260), colors.glow);
+    for (final (i, (circles, from)) in _pads.indexed) {
+      final k = Curves.easeOutBack.transform(
+        ((appear - 0.25 - i * 0.18) / 0.35).clamp(0.0, 1.0),
+      );
+      if (k <= 0) continue;
       canvas.save();
-      final sparkleScale = k * (1 + 0.18 * twinkle);
-      canvas.translate(388, 150);
-      canvas.scale(sparkleScale);
-      canvas.translate(-388, -150);
-      canvas.drawPath(
-        _sparkle,
-        Paint()
-          ..shader = _linear(
-            const Rect.fromLTWH(364, 126, 48, 48),
-            colors.glow,
-            reverse: true,
-          ),
-      );
+      canvas.translate(from.dx, from.dy);
+      canvas.scale(k);
+      canvas.translate(-from.dx, -from.dy);
+      // Back leaves first; a thin rim on each front leaf shows the overlap.
+      for (final (j, (x, y, rx, ry)) in circles.indexed) {
+        final leaf = Rect.fromCenter(
+          center: Offset(x, y),
+          width: rx * 2,
+          height: ry * 2,
+        );
+        if (j > 0) {
+          canvas.drawOval(
+            leaf.inflate(3),
+            Paint()..color = colors.tile.last.withValues(alpha: 0.85),
+          );
+        }
+        canvas.drawOval(leaf, Paint()..shader = leaves);
+      }
       canvas.restore();
-      canvas.drawCircle(
-        const Offset(114, 374),
-        8 * k,
-        Paint()
-          ..shader = ui.Gradient.linear(
-            const Offset(106, 382),
-            const Offset(122, 366),
-            colors.pulse,
-          ),
-      );
     }
+    canvas.restore();
+
+    // The pot: rim and body.
+    canvas.drawPath(
+      _pot,
+      Paint()
+        ..shader = _linear(const Rect.fromLTWH(166, 360, 180, 70), [
+          potColor,
+          _deeper(potColor, 0.25),
+        ]),
+    );
+    canvas.drawRRect(
+      RRect.fromLTRBR(148, 344, 364, 376, const Radius.circular(14)),
+      Paint()..color = _deeper(potColor, 0.2),
+    );
+    // A small highlight on the pot.
+    canvas.drawRRect(
+      RRect.fromLTRBR(186, 384, 198, 410, const Radius.circular(6)),
+      Paint()..color = colors.node.withValues(alpha: 0.35),
+    );
+
     canvas.restore();
   }
 

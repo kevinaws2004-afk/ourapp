@@ -98,7 +98,7 @@ Future<ProviderContainer> _pump(
     theme: theme,
     onboardingCompleted: onboarded,
     appearance: appearance,
-    name: onboarded ? 'Kevin' : '',
+    name: onboarded ? 'Alex' : '',
     trueBlack: trueBlack,
   );
   await tester.runAsync(() async {

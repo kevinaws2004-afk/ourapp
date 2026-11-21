@@ -1,4 +1,4 @@
-// Renders DayCraft's launcher icons and store artwork from the app's own
+// Renders Bonsday's launcher icons and store artwork from the app's own
 // logo painter, in the default (lavender) theme. Not part of the normal
 // test run:
 //   flutter test tool/screens/icon_test.dart
@@ -187,7 +187,7 @@ void main() {
                   ),
                   const SizedBox(height: 18),
                   Text(
-                    'Plan your day. Do it. See it add up.',
+                    'Plan your day. Focus. Grow.',
                     style: TextStyle(
                       fontFamily: 'PlusJakartaSans',
                       fontWeight: FontWeight.w400,

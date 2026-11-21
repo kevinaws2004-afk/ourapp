@@ -108,14 +108,22 @@ List<String> _groupLines(
       TextValue(:final text) => text,
       _ => null,
     };
+    // A ticked step reads "✓ Drink water", not "Drink water Done: Yes".
+    final ticked = others.any(
+      (sub) => switch (item.values[sub.id]) {
+        BooleanValue(value: true) => true,
+        _ => false,
+      },
+    );
     final parts = [
       for (final sub in others)
-        if (item.values[sub.id] case final v?)
+        if (item.values[sub.id] case final v? when v is! BooleanValue)
           v is RepeatingGroupValue
               ? _groupLines(context, type, sub, v).join(', ')
               : formatFieldValue(context, sub, v),
     ].where((p) => p.isNotEmpty);
     return [
+      if (ticked) '✓',
       ?label,
       if (parts.isNotEmpty) parts.join(allNumbers ? ' × ' : ' · '),
     ].join(' ');

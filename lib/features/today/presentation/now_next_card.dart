@@ -26,6 +26,8 @@ import '../../plans/domain/plan.dart';
 import '../../plans/domain/watch_day_overview.dart';
 import '../../plans/presentation/plan_actions.dart';
 import '../../plans/presentation/plan_formatting.dart';
+import '../../plans/presentation/widgets/plan_item_tile.dart';
+import '../../activity_logs/domain/checklist.dart';
 
 /// Today's Now/Next card (ADR-046): the one thing to do now ([upNext]) with
 /// one action.
@@ -97,6 +99,19 @@ class NowNextCard extends ConsumerWidget {
                 ref,
               ).finish(session, title: plan.title, type: type),
             ),
+          )
+        // A counter (water): +1 here too, one row for the day.
+        : showsCounter(item)
+        ? (
+            label: switch (counterValue(
+              counterField(type)!,
+              item.records.firstOrNull?.values,
+            ).round()) {
+              0 => l10n.nowNextAddOne,
+              final n => l10n.nowNextAddOneSoFar(n),
+            },
+            icon: AppIcons.add,
+            onPressed: () => unawaited(PlanActions(context, ref).addOne(item)),
           )
         : timed && session == null
         ? (

@@ -343,42 +343,48 @@ class DbInsightRepository implements InsightRepository {
   );
 
   @override
-  Stream<List<PlanDay>> watchPlanAdherence(LocalDate from, LocalDate today) =>
-      guardStorageStream(
-        'watchPlanAdherence',
-        _watch(() async {
-          // Done: marked done, or logged on a day that has passed (ADR-040).
-          const done =
-              "(p.status = 'completed' OR (p.plan_date < ?3 AND EXISTS ("
-              'SELECT 1 FROM activity_logs pl WHERE pl.plan_id = p.internal_id '
-              'AND pl.deleted_at IS NULL)))';
-          final rows = await _db
-              .customSelect(
-                'SELECT p.plan_date AS d, COUNT(*) AS n, '
-                'SUM(CASE WHEN $done THEN 1 ELSE 0 END) AS k FROM plans p '
-                'WHERE p.deleted_at IS NULL '
-                "AND p.status NOT IN ('skipped', 'cancelled') "
-                'AND p.plan_date BETWEEN ?1 AND ?2 '
-                'AND (p.plan_date < ?3 OR $done) '
-                'GROUP BY p.plan_date ORDER BY p.plan_date',
-                variables: [
-                  Variable(from.toIso()),
-                  Variable(today.toIso()),
-                  Variable(today.toIso()),
-                ],
-                readsFrom: {_db.plans, _db.activityLogs},
-              )
-              .get();
-          return [
-            for (final r in rows)
-              PlanDay(
-                LocalDate.parse(r.read<String>('d')),
-                planned: r.read<int>('n'),
-                done: r.read<int>('k'),
-              ),
-          ];
-        }),
-      );
+  Stream<List<PlanDay>> watchPlanAdherence(
+    LocalDate from,
+    LocalDate today, {
+    DateTime? now,
+  }) => guardStorageStream(
+    'watchPlanAdherence',
+    _watch(() async {
+      // Done: marked done, or logged on a day that has passed (ADR-040).
+      const done =
+          "(p.status = 'completed' OR (p.plan_date < ?3 AND EXISTS ("
+          'SELECT 1 FROM activity_logs pl WHERE pl.plan_id = p.internal_id '
+          'AND pl.deleted_at IS NULL)))';
+      final rows = await _db
+          .customSelect(
+            'SELECT p.plan_date AS d, COUNT(*) AS n, '
+            'SUM(CASE WHEN $done THEN 1 ELSE 0 END) AS k FROM plans p '
+            'WHERE p.deleted_at IS NULL '
+            "AND p.status NOT IN ('skipped', 'cancelled') "
+            'AND p.plan_date BETWEEN ?1 AND ?2 '
+            // Today's timed ones count once their time is over.
+            'AND (p.plan_date < ?3 OR $done OR COALESCE(p.planned_end_at, '
+            'p.planned_start_at + COALESCE(p.planned_duration_ms, 0)) < ?4) '
+            'GROUP BY p.plan_date ORDER BY p.plan_date',
+            variables: [
+              Variable(from.toIso()),
+              Variable(today.toIso()),
+              Variable(today.toIso()),
+              Variable(now?.millisecondsSinceEpoch ?? 0),
+            ],
+            readsFrom: {_db.plans, _db.activityLogs},
+          )
+          .get();
+      return [
+        for (final r in rows)
+          PlanDay(
+            LocalDate.parse(r.read<String>('d')),
+            planned: r.read<int>('n'),
+            done: r.read<int>('k'),
+          ),
+      ];
+    }),
+  );
 
   @override
   Stream<Map<ActivityTypeId, Set<LocalDate>>> watchActiveDays() =>

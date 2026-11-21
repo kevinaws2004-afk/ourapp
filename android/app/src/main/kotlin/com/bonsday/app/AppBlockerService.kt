@@ -1,4 +1,4 @@
-package com.ourapp.daylog
+package com.bonsday.app
 
 import android.accessibilityservice.AccessibilityService
 import android.content.ComponentName
@@ -11,7 +11,7 @@ import android.widget.Toast
 
 /// Focus-mode app blocking (Me → Focus → Block distracting apps). While a
 /// focus session runs, opening an app the person chose to block sends them
-/// back to DayCraft with a short note. It only looks at which app came to
+/// back to Bonsday with a short note. It only looks at which app came to
 /// the front (the window-change event's package name); it never reads what's
 /// on the screen, and nothing leaves the phone.
 class AppBlockerService : AccessibilityService() {
@@ -28,7 +28,7 @@ class AppBlockerService : AccessibilityService() {
         } catch (_: PackageManager.NameNotFoundException) {
             app
         }
-        // DayCraft (the running timer) comes to the front over it. Going
+        // Bonsday (the running timer) comes to the front over it. Going
         // home first would land on the launcher instead.
         startActivity(
             Intent(this, MainActivity::class.java).addFlags(
@@ -83,14 +83,59 @@ object AppBlocker {
     }
 
     /// Apps with a launcher icon (what someone would open), except this one.
-    fun launchableApps(context: Context): List<Map<String, String>> {
+    fun launchableApps(context: Context): List<Map<String, Any>> {
         val pm = context.packageManager
         val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
         return pm.queryIntentActivities(intent, 0)
-            .map { it.activityInfo.packageName to it.loadLabel(pm).toString() }
-            .filter { it.first != context.packageName }
-            .distinctBy { it.first }
-            .sortedBy { it.second.lowercase() }
-            .map { mapOf("package" to it.first, "label" to it.second) }
+            .filter { it.activityInfo.packageName != context.packageName }
+            .distinctBy { it.activityInfo.packageName }
+            .sortedBy { it.loadLabel(pm).toString().lowercase() }
+            .map {
+                val app = mutableMapOf<String, Any>(
+                    "package" to it.activityInfo.packageName,
+                    "label" to it.loadLabel(pm).toString(),
+                )
+                iconPng(it.loadIcon(pm))?.let { png -> app["icon"] = png }
+                // Games, social and video apps: the usual distractions.
+                val category = it.activityInfo.applicationInfo.category
+                app["distracting"] = category == android.content.pm.ApplicationInfo.CATEGORY_GAME ||
+                    category == android.content.pm.ApplicationInfo.CATEGORY_SOCIAL ||
+                    category == android.content.pm.ApplicationInfo.CATEGORY_VIDEO
+                app
+            }
+    }
+
+    /// A small PNG of an app's icon, for the app picker.
+    private fun iconPng(drawable: android.graphics.drawable.Drawable): ByteArray? = try {
+        val size = 72
+        val bitmap = android.graphics.Bitmap.createBitmap(size, size, android.graphics.Bitmap.Config.ARGB_8888)
+        val canvas = android.graphics.Canvas(bitmap)
+        drawable.setBounds(0, 0, size, size)
+        drawable.draw(canvas)
+        val out = java.io.ByteArrayOutputStream()
+        bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, out)
+        out.toByteArray()
+    } catch (_: Exception) {
+        null
+    }
+
+    /// Opens this service's own page in Accessibility settings (Android 13+:
+    /// one switch, and one Back to return), else the Accessibility list.
+    fun openSettings(context: Context) {
+        val component = ComponentName(context, AppBlockerService::class.java).flattenToString()
+        if (android.os.Build.VERSION.SDK_INT >= 33) {
+            try {
+                context.startActivity(
+                    Intent("android.settings.ACCESSIBILITY_DETAILS_SETTINGS")
+                        .putExtra(Intent.EXTRA_COMPONENT_NAME, component)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                )
+                return
+            } catch (_: Exception) {
+            }
+        }
+        context.startActivity(
+            Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        )
     }
 }

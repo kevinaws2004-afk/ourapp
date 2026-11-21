@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,6 +10,8 @@ import '../../../../core/design/context_ext.dart';
 import '../../../../core/design/keys/activity_icon_ids.dart';
 import '../../../../core/design/tokens/activity_palette.dart';
 import '../../../../core/time/clock_provider.dart';
+import '../plan_date_notifier.dart';
+import '../../../activity_logs/domain/checklist.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../shared/widgets/activity_badge.dart';
 import '../../../../shared/widgets/done_check.dart';
@@ -19,7 +23,9 @@ import '../../../focus/presentation/focus_providers.dart';
 import '../../../focus/presentation/focus_screen.dart';
 import '../../domain/plan.dart';
 import '../../domain/watch_day_overview.dart';
+import '../plan_actions.dart';
 import '../plan_formatting.dart';
+import '../../../../core/design/tokens/spacing.dart';
 
 /// One thing on a day as a timeline row (ADR-046), the same on Today and in
 /// Plan. Its sub-line says what matters now:
@@ -39,9 +45,13 @@ class PlanItemTile extends ConsumerWidget {
     required this.onToggleDone,
     this.onLongPress,
     this.dragHandle,
+    this.partOf,
   });
 
   final PlannedItem item;
+
+  /// Its activity's progress today when it's planned more than once.
+  final ({int done, int total})? partOf;
   final VoidCallback onTap;
 
   /// Null when the circle can't toggle (e.g. skipped, or done by itself).
@@ -87,6 +97,9 @@ class PlanItemTile extends ConsumerWidget {
       subline = result == l10n.planStatusDone ? null : result;
     } else if (inactive) {
       subline = null;
+    } else if (openProgressLine(l10n, item, partOf: partOf) case final p?) {
+      // Part-way: "2 of 4 done", "3 glasses", "2 of 5 today".
+      subline = p;
     } else if ((type, item.records.firstOrNull) case (final type?, final log?)
         when summarizeLog(context, type, log).isNotEmpty) {
       // Logged into but not done yet: what's in it so far.
@@ -95,6 +108,10 @@ class PlanItemTile extends ConsumerWidget {
       if (plan.plannedLengthMs case final length?) {
         subline = formatDuration(l10n, length);
       }
+    }
+
+    if (subline == null && !inactive) {
+      if (partOf case final p?) subline = l10n.partOfDay(p.done, p.total);
     }
 
     // Its time window contains now (or it started in the last 15 minutes).
@@ -128,6 +145,13 @@ class PlanItemTile extends ConsumerWidget {
         StatusTone.neutral,
       ),
       _ when isNow => (l10n.nowNextNow, StatusTone.active),
+      // Its time is over and it's still open: say so, kindly.
+      _ when item.isOpen && end != null && !end.isAfter(now) => (
+        plan.planDate == currentLocalDate(ref.watch(clockProvider))
+            ? l10n.statusNotDoneYet
+            : l10n.statusNotDone,
+        StatusTone.neutral,
+      ),
       _ when start != null => (l10n.statusScheduled, StatusTone.scheduled),
       _ => (null, StatusTone.neutral),
     };
@@ -162,6 +186,12 @@ class PlanItemTile extends ConsumerWidget {
               colorKey: type?.colorKey ?? ActivityColorKey.slate.name,
             ),
       trailing: [
+        // A counter (water): +1 right on the row, one row for the day.
+        if (showsCounter(item))
+          Padding(
+            padding: const EdgeInsets.only(right: AppSpacing.xs),
+            child: CounterButton(item: item),
+          ),
         DoneCheck(
           done: done,
           color: inactive
@@ -199,3 +229,60 @@ class _TaskMark extends StatelessWidget {
 /// Whether the running thing's timer is paused (on a break).
 bool _paused(WidgetRef ref) =>
     ref.watch(activeFocusSessionProvider).value?.state == FocusState.paused;
+
+/// How far an open item has got, for its row: "2 of 4 done" (a routine's
+/// steps), "3 glasses" (a counter), "2 of 5 today" (the same activity more
+/// than once today). Null when there's nothing to say.
+String? openProgressLine(
+  AppLocalizations l10n,
+  PlannedItem item, {
+  ({int done, int total})? partOf,
+}) {
+  final values = item.records.firstOrNull?.values;
+  final type = item.type;
+  final parts = [
+    if (checklistProgress(type, values) case final steps?)
+      l10n.checklistProgress(steps.done, steps.total)
+    else if (counterField(type) case final field?
+        when counterValue(field, values) > 0)
+      '${field.name}: ${formatNumber(counterValue(field, values), 0)}',
+    if (partOf case final p?) l10n.partOfDay(p.done, p.total),
+  ];
+  return parts.isEmpty ? null : parts.join(' · ');
+}
+
+/// The +1 button of a counter row (a glass of water).
+class CounterButton extends ConsumerWidget {
+  const CounterButton({super.key, required this.item});
+
+  final PlannedItem item;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final field = counterField(item.type);
+    if (field == null) return const SizedBox.shrink();
+    return Tooltip(
+      message: l10n.counterAddOneHint(field.name.toLowerCase()),
+      child: FilledButton.tonal(
+        style: FilledButton.styleFrom(
+          minimumSize: const Size(48, 36),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+          visualDensity: VisualDensity.compact,
+        ),
+        onPressed: () => unawaited(PlanActions(context, ref).addOne(item)),
+        child: Text(l10n.counterAddOne),
+      ),
+    );
+  }
+}
+
+/// Whether [item] shows a +1 now: a counter, open, still counting (not a
+/// big number like steps).
+bool showsCounter(PlannedItem item) =>
+    item.isOpen &&
+    switch (counterField(item.type)) {
+      final field? =>
+        counterValue(field, item.records.firstOrNull?.values) < 50,
+      null => false,
+    };

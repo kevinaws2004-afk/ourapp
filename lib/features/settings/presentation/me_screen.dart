@@ -15,6 +15,7 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/widgets/app_card.dart';
 import '../../../shared/widgets/settings_group.dart';
 import '../../../shared/widgets/user_avatar.dart';
+import 'avatar_picker.dart';
 import '../../activity_types/presentation/activity_type_providers.dart';
 import '../../challenges/presentation/challenge_providers.dart';
 import '../../insights/presentation/insight_providers.dart';
@@ -134,8 +135,10 @@ class MeScreen extends ConsumerWidget {
                 child: UserAvatar(
                   name: name,
                   size: 88,
-                  onTap: () => unawaited(editName(context, ref)),
-                  tooltip: l10n.meEditName,
+                  picture: ref.watch(avatarPictureProvider).value,
+                  editBadge: true,
+                  onTap: () => unawaited(showAvatarPicker(context, ref)),
+                  tooltip: l10n.meEditPicture,
                 ),
               ),
               const SizedBox(height: AppSpacing.md),
@@ -394,7 +397,7 @@ class MeScreen extends ConsumerWidget {
     );
   }
 
-  /// About: what DayCraft is, its version, and the open-source licenses,
+  /// About: what Bonsday is, its version, and the open-source licenses,
   /// explained (Android's own dialog only says "View licenses").
   Future<void> _showAbout(BuildContext context, String version) {
     final l10n = AppLocalizations.of(context);

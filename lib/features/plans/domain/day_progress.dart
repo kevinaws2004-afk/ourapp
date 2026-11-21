@@ -76,7 +76,8 @@ const openEndedNow = Duration(hours: 1);
 /// 3. else the first untimed one.
 ///
 /// Timed items whose time has passed without being done are left to the list;
-/// they aren't "next" any more.
+/// they aren't "next" any more. With the next timed one more than
+/// [freeAhead] away, an Anytime one comes first.
 PlannedItem? upNext(DayOverview overview, DateTime nowUtc) {
   final open = overview.planned.where((i) => i.isOpen).toList();
   for (final item in open) {
@@ -97,12 +98,19 @@ PlannedItem? upNext(DayOverview overview, DateTime nowUtc) {
       nextTimed = item;
     }
   }
-  if (nextTimed != null) return nextTimed;
-  for (final item in open) {
-    if (item.plan.plannedStartAt == null) return item;
+  final anytime = open.where((i) => i.plan.plannedStartAt == null).firstOrNull;
+  // Hours before the next timed thing: something to do now beats "in 11h".
+  if (nextTimed != null &&
+      (anytime == null ||
+          !nextTimed.plan.plannedStartAt!.isAfter(nowUtc.add(freeAhead)))) {
+    return nextTimed;
   }
-  return null;
+  return anytime ?? nextTimed;
 }
+
+/// How far ahead the next timed thing has to be for an Anytime one to come
+/// first on the Now/Next card.
+const freeAhead = Duration(hours: 2);
 
 /// What Today's Now/Next card says about [item] at [nowUtc] (ADR-046).
 enum NowNextKind {

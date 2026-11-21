@@ -45,6 +45,7 @@ import '../features/measurements/presentation/measurements_screen.dart';
 import '../features/today/presentation/quick_start_sheet.dart';
 import '../features/plans/presentation/widgets/add_sheet.dart';
 import '../features/notifications/presentation/notifications_screen.dart';
+import '../features/garden/presentation/year_pixels_screen.dart';
 import '../features/notes/domain/note.dart';
 import '../features/notes/presentation/note_editor_screen.dart';
 import '../features/notes/presentation/note_providers.dart';
@@ -79,6 +80,7 @@ abstract final class AppRoutes {
 
   /// Notes: the board, and one note.
   static const notes = '/notes';
+  static const year = '/year';
 
   /// A day's report: what got done, time per activity, untracked time.
   static String dayReport(LocalDate date) => '/day/${date.toIso()}';
@@ -193,14 +195,23 @@ final routerProvider = Provider<GoRouter>((ref) {
     final l10n = AppLocalizations.of(context);
     final clock = ref.read(clockProvider);
     try {
-      final planId = await ref.read(createPlanProvider)(
-        PlanDraft(
-          planDate: currentLocalDate(clock),
-          title: '',
-          activityTypeId: typeId,
-          plannedStartAt: clock.nowUtc(),
-        ),
-      );
+      final today = currentLocalDate(clock);
+      // Today's own open one if it's planned already, not a second row.
+      final day = await ref.read(dayOverviewProvider(today).future);
+      final planId =
+          day.planned
+              .where((i) => i.isOpen && i.plan.activityTypeId == typeId)
+              .firstOrNull
+              ?.plan
+              .id ??
+          await ref.read(createPlanProvider)(
+            PlanDraft(
+              planDate: today,
+              title: '',
+              activityTypeId: typeId,
+              plannedStartAt: clock.nowUtc(),
+            ),
+          );
       if (withTimer) {
         await ref.read(startFocusSessionProvider)(typeId, planId: planId);
       }
@@ -313,6 +324,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                   chooser: chooser(context),
                   onOpenMe: () => context.go(AppRoutes.me),
                   onOpenNotes: () => unawaited(context.push(AppRoutes.notes)),
+                  onOpenYear: () => unawaited(context.push(AppRoutes.year)),
                   onOpenFocusMode: () =>
                       unawaited(context.push(AppRoutes.focusMode)),
                   onOpenDayReport: (date) =>
@@ -490,6 +502,11 @@ final routerProvider = Provider<GoRouter>((ref) {
             null => null,
           },
         ),
+      ),
+      GoRoute(
+        parentNavigatorKey: rootNavigatorKey,
+        path: AppRoutes.year,
+        builder: (context, state) => const YearPixelsScreen(),
       ),
       GoRoute(
         parentNavigatorKey: rootNavigatorKey,

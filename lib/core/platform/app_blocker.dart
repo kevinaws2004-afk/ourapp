@@ -1,12 +1,47 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+/// Apps people most often lose time in, shown first when choosing what to
+/// block (many don't declare a category).
+const commonDistractions = {
+  'com.instagram.android',
+  'com.google.android.youtube',
+  'com.zhiliaoapp.musically',
+  'com.ss.android.ugc.trill',
+  'com.facebook.katana',
+  'com.facebook.lite',
+  'com.twitter.android',
+  'com.snapchat.android',
+  'com.reddit.frontpage',
+  'com.netflix.mediaclient',
+  'in.startv.hotstar',
+  'com.amazon.avod.thirdpartyclient',
+  'com.pinterest',
+  'com.linkedin.android',
+  'org.telegram.messenger',
+  'com.whatsapp',
+  'com.discord',
+  'tv.twitch.android.app',
+  'com.spotify.music',
+};
+
 /// An app on the phone that can be blocked while focusing.
 class LaunchableApp {
-  const LaunchableApp(this.package, this.label);
+  const LaunchableApp(
+    this.package,
+    this.label, [
+    this.icon,
+    this.distracting = false,
+  ]);
 
   final String package;
   final String label;
+
+  /// A game, social or video app (Android's category), or a well-known one.
+  final bool distracting;
+
+  /// Its launcher icon as a small PNG, when Android gave one.
+  final Uint8List? icon;
 }
 
 /// Focus-mode app blocking (`AppBlockerService.kt`): while a session runs,
@@ -44,7 +79,12 @@ class AppBlocker {
     return [
       for (final item in list)
         if (item case {'package': final String p, 'label': final String l})
-          LaunchableApp(p, l),
+          LaunchableApp(
+            p,
+            l,
+            (item as Map)['icon'] as Uint8List?,
+            item['distracting'] == true || commonDistractions.contains(p),
+          ),
     ];
   }
 

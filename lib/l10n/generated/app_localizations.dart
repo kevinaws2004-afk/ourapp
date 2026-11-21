@@ -97,7 +97,7 @@ abstract class AppLocalizations {
   /// Temporary visible product name. The real name is undecided (ADR-010). Change together with Android strings.xml and iOS Info.plist.
   ///
   /// In en, this message translates to:
-  /// **'DayCraft'**
+  /// **'Bonsday'**
   String get appTitle;
 
   /// Primary navigation tab: today's plan and timeline.
@@ -1999,25 +1999,25 @@ abstract class AppLocalizations {
   /// Insights / body measurements copy.
   ///
   /// In en, this message translates to:
-  /// **'Week'**
+  /// **'7 days'**
   String get insightRangeWeek;
 
   /// Insights / body measurements copy.
   ///
   /// In en, this message translates to:
-  /// **'Month'**
+  /// **'30 days'**
   String get insightRangeMonth;
 
   /// Insights / body measurements copy.
   ///
   /// In en, this message translates to:
-  /// **'3 months'**
+  /// **'90 days'**
   String get insightRangeQuarter;
 
   /// Insights / body measurements copy.
   ///
   /// In en, this message translates to:
-  /// **'Year'**
+  /// **'12 months'**
   String get insightRangeYear;
 
   /// Insights / body measurements copy.
@@ -9996,7 +9996,7 @@ abstract class AppLocalizations {
   /// No description provided for @meExportSubject.
   ///
   /// In en, this message translates to:
-  /// **'DayCraft backup'**
+  /// **'Bonsday backup'**
   String get meExportSubject;
 
   /// No description provided for @mePrivacy.
@@ -10026,7 +10026,7 @@ abstract class AppLocalizations {
   /// No description provided for @meFooter.
   ///
   /// In en, this message translates to:
-  /// **'DayCraft · Plan it. Do it. See it.'**
+  /// **'Bonsday · Plan it. Do it. See it.'**
   String get meFooter;
 
   /// No description provided for @meNameTitle.
@@ -10386,7 +10386,7 @@ abstract class AppLocalizations {
   /// No description provided for @notifyMorningBodyAnytime.
   ///
   /// In en, this message translates to:
-  /// **'Open DayCraft to plan your day.'**
+  /// **'Open Bonsday to plan your day.'**
   String get notifyMorningBodyAnytime;
 
   /// No description provided for @notifyEvening.
@@ -10434,13 +10434,13 @@ abstract class AppLocalizations {
   /// No description provided for @notificationsMasterHint.
   ///
   /// In en, this message translates to:
-  /// **'Off means DayCraft never notifies you.'**
+  /// **'Off means Bonsday never notifies you.'**
   String get notificationsMasterHint;
 
   /// No description provided for @notificationsBlocked.
   ///
   /// In en, this message translates to:
-  /// **'Notifications are blocked for DayCraft in your phone settings.'**
+  /// **'Notifications are blocked for Bonsday in your phone settings.'**
   String get notificationsBlocked;
 
   /// No description provided for @notificationsAllow.
@@ -11562,7 +11562,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'DayCraft spreadsheets'**
+  /// **'Bonsday spreadsheets'**
   String get csvShareSubject;
 
   /// UI copy.
@@ -11622,19 +11622,19 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Pick a DayCraft backup (.json) saved earlier'**
+  /// **'Pick a Bonsday backup (.json) saved earlier'**
   String get restoreFromFileSubtitle;
 
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'That file isn\'t a DayCraft backup.'**
+  /// **'That file isn\'t a Bonsday backup.'**
   String get restoreNotABackup;
 
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'That backup is from a newer version of DayCraft. Update the app, then try again.'**
+  /// **'That backup is from a newer version of Bonsday. Update the app, then try again.'**
   String get restoreNewerVersion;
 
   /// UI copy.
@@ -11730,7 +11730,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'With Android\'s device backup on (Settings → Google → Backup), these backups and your data move to your next phone with it. Nothing is ever uploaded by DayCraft itself.'**
+  /// **'With Android\'s device backup on (Settings → Google → Backup), these backups and your data move to your next phone with it. Nothing is ever uploaded by Bonsday itself.'**
   String get backupDeviceNote;
 
   /// UI copy.
@@ -11742,13 +11742,13 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Ask for your fingerprint, face or screen lock to open DayCraft'**
+  /// **'Ask for your fingerprint, face or screen lock to open Bonsday'**
   String get appLockSubtitle;
 
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Unlock DayCraft'**
+  /// **'Unlock Bonsday'**
   String get appLockReason;
 
   /// UI copy.
@@ -11766,7 +11766,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'DayCraft is locked'**
+  /// **'Bonsday is locked'**
   String get appLockLockedTitle;
 
   /// UI copy.
@@ -11910,7 +11910,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Allow DayCraft under Do Not Disturb access — tap to open it'**
+  /// **'Allow Bonsday under Do Not Disturb access — tap to open it'**
   String get dndNeedsAccess;
 
   /// UI copy.
@@ -11958,7 +11958,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'My week, planned and done — made with DayCraft'**
+  /// **'My week, planned and done — made with Bonsday'**
   String get recapShareText;
 
   /// UI copy.
@@ -12294,7 +12294,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'DayCraft will ask to send notifications.'**
+  /// **'Bonsday will ask to send notifications.'**
   String get firstPlanRemindHint;
 
   /// UI copy.
@@ -12324,7 +12324,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'DayCraft wasn\'t allowed to read from Health Connect.'**
+  /// **'Bonsday wasn\'t allowed to read from Health Connect.'**
   String get healthDenied;
 
   /// UI copy.
@@ -12390,7 +12390,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Rate DayCraft'**
+  /// **'Rate Bonsday'**
   String get meRate;
 
   /// UI copy.
@@ -12432,7 +12432,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'DayCraft feedback'**
+  /// **'Bonsday feedback'**
   String get feedbackSubject;
 
   /// UI copy.
@@ -12444,7 +12444,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'DayCraft problem report'**
+  /// **'Bonsday problem report'**
   String get feedbackDiagnosticsSubject;
 
   /// UI copy.
@@ -12600,7 +12600,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'Turn on \"DayCraft focus blocking\" in Accessibility settings. Tap to open.'**
+  /// **'Turn on \"Bonsday focus blocking\" in Accessibility settings. Tap to open.'**
   String get blockNeedsService;
 
   /// UI copy.
@@ -12642,7 +12642,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'To block apps while you focus, DayCraft uses Android\'s Accessibility service.\n\n• It only notices which app comes to the front while a focus session is running.\n• It never reads what\'s on your screen, what you type, or anything else.\n• Nothing is collected, stored about other apps, or sent anywhere.\n\nOn the next screen, open \"DayCraft focus blocking\" and turn it on. You can turn it off there at any time.'**
+  /// **'To block apps while you focus, Bonsday uses Android\'s Accessibility service.\n\n• It only notices which app comes to the front while a focus session is running.\n• It never reads what\'s on your screen, what you type, or anything else.\n• Nothing is collected, stored about other apps, or sent anywhere.\n\nOn the next screen, turn on \"Bonsday focus blocking\". Android shows a strong warning about \"full control\" for every app that uses this; Bonsday only uses it as described above. Turn it off there any time, then press Back once to come back.'**
   String get blockDisclosureBody;
 
   /// UI copy.
@@ -13386,7 +13386,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'About DayCraft'**
+  /// **'About Bonsday'**
   String get meAboutTitle;
 
   /// UI copy.
@@ -13404,7 +13404,7 @@ abstract class AppLocalizations {
   /// UI copy.
   ///
   /// In en, this message translates to:
-  /// **'DayCraft is built with free, open software (like Flutter). Their authors ask that their names and terms are listed here.'**
+  /// **'Bonsday is built with free, open software (like Flutter). Their authors ask that their names and terms are listed here.'**
   String get meLicensesSubtitle;
 
   /// UI copy.
@@ -13412,6 +13412,864 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get notesSave;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Type the amount above.'**
+  String get goalEnterAmount;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Type where you are now and your target above.'**
+  String get goalEnterTarget;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {target} today'**
+  String goalTodayOf(String done, String target);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'On tomorrow already'**
+  String get wrapUpOnTomorrow;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Not done yet'**
+  String get statusNotDoneYet;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Not done'**
+  String get statusNotDone;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} already repeats. Set a goal to count the days you keep it.'**
+  String habitHintBodyRepeating(String name);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Self-care & mornings'**
+  String get focusAreaSelfCare;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Home & chores'**
+  String get focusAreaHome;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Faith & prayer'**
+  String get focusAreaFaith;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'More…'**
+  String get onboardingMore;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Find an activity'**
+  String get onboardingMoreTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Skincare, prayer, cleaning, guitar…'**
+  String get onboardingMoreHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing by that name. You can make your own later.'**
+  String get onboardingMoreNone;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick days'**
+  String get firstPlanPickDays;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Usual distractions'**
+  String get blockAppsCommon;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Other apps'**
+  String get blockAppsOther;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your phone will ask to pin Bonsday'**
+  String get focusPinHeadsUpTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Pinning keeps you on the timer until you end focus mode. Android\'s message about personal data is its standard wording for any pinned app; nothing leaves your phone.\n\nTap \"Pin\" (or \"Got it\") on the next screen. To leave, tap End focus mode here.'**
+  String get focusPinHeadsUpBody;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get focusPinHeadsUpGo;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{time} left of {planned}'**
+  String focusTimeLeft(String time, String planned);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{planned} done. Keep going or finish.'**
+  String focusPlannedReached(String planned);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} done'**
+  String checklistProgress(int done, int total);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Add {item}…'**
+  String checklistAdd(String item);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'+1'**
+  String get counterAddOne;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Add one {name}'**
+  String counterAddOneHint(String name);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Body weight'**
+  String get bodyWeightActivity;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get bodyWeightField;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'My weight'**
+  String get goalBodyWeight;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Follows the weights you add in Me → Body measurements.'**
+  String get goalBodyWeightHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Another time'**
+  String get addAnotherTime;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} today'**
+  String partOfDay(int done, int total);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Pip'**
+  String get gardenPlantName;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1-day streak} other{{count}-day streak}}'**
+  String gardenStreak(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Grow your plant'**
+  String get gardenStartTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is watered for today. See you tomorrow!'**
+  String gardenWatered(String name);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Do one small thing today to water {name} and keep your streak.'**
+  String gardenAtRisk(String name);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Do one thing today and {name} sprouts.'**
+  String gardenFirst(String name);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Do one thing today to start a new streak. {name} kept all its growth.'**
+  String gardenRestart(String name);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 rest day saved} other{{count} rest days saved}}'**
+  String gardenRestDays(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Rest day in 1 more day} other{Rest day in {count} more days}}'**
+  String gardenNextRestDay(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your plant and streak'**
+  String get gardenOpenHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Not grown yet} =1{1 day of growing} other{{count} days of growing}}'**
+  String gardenSheetDays(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 more day to become a {stage}} other{{count} more days to become a {stage}}}'**
+  String gardenToNext(int count, String stage);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Fully grown. It keeps thriving as long as you do.'**
+  String get gardenTopStage;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak'**
+  String get gardenStatStreak;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Best'**
+  String get gardenStatBest;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest days'**
+  String get gardenStatRest;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'How it works'**
+  String get gardenHowTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Do at least one thing a day (anything counts) to water your plant and grow your streak.'**
+  String get gardenHow1;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Every 7 days in a row earns a rest day, up to 2. Miss a day and a rest day covers it, so your streak is safe.'**
+  String get gardenHow2;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Missed with no rest day saved? The streak starts again, but your plant never loses what it has grown.'**
+  String get gardenHow3;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Name your plant'**
+  String get gardenRename;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Pip, Basil, Kiwi…'**
+  String get gardenRenameHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get gardenRenameSave;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Milestones'**
+  String get gardenBadges;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total}'**
+  String gardenBadgesCount(int done, int total);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your year in pixels'**
+  String get gardenYear;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'seed'**
+  String get stageSeed;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'sprout'**
+  String get stageSprout;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'seedling'**
+  String get stageSeedling;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'young plant'**
+  String get stageYoung;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'budding plant'**
+  String get stageBudding;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'flowering plant'**
+  String get stageBlooming;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'little tree'**
+  String get stageTree;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'blossom tree'**
+  String get stageGrandTree;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'First step'**
+  String get badgeFirstDay;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first day done'**
+  String get badgeFirstDayHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Warming up'**
+  String get badgeStreak3;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'3 days in a row'**
+  String get badgeStreak3Hint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'One week strong'**
+  String get badgeStreak7;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'7 days in a row'**
+  String get badgeStreak7Hint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Month of momentum'**
+  String get badgeStreak30;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'30 days in a row'**
+  String get badgeStreak30Hint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Hundred club'**
+  String get badgeStreak100;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'100 days in a row'**
+  String get badgeStreak100Hint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Ten good days'**
+  String get badgeDays10;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'10 days with something done'**
+  String get badgeDays10Hint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Fifty good days'**
+  String get badgeDays50;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'50 days with something done'**
+  String get badgeDays50Hint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Hundred good days'**
+  String get badgeDays100;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'100 days with something done'**
+  String get badgeDays100Hint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal getter'**
+  String get badgeGoal;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish a goal'**
+  String get badgeGoalHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Know yourself'**
+  String get badgeCheckIns;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'7 evening check-ins'**
+  String get badgeCheckInsHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved by a rest day'**
+  String get badgeRestDay;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'A rest day kept your streak'**
+  String get badgeRestDayHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'In bloom'**
+  String get badgeBloom;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Grow your plant to flowering'**
+  String get badgeBloomHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Day 1. It begins!} other{{count} days in a row!}}'**
+  String streakCelebrateTitle(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is watered. One thing a day is all it takes.'**
+  String streakCelebrateBody(String name);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} grew into a {stage}!'**
+  String streakCelebrateGrew(String name, String stage);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'You earned a rest day. Take a day off any time; your streak is safe.'**
+  String get streakCelebrateRestDay;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Nice!'**
+  String get streakCelebrateOk;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'How did today feel?'**
+  String get checkInTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'One line for future you (optional)'**
+  String get checkInHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get checkInSave;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved. Sleep well.'**
+  String get checkInSaved;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Today felt {mood}'**
+  String checkInDone(String mood);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get checkInEdit;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'rough'**
+  String get mood1;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'meh'**
+  String get mood2;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'okay'**
+  String get mood3;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'good'**
+  String get mood4;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'great'**
+  String get mood5;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your year'**
+  String get yearTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Each square is a day: colored by how it felt, or green when something got done.'**
+  String get yearSubtitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Something done'**
+  String get yearLegendDone;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest day'**
+  String get yearLegendRest;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing'**
+  String get yearLegendNone;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} days done · {checkIns} check-ins'**
+  String yearDays(int done, int checkIns);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{streak} · watered'**
+  String widgetWatered(String streak);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{streak} · do one thing to keep it'**
+  String widgetThirsty(String streak);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is thirsty 🌱'**
+  String notifyPlantTitle(String name);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{One small thing keeps your 1-day streak going.} other{One small thing keeps your {count}-day streak going.}}'**
+  String notifyPlantBody(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'One small thing keeps your streak. Need a break? A saved rest day covers today.'**
+  String get notifyPlantBodyRest;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound'**
+  String get soundChip;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'No sound'**
+  String get soundOff;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain'**
+  String get soundRain;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep noise'**
+  String get soundBrown;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'White noise'**
+  String get soundWhite;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Background sound'**
+  String get soundTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Checklist'**
+  String get notesChecklist;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Plain text'**
+  String get notesPlainText;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Add item…'**
+  String get notesAddItem;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove item'**
+  String get notesRemoveItem;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear ticked'**
+  String get notesClearTicked;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} done'**
+  String sessionDoneTitle(String name);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'+{time}'**
+  String sessionDoneTime(String time);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{time} today'**
+  String sessionDoneToday(String time);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get sessionDoneClose;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Month by month'**
+  String get yearMonths;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days done{mood}'**
+  String yearMonthLine(int days, String mood);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **' · mostly {mood}'**
+  String yearMonthMood(String mood);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} sprouted! Come back tomorrow to help it grow.'**
+  String streakCelebrateSprouted(String name);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Add 1'**
+  String get nowNextAddOne;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Add 1 · {count} so far'**
+  String nowNextAddOneSoFar(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your picture'**
+  String get avatarTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a photo'**
+  String get avatarPhoto;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove picture'**
+  String get avatarRemove;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Stays on this phone. Nothing is uploaded.'**
+  String get avatarHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Change picture'**
+  String get meEditPicture;
 }
 
 class _AppLocalizationsDelegate
