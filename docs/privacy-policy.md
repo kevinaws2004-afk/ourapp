@@ -46,4 +46,4 @@ DayMeter does not knowingly collect data from anyone, including children.
 If this policy changes, the new version will be posted at this address with a new date.
 
 ## Contact
-Questions: [your support email]
+Questions: app.daymeter@gmail.com

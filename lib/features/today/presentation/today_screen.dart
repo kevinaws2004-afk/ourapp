@@ -40,6 +40,7 @@ import 'day_hero.dart';
 import '../../settings/presentation/avatar_picker.dart';
 import '../../garden/presentation/check_in_card.dart';
 import '../../garden/presentation/garden_card.dart';
+import '../../words/presentation/words_card.dart';
 import 'habit_hint_card.dart';
 import '../../insights/presentation/insight_providers.dart';
 import 'now_next_card.dart';
@@ -61,6 +62,7 @@ class TodayScreen extends ConsumerWidget {
     required this.onOpenMe,
     required this.onStartActivity,
     required this.onOpenNotes,
+    this.onOpenWords,
     this.onOpenYear,
     required this.onOpenDayReport,
     this.onOpenFocusMode,
@@ -71,6 +73,9 @@ class TodayScreen extends ConsumerWidget {
 
   /// Opens Notes.
   final VoidCallback onOpenNotes;
+
+  /// Opens My words.
+  final VoidCallback? onOpenWords;
 
   /// Opens the year in pixels.
   final VoidCallback? onOpenYear;
@@ -228,6 +233,8 @@ class TodayScreen extends ConsumerWidget {
                   progress: progress,
                   bestStreak: bestStreak,
                 ),
+                // The words you saved to read each day.
+                WordsCard(onOpenWords: onOpenWords ?? () {}),
                 // The plant and the day streak: the reason to come back.
                 GardenCard(onOpenYear: onOpenYear ?? () {}),
                 const SizedBox(height: AppSpacing.xs),

@@ -14204,6 +14204,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Change picture'**
   String get meEditPicture;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'My words'**
+  String get wordsTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Lines from books, quotes, or a few words of your own. DayMeter shows them to you each day.'**
+  String get wordsSubtitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Quotes and lines to read each day'**
+  String get wordsMeSubtitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s words'**
+  String get wordsTodayTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s words · {count}'**
+  String wordsTodayCount(int count);
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Read them full screen'**
+  String get wordsCardHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Read this first'**
+  String get wordsReaderOpenTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get wordsReaderNext;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Start my day'**
+  String get wordsReaderStartDay;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get wordsReaderDone;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Words worth reading every day'**
+  String get wordsEmptyTitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Save a line from a book that hit you, a quote, a proverb, or a few lines about who you want to become. DayMeter shows them when you open the app.'**
+  String get wordsEmptyMessage;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Add words'**
+  String get wordsAdd;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit words'**
+  String get wordsEdit;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Show when I open the app'**
+  String get wordsOnOpen;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Once a day, before anything else'**
+  String get wordsOnOpenSubtitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Read today\'s words'**
+  String get wordsReadToday;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day ones, plus one of the rest in turn'**
+  String get wordsReadTodaySubtitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day'**
+  String get wordsEveryDayChip;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'\"We are what we repeatedly do.\"\n\nA line from a book, a quote, or a few lines of your own'**
+  String get wordsTextHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'From (optional)'**
+  String get wordsFrom;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'A book, an author, or me'**
+  String get wordsFromHint;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Show every day'**
+  String get wordsEveryDay;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Otherwise it takes turns with your other words, one a day'**
+  String get wordsEveryDaySubtitle;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get wordsSave;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get wordsDelete;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Words deleted'**
+  String get wordsDeleted;
+
+  /// UI copy.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 saved} other{{count} saved}}'**
+  String wordsCount(int count);
 }
 
 class _AppLocalizationsDelegate

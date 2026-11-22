@@ -86,6 +86,7 @@ abstract final class AppIcons {
   static const lock = PhosphorGlyphs.lockKey;
   static const addCircle = PhosphorGlyphs.plusCircle;
   static const quote = PhosphorGlyphs.quotes;
+  static const bookOpen = PhosphorGlyphs.bookOpen;
   static const medal = PhosphorGlyphs.medal;
   static const sparkle = PhosphorFillGlyphs.sparkle;
   static const heart = PhosphorFillGlyphs.heart;

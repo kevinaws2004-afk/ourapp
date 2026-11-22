@@ -50,6 +50,7 @@ import '../features/notes/domain/note.dart';
 import '../features/notes/presentation/note_editor_screen.dart';
 import '../features/notes/presentation/note_providers.dart';
 import '../features/notes/presentation/notes_screen.dart';
+import '../features/words/presentation/words_screen.dart';
 import 'app_shell.dart';
 import 'dev/demo_data.dart';
 import 'dev/dev_tools.dart';
@@ -81,6 +82,9 @@ abstract final class AppRoutes {
   /// Notes: the board, and one note.
   static const notes = '/notes';
   static const year = '/year';
+
+  /// My words: quotes and lines to read each day.
+  static const words = '/words';
 
   /// A day's report: what got done, time per activity, untracked time.
   static String dayReport(LocalDate date) => '/day/${date.toIso()}';
@@ -324,6 +328,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                   chooser: chooser(context),
                   onOpenMe: () => context.go(AppRoutes.me),
                   onOpenNotes: () => unawaited(context.push(AppRoutes.notes)),
+                  onOpenWords: () => unawaited(context.push(AppRoutes.words)),
                   onOpenYear: () => unawaited(context.push(AppRoutes.year)),
                   onOpenFocusMode: () =>
                       unawaited(context.push(AppRoutes.focusMode)),
@@ -401,6 +406,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                       context.go(AppRoutes.focusSettings),
                   onOpenGoals: () => context.go(AppRoutes.challenges),
                   onOpenNotes: () => unawaited(context.push(AppRoutes.notes)),
+                  onOpenWords: () => unawaited(context.push(AppRoutes.words)),
                   onOpenTokenShowcase: devToolsEnabled
                       ? () => context.push(AppRoutes.tokenShowcase)
                       : null,
@@ -507,6 +513,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         parentNavigatorKey: rootNavigatorKey,
         path: AppRoutes.year,
         builder: (context, state) => const YearPixelsScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: rootNavigatorKey,
+        path: AppRoutes.words,
+        builder: (context, state) => const WordsScreen(),
       ),
       GoRoute(
         parentNavigatorKey: rootNavigatorKey,

@@ -10690,5 +10690,127 @@
   "meEditPicture": "Change picture",
   "@meEditPicture": {
     "description": "UI copy."
+  },
+  "wordsTitle": "My words",
+  "@wordsTitle": {
+    "description": "UI copy."
+  },
+  "wordsSubtitle": "Lines from books, quotes, or a few words of your own. DayMeter shows them to you each day.",
+  "@wordsSubtitle": {
+    "description": "UI copy."
+  },
+  "wordsMeSubtitle": "Quotes and lines to read each day",
+  "@wordsMeSubtitle": {
+    "description": "UI copy."
+  },
+  "wordsTodayTitle": "Today's words",
+  "@wordsTodayTitle": {
+    "description": "UI copy."
+  },
+  "wordsTodayCount": "Today's words · {count}",
+  "@wordsTodayCount": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "wordsCardHint": "Read them full screen",
+  "@wordsCardHint": {
+    "description": "UI copy."
+  },
+  "wordsReaderOpenTitle": "Read this first",
+  "@wordsReaderOpenTitle": {
+    "description": "UI copy."
+  },
+  "wordsReaderNext": "Next",
+  "@wordsReaderNext": {
+    "description": "UI copy."
+  },
+  "wordsReaderStartDay": "Start my day",
+  "@wordsReaderStartDay": {
+    "description": "UI copy."
+  },
+  "wordsReaderDone": "Done",
+  "@wordsReaderDone": {
+    "description": "UI copy."
+  },
+  "wordsEmptyTitle": "Words worth reading every day",
+  "@wordsEmptyTitle": {
+    "description": "UI copy."
+  },
+  "wordsEmptyMessage": "Save a line from a book that hit you, a quote, a proverb, or a few lines about who you want to become. DayMeter shows them when you open the app.",
+  "@wordsEmptyMessage": {
+    "description": "UI copy."
+  },
+  "wordsAdd": "Add words",
+  "@wordsAdd": {
+    "description": "UI copy."
+  },
+  "wordsEdit": "Edit words",
+  "@wordsEdit": {
+    "description": "UI copy."
+  },
+  "wordsOnOpen": "Show when I open the app",
+  "@wordsOnOpen": {
+    "description": "UI copy."
+  },
+  "wordsOnOpenSubtitle": "Once a day, before anything else",
+  "@wordsOnOpenSubtitle": {
+    "description": "UI copy."
+  },
+  "wordsReadToday": "Read today's words",
+  "@wordsReadToday": {
+    "description": "UI copy."
+  },
+  "wordsReadTodaySubtitle": "Every day ones, plus one of the rest in turn",
+  "@wordsReadTodaySubtitle": {
+    "description": "UI copy."
+  },
+  "wordsEveryDayChip": "Every day",
+  "@wordsEveryDayChip": {
+    "description": "UI copy."
+  },
+  "wordsTextHint": "\"We are what we repeatedly do.\"\n\nA line from a book, a quote, or a few lines of your own",
+  "@wordsTextHint": {
+    "description": "UI copy."
+  },
+  "wordsFrom": "From (optional)",
+  "@wordsFrom": {
+    "description": "UI copy."
+  },
+  "wordsFromHint": "A book, an author, or me",
+  "@wordsFromHint": {
+    "description": "UI copy."
+  },
+  "wordsEveryDay": "Show every day",
+  "@wordsEveryDay": {
+    "description": "UI copy."
+  },
+  "wordsEveryDaySubtitle": "Otherwise it takes turns with your other words, one a day",
+  "@wordsEveryDaySubtitle": {
+    "description": "UI copy."
+  },
+  "wordsSave": "Save",
+  "@wordsSave": {
+    "description": "UI copy."
+  },
+  "wordsDelete": "Delete",
+  "@wordsDelete": {
+    "description": "UI copy."
+  },
+  "wordsDeleted": "Words deleted",
+  "@wordsDeleted": {
+    "description": "UI copy."
+  },
+  "wordsCount": "{count, plural, =1{1 saved} other{{count} saved}}",
+  "@wordsCount": {
+    "description": "UI copy.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

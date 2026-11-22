@@ -8101,4 +8101,103 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get meEditPicture => 'Change picture';
+
+  @override
+  String get wordsTitle => 'My words';
+
+  @override
+  String get wordsSubtitle =>
+      'Lines from books, quotes, or a few words of your own. DayMeter shows them to you each day.';
+
+  @override
+  String get wordsMeSubtitle => 'Quotes and lines to read each day';
+
+  @override
+  String get wordsTodayTitle => 'Today\'s words';
+
+  @override
+  String wordsTodayCount(int count) {
+    return 'Today\'s words · $count';
+  }
+
+  @override
+  String get wordsCardHint => 'Read them full screen';
+
+  @override
+  String get wordsReaderOpenTitle => 'Read this first';
+
+  @override
+  String get wordsReaderNext => 'Next';
+
+  @override
+  String get wordsReaderStartDay => 'Start my day';
+
+  @override
+  String get wordsReaderDone => 'Done';
+
+  @override
+  String get wordsEmptyTitle => 'Words worth reading every day';
+
+  @override
+  String get wordsEmptyMessage =>
+      'Save a line from a book that hit you, a quote, a proverb, or a few lines about who you want to become. DayMeter shows them when you open the app.';
+
+  @override
+  String get wordsAdd => 'Add words';
+
+  @override
+  String get wordsEdit => 'Edit words';
+
+  @override
+  String get wordsOnOpen => 'Show when I open the app';
+
+  @override
+  String get wordsOnOpenSubtitle => 'Once a day, before anything else';
+
+  @override
+  String get wordsReadToday => 'Read today\'s words';
+
+  @override
+  String get wordsReadTodaySubtitle =>
+      'Every day ones, plus one of the rest in turn';
+
+  @override
+  String get wordsEveryDayChip => 'Every day';
+
+  @override
+  String get wordsTextHint =>
+      '\"We are what we repeatedly do.\"\n\nA line from a book, a quote, or a few lines of your own';
+
+  @override
+  String get wordsFrom => 'From (optional)';
+
+  @override
+  String get wordsFromHint => 'A book, an author, or me';
+
+  @override
+  String get wordsEveryDay => 'Show every day';
+
+  @override
+  String get wordsEveryDaySubtitle =>
+      'Otherwise it takes turns with your other words, one a day';
+
+  @override
+  String get wordsSave => 'Save';
+
+  @override
+  String get wordsDelete => 'Delete';
+
+  @override
+  String get wordsDeleted => 'Words deleted';
+
+  @override
+  String wordsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count saved',
+      one: '1 saved',
+    );
+    return '$_temp0';
+  }
 }

@@ -19,6 +19,8 @@ import '../core/time/local_date.dart';
 import '../features/garden/presentation/garden_providers.dart';
 import '../features/plans/presentation/plan_date_notifier.dart';
 import '../features/garden/presentation/streak_celebration.dart';
+import '../features/words/presentation/words_providers.dart';
+import '../features/words/presentation/words_reader.dart';
 import 'home_widget_sync.dart';
 
 /// The tab shell: Today, Plan, **+**, Progress, Me. On phones a bottom bar
@@ -28,6 +30,9 @@ import 'home_widget_sync.dart';
 /// keeps its own navigation stack.
 /// The day the streak celebration last showed.
 LocalDate? _celebratedOn;
+
+/// The day today's words last showed on opening.
+LocalDate? _wordsShownOn;
 
 class AppShell extends ConsumerWidget {
   const AppShell({
@@ -99,6 +104,21 @@ class AppShell extends ConsumerWidget {
             unawaited(
               showStreakCelebration(context, before: before, after: after),
             );
+          }
+        }),
+      );
+    });
+    // The first open of the day: the words the person saved to read daily.
+    ref.listen(wordsDueProvider, (_, words) {
+      if (words == null) return;
+      final today = currentLocalDate(ref.read(clockProvider));
+      if (_wordsShownOn == today) return;
+      _wordsShownOn = today;
+      unawaited(markWordsShown(ref, today));
+      unawaited(
+        Future<void>.delayed(const Duration(milliseconds: 400), () {
+          if (context.mounted) {
+            unawaited(showWordsReader(context, words, onOpen: true));
           }
         }),
       );

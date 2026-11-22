@@ -22,6 +22,7 @@ import '../../insights/presentation/insight_providers.dart';
 import '../../measurements/domain/measurement.dart';
 import '../../measurements/presentation/measurement_formatting.dart';
 import '../../measurements/presentation/measurement_providers.dart';
+import '../../words/presentation/words_providers.dart';
 import '../domain/preferences_snapshot.dart';
 import 'app_lock.dart';
 import 'appearance_screen.dart';
@@ -54,6 +55,7 @@ class MeScreen extends ConsumerWidget {
     required this.onOpenGoals,
     required this.onOpenNotifications,
     required this.onOpenNotes,
+    this.onOpenWords,
     required this.onOpenBackup,
     required this.onOpenFocusSettings,
     this.onOpenTokenShowcase,
@@ -75,6 +77,9 @@ class MeScreen extends ConsumerWidget {
 
   /// Your notes.
   final VoidCallback onOpenNotes;
+
+  /// My words: quotes and lines to read each day.
+  final VoidCallback? onOpenWords;
 
   /// Backup & restore.
   final VoidCallback onOpenBackup;
@@ -221,6 +226,20 @@ class MeScreen extends ConsumerWidget {
                     subtitle: l10n.notesMeSubtitle,
                     onTap: onOpenNotes,
                   ),
+                  if (onOpenWords case final open?)
+                    SettingsTile(
+                      icon: AppIcons.quote,
+                      iconColor: c.brandPrimary,
+                      iconBackground: c.brandPrimarySoft,
+                      title: l10n.wordsTitle,
+                      subtitle: switch (ref.watch(myWordsProvider).value) {
+                        final words? when words.isNotEmpty => l10n.wordsCount(
+                          words.length,
+                        ),
+                        _ => l10n.wordsMeSubtitle,
+                      },
+                      onTap: open,
+                    ),
                   SettingsTile(
                     icon: AppIcons.trophy,
                     iconColor: c.warning,
